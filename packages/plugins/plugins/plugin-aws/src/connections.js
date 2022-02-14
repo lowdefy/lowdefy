@@ -14,12 +14,4 @@
   limitations under the License.
 */
 
-import Link from 'next/link';
-import { createIcon } from '@lowdefy/block-utils';
-
-import icons from '../../build/plugins/icons.js';
-
-export default {
-  Link,
-  Icon: createIcon(icons),
-};
+export { default as AwsS3Bucket } from './connections/AwsS3Bucket/AwsS3Bucket.js';

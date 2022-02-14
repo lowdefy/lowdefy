@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import request from './request.js';
+import { createIcon } from '@lowdefy/block-utils';
 
-function waitForRestartedServer(lowdefy) {
-  setTimeout(async () => {
-    try {
-      await request({
-        url: `${lowdefy.basePath}/api/ping`,
-      });
-      lowdefy._internal.window.location.reload();
-    } catch (error) {
-      waitForRestartedServer(lowdefy);
-    }
-  }, 1500);
-}
+import createLinkComponent from './createLinkComponent.js';
+import icons from '../../build/plugins/icons.js';
 
-export default waitForRestartedServer;
+const createComponents = (lowdefy) => {
+  return {
+    Link: createLinkComponent(lowdefy),
+    Icon: createIcon(icons),
+  };
+};
+
+export default createComponents;

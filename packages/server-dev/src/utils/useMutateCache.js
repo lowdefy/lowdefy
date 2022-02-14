@@ -16,13 +16,13 @@
 
 import { useSWRConfig } from 'swr';
 
-function useMutateCache() {
+function useMutateCache(basePath) {
   const { cache, mutate } = useSWRConfig();
   return () => {
-    const keys = ['/api/root'];
+    const keys = [`${basePath}/api/root`];
 
     for (const key of cache.keys()) {
-      if (key.startsWith('/api/page')) {
+      if (key.startsWith(`${basePath}/api/page`)) {
         keys.push(key);
       }
     }

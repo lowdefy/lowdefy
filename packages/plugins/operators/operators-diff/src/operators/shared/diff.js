@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { diff } from 'deep-diff';
+import deepDiff from 'deep-diff';
 import { runClass } from '@lowdefy/operators';
 
 function deep(lhs, rhs) {
-  const result = diff(lhs, rhs);
+  const result = deepDiff.diff(lhs, rhs);
   if (!result) {
     return [];
   }

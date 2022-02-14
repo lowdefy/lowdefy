@@ -4,6 +4,32 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "ariaLabel": {
+        "type": "string",
+        "description": "Arial-label to apply to link tag."
+      },
+      "back": {
+        "type": "boolean",
+        "description": "When the link is clicked, trigger the browser back."
+      },
+      "home": {
+        "type": "boolean",
+        "description": "When the link is clicked, route to the home page."
+      },
+      "input": {
+        "type": "object",
+        "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "urlQuery": {
+        "type": "object",
+        "description": "When the link is clicked, pass data as a url query to the next page.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
       "disabled": {
         "type": "boolean",
         "default": false,
@@ -16,9 +42,13 @@
           "displayType": "icon"
         }
       },
-      "href": {
+      "pageId": {
         "type": "string",
-        "description": "Anchor element href property."
+        "description": "When the link is clicked, route to the provided Lowdefy page."
+      },
+      "url": {
+        "type": "string",
+        "description": "External url to link to when the anchor link is clicked."
       },
       "rel": {
         "type": "string",
@@ -30,10 +60,15 @@
         "default": false,
         "description": "Open link in a new tab when the anchor link is clicked."
       },
-      "strong": {
+      "replace": {
         "type": "boolean",
         "default": false,
-        "description": "Makes the text bold when true."
+        "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+      },
+      "scroll": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
       },
       "style": {
         "type": "object",

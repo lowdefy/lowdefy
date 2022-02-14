@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,19 +15,24 @@
   limitations under the License.
 */
 
-import request from './request.js';
+import * as connections from './connections.js';
 
-function waitForRestartedServer(lowdefy) {
-  setTimeout(async () => {
-    try {
-      await request({
-        url: `${lowdefy.basePath}/api/ping`,
-      });
-      lowdefy._internal.window.location.reload();
-    } catch (error) {
-      waitForRestartedServer(lowdefy);
-    }
-  }, 1500);
-}
+export default {
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
+};
 
-export default waitForRestartedServer;
+// export default {
+//   connections: ['GoogleSheet'],
+//   requests: [
+//     GoogleSheetAppendMany,
+//     GoogleSheetAppendOne,
+//     GoogleSheetDeleteOne,
+//     GoogleSheetGetMany,
+//     GoogleSheetGetOne,
+//     GoogleSheetUpdateOne,
+//     GoogleSheetUpdateMany,
+//   ],
+// };

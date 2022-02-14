@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { CompactPicker } from 'react-color';
+import CompactPicker from 'react-color/lib/Compact.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 

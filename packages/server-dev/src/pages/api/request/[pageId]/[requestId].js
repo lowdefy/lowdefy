@@ -25,6 +25,7 @@ export default async function handler(req, res) {
       throw new Error('Only POST requests are supported.');
     }
     // TODO: configure API context
+    // TODO: configure build directory?
     const apiContext = await createApiContext({
       buildDirectory: './build',
       connections,

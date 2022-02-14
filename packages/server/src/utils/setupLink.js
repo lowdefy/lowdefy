@@ -20,19 +20,26 @@ function setupLink(lowdefy) {
   const { router, window } = lowdefy._internal;
   const backLink = () => router.back();
   const disabledLink = () => {};
-  const newOriginLink = ({ href, newTab }) => {
+  const newOriginLink = ({ url, query, newTab }) => {
     if (newTab) {
-      return window.open(href, '_blank').focus();
+      return window.open(`${url}${query ? `?${query}` : ''}`, '_blank').focus();
     } else {
-      return window.location.assign(href);
+      return window.location.assign(`${url}${query ? `?${query}` : ''}`);
     }
   };
-  const sameOriginLink = ({ href, newTab }) => {
+  const sameOriginLink = ({ newTab, pathname, query, setInput }) => {
     if (newTab) {
-      return window.open(`${window.location.origin}${lowdefy.basePath}${href}`, '_blank').focus();
+      return window
+        .open(
+          `${window.location.origin}${lowdefy.basePath}${pathname}${query ? `?${query}` : ''}`,
+          '_blank'
+        )
+        .focus();
     } else {
+      setInput();
       return router.push({
-        pathname: href, // href includes the urlQuery as defined by engine
+        pathname,
+        query,
       });
     }
   };

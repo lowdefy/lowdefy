@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { CirclePicker } from 'react-color';
+import CirclePicker from 'react-color/lib/Circle.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
