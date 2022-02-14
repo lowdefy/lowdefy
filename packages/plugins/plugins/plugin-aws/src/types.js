@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2021 Lowdefy, Inc
 
@@ -14,30 +15,24 @@
   limitations under the License.
 */
 
-import deepDiff from 'deep-diff';
-import { runClass } from '@lowdefy/operators';
+import * as connections from './connections.js';
 
-function deep(lhs, rhs) {
-  const result = deepDiff.diff(lhs, rhs);
-  if (!result) {
-    return [];
-  }
-  return result;
-}
-
-const functions = { deep };
-const meta = {
-  deep: { namedArgs: ['lhs', 'rhs'], validTypes: ['object', 'array'] },
+export default {
+  connections: Object.keys(connections),
+  requests: Object.keys(connections)
+    .map((connection) => Object.keys(connections[connection].requests))
+    .flat(),
 };
-function _diff({ params, location, methodName }) {
-  return runClass({
-    functions,
-    location,
-    meta,
-    methodName,
-    operator: '_diff',
-    params,
-  });
-}
 
-export default _diff;
+// export default {
+//   connections: ['GoogleSheet'],
+//   requests: [
+//     GoogleSheetAppendMany,
+//     GoogleSheetAppendOne,
+//     GoogleSheetDeleteOne,
+//     GoogleSheetGetMany,
+//     GoogleSheetGetOne,
+//     GoogleSheetUpdateOne,
+//     GoogleSheetUpdateMany,
+//   ],
+// };

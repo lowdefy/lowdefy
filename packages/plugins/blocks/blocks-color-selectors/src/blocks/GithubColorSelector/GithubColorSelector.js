@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { GithubPicker } from 'react-color';
+import GithubPicker from 'react-color/lib/Github.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
