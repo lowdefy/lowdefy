@@ -9758,6 +9758,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lowdefy@workspace:packages/cli"
   dependencies:
+    "@jest/globals": 27.5.1
     "@lowdefy/helpers": 4.0.0-alpha.6
     "@lowdefy/node-utils": 4.0.0-alpha.6
     "@swc/cli": 0.1.55

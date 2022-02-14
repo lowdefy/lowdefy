@@ -14,30 +14,25 @@
   limitations under the License.
 */
 
-// eslint-disable-next-line no-unused-vars
-
+import { jest } from '@jest/globals';
 import path from 'path';
-// eslint-disable-next-line no-unused-vars
-import { v4 as uuid } from 'uuid';
-import { readFile, writeFile } from '@lowdefy/node-utils';
-import getCliJson from './getCliJson.js';
 
-jest.mock('@lowdefy/node-utils', () => {
-  const readFile = jest.fn();
-  const writeFile = jest.fn();
+jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
-    readFile,
-    writeFile,
+    readFile: jest.fn(),
+    writeFile: jest.fn(),
   };
 });
 
-jest.mock('uuid', () => ({
+jest.unstable_mockModule('uuid', () => ({
   v4: () => 'uuidv4',
 }));
 
 const configDirectory = process.cwd();
 
 test('getCliJson, no file exists', async () => {
+  const { readFile, writeFile } = await import('@lowdefy/node-utils');
+  const getCliJson = (await import('./getCliJson.js')).default;
   readFile.mockImplementation(() => {
     return null;
   });
@@ -54,12 +49,14 @@ test('getCliJson, no file exists', async () => {
 });
 
 test('getCliJson, no file exists', async () => {
-  readFile.mockImplementation((filePath) => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  const getCliJson = (await import('./getCliJson.js')).default;
+  nodeUtils.readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), '.lowdefy/cli.json')) {
       return `{"appId": "appId"}`;
     }
   });
   const res = await getCliJson({ configDirectory });
   expect(res).toEqual({ appId: 'appId' });
-  expect(writeFile.mock.calls).toEqual([]);
+  expect(nodeUtils.writeFile.mock.calls).toEqual([]);
 });

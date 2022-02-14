@@ -11903,6 +11903,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/cli/",
           "packageDependencies": [
             ["lowdefy", "workspace:packages/cli"],
+            ["@jest/globals", "npm:27.5.1"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],

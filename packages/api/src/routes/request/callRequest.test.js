@@ -14,12 +14,14 @@
   limitations under the License.
 */
 import { jest } from '@jest/globals';
-import { _date, _payload, _secret, _user } from '@lowdefy/operators-js';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
 import { ConfigurationError, RequestError } from '../../context/errors.js';
+
+const { _date, _payload, _secret, _user } = operatorsServer;
 
 console.error = () => {};
 

@@ -13,79 +13,54 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-// import { wait } from '@lowdefy/helpers';
 
-// import errorHandler from './errorHandler.js';
-// import runCommand from './runCommand.js';
-// import startUp from './startUp.js';
+import { jest } from '@jest/globals';
+import { wait } from '@lowdefy/helpers';
 
-// jest.mock('./errorHandler');
-// jest.mock('./startUp');
+jest.unstable_mockModule('./errorHandler', () => ({
+  default: jest.fn(),
+}));
+jest.unstable_mockModule('./startUp', () => ({
+  default: jest.fn(),
+}));
 
-// beforeEach(() => {
-//   errorHandler.mockReset();
-// });
+const options = { option: true };
+const command = { command: true, name: () => 'test' };
+const cliVersion = 'cliVersion';
 
-// const options = { option: true };
-// const command = {
-//   command: true,
-// };
+test('runCommand with synchronous function', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
 
-// TODO: ora es module import failing
-
-test.todo(
-  'runCommand with synchronous function'
-  /*async () => {
-  const fn = jest.fn(() => 1 + 1);
-  const wrapped = runCommand(fn);
+  const handler = jest.fn(() => 1 + 1);
+  const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(options, command);
   expect(res).toBe(2);
-  expect(fn).toHaveBeenCalled();
-}*/
-);
+  expect(handler).toHaveBeenCalled();
+});
 
-test.todo(
-  'runCommand with asynchronous function' /*async () => {
-  const fn = jest.fn(async () => {
+test('runCommand with asynchronous function', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const handler = jest.fn(async () => {
     await wait(3);
     return 4;
   });
-  const wrapped = runCommand(fn);
+  const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(options, command);
   expect(res).toBe(4);
-  expect(fn).toHaveBeenCalled();
-}*/
-);
+  expect(handler).toHaveBeenCalled();
+});
 
-test.todo(
-  'runCommand calls startUp' /*async () => {
-  const fn = jest.fn((...args) => args);
-  const wrapped = runCommand(fn);
+test('runCommand calls startUp', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const { default: startUp } = await import('./startUp.js');
+  const handler = jest.fn((...args) => args);
+  const wrapped = runCommand({ cliVersion, handler });
   const res = await wrapped(options, command);
   expect(res).toMatchInlineSnapshot(`
     Array [
       Object {
         "context": Object {
-          "appId": "appId",
-          "configDirectory": "configDirectory",
-          "buildDirectory": "configDirectory/buildDirectory",
-          "cacheDirectory": "configDirectory/cacheDirectory",
-          "cliConfig": Object {},
           "cliVersion": "cliVersion",
-          "command": "test",
-          "commandLineOptions": Object {
-            "option": true,
-          },
-          "lowdefyVersion": "lowdefyVersion",
-          "options": Object {
-            "option": true,
-          },
-          "print": Object {
-            "info": [MockFunction],
-            "log": [MockFunction],
-            "succeed": [MockFunction],
-          },
-          "sendTelemetry": [MockFunction],
         },
       },
     ]
@@ -96,28 +71,10 @@ test.todo(
         Object {
           "command": Object {
             "command": true,
+            "name": [Function],
           },
           "context": Object {
-            "appId": "appId",
-            "configDirectory": "configDirectory",
-            "buildDirectory": "configDirectory/buildDirectory",
-            "cacheDirectory": "configDirectory/cacheDirectory",
-            "cliConfig": Object {},
             "cliVersion": "cliVersion",
-            "command": "test",
-            "commandLineOptions": Object {
-              "option": true,
-            },
-            "lowdefyVersion": "lowdefyVersion",
-            "options": Object {
-              "option": true,
-            },
-            "print": Object {
-              "info": [MockFunction],
-              "log": [MockFunction],
-              "succeed": [MockFunction],
-            },
-            "sendTelemetry": [MockFunction],
           },
           "options": Object {
             "option": true,
@@ -126,90 +83,51 @@ test.todo(
       ],
     ]
   `);
-}*/
-);
+});
 
-test.todo(
-  'Catch error synchronous function' /*async () => {
-  const fn = jest.fn(() => {
+test('Catch error synchronous function', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const handler = jest.fn(() => {
     throw new Error('Error');
   });
-  const wrapped = runCommand(fn);
+  const wrapped = runCommand({ cliVersion, handler });
   await wrapped(options, command);
-  expect(fn).toHaveBeenCalled();
+  expect(handler).toHaveBeenCalled();
   expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
         Object {
           "context": Object {
-            "appId": "appId",
-            "configDirectory": "configDirectory",
-            "buildDirectory": "configDirectory/buildDirectory",
-            "cacheDirectory": "configDirectory/cacheDirectory",
-            "cliConfig": Object {},
             "cliVersion": "cliVersion",
-            "command": "test",
-            "commandLineOptions": Object {
-              "option": true,
-            },
-            "lowdefyVersion": "lowdefyVersion",
-            "options": Object {
-              "option": true,
-            },
-            "print": Object {
-              "info": [MockFunction],
-              "log": [MockFunction],
-              "succeed": [MockFunction],
-            },
-            "sendTelemetry": [MockFunction],
           },
           "error": [Error: Error],
         },
       ],
     ]
   `);
-}*/
-);
+});
 
-test.todo(
-  'Catch error asynchronous function' /*async () => {
-  const fn = jest.fn(async () => {
+test('Catch error asynchronous function', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const handler = jest.fn(async () => {
     await wait(3);
     throw new Error('Async Error');
   });
-  const wrapped = runCommand(fn);
+  const wrapped = runCommand({ cliVersion, handler });
   await wrapped(options, command);
-  expect(fn).toHaveBeenCalled();
+  expect(handler).toHaveBeenCalled();
   expect(errorHandler.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
         Object {
           "context": Object {
-            "appId": "appId",
-            "configDirectory": "configDirectory",
-            "buildDirectory": "configDirectory/buildDirectory",
-            "cacheDirectory": "configDirectory/cacheDirectory",
-            "cliConfig": Object {},
             "cliVersion": "cliVersion",
-            "command": "test",
-            "commandLineOptions": Object {
-              "option": true,
-            },
-            "lowdefyVersion": "lowdefyVersion",
-            "options": Object {
-              "option": true,
-            },
-            "print": Object {
-              "info": [MockFunction],
-              "log": [MockFunction],
-              "succeed": [MockFunction],
-            },
-            "sendTelemetry": [MockFunction],
           },
           "error": [Error: Async Error],
         },
       ],
     ]
   `);
-}*/
-);
+});
