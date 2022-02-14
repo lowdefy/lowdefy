@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { SliderPicker } from 'react-color';
+import SliderPicker from 'react-color/lib/Slider.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
