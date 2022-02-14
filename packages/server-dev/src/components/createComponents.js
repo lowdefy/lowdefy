@@ -14,12 +14,16 @@
   limitations under the License.
 */
 
-import Link from 'next/link';
 import { createIcon } from '@lowdefy/block-utils';
 
+import createLinkComponent from './createLinkComponent.js';
 import icons from '../../build/plugins/icons.js';
 
-export default {
-  Link,
-  Icon: createIcon(icons),
+const createComponents = (lowdefy) => {
+  return {
+    Link: createLinkComponent(lowdefy),
+    Icon: createIcon(icons),
+  };
 };
+
+export default createComponents;
