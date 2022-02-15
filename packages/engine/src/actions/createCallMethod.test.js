@@ -80,7 +80,7 @@ test('CallMethod with no args, synchronous method', async () => {
                 {
                   id: 'a',
                   type: 'CallMethod',
-                  params: { blockId: 'block:root:textInput:0', method: 'blockMethod' },
+                  params: { blockId: 'textInput', method: 'blockMethod' },
                 },
               ],
             },
@@ -161,7 +161,7 @@ test('CallMethod method return a promise', async () => {
                   id: 'a',
                   type: 'CallMethod',
                   params: {
-                    blockId: 'block:root:textInput:0',
+                    blockId: 'textInput',
                     method: 'blockMethod',
                     args: ['arg'],
                   },
@@ -236,7 +236,7 @@ test('CallMethod with args not an array', async () => {
                 {
                   id: 'a',
                   type: 'CallMethod',
-                  params: { blockId: 'block:root:textInput:0', method: 'blockMethod', args: 'arg' },
+                  params: { blockId: 'textInput', method: 'blockMethod', args: 'arg' },
                 },
               ],
             },
@@ -271,7 +271,7 @@ test('CallMethod with args not an array', async () => {
       },
       error: {
         error: new Error(
-          'Failed to call method "blockMethod" on block "block:root:textInput:0": "args" should be an array. Received "{"blockId":"block:root:textInput:0","method":"blockMethod","args":"arg"}".'
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
         ),
         index: 0,
         type: 'CallMethod',
@@ -282,7 +282,7 @@ test('CallMethod with args not an array', async () => {
         type: 'CallMethod',
         index: 0,
         error: new Error(
-          'Failed to call method "blockMethod" on block "block:root:textInput:0": "args" should be an array. Received "{"blockId":"block:root:textInput:0","method":"blockMethod","args":"arg"}".'
+          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
         ),
       },
     },
@@ -327,7 +327,7 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
                   id: 'a',
                   type: 'CallMethod',
                   params: {
-                    blockId: 'block:root:textInput:0',
+                    blockId: 'textInput',
                     method: 'blockMethod',
                     args: ['arg1', 'arg2'],
                   },
@@ -420,7 +420,7 @@ test('CallMethod of block in array by explicit id', async () => {
                   id: 'a',
                   type: 'CallMethod',
                   params: {
-                    blockId: 'block:root:list.0.textInput:0',
+                    blockId: 'list.0.textInput',
                     method: 'blockMethod',
                     args: ['arg'],
                   },
@@ -494,7 +494,7 @@ test('CallMethod of block in array by block with same indices and id pattern', a
                           id: 'a',
                           type: 'CallMethod',
                           params: {
-                            blockId: 'block:root:list.$.textInput:0',
+                            blockId: 'list.$.textInput',
                             method: 'blockMethod',
                             args: ['arg'],
                           },
@@ -562,7 +562,7 @@ test('CallMethod with method does not exist', async () => {
                 {
                   id: 'a',
                   type: 'CallMethod',
-                  params: { blockId: 'block:root:textInput:0', method: 'no-method' },
+                  params: { blockId: 'textInput', method: 'no-method' },
                 },
               ],
             },
@@ -594,7 +594,7 @@ test('CallMethod with method does not exist', async () => {
       },
       error: {
         error: new Error(
-          'Failed to call method "no-method" on block "block:root:textInput:0". Check if "no-method" is a valid block method for block "block:root:textInput:0". Received "{"blockId":"block:root:textInput:0","method":"no-method"}".'
+          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
         ),
         index: 0,
         type: 'CallMethod',
@@ -605,7 +605,7 @@ test('CallMethod with method does not exist', async () => {
         type: 'CallMethod',
         index: 0,
         error: new Error(
-          'Failed to call method "no-method" on block "block:root:textInput:0". Check if "no-method" is a valid block method for block "block:root:textInput:0". Received "{"blockId":"block:root:textInput:0","method":"no-method"}".'
+          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
         ),
       },
     },
