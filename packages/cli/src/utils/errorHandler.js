@@ -15,7 +15,7 @@
 */
 
 import axios from 'axios';
-import createPrint from './print.js';
+import createPrint from './createPrint.js';
 
 async function logError({ error, context = {} }) {
   try {

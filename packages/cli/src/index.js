@@ -28,11 +28,11 @@ import runCommand from './utils/runCommand.js';
 const packageJson = JSON.parse(
   await readFile(new URL('../package.json', import.meta.url).pathname)
 );
-const { description, version } = packageJson;
+const { description, version: cliVersion } = packageJson;
 
 const program = new Command();
 
-program.name('lowdefy').description(description).version(version, '-v, --version');
+program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
 
 program
   .command('build')
@@ -55,7 +55,7 @@ program
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
-  .action(runCommand({ cliVersion: version })(build));
+  .action(runCommand({ cliVersion, handler: build }));
 
 program
   .command('dev')
@@ -83,13 +83,13 @@ program
     '--watch-ignore <paths...>',
     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   )
-  .action(runCommand({ cliVersion: version })(dev));
+  .action(runCommand({ cliVersion, handler: dev }));
 
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
   .usage(`[options]`)
-  .action(runCommand({ cliVersion: version })(init));
+  .action(runCommand({ cliVersion, handler: init }));
 
 program
   .command('start')
@@ -109,6 +109,6 @@ program
     'The package manager to use. Options are "npm" or "yarn".'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
-  .action(runCommand({ cliVersion: version })(start));
+  .action(runCommand({ cliVersion, handler: start }));
 
 program.parse(process.argv);

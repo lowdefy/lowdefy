@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import writePages from './writePages.js';
 import testContext from '../test/testContext.js';
 
