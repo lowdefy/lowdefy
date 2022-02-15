@@ -22,7 +22,7 @@ function createGetActions({ actions, arrayIndices, blockId }) {
       arrayIndices,
       location: blockId,
       object: actions,
-      method: 'getAction',
+      method: 'getActions',
       params,
     });
   };
