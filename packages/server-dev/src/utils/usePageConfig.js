@@ -21,11 +21,8 @@ function fetchPageConfig(url) {
   return request({ url });
 }
 
-function usePageConfig(pageId) {
-  if (!pageId) {
-    pageId = 'NULL';
-  }
-  const { data } = useSWR(`/api/page/${pageId}`, fetchPageConfig, { suspense: true });
+function usePageConfig(pageId, basePath) {
+  const { data } = useSWR(`${basePath}/api/page/${pageId}`, fetchPageConfig, { suspense: true });
   return { data };
 }
 

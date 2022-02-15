@@ -28,6 +28,7 @@
   },
   "type": "module",
   "exports": {
+    ".": "./dist/index.js",
     "./operators/client": "./dist/operatorsClient.js",
     "./operators/server": "./dist/operatorsServer.js",
     "./types": "./dist/types.js"
@@ -50,7 +51,7 @@
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.4.7"
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

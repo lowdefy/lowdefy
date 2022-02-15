@@ -13,10 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import { getFileExtension } from '@lowdefy/node-utils';
 
-jest.mock('@lowdefy/node-utils', () => {
+jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
     getFileExtension,
     readFile: jest.fn(),
@@ -25,7 +26,8 @@ jest.mock('@lowdefy/node-utils', () => {
 
 test('readConfigFile', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
-  nodeUtils.mockImplementation(() => Promise.resove('config value'));
+
+  nodeUtils.readFile.mockImplementation(() => Promise.resolve('config value'));
   const createReadConfigFile = (await import('./readConfigFile.js')).default;
   const readConfigFile = createReadConfigFile({ buildDirectory: '/build' });
   const res = await readConfigFile('file');

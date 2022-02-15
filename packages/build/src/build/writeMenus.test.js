@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import writeMenus from './writeMenus.js';
 import testContext from '../test/testContext.js';
 

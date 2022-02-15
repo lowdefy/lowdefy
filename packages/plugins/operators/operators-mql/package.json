@@ -45,13 +45,13 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/operators": "4.0.0-alpha.6",
-    "mingo": "6.0.0"
+    "mingo": "6.0.4"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.4.7"
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

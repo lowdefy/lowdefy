@@ -20,9 +20,9 @@ import useMutateCache from '../utils/useMutateCache.js';
 import waitForRestartedServer from '../utils/waitForRestartedServer.js';
 
 const Reload = ({ children, lowdefy }) => {
-  const mutateCache = useMutateCache();
+  const mutateCache = useMutateCache(lowdefy.basePath);
   useEffect(() => {
-    const sse = new EventSource('/api/reload');
+    const sse = new EventSource(`${lowdefy.basePath}/api/reload`);
 
     sse.addEventListener('reload', () => {
       mutateCache();

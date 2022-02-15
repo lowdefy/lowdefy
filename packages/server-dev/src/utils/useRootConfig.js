@@ -17,12 +17,12 @@ import request from './request.js';
 
 // TODO: Handle TokenExpiredError
 
-function fetchRootConfig() {
-  return request({ url: '/api/root' });
+function fetchRootConfig(url) {
+  return request({ url });
 }
 
-function useRootConfig() {
-  const { data } = useSWR('root', fetchRootConfig, { suspense: true });
+function useRootConfig(basePath) {
+  const { data } = useSWR(`${basePath}/api/root`, fetchRootConfig, { suspense: true });
   return { data };
 }
 

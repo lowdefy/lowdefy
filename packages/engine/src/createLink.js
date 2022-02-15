@@ -30,25 +30,34 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       // Cannot set input or urlQuery on back
       return backLink(props);
     }
-    const lowdefyUrlQuery = type.isNone(props.urlQuery)
-      ? ''
-      : `?${urlQueryFn.stringify(props.urlQuery)}`;
+    const query = type.isNone(props.urlQuery) ? '' : `${urlQueryFn.stringify(props.urlQuery)}`;
     if (props.home === true) {
-      lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input || {};
+      const pathname = `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}`;
       return sameOriginLink({
-        href: `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}${lowdefyUrlQuery}`,
         ...props,
+        pathname,
+        query,
+        setInput: () => {
+          lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input || {};
+        },
       });
     }
     if (type.isString(props.pageId)) {
-      lowdefy.inputs[`page:${props.pageId}`] = props.input || {};
-      return sameOriginLink({ href: `/${props.pageId}${lowdefyUrlQuery}`, ...props });
+      return sameOriginLink({
+        ...props,
+        pathname: `/${props.pageId}`,
+        query,
+        setInput: () => {
+          lowdefy.inputs[`page:${props.pageId}`] = props.input || {};
+        },
+      });
     }
     if (type.isString(props.url)) {
       const protocol = props.url.includes(':') ? '' : 'https://';
       return newOriginLink({
-        href: `${protocol}${props.url}${lowdefyUrlQuery}`,
         ...props,
+        url: `${protocol}${props.url}`,
+        query,
       });
     }
     return noLink(props);

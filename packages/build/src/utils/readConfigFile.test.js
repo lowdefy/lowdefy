@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import path from 'path';
 
-jest.mock('@lowdefy/node-utils', () => {
+jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
     readFile: jest.fn(),
   };

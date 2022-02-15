@@ -14,25 +14,28 @@
   limitations under the License.
 */
 
-import axios from 'axios';
-import errorHandler from './errorHandler.js';
-import createPrint from './print.js';
+import { jest } from '@jest/globals';
 
-jest.mock('./print', () => {
+jest.unstable_mockModule('./createPrint.js', () => {
   const error = jest.fn();
-  return () => ({
-    error,
-  });
+  return {
+    default: () => ({
+      error,
+    }),
+  };
 });
-jest.mock('axios');
 
-const print = createPrint();
-
-beforeEach(() => {
-  print.error.mockReset();
-});
+jest.unstable_mockModule('axios', () => ({
+  default: {
+    request: jest.fn(),
+  },
+}));
 
 test('Print and log error with full context', async () => {
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const { default: axios } = await import('axios');
+  const { default: createPrint } = await import('./createPrint.js');
+  const print = createPrint();
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
@@ -41,7 +44,6 @@ test('Print and log error with full context', async () => {
     disableTelemetry: false,
   };
   await errorHandler({ context, error });
-
   expect(print.error.mock.calls).toEqual([['Test error']]);
   const axiosArguments = axios.request.mock.calls[0][0];
   expect(axiosArguments.headers).toEqual({
@@ -59,6 +61,10 @@ test('Print and log error with full context', async () => {
 });
 
 test('Print and log error with starting context', async () => {
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const { default: axios } = await import('axios');
+  const { default: createPrint } = await import('./createPrint.js');
+  const print = createPrint();
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
@@ -82,6 +88,10 @@ test('Print and log error with starting context', async () => {
 });
 
 test('Do not log error if telemetry is disabled', async () => {
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const { default: axios } = await import('axios');
+  const { default: createPrint } = await import('./createPrint.js');
+  const print = createPrint();
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
@@ -96,6 +106,10 @@ test('Do not log error if telemetry is disabled', async () => {
 });
 
 test('Pass if logError fails', async () => {
+  const { default: errorHandler } = await import('./errorHandler.js');
+  const { default: axios } = await import('axios');
+  const { default: createPrint } = await import('./createPrint.js');
+  const print = createPrint();
   let didThrow = false;
   axios.request.mockImplementationOnce(() => {
     didThrow = true;

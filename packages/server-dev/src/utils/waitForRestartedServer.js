@@ -20,7 +20,7 @@ function waitForRestartedServer(lowdefy) {
   setTimeout(async () => {
     try {
       await request({
-        url: '/api/ping',
+        url: `${lowdefy.basePath}/api/ping`,
       });
       lowdefy._internal.window.location.reload();
     } catch (error) {
