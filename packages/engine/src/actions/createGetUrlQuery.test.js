@@ -19,16 +19,16 @@ import testContext from '../../test/testContext.js';
 const lowdefy = {
   _internal: {
     actions: {
-      Action: ({ methods: { getInput }, params }) => {
-        return getInput(params);
+      Action: ({ methods: { getUrlQuery }, params }) => {
+        return getUrlQuery(params);
       },
     },
     blockComponents: {
       Button: { meta: { category: 'display' } },
     },
   },
-  inputs: {
-    test: { some: 'data' },
+  urlQuery: {
+    some: 'data',
   },
 };
 
@@ -48,7 +48,7 @@ afterAll(() => {
   global.Date = RealDate;
 });
 
-test('getInput params is true', async () => {
+test('getUrlQuery params is true', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -103,7 +103,7 @@ test('getInput params is true', async () => {
   });
 });
 
-test('getInput params is some', async () => {
+test('getUrlQuery params is some', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -158,7 +158,7 @@ test('getInput params is some', async () => {
   });
 });
 
-test('getInput params is none', async () => {
+test('getUrlQuery params is none', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -202,7 +202,7 @@ test('getInput params is none', async () => {
       action: { id: 'a', type: 'Action' },
       error: {
         error: new Error(
-          'Method Error: getInput params must be of type string, integer, boolean or object. Received: undefined at button.'
+          'Method Error: getUrlQuery params must be of type string, integer, boolean or object. Received: undefined at button.'
         ),
         index: 0,
         type: 'Action',
@@ -213,7 +213,7 @@ test('getInput params is none', async () => {
     responses: {
       a: {
         error: new Error(
-          'Method Error: getInput params must be of type string, integer, boolean or object. Received: undefined at button.'
+          'Method Error: getUrlQuery params must be of type string, integer, boolean or object. Received: undefined at button.'
         ),
         index: 0,
         type: 'Action',
@@ -224,7 +224,7 @@ test('getInput params is none', async () => {
   });
 });
 
-test('getInput params.key is null', async () => {
+test('getUrlQuery params.key is null', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -282,7 +282,7 @@ test('getInput params.key is null', async () => {
   });
 });
 
-test('getInput params.all is true', async () => {
+test('getUrlQuery params.all is true', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -339,7 +339,7 @@ test('getInput params.all is true', async () => {
   });
 });
 
-test('getInput params.key is not string or int', async () => {
+test('getUrlQuery params.key is not string or int', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -394,7 +394,7 @@ test('getInput params.key is not string or int', async () => {
       },
       error: {
         error: new Error(
-          'Method Error: getInput params.key must be of type string or integer. Received: {"key":{}} at button.'
+          'Method Error: getUrlQuery params.key must be of type string or integer. Received: {"key":{}} at button.'
         ),
         index: 0,
         type: 'Action',
@@ -403,7 +403,7 @@ test('getInput params.key is not string or int', async () => {
     responses: {
       a: {
         error: new Error(
-          'Method Error: getInput params.key must be of type string or integer. Received: {"key":{}} at button.'
+          'Method Error: getUrlQuery params.key must be of type string or integer. Received: {"key":{}} at button.'
         ),
         index: 0,
         type: 'Action',
@@ -414,7 +414,7 @@ test('getInput params.key is not string or int', async () => {
   });
 });
 
-test('getInput params.key is some', async () => {
+test('getUrlQuery params.key is some', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
