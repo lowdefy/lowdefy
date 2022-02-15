@@ -24,7 +24,7 @@ function DisplayMessage({ methods: { displayMessage }, params }) {
       )}".`
     );
   }
-  if (type.isNull(params) || type.isUndefined(params)) {
+  if (type.isNone(params)) {
     displayMessage({ content: 'Success' });
   }
   if (type.isObject(params)) {
