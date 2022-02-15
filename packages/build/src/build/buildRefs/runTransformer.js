@@ -25,10 +25,9 @@ async function runTransformer({ context, parsedFile, refDef }) {
     try {
       return transformerFn(parsedFile, refDef.vars);
     } catch (error) {
-      context.logger.error(
+      throw Error(
         `Error calling transformer "${refDef.transformer}" from "${refDef.path}": ${error.message}`
       );
-      throw Error(error);
     }
   }
   return parsedFile;
