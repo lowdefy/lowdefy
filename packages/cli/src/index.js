@@ -55,6 +55,10 @@ program
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
+  .option(
+    '--server-directory <server-directory>',
+    'Change the server directory. Default is "<config-directory>/.lowdefy/server".'
+  )
   .action(runCommand({ cliVersion, handler: build }));
 
 program
@@ -83,6 +87,10 @@ program
     '--watch-ignore <paths...>',
     'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   )
+  .option(
+    '--dev-directory <dev-directory>',
+    'Change the development server directory. Default is "<config-directory>/.lowdefy/dev".'
+  )
   .action(runCommand({ cliVersion, handler: dev }));
 
 program
@@ -109,6 +117,10 @@ program
     'The package manager to use. Options are "npm" or "yarn".'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
+  .option(
+    '--server-directory <server-directory>',
+    'Change the server directory. Default is "<config-directory>/.lowdefy/server".'
+  )
   .action(runCommand({ cliVersion, handler: start }));
 
 program.parse(process.argv);

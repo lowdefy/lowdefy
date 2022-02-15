@@ -25,7 +25,7 @@ test('default directories', () => {
   expect(directories).toEqual({
     build: '/test/config/.lowdefy/server/build',
     config: '/test/config',
-    devServer: '/test/config/.lowdefy/dev',
+    dev: '/test/config/.lowdefy/dev',
     dotLowdefy: '/test/config/.lowdefy',
     server: '/test/config/.lowdefy/server',
   });
@@ -42,8 +42,42 @@ test('specify outputDirectory in options', () => {
   expect(directories).toEqual({
     build: '/test/out/server/build',
     config: '/test/config',
-    devServer: '/test/out/dev',
+    dev: '/test/out/dev',
     dotLowdefy: '/test/out',
     server: '/test/out/server',
+  });
+});
+
+test('specify serverDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      serverDirectory: '/test/server',
+    },
+  });
+
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/config/.lowdefy/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/server',
+  });
+});
+
+test('specify devDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      devDirectory: '/test/dev',
+    },
+  });
+
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/config/.lowdefy/server',
   });
 });

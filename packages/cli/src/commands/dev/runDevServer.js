@@ -22,7 +22,7 @@ async function runDevServer({ context }) {
     args: ['run', 'start'],
     command: context.packageManager, // npm or yarn
     processOptions: {
-      cwd: context.directories.devServer,
+      cwd: context.directories.dev,
       env: {
         ...process.env,
         LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
