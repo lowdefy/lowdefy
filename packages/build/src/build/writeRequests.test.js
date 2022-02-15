@@ -224,12 +224,6 @@ test('writeRequests empty pages array', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
-test('writeRequests no pages array', async () => {
-  const components = {};
-  await writeRequests({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
-});
-
 test('writeRequests deletes request properties', async () => {
   const components = {
     pages: [

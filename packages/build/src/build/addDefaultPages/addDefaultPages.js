@@ -29,7 +29,12 @@ async function addDefaultPages({ components }) {
     throw new Error('lowdefy.pages is not an array.');
   }
 
-  const pageIds = components.pages.map((page) => page.id);
+  const pageIds = components.pages.map((page, index) => {
+    if (!type.isObject(page)) {
+      throw new Error(`pages[${index}] is not an object. Received ${JSON.stringify(page)}`);
+    }
+    return page.id;
+  });
   // deep copy to avoid mutating defaultConfig
   const filteredDefaultPages = defaultPages.filter(
     (defaultPage) => !pageIds.includes(defaultPage.id)

@@ -99,25 +99,3 @@ test('writePages no pages', async () => {
   await writePages({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
-
-test('writePages pages undefined', async () => {
-  const components = {};
-  await writePages({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
-});
-
-test('writePages pages not an array', async () => {
-  const components = {
-    pages: 'pages',
-  };
-  await expect(writePages({ components, context })).rejects.toThrow('Pages is not an array.');
-});
-
-test('writePages page is not an object', async () => {
-  const components = {
-    pages: ['page'],
-  };
-  await expect(writePages({ components, context })).rejects.toThrow(
-    'Page is not an object. Received "page"'
-  );
-});
