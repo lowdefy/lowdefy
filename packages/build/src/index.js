@@ -84,40 +84,34 @@ async function createContext(options) {
 
 async function build(options) {
   const context = await createContext(options);
-  try {
-    const components = await buildRefs({ context });
-    await testSchema({ components, context });
-    await validateApp({ components, context });
-    await validateConfig({ components, context });
-    await addDefaultPages({ components, context });
-    await buildAuth({ components, context });
-    await buildConnections({ components, context });
-    await buildPages({ components, context });
-    await buildMenu({ components, context });
-    await buildTypes({ components, context });
-    await buildIcons({ components, context });
-    await buildStyles({ components, context });
-    await cleanBuildDirectory({ context });
-    await writeApp({ components, context });
-    await writeConnections({ components, context });
-    await writeRequests({ components, context });
-    await writePages({ components, context });
-    await writeConfig({ components, context });
-    await writeGlobal({ components, context });
-    await writeMenus({ components, context });
-    await writeTypes({ components, context });
-    await writeActionImports({ components, context });
-    await writeBlockImports({ components, context });
-    await writeConnectionImports({ components, context });
-    await writeOperatorImports({ components, context });
-    await writeStyleImports({ components, context });
-    await writeIconImports({ components, context });
-    await updateServerPackageJson({ components, context });
-    await copyPublicFolder({ components, context });
-  } catch (error) {
-    context.logger.error(error);
-    throw error;
-  }
+  const components = await buildRefs({ context });
+  await testSchema({ components, context });
+  await validateApp({ components, context });
+  await validateConfig({ components, context });
+  await addDefaultPages({ components, context });
+  await buildAuth({ components, context });
+  await buildConnections({ components, context });
+  await buildPages({ components, context });
+  await buildMenu({ components, context });
+  await buildTypes({ components, context });
+  await buildIcons({ components, context });
+  await buildStyles({ components, context });
+  await cleanBuildDirectory({ context });
+  await writeApp({ components, context });
+  await writeConnections({ components, context });
+  await writeRequests({ components, context });
+  await writePages({ components, context });
+  await writeConfig({ components, context });
+  await writeGlobal({ components, context });
+  await writeMenus({ components, context });
+  await writeTypes({ components, context });
+  await writeBlockImports({ components, context });
+  await writeConnectionImports({ components, context });
+  await writeOperatorImports({ components, context });
+  await writeStyleImports({ components, context });
+  await writeIconImports({ components, context });
+  await updateServerPackageJson({ components, context });
+  await copyPublicFolder({ components, context });
 }
 
 export { createContext };

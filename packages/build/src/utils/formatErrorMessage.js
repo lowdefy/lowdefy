@@ -17,7 +17,7 @@
 import { get, type } from '@lowdefy/helpers';
 
 function formatArrayKey({ index, object }) {
-  if (!type.isNone(object.id) || !type.isNone(object.type)) {
+  if (type.isObject(object) && (!type.isNone(object.id) || !type.isNone(object.type))) {
     const objectId = type.isNone(object.id) ? '_ERROR_MISSING_ID_' : object.id;
     const objectType = type.isNone(object.type) ? '_ERROR_MISSING_TYPE_' : object.type;
     return `[${index}:${objectId}:${objectType}]`;

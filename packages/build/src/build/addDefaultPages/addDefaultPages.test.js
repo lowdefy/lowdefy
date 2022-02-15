@@ -204,6 +204,15 @@ test('addDefaultPages, pages not an array', async () => {
   );
 });
 
+test('addDefaultPages, with a page not an object', async () => {
+  const components = {
+    pages: [null],
+  };
+  await expect(addDefaultPages({ components, context })).rejects.toThrow(
+    'pages[0] is not an object. Received null'
+  );
+});
+
 test('addDefaultPages, pages are copied', async () => {
   const components1 = {};
   const res1 = await addDefaultPages({ components: components1, context });

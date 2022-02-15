@@ -17,36 +17,38 @@
 import fs from 'fs';
 import path from 'path';
 import { cleanDirectory, readFile } from '@lowdefy/node-utils';
-import fetchNpmTarball from '../../utils/fetchNpmTarball.js';
+import fetchNpmTarball from './fetchNpmTarball.js';
 
-async function getServer({ context }) {
+async function getServer({ context, packageName }) {
+  if (context.lowdefyVersion === 'local') {
+    context.print.warn(`Running local ${packageName}.`);
+    return;
+  }
+
   let fetchServer = false;
 
-  const serverExists = fs.existsSync(path.join(context.directories.devServer, 'package.json'));
+  const serverExists = fs.existsSync(path.join(context.directories.server, 'package.json'));
   if (!serverExists) fetchServer = true;
 
   if (serverExists) {
     const serverPackageConfig = JSON.parse(
-      await readFile(path.join(context.directories.devServer, 'package.json'))
+      await readFile(path.join(context.directories.server, 'package.json'))
     );
     if (serverPackageConfig.version !== context.lowdefyVersion) {
       fetchServer = true;
-      context.print.warn(
-        `Removing @lowdefy/server-dev with version ${serverPackageConfig.version}`
-      );
-      await cleanDirectory(context.directories.devServer);
+      context.print.warn(`Removing @lowdefy/server with version ${serverPackageConfig.version}`);
+      await cleanDirectory(context.directories.server);
     }
   }
 
   if (fetchServer) {
-    context.print.spin('Fetching @lowdefy/server-dev from npm.');
+    context.print.spin('Fetching @lowdefy/server from npm.');
     await fetchNpmTarball({
-      packageName: '@lowdefy/server-dev',
+      packageName,
       version: context.lowdefyVersion,
-      directory: context.directories.devServer,
+      directory: context.directories.server,
     });
-    context.print.log('Fetched @lowdefy/server-dev from npm.');
-    return;
+    context.print.log('Fetched @lowdefy/server from npm.');
   }
 }
 

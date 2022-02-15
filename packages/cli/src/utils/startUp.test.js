@@ -57,7 +57,7 @@ test('startUp, options empty', async () => {
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
-      devServer: path.resolve(process.cwd(), './.lowdefy/dev'),
+      dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -104,7 +104,7 @@ test('startUp, options undefined', async () => {
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
-      devServer: path.resolve(process.cwd(), './.lowdefy/dev'),
+      dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -150,7 +150,7 @@ test('startUp, options configDirectory', async () => {
     directories: {
       build: path.resolve(process.cwd(), './configDirectory/.lowdefy/server/build'),
       config: path.resolve(process.cwd(), './configDirectory'),
-      devServer: path.resolve(process.cwd(), './configDirectory/.lowdefy/dev'),
+      dev: path.resolve(process.cwd(), './configDirectory/.lowdefy/dev'),
       dotLowdefy: path.resolve(process.cwd(), './configDirectory/.lowdefy'),
       server: path.resolve(process.cwd(), './configDirectory/.lowdefy/server'),
     },
@@ -180,7 +180,7 @@ test('startUp, options outputDirectory', async () => {
     directories: {
       build: path.resolve(process.cwd(), './outputDirectory/server/build'),
       config: path.resolve(process.cwd()),
-      devServer: path.resolve(process.cwd(), './outputDirectory/dev'),
+      dev: path.resolve(process.cwd(), './outputDirectory/dev'),
       dotLowdefy: path.resolve(process.cwd(), './outputDirectory'),
       server: path.resolve(process.cwd(), './outputDirectory/server'),
     },
@@ -220,7 +220,7 @@ test('startUp, options configDirectory and outputDirectory', async () => {
     directories: {
       build: path.resolve(process.cwd(), './outputDirectory/server/build'),
       config: path.resolve(process.cwd(), './configDirectory'),
-      devServer: path.resolve(process.cwd(), './outputDirectory/dev'),
+      dev: path.resolve(process.cwd(), './outputDirectory/dev'),
       dotLowdefy: path.resolve(process.cwd(), './outputDirectory'),
       server: path.resolve(process.cwd(), './outputDirectory/server'),
     },
@@ -254,7 +254,7 @@ test('startUp, no lowdefyVersion returned', async () => {
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
-      devServer: path.resolve(process.cwd(), './.lowdefy/dev'),
+      dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
