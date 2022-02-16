@@ -17,9 +17,9 @@
 import React, { useEffect, useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
-import { Upload } from 'antd';
+import { Button } from '@lowdefy/blocks-antd/blocks';
 
-import Button from '../Button/Button.js';
+import { Upload } from 'antd';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;

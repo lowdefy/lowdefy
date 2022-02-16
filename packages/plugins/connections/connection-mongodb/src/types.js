@@ -23,18 +23,3 @@ export default {
     .map((connection) => Object.keys(connections[connection].requests))
     .flat(),
 };
-
-// export default {
-//   connections: ['MongoDBCollection'],
-//   requests: [
-//     MongoDBAggregation,
-//     MongoDBDeleteMany,
-//     MongoDBDeleteOne,
-//     MongoDBFind,
-//     MongoDBFindOne,
-//     MongoDBInsertMany,
-//     MongoDBInsertOne,
-//     MongoDBUpdateMany,
-//     MongoDBUpdateOne,
-//   ],
-// };

@@ -17,11 +17,12 @@
 import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
 
-import awsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy.js';
-import requestIndex from './index.js';
-import schema from './AwsS3PresignedPostPolicySchema.json';
+import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy.js';
 
 jest.mock('aws-sdk');
+
+const schema = AwsS3PresignedPostPolicy.schema;
+const { checkRead, checkWrite } = AwsS3PresignedPostPolicy.meta;
 
 const mockCreatePresignedPost = jest.fn();
 const createPresignedPostMockImp = () => 'res';
@@ -32,8 +33,6 @@ const s3ConstructorMockImp = () => ({
 
 AWS.S3 = mockS3Constructor;
 
-const { checkRead, checkWrite } = requestIndex.meta;
-
 beforeEach(() => {
   mockCreatePresignedPost.mockReset();
   mockS3Constructor.mockReset();
@@ -41,7 +40,7 @@ beforeEach(() => {
   mockS3Constructor.mockImplementation(s3ConstructorMockImp);
 });
 
-test('awsS3PresignedPostPolicy', () => {
+test('AwsS3PresignedPostPolicy', () => {
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -50,7 +49,7 @@ test('awsS3PresignedPostPolicy', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = awsS3PresignedPostPolicy({ request, connection });
+  const res = AwsS3PresignedPostPolicy({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -74,7 +73,7 @@ test('awsS3PresignedPostPolicy', () => {
   expect(res).toEqual('res');
 });
 
-test('awsS3PresignedPostPolicy options ', async () => {
+test('AwsS3PresignedPostPolicy options ', async () => {
   const request = {
     key: 'key',
     acl: 'private',
@@ -88,7 +87,7 @@ test('awsS3PresignedPostPolicy options ', async () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = awsS3PresignedPostPolicy({ request, connection });
+  const res = AwsS3PresignedPostPolicy({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -127,7 +126,7 @@ test('Error from s3 client', async () => {
     bucket: 'bucket',
     write: true,
   };
-  await expect(() => awsS3PresignedPostPolicy({ request, connection })).toThrow(
+  await expect(() => AwsS3PresignedPostPolicy({ request, connection })).toThrow(
     'Test S3 client error.'
   );
 });
