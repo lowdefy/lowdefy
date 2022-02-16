@@ -47,9 +47,9 @@ _ref:
           title: Generate a CSV
           color: '#1890ff'
         events:
-          onClick:
-            - id: generate_csv
-              type: JsAction
+          onClick: []
+            {# - id: generate_csv
+              type: JsAction # TODO:
               params:
                 name: csvMake
                 args:
@@ -77,7 +77,7 @@ _ref:
                   - - Username           # an array of field definitions
                     - Identifier
                     - FirstName
-                    - LastName
+                    - LastName #}
 
       - id: md2
         type: MarkdownWithCode
@@ -211,7 +211,7 @@ _ref:
                         events:
                           onClick:
                             - id: generate_csv
-                              type: JsAction
+                              type: JsAction # TODO:
                               params:
                                 name: csvMake
                                 args:

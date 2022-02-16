@@ -110,7 +110,7 @@ _ref:
                 events:
                   onEnter:
                     - id: get_todos
-                      type: JsAction
+                      type: JsAction # TODO:
                       params:
                         name: fetchTodos # Trigger the custom JavaScript action.
                         args:
