@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Skeleton
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Skeleton/Skeleton.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Skeleton/schema.json
     filePath: blocks/display/Skeleton.yaml
     description_content: |
       Skeleton block to use as a loading place holder.
@@ -25,4 +25,3 @@ _ref:
     examples:
       - title: Basic skeleton
         properties: '{}'
-      

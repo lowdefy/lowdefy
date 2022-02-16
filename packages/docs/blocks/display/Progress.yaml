@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Progress
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Progress/Progress.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.json
     filePath: blocks/display/Progress.yaml
     init_property_values:
       percent: 30
@@ -29,25 +29,24 @@ _ref:
         block:
           id: line_example
           type: Progress
-          properties: 
+          properties:
             type: line
             percent: 60
-            strokeColor: "#fcb900"
+            strokeColor: '#fcb900'
             status: active
       - title: Circle progress
         block:
           id: circle_example
           type: Progress
-          properties: 
-            type: circle 
+          properties:
+            type: circle
             percent: 60
-            strokeColor: "#52c41a"
+            strokeColor: '#52c41a'
       - title: Dashboard progress
         block:
           id: dashboard_example
           type: Progress
-          properties: 
+          properties:
             type: dashboard
             percent: 60
-            strokeColor: "#1890ff"
-      
+            strokeColor: '#1890ff'

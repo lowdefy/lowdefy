@@ -17,12 +17,12 @@ _ref:
   vars:
     block_type: Html
     category: display
-    schema: ../blocks/blocksBasic/src/blocks/Html/Html.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Html/schema.json
     filePath: blocks/display/Html.yaml
     init_property_values:
       html: <a href="https://lowdefy.com">Lowdefy Website</a>
     description_content: |
-      A block to render HTML. 
+      A block to render HTML.
 
       > The Html block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) default configuration. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the Html block. In short, it is strongly advised to never render any user input Html content, only render hardcoded or trusted HTML content.
 

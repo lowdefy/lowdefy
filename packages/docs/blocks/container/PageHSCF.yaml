@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageHSCF
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/PageHSCF/PageHSCF.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHSCF/schema.json
     filePath: blocks/container/PageHSCF.yaml
     description_content: |
       Page HSCF provides a minimal layout structure for a page container with a header, sider, content, and footer arrangement.

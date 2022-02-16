@@ -18,7 +18,7 @@ _ref:
     block_type: AutoComplete
     value_type: string
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/AutoComplete/AutoComplete.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/AutoComplete/schema.json
     filePath: blocks/input/AutoComplete.yaml
     init_property_values:
       options:
@@ -28,4 +28,3 @@ _ref:
       The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
 
       >If you need the user to select only from a list of options, use a block like the `Selector` block instead.
-

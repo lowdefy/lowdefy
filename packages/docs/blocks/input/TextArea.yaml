@@ -18,11 +18,10 @@ _ref:
     block_type: TextArea
     value_type: string
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/TextArea/TextArea.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TextArea/schema.json
     filePath: blocks/input/TextArea.yaml
     init_state_values:
       __type_block.properties.autoSize: boolean
       __boolean_block.properties.autoSize: true
     description_content: |
       The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
-      

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Result
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Result/Result.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.json
     filePath: blocks/container/Result.yaml
     description_content: |
       Used to provide feedback the results of a task or error.
@@ -29,6 +29,6 @@ _ref:
         block:
           id: error_example
           type: Result
-          properties: 
+          properties:
             status: 500
             title: An error occurred

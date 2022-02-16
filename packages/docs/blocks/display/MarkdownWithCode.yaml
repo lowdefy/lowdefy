@@ -17,19 +17,19 @@ _ref:
   vars:
     block_type: MarkdownWithCode
     category: display
-    schema: ../blocks/blocksMarkdown/src/blocks/MarkdownWithCode/MarkdownWithCode.json
+    schema: ../plugins/blocks/blocks-markdown/src/blocks/MarkdownWithCode/schema.json
     filePath: blocks/display/MarkdownWithCode.yaml
     init_property_values:
       content: |
         ### Some JS Math:
         ```js
-          true + true; // -> 2
+          # true + true; // -> 2
           (true + true) * (true + true) - true; // -> 3
         ```
         Hmmm… 🤔
 
         Fine the explanation [here](https://github.com/denysdovhan/wtfjs#math-with-true-and-false)
-        
+
     description_content: |
       Render markdown content with code highlighting support. Currently, the following languages are supported:
       - HTML: `html`
@@ -42,7 +42,5 @@ _ref:
       - Typescript: `typescript`, `ts`,
       - XML: `xml`
       - YAML: `yaml`
-      
+
       > For more details on markdown syntax see: [Markdown cheat sheet](https://guides.github.com/features/mastering-markdown/).
-    
-    

@@ -18,10 +18,9 @@ _ref:
     block_type: MonthSelector
     value_type: date
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/MonthSelector/MonthSelector.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MonthSelector/schema.json
     filePath: blocks/input/MonthSelector.yaml
     description_content: |
       The `MonthSelector` block allows a user to select a month. The value is a date object, with day and time values of midnight on the first day of the month GMT.
 
       > Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `WeekSelector`.
-

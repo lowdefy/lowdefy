@@ -84,7 +84,7 @@ _ref:
         properties:
           block: true
           hideActionLoading: true
-          icon: RocketOutlined
+          icon: AiOutlinedRocket
           size: large
           title: Start the tutorial
           type: primary

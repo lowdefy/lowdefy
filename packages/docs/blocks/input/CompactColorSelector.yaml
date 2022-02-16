@@ -18,8 +18,7 @@ _ref:
     block_type: CompactColorSelector
     value_type: string
     category: input
-    schema: ../blocks/blocksColorSelectors/src/blocks/CompactColorSelector/CompactColorSelector.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/CompactColorSelector/schema.json
     filePath: blocks/input/CompactColorSelector.yaml
     description_content: |
       A compact color selector component.
-

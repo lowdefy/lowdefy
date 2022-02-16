@@ -18,7 +18,7 @@ _ref:
     block_type: RadioSelector
     value_type: any
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/RadioSelector/RadioSelector.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/RadioSelector/schema.json
     filePath: blocks/input/RadioSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]

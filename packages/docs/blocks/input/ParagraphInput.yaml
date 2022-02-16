@@ -18,7 +18,7 @@ _ref:
     block_type: ParagraphInput
     value_type: string
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/ParagraphInput/ParagraphInput.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ParagraphInput/schema.json
     filePath: blocks/input/ParagraphInput.yaml
     init_state_values:
       __type_block.properties.copyable: boolean

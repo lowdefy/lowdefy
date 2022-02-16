@@ -18,7 +18,7 @@ _ref:
     block_type: CheckboxSwitch
     value_type: any[]
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/CheckboxSwitch/CheckboxSwitch.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/schema.json
     filePath: blocks/input/CheckboxSwitch.yaml
     description_content: |
       The `CheckboxSwitch` block allows a user to select a boolean value between (true/false).
