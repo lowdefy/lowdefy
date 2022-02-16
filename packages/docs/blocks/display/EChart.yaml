@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: EChart
     category: display
-    schema: ../blocks/blocksECharts/src/blocks/EChart/EChart.json
+    schema: ../plugins/blocks/blocks-echarts/src/blocks/EChart/schema.json
     filePath: blocks/display/EChart.yaml
     init_property_values:
       option: |

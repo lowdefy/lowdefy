@@ -53,12 +53,12 @@ _ref:
         key:
           _state: status
         from:
-          new: PlusCircleTwoTone
-          escalated: ExclamationCircleOutlined
-          investigation_started: ToolTwoTone
-          client_contacted: SoundTwoTone
-          awaiting_confirmation: LikeOutlined
-          closed: StopOutlined
+          new: AiTwoTonePlusCircle
+          escalated: AiOutlinedExclamationCircle
+          investigation_started: AiTwoToneTool
+          client_contacted: AiTwoToneSound
+          awaiting_confirmation: AiOutlinedLike
+          closed: AiOutlinedStop
       ```
       Returns: The icon corresponding to the status in state.
 

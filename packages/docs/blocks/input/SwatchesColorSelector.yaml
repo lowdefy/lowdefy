@@ -18,7 +18,7 @@ _ref:
     block_type: SwatchesColorSelector
     value_type: string
     category: input
-    schema: ../blocks/blocksColorSelectors/src/blocks/SwatchesColorSelector/SwatchesColorSelector.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/SwatchesColorSelector/schema.json
     filePath: blocks/input/SwatchesColorSelector.yaml
     description_content: |
       A swatches color selector component.

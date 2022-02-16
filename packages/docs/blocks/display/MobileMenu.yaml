@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: MobileMenu
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/MobileMenu/MobileMenu.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/MobileMenu/schema.json
     description_content: |
       A menu designed for mobile devices. Renders a button that opens a Drawer with the menu inside. This menu is used by default in `PageHeaderMenu` and `PageSiderMenu` on mobile devices.
     init_state_values:
@@ -26,13 +26,13 @@ _ref:
           type: MenuLink
           pageId: home
           properties:
-            icon: HomeOutlined
+            icon: AiOutlinedHome
             title: Home
         - id: pages
           type: MenuGroup
           properties:
             title: Pages
-            icon: LayoutOutlined
+            icon: AiOutlinedLayout
           links:
             - id: page1
               type: MenuLink
@@ -45,4 +45,3 @@ _ref:
                 - id: page3
                   type: MenuLink
                   pageId: page3
-

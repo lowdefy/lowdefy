@@ -18,7 +18,7 @@ _ref:
     block_type: Selector
     value_type: any
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/Selector/Selector.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/schema.json
     filePath: blocks/input/Selector.yaml
     init_state_values:
       __type_block.properties.options: object[]

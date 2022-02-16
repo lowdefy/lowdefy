@@ -74,7 +74,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          icon: WarningFilled
+          icon: AiFilledWarning
           description: When updating your app to a new Lowdefy version, make sure to update the Lowdefy version in the Dockerfile
 
       - id: md2

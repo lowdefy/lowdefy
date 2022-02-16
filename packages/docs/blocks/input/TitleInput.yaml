@@ -18,7 +18,7 @@ _ref:
     block_type: TitleInput
     value_type: string
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/TitleInput/TitleInput.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TitleInput/schema.json
     filePath: blocks/input/TitleInput.yaml
     init_state_values:
       __type_block.properties.copyable: boolean

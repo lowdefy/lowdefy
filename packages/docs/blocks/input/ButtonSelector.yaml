@@ -18,7 +18,7 @@ _ref:
     block_type: ButtonSelector
     value_type: any
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/ButtonSelector/ButtonSelector.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ButtonSelector/schema.json
     filePath: blocks/input/ButtonSelector.yaml
     init_state_values:
       __type_block.properties.options: object[]
@@ -34,4 +34,3 @@ _ref:
       The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
       > Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
-

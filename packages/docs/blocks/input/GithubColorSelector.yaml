@@ -18,8 +18,7 @@ _ref:
     block_type: GithubColorSelector
     value_type: string
     category: input
-    schema: ../blocks/blocksColorSelectors/src/blocks/GithubColorSelector/GithubColorSelector.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/GithubColorSelector/schema.json
     filePath: blocks/input/GithubColorSelector.yaml
     description_content: |
       A color selector component similar to the Github color selector.
-

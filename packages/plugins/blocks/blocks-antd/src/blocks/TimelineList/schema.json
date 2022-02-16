@@ -5,7 +5,10 @@
     "additionalProperties": false,
     "properties": {
       "data": {
-        "type": "array"
+        "type": "array",
+        "docs": {
+          "displayType": "yaml"
+        }
       },
       "style": {
         "type": "object",

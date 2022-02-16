@@ -68,7 +68,7 @@ pages:
                   title: Generate PDF from data with Lowdefy
                   subTitle: <a href="https://docs.lowdefy.com/generate-pdf-document-from-data">Read the full how to guide</a>
                   icon:
-                    name: PrinterTwoTone
+                    name: AiTwoTonePrinter
                     color: '#ff0000'
                 areas:
                   extra:

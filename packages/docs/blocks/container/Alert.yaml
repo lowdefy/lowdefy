@@ -17,8 +17,8 @@ _ref:
   vars:
     block_type: Alert
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Alert/Alert.json
-    filePath: blocks/display/Alert.yaml
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Alert/schema.json
+    filePath: blocks/container/Alert.yaml
     init_property_values:
       message: Alerts help to highlight important information.
     description_content: |

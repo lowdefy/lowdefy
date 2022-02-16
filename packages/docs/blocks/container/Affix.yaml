@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Affix
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Affix/Affix.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Affix/schema.json
     filePath: blocks/container/Affix.yaml
     description_content: |
       An Affix block makes it's content stick to the viewport.

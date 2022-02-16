@@ -64,7 +64,10 @@ function buildEvents(block, pageContext) {
           }". Received ${JSON.stringify(block.events[key].try)}`
         );
       }
-      if (!type.isArray(block.events[key].catch) && !type.isNone(block.events[key].catch)) {
+      if (type.isNone(block.events[key].catch)) {
+        block.events[key].catch = [];
+      }
+      if (!type.isArray(block.events[key].catch)) {
         throw new Error(
           `Catch events must be an array of actions at "${
             block.blockId

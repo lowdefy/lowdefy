@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Tabs
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Tabs/Tabs.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Tabs/schema.json
     description_content: |
       Tabs to easily switch between different views.
       The key of each tabs is the area keys of the container and there is an `extra` content area.
@@ -26,7 +26,7 @@ _ref:
       block.properties.tabs:
         - key: tab1
           title: Tab 1
-          icon: MenuOutlined
+          icon: AiOutlinedMenu
         - key: tab2
           title: Tab 2
         - key: tab3
