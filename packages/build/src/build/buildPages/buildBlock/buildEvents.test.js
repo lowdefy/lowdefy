@@ -120,6 +120,42 @@ test('block events actions as try catch arrays', async () => {
   ]);
 });
 
+test('block events actions as try array and catch not defined.', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block_1',
+            type: 'Input',
+            events: {
+              onClick: {
+                try: [
+                  {
+                    id: 'action_1',
+                    type: 'Reset',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const res = await buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+    {
+      id: 'action_1',
+      type: 'Reset',
+    },
+  ]);
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+});
+
 test('block events actions try not an array', async () => {
   const components = {
     pages: [
