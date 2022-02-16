@@ -97,6 +97,7 @@ async function build(options) {
   await buildIcons({ components, context });
   await buildStyles({ components, context });
   await cleanBuildDirectory({ context });
+  await writeActionImports({ components, context });
   await writeApp({ components, context });
   await writeConnections({ components, context });
   await writeRequests({ components, context });
