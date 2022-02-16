@@ -53,12 +53,12 @@ function buildTypes({ components, context }) {
     },
   };
 
-  // buildTypeClass({
-  //   counter: typeCounters.actions,
-  //   definitions: context.types.actions,
-  //   store: components.types.actions,
-  //   typeClass: 'Action',
-  // });
+  buildTypeClass(context, {
+    counter: typeCounters.actions,
+    definitions: context.types.actions,
+    store: components.types.actions,
+    typeClass: 'Action',
+  });
 
   buildTypeClass(context, {
     counter: typeCounters.blocks,

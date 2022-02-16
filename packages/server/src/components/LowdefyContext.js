@@ -16,6 +16,7 @@
 
 import React from 'react';
 
+import actions from '../../build/plugins/actions.js';
 import callRequest from '../utils/callRequest.js';
 import blockComponents from '../../build/plugins/blocks.js';
 import operators from '../../build/plugins/operatorsClient.js';
@@ -23,6 +24,7 @@ import operators from '../../build/plugins/operatorsClient.js';
 const LowdefyContext = ({ children, lowdefy }) => {
   if (!lowdefy._internal) {
     lowdefy._internal = {
+      actions,
       blockComponents,
       callRequest,
       components: {},

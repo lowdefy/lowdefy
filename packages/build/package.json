@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@jest/globals": "27.5.1",
+    "@lowdefy/actions-core": "4.0.0-alpha.6",
     "@lowdefy/blocks-antd": "4.0.0-alpha.6",
     "@lowdefy/blocks-basic": "4.0.0-alpha.6",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.6",

@@ -38,6 +38,7 @@ import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
+import writeActionImports from './build/writePluginImports/writeActionImports.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
