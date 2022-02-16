@@ -17,11 +17,12 @@
 import { validate } from '@lowdefy/ajv';
 import AWS from 'aws-sdk';
 
-import awsS3PresignedGetObject from './AwsS3PresignedGetObject.js';
-import requestIndex from './index.js';
-import schema from './AwsS3PresignedGetObjectSchema.json';
+import AwsS3PresignedGetObject from './AwsS3PresignedGetObject.js';
 
 jest.mock('aws-sdk');
+
+const schema = AwsS3PresignedGetObject.schema;
+const { checkRead, checkWrite } = AwsS3PresignedGetObject.meta;
 
 const mockGetSignedUrl = jest.fn();
 const getSignedUrlMockImp = () => 'res';
@@ -32,8 +33,6 @@ const s3ConstructorMockImp = () => ({
 
 AWS.S3 = mockS3Constructor;
 
-const { checkRead, checkWrite } = requestIndex.meta;
-
 beforeEach(() => {
   mockGetSignedUrl.mockReset();
   mockS3Constructor.mockReset();
@@ -41,7 +40,7 @@ beforeEach(() => {
   mockS3Constructor.mockImplementation(s3ConstructorMockImp);
 });
 
-test('awsS3PresignedGetObject', () => {
+test('AwsS3PresignedGetObject', () => {
   const request = { key: 'key' };
   const connection = {
     accessKeyId: 'accessKeyId',
@@ -50,7 +49,7 @@ test('awsS3PresignedGetObject', () => {
     write: true,
     bucket: 'bucket',
   };
-  const res = awsS3PresignedGetObject({ request, connection });
+  const res = AwsS3PresignedGetObject({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -73,7 +72,7 @@ test('awsS3PresignedGetObject', () => {
   expect(res).toEqual('res');
 });
 
-test('awsS3PresignedGetObject options ', async () => {
+test('AwsS3PresignedGetObject options ', async () => {
   const request = {
     key: 'key',
     versionId: 'versionId',
@@ -87,7 +86,7 @@ test('awsS3PresignedGetObject options ', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  const res = awsS3PresignedGetObject({ request, connection });
+  const res = AwsS3PresignedGetObject({ request, connection });
   expect(mockS3Constructor.mock.calls).toEqual([
     [
       {
@@ -133,7 +132,7 @@ test('Error from s3 client', async () => {
     region: 'region',
     bucket: 'bucket',
   };
-  await expect(() => awsS3PresignedGetObject({ request, connection })).toThrow(
+  await expect(() => AwsS3PresignedGetObject({ request, connection })).toThrow(
     'Test S3 client error.'
   );
 });

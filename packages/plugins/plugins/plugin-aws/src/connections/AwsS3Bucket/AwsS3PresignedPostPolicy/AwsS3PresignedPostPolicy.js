@@ -15,8 +15,9 @@
 */
 
 import AWS from 'aws-sdk';
+import schema from './schema.js';
 
-function awsS3PresignedPostPolicy({ request, connection }) {
+function AwsS3PresignedPostPolicy({ request, connection }) {
   const { accessKeyId, secretAccessKey, region, bucket } = connection;
   const { acl, conditions, expires, key } = request;
   const params = {
@@ -38,4 +39,10 @@ function awsS3PresignedPostPolicy({ request, connection }) {
   return s3.createPresignedPost(params);
 }
 
-export default awsS3PresignedPostPolicy;
+AwsS3PresignedPostPolicy.schema = schema;
+AwsS3PresignedPostPolicy.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default AwsS3PresignedPostPolicy;

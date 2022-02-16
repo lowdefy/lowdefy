@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/index.js';
-import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/index.js';
+import AwsS3PresignedGetObject from './AwsS3PresignedGetObject/AwsS3PresignedGetObject.js';
+import AwsS3PresignedPostPolicy from './AwsS3PresignedPostPolicy/AwsS3PresignedPostPolicy.js';
+import schema from './schema.js';
 
 export default {
-  import: {
-    schema: 'connections/AwsS3Bucket/AwsS3BucketSchema.json',
-  },
+  schema,
   requests: {
     AwsS3PresignedGetObject,
     AwsS3PresignedPostPolicy,
