@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 async function writeRequestsOnPage({ page, context }) {
   return Promise.all(
     page.requests.map(async (request) => {
@@ -32,7 +30,6 @@ async function writeRequestsOnPage({ page, context }) {
 }
 
 async function writeRequests({ components, context }) {
-  if (type.isNone(components.pages)) return;
   const writePromises = components.pages.map((page) => writeRequestsOnPage({ page, context }));
   return Promise.all(writePromises);
 }

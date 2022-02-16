@@ -24,7 +24,7 @@ import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
 import getPackageManager from './getPackageManager.js';
 import getSendTelemetry from './getSendTelemetry.js';
-import createPrint from './print.js';
+import createPrint from './createPrint.js';
 
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();

@@ -11,17 +11,18 @@
   limitations under the License.
 */
 
-jest.mock('@lowdefy/node-utils', () => {
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
     writeFile: jest.fn(),
   };
 });
-
 const directories = { build: '/build' };
 
 test('Write build artifact.', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
-  nodeUtils.readFile.mockImplementation(() => Promise.resolve(null));
+  nodeUtils.writeFile.mockImplementation(() => Promise.resolve(null));
   const createWriteBuildArtifact = (await import('./writeBuildArtifact.js')).default;
 
   const writeBuildArtifact = createWriteBuildArtifact({ directories });

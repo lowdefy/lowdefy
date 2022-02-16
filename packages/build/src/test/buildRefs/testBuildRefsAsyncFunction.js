@@ -21,4 +21,4 @@ async function asyncFn() {
   return { async: true };
 }
 
-module.exports = asyncFn;
+export default asyncFn;

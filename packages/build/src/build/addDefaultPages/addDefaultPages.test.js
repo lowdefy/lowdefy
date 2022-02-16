@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import addDefaultPages from './addDefaultPages.js';
 import testContext from '../../test/testContext.js';
 
@@ -199,6 +201,15 @@ test('addDefaultPages, pages not an array', async () => {
   };
   await expect(addDefaultPages({ components, context })).rejects.toThrow(
     'lowdefy.pages is not an array.'
+  );
+});
+
+test('addDefaultPages, with a page not an object', async () => {
+  const components = {
+    pages: [null],
+  };
+  await expect(addDefaultPages({ components, context })).rejects.toThrow(
+    'pages[0] is not an object. Received null'
   );
 });
 

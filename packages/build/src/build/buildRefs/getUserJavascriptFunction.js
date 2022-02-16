@@ -16,8 +16,12 @@
 import path from 'path';
 
 async function getUserJavascriptFunction({ context, filePath }) {
-  const module = await import(path.resolve(context.directories.config, filePath));
-  return module.default;
+  try {
+    return (await import(path.resolve(context.directories.config, filePath))).default;
+  } catch (error) {
+    context.logger.error(`Error importing ${filePath}.`);
+    throw Error(error);
+  }
 }
 
 export default getUserJavascriptFunction;
