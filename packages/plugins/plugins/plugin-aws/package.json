@@ -36,19 +36,34 @@
   "scripts": {
     "build": "yarn swc",
     "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
     "test": "jest --coverage"
   },
   "dependencies": {
-    "aws-sdk": "2.1066.0"
+    "@lowdefy/block-utils": "4.0.0-alpha.6",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.6",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "antd": "4.17.0-alpha.7",
+    "aws-sdk": "2.1066.0",
+    "react": "18.0.0-rc.0",
+    "react-dom": "18.0.0-rc.0"
   },
   "devDependencies": {
+    "@emotion/jest": "11.7.1",
     "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@lowdefy/block-dev": "4.0.0-alpha.6",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.5.1"
+    "@testing-library/dom": "8.11.3",
+    "@testing-library/react": "13.0.0-alpha.4",
+    "@testing-library/user-event": "14.0.0-alpha.14",
+    "copyfiles": "2.4.1",
+    "jest": "27.5.1",
+    "jest-serializer-html": "7.1.0",
+    "jest-transform-yaml": "1.0.0"
   },
   "publishConfig": {
     "access": "public"
