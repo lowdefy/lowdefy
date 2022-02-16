@@ -23,8 +23,3 @@ export default {
     .map((connection) => Object.keys(connections[connection].requests))
     .flat(),
 };
-
-// export default {
-//   connections: ['Stripe'],
-//   requests: ['StripeRequest'],
-// };

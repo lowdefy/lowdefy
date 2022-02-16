@@ -2620,6 +2620,7 @@ __metadata:
     "@testing-library/user-event": 14.0.0-alpha.14
     antd: 4.17.0-alpha.7
     aws-sdk: 2.1066.0
+    copyfiles: 2.4.1
     jest: 27.5.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
