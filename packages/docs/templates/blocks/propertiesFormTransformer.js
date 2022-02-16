@@ -28,7 +28,7 @@ const avatar = (path) => ({
   blocks: [
     {
       id: `${path}.color`,
-      type: 'Selector', // TODO: change back to CircleColorSelector
+      type: 'CircleColorSelector',
       layout: {
         _global: 'settings_input_layout',
       },
@@ -258,7 +258,7 @@ function makeBlockDefinition({
         };
         return block;
       case 'color':
-        block.type = 'Selector'; // TODO: change back to CircleColorSelector
+        block.type = 'CircleColorSelector';
         block.properties.circleSize = 14;
         block.properties.circleSpacing = 8;
         block.properties.colors = [

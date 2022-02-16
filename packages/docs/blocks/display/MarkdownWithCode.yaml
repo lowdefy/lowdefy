@@ -23,7 +23,7 @@ _ref:
       content: |
         ### Some JS Math:
         ```js
-          # true + true; // -> 2
+          true + true; // -> 2
           (true + true) * (true + true) - true; // -> 3
         ```
         Hmmm… 🤔
