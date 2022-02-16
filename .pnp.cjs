@@ -55,6 +55,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/operators"
       },
       {
+        "name": "@lowdefy/actions-core",
+        "reference": "workspace:packages/plugins/actions/actions-core"
+      },
+      {
         "name": "@lowdefy/blocks-antd",
         "reference": "workspace:packages/plugins/blocks/blocks-antd"
       },
@@ -178,6 +182,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
+      ["@lowdefy/actions-core", ["workspace:packages/plugins/actions/actions-core"]],
       ["@lowdefy/ajv", ["workspace:packages/utils/ajv"]],
       ["@lowdefy/api", ["workspace:packages/api"]],
       ["@lowdefy/block-dev", ["workspace:packages/utils/block-dev"]],
@@ -2794,6 +2799,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@lowdefy/actions-core", [
+        ["workspace:packages/plugins/actions/actions-core", {
+          "packageLocation": "./packages/plugins/actions/actions-core/",
+          "packageDependencies": [
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
+            ["@lowdefy/engine", "workspace:packages/engine"],
+            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/operators", "workspace:packages/operators"],
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
+            ["@swc/core", "npm:1.2.135"],
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
+            ["jest", "virtual:42e288f3c714e1d86d12bf40fb17a72864641a713e0a167e85a3dab47534d11bcd2e71357e431b2f4737000bc9432f95c60dff0c9bfb212cd46e1f0f5bf0ad9f#npm:27.4.7"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/ajv", [
         ["workspace:packages/utils/ajv", {
           "packageLocation": "./packages/utils/ajv/",
@@ -3050,6 +3071,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@lowdefy/build", "workspace:packages/build"],
             ["@jest/globals", "npm:27.5.1"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
@@ -3243,6 +3265,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/operators", "workspace:packages/operators"],
+            ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
@@ -10483,12 +10506,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["jest", [
+        ["npm:27.4.7", {
+          "packageLocation": "./.yarn/cache/jest-npm-27.4.7-cdda9da561-28ce948b30.zip/node_modules/jest/",
+          "packageDependencies": [
+            ["jest", "npm:27.4.7"]
+          ],
+          "linkType": "SOFT",
+        }],
         ["npm:27.5.1", {
           "packageLocation": "./.yarn/cache/jest-npm-27.5.1-bacad4fe2a-96f1d69042.zip/node_modules/jest/",
           "packageDependencies": [
             ["jest", "npm:27.5.1"]
           ],
           "linkType": "SOFT",
+        }],
+        ["virtual:42e288f3c714e1d86d12bf40fb17a72864641a713e0a167e85a3dab47534d11bcd2e71357e431b2f4737000bc9432f95c60dff0c9bfb212cd46e1f0f5bf0ad9f#npm:27.4.7", {
+          "packageLocation": "./.yarn/__virtual__/jest-virtual-4325f46d83/0/cache/jest-npm-27.4.7-cdda9da561-28ce948b30.zip/node_modules/jest/",
+          "packageDependencies": [
+            ["jest", "virtual:42e288f3c714e1d86d12bf40fb17a72864641a713e0a167e85a3dab47534d11bcd2e71357e431b2f4737000bc9432f95c60dff0c9bfb212cd46e1f0f5bf0ad9f#npm:27.4.7"],
+            ["@jest/core", "virtual:af105d7a2bc799821f67e8114057f53830abc6c7c9faa96846247605351f361b4158d347970d00ebc3c04dbab6e46e1c1e24df193c1caf1f7d80a00c65068a2a#npm:27.5.1"],
+            ["@types/node-notifier", null],
+            ["import-local", "npm:3.1.0"],
+            ["jest-cli", "virtual:af105d7a2bc799821f67e8114057f53830abc6c7c9faa96846247605351f361b4158d347970d00ebc3c04dbab6e46e1c1e24df193c1caf1f7d80a00c65068a2a#npm:27.5.1"],
+            ["node-notifier", null]
+          ],
+          "packagePeers": [
+            "@types/node-notifier",
+            "node-notifier"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1", {
           "packageLocation": "./.yarn/__virtual__/jest-virtual-af105d7a2b/0/cache/jest-npm-27.5.1-bacad4fe2a-96f1d69042.zip/node_modules/jest/",

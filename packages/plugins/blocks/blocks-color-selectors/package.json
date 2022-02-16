@@ -8,7 +8,8 @@
     "lowdefy",
     "lowdefy blocks",
     "color picker",
-    "react-color"
+    "react-color",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"

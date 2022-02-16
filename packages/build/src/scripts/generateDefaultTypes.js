@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 const defaultPackages = [
+  '@lowdefy/actions-core',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-color-selectors',
