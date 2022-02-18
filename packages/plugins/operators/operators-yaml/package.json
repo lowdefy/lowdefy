@@ -45,7 +45,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.6",
     "@lowdefy/operators": "4.0.0-alpha.6",
-    "js-yaml": "4.1.0"
+    "yaml": "2.0.0-10"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",

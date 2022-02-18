@@ -17,7 +17,7 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
-import YAML from 'js-yaml';
+import YAML from 'yaml';
 
 async function getLowdefyVersion(context) {
   let lowdefyYaml = await readFile(path.join(context.directories.config, 'lowdefy.yaml'));
@@ -29,7 +29,7 @@ async function getLowdefyVersion(context) {
   }
   let lowdefy;
   try {
-    lowdefy = YAML.load(lowdefyYaml);
+    lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
     throw new Error(`Could not parse "lowdefy.yaml" file. Received error ${error.message}.`);
   }
