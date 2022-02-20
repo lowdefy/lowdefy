@@ -27,7 +27,7 @@ blocks:
     properties:
       block: true
       hideActionLoading: true
-      icon: AiOutlinedArrowLeft
+      icon: AiOutlineArrowLeft
       size: large
       title:
         _var: previous_page_title
@@ -50,7 +50,7 @@ blocks:
     properties:
       block: true
       hideActionLoading: true
-      icon: AiOutlinedArrowRight
+      icon: AiOutlineArrowRight
       size: large
       title:
         _var: next_page_title

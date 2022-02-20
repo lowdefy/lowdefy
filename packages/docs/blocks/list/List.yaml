@@ -92,7 +92,7 @@ _ref:
                 shrink: 1
               properties:
                 title: Add item
-                icon: AiOutlinedPlus
+                icon: AiOutlinePlus
               events:
                 onClick:
                   - id: add
@@ -119,7 +119,7 @@ _ref:
                   layout:
                     shrink: 1
                   properties:
-                    name: AiOutlinedMinusCircle
+                    name: AiOutlineMinusCircle
                     size: 18
                   events:
                     onClick:

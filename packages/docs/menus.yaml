@@ -5,12 +5,12 @@
       pageId: introduction
       properties:
         title: Introduction
-        icon: AiOutlinedCoffee
+        icon: AiOutlineCoffee
     - id: tutorial
       type: MenuGroup
       properties:
         title: Tutorial
-        icon: AiOutlinedRocket
+        icon: AiOutlineRocket
       links:
         - id: tutorial-start
           type: MenuLink
@@ -51,7 +51,7 @@
       type: MenuGroup
       properties:
         title: How To
-        icon: AiOutlinedQuestion
+        icon: AiOutlineQuestion
       links:
         - id: generate-csv
           type: MenuLink
@@ -67,7 +67,7 @@
       type: MenuGroup
       properties:
         title: Concepts
-        icon: AiOutlinedBulb
+        icon: AiOutlineBulb
       links:
         - id: overview
           type: MenuLink
@@ -143,7 +143,7 @@
       type: MenuGroup
       properties:
         title: Deployment
-        icon: AiOutlinedCloudUpload
+        icon: AiOutlineCloudUpload
       links:
         - id: aws-lambda
           type: MenuLink
@@ -169,7 +169,7 @@
       type: MenuGroup
       properties:
         title: User Authentication
-        icon: AiOutlinedTeam
+        icon: AiOutlineTeam
       links:
         - id: users
           type: MenuLink
@@ -206,7 +206,7 @@
       type: MenuGroup
       properties:
         title: Input Blocks
-        icon: AiOutlinedForm
+        icon: AiOutlineForm
       links:
         - id: AutoComplete
           type: MenuLink
@@ -302,7 +302,7 @@
       type: MenuGroup
       properties:
         title: Display Blocks
-        icon: AiOutlinedPicture
+        icon: AiOutlinePicture
       links:
         - id: Alert
           type: MenuLink
@@ -381,7 +381,7 @@
       type: MenuGroup
       properties:
         title: Container Blocks
-        icon: AiOutlinedContainer
+        icon: AiOutlineContainer
       links:
         - id: Affix
           type: MenuLink
@@ -451,7 +451,7 @@
       type: MenuGroup
       properties:
         title: List Blocks
-        icon: AiOutlinedOrderedList
+        icon: AiOutlineOrderedList
       links:
         - id: ControlledList
           type: MenuLink
@@ -463,7 +463,7 @@
       type: MenuGroup
       properties:
         title: Connections
-        icon: AiOutlinedApi
+        icon: AiOutlineApi
       links:
         - id: AmazonRedshift
           type: MenuLink
@@ -533,7 +533,7 @@
       type: MenuGroup
       properties:
         title: Actions
-        icon: AiOutlinedThunderbolt
+        icon: AiOutlineThunderbolt
       links:
         - id: CallMethod
           type: MenuLink
@@ -588,7 +588,7 @@
       type: MenuGroup
       properties:
         title: Operators
-        icon: AiOutlinedTool
+        icon: AiOutlineTool
       links:
         - id: _actions
           type: MenuLink
@@ -768,7 +768,7 @@
       type: MenuGroup
       properties:
         title: Lowdefy Versions
-        icon: AiOutlinedBranches
+        icon: AiOutlineBranches
       links:
         - id: v3.23.2
           type: MenuLink

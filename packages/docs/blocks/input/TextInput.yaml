@@ -53,7 +53,7 @@ _ref:
           type: TextInput
           properties:
             title: First Name
-            suffixIcon: AiOutlinedUser
+            suffixIcon: AiOutlineUser
             placeholder: Your name
             label:
               span: 6

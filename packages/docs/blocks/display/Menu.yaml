@@ -27,13 +27,13 @@ _ref:
           type: MenuLink
           pageId: home
           properties:
-            icon: AiOutlinedHome
+            icon: AiOutlineHome
             title: Home
         - id: pages
           type: MenuGroup
           properties:
             title: Pages
-            icon: AiOutlinedLayout
+            icon: AiOutlineLayout
           links:
             - id: page1
               type: MenuLink
