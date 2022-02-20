@@ -20,7 +20,7 @@ _ref:
     schema: ../plugins/blocks/blocks-basic/src/blocks/Img/schema.json
     filePath: blocks/display/Img.yaml
     init_property_values:
-      src: 'https://docs.lowdefy.com/public/logo-light-theme.png'
+      src: 'https://docs.lowdefy.com/logo-light-theme.png'
     description_content: |
       A block to render a HTML [`<img/>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) element.
     examples:
@@ -29,12 +29,12 @@ _ref:
           id: basic_example
           type: Img
           properties:
-            src: https://docs.lowdefy.com/public/logo-light-theme.png
+            src: https://docs.lowdefy.com/logo-light-theme.png
       - title: srcset Img
         block:
           id: srcset_example
           type: Img
           properties:
-            src: https://docs.lowdefy.com/public/logo-light-theme.png
-            srcSet: https://docs.lowdefy.com/public/logo-square-light-theme.png 40w, https://docs.lowdefy.com/public/logo-light-theme.png 577w
+            src: https://docs.lowdefy.com/logo-light-theme.png
+            srcSet: https://docs.lowdefy.com/logo-square-light-theme.png 40w, https://docs.lowdefy.com/logo-light-theme.png 577w
             sizes: '(max-width: 576px) 40px, 577px'
