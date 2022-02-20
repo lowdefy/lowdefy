@@ -14,28 +14,31 @@
   limitations under the License.
 */
 
-import YAML from 'js-yaml';
-import { serializer } from '@lowdefy/helpers';
+import YAML from 'yaml';
+import { serializer, type } from '@lowdefy/helpers';
 
 import { runClass } from '@lowdefy/operators';
 
-function parse(input) {
+// TODO: consider adding replacer and reviver args supported by yaml package.
+function parse(input, options) {
   if (input === 'undefined') return undefined;
-  const loaded = YAML.load(input);
+  if (!type.isString(input)) {
+    throw new Error('requires a string type to parse.');
+  }
+  const loaded = YAML.parse(input, options);
   return serializer.deserialize(loaded);
 }
 
 function stringify(input, options) {
-  return YAML.dump(serializer.serialize(input, { isoStringDates: true }), {
-    sortKeys: true,
-    ...options,
-  });
+  if (input === undefined) return '';
+  // TODO: option sortKeys: true, sort keys was supported by js-yaml and not by yaml.
+  return YAML.stringify(serializer.serialize(input, { isoStringDates: true }), options);
 }
 
 const functions = { parse, stringify };
 const meta = {
   stringify: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
-  parse: { singleArg: true, validTypes: ['string'] },
+  parse: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
 };
 
 function _yaml({ params, location, methodName }) {

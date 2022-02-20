@@ -97,7 +97,7 @@ _ref:
       events:
         onClick:
           - id: get_normalized_eigenvector
-            type: JsAction
+            type: JsAction # TODO:
             params:
               name: getNormalizedEigenvector
               args:

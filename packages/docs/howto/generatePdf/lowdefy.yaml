@@ -99,13 +99,14 @@ pages:
                           color: '#1890ff'
                         events:
                           onClick:
-                            - id: make_pdf
-                              type: JsAction
-                              params:
-                                name: pdfMake
-                                args:
-                                  _ref:
-                                    path: inv_template.yaml
+                            []
+                            # - id: make_pdf
+                            #   type: JsAction # TODO:
+                            #   params:
+                            #     name: pdfMake
+                            #     args:
+                            #       _ref:
+                            #         path: inv_template.yaml
       footer:
         blocks:
           - id: footer

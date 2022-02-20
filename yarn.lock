@@ -2245,9 +2245,9 @@ __metadata:
     "@swc/jest": 0.2.17
     ajv: 8.9.0
     jest: 27.5.1
-    js-yaml: 4.1.0
     json5: 2.2.0
     uuid: 8.3.2
+    yaml: 2.0.0-10
     yargs: 17.3.1
   bin:
     lowdefy-build: ./dist/scripts/run.js
@@ -2586,7 +2586,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.5.1
-    js-yaml: 4.1.0
+    yaml: 2.0.0-10
   languageName: unknown
   linkType: soft
 
@@ -9800,9 +9800,9 @@ __metadata:
     decompress: 4.2.1
     decompress-targz: 4.1.1
     jest: 27.5.1
-    js-yaml: 4.1.0
     ora: 5.4.1
     uuid: 8.3.2
+    yaml: 2.0.0-10
   bin:
     lowdefy: ./dist/index.js
   languageName: unknown
@@ -15857,6 +15857,13 @@ __metadata:
     loader-utils: ^1.4.0
     yaml: ^1.8.3
   checksum: de6f070aafaf10ee65aac721fbbacadfec0468801e07457ed81bb725e6336e2bd6c1402fa233a16d6ad72e4373680147b3e37d569d9a1e98d3fcd3a2cd64de8e
+  languageName: node
+  linkType: hard
+
+"yaml@npm:2.0.0-10":
+  version: 2.0.0-10
+  resolution: "yaml@npm:2.0.0-10"
+  checksum: 7a0bac2f80225da6008fb8ab887f43166fb2485cc3e1350185c43499c76841ea0ca9d79b40c0970e08ab3943f25ffb184e709fef7fb8b26d73987ed0452a91cc
   languageName: node
   linkType: hard
 

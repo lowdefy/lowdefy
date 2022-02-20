@@ -94,7 +94,7 @@ _ref:
           events:
             onInitAsync:
               - id: set_intercom_user
-                type: JsAction
+                type: JsAction # TODO:
                 params:
                   name: setIntercomUser
           blocks:
@@ -203,7 +203,7 @@ _ref:
                     type: Request
                     params: search_products
                   - id: apply_highlight # apply the highlight transformation to the request data.
-                    type: JsAction
+                    type: JsAction # TODO:
                     params:
                       name: highlightText
                       args:
@@ -271,7 +271,7 @@ _ref:
       events:
         onClick:
           - id: loop_requests
-            type: JsAction
+            type: JsAction # TODO:
             params:
               name: loopRequests
               args:

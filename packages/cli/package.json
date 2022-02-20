@@ -47,9 +47,9 @@
     "commander": "9.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
-    "js-yaml": "4.1.0",
     "ora": "5.4.1",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "yaml": "2.0.0-10"
   },
   "devDependencies": {
     "@jest/globals": "27.5.1",
