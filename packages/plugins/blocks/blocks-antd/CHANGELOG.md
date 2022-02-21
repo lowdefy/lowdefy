@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Refactored tests to use new Block config. ([1919560](https://github.com/lowdefy/lowdefy/commit/191956023512213203b78f66bfcdebc451202eb0))
+* **blocks-antd:** Temporary for schema for TimelineList. ([ce8640d](https://github.com/lowdefy/lowdefy/commit/ce8640d85b5ff7daa3610fe145a4569ec4c91777))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **deps:** Update emotion css packages. ([3380594](https://github.com/lowdefy/lowdefy/commit/33805944e30e919c57e3e7e1876b9c6723c3988d))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* Move S3UploadButton to plugin-aws. ([540aa03](https://github.com/lowdefy/lowdefy/commit/540aa035d2ed0672b0f3e233c1cee90e82d4bb52))
+
+
+### Features
+
+* **blocks:** Implement Link in blocks. ([2bcf600](https://github.com/lowdefy/lowdefy/commit/2bcf600bd1ae477325cf205069952006e3032b63))
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 
