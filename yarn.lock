@@ -2037,6 +2037,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-utils@workspace:packages/utils/block-utils"
   dependencies:
+    "@ant-design/icons": 4.7.0
     "@emotion/css": 11.7.1
     "@emotion/jest": 11.7.1
     "@emotion/react": 11.7.1
