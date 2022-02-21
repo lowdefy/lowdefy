@@ -598,6 +598,13 @@ export default {
         auth: {
           $ref: '#/definitions/authConfig',
         },
+        basePath: {
+          type: 'string',
+          description: 'App base path to apply to all routes. Base path must start with "/".',
+          errorMessage: {
+            type: 'App "config.basePath" should be a string.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:

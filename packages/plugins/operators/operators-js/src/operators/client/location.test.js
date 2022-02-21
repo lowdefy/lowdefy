@@ -15,7 +15,10 @@
 */
 
 import location from './location.js';
-jest.mock('@lowdefy/operators');
+
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
 beforeEach(() => {
   Object.defineProperty(window, 'location', {
@@ -43,8 +46,8 @@ const input = {
   params: 'origin',
 };
 
-test('location calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
+test('location calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
   location(input);
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [

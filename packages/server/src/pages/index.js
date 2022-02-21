@@ -19,6 +19,7 @@ import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 import Page from '../components/Page.js';
 
 export async function getServerSideProps() {
+  // TODO: is this build directory configurable from the cli?
   const apiContext = await createApiContext({ buildDirectory: './build' });
   const rootConfig = await getRootConfig(apiContext);
   const { home } = rootConfig;

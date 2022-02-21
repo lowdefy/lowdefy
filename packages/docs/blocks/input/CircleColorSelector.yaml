@@ -18,8 +18,7 @@ _ref:
     block_type: CircleColorSelector
     value_type: string
     category: input
-    schema: ../blocks/blocksColorSelectors/src/blocks/CircleColorSelector/CircleColorSelector.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/CircleColorSelector/schema.json
     filePath: blocks/input/CircleColorSelector.yaml
     description_content: |
       A color selector component which displays the colors in circles.
-

@@ -23,4 +23,4 @@ function resolver(path, vars, context) {
   };
 }
 
-module.exports = resolver;
+export default resolver;

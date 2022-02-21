@@ -15,7 +15,9 @@
 */
 
 import user from './user.js';
-jest.mock('@lowdefy/operators');
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
 const input = {
   arrayIndices: [0],
@@ -24,9 +26,14 @@ const input = {
   user: { name: 'first name' },
 };
 
-test('user calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  user(input);
+test('user calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  user({
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+    user: { name: 'first name' },
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

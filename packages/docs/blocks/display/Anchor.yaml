@@ -17,10 +17,9 @@ _ref:
   vars:
     block_type: Anchor
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Anchor/Anchor.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/Anchor/schema.json
     filePath: blocks/display/Anchor.yaml
     description_content: |
       Anchor link block. Creates a clickable icon and/ or text.
 
       > When changing the relationship (`rel`) property of the linked URL, make sure you understand the security implications. Read more about link types [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
-

@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Menu
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Menu/Menu.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Menu/schema.json
     filePath: blocks/display/Menu.yaml
     description_content: |
       A menu block used to display page links.
@@ -27,13 +27,13 @@ _ref:
           type: MenuLink
           pageId: home
           properties:
-            icon: HomeOutlined
+            icon: AiOutlinedHome
             title: Home
         - id: pages
           type: MenuGroup
           properties:
             title: Pages
-            icon: LayoutOutlined
+            icon: AiOutlinedLayout
           links:
             - id: page1
               type: MenuLink

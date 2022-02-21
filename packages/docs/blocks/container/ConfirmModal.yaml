@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: ConfirmModal
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/ConfirmModal/ConfirmModal.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ConfirmModal/schema.json
     filePath: blocks/container/ConfirmModal.yaml
     description_content: |
       A popup container, presenting the user with a modal confirmation dialog.

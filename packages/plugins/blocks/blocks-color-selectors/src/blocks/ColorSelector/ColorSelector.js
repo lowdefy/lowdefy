@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { BlockPicker } from 'react-color';
+import BlockPicker from 'react-color/lib/Block.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 

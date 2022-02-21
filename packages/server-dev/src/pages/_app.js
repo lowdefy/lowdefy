@@ -22,12 +22,14 @@ import LowdefyContext from '../components/LowdefyContext.js';
 
 import '../../build/plugins/styles.less';
 
+const lowdefy = {};
+
 function App({ Component, pageProps }) {
   return (
     <ErrorBoundary>
       <Suspense>
-        <LowdefyContext>
-          {(lowdefy) => <Component lowdefy={lowdefy} {...pageProps} />}
+        <LowdefyContext lowdefy={lowdefy}>
+          <Component lowdefy={lowdefy} {...pageProps} />
         </LowdefyContext>
       </Suspense>
     </ErrorBoundary>

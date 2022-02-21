@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import axios from 'axios';
-import getSendTelemetry from './getSendTelemetry.js';
+import { jest } from '@jest/globals';
 
-jest.mock('axios', () => ({
-  request: jest.fn(),
+jest.unstable_mockModule('axios', () => ({
+  default: {
+    request: jest.fn(),
+  },
 }));
 
 const appId = 'appId';
@@ -26,6 +27,8 @@ const cliVersion = 'cliVersion';
 const lowdefyVersion = 'lowdefyVersion';
 
 test('disable telemetry', async () => {
+  const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
+  const axios = (await import('axios')).default;
   const sendTelemetry = getSendTelemetry({
     appId,
     cliVersion,
@@ -39,6 +42,8 @@ test('disable telemetry', async () => {
 });
 
 test('send telemetry', async () => {
+  const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
+  const axios = (await import('axios')).default;
   const sendTelemetry = getSendTelemetry({
     appId,
     cliVersion,
@@ -66,6 +71,8 @@ test('send telemetry', async () => {
 });
 
 test('send telemetry should not throw', async () => {
+  const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
+  const axios = (await import('axios')).default;
   axios.request.mockImplementation(() => {
     throw new Error('Test error');
   });

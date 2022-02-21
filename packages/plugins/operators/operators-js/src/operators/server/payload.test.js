@@ -15,17 +15,18 @@
 */
 
 import payload from './payload.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  location: 'location',
-  params: 'params',
-  payload: { payload: true },
-};
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-test('payload calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  payload(input);
+test('payload calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  payload({
+    location: 'location',
+    params: 'params',
+    payload: { payload: true },
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

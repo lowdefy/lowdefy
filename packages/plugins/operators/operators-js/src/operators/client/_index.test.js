@@ -15,17 +15,18 @@
 */
 
 import _index from './_index.js';
-jest.mock('@lowdefy/operators');
 
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-};
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-test('args calls getFromObject', () => {
-  const lowdefyOperators = import('@lowdefy/operators');
-  _index(input);
+test('_index calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  _index({
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
+  });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

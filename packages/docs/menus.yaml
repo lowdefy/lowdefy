@@ -5,12 +5,12 @@
       pageId: introduction
       properties:
         title: Introduction
-        icon: CoffeeOutlined
+        icon: AiOutlinedCoffee
     - id: tutorial
       type: MenuGroup
       properties:
         title: Tutorial
-        icon: RocketOutlined
+        icon: AiOutlinedRocket
       links:
         - id: tutorial-start
           type: MenuLink
@@ -51,7 +51,7 @@
       type: MenuGroup
       properties:
         title: How To
-        icon: QuestionOutlined
+        icon: AiOutlinedQuestion
       links:
         - id: generate-csv
           type: MenuLink
@@ -67,7 +67,7 @@
       type: MenuGroup
       properties:
         title: Concepts
-        icon: BulbOutlined
+        icon: AiOutlinedBulb
       links:
         - id: overview
           type: MenuLink
@@ -143,7 +143,7 @@
       type: MenuGroup
       properties:
         title: Deployment
-        icon: CloudUploadOutlined
+        icon: AiOutlinedCloudUpload
       links:
         - id: aws-lambda
           type: MenuLink
@@ -169,7 +169,7 @@
       type: MenuGroup
       properties:
         title: User Authentication
-        icon: TeamOutlined
+        icon: AiOutlinedTeam
       links:
         - id: users
           type: MenuLink
@@ -206,7 +206,7 @@
       type: MenuGroup
       properties:
         title: Input Blocks
-        icon: FormOutlined
+        icon: AiOutlinedForm
       links:
         - id: AutoComplete
           type: MenuLink
@@ -268,9 +268,9 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
-        - id: S3UploadButton
-          type: MenuLink
-          pageId: S3UploadButton
+        # - id: S3UploadButton
+        #   type: MenuLink
+        #   pageId: S3UploadButton
         - id: Selector
           type: MenuLink
           pageId: Selector
@@ -302,7 +302,7 @@
       type: MenuGroup
       properties:
         title: Display Blocks
-        icon: PictureOutlined
+        icon: AiOutlinedPicture
       links:
         - id: Alert
           type: MenuLink
@@ -381,7 +381,7 @@
       type: MenuGroup
       properties:
         title: Container Blocks
-        icon: ContainerOutlined
+        icon: AiOutlinedContainer
       links:
         - id: Affix
           type: MenuLink
@@ -437,9 +437,9 @@
         - id: Span
           type: MenuLink
           pageId: Span
-        - id: Spin
-          type: MenuLink
-          pageId: Spin
+        # - id: Spin
+        #   type: MenuLink
+        #   pageId: Spin
         - id: Tabs
           type: MenuLink
           pageId: Tabs
@@ -451,7 +451,7 @@
       type: MenuGroup
       properties:
         title: List Blocks
-        icon: OrderedListOutlined
+        icon: AiOutlinedOrderedList
       links:
         - id: ControlledList
           type: MenuLink
@@ -463,7 +463,7 @@
       type: MenuGroup
       properties:
         title: Connections
-        icon: ApiOutlined
+        icon: AiOutlinedApi
       links:
         - id: AmazonRedshift
           type: MenuLink
@@ -533,14 +533,11 @@
       type: MenuGroup
       properties:
         title: Actions
-        icon: ThunderboltOutlined
+        icon: AiOutlinedThunderbolt
       links:
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
-        - id: JsAction
-          type: MenuLink
-          pageId: JsAction
         - id: Link
           type: MenuLink
           pageId: Link
@@ -591,7 +588,7 @@
       type: MenuGroup
       properties:
         title: Operators
-        icon: ToolOutlined
+        icon: AiOutlinedTool
       links:
         - id: _actions
           type: MenuLink
@@ -659,9 +656,9 @@
         - id: _input
           type: MenuLink
           pageId: _input
-        - id: _js
-          type: MenuLink
-          pageId: _js
+        # - id: _js
+        #   type: MenuLink
+        #   pageId: _js
         - id: _json
           type: MenuLink
           pageId: _json
@@ -771,7 +768,7 @@
       type: MenuGroup
       properties:
         title: Lowdefy Versions
-        icon: BranchesOutlined
+        icon: AiOutlinedBranches
       links:
         - id: v3.23.2
           type: MenuLink

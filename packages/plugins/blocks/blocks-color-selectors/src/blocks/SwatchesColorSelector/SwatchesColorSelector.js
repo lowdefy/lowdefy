@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { SwatchesPicker } from 'react-color';
+import SwatchesPicker from 'react-color/lib/Swatches.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 

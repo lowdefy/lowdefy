@@ -46,6 +46,8 @@ function getDefaultValues(defaultValues, obj) {
   return defaultValues;
 }
 
-const transformer = (obj) => getDefaultValues({}, obj.properties);
+const transformer = (obj) => {
+  return getDefaultValues({}, obj.properties);
+};
 
 export default transformer;

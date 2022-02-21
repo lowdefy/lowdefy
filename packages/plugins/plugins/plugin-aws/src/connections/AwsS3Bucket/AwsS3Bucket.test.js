@@ -17,7 +17,8 @@
 import { validate } from '@lowdefy/ajv';
 
 import AwsS3Bucket from './AwsS3Bucket.js';
-import schema from './AwsS3BucketSchema.json';
+
+const schema = AwsS3Bucket.schema;
 
 test('All requests are present', () => {
   expect(AwsS3Bucket.requests.AwsS3PresignedGetObject).toBeDefined();

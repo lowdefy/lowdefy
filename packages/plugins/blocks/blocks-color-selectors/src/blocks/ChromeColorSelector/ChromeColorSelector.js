@@ -15,7 +15,7 @@
 */
 
 import React, { useState } from 'react';
-import { ChromePicker } from 'react-color';
+import ChromePicker from 'react-color/lib/Chrome.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 

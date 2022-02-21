@@ -25,22 +25,36 @@ _ref:
       - name: parse
         types: |
           ```
-          (value: string): any
+          ({on: string, options?: object}): object
+          ([on: string, options?: object]): object
           ```
         description: |
           The `_yaml.parse` method parses a YAML string into an object.
         arguments: |
-          ###### string
-          The string to parse.
+          ###### object
+            - `on: string`: String to parse.
+            - `options?: object`: Optional settings. See the [YAML.parse: method here](https://eemeli.org/yaml/#parse-options) for supported settings.
+
         examples: |
           ###### Parse a YAML string:
           ```yaml
-          _yaml.parse: |
-            key: Value
-            boolean: true
-            array:
-              - 1
-              - 2
+          _yaml.parse:
+            on: |
+              key: Value
+              boolean: true
+              array:
+                - 1
+                - 2
+          ```
+          or:
+          ```yaml
+          _yaml.parse:
+            - |
+              key: Value
+              boolean: true
+              array:
+                - 1
+                - 2
           ```
           Returns:
           ```
@@ -61,17 +75,27 @@ _ref:
         arguments: |
           ###### object
             - `on: any`: The object to stringify.
-            - `options: object`: Optional settings. See the [YAML.dump method here](https://www.npmjs.com/package/js-yaml) for supported settings.
+            - `options?: object`: Optional settings. See the [YAML.stringify: method here](https://eemeli.org/yaml/#tostring-options) for supported settings.
 
         examples: |
           ###### Stringify an object as YAML:
           ```yaml
           _yaml.stringify:
-            key: Value
-            boolean: true
-            array:
-              - 1
-              - 2
+            on:
+              key: Value
+              boolean: true
+              array:
+                - 1
+                - 2
+          ```
+          or:
+          ```yaml
+          _yaml.stringify:
+            - key: Value
+              boolean: true
+              array:
+                - 1
+                - 2
           ```
           Returns (as a string):
           ```text

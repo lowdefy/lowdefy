@@ -18,7 +18,7 @@ _ref:
     block_type: SliderColorSelector
     value_type: string
     category: input
-    schema: ../blocks/blocksColorSelectors/src/blocks/SliderColorSelector/SliderColorSelector.json
+    schema: ../plugins/blocks/blocks-color-selectors/src/blocks/SliderColorSelector/schema.json
     filePath: blocks/input/SliderColorSelector.yaml
     description_content: |
       A slider color selector component.

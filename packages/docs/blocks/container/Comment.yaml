@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Comment
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Comment/Comment.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Comment/schema.json
     filePath: blocks/container/Comment.yaml
     init_state_values:
       __type_block.properties.avatar: object
@@ -33,11 +33,11 @@ _ref:
         block:
           id: comment_ex
           type: Comment
-          properties: 
+          properties:
             author: The Dude
             content: Yeah, well, you know, that’s just, like, your opinion, man.
             datetime: 18 January, 1998
-            avatar: 
-              color: "#402B18"
+            avatar:
+              color: '#402B18'
               content: TD
               shape: square

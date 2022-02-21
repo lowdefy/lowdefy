@@ -46,7 +46,7 @@ _ref:
           textAlign: center
         properties:
           title: Generate & Download PDF
-          icon: DownloadOutlined
+          icon: AiOutlinedDownload
           color: '#6293F8'
         events:
           onMount:
@@ -90,13 +90,13 @@ _ref:
                       qty: 2
                       price: 60.667
                       code: X12-49A
-          onClick:
-            - id: generate_pdf
-              type: JsAction
+          onClick: []
+            {# - id: generate_pdf
+              type: JsAction # TODO:
               params:
                 name: pdfMake
                 args:
-                  _ref: howto/generatePdf/inv_template.yaml
+                  _ref: howto/generatePdf/inv_template.yaml #}
 
       - id: md2
         type: MarkdownWithCode
@@ -109,7 +109,7 @@ _ref:
           textAlign: center
         properties:
           title: Share this post
-          icon: UploadOutlined
+          icon: AiOutlinedUpload
           color: '#6293F8'
         events:
           onClick:
@@ -252,11 +252,11 @@ _ref:
                     type: Button
                     properties:
                       title: Download PDF
-                      icon: DownloadOutlined
+                      icon: AiOutlinedDownload
                     events:
                       onClick:
                         - id: make_pdf
-                          type: JsAction
+                          type: JsAction # TODO:
                           params:
                             name: pdfMake
                             args:
@@ -277,11 +277,11 @@ _ref:
           textAlign: center
         properties:
           title: Download PDF
-          icon: DownloadOutlined
+          icon: AiOutlinedDownload
         events:
-          onClick:
-            - id: make_pdf
-              type: JsAction
+          onClick: []
+            {# - id: make_pdf
+              type: JsAction # TODO:
               params:
                 name: pdfMake
                 args:
@@ -291,7 +291,7 @@ _ref:
                       fontSize: 10
                     content:
                       - text: This pdf has been generated with Lowdefy and pdfMake.
-                        bold: true
+                        bold: true #}
       - id: md4
         type: MarkdownWithCode
         properties:
@@ -370,7 +370,7 @@ _ref:
                         events:
                           onClick:
                             - id: make_pdf
-                              type: JsAction
+                              type: JsAction # TODO:
                               params:
                                 name: pdfMake
                                 args:
@@ -591,7 +591,7 @@ _ref:
           textAlign: center
         properties:
           title: Generate Invoice
-          icon: DownloadOutlined
+          icon: AiOutlinedDownload
           color: '#6293F8'
         events:
           onMount:
@@ -635,13 +635,13 @@ _ref:
                       qty: 2
                       price: 60.667
                       code: X12-49A
-          onClick:
-            - id: generate_pdf
-              type: JsAction
+          onClick: []
+            {# - id: generate_pdf
+              type: JsAction # TODO:
               params:
                 name: pdfMake
                 args:
-                  _ref: howto/generatePdf/inv_template.yaml
+                  _ref: howto/generatePdf/inv_template.yaml #}
       - id: md5
         type: MarkdownWithCode
         properties:

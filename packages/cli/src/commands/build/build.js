@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import getServer from './getServer.js';
+import getServer from '../../utils/getServer.js';
 import installServer from './installServer.js';
 import runLowdefyBuild from './runLowdefyBuild.js';
 import runNextBuild from './runNextBuild.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
-  await getServer({ context });
+  await getServer({ context, packageName: '@lowdefy/server' });
   await installServer({ context });
   await runLowdefyBuild({ context });
   await installServer({ context });

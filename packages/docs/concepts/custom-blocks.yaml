@@ -123,6 +123,20 @@ _ref:
 
             - `basePath: string`: The base path setting for the application. This variable is used to prefix route paths for example `${basePath}/public/logo-square-light-theme.png`. The default base path is ''.
             - `blockId: string`: The block's id within the Lowdefy app, this is useful for setting a unique `id` on DOM elements.
+            - `components: object`: Helper React components that are exposed to blocks to use internally.
+              - `Icon`: component`: Lowdefy standard Icon React component to render build in icons.
+              - `Link`: component`: Lowdefy standard Link React component used as links to pages or external urls. The following props apply:
+                - `ariaLabel: string`: Arial-label to apply to link tag.
+                - `back: boolean`: When the link is clicked, trigger the browser back.
+                - `home: boolean`: When the link is clicked, route to the home page.
+                - `input: object`: When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. See [Input]( TODO: Link to input page? ).
+                - `newTab: boolean`: When the link is clicked, open the page in a new browser tab.
+                - `pageId: string`: When the link is clicked, route to the provided Lowdefy page.
+                - `rel: string`: The relationship of the linked URL as space-separated link types.
+                - `replace: boolean`: Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false.
+                - `scroll: boolean`: Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false.
+                - `url: string`: When the link is clicked, route to an external url.
+                - `urlQuery: object`: When the link is clicked, pass data as a url query to the next page. See [url query]( TODO: Link to url query page? ).
             - `content: object`: Passed to `container` and `context` block categories. The `content` object with methods to render sub blocks into content areas. The method name is the same as the area key, for example, 'content.content()` renders a blocks default `content` area.
             - `events: object`: All events defined on the block in the Lowdefy app config.
               - `[event_key]: object`: Event keys gives a handle name to the event details.

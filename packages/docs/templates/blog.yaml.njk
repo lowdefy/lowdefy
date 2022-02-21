@@ -44,10 +44,10 @@ events:
             type: string
             length: 16
   onEnterAsync:
-    - id: connect_docsearch
-      type: JsAction
+    {# - id: connect_docsearch
+      type: JsAction # TODO:
       params:
-        name: connectDocsearch
+        name: connectDocsearch #}
     - id: post_telemetry
       type: Request
       messages:
@@ -182,8 +182,8 @@ areas:
               - id: links-{{ item.pageId }}
                 type: Anchor
                 properties:
-                  icon: LinkOutlined
-                  href: /{{ item.pageId }}
+                  icon: AiOutlinedLink
+                  pageId: {{ item.pageId }}
                   title: {{ item.title }}
               {% endfor %}
 

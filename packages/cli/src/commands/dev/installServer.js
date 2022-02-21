@@ -29,7 +29,7 @@ async function installServer({ context }) {
       command: context.packageManager, // npm or yarn
       args: args[context.packageManager],
       processOptions: {
-        cwd: context.directories.devServer,
+        cwd: context.directories.dev,
       },
       silent: false,
     });

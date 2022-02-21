@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import writeRequests from './writeRequests.js';
 import testContext from '../test/testContext.js';
 
@@ -218,12 +220,6 @@ test('writeRequests empty pages array', async () => {
   const components = {
     pages: [],
   };
-  await writeRequests({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
-});
-
-test('writeRequests no pages array', async () => {
-  const components = {};
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });

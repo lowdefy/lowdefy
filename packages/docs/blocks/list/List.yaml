@@ -17,25 +17,25 @@ _ref:
   vars:
     block_type: List
     category: list
-    schema: ../blocks/blocksBasic/src/blocks/List/List.json
+    schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.json
     filePath: blocks/list/List.yaml
     description_content: |
       The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
     areas:
       - content
     init_state_values:
-      todos: 
-        - Bake a 🧁   
+      todos:
+        - Bake a 🧁
         - Eat a🍦
         - Phone a 🦖
     methods:
       - name: pushItem
         onClick:
-        - id: pushItem
-          type: CallMethod
-          params:
-            blockId: block_id
-            method: pushItem
+          - id: pushItem
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: pushItem
       - name: unshiftItem
         onClick:
           - id: unshiftItem
@@ -50,7 +50,7 @@ _ref:
             params:
               blockId: block_id
               method: removeItem
-              args: 
+              args:
                 - 1
       - name: for index 1 moveItemDown
         onClick:
@@ -59,7 +59,7 @@ _ref:
             params:
               blockId: block_id
               method: moveItemDown
-              args: 
+              args:
                 - 1
       - name: for index 1 moveItemUp
         onClick:
@@ -68,7 +68,7 @@ _ref:
             params:
               blockId: block_id
               method: moveItemUp
-              args: 
+              args:
                 - 1
     examples:
       - title: Todo List
@@ -92,7 +92,7 @@ _ref:
                 shrink: 1
               properties:
                 title: Add item
-                icon: PlusOutlined
+                icon: AiOutlinedPlus
               events:
                 onClick:
                   - id: add
@@ -119,7 +119,7 @@ _ref:
                   layout:
                     shrink: 1
                   properties:
-                    name: MinusCircleOutlined
+                    name: AiOutlinedMinusCircle
                     size: 18
                   events:
                     onClick:
@@ -133,7 +133,6 @@ _ref:
                           method: removeItem
                           args:
                             - _index: 0
-      
 
         extra:
           id: ex_state
@@ -141,7 +140,7 @@ _ref:
           style:
             paddingTop: 16
           properties:
-            content: 
+            content:
               _nunjucks:
                 template: |
                   ###### Todos State Value:
@@ -152,7 +151,7 @@ _ref:
                   value:
                     _yaml.stringify:
                       on:
-                        todos: 
+                        todos:
                           _state: todos
                       options:
-                        sortKeys: false 
+                        sortKeys: false

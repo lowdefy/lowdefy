@@ -18,4 +18,4 @@ function resolver() {
   throw new Error('Test error');
 }
 
-module.exports = resolver;
+export default resolver;

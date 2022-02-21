@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
-import YAML from 'js-yaml';
+import YAML from 'yaml';
 
 import parseNunjucks from './parseNunjucks.js';
 
@@ -31,7 +31,7 @@ function parseRefContent({ content, refDef }) {
     }
 
     if (ext === 'yaml' || ext === 'yml') {
-      return YAML.load(content);
+      return YAML.parse(content);
     }
     if (ext === 'json') {
       return JSON5.parse(content);

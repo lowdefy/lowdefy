@@ -20,9 +20,10 @@ import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 const defaultPackages = [
+  '@lowdefy/actions-core',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
-  // '@lowdefy/blocks-color-selectors',
+  '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
@@ -35,9 +36,9 @@ const defaultPackages = [
   '@lowdefy/connection-sendgrid',
   '@lowdefy/connection-stripe',
   '@lowdefy/operators-change-case',
-  // '@lowdefy/operators-diff',
+  '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
-  // '@lowdefy/operators-mql',
+  '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',

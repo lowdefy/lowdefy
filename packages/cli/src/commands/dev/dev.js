@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import getServer from './getServer.js';
 import installServer from './installServer.js';
 import runDevServer from './runDevServer.js';
+import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
   context.print.info('Starting development server.');
-  await getServer({ context });
+  await getServer({ context, packageName: '@lowdefy/server-dev' });
   await installServer({ context });
   context.sendTelemetry();
   await runDevServer({ context });

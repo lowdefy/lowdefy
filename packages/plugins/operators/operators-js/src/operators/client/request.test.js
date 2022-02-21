@@ -15,6 +15,11 @@
 */
 
 import { WebParser } from '@lowdefy/operators';
+import _request from './request.js';
+
+const operators = {
+  _request,
+};
 
 const arrayIndices = [1];
 
@@ -30,7 +35,23 @@ const context = {
   },
   eventLog: [{ eventLog: true }],
   id: 'id',
-  requests: [{ requests: true }],
+  requests: {
+    arr: {
+      response: [{ a: 'request a1' }, { a: 'request a2' }],
+      loading: false,
+      error: [],
+    },
+    number: {
+      response: 500,
+      loading: false,
+      error: [],
+    },
+    string: {
+      response: 'request String',
+      loading: false,
+      error: [],
+    },
+  },
   state: { state: true },
 };
 
@@ -38,7 +59,7 @@ console.error = () => {};
 
 test('_request by id', async () => {
   const input = { a: { _request: 'string' } };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -49,7 +70,7 @@ test('_request by id', async () => {
 
 test('_request true gives null', async () => {
   const input = { _request: true };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
@@ -62,7 +83,7 @@ test('_request true gives null', async () => {
 
 test('_request return full array', async () => {
   const input = { _request: 'arr' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([{ a: 'request a1' }, { a: 'request a2' }]);
@@ -71,7 +92,7 @@ test('_request return full array', async () => {
 
 test('_request return number', async () => {
   const input = { _request: 'number' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(500);
@@ -80,7 +101,7 @@ test('_request return number', async () => {
 
 test('_request null', async () => {
   const input = { _request: null };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -93,7 +114,7 @@ test('_request null', async () => {
 
 test('_request loading true', async () => {
   const input = { _request: 'not_loaded' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -102,7 +123,7 @@ test('_request loading true', async () => {
 
 test('_request dot notation', async () => {
   const input = { _request: 'arr.0.a' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request a1');
@@ -111,7 +132,7 @@ test('_request dot notation', async () => {
 
 test('_request dot notation with arrayindices', async () => {
   const input = { _request: 'arr.$.a' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request a2');
@@ -120,7 +141,7 @@ test('_request dot notation with arrayindices', async () => {
 
 test('_request dot notation returns null if ', async () => {
   const input = { _request: 'returnsNull.key' };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
