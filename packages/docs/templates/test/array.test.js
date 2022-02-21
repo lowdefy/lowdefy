@@ -1072,17 +1072,19 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                         "_array.map": Object {
                           "callback": Object {
                             "_function": Object {
-                              "__yaml.parse": Object {
-                                "__if_none": Array [
-                                  Object {
-                                    "__args": Object {
-                                      "contextId": undefined,
-                                      "key": "0",
+                              "__yaml.parse": Array [
+                                Object {
+                                  "__if_none": Array [
+                                    Object {
+                                      "__args": Object {
+                                        "contextId": undefined,
+                                        "key": "0",
+                                      },
                                     },
-                                  },
-                                  "",
-                                ],
-                              },
+                                    "",
+                                  ],
+                                },
+                              ],
                             },
                           },
                           "on": Object {
@@ -1267,17 +1269,19 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                     },
                     Object {
                       "obj": Object {
-                        "__yaml.parse": Object {
-                          "__if_none": Array [
-                            Object {
-                              "__args": Object {
-                                "contextId": undefined,
-                                "key": "0.obj",
+                        "__yaml.parse": Array [
+                          Object {
+                            "__if_none": Array [
+                              Object {
+                                "__args": Object {
+                                  "contextId": undefined,
+                                  "key": "0.obj",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                     Object {
@@ -1285,17 +1289,19 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                         "__array.map": Object {
                           "callback": Object {
                             "__function": Object {
-                              "___yaml.parse": Object {
-                                "___if_none": Array [
-                                  Object {
-                                    "___args": Object {
-                                      "contextId": undefined,
-                                      "key": "0",
+                              "___yaml.parse": Array [
+                                Object {
+                                  "___if_none": Array [
+                                    Object {
+                                      "___args": Object {
+                                        "contextId": undefined,
+                                        "key": "0",
+                                      },
                                     },
-                                  },
-                                  "",
-                                ],
-                              },
+                                    "",
+                                  ],
+                                },
+                              ],
                             },
                           },
                           "on": Object {
