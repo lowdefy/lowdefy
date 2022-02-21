@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Add operators used by validation to plugin imports. ([02abd41](https://github.com/lowdefy/lowdefy/commit/02abd41e8eb7e9d1f2637de8f85fbe5dfee350ee))
+* **build:** Add writeActionImports to build. ([f0889d2](https://github.com/lowdefy/lowdefy/commit/f0889d238ca2e0558a59913b6f68069b018bc25f))
+* **build:** Events with try defined should add default for catch. ([bb36b55](https://github.com/lowdefy/lowdefy/commit/bb36b55d7c3a06dea1a448fb6b588b12547141b4))
+* **build:** Fix build tests. ([417f5cb](https://github.com/lowdefy/lowdefy/commit/417f5cb0043ca4e62bcedac192a5965217b0219c))
+* **build:** Fix error message when block is not an object. ([5bc113b](https://github.com/lowdefy/lowdefy/commit/5bc113b18cc30090d9862d95dc6d021b0fe9af6b))
+* **build:** Fix jest with es modules. ([a4d089a](https://github.com/lowdefy/lowdefy/commit/a4d089afa25363a19cddb0ee62d4e0211f1cfda3))
+* **build:** Move page not an object error to addDefaultPages. ([b3c980d](https://github.com/lowdefy/lowdefy/commit/b3c980d2bfc99d1ef4f48a5fb9ef6f99353a4fd6))
+* **build:** Throw better error for incorrect user transformer functions. ([d796de3](https://github.com/lowdefy/lowdefy/commit/d796de3cc7e3bf8602d76e5190cfd1d4f71c775a))
+* **build:** Throw instead of logging error for build. ([cccaabc](https://github.com/lowdefy/lowdefy/commit/cccaabcdaeb357dc8c1382310166cd96af10b2e0))
+* **connection-elasticsearch:** Fix connection-elasticsearch plugin structure to work with version 4. ([f0c55e8](https://github.com/lowdefy/lowdefy/commit/f0c55e8afd69da8581285c9b1805e72e858e4dad))
+* **connection-google-sheets:** Fix connection-google-sheets plugin structure to work with version 4. ([2c19747](https://github.com/lowdefy/lowdefy/commit/2c1974748625a2262edb068f3a8317474eaaee50))
+* **connection-knex:** Fix connection-knex plugin structure to work with version 4. ([ffc9c35](https://github.com/lowdefy/lowdefy/commit/ffc9c351590921f0008192c4106ba4fab8c82e73))
+* **connection-mongodb:** Fix connection-mongodb plugin structure to work with version 4. ([a8b9da9](https://github.com/lowdefy/lowdefy/commit/a8b9da9707fe7aa77e64f042ac36a8efb135329b))
+* **connection-sendgrid:** Fix connection-sendgrid plugin structure to work with version 4. ([1baeb0f](https://github.com/lowdefy/lowdefy/commit/1baeb0faaac7a9a008984f7a333e902d8b3be4dc))
+* **connection-stripe:** Fix connection-stripe plugin structure to work with version 4. ([3a35829](https://github.com/lowdefy/lowdefy/commit/3a35829edae64dcd5d558698d7bc469fe9d55f0e))
+* **deps:** Update dependency ajv to v8.9.0. ([efd18da](https://github.com/lowdefy/lowdefy/commit/efd18da6b146a60db286af00353bac0e12667884))
+* **deps:** Update dependency yargs to v17.3.1. ([277776c](https://github.com/lowdefy/lowdefy/commit/277776c7294e57a95dfcf86d300bb20ea4742043))
+* Fix import issues for build. ([64a076c](https://github.com/lowdefy/lowdefy/commit/64a076cdc91b77a4b067972f77e99bfc2c571650))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* **node-utils:** Convert writeFile function prototype. ([5371430](https://github.com/lowdefy/lowdefy/commit/53714307123f3477240767a91c5332a70a292d93))
+
+
+### Features
+
+* Add watch and ignore paths, default ref resolver to dev server and build. ([c700d9f](https://github.com/lowdefy/lowdefy/commit/c700d9fb0efbdb20dcfe5f8916e256de81acd79e))
+* **build:** Add buildPath to config. ([1cce024](https://github.com/lowdefy/lowdefy/commit/1cce024339bc89e4192d86f09d1a9ec233663f02))
+* **build:** Add command line args for build, config and server directories. ([1ef213b](https://github.com/lowdefy/lowdefy/commit/1ef213b19d5eea582f7597310200468a787e897c))
+* **build:** Added @lowdefy/actions-core plugin to build process. ([a144735](https://github.com/lowdefy/lowdefy/commit/a144735e2cf7647db5e48b434a53c974d907b4f9))
+* **build:** Copy files in config public folder to next public folder. ([ceafdc8](https://github.com/lowdefy/lowdefy/commit/ceafdc8cfca0011425e7a2979e50cd2b32d883b9))
+* **build:** Use dynamic import for build resolver and transformer functions. ([c9db72a](https://github.com/lowdefy/lowdefy/commit/c9db72ac55109a85cfc821dfbbf87e54b4881d59))
+* **operators:** Change dependancy from js-yaml to yaml. ([cbb71d8](https://github.com/lowdefy/lowdefy/commit/cbb71d809b3117dbaf89b23c17a2229a24235308))
+
+
+### BREAKING CHANGES
+
+* **operators:** _yaml.parse now takes an array or an object data instead of a string.
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 

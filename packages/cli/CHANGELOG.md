@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **cli:** Change additional base dir references to config. ([e20cfdf](https://github.com/lowdefy/lowdefy/commit/e20cfdfdcb1f079ea80450b87608ae57ab4e30f8))
+* **cli:** Fix icon in init command. ([295faba](https://github.com/lowdefy/lowdefy/commit/295faba2bf0c9dec826fa0c589e3a7e729e635e9))
+* **cli:** Fix jest es module mocks. ([78480e8](https://github.com/lowdefy/lowdefy/commit/78480e80022f79a0ab449a9a8d804e6213b676c4))
+* **deps:** Update dependency axios to v0.25.0. ([ddf13bb](https://github.com/lowdefy/lowdefy/commit/ddf13bb7f891bbb328f1ac6aea3e34894d80c42c))
+* **deps:** Update dependency commander to v9.0.0. ([aebd5be](https://github.com/lowdefy/lowdefy/commit/aebd5bec6b28d0242d60d3ac92a667b5e39c8aca))
+* Downgrade dependency ora to v5.4.1 ([ea28ea5](https://github.com/lowdefy/lowdefy/commit/ea28ea51c2c2371e0636d3f9bc66b07470563bce))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* **node-utils:** Convert writeFile function prototype. ([5371430](https://github.com/lowdefy/lowdefy/commit/53714307123f3477240767a91c5332a70a292d93))
+
+
+### Features
+
+* Add watch and ignore paths, default ref resolver to dev server and build. ([c700d9f](https://github.com/lowdefy/lowdefy/commit/c700d9fb0efbdb20dcfe5f8916e256de81acd79e))
+* **cli:** Add config option for server-dev and server directories. ([07902b0](https://github.com/lowdefy/lowdefy/commit/07902b0e06f9c72a04168842d7f9bb8de470c424))
+* **cli:** Add port option for start command. ([9e16e2f](https://github.com/lowdefy/lowdefy/commit/9e16e2f9b920a44ce1ed95172b4e960afe404ffa))
+* **cli:** Add port setting to dev command. ([546798a](https://github.com/lowdefy/lowdefy/commit/546798a8fc3ac877b851f31316eb5b0a49d7ac9f))
+* **cli:** Pass package manager setting to dev server. ([0425f07](https://github.com/lowdefy/lowdefy/commit/0425f07e4ada328e76488e3ec0aa164ff475df5c))
+* **cli:** Rename base-directory to config-directory. ([f09c569](https://github.com/lowdefy/lowdefy/commit/f09c569f0e4207ce31a9e5e002f8eb30ea221bc5))
+* **operators:** Change dependancy from js-yaml to yaml. ([cbb71d8](https://github.com/lowdefy/lowdefy/commit/cbb71d809b3117dbaf89b23c17a2229a24235308))
+* **server-dev:** Add .env and lowdefy version watchers. ([bc52268](https://github.com/lowdefy/lowdefy/commit/bc522684abce8c050873ef20a3da66ca023cfa32))
+
+
+### BREAKING CHANGES
+
+* **operators:** _yaml.parse now takes an array or an object data instead of a string.
+* **cli:** Rename base-directory to config-directory.
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 

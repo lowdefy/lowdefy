@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency aws-sdk to v2.1066.0. ([766acde](https://github.com/lowdefy/lowdefy/commit/766acde8de455290076e1aba97fd2ed7f8c50610))
+* Move S3UploadButton to plugin-aws. ([540aa03](https://github.com/lowdefy/lowdefy/commit/540aa035d2ed0672b0f3e233c1cee90e82d4bb52))
+* **plugin-aws:** Convert @lowdefy/plugin-aws to new plugin package structure. ([64043d3](https://github.com/lowdefy/lowdefy/commit/64043d3ddee84fcfc40b60ed777eff688517c2c8))
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 **Note:** Version bump only for package @lowdefy/plugin-aws
