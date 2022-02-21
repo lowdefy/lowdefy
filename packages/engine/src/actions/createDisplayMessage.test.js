@@ -109,7 +109,7 @@ test('DisplayMessage with all params', async () => {
                   params: {
                     content: 'content',
                     duration: 6,
-                    icon: 'FireOutlined',
+                    icon: 'AiOutlineFire',
                     status: 'error',
                   },
                 },
@@ -131,7 +131,7 @@ test('DisplayMessage with all params', async () => {
       {
         content: 'content',
         duration: 6,
-        icon: 'FireOutlined',
+        icon: 'AiOutlineFire',
         status: 'error',
       },
     ],

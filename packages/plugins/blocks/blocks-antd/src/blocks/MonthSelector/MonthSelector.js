@@ -67,7 +67,7 @@ const MonthSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    properties={properties.suffixIcon || 'CalendarOutlined'}
+                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
                   />
                 )
               }
@@ -97,7 +97,7 @@ MonthSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
-  icons: [...Label.meta.icons],
+  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/MonthSelector/style.less'],
 };
 

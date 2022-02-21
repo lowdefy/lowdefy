@@ -46,7 +46,7 @@
 - id: 'property.minIcon: MehTwoTone'
   type: RatingSlider
   properties:
-    minIcon: FormOutlined
+    minIcon: AiOutlineForm
 - id: 'property.maxIcon: SmileTwoTone'
   type: RatingSlider
   properties:

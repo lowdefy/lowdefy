@@ -112,7 +112,7 @@
     copyable:
       icon:
         - WarningOutlined
-        - RocketOutlined
+        - AiOutlineRocket
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: tooltips: []'
   type: Title

@@ -146,7 +146,7 @@ test('button defaultValueTransformer', () => {
             displayType: 'button',
           },
           default: {
-            icon: 'UploadOutlined',
+            icon: 'AiOutlineUpload',
             title: 'Upload',
             type: 'default',
           },
@@ -157,7 +157,7 @@ test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
     Object {
       "field": Object {
-        "icon": "UploadOutlined",
+        "icon": "AiOutlineUpload",
         "title": "Upload",
         "type": "default",
       },
