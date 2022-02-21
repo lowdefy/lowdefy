@@ -42,6 +42,7 @@ test('deleteOne', async () => {
   };
   const res = await MongoDBDeleteOne({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     deletedCount: 1,
   });
 });
@@ -57,7 +58,7 @@ test('deleteOne connection error', async () => {
     write: true,
   };
   await expect(MongoDBDeleteOne({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
@@ -80,9 +81,11 @@ test('deleteOne catch invalid options', async () => {
     collection,
     write: true,
   };
-  await expect(MongoDBDeleteOne({ request, connection })).rejects.toThrow(
-    'w has to be a number or a string'
-  );
+  const res = await MongoDBDeleteOne({ request, connection });
+  expect(res).toEqual({
+    acknowledged: false,
+    deletedCount: undefined,
+  });
 });
 
 test('request not an object', async () => {

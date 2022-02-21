@@ -3192,7 +3192,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
-            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.7.3"],
+            ["mongodb", "npm:4.4.0"],
             ["saslprep", "npm:1.0.3"]
           ],
           "linkType": "SOFT",
@@ -4221,7 +4221,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.2.0"],
             ["@types/mongodb", null],
             ["debug", "virtual:46bd44738c648c1105842f65adfc896e3dbcb5f8631b32158dc40c0a1a21460f1708014b7896430af62fa59b995d372f1841b2205de80ebc306769451a14cbdd#npm:4.3.2"],
-            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.7.3"],
+            ["mongodb", "npm:4.4.0"],
             ["mongodb-memory-server", "npm:7.3.6"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -4892,6 +4892,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-unist-npm-2.0.6-82641b4aa5-25cb860ff1.zip/node_modules/@types/unist/",
           "packageDependencies": [
             ["@types/unist", "npm:2.0.6"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/webidl-conversions", [
+        ["npm:6.1.1", {
+          "packageLocation": "./.yarn/cache/@types-webidl-conversions-npm-6.1.1-ce4d057614-bd0faad4df.zip/node_modules/@types/webidl-conversions/",
+          "packageDependencies": [
+            ["@types/webidl-conversions", "npm:6.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/whatwg-url", [
+        ["npm:8.2.1", {
+          "packageLocation": "./.yarn/cache/@types-whatwg-url-npm-8.2.1-718fa51acd-975987a9ca.zip/node_modules/@types/whatwg-url/",
+          "packageDependencies": [
+            ["@types/whatwg-url", "npm:8.2.1"],
+            ["@types/node", "npm:17.0.14"],
+            ["@types/webidl-conversions", "npm:6.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -6053,6 +6073,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/bson-npm-1.1.6-071be5c52e-75762c9b7e.zip/node_modules/bson/",
           "packageDependencies": [
             ["bson", "npm:1.1.6"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.6.1", {
+          "packageLocation": "./.yarn/cache/bson-npm-4.6.1-4e698544f6-32c38400b0.zip/node_modules/bson/",
+          "packageDependencies": [
+            ["bson", "npm:4.6.1"],
+            ["buffer", "npm:5.7.1"]
           ],
           "linkType": "HARD",
         }]
@@ -7518,6 +7546,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/denque-npm-1.5.1-2dd42d2dcb-4375ad19d5.zip/node_modules/denque/",
           "packageDependencies": [
             ["denque", "npm:1.5.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/denque-npm-2.0.1-4ba00e404b-ec398d1e3c.zip/node_modules/denque/",
+          "packageDependencies": [
+            ["denque", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -12993,10 +13028,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.7.3", {
-          "packageLocation": "./.yarn/__virtual__/mongodb-virtual-40cb457e1d/0/cache/mongodb-npm-3.7.3-c479129d1e-ef7690fe6e.zip/node_modules/mongodb/",
+        ["npm:4.4.0", {
+          "packageLocation": "./.yarn/cache/mongodb-npm-4.4.0-cc5718bafa-e485927d1d.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.7.3"],
+            ["mongodb", "npm:4.4.0"],
+            ["bson", "npm:4.6.1"],
+            ["denque", "npm:2.0.1"],
+            ["mongodb-connection-string-url", "npm:2.4.2"],
+            ["saslprep", "npm:1.0.3"],
+            ["socks", "npm:2.6.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:0a51e320dc5b109e637e794bce5af2be0a1eef05b47f4f7a5da449544562a38b8e690909d1d419a9018331638b1b33914a9007effc9c013b31e98b84170bb801#npm:3.7.3", {
+          "packageLocation": "./.yarn/__virtual__/mongodb-virtual-e918975556/0/cache/mongodb-npm-3.7.3-c479129d1e-ef7690fe6e.zip/node_modules/mongodb/",
+          "packageDependencies": [
+            ["mongodb", "virtual:0a51e320dc5b109e637e794bce5af2be0a1eef05b47f4f7a5da449544562a38b8e690909d1d419a9018331638b1b33914a9007effc9c013b31e98b84170bb801#npm:3.7.3"],
             ["@types/aws4", null],
             ["@types/bson-ext", null],
             ["@types/kerberos", null],
@@ -13033,6 +13080,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["mongodb-connection-string-url", [
+        ["npm:2.4.2", {
+          "packageLocation": "./.yarn/cache/mongodb-connection-string-url-npm-2.4.2-dfd1085b7c-aed2718840.zip/node_modules/mongodb-connection-string-url/",
+          "packageDependencies": [
+            ["mongodb-connection-string-url", "npm:2.4.2"],
+            ["@types/whatwg-url", "npm:8.2.1"],
+            ["whatwg-url", "npm:11.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["mongodb-memory-server", [
         ["npm:7.3.6", {
           "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-7.3.6-1008c38beb/node_modules/mongodb-memory-server/",
@@ -13058,7 +13116,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["https-proxy-agent", "npm:5.0.0"],
             ["md5-file", "npm:5.0.0"],
             ["mkdirp", "npm:1.0.4"],
-            ["mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:3.7.3"],
+            ["mongodb", "virtual:0a51e320dc5b109e637e794bce5af2be0a1eef05b47f4f7a5da449544562a38b8e690909d1d419a9018331638b1b33914a9007effc9c013b31e98b84170bb801#npm:3.7.3"],
             ["new-find-package-json", "npm:1.1.0"],
             ["semver", "npm:7.3.5"],
             ["tar-stream", "npm:2.2.0"],
@@ -18237,6 +18295,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["punycode", "npm:2.1.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/tr46-npm-3.0.0-e1ae1ea7c9-44c3cc6767.zip/node_modules/tr46/",
+          "packageDependencies": [
+            ["tr46", "npm:3.0.0"],
+            ["punycode", "npm:2.1.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["treeify", [
@@ -18936,6 +19002,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webidl-conversions", "npm:6.1.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:7.0.0", {
+          "packageLocation": "./.yarn/cache/webidl-conversions-npm-7.0.0-e8c8e30c68-f05588567a.zip/node_modules/webidl-conversions/",
+          "packageDependencies": [
+            ["webidl-conversions", "npm:7.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["whatwg-encoding", [
@@ -18958,6 +19031,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["whatwg-url", [
+        ["npm:11.0.0", {
+          "packageLocation": "./.yarn/cache/whatwg-url-npm-11.0.0-073529d93a-ed4826aaa5.zip/node_modules/whatwg-url/",
+          "packageDependencies": [
+            ["whatwg-url", "npm:11.0.0"],
+            ["tr46", "npm:3.0.0"],
+            ["webidl-conversions", "npm:7.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:5.0.0", {
           "packageLocation": "./.yarn/cache/whatwg-url-npm-5.0.0-374fb45e60-b8daed4ad3.zip/node_modules/whatwg-url/",
           "packageDependencies": [
