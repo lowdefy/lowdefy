@@ -3,7 +3,12 @@ export default {
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.js'],
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/index.js'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/dist/',
+    '<rootDir>/src/index.js',
+    '<rootDir>/src/connections.js',
+    '<rootDir>/src/types.js',
+  ],
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
