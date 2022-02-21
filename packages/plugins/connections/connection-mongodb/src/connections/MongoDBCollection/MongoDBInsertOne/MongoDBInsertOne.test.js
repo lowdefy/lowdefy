@@ -40,13 +40,8 @@ test('insertOne', async () => {
   };
   const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
-    insertedCount: 1,
+    acknowledged: true,
     insertedId: 'insertOne',
-    ops: [
-      {
-        _id: 'insertOne',
-      },
-    ],
   });
 });
 
@@ -63,13 +58,8 @@ test('insertOne options', async () => {
   };
   const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
-    insertedCount: 1,
+    acknowledged: true,
     insertedId: 'insertOne_options',
-    ops: [
-      {
-        _id: 'insertOne_options',
-      },
-    ],
   });
 });
 
@@ -82,7 +72,7 @@ test('insertOne connection error', async () => {
     write: true,
   };
   await expect(MongoDBInsertOne({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
@@ -123,16 +113,8 @@ test('insertOne insert a date', async () => {
   };
   const res = await MongoDBInsertOne({ request, connection });
   expect(res).toEqual({
-    insertedCount: 1,
+    acknowledged: true,
     insertedId: 'insertOneDate',
-    ops: [
-      {
-        _id: 'insertOneDate',
-        date: {
-          _date: 1577836800000,
-        },
-      },
-    ],
   });
   let client;
   let inserted;
