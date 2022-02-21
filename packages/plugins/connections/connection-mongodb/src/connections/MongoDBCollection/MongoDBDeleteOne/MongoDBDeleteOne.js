@@ -30,8 +30,8 @@ async function MongodbDeleteOne({ request, connection }) {
     throw error;
   }
   await client.close();
-  const { deletedCount } = serialize(res);
-  return { deletedCount };
+  const { acknowledged, deletedCount } = serialize(res);
+  return { acknowledged, deletedCount };
 }
 
 MongodbDeleteOne.schema = schema;

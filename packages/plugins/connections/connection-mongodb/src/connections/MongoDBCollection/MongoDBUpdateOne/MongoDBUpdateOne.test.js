@@ -65,10 +65,7 @@ test('updateOne upsert', async () => {
   const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
-    upsertedId: {
-      _id: 'updateOne_upsert',
-      index: 0,
-    },
+    upsertedId: 'updateOne_upsert',
     upsertedCount: 1,
     matchedCount: 0,
   });
@@ -127,7 +124,7 @@ test('updateOne connection error', async () => {
     write: true,
   };
   await expect(MongoDBUpdateOne({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 

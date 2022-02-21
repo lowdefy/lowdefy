@@ -86,7 +86,7 @@ test('findOne connection error', async () => {
     read: true,
   };
   await expect(MongoDBFindOne({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 

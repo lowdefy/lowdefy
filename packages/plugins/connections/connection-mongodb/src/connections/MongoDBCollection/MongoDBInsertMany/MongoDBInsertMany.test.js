@@ -41,18 +41,8 @@ test('insertMany', async () => {
   };
   const res = await MongoDBInsertMany({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     insertedCount: 3,
-    ops: [
-      {
-        _id: 'insertMany1-1',
-      },
-      {
-        _id: 'insertMany1-2',
-      },
-      {
-        _id: 'insertMany1-3',
-      },
-    ],
   });
 });
 
@@ -69,15 +59,8 @@ test('insertMany options', async () => {
   };
   const res = await MongoDBInsertMany({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     insertedCount: 2,
-    ops: [
-      {
-        _id: 'insertMany2-1',
-      },
-      {
-        _id: 'insertMany2-2',
-      },
-    ],
   });
 });
 
@@ -90,7 +73,7 @@ test('insertMany connection error', async () => {
     write: true,
   };
   await expect(MongoDBInsertMany({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 

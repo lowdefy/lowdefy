@@ -50,6 +50,7 @@ test('deleteMany - Single Document', async () => {
   };
   const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     deletedCount: 1,
   });
 });
@@ -66,6 +67,7 @@ test('deleteMany - Multiple Documents', async () => {
   };
   const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     deletedCount: 3,
   });
 });
@@ -82,6 +84,7 @@ test('deleteMany - Multiple Documents one field', async () => {
   };
   const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     deletedCount: 3,
   });
 });
@@ -97,7 +100,7 @@ test('deleteMany connection error', async () => {
     write: true,
   };
   await expect(MongoDBDeleteMany({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
@@ -112,9 +115,11 @@ test('deleteMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(MongoDBDeleteMany({ request, connection })).rejects.toThrow(
-    'w has to be a number or a string'
-  );
+  const res = await MongoDBDeleteMany({ request, connection });
+  expect(res).toEqual({
+    acknowledged: false,
+    deletedCount: undefined,
+  });
 });
 
 test('checkRead should be false', async () => {
