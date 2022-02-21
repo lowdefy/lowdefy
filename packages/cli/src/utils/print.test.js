@@ -16,7 +16,7 @@
 
 // eslint-disable-next-line no-unused-vars
 import ora from 'ora';
-import { createOraPrint, createBasicPrint } from './print';
+import { createOraPrint, createBasicPrint } from './print.js';
 
 jest.mock('ora', () => {
   const mockOraConstructor = jest.fn();

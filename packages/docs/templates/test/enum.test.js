@@ -19,16 +19,14 @@ import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
 import defaultValueTransformer from '../blocks/defaultValueTransformer';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        enum: {
-          type: 'string',
-          enum: ['a', 'b', 'c'],
-          description: 'description.',
-        },
+      enum: {
+        type: 'string',
+        enum: ['a', 'b', 'c'],
+        description: 'description.',
       },
     },
   },
@@ -86,17 +84,15 @@ test('enum defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          enum: {
-            type: 'string',
-            enum: ['a', 'b', 'c'],
-            default: 'a',
-            description: 'description.',
-          },
+        enum: {
+          type: 'string',
+          enum: ['a', 'b', 'c'],
+          default: 'a',
+          description: 'description.',
         },
       },
     },

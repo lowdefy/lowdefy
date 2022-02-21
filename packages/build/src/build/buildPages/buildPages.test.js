@@ -13,9 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { get } from '@lowdefy/helpers';
-import buildPages from './buildPages';
-import testContext from '../../test/testContext';
+import buildPages from './buildPages.js';
+import testContext from '../../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 const mockLog = jest.fn();
@@ -25,158 +24,11 @@ const logger = {
   log: mockLog,
 };
 
-const blockMetas = {
-  Context: {
-    category: 'context',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Context',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Container: {
-    category: 'container',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  List: {
-    category: 'list',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Input: {
-    category: 'input',
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-  Display: {
-    category: 'display',
-    loading: {
-      type: 'Spinner',
-    },
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    schema: {
-      $schema: 'http://json-schema.org/draft-07/schema#',
-      $id: 'https://example.com/Container.json',
-    },
-  },
-};
-
-const outputMetas = {
-  Context: {
-    category: 'context',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Context',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  Container: {
-    category: 'container',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Container',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-  List: {
-    category: 'list',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'List',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-    valueType: 'array',
-  },
-  Input: {
-    category: 'input',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Input',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    valueType: 'string',
-    loading: {
-      type: 'SkeletonInput',
-    },
-  },
-  Display: {
-    category: 'display',
-    moduleFederation: {
-      scope: 'blocks',
-      module: 'Display',
-      url: 'https://example.com/remoteEntry.js',
-    },
-    loading: {
-      type: 'Spinner',
-    },
-  },
-};
-
 const auth = {
   public: true,
 };
 
-const getMeta = (type) => {
-  const meta = blockMetas[type];
-  if (!meta) {
-    return null;
-  }
-  return Promise.resolve(meta);
-};
-
-const context = testContext({ logger, getMeta });
+const context = testContext({ logger });
 
 beforeEach(() => {
   mockLogWarn.mockReset();
@@ -203,7 +55,7 @@ test('page does not have an id', async () => {
   const components = {
     pages: [
       {
-        type: 'Context',
+        type: 'Container',
         auth,
       },
     ],
@@ -216,14 +68,32 @@ test('page id is not a string', async () => {
     pages: [
       {
         id: true,
-        type: 'Context',
+        type: 'Container',
         auth,
       },
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page id is not a string at at page 0. Received true.'
+    'Page id is not a string at page 0. Received true.'
   );
+});
+
+test('Throw on duplicate page ids', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+      },
+    ],
+  };
+  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
 });
 
 test('block does not have an id', async () => {
@@ -231,7 +101,7 @@ test('block does not have an id', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -251,7 +121,7 @@ test('block id is not a string', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -277,7 +147,7 @@ test('page type missing', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page type is not defined at page1.'
+    'Block type is not defined at "page1" on page "page1".'
   );
 });
 
@@ -286,7 +156,7 @@ test('block type missing', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -297,43 +167,7 @@ test('block type missing', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Block type is not defined at blockId on page page1.'
-  );
-});
-
-test('invalid page type', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page1',
-        type: 'NotABlock',
-        auth,
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Invalid block type at page page1. Received "NotABlock"'
-  );
-});
-
-test('invalid block type', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'blockId',
-            type: 'NotABlock',
-          },
-        ],
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Invalid Block type at blockId on page page1. Received "NotABlock"'
+    'Block type is not defined at "blockId" on page "page1".'
   );
 });
 
@@ -348,7 +182,7 @@ test('page type not a string', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page type is not a string at page1. Received 1'
+    'Block type is not a string at "page1" on page "page1". Received 1.'
   );
 });
 
@@ -357,7 +191,7 @@ test('block type not a string', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -369,22 +203,7 @@ test('block type not a string', async () => {
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Block type is not a string at blockId on page page1. Received 1'
-  );
-});
-
-test('page type is not of category context', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page1',
-        type: 'Container',
-        auth,
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Page page1 is not of category "context". Received "Container"'
+    'Block type is not a string at "blockId" on page "page1". Received 1.'
   );
 });
 
@@ -393,7 +212,7 @@ test('no blocks on page', async () => {
     pages: [
       {
         id: '1',
-        type: 'Context',
+        type: 'Container',
         auth,
       },
     ],
@@ -407,8 +226,7 @@ test('no blocks on page', async () => {
         operators: [],
         pageId: '1',
         blockId: '1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
         requests: [],
       },
     ],
@@ -420,7 +238,7 @@ test('blocks not an array', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         blocks: 'block_1',
       },
     ],
@@ -435,79 +253,14 @@ test('block not an object', async () => {
     pages: [
       {
         id: 'page1',
-        type: 'Context',
+        type: 'Container',
         blocks: ['block_1'],
       },
     ],
   };
   await expect(buildPages({ components, context })).rejects.toThrow(
-    'Expected block to be an object on page1. Received "block_1"'
+    'Expected block to be an object on page "page1". Received "block_1".'
   );
-});
-
-test('block meta should include all meta fields', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-          },
-          {
-            id: 'block_2',
-            type: 'Display',
-          },
-          {
-            id: 'block_3',
-            type: 'List',
-          },
-        ],
-      },
-    ],
-  };
-  const res = await buildPages({ components, context });
-  expect(res).toEqual({
-    pages: [
-      {
-        id: 'page:page_1',
-        auth: { public: true },
-        operators: [],
-        pageId: 'page_1',
-        blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
-        requests: [],
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:page_1:block_1',
-                blockId: 'block_1',
-                type: 'Input',
-                meta: outputMetas.Input,
-              },
-              {
-                id: 'block:page_1:block_2',
-                blockId: 'block_2',
-                type: 'Display',
-                meta: outputMetas.Display,
-              },
-              {
-                id: 'block:page_1:block_3',
-                blockId: 'block_3',
-                type: 'List',
-                meta: outputMetas.List,
-              },
-            ],
-          },
-        },
-      },
-    ],
-  });
 });
 
 test('nested blocks', async () => {
@@ -515,7 +268,7 @@ test('nested blocks', async () => {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
@@ -541,25 +294,22 @@ test('nested blocks', async () => {
         operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
-        type: 'Context',
-        meta: outputMetas.Context,
+        type: 'Container',
         requests: [],
         areas: {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Container',
-                meta: outputMetas.Container,
                 areas: {
                   content: {
                     blocks: [
                       {
-                        id: 'block:page_1:block_2',
+                        id: 'block:page_1:block_2:0',
                         blockId: 'block_2',
                         type: 'Input',
-                        meta: outputMetas.Input,
                       },
                     ],
                   },
@@ -579,7 +329,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page1',
-          type: 'Context',
+          type: 'Container',
           auth,
           areas: {
             content: {
@@ -599,7 +349,7 @@ describe('block areas', () => {
       pages: [
         {
           id: 'page1',
-          type: 'Context',
+          type: 'Container',
           auth,
           areas: {
             content: {},
@@ -616,8 +366,7 @@ describe('block areas', () => {
           blockId: 'page1',
           operators: [],
           pageId: 'page1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
@@ -634,7 +383,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           areas: {
             content: {
@@ -658,17 +407,15 @@ describe('block areas', () => {
           blockId: '1',
           operators: [],
           pageId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
@@ -683,7 +430,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           areas: {
             content: {
@@ -708,18 +455,16 @@ describe('block areas', () => {
           pageId: '1',
           operators: [],
           blockId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               gutter: 20,
               blocks: [
                 {
-                  id: 'block:1:block1',
+                  id: 'block:1:block1:0',
                   blockId: 'block1',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
@@ -734,7 +479,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           areas: {
             content: {
@@ -766,27 +511,24 @@ describe('block areas', () => {
           operators: [],
           pageId: '1',
           blockId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -801,7 +543,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           blocks: [
             {
@@ -831,27 +573,24 @@ describe('block areas', () => {
           operators: [],
           pageId: '1',
           blockId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -866,7 +605,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           blocks: [
             {
@@ -904,27 +643,24 @@ describe('block areas', () => {
           operators: [],
           pageId: '1',
           blockId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:textInput',
+                  id: 'block:1:textInput:0',
                   blockId: 'textInput',
                   type: 'Input',
-                  meta: outputMetas.Input,
                 },
               ],
             },
             header: {
               blocks: [
                 {
-                  id: 'block:1:avatar',
+                  id: 'block:1:avatar:0',
                   blockId: 'avatar',
                   type: 'Display',
-                  meta: outputMetas.Display,
                 },
               ],
             },
@@ -939,7 +675,7 @@ describe('block areas', () => {
       pages: [
         {
           id: '1',
-          type: 'Context',
+          type: 'Container',
           auth,
           blocks: [
             {
@@ -993,43 +729,38 @@ describe('block areas', () => {
           operators: [],
           pageId: '1',
           blockId: '1',
-          type: 'Context',
-          meta: outputMetas.Context,
+          type: 'Container',
           requests: [],
           areas: {
             content: {
               blocks: [
                 {
-                  id: 'block:1:card',
+                  id: 'block:1:card:0',
                   blockId: 'card',
                   type: 'Container',
-                  meta: outputMetas.Container,
                   areas: {
                     content: {
                       blocks: [
                         {
-                          id: 'block:1:card2',
+                          id: 'block:1:card2:0',
                           blockId: 'card2',
                           type: 'Container',
-                          meta: outputMetas.Container,
                           areas: {
                             title: {
                               blocks: [
                                 {
-                                  id: 'block:1:title',
+                                  id: 'block:1:title:0',
                                   blockId: 'title',
                                   type: 'Display',
-                                  meta: outputMetas.Display,
                                 },
                               ],
                             },
                             content: {
                               blocks: [
                                 {
-                                  id: 'block:1:textInput',
+                                  id: 'block:1:textInput:0',
                                   blockId: 'textInput',
                                   type: 'Input',
-                                  meta: outputMetas.Input,
                                 },
                               ],
                             },
@@ -1040,10 +771,9 @@ describe('block areas', () => {
                     header: {
                       blocks: [
                         {
-                          id: 'block:1:avatar',
+                          id: 'block:1:avatar:0',
                           blockId: 'avatar',
                           type: 'Display',
-                          meta: outputMetas.Display,
                         },
                       ],
                     },
@@ -1058,479 +788,12 @@ describe('block areas', () => {
   });
 });
 
-describe('build requests', () => {
-  test('requests not an array', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          auth,
-          type: 'Context',
-          requests: 'requests',
-        },
-      ],
-    };
-    await expect(buildPages({ components, context })).rejects.toThrow(
-      'Requests is not an array at page_1 on page page_1. Received "requests"'
-    );
-  });
-
-  test('request id missing', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          auth,
-          type: 'Context',
-          requests: [{ type: 'Request' }],
-        },
-      ],
-    };
-    await expect(buildPages({ components, context })).rejects.toThrow(
-      'Request id missing at page "page_1".'
-    );
-  });
-
-  test('request id not a string', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          auth,
-          type: 'Context',
-          requests: [{ id: true, type: 'Request' }],
-        },
-      ],
-    };
-    await expect(buildPages({ components, context })).rejects.toThrow(
-      'Request id is not a string at page "page_1". Received true.'
-    );
-  });
-
-  test('request id contains a "."', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          auth,
-          type: 'Context',
-          requests: [{ id: 'my.request', type: 'Request' }],
-        },
-      ],
-    };
-    await expect(buildPages({ components, context })).rejects.toThrow(
-      'Request id "my.request" should not include a period (".").'
-    );
-  });
-
-  test('give request an id', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          requests: [
-            {
-              id: 'request_1',
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          operators: [],
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [
-            {
-              id: 'request:page_1:page_1:request_1',
-              auth: { public: true },
-              requestId: 'request_1',
-              contextId: 'page_1',
-            },
-          ],
-        },
-      ],
-    });
-  });
-
-  test('request on a context block not at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          blocks: [
-            {
-              id: 'context',
-              type: 'Context',
-              requests: [
-                {
-                  id: 'request_1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          operators: [],
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:context',
-                  blockId: 'context',
-                  type: 'Context',
-                  operators: [],
-                  meta: outputMetas.Context,
-                  requests: [
-                    {
-                      id: 'request:page_1:context:request_1',
-                      auth: { public: true },
-                      requestId: 'request_1',
-                      contextId: 'context',
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('request on a non-context block', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          blocks: [
-            {
-              id: 'box',
-              type: 'Container',
-              requests: [
-                {
-                  id: 'request_1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          blockId: 'page_1',
-          operators: [],
-          pageId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [
-            {
-              id: 'request:page_1:page_1:request_1',
-              auth: { public: true },
-              requestId: 'request_1',
-              contextId: 'page_1',
-            },
-          ],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:box',
-                  blockId: 'box',
-                  type: 'Container',
-                  meta: outputMetas.Container,
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('request on a non-context block below a context block not at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          blocks: [
-            {
-              id: 'context',
-              type: 'Context',
-              blocks: [
-                {
-                  id: 'box',
-                  type: 'Container',
-                  requests: [
-                    {
-                      id: 'request_1',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          operators: [],
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:context',
-                  blockId: 'context',
-                  type: 'Context',
-                  operators: [],
-                  meta: outputMetas.Context,
-                  requests: [
-                    {
-                      id: 'request:page_1:context:request_1',
-                      auth: { public: true },
-                      requestId: 'request_1',
-                      contextId: 'context',
-                    },
-                  ],
-                  areas: {
-                    content: {
-                      blocks: [
-                        {
-                          id: 'block:page_1:box',
-                          blockId: 'box',
-                          meta: outputMetas.Container,
-                          type: 'Container',
-                        },
-                      ],
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('request on a non-context block below a context block and at root', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          blocks: [
-            {
-              id: 'context',
-              type: 'Context',
-              blocks: [
-                {
-                  id: 'box-inner',
-                  type: 'Container',
-                },
-              ],
-            },
-            {
-              id: 'box',
-              type: 'Container',
-              requests: [
-                {
-                  id: 'request_1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          blockId: 'page_1',
-          type: 'Context',
-          meta: {
-            category: 'context',
-            loading: { type: 'Spinner' },
-            moduleFederation: {
-              module: 'Context',
-              scope: 'blocks',
-              url: 'https://example.com/remoteEntry.js',
-            },
-          },
-          operators: [],
-          pageId: 'page_1',
-          requests: [
-            {
-              id: 'request:page_1:page_1:request_1',
-              auth: { public: true },
-              contextId: 'page_1',
-              requestId: 'request_1',
-            },
-          ],
-          areas: {
-            content: {
-              blocks: [
-                {
-                  id: 'block:page_1:context',
-                  blockId: 'context',
-                  operators: [],
-                  type: 'Context',
-                  requests: [],
-                  areas: {
-                    content: {
-                      blocks: [
-                        {
-                          blockId: 'box-inner',
-                          id: 'block:page_1:box-inner',
-                          meta: {
-                            category: 'container',
-                            loading: {
-                              type: 'Spinner',
-                            },
-                            moduleFederation: {
-                              module: 'Container',
-                              scope: 'blocks',
-                              url: 'https://example.com/remoteEntry.js',
-                            },
-                          },
-                          type: 'Container',
-                        },
-                      ],
-                    },
-                  },
-                  meta: {
-                    category: 'context',
-                    loading: { type: 'Spinner' },
-                    moduleFederation: {
-                      module: 'Context',
-                      scope: 'blocks',
-                      url: 'https://example.com/remoteEntry.js',
-                    },
-                  },
-                },
-                {
-                  id: 'block:page_1:box',
-                  blockId: 'box',
-                  type: 'Container',
-                  meta: {
-                    category: 'container',
-                    loading: { type: 'Spinner' },
-                    moduleFederation: {
-                      module: 'Container',
-                      scope: 'blocks',
-                      url: 'https://example.com/remoteEntry.js',
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-      ],
-    });
-  });
-
-  test('multiple requests', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          requests: [
-            {
-              id: 'request_1',
-            },
-            {
-              id: 'request_2',
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          operators: [],
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [
-            {
-              id: 'request:page_1:page_1:request_1',
-              auth: { public: true },
-              requestId: 'request_1',
-              contextId: 'page_1',
-            },
-            {
-              id: 'request:page_1:page_1:request_2',
-              auth: { public: true },
-              requestId: 'request_2',
-              contextId: 'page_1',
-            },
-          ],
-        },
-      ],
-    });
-  });
-});
-
-test('add user defined loading to meta', async () => {
+test('user defined loading', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         loading: {
           custom: true,
@@ -1556,43 +819,20 @@ test('add user defined loading to meta', async () => {
         operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
-        type: 'Context',
+        type: 'Container',
         loading: {
           custom: true,
-        },
-        meta: {
-          category: 'context',
-          moduleFederation: {
-            scope: 'blocks',
-            module: 'Context',
-            url: 'https://example.com/remoteEntry.js',
-          },
-          loading: {
-            custom: true,
-          },
         },
         requests: [],
         areas: {
           content: {
             blocks: [
               {
-                id: 'block:page_1:block_1',
+                id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Input',
                 loading: {
                   custom: true,
-                },
-                meta: {
-                  category: 'input',
-                  moduleFederation: {
-                    scope: 'blocks',
-                    module: 'Input',
-                    url: 'https://example.com/remoteEntry.js',
-                  },
-                  valueType: 'string',
-                  loading: {
-                    custom: true,
-                  },
                 },
               },
             ],
@@ -1603,404 +843,155 @@ test('add user defined loading to meta', async () => {
   });
 });
 
-describe('auth field', () => {
-  test('set auth to request', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          auth: { public: true },
-          type: 'Context',
-          requests: [
-            {
-              id: 'request_1',
-            },
-          ],
-        },
-        {
-          id: 'page_2',
-          type: 'Context',
-          auth: { public: false },
-          requests: [
-            {
-              id: 'request_2',
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(res).toEqual({
-      pages: [
-        {
-          id: 'page:page_1',
-          auth: { public: true },
-          operators: [],
-          pageId: 'page_1',
-          blockId: 'page_1',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [
-            {
-              id: 'request:page_1:page_1:request_1',
-              auth: { public: true },
-              requestId: 'request_1',
-              contextId: 'page_1',
-            },
-          ],
-        },
-        {
-          id: 'page:page_2',
-          auth: { public: false },
-          operators: [],
-          pageId: 'page_2',
-          blockId: 'page_2',
-          type: 'Context',
-          meta: outputMetas.Context,
-          requests: [
-            {
-              id: 'request:page_2:page_2:request_2',
-              auth: { public: false },
-              requestId: 'request_2',
-              contextId: 'page_2',
-            },
-          ],
-        },
-      ],
-    });
-  });
-});
-
-describe('web operators', () => {
-  test('set empty operators array for every context', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          blocks: [
-            {
-              id: 'context_1',
-              type: 'Context',
-            },
-            {
-              id: 'context_2',
-              type: 'Context',
-              blocks: [
-                {
-                  id: 'context_2_1',
-                  type: 'Context',
-                },
-                {
-                  id: 'block_2_2',
-                  type: 'Display',
-                },
-              ],
-            },
-            {
-              id: 'block_3',
-              type: 'Display',
-            },
-          ],
-        },
-        {
-          id: 'page_2',
-          type: 'Context',
-          auth,
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(get(res, 'pages.0.operators')).toEqual([]);
-    expect(get(res, 'pages.0.areas.content.blocks.0.operators')).toEqual([]);
-    expect(get(res, 'pages.0.areas.content.blocks.1.areas.content.blocks.0.operators')).toEqual([]);
-    expect(get(res, 'pages.1.operators')).toEqual([]);
-  });
-
-  test('set all operators for context', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          properties: {
-            a: { _c_op_1: {} },
-          },
-          blocks: [
-            {
-              id: 'block_1',
-              type: 'Display',
-              visible: {
-                _v_1: {},
-              },
-              properties: {
-                a: { _op_1: {} },
-                b: { _op_1: {} },
-                c: { _op_2: { __op_3: { ___op_4: {} } } },
-              },
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(get(res, 'pages.0.operators')).toEqual([
-      '_c_op_1',
-      '_v_1',
-      '_op_1',
-      '_op_4',
-      '_op_3',
-      '_op_2',
-    ]);
-  });
-
-  test('exclude requests operators', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          requests: [
-            {
-              id: 'request_1',
-              properties: {
-                a: { _r_op_1: {} },
-              },
-            },
-          ],
-          properties: {
-            a: { _c_op_1: {} },
-          },
-          blocks: [
-            {
-              id: 'block_1',
-              type: 'Display',
-              visible: {
-                _v_1: {},
-              },
-              properties: {
-                a: { _op_1: {} },
-                b: { _op_1: {} },
-                c: { _op_2: { __op_3: { ___op_4: {} } } },
-              },
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(get(res, 'pages.0.operators')).toEqual([
-      '_c_op_1',
-      '_v_1',
-      '_op_1',
-      '_op_4',
-      '_op_3',
-      '_op_2',
-    ]);
-  });
-
-  test('set operators specific to multiple contexts', async () => {
-    const components = {
-      pages: [
-        {
-          id: 'page_1',
-          type: 'Context',
-          auth,
-          properties: {
-            a: { _c_op_1: {} },
-          },
-          blocks: [
-            {
-              id: 'block_1',
-              type: 'Context',
-              visible: {
-                _v_1: {},
-              },
-              properties: {
-                a: { _op_1: {} },
-                b: { _op_1: {} },
-                c: { _op_2: { __op_3: { ___op_4: {} } } },
-              },
-            },
-          ],
-        },
-      ],
-    };
-    const res = await buildPages({ components, context });
-    expect(get(res, 'pages.0.operators')).toEqual(['_c_op_1']);
-    expect(get(res, 'pages.0.areas.content.blocks.0.operators')).toEqual([
-      '_v_1',
-      '_op_1',
-      '_op_4',
-      '_op_3',
-      '_op_2',
-    ]);
-  });
-});
-
-test('block events actions array should map to try catch', async () => {
+test('create unique block ids', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
-            id: 'block_1',
-            type: 'Input',
-            events: {
-              onClick: [
-                {
-                  id: 'action_1',
-                  type: 'Reset',
-                },
-              ],
-            },
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
           },
         ],
       },
     ],
   };
   const res = await buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
-    {
-      id: 'action_1',
-      type: 'Reset',
-    },
-  ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+  expect(res).toEqual({
+    pages: [
+      {
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_1:block:2',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
+      },
+    ],
+  });
 });
 
-test('block events actions as try catch arrays', async () => {
+test('different blockId counter for each page', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
-        type: 'Context',
+        type: 'Container',
         auth,
         blocks: [
           {
-            id: 'block_1',
-            type: 'Input',
-            events: {
-              onClick: {
-                try: [
-                  {
-                    id: 'action_1',
-                    type: 'Reset',
-                  },
-                ],
-                catch: [
-                  {
-                    id: 'action_1',
-                    type: 'Retry',
-                  },
-                ],
-              },
-            },
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
+          },
+        ],
+      },
+      {
+        id: 'page_2',
+        type: 'Container',
+        auth,
+        blocks: [
+          {
+            id: 'block',
+            type: 'Display',
+          },
+          {
+            id: 'block',
+            type: 'Display',
           },
         ],
       },
     ],
   };
   const res = await buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
-    {
-      id: 'action_1',
-      type: 'Reset',
-    },
-  ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([
-    {
-      id: 'action_1',
-      type: 'Retry',
-    },
-  ]);
-});
-
-test('block events actions try not an array', async () => {
-  const components = {
+  expect(res).toEqual({
     pages: [
       {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-            events: {
-              onClick: {
-                try: {
-                  id: 'action_1',
-                  type: 'Reset',
-                },
+        id: 'page:page_1',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_1',
+        blockId: 'page_1',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_1:block:0',
+                blockId: 'block',
+                type: 'Display',
               },
-            },
-          },
-        ],
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Events must be an array of actions at block_1 in events onClick on page page_1. Received {"id":"action_1","type":"Reset"}'
-  );
-});
-
-test('block events actions not an array', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-            events: {
-              onClick: {},
-            },
-          },
-        ],
-      },
-    ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Events must be an array of actions at block_1 in events onClick on page page_1. Received undefined'
-  );
-});
-
-test('block events actions catch not an array', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page_1',
-        type: 'Context',
-        auth,
-        blocks: [
-          {
-            id: 'block_1',
-            type: 'Input',
-            events: {
-              onClick: {
-                try: [],
-                catch: {
-                  id: 'action_1',
-                  type: 'Reset',
-                },
+              {
+                id: 'block:page_1:block:1',
+                blockId: 'block',
+                type: 'Display',
               },
-            },
+            ],
           },
-        ],
+        },
+      },
+      {
+        id: 'page:page_2',
+        auth: { public: true },
+        operators: [],
+        pageId: 'page_2',
+        blockId: 'page_2',
+        type: 'Container',
+        requests: [],
+        areas: {
+          content: {
+            blocks: [
+              {
+                id: 'block:page_2:block:0',
+                blockId: 'block',
+                type: 'Display',
+              },
+              {
+                id: 'block:page_2:block:1',
+                blockId: 'block',
+                type: 'Display',
+              },
+            ],
+          },
+        },
       },
     ],
-  };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Catch events must be an array of actions at block_1 in events onClick on page page_1. Received {"id":"action_1","type":"Reset"}'
-  );
+  });
 });

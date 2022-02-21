@@ -71,10 +71,10 @@ class Events {
     }
     eventDescription.loading = true;
     this.block.update = true;
-    this.context.update();
+    this.context._internal.update();
 
     const actionHandle = async () => {
-      const res = await this.context.Actions.callActions({
+      const res = await this.context._internal.Actions.callActions({
         actions: eventDescription.actions,
         arrayIndices: this.arrayIndices,
         block: this.block,
@@ -86,7 +86,7 @@ class Events {
       this.context.eventLog.unshift(res);
       eventDescription.loading = false;
       this.block.update = true;
-      this.context.update();
+      this.context._internal.update();
       return res;
     };
 

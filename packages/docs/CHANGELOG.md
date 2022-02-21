@@ -3,92 +3,140 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
-
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 ### Bug Fixes
 
-* **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
-* **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
-
+- **docs:** Added redis connection documentation. ([ee1620b](https://github.com/lowdefy/lowdefy/commit/ee1620bb41d8aa3f32e05e9b7e03c7986365c59f))
 
 ### Features
 
-* Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
+- Add \_diff to client operators as well as server. ([4e23fec](https://github.com/lowdefy/lowdefy/commit/4e23fec8a4985d7453dfcf750298bc0bedeb34a2))
+
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
+
+**Note:** Version bump only for package @lowdefy/docs
 
 
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+### Bug Fixes
+
+- **docs:** Document that \_index operator is client side only. ([72c8228](https://github.com/lowdefy/lowdefy/commit/72c82282a3e6bcd3eb2eeaf3c09b395a0f152405))
+- Replace all front end testing with @testing-library/react, jest and other updates. ([22ec295](https://github.com/lowdefy/lowdefy/commit/22ec2954047853096aabcddba7a2c509342f95f2))
+
+### Features
+
+- **blocksAntd:** Add HolderOutlined icon. ([c39c387](https://github.com/lowdefy/lowdefy/commit/c39c38752e4a681a1146e44b6638ff8486ff9da9))
+- **blocksAntd:** Convert Alert to container and add action content area. ([49c6baa](https://github.com/lowdefy/lowdefy/commit/49c6baabeedd4ed5aaaf14f1d7b4ae5d2545d6cf))
+- **blocksAntd:** Drawer: Add extra content area and contentWrapperStyle property. ([9273fac](https://github.com/lowdefy/lowdefy/commit/9273facac41e5ee6341c80e698f4367b7d8686f3))
+- **blocks:** Convert all context category blocks to container. ([6bc03c8](https://github.com/lowdefy/lowdefy/commit/6bc03c86b80a3506c2b85076626ae15a401bcdfc))
+- **blockTools:** Update to @emotion/css, optimize makeCssClass standarise jest settings. ([947defa](https://github.com/lowdefy/lowdefy/commit/947defa3d8934e061933b1e218b79f2f97456054))
+- Replace server side state with payload and \_payload operator. ([1f928d9](https://github.com/lowdefy/lowdefy/commit/1f928d93db4cbe886d322a1a3998a817d769485f))
+
+### BREAKING CHANGES
+
+- The \_event, \_global, \_input, \_state, and \_url_query operators are no longer evaluated in connections or requests.
 
 
+## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
+
+**Note:** Version bump only for package @lowdefy/docs
+
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+### Bug Fixes
+
+- **docs:** Fix \_ref resolver function example. ([0903094](https://github.com/lowdefy/lowdefy/commit/0903094ce531f4d8ab7849deb91ab3d6b7e5fd82))
+- **docs:** Included onSearch event example in MultipleSelector and Selector docs. ([0e53cb8](https://github.com/lowdefy/lowdefy/commit/0e53cb8f93ed49e0122ac038113d7378f67501f7))
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+### Bug Fixes
+
+- Add \_switch operator to docs. ([c5c6f0c](https://github.com/lowdefy/lowdefy/commit/c5c6f0c9a5b0dfc89e09835d3ab940195a077504))
+- Support .yml in lowdefy.yaml file. ([0f7cc2a](https://github.com/lowdefy/lowdefy/commit/0f7cc2a7612a5ad9a8164d5a5437dde5c6d7da49)), closes [#902](https://github.com/lowdefy/lowdefy/issues/902)
+- **docs:** Add avatar and links to blog template. ([d855599](https://github.com/lowdefy/lowdefy/commit/d855599398cae041933dd8b11aaf77648f87d4c2))
+- **docs:** Add how to generate pdfs. ([7b35550](https://github.com/lowdefy/lowdefy/commit/7b35550fa944995be8f8a9d0e809971cabcf12af))
+- **docs:** Fix the iframe videos in the docs. ([c4a957a](https://github.com/lowdefy/lowdefy/commit/c4a957a12ea5adf018b373d8da8c5116e064205f))
+- improvements on blog template. ([30e2291](https://github.com/lowdefy/lowdefy/commit/30e22917fed9932e43cde942532654aa4a6aeac6))
+- **docs:** Add how to generate CSVs. ([2cc8e45](https://github.com/lowdefy/lowdefy/commit/2cc8e45b165aa755dceb9e40525f8a0511fb3485))
+
+### Features
+
+- **docs:** Add how to generate csv. ([3257f51](https://github.com/lowdefy/lowdefy/commit/3257f514b95f7cafb8ac30998194e7ae0a327862))
+- **docs:** Add videos to how tos. ([57c7779](https://github.com/lowdefy/lowdefy/commit/57c77798f0356c606cf90bfd36a4f63ab8d0ff36))
+- Add generate pdf how to. ([5bde460](https://github.com/lowdefy/lowdefy/commit/5bde460934e2dc94d677af5f287e3c85c0ff4c34))
+- **docs:** Added switch operator documentation. ([7c42c78](https://github.com/lowdefy/lowdefy/commit/7c42c7882422ea89332b32bcef985b5bc5059ec8))
+
+# [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
+
+### Bug Fixes
+
+- **cli:** Use renderer served from blocks server url if configured. ([69d14b4](https://github.com/lowdefy/lowdefy/commit/69d14b4a862827beac955a5039df225af689f297)), closes [#840](https://github.com/lowdefy/lowdefy/issues/840)
+- **docs:** Fix AxiosHttp connection type spelling in docs. ([d9b53a0](https://github.com/lowdefy/lowdefy/commit/d9b53a034111bc65813d81c036376d05274ff6c7))
+
+### Features
+
+- Add `_array.reduce` examples. ([c9a6b50](https://github.com/lowdefy/lowdefy/commit/c9a6b50017c05774654388244b06076646449ce9))
 
 # [3.22.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.0...v3.22.0-alpha.1) (2021-09-20)
 
-
 ### Bug Fixes
 
-* **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
-* **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
-* **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
-* **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
-* **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
-
+- **docs:** Added CheckboxSwitch examples and CheckboxSelector note. ([9cf56bf](https://github.com/lowdefy/lowdefy/commit/9cf56bfbaa5c7a75c55d24d2f965ec351c1672e0))
+- **docs:** Added copyable and ellipsis config to Title block. ([9f8632e](https://github.com/lowdefy/lowdefy/commit/9f8632ec577196ea45471470a9dd13d3dbc09446))
+- **docs:** Change npx commands to specific versions for deployments. ([f2c380b](https://github.com/lowdefy/lowdefy/commit/f2c380b07a78defff79281d5c07c61a718bfe750))
+- **docs:** Convert CLI commands to npx commands. ([c9cd643](https://github.com/lowdefy/lowdefy/commit/c9cd643f3809fdc0cde7ba47e17e392b3236c17b))
+- **docs:** Update CLI npm install docs. ([98a8b71](https://github.com/lowdefy/lowdefy/commit/98a8b71ff2ef961ccfcb8b94e115b4162881dd38))
 
 ### Features
 
-* **docs:** Add _get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
-* **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
-
-
-
-
+- **docs:** Add \_get operator switch example. ([b727b9e](https://github.com/lowdefy/lowdefy/commit/b727b9edd0f37d3d10d5add32cbd9411fa4b6f98))
+- **docs:** Added CheckboxSwitch docs. ([81752aa](https://github.com/lowdefy/lowdefy/commit/81752aa927f1d6050a290440ca15a87c05f3ea51))
 
 # [3.22.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.2...v3.22.0-alpha.0) (2021-09-08)
 
-
 ### Features
 
-* **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
-* **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
-
-
-
-
+- **docs:** Add Stripe documentation. ([ed963ec](https://github.com/lowdefy/lowdefy/commit/ed963ec823ef19e88ed8320d71b83a7eef2e6cfe))
+- **docs:** Added Password Input block docs. ([ee8bda4](https://github.com/lowdefy/lowdefy/commit/ee8bda4a5bd6248c03433a720652d72c3b9ddbae))
 
 ## [3.21.2](https://github.com/lowdefy/lowdefy/compare/v3.21.2-alpha.0...v3.21.2) (2021-08-31)
 
 **Note:** Version bump only for package @lowdefy/docs
 
-
-
-
-
 ## [3.21.2-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.21.1...v3.21.2-alpha.0) (2021-08-31)
-
 
 ### Bug Fixes
 
-* Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
-
-
-
-
+- Downgrade mongodb driver to LTS version 3.6.12. ([24f94f6](https://github.com/lowdefy/lowdefy/commit/24f94f644256cfc4f1b09c3122f2525c58f1502c))
 
 ## [3.21.1](https://github.com/lowdefy/lowdefy/compare/v3.21.0...v3.21.1) (2021-08-26)
 
-
 ### Bug Fixes
 
-* **docs:** Add missing hash docs. ([2520555](https://github.com/lowdefy/lowdefy/commit/2520555212b699bf58d9a01b5db996cb2f5b44cb))
-* **docs:** Add responsive layout docs and video. ([5c31dac](https://github.com/lowdefy/lowdefy/commit/5c31dacda32ec8688dcf6605756c6a1262867adf))
-* **docs:** Update node server docs. ([bb64d3e](https://github.com/lowdefy/lowdefy/commit/bb64d3e850b0c60a5129babbb5b144a577d8635d))
-
+- **docs:** Add missing hash docs. ([2520555](https://github.com/lowdefy/lowdefy/commit/2520555212b699bf58d9a01b5db996cb2f5b44cb))
+- **docs:** Add responsive layout docs and video. ([5c31dac](https://github.com/lowdefy/lowdefy/commit/5c31dacda32ec8688dcf6605756c6a1262867adf))
+- **docs:** Update node server docs. ([bb64d3e](https://github.com/lowdefy/lowdefy/commit/bb64d3e850b0c60a5129babbb5b144a577d8635d))
 
 ### Features
 
-* **docs:** Added responsive setup to Layout Concepts. ([0635433](https://github.com/lowdefy/lowdefy/commit/0635433df47ff1fd1fe067231ea0a9ff4b3f652e))
-
-
-
-
+- **docs:** Added responsive setup to Layout Concepts. ([0635433](https://github.com/lowdefy/lowdefy/commit/0635433df47ff1fd1fe067231ea0a9ff4b3f652e))
 
 # [3.21.0](https://github.com/lowdefy/lowdefy/compare/v3.20.4...v3.21.0) (2021-08-25)
 

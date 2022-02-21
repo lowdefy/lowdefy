@@ -1,0 +1,64 @@
+{
+  "name": "@lowdefy/block-utils",
+  "version": "4.0.0-alpha.6",
+  "licence": "Apache-2.0",
+  "description": "Lowdefy Block Utils",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "utils"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": "./dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@emotion/css": "11.7.1",
+    "@emotion/react": "11.7.1",
+    "@lowdefy/helpers": "4.0.0-alpha.6",
+    "classnames": "2.3.1",
+    "dompurify": "2.3.5",
+    "react": "18.0.0-rc.0",
+    "react-dom": "18.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@emotion/jest": "11.7.1",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "@testing-library/dom": "8.11.3",
+    "@testing-library/react": "13.0.0-alpha.4",
+    "@testing-library/user-event": "14.0.0-alpha.14",
+    "jest": "27.4.7",
+    "jest-serializer-html": "7.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

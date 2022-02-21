@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeGlobal from './writeGlobal';
-import testContext from '../test/testContext';
+import writeGlobal from './writeGlobal.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -34,12 +34,10 @@ test('writeGlobal', async () => {
   await writeGlobal({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'global.json',
-        content: `{
+      'global.json',
+      `{
   "key": "value"
 }`,
-      },
     ],
   ]);
 });
@@ -49,27 +47,13 @@ test('writeGlobal empty global', async () => {
     global: {},
   };
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'global.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{}`]]);
 });
 
 test('writeGlobal global undefined', async () => {
   const components = {};
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'global.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{}`]]);
 });
 
 test('writeGlobal global not an object', async () => {

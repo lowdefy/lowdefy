@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import testSchema from './testSchema';
-import testContext from '../test/testContext';
+import testSchema from './testSchema.js';
+import testContext from '../test/testContext.js';
 
 const mockLogWarn = jest.fn();
 
@@ -98,11 +98,9 @@ test('invalid schema', async () => {
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
-      `
---------- Schema Error ---------
-message: App "global" should be an object.
-path: /global
---------------------------------`,
+      `Schema Error
+App "global" should be an object.
+- global`,
     ],
   ]);
 });
@@ -128,32 +126,365 @@ test('multiple schema errors', async () => {
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
-      `
---------- Schema Error ---------
-message: Block should have required property "id".
-path: /pages/0
---------------------------------`,
+      `Schema Error
+Block should have required property "id".
+- pages
+ - [0]`,
     ],
     [
-      `
---------- Schema Error ---------
-message: Block should have required property "type".
-path: /pages/0
---------------------------------`,
+      `Schema Error
+Block should have required property "type".
+- pages
+ - [0]`,
     ],
     [
-      `
---------- Schema Error ---------
-message: Block "id" should be a string.
-path: /pages/1/id
---------------------------------`,
+      `Schema Error
+Block "id" should be a string.
+- pages
+ - [1:1:_ERROR_MISSING_TYPE_].id`,
     ],
     [
-      `
---------- Schema Error ---------
-message: Block should have required property "type".
-path: /pages/1
---------------------------------`,
+      `Schema Error
+Block should have required property "type".
+- pages
+ - [1:1:_ERROR_MISSING_TYPE_]`,
+    ],
+  ]);
+});
+
+test('nested schema error', async () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          {
+            id: 'box_1',
+            type: 'Box',
+            areas: {
+              footer: {
+                blocks: [
+                  {
+                    id: 'button',
+                    type: 'Button',
+                    events: {
+                      onClick: [
+                        {
+                          id: 'set_state',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+Action should have required property "type".
+- pages
+ - [0:page_1:PageHeaderMenu].blocks
+  - [0:box_1:Box].areas.footer.blocks
+   - [0:button:Button].events.onClick
+    - [0:set_state:_ERROR_MISSING_TYPE_]`,
+    ],
+    [
+      `Schema Error
+must be object
+- pages
+ - [0:page_1:PageHeaderMenu].blocks
+  - [0:box_1:Box].areas.footer.blocks
+   - [0:button:Button].events.onClick`,
+    ],
+    [
+      `Schema Error
+must match a schema in anyOf
+- pages
+ - [0:page_1:PageHeaderMenu].blocks
+  - [0:box_1:Box].areas.footer.blocks
+   - [0:button:Button].events.onClick`,
+    ],
+  ]);
+});
+
+test('nested schema error 2', async () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          {
+            id: 'box_1',
+            type: 'Box',
+            areas: {
+              footer: {
+                blocks: [
+                  {
+                    id: 'box_2',
+                    type: 'Box',
+                    blocks: null,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+Block "blocks" should be an array.
+- pages
+ - [0:page_1:PageHeaderMenu].blocks
+  - [0:box_1:Box].areas.footer.blocks
+   - [0:box_2:Box].blocks`,
+    ],
+  ]);
+});
+
+test('connections schema error', async () => {
+  const components = {
+    lowdefy: '1.0.0',
+    connections: [
+      {
+        id: 'email-surveys',
+        properties: {
+          collection: 'email-surveys',
+          databaseUri: 'https://example.com',
+          write: true,
+        },
+      },
+      {
+        type: 'MongoDBCollection',
+        properties: {
+          collection: 'cati-surveys',
+          databaseUri: 'https://example.com',
+          write: true,
+        },
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+Connection should have required property "type".
+- connections
+ - [0:email-surveys:_ERROR_MISSING_TYPE_]`,
+    ],
+    [
+      `Schema Error
+Connection should have required property "id".
+- connections
+ - [1:_ERROR_MISSING_ID_:MongoDBCollection]`,
+    ],
+  ]);
+});
+
+test('requests schema error', async () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        requests: [
+          {
+            type: 'MongoDBAggregation',
+            connectionId: 'interviews',
+            properties: {
+              pipeline: [],
+            },
+          },
+          {
+            id: 'request_1',
+            connectionId: 'interviews',
+            properties: {
+              pipeline: [],
+            },
+          },
+          {
+            id: 'request_1',
+            type: 'MongoDBAggregation',
+            connectionId: 'interviews',
+            properties: null,
+          },
+        ],
+        blocks: [
+          {
+            id: 'box_1',
+            type: 'Box',
+            areas: {
+              footer: {
+                blocks: [
+                  {
+                    id: 'box_2',
+                    type: 'Box',
+                    blocks: [],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+Request should have required property "id".
+- pages
+ - [0:page_1:PageHeaderMenu].requests
+  - [0:_ERROR_MISSING_ID_:MongoDBAggregation]`,
+    ],
+    [
+      `Schema Error
+Request should have required property "type".
+- pages
+ - [0:page_1:PageHeaderMenu].requests
+  - [1:request_1:_ERROR_MISSING_TYPE_]`,
+    ],
+    [
+      `Schema Error
+Request "properties" should be an object.
+- pages
+ - [0:page_1:PageHeaderMenu].requests
+  - [2:request_1:MongoDBAggregation].properties`,
+    ],
+  ]);
+});
+
+test('menus schema error', async () => {
+  const components = {
+    lowdefy: '1.0.0',
+    menus: [
+      {
+        id: 'default',
+        links: [
+          {
+            type: 'MenuLink',
+            pageId: 'overview',
+            properties: {
+              title: 'Overview',
+            },
+          },
+          {
+            id: 'menu-2',
+            properties: {
+              title: 'Overview',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+must NOT have additional properties
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+    ],
+    [
+      `Schema Error
+MenuGroup should have required property "id".
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+    ],
+    [
+      `Schema Error
+MenuLink should have required property "id".
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+    ],
+    [
+      `Schema Error
+must match a schema in anyOf
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+    ],
+    [
+      `Schema Error
+MenuGroup should have required property "type".
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+    ],
+    [
+      `Schema Error
+MenuLink should have required property "type".
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+    ],
+    [
+      `Schema Error
+must match a schema in anyOf
+- menus
+ - [0:default:_ERROR_MISSING_TYPE_].links
+  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+    ],
+  ]);
+});
+
+test('missing lowdefy version schema error', async () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'PageHeaderMenu',
+        blocks: [
+          {
+            id: 'box_1',
+            type: 'Box',
+            areas: {
+              footer: {
+                blocks: [
+                  {
+                    id: 'box_2',
+                    type: 'Box',
+                    blocks: [],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  await testSchema({ components, context });
+  expect(mockLogWarn.mock.calls).toEqual([
+    ['Schema not valid.'],
+    [
+      `Schema Error
+Lowdefy configuration should have required property "lowdefy".
+`,
     ],
   ]);
 });

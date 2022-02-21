@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import testContext from '../testContext';
-import { ThrowActionError } from '../../src/actions/Throw';
-
-const pageId = 'one';
+import testContext from '../testContext.js';
+import { ThrowActionError } from '../../src/actions/Throw.js';
 
 const closeLoader = jest.fn();
 const displayMessage = jest.fn();
 const lowdefy = {
-  displayMessage,
-  pageId,
+  _internal: {
+    displayMessage,
+  },
 };
 
 const RealDate = Date;
@@ -50,22 +49,16 @@ afterAll(() => {
 
 test('Throw no params', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -88,7 +81,7 @@ test('Throw no params', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -111,22 +104,16 @@ test('Throw no params', async () => {
 
 test('Throw throw true no message or metaData', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -150,7 +137,7 @@ test('Throw throw true no message or metaData', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -195,22 +182,16 @@ test('Throw throw true no message or metaData', async () => {
 
 test('Throw throw true message no metaData', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -234,7 +215,7 @@ test('Throw throw true message no metaData', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -279,22 +260,16 @@ test('Throw throw true message no metaData', async () => {
 
 test('Throw throw true message metaData string', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -318,7 +293,7 @@ test('Throw throw true message metaData string', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -371,22 +346,16 @@ test('Throw throw true message metaData string', async () => {
 
 test('Throw throw true message metaData object', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -410,7 +379,7 @@ test('Throw throw true message metaData object', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -463,22 +432,16 @@ test('Throw throw true message metaData object', async () => {
 
 test('Throw throw false', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -502,7 +465,7 @@ test('Throw throw false', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -525,22 +488,16 @@ test('Throw throw false', async () => {
 
 test('Throw throw invalid', async () => {
   const rootBlock = {
+    id: 'block:root:root:0',
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
         blocks: [
           {
-            blockId: 'text',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
+            id: 'block:root:button:0',
             blockId: 'button',
             type: 'Button',
             meta: {
@@ -564,7 +521,7 @@ test('Throw throw invalid', async () => {
     lowdefy,
     rootBlock,
   });
-  const { button } = context.RootBlocks.map;
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',

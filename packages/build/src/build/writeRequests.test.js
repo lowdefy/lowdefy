@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeRequests from './writeRequests';
-import testContext from '../test/testContext';
+import writeRequests from './writeRequests.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -33,10 +33,13 @@ test('writeRequests write request', async () => {
         pageId: 'page1',
         requests: [
           {
-            id: 'request:page1:page1:request1',
+            id: 'request:page1:request1',
             requestId: 'request1',
-            contextId: 'page1',
+            pageId: 'page1',
             connectionId: 'connection1',
+            auth: { public: true },
+            type: 'Request',
+            payload: {},
             properties: { key: 'value' },
           },
         ],
@@ -46,82 +49,169 @@ test('writeRequests write request', async () => {
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/requests/page1/request1.json',
-        content: `{
-  "id": "request:page1:page1:request1",
+      'pages/page1/requests/request1.json',
+      `{
+  "id": "request:page1:request1",
   "requestId": "request1",
-  "contextId": "page1",
+  "pageId": "page1",
   "connectionId": "connection1",
+  "auth": {
+    "public": true
+  },
+  "type": "Request",
+  "payload": {},
   "properties": {
     "key": "value"
   }
 }`,
-      },
     ],
   ]);
 });
 
-test('writeRequests write nested request', async () => {
+test('writeRequests write multiple requests on a page', async () => {
   const components = {
     pages: [
       {
         id: 'page:page1',
         pageId: 'page1',
-        areas: {
-          content: {
-            blocks: [
-              {
-                id: 'block:block1',
-                blockId: 'block1',
-                requests: [
-                  {
-                    id: 'request:page1:page1:request1',
-                    requestId: 'request1',
-                    contextId: 'page1',
-                    connectionId: 'connection1',
-                    properties: { key: 'value' },
-                  },
-                ],
-              },
-            ],
+        requests: [
+          {
+            id: 'request:page1:request1',
+            requestId: 'request1',
+            pageId: 'page1',
+            connectionId: 'connection1',
+            auth: { public: true },
+            type: 'Request',
+            payload: {},
+            properties: { key: 'value' },
           },
-        },
+          {
+            id: 'request:page1:request2',
+            requestId: 'request2',
+            pageId: 'page1',
+            connectionId: 'connection1',
+            auth: { public: true },
+            type: 'Request',
+            payload: {},
+            properties: { key: 'value' },
+          },
+        ],
       },
     ],
   };
   await writeRequests({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'pages/page1/requests/page1/request1.json',
-        content: `{
-  "id": "request:page1:page1:request1",
+      'pages/page1/requests/request1.json',
+      `{
+  "id": "request:page1:request1",
   "requestId": "request1",
-  "contextId": "page1",
+  "pageId": "page1",
   "connectionId": "connection1",
+  "auth": {
+    "public": true
+  },
+  "type": "Request",
+  "payload": {},
   "properties": {
     "key": "value"
   }
 }`,
-      },
+    ],
+    [
+      'pages/page1/requests/request2.json',
+      `{
+  "id": "request:page1:request2",
+  "requestId": "request2",
+  "pageId": "page1",
+  "connectionId": "connection1",
+  "auth": {
+    "public": true
+  },
+  "type": "Request",
+  "payload": {},
+  "properties": {
+    "key": "value"
+  }
+}`,
     ],
   ]);
 });
 
-test('writeRequests requests is not an array', async () => {
+test('writeRequests write requests on a for multiple pages', async () => {
   const components = {
     pages: [
       {
         id: 'page:page1',
         pageId: 'page1',
-        requests: 'requests',
+        requests: [
+          {
+            id: 'request:page1:request1',
+            requestId: 'request1',
+            pageId: 'page1',
+            connectionId: 'connection1',
+            auth: { public: true },
+            type: 'Request',
+            payload: {},
+            properties: { key: 'value' },
+          },
+        ],
+      },
+      {
+        id: 'page:page2',
+        pageId: 'page2',
+        requests: [
+          {
+            id: 'request:page2:request1',
+            requestId: 'request1',
+            pageId: 'page2',
+            connectionId: 'connection1',
+            auth: { public: true },
+            type: 'Request',
+            payload: {},
+            properties: { key: 'value' },
+          },
+        ],
       },
     ],
   };
-  await expect(writeRequests({ components, context })).rejects.toThrow(
-    'Requests is not an array on page "page1"'
-  );
+  await writeRequests({ components, context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'pages/page1/requests/request1.json',
+      `{
+  "id": "request:page1:request1",
+  "requestId": "request1",
+  "pageId": "page1",
+  "connectionId": "connection1",
+  "auth": {
+    "public": true
+  },
+  "type": "Request",
+  "payload": {},
+  "properties": {
+    "key": "value"
+  }
+}`,
+    ],
+    [
+      'pages/page2/requests/request1.json',
+      `{
+  "id": "request:page2:request1",
+  "requestId": "request1",
+  "pageId": "page2",
+  "connectionId": "connection1",
+  "auth": {
+    "public": true
+  },
+  "type": "Request",
+  "payload": {},
+  "properties": {
+    "key": "value"
+  }
+}`,
+    ],
+  ]);
 });
 
 test('writeRequests empty pages array', async () => {
@@ -138,60 +228,6 @@ test('writeRequests no pages array', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([]);
 });
 
-test('writeRequests pages not an array', async () => {
-  const components = {
-    pages: 'pages',
-  };
-  await expect(writeRequests({ components, context })).rejects.toThrow('Pages is not an array.');
-});
-
-test('writeRequests page is not a object', async () => {
-  const components = {
-    pages: ['page'],
-  };
-  await expect(writeRequests({ components, context })).rejects.toThrow('Page is not an object.');
-});
-
-test('writeRequests to throw when blocks is not a array', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        blockId: 'page1',
-        areas: {
-          content: {
-            blocks: 'blocks',
-          },
-        },
-      },
-    ],
-  };
-  await expect(writeRequests({ components, context })).rejects.toThrow(
-    'Blocks is not an array on page "page1", block "page1", area "content".'
-  );
-});
-
-test('writeRequests to throw when block is not an object', async () => {
-  const components = {
-    pages: [
-      {
-        id: 'page:page1',
-        pageId: 'page1',
-        blockId: 'page1',
-        areas: {
-          content: {
-            blocks: ['block'],
-          },
-        },
-      },
-    ],
-  };
-  await expect(writeRequests({ components, context })).rejects.toThrow(
-    'Block is not an object on page "page1".'
-  );
-});
-
 test('writeRequests deletes request properties', async () => {
   const components = {
     pages: [
@@ -200,9 +236,21 @@ test('writeRequests deletes request properties', async () => {
         pageId: 'page1',
         requests: [
           {
-            id: 'request:page1:page1:request1',
+            id: 'request:page1:request1',
             requestId: 'request1',
+            type: 'RequestType',
             connectionId: 'connection1',
+            payload: { payload: 1 },
+            auth: { public: true },
+            properties: { key: 'value' },
+          },
+          {
+            id: 'request:page1:request2',
+            requestId: 'request2',
+            type: 'RequestType',
+            connectionId: 'connection1',
+            payload: { payload: 2 },
+            auth: { public: true },
             properties: { key: 'value' },
           },
         ],
@@ -212,14 +260,6 @@ test('writeRequests deletes request properties', async () => {
               {
                 id: 'block:block1',
                 blockId: 'block1',
-                requests: [
-                  {
-                    id: 'request:request2',
-                    requestId: 'request1',
-                    connectionId: 'connection1',
-                    properties: { key: 'value' },
-                  },
-                ],
               },
             ],
           },
@@ -235,9 +275,14 @@ test('writeRequests deletes request properties', async () => {
         pageId: 'page1',
         requests: [
           {
-            id: 'request:page1:page1:request1',
+            id: 'request:page1:request1',
             requestId: 'request1',
-            connectionId: 'connection1',
+            payload: { payload: 1 },
+          },
+          {
+            id: 'request:page1:request2',
+            requestId: 'request2',
+            payload: { payload: 2 },
           },
         ],
         areas: {
@@ -246,13 +291,6 @@ test('writeRequests deletes request properties', async () => {
               {
                 id: 'block:block1',
                 blockId: 'block1',
-                requests: [
-                  {
-                    id: 'request:request2',
-                    requestId: 'request1',
-                    connectionId: 'connection1',
-                  },
-                ],
               },
             ],
           },

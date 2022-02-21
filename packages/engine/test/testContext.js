@@ -16,58 +16,55 @@
 
 import { WebParser } from '@lowdefy/operators';
 
-import Actions from '../src/Actions';
-import Blocks from '../src/Blocks';
-import Requests from '../src/Requests';
-import State from '../src/State';
+import Actions from '../src/Actions.js';
+import Blocks from '../src/Blocks.js';
+import Requests from '../src/Requests.js';
+import State from '../src/State.js';
 
-const testContext = async ({ lowdefy, rootBlock, initState = {} }) => {
+const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) => {
   const testLowdefy = {
-    displayMessage: () => () => undefined,
     inputs: { test: {} },
-    pageId: rootBlock.blockId,
-    updateBlock: () => {},
     urlQuery: {},
-    imports: {
-      jsActions: {},
-      jsOperators: {},
-    },
     ...lowdefy,
+    _internal: {
+      displayMessage: () => () => undefined,
+      updateBlock: () => {},
+      ...lowdefy._internal,
+    },
   };
   const ctx = {
     id: 'test',
-    blockId: rootBlock.blockId,
+    pageId: rootBlock.blockId,
     eventLog: [],
     requests: {},
-    lowdefy: testLowdefy,
-    rootBlock,
-    pageId: rootBlock.blockId,
-    // routeHistory: [], // init new routeHistory for each test
     state: {},
-    updateListeners: new Set(),
+    _internal: {
+      lowdefy: testLowdefy,
+      rootBlock,
+    },
   };
-  ctx.parser = new WebParser({ context: ctx, contexts: {} });
-  ctx.operators = Object.keys(ctx.parser.operators);
-  await ctx.parser.init();
-  ctx.State = new State(ctx);
-  ctx.Actions = new Actions(ctx);
-  ctx.Requests = new Requests(ctx);
-  ctx.RootBlocks = new Blocks({
-    areas: { root: { blocks: [ctx.rootBlock] } },
+  const _internal = ctx._internal;
+  _internal.parser = new WebParser({ context: ctx, contexts: {}, operators: operators || {} });
+  await _internal.parser.init();
+  _internal.State = new State(ctx);
+  _internal.Actions = new Actions(ctx);
+  _internal.Requests = new Requests(ctx);
+  _internal.RootBlocks = new Blocks({
+    areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  ctx.RootBlocks.init();
-  ctx.update = () => {
-    ctx.RootBlocks.update();
+  _internal.RootBlocks.init();
+  _internal.update = () => {
+    _internal.RootBlocks.update();
   };
   if (initState) {
     Object.keys(initState).forEach((key) => {
-      ctx.State.set(key, initState[key]);
+      _internal.State.set(key, initState[key]);
     });
-    ctx.RootBlocks.reset();
+    _internal.RootBlocks.reset();
   }
-  ctx.update();
-  ctx.State.freezeState();
+  _internal.update();
+  _internal.State.freezeState();
   return ctx;
 };
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import getProtectedPages from './getProtectedPages';
+import getProtectedPages from './getProtectedPages.js';
 
 test('No config', () => {
   const components = {

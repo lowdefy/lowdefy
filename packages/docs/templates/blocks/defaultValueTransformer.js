@@ -46,6 +46,6 @@ function getDefaultValues(defaultValues, obj) {
   return defaultValues;
 }
 
-const transformer = (obj) => getDefaultValues({}, obj.schema.properties);
+const transformer = (obj) => getDefaultValues({}, obj.properties);
 
-module.exports = transformer;
+export default transformer;

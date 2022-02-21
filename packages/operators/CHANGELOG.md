@@ -3,6 +3,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Features
+
+* Add additional operator plugins to generateDefaultTypes, and fix operaotr packages. ([a1d9c3b](https://github.com/lowdefy/lowdefy/commit/a1d9c3bf7c687603b2f79d0f75b794f703482b17))
+* Create operators-change-case plugin ([9aca6be](https://github.com/lowdefy/lowdefy/commit/9aca6be86d3246bc2028c9a559bf90be2f3c3298))
+* Create operators-diff plugin. ([97885be](https://github.com/lowdefy/lowdefy/commit/97885bef8cc8a325ae8b301b7dfc9234e4d0ddb5))
+* Create operators-mql plugin ([e3084aa](https://github.com/lowdefy/lowdefy/commit/e3084aaffa5c9d295faa699c25367883bfd690c7))
+* Create operators-uuid plugin. ([7ab243b](https://github.com/lowdefy/lowdefy/commit/7ab243bfc71f47ff2f7d81e87c7b41197fcd676d))
+* Create operators-yaml plugin. ([3a521ba](https://github.com/lowdefy/lowdefy/commit/3a521ba8c11e575ce74c994a6a7f4d99f6563ee6))
+
+
+
+
+
+# [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
+
+
+### Features
+
+* Add client operators to operators-js. ([1453e8e](https://github.com/lowdefy/lowdefy/commit/1453e8e8d6ef2897be1d378488144b179949a7dd))
+* Create operators-nunjucks plugin. ([d299d2f](https://github.com/lowdefy/lowdefy/commit/d299d2f7ed4fd2ad928882bcdd1cfda7f82c9187))
+* Move server operators to operators-js plugin. ([a864473](https://github.com/lowdefy/lowdefy/commit/a864473d7f68d4921186db8a6abeb681e5fe7f41))
+* **operators:** Add other functions to operators export. ([16f4da7](https://github.com/lowdefy/lowdefy/commit/16f4da78ec8e7a44fff4bdc28d4a61d421b82ca4))
+* **operators:** Move common operators to operators-js plugin ([42a8054](https://github.com/lowdefy/lowdefy/commit/42a80549e3c6153ef09ab5d0fd4b31c40a9c92f6))
+* **operators:** Update node and web parser and move their tests. ([3647299](https://github.com/lowdefy/lowdefy/commit/364729916a9238a7018adcfc5927e2ea85cab8c5))
+* **operators:** Update node and webParser and tests. ([e52a22e](https://github.com/lowdefy/lowdefy/commit/e52a22eb9fbfafab6c2bc0ef2c8915c9f844087c))
+
+
+
+
+
+# [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* **api:** Add request handler tests. ([b827137](https://github.com/lowdefy/lowdefy/commit/b8271376f1d20f2cc2d036aa50f69caa3b6b0c4a))
+* **operators:** _index operator is no longer supported in node env. ([ec777ca](https://github.com/lowdefy/lowdefy/commit/ec777ca4b90a9cac8bc82a2b941fff82cdb01824))
+* **operators:** Fix _switch operator tests. ([b28c65e](https://github.com/lowdefy/lowdefy/commit/b28c65e1b51188f1b4ccba3a32371ca8702fc460))
+* **operators:** Fix operator tests for payload change. ([dc41f69](https://github.com/lowdefy/lowdefy/commit/dc41f69330b7f935b0220f01f1590a696bac4f1d))
+* Replace all front end testing with @testing-library/react, jest and other updates. ([22ec295](https://github.com/lowdefy/lowdefy/commit/22ec2954047853096aabcddba7a2c509342f95f2))
+* Update dependency mingo to v4.2.0. ([cbcf3a7](https://github.com/lowdefy/lowdefy/commit/cbcf3a7a8d4b336be9c25a913c00410703f231d5))
+
+
+### Features
+
+* Add requests to client and server. ([320c4a1](https://github.com/lowdefy/lowdefy/commit/320c4a10a14b14488f13bb3b98bb100c7e6227af))
+* **blockTools:** Update to @emotion/css, optimize makeCssClass standarise jest settings. ([947defa](https://github.com/lowdefy/lowdefy/commit/947defa3d8934e061933b1e218b79f2f97456054))
+* Next server rendering blocks ([e625e07](https://github.com/lowdefy/lowdefy/commit/e625e07a29b5ae3f09f74c629f35fe52ce73dace))
+* **operators:** Convert package @lowdefy/operators to es modules. ([eba25a7](https://github.com/lowdefy/lowdefy/commit/eba25a7d165679318a2174a98f130a07981c941e))
+* **operators:** Remove ability to get from another context. ([1abc542](https://github.com/lowdefy/lowdefy/commit/1abc5426fb84fc3d24369be3907b25dc17837ab7))
+* Replace server side state with payload and _payload operator. ([1f928d9](https://github.com/lowdefy/lowdefy/commit/1f928d93db4cbe886d322a1a3998a817d769485f))
+
+
+### BREAKING CHANGES
+
+* **operators:** Getter operators can no longer get from another context.
+* **operators:** The _index operator is no longer supported in node env.
+* The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
+
+
+
+
+
+## [3.23.1](https://github.com/lowdefy/lowdefy/compare/v3.23.0...v3.23.1) (2021-11-20)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.23.0](https://github.com/lowdefy/lowdefy/compare/v3.23.0-alpha.0...v3.23.0) (2021-11-19)
+
+**Note:** Version bump only for package @lowdefy/operators
+
+
+
+
+
+# [3.23.0-alpha.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0...v3.23.0-alpha.0) (2021-11-09)
+
+
+### Bug Fixes
+
+* **operators:** Added tests for switch operator to Node and Web Parsers. ([249ab6b](https://github.com/lowdefy/lowdefy/commit/249ab6bb475bb0d945e48d4f5b90d2308fd00e16))
+* **operators:** Added tests for switch operator. ([ce31fa3](https://github.com/lowdefy/lowdefy/commit/ce31fa30c05023f7a15c944abfc93a7ecb9f6b56))
+* **operators:** Updated switch operator to for... ...of syntax. ([cdbd0e0](https://github.com/lowdefy/lowdefy/commit/cdbd0e0d229933d6b0e497f90cf755ccd04b89c9))
+
+
+### Features
+
+* **operators:** Added switch operator. ([436170c](https://github.com/lowdefy/lowdefy/commit/436170c2ec88e6a8ddbd5a34c791cd7eacc5f72b))
+
+
+
+
+
 # [3.22.0](https://github.com/lowdefy/lowdefy/compare/v3.22.0-alpha.1...v3.22.0) (2021-09-27)
 
 **Note:** Version bump only for package @lowdefy/operators

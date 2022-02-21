@@ -14,37 +14,68 @@
   limitations under the License.
 */
 
-import validateApp from './validateApp';
-import testContext from '../test/testContext';
+import validateApp from './validateApp.js';
+import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('validateApp success', async () => {
-  let components = {
+test('validateApp no app defined', async () => {
+  const components = {};
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
     app: {
       html: {
-        appendBody: 'abc',
-        appendHead: 'abc',
+        appendBody: '',
+        appendHead: '',
+      },
+    },
+  });
+});
+
+test('validateApp empty app object', async () => {
+  const components = { app: {} };
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
+    app: {
+      html: {
+        appendBody: '',
+        appendHead: '',
+      },
+    },
+  });
+});
+
+test('validateApp empty html', async () => {
+  const components = { app: { html: {} } };
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
+    app: {
+      html: {
+        appendBody: '',
+        appendHead: '',
+      },
+    },
+  });
+});
+
+test('validateApp appendHead and appendHead', async () => {
+  const components = {
+    app: {
+      html: {
+        appendBody: 'body',
+        appendHead: 'head',
       },
     },
   };
-  let result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: 'abc', appendHead: 'abc' } } });
-  components = {};
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
-  components = {
-    app: {},
-  };
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
-  components = {
+  const result = await validateApp({ components, context });
+  expect(result).toEqual({
     app: {
-      html: {},
+      html: {
+        appendBody: 'body',
+        appendHead: 'head',
+      },
     },
-  };
-  result = await validateApp({ components, context });
-  expect(result).toEqual({ app: { html: { appendBody: '', appendHead: '' } } });
+  });
 });
 
 test('validateApp app not an object', async () => {

@@ -16,7 +16,7 @@
 
 import path from 'path';
 import { readFile } from '@lowdefy/node-utils';
-import getLowdefyYaml from './getLowdefyYaml';
+import getLowdefyYaml from './getLowdefyYaml.js';
 
 jest.mock('@lowdefy/node-utils', () => {
   const readFile = jest.fn();
@@ -31,7 +31,7 @@ beforeEach(() => {
   readFile.mockReset();
 });
 
-const baseDirectory = process.cwd();
+const configDirectory = process.cwd();
 
 test('get version from yaml file', async () => {
   readFile.mockImplementation((filePath) => {
@@ -42,40 +42,48 @@ test('get version from yaml file', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ baseDirectory });
+  const config = await getLowdefyYaml({ configDirectory });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {} });
 });
 
-test('get version from yaml file, base dir specified', async () => {
+test('get version from yaml file, config dir specified', async () => {
   readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'baseDir/lowdefy.yaml')) {
+    if (filePath === path.resolve(process.cwd(), 'configDir/lowdefy.yaml')) {
       return `
       lowdefy: 1.0.0
       `;
     }
     return null;
   });
-  const config = await getLowdefyYaml({ baseDirectory: path.resolve(process.cwd(), './baseDir') });
+  const config = await getLowdefyYaml({
+    configDirectory: path.resolve(process.cwd(), './configDir'),
+  });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {} });
 });
 
 test('could not find lowdefy.yaml in cwd', async () => {
   readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
+    if (
+      filePath === path.resolve(process.cwd(), 'lowdefy.yaml') ||
+      filePath === path.resolve(process.cwd(), 'lowdefy.yml')
+    ) {
       return null;
     }
     return `
     lowdefy: 1.0.0
     `;
   });
-  await expect(getLowdefyYaml({ baseDirectory })).rejects.toThrow(
-    'Could not find "lowdefy.yaml" file in specified base directory'
+  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+    'Could not find "lowdefy.yaml" file in specified config directory'
   );
 });
 
-test('could not find lowdefy.yaml in base dir', async () => {
+test('could not find lowdefy.yaml in config dir', async () => {
   readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'baseDir/lowdefy.yaml')) {
+    if (
+      filePath === path.resolve(process.cwd(), 'configDir/lowdefy.yaml') ||
+      filePath === path.resolve(process.cwd(), 'configDir/lowdefy.yml')
+    ) {
       return null;
     }
     return `
@@ -83,8 +91,8 @@ test('could not find lowdefy.yaml in base dir', async () => {
     `;
   });
   await expect(
-    getLowdefyYaml({ baseDirectory: path.resolve(process.cwd(), './baseDir') })
-  ).rejects.toThrow('Could not find "lowdefy.yaml" file in specified base directory');
+    getLowdefyYaml({ configDirectory: path.resolve(process.cwd(), './configDir') })
+  ).rejects.toThrow('Could not find "lowdefy.yaml" file in specified config directory');
 });
 
 test('lowdefy.yaml is invalid yaml', async () => {
@@ -98,7 +106,7 @@ test('lowdefy.yaml is invalid yaml', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ baseDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
     'Could not parse "lowdefy.yaml" file. Received error '
   );
 });
@@ -114,7 +122,7 @@ test('No version specified', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ baseDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
     'No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.'
   );
 });
@@ -128,22 +136,8 @@ test('Version is not a string', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ baseDirectory })).rejects.toThrow(
-    'Version number specified in "lowdefy.yaml" file is not valid. Received 1.'
-  );
-});
-
-test('Version is not a valid version number', async () => {
-  readFile.mockImplementation((filePath) => {
-    if (filePath === path.resolve(process.cwd(), 'lowdefy.yaml')) {
-      return `
-      lowdefy: v1-0-3
-      `;
-    }
-    return null;
-  });
-  await expect(getLowdefyYaml({ baseDirectory })).rejects.toThrow(
-    'Version number specified in "lowdefy.yaml" file is not valid. Received "v1-0-3".'
+  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+    'Version number specified in "lowdefy.yaml" file should be a string. Received 1.'
   );
 });
 
@@ -160,21 +154,30 @@ test('get cliConfig', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ baseDirectory });
+  const config = await getLowdefyYaml({ configDirectory });
   expect(config).toEqual({
     lowdefyVersion: '1.0.0',
     cliConfig: { disableTelemetry: true, watch: ['a'] },
   });
 });
 
-test('could not find lowdefy.yaml in base dir, command is "init" or "clean-cache"', async () => {
+test('could not find lowdefy.yaml in config dir, command is "init" or "clean-cache"', async () => {
   readFile.mockImplementation(() => null);
-  let config = await getLowdefyYaml({ command: 'init', baseDirectory });
+  const config = await getLowdefyYaml({ command: 'init', configDirectory });
   expect(config).toEqual({
     cliConfig: {},
   });
-  config = await getLowdefyYaml({ command: 'clean-cache', baseDirectory });
-  expect(config).toEqual({
-    cliConfig: {},
+});
+
+test('support yml extension', async () => {
+  readFile.mockImplementation((filePath) => {
+    if (filePath === path.resolve(process.cwd(), 'lowdefy.yml')) {
+      return `
+      lowdefy: 1.0.0
+      `;
+    }
+    return null;
   });
+  const config = await getLowdefyYaml({ configDirectory });
+  expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {} });
 });

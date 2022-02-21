@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object with all media 1`] = `
+Array [
+  Object {
+    "@media screen and (max-width: 576px)": Object {
+      "a": "xs",
+    },
+    "@media screen and (min-width: 1200px)": Object {
+      "a": "xl",
+    },
+    "@media screen and (min-width: 1600px)": Object {
+      "a": "xxl",
+    },
+    "@media screen and (min-width: 576px)": Object {
+      "a": "sm",
+    },
+    "@media screen and (min-width: 768px)": Object {
+      "a": "md",
+    },
+    "@media screen and (min-width: 992px)": Object {
+      "a": "lg",
+    },
+    "a": "a",
+  },
+]
+`;
+
+exports[`object with all media with styleObjectOnly option 1`] = `
+Array [
+  Object {
+    "@media screen and (maxWidth: 576px)": Object {
+      "a": "xs",
+    },
+    "@media screen and (minWidth: 1200px)": Object {
+      "a": "xl",
+    },
+    "@media screen and (minWidth: 1600px)": Object {
+      "a": "xxl",
+    },
+    "@media screen and (minWidth: 576px)": Object {
+      "a": "sm",
+    },
+    "@media screen and (minWidth: 768px)": Object {
+      "a": "md",
+    },
+    "@media screen and (minWidth: 992px)": Object {
+      "a": "lg",
+    },
+    "a": "a",
+  },
+]
+`;
+
+exports[`string with all media 1`] = `
+"{
+    a: 'a',
+    @media screen and (max-width: 576px) { a: 'xs' }
+    @media screen and (min-width: 576px) { a: 'sm' }
+    @media screen and (min-width: 768px) { a: 'md' }
+    @media screen and (min-width: 992px) { a: 'lg' }
+    @media screen and (min-width: 1200px) { a: 'xl' }
+    @media screen and (min-width: 1600px) { a: 'xxl' }
+  }"
+`;

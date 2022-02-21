@@ -22,4 +22,4 @@ const reviver = (key, value) => {
 
 const transformer = (obj) => JSON.parse(JSON.stringify(obj), reviver);
 
-module.exports = transformer;
+export default transformer;

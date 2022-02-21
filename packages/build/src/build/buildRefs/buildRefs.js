@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import recursiveBuild from './recursiveBuild';
-import makeRefDefinition from './makeRefDefinition';
+import recursiveBuild from './recursiveBuild.js';
+import makeRefDefinition from './makeRefDefinition.js';
 
 async function buildRefs({ context }) {
-  return recursiveBuild({
+  const components = await recursiveBuild({
     context,
     refDef: makeRefDefinition('lowdefy.yaml'),
     count: 0,
   });
+  return components || {};
 }
 
 export default buildRefs;

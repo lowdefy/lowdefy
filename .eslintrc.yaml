@@ -37,6 +37,14 @@ rules:
   jsx-a11y/anchor-is-valid: 'off'
   jsx-a11y/click-events-have-key-events: 'off'
   jsx-a11y/no-static-element-interactions: 'off'
+  import/extensions:
+    - error
+    - ignorePackages
+  import/no-unresolved:
+    - error
+    # Because of https://github.com/import-js/eslint-plugin-import/issues/1868
+    - ignore:
+        - "^@lowdefy\/.*$"
 parserOptions:
   sourceType: module
-  ecmaVersion: 9
+  ecmaVersion: latest

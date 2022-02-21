@@ -14,11 +14,10 @@
   limitations under the License.
 */
 import path from 'path';
-import { readFile } from '@lowdefy/node-utils';
 
 async function getUserJavascriptFunction({ context, filePath }) {
-  const jsFile = await readFile(path.resolve(context.configDirectory, filePath));
-  return eval(jsFile);
+  const module = await import(path.resolve(context.directories.config, filePath));
+  return module.default;
 }
 
 export default getUserJavascriptFunction;

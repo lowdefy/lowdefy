@@ -16,16 +16,20 @@
 
 import path from 'path';
 
-function getDirectories({ baseDirectory, options }) {
-  const cacheDirectory = path.resolve(baseDirectory, './.lowdefy/.cache');
-
-  let outputDirectory;
+function getDirectories({ configDirectory, options }) {
+  let dotLowdefy;
   if (options.outputDirectory) {
-    outputDirectory = path.resolve(options.outputDirectory);
+    dotLowdefy = path.resolve(options.outputDirectory);
   } else {
-    outputDirectory = path.resolve(baseDirectory, './.lowdefy/build');
+    dotLowdefy = path.resolve(configDirectory, '.lowdefy');
   }
-  return { cacheDirectory, outputDirectory };
+  return {
+    config: configDirectory,
+    build: path.join(dotLowdefy, 'server', 'build'),
+    dotLowdefy,
+    server: path.join(dotLowdefy, 'server'),
+    devServer: path.join(dotLowdefy, 'dev'),
+  };
 }
 
 export default getDirectories;

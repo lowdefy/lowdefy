@@ -124,9 +124,9 @@ const transformer = (obj, vars) => {
     contextId,
     data: 'state',
     path: 'block.properties',
-    properties: obj.schema.properties.properties,
+    properties: obj.properties.properties,
     underscores: '_',
   });
 };
 
-module.exports = transformer;
+export default transformer;

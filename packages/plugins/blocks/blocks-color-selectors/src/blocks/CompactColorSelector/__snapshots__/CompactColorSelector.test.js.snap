@@ -1,0 +1,2889 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render colors - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="colors"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="colors_input"
+      title="colors"
+    >
+      <span
+        class="emotion-3"
+      >
+        colors
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-4"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(18, 52, 86); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#123456"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 195, 69); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#abc345"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(0, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-9"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#000000"
+                  />
+                  <label
+                    for="rc-editable-input-9"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-10"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-10"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-11"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-11"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-12"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-12"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render default - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="default"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="default_input"
+      title="default"
+    >
+      <span
+        class="emotion-3"
+      >
+        default
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-4"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(77, 77, 77); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#4D4D4D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(153, 153, 153); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#999999"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(255, 255, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px; box-shadow: inset 0 0 0 1px #ddd;"
+                    tabindex="0"
+                    title="#FFFFFF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(244, 78, 59); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#F44E3B"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(254, 146, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FE9200"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 220, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCDC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(219, 223, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#DBDF00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(164, 221, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#A4DD00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 204, 202); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68CCCA"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(115, 216, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#73D8FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(174, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AEA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(253, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FDA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(51, 51, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#333333"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 128, 128); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808080"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(204, 204, 204); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#cccccc"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(211, 49, 21); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#D33115"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(226, 115, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#E27300"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 196, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCC400"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(176, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B0BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(22, 165, 165); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#16A5A5"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 156, 224); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#009CE0"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(123, 100, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#7B64FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(250, 40, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FA28FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 0, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#000000"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 1;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(102, 102, 102); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#666666"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(179, 179, 179); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B3B3B3"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(159, 5, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#9F0500"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(196, 81, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#C45100"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(251, 158, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FB9E00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 137, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808900"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(25, 77, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#194D33"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(12, 121, 125); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0C797D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 98, 177); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0062B1"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(101, 50, 148); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#653294"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 20, 158); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AB149E"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(0, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-1"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#000000"
+                  />
+                  <label
+                    for="rc-editable-input-1"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-2"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-2"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-3"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-3"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-4"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-4"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render defaultColor - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="defaultColor"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="defaultColor_input"
+      title="defaultColor"
+    >
+      <span
+        class="emotion-3"
+      >
+        defaultColor
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-4"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(77, 77, 77); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#4D4D4D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(153, 153, 153); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#999999"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(255, 255, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px; box-shadow: inset 0 0 0 1px #ddd;"
+                    tabindex="0"
+                    title="#FFFFFF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(244, 78, 59); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#F44E3B"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(254, 146, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FE9200"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 220, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCDC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(219, 223, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#DBDF00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(164, 221, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#A4DD00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 204, 202); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68CCCA"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(115, 216, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#73D8FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(174, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AEA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(253, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FDA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(51, 51, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#333333"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 128, 128); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808080"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(204, 204, 204); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#cccccc"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(211, 49, 21); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#D33115"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(226, 115, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#E27300"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 196, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCC400"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(176, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B0BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(22, 165, 165); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#16A5A5"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 156, 224); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#009CE0"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(123, 100, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#7B64FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(250, 40, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FA28FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 0, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#000000"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(102, 102, 102); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#666666"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(179, 179, 179); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B3B3B3"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(159, 5, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#9F0500"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(196, 81, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#C45100"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(251, 158, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FB9E00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 137, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808900"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(25, 77, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#194D33"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(12, 121, 125); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0C797D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 98, 177); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0062B1"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(101, 50, 148); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#653294"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 20, 158); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AB149E"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(255, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-13"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#FF0000"
+                  />
+                  <label
+                    for="rc-editable-input-13"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-14"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="255"
+                  />
+                  <label
+                    for="rc-editable-input-14"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-15"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-15"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-16"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-16"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render inputStyle - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+  border: 3px solid blue;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="inputStyle"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="inputStyle_input"
+      title="inputStyle"
+    >
+      <span
+        class="emotion-3"
+      >
+        inputStyle
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-4"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(77, 77, 77); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#4D4D4D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(153, 153, 153); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#999999"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(255, 255, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px; box-shadow: inset 0 0 0 1px #ddd;"
+                    tabindex="0"
+                    title="#FFFFFF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(244, 78, 59); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#F44E3B"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(254, 146, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FE9200"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 220, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCDC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(219, 223, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#DBDF00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(164, 221, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#A4DD00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 204, 202); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68CCCA"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(115, 216, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#73D8FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(174, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AEA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(253, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FDA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(51, 51, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#333333"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 128, 128); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808080"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(204, 204, 204); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#cccccc"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(211, 49, 21); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#D33115"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(226, 115, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#E27300"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 196, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCC400"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(176, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B0BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(22, 165, 165); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#16A5A5"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 156, 224); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#009CE0"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(123, 100, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#7B64FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(250, 40, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FA28FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 0, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#000000"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 1;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(102, 102, 102); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#666666"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(179, 179, 179); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B3B3B3"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(159, 5, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#9F0500"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(196, 81, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#C45100"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(251, 158, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FB9E00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 137, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808900"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(25, 77, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#194D33"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(12, 121, 125); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0C797D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 98, 177); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0062B1"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(101, 50, 148); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#653294"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 20, 158); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AB149E"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(0, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-17"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#000000"
+                  />
+                  <label
+                    for="rc-editable-input-17"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-18"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-18"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-19"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-19"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-20"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-20"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render label-disabled - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="label-disabled"
+>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-1"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(77, 77, 77); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#4D4D4D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(153, 153, 153); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#999999"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(255, 255, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px; box-shadow: inset 0 0 0 1px #ddd;"
+                    tabindex="0"
+                    title="#FFFFFF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(244, 78, 59); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#F44E3B"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(254, 146, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FE9200"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 220, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCDC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(219, 223, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#DBDF00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(164, 221, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#A4DD00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 204, 202); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68CCCA"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(115, 216, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#73D8FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(174, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AEA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(253, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FDA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(51, 51, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#333333"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 128, 128); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808080"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(204, 204, 204); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#cccccc"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(211, 49, 21); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#D33115"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(226, 115, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#E27300"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 196, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCC400"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(176, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B0BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(22, 165, 165); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#16A5A5"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 156, 224); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#009CE0"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(123, 100, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#7B64FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(250, 40, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FA28FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 0, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#000000"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 1;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(102, 102, 102); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#666666"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(179, 179, 179); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B3B3B3"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(159, 5, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#9F0500"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(196, 81, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#C45100"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(251, 158, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FB9E00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 137, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808900"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(25, 77, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#194D33"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(12, 121, 125); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0C797D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 98, 177); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0062B1"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(101, 50, 148); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#653294"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 20, 158); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AB149E"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(0, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-21"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#000000"
+                  />
+                  <label
+                    for="rc-editable-input-21"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-22"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-22"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-23"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-23"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-24"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-24"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render title - value[0] 1`] = `
+.emotion-0 {
+  margin-bottom: 0;
+}
+
+.emotion-1 {
+  white-space: normal;
+  margin-bottom: 8px;
+}
+
+.emotion-2 {
+  height: -webkit-fit-content!important;
+  height: -moz-fit-content!important;
+  height: fit-content!important;
+  min-height: 32px;
+}
+
+.emotion-4 {
+  margin-bottom: 0px!important;
+}
+
+<div
+  class="ant-row ant-form-item emotion-0"
+  id="title"
+>
+  <div
+    class="ant-col ant-form-item-label ant-form-item-label-left emotion-1 ant-col-xs-24 ant-col-sm-24"
+  >
+    <label
+      class="emotion-2"
+      for="title_input"
+      title="The color selector"
+    >
+      <span
+        class="emotion-3"
+      >
+        The color selector
+      </span>
+    </label>
+  </div>
+  <div
+    class="ant-col ant-form-item-control ant-col-xs-24 ant-col-sm-24"
+  >
+    <div
+      class="ant-form-item-control-input"
+    >
+      <div
+        class="ant-form-item-control-input-content"
+      >
+        <div
+          style="position: relative; display: inline-block;"
+        >
+          <div
+            style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; box-shadow: 0 2px 10px rgba(0,0,0,.12), 0 2px 5px rgba(0,0,0,.16); border-radius: 2px; background: rgb(255, 255, 255);"
+          />
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="compact-picker emotion-4"
+              style="padding-top: 5px; padding-left: 5px; box-sizing: initial; width: 240px;"
+            >
+              <div>
+                <span>
+                  <div
+                    style="background: rgb(77, 77, 77); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#4D4D4D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(153, 153, 153); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#999999"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(255, 255, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px; box-shadow: inset 0 0 0 1px #ddd;"
+                    tabindex="0"
+                    title="#FFFFFF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(244, 78, 59); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#F44E3B"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(254, 146, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FE9200"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 220, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCDC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(219, 223, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#DBDF00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(164, 221, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#A4DD00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 204, 202); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68CCCA"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(115, 216, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#73D8FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(174, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AEA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(253, 161, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FDA1FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(51, 51, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#333333"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 128, 128); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808080"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(204, 204, 204); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#cccccc"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(211, 49, 21); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#D33115"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(226, 115, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#E27300"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(252, 196, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FCC400"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(176, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B0BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(104, 188, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#68BC00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(22, 165, 165); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#16A5A5"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 156, 224); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#009CE0"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(123, 100, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#7B64FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(250, 40, 255); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FA28FF"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 0, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#000000"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 1;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(102, 102, 102); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#666666"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(179, 179, 179); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#B3B3B3"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(159, 5, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#9F0500"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(196, 81, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#C45100"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(251, 158, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#FB9E00"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(0, 0, 0); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(128, 137, 0); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#808900"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(25, 77, 51); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#194D33"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(12, 121, 125); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0C797D"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(0, 98, 177); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#0062B1"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(101, 50, 148); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#653294"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div
+                    style="background: rgb(171, 20, 158); height: 15px; width: 15px; cursor: pointer; position: relative; outline: none; float: left; margin-right: 5px; margin-bottom: 5px;"
+                    tabindex="0"
+                    title="#AB149E"
+                  >
+                    <div
+                      style="position: absolute; top: 5px; right: 5px; bottom: 5px; left: 5px; background: rgb(255, 255, 255); border-radius: 50%; opacity: 0;"
+                    />
+                  </div>
+                </span>
+                <div
+                  style="clear: both;"
+                />
+              </div>
+              <div
+                class="flexbox-fix"
+                style="display: flex; padding-bottom: 6px; padding-right: 5px; position: relative;"
+              >
+                <div
+                  style="position: absolute; top: 6px; left: 5px; height: 9px; width: 9px; background: rgb(0, 0, 0);"
+                />
+                <div
+                  style="position: relative; flex: 6;"
+                >
+                  <input
+                    id="rc-editable-input-5"
+                    spellcheck="false"
+                    style="width: 80%; padding: 0px 0px 0px 20%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="#000000"
+                  />
+                  <label
+                    for="rc-editable-input-5"
+                    style="display: none;"
+                  >
+                    hex
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-6"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-6"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    r
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-7"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-7"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    g
+                  </label>
+                </div>
+                <div
+                  style="position: relative; flex: 3;"
+                >
+                  <input
+                    id="rc-editable-input-8"
+                    spellcheck="false"
+                    style="width: 70%; padding: 0px 0px 0px 30%; outline: none; background: none; font-size: 12px; color: rgb(51, 51, 51); height: 16px;"
+                    value="0"
+                  />
+                  <label
+                    for="rc-editable-input-8"
+                    style="position: absolute; top: 3px; left: 0px; line-height: 16px; text-transform: uppercase; font-size: 12px; color: rgb(153, 153, 153);"
+                  >
+                    b
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test Schema colors 1`] = `true`;
+
+exports[`Test Schema colors 2`] = `null`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema defaultColor 1`] = `true`;
+
+exports[`Test Schema defaultColor 2`] = `null`;
+
+exports[`Test Schema inputStyle 1`] = `true`;
+
+exports[`Test Schema inputStyle 2`] = `null`;
+
+exports[`Test Schema label-disabled 1`] = `true`;
+
+exports[`Test Schema label-disabled 2`] = `null`;
+
+exports[`Test Schema title 1`] = `true`;
+
+exports[`Test Schema title 2`] = `null`;

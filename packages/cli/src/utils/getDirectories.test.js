@@ -14,26 +14,36 @@
   limitations under the License.
 */
 
-import getDirectories from './getDirectories';
+import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
-  const { cacheDirectory, outputDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+  const directories = getDirectories({
+    configDirectory: '/test/config',
     options: {},
   });
 
-  expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
-  expect(outputDirectory).toEqual('/test/base/.lowdefy/build');
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    devServer: '/test/config/.lowdefy/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/config/.lowdefy/server',
+  });
 });
 
 test('specify outputDirectory in options', () => {
-  const { cacheDirectory, outputDirectory } = getDirectories({
-    baseDirectory: '/test/base',
+  const directories = getDirectories({
+    configDirectory: '/test/config',
     options: {
-      outputDirectory: '/test/build',
+      outputDirectory: '/test/out',
     },
   });
 
-  expect(cacheDirectory).toEqual('/test/base/.lowdefy/.cache');
-  expect(outputDirectory).toEqual('/test/build');
+  expect(directories).toEqual({
+    build: '/test/out/server/build',
+    config: '/test/config',
+    devServer: '/test/out/dev',
+    dotLowdefy: '/test/out',
+    server: '/test/out/server',
+  });
 });

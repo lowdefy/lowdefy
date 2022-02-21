@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 const lowdefy = { pageId };
@@ -23,7 +23,7 @@ test('container and set value from block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -94,7 +94,7 @@ test('container blocks visibility toggle fields in state and propagate visibilit
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -172,7 +172,7 @@ test('container blocks visibility toggle fields in state with nested containers 
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -266,7 +266,7 @@ test('visibleParent. If container visible is null, child blocks should still be 
     blockId: 'root',
     type: 'Context',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

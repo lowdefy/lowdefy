@@ -14,10 +14,52 @@
   limitations under the License.
 */
 
-import validateConfig from './validateConfig';
-import testContext from '../test/testContext';
+import validateConfig from './validateConfig.js';
+import testContext from '../test/testContext.js';
 
 const context = testContext();
+
+test('validateConfig no config defined', async () => {
+  const components = {};
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {},
+    },
+  });
+});
+
+test('validate config theme', async () => {
+  const components = {
+    config: {
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  };
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  });
+});
 
 test('validateConfig config not an object', async () => {
   const components = {

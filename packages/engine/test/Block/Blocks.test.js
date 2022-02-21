@@ -19,10 +19,10 @@
 import { serializer } from '@lowdefy/helpers';
 import { WebParser } from '@lowdefy/operators';
 
-import Blocks from '../../src/Blocks';
-import State from '../../src/State';
+import Blocks from '../../src/Blocks.js';
+import State from '../../src/State.js';
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const pageId = 'one';
 const lowdefy = { pageId };
@@ -31,7 +31,7 @@ test('set block to init', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -96,7 +96,7 @@ test('Blocks to init with arrayIndices not an array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -139,7 +139,7 @@ test('Blocks to init with undefined arrayIndices', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -169,7 +169,7 @@ test('set block enforceType value no init', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -199,7 +199,7 @@ test('set block value to initValue in meta', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -232,7 +232,7 @@ test('Reset to change blocks back to initState', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -273,7 +273,7 @@ test('state should not have value if block is not visible', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -304,7 +304,7 @@ test('block should only not be visible when visible === false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -479,7 +479,7 @@ test('block should only not be evaluated when visible === false', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -724,7 +724,7 @@ test('set value from block', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -759,7 +759,7 @@ test('set value from block in nested object', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -794,7 +794,7 @@ test('set value from block with type enforceType', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -835,7 +835,7 @@ test('parse visible operator with setValue', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -880,7 +880,7 @@ test('rec parse visible operator with setValue', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -933,7 +933,7 @@ test('non-input blocks visibility toggle', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -978,7 +978,7 @@ test('non-input blocks visibility toggle in array', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -1042,7 +1042,7 @@ test('no need to evaluate invisible blocks', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -1094,7 +1094,7 @@ test('max recuse limit', async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {

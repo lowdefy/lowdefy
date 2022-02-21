@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import writeConfig from './writeConfig';
-import testContext from '../test/testContext';
+import writeConfig from './writeConfig.js';
+import testContext from '../test/testContext.js';
 
 const mockWriteBuildArtifact = jest.fn();
 
@@ -34,12 +34,10 @@ test('writeConfig', async () => {
   await writeConfig({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
-      {
-        filePath: 'config.json',
-        content: `{
+      'config.json',
+      `{
   "key": "value"
 }`,
-      },
     ],
   ]);
 });
@@ -49,25 +47,11 @@ test('writeConfig empty config', async () => {
     config: {},
   };
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'config.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', `{}`]]);
 });
 
 test('writeConfig config undefined', async () => {
   const components = {};
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      {
-        filePath: 'config.json',
-        content: `{}`,
-      },
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', `{}`]]);
 });

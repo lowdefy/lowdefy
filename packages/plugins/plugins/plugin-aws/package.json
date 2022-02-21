@@ -1,0 +1,56 @@
+{
+  "name": "@lowdefy/plugin-aws",
+  "version": "4.0.0-alpha.6",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./connections/*": "./dist/connections/*"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "aws-sdk": "2.1066.0"
+  },
+  "devDependencies": {
+    "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "jest": "27.4.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

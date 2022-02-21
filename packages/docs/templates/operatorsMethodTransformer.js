@@ -116,4 +116,4 @@ function transformer(obj) {
   return obj.page;
 }
 
-module.exports = transformer;
+export default transformer;

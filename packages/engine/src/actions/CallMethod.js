@@ -21,7 +21,7 @@ import { applyArrayIndices, type } from '@lowdefy/helpers';
 async function CallMethod({ arrayIndices, context, params }) {
   const { blockId, method, args = [] } = params;
   const blockMethod =
-    context.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
+    context._internal.RootBlocks.map[applyArrayIndices(arrayIndices, blockId)].methods[method];
   if (!type.isArray(args)) {
     throw new Error(
       `Failed to call method "${method}" on block "${blockId}": "args" should be an array. Received "${JSON.stringify(

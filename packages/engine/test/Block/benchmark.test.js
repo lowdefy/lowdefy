@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-import testContext from '../testContext';
+import testContext from '../testContext.js';
 
 const NUM_TIMES = 10;
 const pageId = 'one';
@@ -50,7 +50,7 @@ test(`parse nunjucks value 500 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -109,7 +109,7 @@ test(`parse nunjucks value 100 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -168,7 +168,7 @@ test(`parse state value 1000 blocks`, async () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
-      category: 'context',
+      category: 'container',
     },
     areas: {
       content: {
@@ -226,7 +226,7 @@ test(`parse state value 1000 blocks`, async () => {
 //   const rootBlock = {
 //     blockId: 'root',
 //     meta: {
-//       category: 'context',
+//       category: 'container',
 //     },
 //     areas: { content: { blocks: [
 //       {
