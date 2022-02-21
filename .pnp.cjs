@@ -3155,7 +3155,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.4.7"],
-            ["mongodb", "npm:4.3.1"],
+            ["mongodb", "npm:4.4.0"],
             ["saslprep", "npm:1.0.3"]
           ],
           "linkType": "SOFT",
@@ -4167,7 +4167,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.2.0"],
             ["@types/mongodb", null],
             ["debug", "virtual:46bd44738c648c1105842f65adfc896e3dbcb5f8631b32158dc40c0a1a21460f1708014b7896430af62fa59b995d372f1841b2205de80ebc306769451a14cbdd#npm:4.3.2"],
-            ["mongodb", "npm:4.3.1"],
+            ["mongodb", "npm:4.4.0"],
             ["mongodb-memory-server", "npm:7.3.6"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -12972,10 +12972,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["npm:4.3.1", {
-          "packageLocation": "./.yarn/cache/mongodb-npm-4.3.1-a90fff3f6a-5684b5481b.zip/node_modules/mongodb/",
+        ["npm:4.4.0", {
+          "packageLocation": "./.yarn/cache/mongodb-npm-4.4.0-cc5718bafa-e485927d1d.zip/node_modules/mongodb/",
           "packageDependencies": [
-            ["mongodb", "npm:4.3.1"],
+            ["mongodb", "npm:4.4.0"],
             ["bson", "npm:4.6.1"],
             ["denque", "npm:2.0.1"],
             ["mongodb-connection-string-url", "npm:2.4.2"],
