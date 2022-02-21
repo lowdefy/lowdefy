@@ -14,28 +14,6 @@
   limitations under the License.
 */
 
-import React from 'react';
+import App from '../lib/components/App.js';
 
-import { ErrorBoundary } from '@lowdefy/block-utils';
-
-import LowdefyContext from '../components/LowdefyContext.js';
-
-import '../../build/plugins/styles.less';
-
-const lowdefy = {};
-
-function App({ Component, pageProps }) {
-  return (
-    <ErrorBoundary>
-      <LowdefyContext lowdefy={lowdefy}>
-        <Component lowdefy={lowdefy} {...pageProps} />
-      </LowdefyContext>
-    </ErrorBoundary>
-  );
-}
-
-const DynamicApp = dynamic(() => Promise.resolve(App), {
-  ssr: false,
-});
-
-export default DynamicApp;
+export default App;

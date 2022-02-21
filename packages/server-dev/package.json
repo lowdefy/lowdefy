@@ -34,8 +34,7 @@
   "scripts": {
     "build:lowdefy": "lowdefy-build",
     "build:next": "next build",
-    "dev": "next dev",
-    "start": "node src/manager/run.mjs",
+    "start": "node manager/run.mjs",
     "lint": "next lint",
     "next": "next"
   },
