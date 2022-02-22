@@ -16,22 +16,18 @@
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import Page from '../components/Page.js';
+import Page from '../lib/components/Page.js';
 
-export async function getServerSideProps() {
-  // TODO: is this build directory configurable from the cli?
+export async function getServerSideProps(context) {
+  const { pageId } = context.params;
+  // TODO: get the right api context options
   const apiContext = await createApiContext({ buildDirectory: './build' });
-  const rootConfig = await getRootConfig(apiContext);
-  const { home } = rootConfig;
-  if (home.configured === false) {
-    return {
-      redirect: {
-        destination: `/${home.pageId}`,
-        permanent: false,
-      },
-    };
-  }
-  const pageConfig = await getPageConfig(apiContext, { pageId: home.pageId });
+
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId }),
+  ]);
+
   if (!pageConfig) {
     return {
       redirect: {
@@ -40,6 +36,7 @@ export async function getServerSideProps() {
       },
     };
   }
+
   return {
     props: {
       pageConfig,

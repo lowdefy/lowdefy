@@ -14,25 +14,28 @@
   limitations under the License.
 */
 
-import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import React from 'react';
 
-import Page from '../components/Page.js';
+import { ErrorBoundary } from '@lowdefy/block-utils';
 
-export async function getStaticProps() {
-  // TODO: get the right api context options
-  const apiContext = await createApiContext({ buildDirectory: './build' });
+import LowdefyContext from '../lib/components/LowdefyContext.js';
 
-  const [rootConfig, pageConfig] = await Promise.all([
-    getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId: '404' }),
-  ]);
+import '../build/plugins/styles.less';
 
-  return {
-    props: {
-      pageConfig,
-      rootConfig,
-    },
-  };
+const lowdefy = {};
+
+function App({ Component, pageProps }) {
+  return (
+    <ErrorBoundary>
+      <LowdefyContext lowdefy={lowdefy}>
+        <Component lowdefy={lowdefy} {...pageProps} />
+      </LowdefyContext>
+    </ErrorBoundary>
+  );
 }
 
-export default Page;
+const DynamicApp = dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});
+
+export default DynamicApp;

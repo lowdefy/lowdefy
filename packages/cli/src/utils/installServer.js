@@ -21,7 +21,7 @@ const args = {
   yarn: ['install'],
 };
 
-async function installServer({ context }) {
+async function installServer({ context, directory }) {
   context.print.spin(`Running ${context.packageManager} install.`);
   try {
     await spawnProcess({
@@ -29,7 +29,7 @@ async function installServer({ context }) {
       command: context.packageManager, // npm or yarn
       args: args[context.packageManager],
       processOptions: {
-        cwd: context.directories.dev,
+        cwd: directory,
       },
       silent: false,
     });

@@ -14,16 +14,22 @@
   limitations under the License.
 */
 
-import installServer from './installServer.js';
+import installServer from '../../utils/installServer.js';
+import mergePackageJson from '../../utils/mergePackageJson.js';
 import runDevServer from './runDevServer.js';
 import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
+  const directory = context.directory.dev;
   context.print.info('Starting development server.');
   await getServer({ context, packageName: '@lowdefy/server-dev' });
-  await installServer({ context });
+  await mergePackageJson({
+    context,
+    serverDirectory: directory,
+  });
+  await installServer({ context, directory });
   context.sendTelemetry();
-  await runDevServer({ context });
+  await runDevServer({ context, directory });
 }
 
 export default dev;

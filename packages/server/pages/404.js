@@ -14,6 +14,25 @@
   limitations under the License.
 */
 
-import App from '../components/App.js';
+import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-export default App;
+import Page from '../lib/components/Page.js';
+
+export async function getStaticProps() {
+  // TODO: get the right api context options
+  const apiContext = await createApiContext({ buildDirectory: './build' });
+
+  const [rootConfig, pageConfig] = await Promise.all([
+    getRootConfig(apiContext),
+    getPageConfig(apiContext, { pageId: '404' }),
+  ]);
+
+  return {
+    props: {
+      pageConfig,
+      rootConfig,
+    },
+  };
+}
+
+export default Page;

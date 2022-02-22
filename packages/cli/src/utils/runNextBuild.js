@@ -16,28 +16,22 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-const args = {
-  npm: ['install', '--legacy-peer-deps'],
-  yarn: ['install'],
-};
-
-async function installServer({ context }) {
-  context.print.spin(`Running ${context.packageManager} install.`);
+async function runNextBuild({ context, directory }) {
+  context.print.log('Running Next build.');
   try {
     await spawnProcess({
       logger: context.print,
       command: context.packageManager, // npm or yarn
-      args: args[context.packageManager],
+      args: ['run', 'build:next'],
       processOptions: {
-        cwd: context.directories.server,
+        cwd: directory,
       },
       silent: false,
     });
   } catch (error) {
-    console.log(error);
-    throw new Error(`${context.packageManager} install failed.`);
+    throw new Error('Next build failed.');
   }
-  context.print.log(`${context.packageManager} install successful.`);
+  context.print.log('Next build successful.');
 }
 
-export default installServer;
+export default runNextBuild;
