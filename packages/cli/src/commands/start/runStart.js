@@ -16,14 +16,14 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runStart({ context }) {
+async function runStart({ context, directory }) {
   context.print.spin(`Running "${context.packageManager} run start".`);
   await spawnProcess({
     logger: context.print,
     args: ['run', 'start'],
     command: context.packageManager, // npm or yarn
     processOptions: {
-      cwd: context.directories.server,
+      cwd: directory,
       env: {
         ...process.env,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,

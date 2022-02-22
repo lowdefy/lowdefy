@@ -16,13 +16,13 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runDevServer({ context }) {
+async function runDevServer({ context, directory }) {
   await spawnProcess({
     logger: context.print,
     args: ['run', 'start'],
     command: context.packageManager, // npm or yarn
     processOptions: {
-      cwd: context.directories.dev,
+      cwd: directory,
       env: {
         ...process.env,
         LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
