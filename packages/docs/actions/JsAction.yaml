@@ -196,7 +196,7 @@ _ref:
               type: TextInput
               properties:
                 title: Type to search products
-                prefix: AiOutlinedSearch
+                prefix: AiOutlineSearch
               events:
                 onChange:
                   - id: get_search # get search_products query for search.input

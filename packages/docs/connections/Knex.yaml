@@ -33,7 +33,7 @@ _ref:
         type: Anchor
         properties:
           title: Amazon Redshift
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -44,7 +44,7 @@ _ref:
         type: Anchor
         properties:
           title: MariaDB
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -55,7 +55,7 @@ _ref:
         type: Anchor
         properties:
           title: MS SQL Server
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -66,7 +66,7 @@ _ref:
         type: Anchor
         properties:
           title: MySQL
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -77,7 +77,7 @@ _ref:
         type: Anchor
         properties:
           title: Oracle Database
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -88,7 +88,7 @@ _ref:
         type: Anchor
         properties:
           title: PostgreSQL
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,
@@ -99,7 +99,7 @@ _ref:
         type: Anchor
         properties:
           title: SQLite
-          icon: AiOutlinedLink
+          icon: AiOutlineLink
         events:
           onClick:
             - id: link,

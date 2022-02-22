@@ -81,14 +81,14 @@ _ref:
         type: Alert
         properties:
           type: info
-          icon: AiFilledInfoCircle
+          icon: AiFillInfoCircle
           description: To paste into the Windows Command Prompt, you can right-click and select paste.
 
       - id: error_already_exists
         type: Alert
         properties:
           type: error
-          icon: AiOutlinedFire
+          icon: AiOutlineFire
           message: A "lowdefy.yaml" file already exists
           description: If you get a 'A "lowdefy.yaml" file already exists' error, delete the "lowdefy.yaml" file in your current working directory or run the command in a new directory.
 
@@ -167,7 +167,7 @@ _ref:
         type: Alert
         properties:
           type: error
-          icon: AiOutlinedFire
+          icon: AiOutlineFire
           message: Could not find "lowdefy.yaml"
           description: If you get a 'Could not find "lowdefy.yaml"' error, make sure your current working directory contains the "lowdefy.yaml" file. You can verify this by running the "dir" (Windows) or "ls" (MacOS) command.
 

@@ -37,7 +37,7 @@ function transformer(obj) {
       type: 'Anchor',
       properties: {
         title: `${operatorName}.${method.name}`,
-        icon: 'AiOutlinedLink',
+        icon: 'AiOutlineLink',
       },
       events: {
         onClick: [

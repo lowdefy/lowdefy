@@ -31,7 +31,7 @@ _ref:
             title: Get started
             block: true
             ghost: true
-            icon: AiOutlinedRocket
+            icon: AiOutlineRocket
       - title: Round and type danger
         block:
           id: danger_example
@@ -40,4 +40,4 @@ _ref:
             title: Delete Forever
             shape: round
             type: danger
-            icon: AiOutlinedWarning
+            icon: AiOutlineWarning

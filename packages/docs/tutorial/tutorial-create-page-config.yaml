@@ -36,13 +36,13 @@ _ref:
                   - id: new-ticket
                     type: MenuLink
                     properties:
-                      icon: AiOutlinedAlert
+                      icon: AiOutlineAlert
                       title: New ticket
                     pageId: new-ticket
                   - id: welcome
                     type: MenuLink
                     properties:
-                      icon: AiOutlinedHome
+                      icon: AiOutlineHome
                       title: Home
                     pageId: welcome
 

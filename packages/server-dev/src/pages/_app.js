@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
@@ -27,13 +27,15 @@ const lowdefy = {};
 function App({ Component, pageProps }) {
   return (
     <ErrorBoundary>
-      <Suspense>
-        <LowdefyContext lowdefy={lowdefy}>
-          <Component lowdefy={lowdefy} {...pageProps} />
-        </LowdefyContext>
-      </Suspense>
+      <LowdefyContext lowdefy={lowdefy}>
+        <Component lowdefy={lowdefy} {...pageProps} />
+      </LowdefyContext>
     </ErrorBoundary>
   );
 }
 
-export default App;
+const DynamicApp = dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});
+
+export default DynamicApp;

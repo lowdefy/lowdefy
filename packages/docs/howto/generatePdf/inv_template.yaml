@@ -9,7 +9,7 @@
     logo:
       _string.concat:
         - _location: origin
-        - /public/logo_example.png
+        - /logo_example.png
   footer:
     _function:
       - columns:
