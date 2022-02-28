@@ -12,31 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- id: default
-  type: ColorSelector
 - id: title
   type: ColorSelector
   properties:
-    title: The color selector
-- id: colors
+    title: title
+- id: size_small
   type: ColorSelector
   properties:
-    colors: ['#123456', '#abc345']
-- id: defaultColor
+    title: size_small
+    size: small
+- id: size_large
   type: ColorSelector
   properties:
-    defaultColor: '#FF0000'
-- id: inputStyle
+    title: size_large
+    size: large
+- id: undefined_color
   type: ColorSelector
   properties:
+    title: undefined_color
+    undefinedColor: '#0092f0'
+- id: style
+  type: ColorSelector
+  style:
+    border: 1px solid red
+  properties:
+    title: style
+- id: className
+  type: ColorSelector
+  properties:
+    title: className
     inputStyle:
-      border: 3px solid blue
-- id: width
+      border: 1px solid red
+- id: hideInput_true
   type: ColorSelector
   properties:
-    width: 200
-- id: label-disabled
+    title: hideInput_true
+    hideInput: true
+- id: hideInput_true
   type: ColorSelector
   properties:
-    label:
-      disabled: true
+    title: hideInput_true
+    hideInput: true
+- id: disabled_true
+  type: ColorSelector
+  properties:
+    title: disabled_true
+    disabled: true
+- id: disabled_true_small
+  type: ColorSelector
+  properties:
+    title: disabled_true_small
+    disabled: true
+    size: small
