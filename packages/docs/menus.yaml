@@ -220,18 +220,9 @@
         - id: CheckboxSwitch
           type: MenuLink
           pageId: CheckboxSwitch
-        - id: ChromeColorSelector
-          type: MenuLink
-          pageId: ChromeColorSelector
-        - id: CircleColorSelector
-          type: MenuLink
-          pageId: CircleColorSelector
         - id: ColorSelector
           type: MenuLink
           pageId: ColorSelector
-        - id: CompactColorSelector
-          type: MenuLink
-          pageId: CompactColorSelector
         - id: DateRangeSelector
           type: MenuLink
           pageId: DateRangeSelector
@@ -241,9 +232,6 @@
         - id: DateTimeSelector
           type: MenuLink
           pageId: DateTimeSelector
-        - id: GithubColorSelector
-          type: MenuLink
-          pageId: GithubColorSelector
         - id: MonthSelector
           type: MenuLink
           pageId: MonthSelector
@@ -274,12 +262,6 @@
         - id: Selector
           type: MenuLink
           pageId: Selector
-        - id: SliderColorSelector
-          type: MenuLink
-          pageId: SliderColorSelector
-        - id: SwatchesColorSelector
-          type: MenuLink
-          pageId: SwatchesColorSelector
         - id: Switch
           type: MenuLink
           pageId: Switch
@@ -292,9 +274,6 @@
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
-        - id: TwitterColorSelector
-          type: MenuLink
-          pageId: TwitterColorSelector
         - id: WeekSelector
           type: MenuLink
           pageId: WeekSelector
