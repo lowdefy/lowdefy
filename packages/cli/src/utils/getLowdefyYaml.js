@@ -53,6 +53,7 @@ async function getLowdefyYaml({ configDirectory, command }) {
   return {
     lowdefyVersion: lowdefy.lowdefy,
     cliConfig: get(lowdefy, 'cli', { default: {} }),
+    plugins: get(lowdefy, 'plugins', { default: [] }),
   };
 }
 
