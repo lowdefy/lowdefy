@@ -27,6 +27,9 @@ class ThrowActionError extends Error {
 }
 
 function Throw({ methods: { getBlockId, getPageId }, params }) {
+  if (!type.isObject(params)) {
+    throw new Error(`Invalid Throw, check action params. Received "${JSON.stringify(params)}".`);
+  }
   if (params.throw === false || type.isNone(params.throw)) {
     return;
   }

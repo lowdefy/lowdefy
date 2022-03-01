@@ -100,14 +100,14 @@ test('Throw no params', async () => {
         type: 'Throw',
       },
       error: {
-        error: new TypeError("Cannot read properties of undefined (reading 'throw')"),
+        error: new TypeError('Invalid Throw, check action params. Received "undefined".'),
         index: 0,
         type: 'Throw',
       },
     },
     responses: {
       throw: {
-        error: new TypeError("Cannot read properties of undefined (reading 'throw')"),
+        error: new TypeError('Invalid Throw, check action params. Received "undefined".'),
         type: 'Throw',
         index: 0,
       },
@@ -120,7 +120,7 @@ test('Throw no params', async () => {
     Array [
       Array [
         Object {
-          "content": "Cannot read properties of undefined (reading 'throw')",
+          "content": "Invalid Throw, check action params. Received \\"undefined\\".",
           "duration": 6,
           "status": "error",
         },
