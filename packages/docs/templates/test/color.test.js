@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
   properties: {
@@ -34,7 +34,7 @@ const schema = {
   },
 };
 
-test.todo('color propertiesFormTransformer', () => {
+test('color propertiesFormTransformer', () => {
   expect(propertiesFormTransformer(schema)).toMatchInlineSnapshot(`
     Array [
       Object {
