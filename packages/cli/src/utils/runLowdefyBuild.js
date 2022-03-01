@@ -16,7 +16,7 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-async function runLowdefyBuild({ context }) {
+async function runLowdefyBuild({ context, directory }) {
   context.print.log('Running Lowdefy build.');
   try {
     await spawnProcess({
@@ -24,7 +24,7 @@ async function runLowdefyBuild({ context }) {
       command: context.packageManager, // npm or yarn
       args: ['run', 'build:lowdefy'],
       processOptions: {
-        cwd: context.directories.server,
+        cwd: directory,
         env: {
           ...process.env,
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,

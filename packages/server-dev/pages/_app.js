@@ -19,9 +19,9 @@ import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
-import LowdefyContext from '../components/LowdefyContext.js';
+import LowdefyContext from '../lib/components/LowdefyContext.js';
 
-import '../../build/plugins/styles.less';
+import '../build/plugins/styles.less';
 
 const lowdefy = {};
 
