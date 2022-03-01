@@ -91,7 +91,7 @@
     copyable:
       icon:
         - WarningOutlined
-        - RocketOutlined
+        - AiOutlineRocket
 - id: 'properties.copyable: tooltips: []'
   type: TitleInput
   properties:

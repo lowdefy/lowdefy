@@ -33,7 +33,7 @@
       },
       "minIcon": {
         "type": ["string", "object"],
-        "default": "FrownOutlined",
+        "default": "AiOutlineFrown",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
         "docs": {
           "displayType": "icon"
@@ -41,7 +41,7 @@
       },
       "maxIcon": {
         "type": ["string", "object"],
-        "default": "SmileOutlined",
+        "default": "AiOutlineSmile",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
         "docs": {
           "displayType": "icon"

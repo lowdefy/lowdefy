@@ -182,9 +182,9 @@ areas:
               _state: block.layout
             style:
               _yaml.parse:
-                _if_none:
-                  - _state: style_block_input
-                  - ''
+                - _if_none:
+                    - _state: style_block_input
+                    - ''
             {% if category != "context" %}
             visible:
               _state: block.visible
@@ -320,9 +320,9 @@ areas:
                                 _state: block.layout
                               style:
                                 _yaml.parse:
-                                  _if_none:
-                                    - _state: style_block_input
-                                    - ''
+                                  - _if_none:
+                                      - _state: style_block_input
+                                      - ''
                               properties:
                                 _ref:
                                   path:

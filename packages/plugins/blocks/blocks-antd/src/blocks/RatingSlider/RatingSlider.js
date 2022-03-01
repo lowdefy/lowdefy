@@ -150,7 +150,7 @@ const RatingSlider = ({
                 events={events}
                 properties={mergeObjects([
                   {
-                    name: 'FrownOutlined',
+                    name: 'AiOutlineFrown',
                     style: styles.iconLeft,
                     color: properties.color,
                   },
@@ -217,7 +217,7 @@ const RatingSlider = ({
                 events={events}
                 properties={mergeObjects([
                   {
-                    name: 'SmileOutlined',
+                    name: 'AiOutlineSmile',
                     style: styles.iconRight,
                     color: properties.color,
                   },
@@ -239,7 +239,7 @@ RatingSlider.meta = {
   loading: {
     type: 'SkeletonInput',
   },
-  icons: [...Label.meta.icons],
+  icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
   styles: ['blocks/RatingSlider/style.less'],
 };
 

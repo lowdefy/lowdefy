@@ -19,6 +19,7 @@ import classNames from 'classnames';
 import { keyframes } from '@emotion/react';
 import { css } from '@emotion/css';
 import { omit, type } from '@lowdefy/helpers';
+import Icon from '@ant-design/icons';
 
 import blockDefaultProps from './blockDefaultProps.js';
 import ErrorBoundary from './ErrorBoundary.js';
@@ -103,8 +104,9 @@ const createIcon = (Icons) => {
       </>
     );
   };
-  IconBlock.defaultProps = blockDefaultProps;
-  return IconBlock;
+  const AntIcon = (all) => <Icon component={() => <IconBlock {...all} />} />;
+  AntIcon.defaultProps = blockDefaultProps;
+  return AntIcon;
 };
 
 export default createIcon;

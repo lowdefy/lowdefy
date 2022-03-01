@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
   properties: {
@@ -730,17 +730,19 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
                         ],
                       },
                       "then": Object {
-                        "_yaml.parse": Object {
-                          "_if_none": Array [
-                            Object {
-                              "_state": Object {
-                                "contextId": "Block:Block:{}",
-                                "key": "__object_block.properties.field",
+                        "_yaml.parse": Array [
+                          Object {
+                            "_if_none": Array [
+                              Object {
+                                "_state": Object {
+                                  "contextId": "Block:Block:{}",
+                                  "key": "__object_block.properties.field",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                   ],

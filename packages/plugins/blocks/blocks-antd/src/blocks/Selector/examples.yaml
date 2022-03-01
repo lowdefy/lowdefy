@@ -116,10 +116,10 @@
   type: Selector
   properties:
     size: default
-- id: 'properties.suffixIcon: DoubleLeftOutlined'
+- id: 'properties.suffixIcon: AiOutlineDoubleLeft'
   type: Selector
   properties:
-    suffixIcon: DoubleLeftOutlined
+    suffixIcon: AiOutlineDoubleLeft
 - id: 'properties.label span: 12'
   type: Selector
   properties:

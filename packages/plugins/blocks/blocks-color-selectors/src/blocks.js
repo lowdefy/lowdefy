@@ -15,10 +15,3 @@
 */
 
 export { default as ColorSelector } from './blocks/ColorSelector/ColorSelector.js';
-export { default as ChromeColorSelector } from './blocks/ChromeColorSelector/ChromeColorSelector.js';
-export { default as CircleColorSelector } from './blocks/CircleColorSelector/CircleColorSelector.js';
-export { default as CompactColorSelector } from './blocks/CompactColorSelector/CompactColorSelector.js';
-export { default as GithubColorSelector } from './blocks/GithubColorSelector/GithubColorSelector.js';
-export { default as SliderColorSelector } from './blocks/SliderColorSelector/SliderColorSelector.js';
-export { default as SwatchesColorSelector } from './blocks/SwatchesColorSelector/SwatchesColorSelector.js';
-export { default as TwitterColorSelector } from './blocks/TwitterColorSelector/TwitterColorSelector.js';

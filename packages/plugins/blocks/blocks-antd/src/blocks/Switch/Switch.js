@@ -72,7 +72,7 @@ const SwitchBlock = ({
                   blockId={`${blockId}_checkedIcon`}
                   events={events}
                   properties={{
-                    name: 'CheckOutlined',
+                    name: 'AiOutlineCheck',
                     ...(propertiesIconChecked || {}),
                   }}
                 />
@@ -86,7 +86,7 @@ const SwitchBlock = ({
                   blockId={`${blockId}_uncheckedIcon`}
                   events={events}
                   properties={{
-                    name: 'CloseOutlined',
+                    name: 'AiOutlineClose',
                     ...(propertiesIconUnchecked || {}),
                   }}
                 />
@@ -110,7 +110,7 @@ SwitchBlock.meta = {
   loading: {
     type: 'SkeletonInput',
   },
-  icons: [...Label.meta.icons],
+  icons: [...Label.meta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
   styles: ['blocks/Switch/style.less'],
 };
 

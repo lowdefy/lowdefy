@@ -78,7 +78,7 @@ const DateRangeSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    properties={properties.suffixIcon || 'CalendarOutlined'}
+                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
                   />
                 )
               }
@@ -108,7 +108,7 @@ DateRangeSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
-  icons: [...Label.meta.icons],
+  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateRangeSelector/style.less'],
 };
 

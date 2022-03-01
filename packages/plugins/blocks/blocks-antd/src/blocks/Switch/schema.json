@@ -11,7 +11,7 @@
       },
       "checkedIcon": {
         "type": ["string", "object"],
-        "default": "CheckOutlined",
+        "default": "AiOutlineCheck",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is checked (true).",
         "docs": {
           "displayType": "icon"
@@ -111,7 +111,7 @@
       },
       "uncheckedIcon": {
         "type": ["string", "object"],
-        "default": "CloseOutlined",
+        "default": "AiOutlineClose",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
         "docs": {
           "displayType": "icon"

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
   properties: {
@@ -146,7 +146,7 @@ test('button defaultValueTransformer', () => {
             displayType: 'button',
           },
           default: {
-            icon: 'UploadOutlined',
+            icon: 'AiOutlineUpload',
             title: 'Upload',
             type: 'default',
           },
@@ -157,7 +157,7 @@ test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
     Object {
       "field": Object {
-        "icon": "UploadOutlined",
+        "icon": "AiOutlineUpload",
         "title": "Upload",
         "type": "default",
       },

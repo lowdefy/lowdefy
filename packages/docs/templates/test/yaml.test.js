@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
   properties: {
@@ -75,17 +75,19 @@ test('yaml propertiesGetterTransformer', () => {
         },
         Object {
           "field": Object {
-            "_yaml.parse": Object {
-              "_if_none": Array [
-                Object {
-                  "_state": Object {
-                    "contextId": "Block:Block:{}",
-                    "key": "block.properties.field",
+            "_yaml.parse": Array [
+              Object {
+                "_if_none": Array [
+                  Object {
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.field",
+                    },
                   },
-                },
-                "",
-              ],
-            },
+                  "",
+                ],
+              },
+            ],
           },
         },
       ],
@@ -207,17 +209,19 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
               },
               Object {
                 "field": Object {
-                  "_yaml.parse": Object {
-                    "_if_none": Array [
-                      Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "block.properties.obj.field",
+                  "_yaml.parse": Array [
+                    Object {
+                      "_if_none": Array [
+                        Object {
+                          "_state": Object {
+                            "contextId": "Block:Block:{}",
+                            "key": "block.properties.obj.field",
+                          },
                         },
-                      },
-                      "",
-                    ],
-                  },
+                        "",
+                      ],
+                    },
+                  ],
                 },
               },
             ],
@@ -342,17 +346,19 @@ test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
             "_array.map": Object {
               "callback": Object {
                 "_function": Object {
-                  "__yaml.parse": Object {
-                    "__if_none": Array [
-                      Object {
-                        "__args": Object {
-                          "contextId": undefined,
-                          "key": "0",
+                  "__yaml.parse": Array [
+                    Object {
+                      "__if_none": Array [
+                        Object {
+                          "__args": Object {
+                            "contextId": undefined,
+                            "key": "0",
+                          },
                         },
-                      },
-                      "",
-                    ],
-                  },
+                        "",
+                      ],
+                    },
+                  ],
                 },
               },
               "on": Object {
@@ -524,17 +530,19 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
                     },
                     Object {
                       "yaml": Object {
-                        "__yaml.parse": Object {
-                          "__if_none": Array [
-                            Object {
-                              "__args": Object {
-                                "contextId": undefined,
-                                "key": "0.yaml",
+                        "__yaml.parse": Array [
+                          Object {
+                            "__if_none": Array [
+                              Object {
+                                "__args": Object {
+                                  "contextId": undefined,
+                                  "key": "0.yaml",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                   ],

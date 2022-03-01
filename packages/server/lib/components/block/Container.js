@@ -24,11 +24,11 @@ const Container = ({ block, Blocks, Component, context, lowdefy }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   const areas = Blocks.subBlocks[block.id][0].areas;
-  Object.keys(areas).forEach((areaKey) => {
+  Object.keys(areas).forEach((areaKey, i) => {
     content[areaKey] = (areaStyle) => (
       <Area
         id={`ar-${block.blockId}-${areaKey}`}
-        key={`ar-${block.blockId}-${areaKey}`}
+        key={`ar-${block.blockId}-${areaKey}-${i}`}
         area={layoutParamsToArea({
           area: block.eval.areas[areaKey] || {},
           areaKey,
@@ -38,9 +38,9 @@ const Container = ({ block, Blocks, Component, context, lowdefy }) => {
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         makeCssClass={makeCssClass}
       >
-        {areas[areaKey].blocks.map((bl) => (
+        {areas[areaKey].blocks.map((bl, k) => (
           <Block
-            key={`co-${bl.blockId}`}
+            key={`co-${bl.blockId}-${k}`}
             Blocks={Blocks.subBlocks[block.id][0]}
             block={bl}
             context={context}

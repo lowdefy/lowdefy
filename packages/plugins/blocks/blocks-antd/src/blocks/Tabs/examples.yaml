@@ -112,12 +112,12 @@
     tabs:
       - key: content_one
         title: Title One
-        icon: WarningOutlined
+        icon: AiOutlineWarning
       - key: content_two
         title: Title Two
       - key: content_three
         title: Title Three
-        icon: SaveOutlined
+        icon: AiOutlineSave
   areas:
     content_one:
       blocks:

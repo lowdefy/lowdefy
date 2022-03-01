@@ -15,14 +15,27 @@
 */
 
 import React from 'react';
-import BlockPicker from 'react-color/lib/Block.js';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
-const Selector = ({ blockId, loading, methods, properties, required, validation, value }) => {
+import ColorPicker from './ColorPicker.js';
+
+const ColorSelector = ({
+  blockId,
+  components,
+  events,
+  loading,
+  methods,
+  properties,
+  required,
+  validation,
+  value,
+}) => {
   return (
     <Label
       blockId={blockId}
+      components={components}
+      events={events}
       loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
@@ -30,20 +43,22 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
       validation={validation}
       content={{
         content: () => (
-          <BlockPicker
+          <ColorPicker
             id={`${blockId}_input`}
             className={methods.makeCssClass([
               { marginBottom: '0px !important' },
               properties.inputStyle,
             ])}
-            color={value || properties.defaultColor || '#000000'}
-            colors={properties.colors}
-            triangle={properties.triangle || 'hide'}
-            width={properties.width || '100%'}
-            onChangeComplete={(color) => {
-              methods.setValue(color.hex ? color.hex : '#000000');
+            onChange={(newColor) => {
+              methods.setValue(newColor);
               methods.triggerEvent({ name: 'onChange' });
             }}
+            size={properties.size}
+            undefinedColor={properties.undefinedColor}
+            value={value}
+            hideInput={properties.hideInput}
+            disabled={properties.disabled}
+            methods={methods}
           />
         ),
       }}
@@ -51,8 +66,8 @@ const Selector = ({ blockId, loading, methods, properties, required, validation,
   );
 };
 
-Selector.defaultProps = blockDefaultProps;
-Selector.meta = {
+ColorSelector.defaultProps = blockDefaultProps;
+ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
   loading: {
@@ -65,4 +80,4 @@ Selector.meta = {
   styles: ['blocks/ColorSelector/style.less'],
 };
 
-export default Selector;
+export default ColorSelector;
