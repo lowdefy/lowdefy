@@ -100,14 +100,14 @@ test('Throw no params', async () => {
         type: 'Throw',
       },
       error: {
-        error: new TypeError("Cannot read properties of undefined (reading 'throw')"),
+        error: new TypeError('Throw action params should be an object. Received "undefined".'),
         index: 0,
         type: 'Throw',
       },
     },
     responses: {
       throw: {
-        error: new TypeError("Cannot read properties of undefined (reading 'throw')"),
+        error: new TypeError('Throw action params should be an object. Received "undefined".'),
         type: 'Throw',
         index: 0,
       },
@@ -120,7 +120,7 @@ test('Throw no params', async () => {
     Array [
       Array [
         Object {
-          "content": "Cannot read properties of undefined (reading 'throw')",
+          "content": "Throw action params should be an object. Received \\"undefined\\".",
           "duration": 6,
           "status": "error",
         },
@@ -129,7 +129,7 @@ test('Throw no params', async () => {
   `);
 });
 
-test('Throw throw true no message or metaData', async () => {
+test('Throw params.throw true, no message or metaData', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -207,7 +207,7 @@ test('Throw throw true no message or metaData', async () => {
   `);
 });
 
-test('Throw throw true message no metaData', async () => {
+test('Throw params.throw true, message and  no metaData', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -285,7 +285,7 @@ test('Throw throw true message no metaData', async () => {
   `);
 });
 
-test('Throw throw true message metaData string', async () => {
+test('Throw params.throw true, message and  metaData string', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -371,7 +371,7 @@ test('Throw throw true message metaData string', async () => {
   `);
 });
 
-test('Throw throw true message metaData object', async () => {
+test('Throw params.throw true, message and metaData object', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -457,7 +457,7 @@ test('Throw throw true message metaData object', async () => {
   `);
 });
 
-test('Throw throw false', async () => {
+test('Throw params.throw false', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -513,7 +513,63 @@ test('Throw throw false', async () => {
   expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
 });
 
-test('Throw throw invalid', async () => {
+test('Throw params.throw null', async () => {
+  const rootBlock = {
+    id: 'block:root:root:0',
+    blockId: 'root',
+    meta: {
+      category: 'container',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            id: 'block:root:button:0',
+            blockId: 'button',
+            type: 'Button',
+            meta: {
+              category: 'display',
+            },
+            events: {
+              onClick: [
+                {
+                  id: 'throw',
+                  type: 'Throw',
+                  params: { throw: null },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+  });
+  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.Events.events.onClick.history[0]).toEqual({
+    blockId: 'button',
+    bounced: false,
+    event: undefined,
+    eventName: 'onClick',
+    responses: {
+      throw: {
+        type: 'Throw',
+        response: undefined,
+        index: 0,
+      },
+    },
+    endTimestamp: { date: 0 },
+    startTimestamp: { date: 0 },
+    success: true,
+  });
+  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
+});
+
+test('Throw params.throw should be a boolean.', async () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -556,7 +612,7 @@ test('Throw throw invalid', async () => {
     error: {
       error: {
         type: 'Throw',
-        error: new Error('Invalid Throw, check action params. Received "{"throw":"invalid"}".'),
+        error: new Error('Throw action "throw" param should be an boolean. Received ""invalid"".'),
         index: 0,
       },
       action: {
@@ -570,7 +626,7 @@ test('Throw throw invalid', async () => {
     responses: {
       throw: {
         type: 'Throw',
-        error: new Error('Invalid Throw, check action params. Received "{"throw":"invalid"}".'),
+        error: new Error('Throw action "throw" param should be an boolean. Received ""invalid"".'),
         index: 0,
       },
     },
@@ -582,7 +638,7 @@ test('Throw throw invalid', async () => {
     Array [
       Array [
         Object {
-          "content": "Invalid Throw, check action params. Received \\"{\\"throw\\":\\"invalid\\"}\\".",
+          "content": "Throw action \\"throw\\" param should be an boolean. Received \\"\\"invalid\\"\\".",
           "duration": 6,
           "status": "error",
         },
