@@ -46,7 +46,7 @@ function getConfigIcons({ components, icons, regex }) {
 
 function getBlockDefaultIcons({ components, context, icons, regex }) {
   Object.entries(components.types.blocks).forEach(([blockName, block]) => {
-    context.types.icons[block.package][blockName].forEach((icon) => {
+    context.typesMap.icons[block.package][blockName].forEach((icon) => {
       [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
     });
   });
