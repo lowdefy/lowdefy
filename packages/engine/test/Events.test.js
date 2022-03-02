@@ -102,7 +102,7 @@ test('init Events', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -139,7 +139,7 @@ test('triggerEvent no event defined', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -183,7 +183,7 @@ test('triggerEvent x1', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -249,7 +249,7 @@ test('triggerEvent, 2 actions', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -290,7 +290,7 @@ test('triggerEvent error', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -351,7 +351,7 @@ test('registerEvent then triggerEvent x1', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -414,7 +414,7 @@ test('triggerEvent skip', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -516,7 +516,7 @@ test('triggerEvent skip tests === true', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { textInput: 'init' },
@@ -594,7 +594,7 @@ test('triggerEvent skip tests === true', async () => {
   `);
 });
 
-test('Actions array defaults', async () => {
+test('Actions array defaults', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -618,7 +618,7 @@ test('Actions array defaults', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -633,7 +633,7 @@ test('Actions array defaults', async () => {
   });
 });
 
-test('Actions try catch array defaults', async () => {
+test('Actions try catch array defaults', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -660,7 +660,7 @@ test('Actions try catch array defaults', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -670,7 +670,7 @@ test('Actions try catch array defaults', async () => {
   });
 });
 
-test('Actions try catch arrays', async () => {
+test('Actions try catch arrays', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -697,7 +697,7 @@ test('Actions try catch arrays', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -742,7 +742,7 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -864,7 +864,7 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -982,7 +982,7 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

@@ -86,9 +86,6 @@ class Requests {
 
   async fetch({ requestId, payload }) {
     this.context.requests[requestId].loading = true;
-    if (this.context._internal.RootBlocks) {
-      this.context._internal.RootBlocks.setBlocksLoadingCache();
-    }
 
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({

@@ -186,7 +186,7 @@ test('Validate required field', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -331,7 +331,7 @@ test('Validate all fields', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -538,7 +538,7 @@ test('Validate only one field', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -709,7 +709,7 @@ test('Validate list of fields', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -847,7 +847,7 @@ test('Invalid Validate params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -939,7 +939,7 @@ test('Validate does not fail on warnings', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -1036,7 +1036,7 @@ test('Validate on nested objects using params.regex string', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -1152,7 +1152,7 @@ test('Validate on nested objects using params.regex array', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,
@@ -1285,7 +1285,7 @@ test('Validate on nested objects using params.regex array and blockIds', async (
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,

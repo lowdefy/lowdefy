@@ -61,7 +61,7 @@ test('SetGlobal data to global', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

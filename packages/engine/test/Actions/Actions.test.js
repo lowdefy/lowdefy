@@ -78,7 +78,7 @@ test('call a synchronous action', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -117,7 +117,7 @@ test('call a asynchronous action', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -156,7 +156,7 @@ test('call 2 actions', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -202,7 +202,7 @@ test('operators are evaluated in params, skip and messages', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -278,7 +278,7 @@ test('operators are evaluated in error messages after error', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -326,7 +326,7 @@ test('action error in error messages from same action id', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -382,7 +382,7 @@ test('action error in error parser', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -435,7 +435,7 @@ test('error with messages undefined', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -471,7 +471,7 @@ test('skip a action', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -510,7 +510,7 @@ test('action throws a error', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -561,7 +561,7 @@ test('actions after a error are not called throws a error', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -616,7 +616,7 @@ test('Invalid action type', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -666,7 +666,7 @@ test('Parser error in action', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -722,7 +722,7 @@ test('Display default loading and success messages when value == true ', async (
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -767,7 +767,7 @@ test('Display custom loading and success messages when value is a string ', asyn
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -812,7 +812,7 @@ test('Do not display loading and success messages by default', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -841,7 +841,7 @@ test('Display error message by default', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -877,7 +877,7 @@ test('Display custom error message', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -916,7 +916,7 @@ test('Do not display an error message if message === false', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -947,7 +947,7 @@ test('Call catchActions when actions throws error', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -1023,7 +1023,7 @@ test('Call catchActions when actions throws error and catchActions throws error'
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -1126,7 +1126,7 @@ test('call 2 actions, first with async: true', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -1189,7 +1189,7 @@ test('call async: true with error', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -1252,7 +1252,7 @@ test('call 2 actions, first with async: false', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -1298,7 +1298,7 @@ test('call 2 actions, first with async: null', async () => {
       category: 'container',
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

@@ -51,7 +51,7 @@ test('memoize context', async () => {
   expect(c1).toBe(c2);
 });
 
-test('create context', async () => {
+test('create context', () => {
   const lowdefy = {
     client: { client: true },
     contexts: {},
@@ -72,7 +72,7 @@ test('create context', async () => {
       type: 'container',
     },
   };
-  const context = await getContext({ page, lowdefy });
+  const context = getContext({ page, lowdefy });
   expect(context.Actions).toBeDefined();
   expect(context.Requests).toBeDefined();
   expect(context.RootBlocks).toBeDefined();
@@ -89,7 +89,7 @@ test('create context', async () => {
   expect(context.update).toBeDefined();
 });
 
-test('create context, initialize input', async () => {
+test('create context, initialize input', () => {
   const lowdefy = {
     client: { client: true },
     contexts: {},
@@ -110,11 +110,11 @@ test('create context, initialize input', async () => {
       type: 'container',
     },
   };
-  const context = await getContext({ page, lowdefy });
+  const context = getContext({ page, lowdefy });
   expect(context.lowdefy.inputs.pageId).toEqual({});
 });
 
-test('update memoized context', async () => {
+test('update memoized context', () => {
   const lowdefy = {
     client,
     contexts: {},
@@ -130,8 +130,8 @@ test('update memoized context', async () => {
     },
   };
   const mockUpdate = jest.fn();
-  const c1 = await getContext({ page, lowdefy });
+  const c1 = getContext({ page, lowdefy });
   c1.update = mockUpdate;
-  await getContext({ page, lowdefy });
+  getContext({ page, lowdefy });
   expect(mockUpdate.mock.calls.length).toBe(1);
 });

@@ -1,17 +1,17 @@
 /*
-   Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2021 Lowdefy, Inc
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 import testContext from '../testContext.js';
@@ -19,7 +19,7 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('list block no init', async () => {
+test('list block no init', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -54,7 +54,7 @@ test('list block no init', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -63,7 +63,7 @@ test('list block no init', async () => {
   expect(context.state).toEqual({ list: [] });
 });
 
-test('list block with init', async () => {
+test('list block with init', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -98,7 +98,7 @@ test('list block with init', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ text: 'hello' }] },
@@ -108,7 +108,7 @@ test('list block with init', async () => {
   expect(context.state).toEqual({ list: [{ text: 'hello' }] });
 });
 
-test('list block init with non array', async () => {
+test('list block init with non array', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -143,7 +143,7 @@ test('list block init with non array', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: 'hello' },
@@ -151,7 +151,7 @@ test('list block init with non array', async () => {
   expect(context.state).toEqual({ list: [] });
 });
 
-test('list block no init push item', async () => {
+test('list block no init push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -186,7 +186,7 @@ test('list block no init push item', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -201,7 +201,7 @@ test('list block no init push item', async () => {
   expect(context.state).toEqual({ list: [{ text: null }] });
 });
 
-test('list block with init move item up', async () => {
+test('list block with init move item up', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -236,7 +236,7 @@ test('list block with init move item up', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [0, 1, 2, 3, 4, 5] },
@@ -249,7 +249,7 @@ test('list block with init move item up', async () => {
   expect(context.state).toEqual({ list: [1, 0, 2, 3, 4, 5] });
 });
 
-test('list block with init move item down', async () => {
+test('list block with init move item down', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -284,7 +284,7 @@ test('list block with init move item down', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [0, 1, 2, 3, 4, 5] },
@@ -297,7 +297,7 @@ test('list block with init move item down', async () => {
   expect(context.state).toEqual({ list: [0, 2, 1, 3, 4, 5] });
 });
 
-test('list block no init unshift item to start', async () => {
+test('list block no init unshift item to start', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -332,7 +332,7 @@ test('list block no init unshift item to start', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -369,7 +369,7 @@ test('list block no init unshift item to start', async () => {
   expect(newText0.value).toEqual(null);
 });
 
-test('list block no init unshift item to start, block id not in array', async () => {
+test('list block no init unshift item to start, block id not in array', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -404,7 +404,7 @@ test('list block no init unshift item to start, block id not in array', async ()
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -430,7 +430,7 @@ test('list block no init unshift item to start, block id not in array', async ()
   expect(context.state).toEqual({ other: [null, 'first'] });
 });
 
-test('list block unshift item clear all previous values', async () => {
+test('list block unshift item clear all previous values', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -487,7 +487,7 @@ test('list block unshift item clear all previous values', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -535,7 +535,7 @@ test('list block unshift item clear all previous values', async () => {
   });
 });
 
-test('list block with init push item', async () => {
+test('list block with init push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -570,7 +570,7 @@ test('list block with init push item', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ text: 'a' }] },
@@ -581,7 +581,7 @@ test('list block with init push item', async () => {
   expect(context.state).toEqual({ list: [{ text: 'a' }, { text: null }] });
 });
 
-test('list block with init including extra data and push item', async () => {
+test('list block with init including extra data and push item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -616,7 +616,7 @@ test('list block with init including extra data and push item', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ b: 'b', c: 'c' }], d: 'd' },
@@ -627,7 +627,7 @@ test('list block with init including extra data and push item', async () => {
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }, { b: null }], d: 'd' });
 });
 
-test('list block no init push item, with enforced input type', async () => {
+test('list block no init push item, with enforced input type', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -662,7 +662,7 @@ test('list block no init push item, with enforced input type', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -672,7 +672,7 @@ test('list block no init push item, with enforced input type', async () => {
   expect(context.state).toEqual({ list: [{ text: null }] });
 });
 
-test('list block with rec visible in parent blocks', async () => {
+test('list block with rec visible in parent blocks', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -730,7 +730,7 @@ test('list block with rec visible in parent blocks', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ b: 'b', a: 'a' }], c: 'c' },
@@ -741,7 +741,7 @@ test('list block with rec visible in parent blocks', async () => {
   expect(context.state).toEqual({ list: [{ b: 'b', a: 'show b' }], c: 'c' });
 });
 
-test('list block with visible', async () => {
+test('list block with visible', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -785,7 +785,7 @@ test('list block with visible', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ a: 'a' }], swtch: true },
@@ -799,7 +799,7 @@ test('list block with visible', async () => {
   expect(context.state).toEqual({ list: [{ a: 'a' }], swtch: true });
 });
 
-test('toggle list object field visibility with index', async () => {
+test('toggle list object field visibility with index', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -843,7 +843,7 @@ test('toggle list object field visibility with index', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -867,7 +867,7 @@ test('toggle list object field visibility with index', async () => {
   expect(context.state).toEqual({ list: [{ text: 'a1', swtch: true }, { swtch: false }] });
 });
 
-test('primitive list block no init', async () => {
+test('primitive list block no init', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -916,14 +916,14 @@ test('primitive list block no init', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
   expect(context.state).toEqual({ list: [] });
 });
 
-test('primitive list block with init', async () => {
+test('primitive list block with init', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -958,7 +958,7 @@ test('primitive list block with init', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [1, 2, 3] },
@@ -968,7 +968,7 @@ test('primitive list block with init', async () => {
   expect(context.state).toEqual({ list: [1, 2, 3] });
 });
 
-test('primitive list block with init, push item and setValue', async () => {
+test('primitive list block with init, push item and setValue', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1003,7 +1003,7 @@ test('primitive list block with init, push item and setValue', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [1, 2, 3] },
@@ -1017,7 +1017,7 @@ test('primitive list block with init, push item and setValue', async () => {
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
 
-test('primitive list block with init, push item and setValue', async () => {
+test('primitive list block with init, push item and setValue', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1052,7 +1052,7 @@ test('primitive list block with init, push item and setValue', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [1, 2, 3] },
@@ -1066,7 +1066,7 @@ test('primitive list block with init, push item and setValue', async () => {
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
 
-test('primitive list block with init and push item with enforced input type', async () => {
+test('primitive list block with init and push item with enforced input type', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1101,7 +1101,7 @@ test('primitive list block with init and push item with enforced input type', as
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [true, true, true] },
@@ -1112,7 +1112,7 @@ test('primitive list block with init and push item with enforced input type', as
   expect(context.state).toEqual({ list: [true, true, true, false] });
 });
 
-test('list block with nested primitive array with init, push item enforced type on inputs and setValue', async () => {
+test('list block with nested primitive array with init, push item enforced type on inputs and setValue', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1169,7 +1169,7 @@ test('list block with nested primitive array with init, push item enforced type 
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ innerList: [true, true, true], text: 'text' }] },
@@ -1201,7 +1201,7 @@ test('list block with nested primitive array with init, push item enforced type 
   });
 });
 
-test('list block with nested primitive array with init, push item and setValue', async () => {
+test('list block with nested primitive array with init, push item and setValue', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1258,7 +1258,7 @@ test('list block with nested primitive array with init, push item and setValue',
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ innerList: [1, 2, 3], text: 'text' }] },
@@ -1290,7 +1290,7 @@ test('list block with nested primitive array with init, push item and setValue',
   });
 });
 
-test('list block with init remove item of first item and more than two values', async () => {
+test('list block with init remove item of first item and more than two values', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1325,7 +1325,7 @@ test('list block with init remove item of first item and more than two values', 
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
@@ -1341,7 +1341,7 @@ test('list block with init remove item of first item and more than two values', 
   expect(listSubblocksList.length).toEqual(2);
 });
 
-test('list block remove item, add item does not have previous item value ', async () => {
+test('list block remove item, add item does not have previous item value ', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1376,7 +1376,7 @@ test('list block remove item, add item does not have previous item value ', asyn
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ text: '0' }] },
@@ -1394,7 +1394,7 @@ test('list block remove item, add item does not have previous item value ', asyn
   expect(listSubblocksList.length).toEqual(1);
 });
 
-test('list block with init remove item and set existing item values', async () => {
+test('list block with init remove item and set existing item values', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1429,7 +1429,7 @@ test('list block with init remove item and set existing item values', async () =
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
@@ -1460,7 +1460,7 @@ test('list block with init remove item and set existing item values', async () =
   expect(listSubblocksList.length).toEqual(3);
 });
 
-test('primitive list block with init remove item', async () => {
+test('primitive list block with init remove item', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1495,7 +1495,7 @@ test('primitive list block with init remove item', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { list: [0, 1, 2, 3, 4, 5, 6, 7] },
@@ -1530,7 +1530,7 @@ test('primitive list block with init remove item', async () => {
   expect(context.state).toEqual({ list: [0, 1, 2, 30, 50, 6, 7, null] });
 });
 
-test('nested list', async () => {
+test('nested list', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1637,7 +1637,7 @@ test('nested list', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: {
