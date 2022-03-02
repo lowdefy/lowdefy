@@ -5,13 +5,13 @@ plugins:
     config:
       languages:
         javascript:
-          mass_threshold: 50
+          mass_threshold: 80
   identical-code:
     enabled: true
     config:
       languages:
         javascript:
-          mass_threshold: 50
+          mass_threshold: 80
   fixme:
     enabled: true
   nodesecurity:
