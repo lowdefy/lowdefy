@@ -27,7 +27,6 @@ const CheckboxSelector = ({
   blockId,
   components,
   events,
-  loading,
   properties,
   required,
   validation,
@@ -43,7 +42,6 @@ const CheckboxSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <Checkbox.Group

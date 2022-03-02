@@ -73,7 +73,6 @@ const RatingSlider = ({
   blockId,
   components: { Icon, Link },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -102,7 +101,6 @@ const RatingSlider = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}

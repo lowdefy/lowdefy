@@ -29,7 +29,6 @@ const MultipleSelector = ({
   blockId,
   components: { Icon },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -42,7 +41,6 @@ const MultipleSelector = ({
     <Label
       blockId={blockId}
       components={{ Icon }}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}

@@ -28,7 +28,6 @@ const AutoCompleteInput = ({
   blockId,
   components,
   events,
-  loading,
   methods,
   properties,
   required,
@@ -44,7 +43,6 @@ const AutoCompleteInput = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <AutoComplete

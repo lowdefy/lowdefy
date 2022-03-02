@@ -25,7 +25,6 @@ const PasswordInput = ({
   blockId,
   components,
   events,
-  loading,
   methods,
   properties,
   required,
@@ -37,7 +36,6 @@ const PasswordInput = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}

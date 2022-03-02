@@ -18,15 +18,8 @@ import React from 'react';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const AnchorBlock = ({
-  blockId,
-  events,
-  components: { Icon, Link },
-  loading,
-  methods,
-  properties,
-}) => {
-  const showLoading = get(events, 'onClick.loading') || loading;
+const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, properties }) => {
+  const showLoading = get(events, 'onClick.loading');
   const disabled = properties.disabled || showLoading;
   return (
     <Link
@@ -46,7 +39,9 @@ const AnchorBlock = ({
               <Icon
                 blockId={`${blockId}_icon`}
                 events={events}
-                properties={showLoading ? { name: 'LoadingOutlined', spin: true } : properties.icon}
+                properties={
+                  showLoading ? { name: 'AiOutlineLoading3Quarters', spin: true } : properties.icon
+                }
               />
             ) + ` `}
           {properties.title || defaultTitle}
@@ -65,7 +60,7 @@ AnchorBlock.meta = {
       lines: 1,
     },
   },
-  icons: [],
+  icons: ['AiOutlineLoading3Quarters'],
   styles: [],
 };
 

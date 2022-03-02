@@ -25,7 +25,6 @@ const SwitchBlock = ({
   blockId,
   components: { Icon, Link },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -45,7 +44,6 @@ const SwitchBlock = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -61,7 +59,6 @@ const SwitchBlock = ({
               properties.inputStyle,
             ])}
             disabled={properties.disabled}
-            loading={loading}
             id={`${blockId}_input`}
             size={properties.size}
             checkedChildren={

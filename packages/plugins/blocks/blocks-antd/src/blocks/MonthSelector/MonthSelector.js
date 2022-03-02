@@ -29,7 +29,6 @@ const MonthSelector = ({
   blockId,
   components: { Icon },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -41,7 +40,6 @@ const MonthSelector = ({
       blockId={blockId}
       components={{ Icon }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}

@@ -28,7 +28,6 @@ const TextAreaBlock = ({
   blockId,
   components,
   events,
-  loading,
   properties,
   required,
   validation,
@@ -43,7 +42,6 @@ const TextAreaBlock = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => {
           const runAfterUpdate = useRunAfterUpdate();

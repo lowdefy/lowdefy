@@ -26,7 +26,6 @@ import disabledDate from '../../disabledDate.js';
 const DateTimeSelector = ({
   blockId,
   events,
-  loading,
   components: { Icon },
   methods,
   properties,
@@ -49,7 +48,6 @@ const DateTimeSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>

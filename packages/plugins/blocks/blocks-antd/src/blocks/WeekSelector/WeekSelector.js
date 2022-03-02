@@ -29,7 +29,6 @@ const WeekSelector = ({
   blockId,
   components: { Icon, Link },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -44,7 +43,6 @@ const WeekSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>

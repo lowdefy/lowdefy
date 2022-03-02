@@ -24,7 +24,6 @@ import color from '../../color.js';
 const ButtonBlock = ({
   blockId,
   events,
-  loading,
   components: { Icon },
   methods,
   onClick,
@@ -55,7 +54,7 @@ const ButtonBlock = ({
       danger={properties.danger}
       href={properties.href}
       id={blockId}
-      loading={loading || get(events, `${onClickActionName}.loading`)}
+      loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
       type={get(properties, 'type', { default: 'primary' })}

@@ -24,7 +24,6 @@ const NumberInput = ({
   blockId,
   events,
   components,
-  loading,
   methods,
   properties,
   required,
@@ -36,7 +35,6 @@ const NumberInput = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}

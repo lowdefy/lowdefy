@@ -25,7 +25,6 @@ const TextInput = ({
   blockId,
   components: { Icon, Link },
   events,
-  loading,
   methods,
   properties,
   required,
@@ -37,7 +36,6 @@ const TextInput = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}

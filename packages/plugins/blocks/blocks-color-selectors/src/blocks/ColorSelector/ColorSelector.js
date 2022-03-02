@@ -24,7 +24,6 @@ const ColorSelector = ({
   blockId,
   components,
   events,
-  loading,
   methods,
   properties,
   required,
@@ -36,7 +35,6 @@ const ColorSelector = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
