@@ -46,7 +46,6 @@ class Blocks {
     this.resetValidation = this.resetValidation.bind(this);
     this.resetValidationRec = this.resetValidationRec.bind(this);
     this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
     this.update = this.update.bind(this);
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
@@ -570,11 +569,6 @@ class Blocks {
     this.loopBlocks((block) => {
       if (block.update) {
         block.update = false;
-        block.loading = block.requestKeys.reduce(
-          (acc, key) =>
-            acc || (this.context.requests[key] ? this.context.requests[key].loading : true),
-          false
-        );
         block.eval = {
           areas: block.areasLayoutEval.output,
           events: type.isNone(block.Events.events) ? null : block.Events.events,
@@ -595,25 +589,6 @@ class Blocks {
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
         subBlock.setBlocksCache();
-      });
-    });
-  }
-
-  setBlocksLoadingCache() {
-    this.loopBlocks((block) => {
-      block.loading_prev = block.loading;
-      block.loading = block.requestKeys.reduce(
-        (acc, key) =>
-          acc || (this.context.requests[key] ? this.context.requests[key].loading : true),
-        false
-      );
-      if (block.loading_prev !== block.loading) {
-        this.context._internal.lowdefy._internal.updateBlock(block.id);
-      }
-    });
-    Object.keys(this.subBlocks).forEach((subKey) => {
-      this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.setBlocksLoadingCache();
       });
     });
   }
