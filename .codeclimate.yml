@@ -12,8 +12,6 @@ plugins:
       languages:
         javascript:
           mass_threshold: 50
-  eslint:
-    enabled: true
   fixme:
     enabled: true
   nodesecurity:
