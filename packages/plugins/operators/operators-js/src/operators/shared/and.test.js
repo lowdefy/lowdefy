@@ -49,15 +49,14 @@ test('_and errors', () => {
   );
 });
 
-test('_and evaluated in NodeParser', async () => {
+test('_and evaluated in NodeParser', () => {
   const input = { a: { _and: [true, true] } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });
 
-test('_and evaluated in WebParser', async () => {
+test('_and evaluated in WebParser', () => {
   const context = {
     _internal: {
       lowdefy: {
@@ -75,7 +74,6 @@ test('_and evaluated in WebParser', async () => {
   };
   const input = { a: { _and: [true, true] } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });

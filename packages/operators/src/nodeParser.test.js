@@ -45,36 +45,32 @@ const user = {
   user: true,
 };
 
-test('parse input undefined', async () => {
+test('parse input undefined', () => {
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({});
   expect(res.output).toEqual();
   expect(res.errors).toEqual([]);
 });
 
-test('parse args not array', async () => {
+test('parse args not array', () => {
   const input = {};
   const args = 'not an array';
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
 });
 
-test('parse location not string', async () => {
+test('parse location not string', () => {
   const input = {};
   const location = [];
   const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
   expect(() => parser.parse({ args, input, location })).toThrow(
     'Operator parser location must be a string.'
   );
 });
 
-test('operator returns value', async () => {
+test('operator returns value', () => {
   const input = { a: { _test: { params: true } } };
   const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
@@ -147,35 +143,26 @@ test('operator returns value', async () => {
   expect(res.errors).toEqual([]);
 });
 
-test('operator should be object with 1 key', async () => {
+test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
 
-test('undefined operator', async () => {
+test('undefined operator', () => {
   const input = { a: { _id: { params: true } } };
   const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
 
-test('operator errors', async () => {
+test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toEqual([new Error('Test error.')]);
-});
-
-test('operator init', async () => {
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  await parser.init();
-  expect(operators._init.init).toHaveBeenCalledTimes(1);
 });

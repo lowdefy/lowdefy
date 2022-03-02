@@ -19,22 +19,8 @@ import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 class WebParser {
   constructor({ context, operators }) {
     this.context = context;
-    this.init = this.init.bind(this);
     this.parse = this.parse.bind(this);
     this.operators = operators;
-  }
-
-  async init() {
-    if (!type.isObject(this.context._internal.lowdefy)) {
-      throw new Error('context._internal.lowdefy must be an object.');
-    }
-    await Promise.all(
-      Object.values(this.operators).map(async (operator) => {
-        if (operator.init) {
-          await operator.init();
-        }
-      })
-    );
   }
 
   parse({ actions, args, arrayIndices, event, input, location }) {

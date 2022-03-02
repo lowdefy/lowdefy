@@ -33,9 +33,6 @@ const operators = {
 const location = 'location';
 
 const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-beforeAll(async () => {
-  await parser.init();
-});
 
 describe('_array.concat', () => {
   const methodName = 'concat';

@@ -57,27 +57,24 @@ const context = {
 
 console.error = () => {};
 
-test('NodeParser, _function that gets from payload', async () => {
+test('NodeParser, _function that gets from payload', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const params = { __payload: 'string' };
   const fn = _function({ location, params, parser });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
 
-test('NodeParser, _function gives args as an array', async () => {
+test('NodeParser, _function gives args as an array', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
-test('NodeParser, _function throws on parser errors', async () => {
+test('NodeParser, _function throws on parser errors', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const params = { __payload: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
@@ -85,9 +82,8 @@ test('NodeParser, _function throws on parser errors', async () => {
   );
 });
 
-test('WebParser, _function that gets from state', async () => {
+test('WebParser, _function that gets from state', () => {
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const params = { __state: 'string' };
   const fn = _function({ location, params, parser });
   expect(fn).toBeInstanceOf(Function);
@@ -95,18 +91,16 @@ test('WebParser, _function that gets from state', async () => {
   expect(fn()).toEqual('Some String');
 });
 
-test('WebParser, _function gives args as an array', async () => {
+test('WebParser, _function gives args as an array', () => {
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const params = { __args: true };
   const fn = _function({ location, params, parser });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
-test('WebParser, _function throws on parser errors', async () => {
+test('WebParser, _function throws on parser errors', () => {
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const params = { __state: [] };
   const fn = _function({ location, params, parser });
   expect(fn).toThrow(
