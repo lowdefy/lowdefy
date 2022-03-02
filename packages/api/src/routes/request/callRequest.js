@@ -37,7 +37,7 @@ async function callRequest(context, { pageId, payload, requestId }) {
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
 
-  const { connectionProperties, requestProperties } = await evaluateOperators(context, {
+  const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     payload: serializer.deserialize(payload),
     requestConfig,

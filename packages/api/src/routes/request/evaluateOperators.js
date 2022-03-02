@@ -18,7 +18,7 @@ import { NodeParser } from '@lowdefy/operators';
 
 import { RequestError } from '../../context/errors.js';
 
-async function evaluateOperators(
+function evaluateOperators(
   { operators, secrets, user },
   { connectionConfig, payload, requestConfig }
 ) {
@@ -28,7 +28,6 @@ async function evaluateOperators(
     secrets,
     user,
   });
-  await operatorsParser.init();
   const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
     input: connectionConfig.properties || {},
     location: connectionConfig.connectionId,
