@@ -50,6 +50,7 @@ async function getLowdefyYaml({ configDirectory, command }) {
       )}.`
     );
   }
+  // TODO: Validate plugins
   return {
     lowdefyVersion: lowdefy.lowdefy,
     cliConfig: get(lowdefy, 'cli', { default: {} }),
