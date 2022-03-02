@@ -36,7 +36,7 @@ const Icons = {
 
 const IconComponent = createIcon(Icons);
 
-const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
+const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));

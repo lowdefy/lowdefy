@@ -21,8 +21,9 @@ import userEvent from '@testing-library/user-event';
 
 import mockBlock from './mockBlock.js';
 
-const runMockMethodTests = ({ examples, logger, meta, mocks, schema, tests }) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger, schema });
+const runMockMethodTests = ({ Block, examples, mocks, schema, testConfig }) => {
+  const meta = Block.meta;
+  const { before, methods, getProps } = mockBlock({ meta, schema });
 
   beforeEach(() => {
     before();
@@ -33,8 +34,8 @@ const runMockMethodTests = ({ examples, logger, meta, mocks, schema, tests }) =>
 
   examples.forEach((ex) => {
     values.forEach((value, v) => {
-      if (tests && tests.methods) {
-        tests.methods.forEach((method) => {
+      if (testConfig && testConfig.methods) {
+        testConfig.methods.forEach((method) => {
           mocks.forEach((mock) => {
             test(`Mock for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}] - ${
               mock.name
