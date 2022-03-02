@@ -14,47 +14,49 @@
   limitations under the License.
 */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import getContext from '@lowdefy/engine';
 
 import MountEvents from './block/MountEvents.js';
 
 const Context = ({ children, lowdefy, config }) => {
-  const [context, setContext] = useState({});
+  const context = getContext({ config, lowdefy });
 
-  useEffect(() => {
-    let mounted = true;
-    const mount = async () => {
-      const ctx = await getContext({
-        config,
-        lowdefy,
-        development: true,
-      });
-      if (mounted) {
-        setContext(ctx);
-      }
-    };
-    mount();
-    return () => {
-      mounted = false;
-    };
-  }, [config, lowdefy]);
-  const loadingPage = context.id !== config.id;
+  // TODO: WHY ??
+  // const loadingPage = context.id !== config.id;
 
-  if (loadingPage) {
-    return children(context, loadingPage, 'pager');
-  }
+  // if (loadingPage) {
+  //   return children(context, loadingPage, 'pager');
+  // }
 
   return (
     <MountEvents
-      asyncEventName="onEnterAsync"
+      asyncEventName="onInitAsync"
       context={context}
-      eventName="onEnter"
-      triggerEvent={({ name, context }) =>
-        context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
-      }
+      eventName="onInit"
+      triggerEvent={({ name, context, async }) => {
+        if (!async) {
+          context._internal.update(); // TODO: do we need this?
+          context._internal.State.freezeState();
+        }
+        context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name });
+      }}
     >
-      {(loading) => children(context, loading, 'mounter')}
+      {(loadingOnInit) => {
+        if (loadingOnInit) return ''; // TODO: handle onInit Loader
+        return (
+          <MountEvents
+            asyncEventName="onEnterAsync"
+            context={context}
+            eventName="onEnter"
+            triggerEvent={({ name, context }) =>
+              context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
+            }
+          >
+            {(loadingOnEnter) => children(context, loadingOnEnter, 'mounter')}
+          </MountEvents>
+        );
+      }}
     </MountEvents>
   );
 };
