@@ -54,7 +54,7 @@
 - id: 'properties.icon: AndroidFilled'
   type: ConfirmModal
   properties:
-    icon: AndroidFilled
+    icon: AiFillAndroid
 - id: 'properties.mask: false'
   type: ConfirmModal
   properties:

@@ -49,7 +49,7 @@
 - id: 'properties.icon'
   type: Notification
   properties:
-    icon: AccountBookFilled
+    icon: AiFillAccountBook
     message: Notification message
 - id: 'properties.closeIcon: AiOutlineAlert'
   type: Notification

@@ -21,18 +21,18 @@
 - id: properties.icon string
   type: Anchor
   properties:
-    icon: FireFilled
+    icon: AiFillFire
 - id: properties.icon object
   type: Anchor
   properties:
     title: Click here
     icon:
       color: red
-      name: RocketTwoTone
+      name: AiFillRocket
 - id: properties.icon and properties.title
   type: Anchor
   properties:
-    icon: LinkOutlined
+    icon: AiOutlineLink
     title: This is the anchor title
 - id: properties.disabled
   type: Anchor
@@ -42,7 +42,7 @@
 - id: properties.icon, properties.title and properties.disabled
   type: Anchor
   properties:
-    icon: LinkOutlined
+    icon: AiOutlineLink
     title: This is the anchor title
     disabled: true
 - id: properties.strong
@@ -82,7 +82,7 @@
   type: Anchor
   properties:
     title: Click here
-    icon: LinkOutlined
+    icon: AiOutlineLink
     style:
       color: green !important
       fontSize: 8

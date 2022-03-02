@@ -32,12 +32,12 @@
         type: MenuLink
         pageId: page_1
         properties:
-          icon: RocketFilled
+          icon: AiFillRocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'properties.title'
   type: MobileMenu
   properties:
@@ -47,13 +47,13 @@
         pageId: page_1
         properties:
           title: Title Menu Item 1
-          icon: RocketFilled
+          icon: AiFillRocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'properties.MenuGroup with MenuLInks'
   type: MobileMenu
   properties:
@@ -137,7 +137,7 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
           danger: true
 
 # mode inline
@@ -180,13 +180,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'backgroundColor: #016e1e'
   type: MobileMenu
   properties:
@@ -226,13 +226,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'selectedColor: #f16e1e'
   type: MobileMenu
   properties:
@@ -272,13 +272,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'selectedColor: #f16e1e, backgroundColor: #016e1e'
   type: MobileMenu
   properties:
@@ -319,13 +319,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e'
   type: MobileMenu
   properties:
@@ -367,13 +367,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 
 - id: 'theme: light, selectedColor: #6C2ACB'
   type: MobileMenu
@@ -415,13 +415,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 
 - id: 'menus: links[0]'
   type: MobileMenu
@@ -444,7 +444,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 - id: 'menus: default'
   type: MobileMenu
   menus:
@@ -466,7 +466,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
     - id: menu_one
       menuId: default
       links:
@@ -504,7 +504,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
     - id: menu_one
       menuId: default
       links:
@@ -530,7 +530,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 
 - id: 'menusTitle pageId'
   type: MobileMenu
@@ -542,7 +542,7 @@
           type: MenuLink
           pageId: pageId_page_2
           properties:
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 
 - id: 'menusTitle url'
   type: MobileMenu
@@ -554,4 +554,4 @@
           type: MenuLink
           url: http://page.com
           properties:
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
