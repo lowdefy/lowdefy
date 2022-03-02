@@ -146,12 +146,14 @@ ControlledListBlock.defaultProps = blockDefaultProps;
 ControlledListBlock.meta = {
   valueType: 'array',
   category: 'list',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
+  skeleton: [
+    {
+      type: 'Skeleton',
+      properties: {
+        height: 80,
+      },
     },
-  },
+  ],
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
   styles: ['blocks/ControlledList/style.less'],
 };

@@ -31,12 +31,14 @@ const Markdown = ({ blockId, properties, methods }) => (
 Markdown.defaultProps = blockDefaultProps;
 Markdown.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 7,
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+      properties: {
+        lines: 7,
+      },
     },
-  },
+  ],
   icons: [],
   styles: [],
 };

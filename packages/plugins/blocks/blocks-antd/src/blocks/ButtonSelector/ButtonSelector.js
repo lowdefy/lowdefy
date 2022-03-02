@@ -99,9 +99,11 @@ ButtonSelector.defaultProps = blockDefaultProps;
 ButtonSelector.meta = {
   valueType: 'any',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons],
   styles: ['blocks/ButtonSelector/style.less'],
 };

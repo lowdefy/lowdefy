@@ -84,12 +84,14 @@ PaginationBlock.meta = {
     skip: 0,
   },
   category: 'input',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 33,
+  skeleton: [
+    {
+      type: 'Skeleton',
+      properties: {
+        height: 33,
+      },
     },
-  },
+  ],
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };

@@ -72,12 +72,14 @@ const MarkdownWithCode = ({ blockId, properties, methods }) => (
 MarkdownWithCode.defaultProps = blockDefaultProps;
 MarkdownWithCode.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 7,
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+      properties: {
+        lines: 7,
+      },
     },
-  },
+  ],
   icons: [],
   styles: [],
 };

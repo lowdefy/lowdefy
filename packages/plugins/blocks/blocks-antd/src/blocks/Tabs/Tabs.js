@@ -83,12 +83,14 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
 TabsBlock.defaultProps = blockDefaultProps;
 TabsBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
+  skeleton: [
+    {
+      type: 'Skeleton',
+      properties: {
+        height: 80,
+      },
     },
-  },
+  ],
   icons: [],
   styles: ['blocks/Tabs/style.less'],
 };

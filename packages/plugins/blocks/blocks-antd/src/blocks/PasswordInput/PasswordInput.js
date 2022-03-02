@@ -77,9 +77,11 @@ PasswordInput.defaultProps = blockDefaultProps;
 PasswordInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons],
   styles: ['blocks/PasswordInput/style.less'],
 };

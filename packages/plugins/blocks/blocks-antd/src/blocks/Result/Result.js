@@ -38,12 +38,14 @@ const ResultBlock = ({ blockId, components: { Icon }, events, content, methods, 
 ResultBlock.defaultProps = blockDefaultProps;
 ResultBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Spinner',
-    properties: {
-      height: '100vh',
+  skeleton: [
+    {
+      type: 'Spinner',
+      properties: {
+        height: '100vh',
+      },
     },
-  },
+  ],
   icons: [],
   styles: ['blocks/Result/style.less'],
 };

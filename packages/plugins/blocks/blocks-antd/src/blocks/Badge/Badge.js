@@ -45,7 +45,7 @@ const BadgeBlock = ({ blockId, events, content, components: { Icon }, properties
 BadgeBlock.defaultProps = blockDefaultProps;
 BadgeBlock.meta = {
   category: 'container',
-  loading: false,
+  skeleton: false,
   icons: [],
   styles: ['blocks/Badge/style.less'],
 };

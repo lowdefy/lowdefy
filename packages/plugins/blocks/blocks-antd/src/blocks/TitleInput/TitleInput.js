@@ -131,12 +131,14 @@ TitleInput.defaultProps = blockDefaultProps;
 TitleInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 1,
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+      properties: {
+        lines: 1,
+      },
     },
-  },
+  ],
   icons: [],
   styles: ['blocks/TitleInput/style.less'],
 };

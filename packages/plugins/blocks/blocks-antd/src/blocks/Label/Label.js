@@ -105,9 +105,11 @@ const Label = ({
 Label.defaultProps = blockDefaultProps;
 Label.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
   styles: ['blocks/Label/style.less'],
 };

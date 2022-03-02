@@ -108,9 +108,11 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
 ParagraphBlock.defaultProps = blockDefaultProps;
 ParagraphBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'SkeletonParagraph',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+    },
+  ],
   icons: [],
   styles: ['blocks/Paragraph/style.less'],
 };

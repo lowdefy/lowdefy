@@ -68,12 +68,14 @@ ColorSelector.defaultProps = blockDefaultProps;
 ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 216,
+  skeleton: [
+    {
+      type: 'Skeleton',
+      properties: {
+        height: 216,
+      },
     },
-  },
+  ],
   icons: [...Label.meta.icons],
   styles: ['blocks/ColorSelector/style.less'],
 };

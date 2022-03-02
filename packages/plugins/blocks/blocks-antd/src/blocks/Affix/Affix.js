@@ -39,7 +39,7 @@ const AffixBlock = ({ blockId, content, methods, properties, rename }) => (
 AffixBlock.defaultProps = blockDefaultProps;
 AffixBlock.meta = {
   category: 'container',
-  loading: false,
+  skeleton: false,
   icons: [],
   styles: ['blocks/Affix/style.less'],
 };

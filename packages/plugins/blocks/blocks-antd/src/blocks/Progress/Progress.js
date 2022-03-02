@@ -40,12 +40,14 @@ const ProgressBlock = ({ blockId, properties }) => (
 ProgressBlock.defaultProps = blockDefaultProps;
 ProgressBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 40,
+  skeleton: [
+    {
+      type: 'Skeleton',
+      properties: {
+        height: 40,
+      },
     },
-  },
+  ],
   icons: [],
   styles: ['blocks/Progress/style.less'],
 };

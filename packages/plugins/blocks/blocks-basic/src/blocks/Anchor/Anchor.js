@@ -54,12 +54,14 @@ const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, pro
 AnchorBlock.defaultProps = blockDefaultProps;
 AnchorBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 1,
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+      properties: {
+        lines: 1,
+      },
     },
-  },
+  ],
   icons: ['AiOutlineLoading3Quarters'],
   styles: [],
 };

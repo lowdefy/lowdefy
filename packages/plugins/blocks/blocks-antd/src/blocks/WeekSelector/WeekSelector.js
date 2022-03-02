@@ -89,9 +89,11 @@ WeekSelector.defaultProps = blockDefaultProps;
 WeekSelector.meta = {
   valueType: 'date',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/WeekSelector/style.less'],
 };

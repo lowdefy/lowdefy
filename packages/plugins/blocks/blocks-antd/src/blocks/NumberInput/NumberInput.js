@@ -76,9 +76,11 @@ NumberInput.defaultProps = blockDefaultProps;
 NumberInput.meta = {
   valueType: 'number',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons],
   styles: ['blocks/NumberInput/style.less'],
 };

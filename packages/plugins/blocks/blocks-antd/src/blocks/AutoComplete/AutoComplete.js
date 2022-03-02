@@ -112,9 +112,11 @@ AutoCompleteInput.defaultProps = blockDefaultProps;
 AutoCompleteInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons],
   styles: ['blocks/AutoComplete/style.less'],
 };

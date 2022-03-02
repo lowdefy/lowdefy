@@ -380,12 +380,14 @@ const PageSiderMenu = ({
 PageSiderMenu.defaultProps = blockDefaultProps;
 PageSiderMenu.meta = {
   category: 'container',
-  loading: {
-    type: 'Spinner',
-    properties: {
-      height: '100vh',
+  skeleton: [
+    {
+      type: 'Spinner',
+      properties: {
+        height: '100vh',
+      },
     },
-  },
+  ],
   icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
   styles: ['blocks/PageSiderMenu/style.less'],
 };

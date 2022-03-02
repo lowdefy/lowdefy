@@ -49,12 +49,14 @@ class DangerousMarkdown extends React.Component {
 DangerousMarkdown.defaultProps = blockDefaultProps;
 DangerousMarkdown.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 7,
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+      properties: {
+        lines: 7,
+      },
     },
-  },
+  ],
   icons: [],
   styles: [],
 };

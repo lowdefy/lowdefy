@@ -104,9 +104,11 @@ SwitchBlock.defaultProps = blockDefaultProps;
 SwitchBlock.meta = {
   valueType: 'boolean',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonInput',
+    },
+  ],
   icons: [...Label.meta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
   styles: ['blocks/Switch/style.less'],
 };

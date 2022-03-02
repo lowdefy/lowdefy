@@ -64,7 +64,7 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
 ConfirmModal.defaultProps = blockDefaultProps;
 ConfirmModal.meta = {
   category: 'container',
-  loading: false,
+  skeleton: false,
   icons: [],
   styles: ['blocks/ConfirmModal/style.less'],
 };

@@ -29,7 +29,7 @@ const ContentBlock = ({ blockId, content, methods, properties }) => (
 ContentBlock.defaultProps = blockDefaultProps;
 ContentBlock.meta = {
   category: 'container',
-  loading: false,
+  skeleton: false,
   icons: [],
   styles: ['blocks/Content/style.less'],
 };

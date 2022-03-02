@@ -50,9 +50,11 @@ const CommentBlock = ({ blockId, components, content, properties, methods }) => 
 CommentBlock.defaultProps = blockDefaultProps;
 CommentBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-  },
+  skeleton: [
+    {
+      type: 'SkeletonParagraph',
+    },
+  ],
   icons: [],
   styles: ['blocks/Comment/style.less'],
 };
