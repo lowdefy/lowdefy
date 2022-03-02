@@ -16,9 +16,11 @@
   limitations under the License.
 */
 
+import { mergeObjects } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
 import createCounter from './utils/createCounter.js';
+import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
@@ -52,17 +54,16 @@ import writeRequests from './build/writeRequests.js';
 import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
-async function createContext(options) {
-  const { directories, logger, refResolver } = options;
-
-  const defaultTypes = JSON.parse(
-    await readFile(new URL('./defaultTypes.json', import.meta.url).pathname)
+async function createContext({ customTypesMap, directories, logger, refResolver }) {
+  const defaultTypesMap = JSON.parse(
+    await readFile(new URL('./defaultTypesMap.json', import.meta.url).pathname)
   );
-
-  // TODO: resolve custom plugin types
 
   const context = {
     directories,
+    logger,
+    readConfigFile: createReadConfigFile({ directories }),
+    refResolver,
     typeCounters: {
       actions: createCounter(),
       blocks: createCounter(),
@@ -73,10 +74,7 @@ async function createContext(options) {
         server: createCounter(),
       },
     },
-    logger,
-    readConfigFile: createReadConfigFile({ directories }),
-    refResolver,
-    types: defaultTypes,
+    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
   return context;
@@ -115,6 +113,6 @@ async function build(options) {
   await copyPublicFolder({ components, context });
 }
 
-export { createContext };
+export { createContext, createPluginTypesMap };
 
 export default build;

@@ -2687,6 +2687,8 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     react-icons: 4.3.1
+    yaml: 1.10.2
+    yargs: 17.3.1
   languageName: unknown
   linkType: soft
 
@@ -15891,17 +15893,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"yaml@npm:1.10.2, yaml@npm:^1.10.0, yaml@npm:^1.7.2, yaml@npm:^1.8.3":
+  version: 1.10.2
+  resolution: "yaml@npm:1.10.2"
+  checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
+  languageName: node
+  linkType: hard
+
 "yaml@npm:2.0.0-10":
   version: 2.0.0-10
   resolution: "yaml@npm:2.0.0-10"
   checksum: 7a0bac2f80225da6008fb8ab887f43166fb2485cc3e1350185c43499c76841ea0ca9d79b40c0970e08ab3943f25ffb184e709fef7fb8b26d73987ed0452a91cc
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^1.10.0, yaml@npm:^1.7.2, yaml@npm:^1.8.3":
-  version: 1.10.2
-  resolution: "yaml@npm:1.10.2"
-  checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
   languageName: node
   linkType: hard
 

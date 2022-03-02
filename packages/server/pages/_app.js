@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-
+import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import LowdefyContext from '../lib/components/LowdefyContext.js';

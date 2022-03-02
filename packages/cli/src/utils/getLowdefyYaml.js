@@ -20,9 +20,9 @@ import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 async function getLowdefyYaml({ configDirectory, command }) {
-  let lowdefyYaml = await readFile(path.resolve(configDirectory, 'lowdefy.yaml'));
+  let lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
-    lowdefyYaml = await readFile(path.resolve(configDirectory, 'lowdefy.yml'));
+    lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
     if (!['init'].includes(command)) {
