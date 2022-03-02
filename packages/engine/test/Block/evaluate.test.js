@@ -453,3 +453,129 @@ test('default value for areas', async () => {
   const { textInput } = context.RootBlocks.map;
   expect(textInput.eval.areas).toEqual({});
 });
+
+test('parse block loading', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'container',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'textInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            loading: { _state: 'key' },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { key: false },
+  });
+  const { textInput } = context.RootBlocks.map;
+  expect(textInput.loading).toEqual({ _state: true });
+  expect(textInput.eval.loading).toEqual(true);
+});
+
+test('default value for loading', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'container',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'textInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { key: 'value' },
+  });
+  const { textInput } = context.RootBlocks.map;
+  expect(textInput.loading).toEqual({});
+  expect(textInput.eval.loading).toEqual(false);
+});
+
+test('parse block skeleton', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'container',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'textInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+            skeleton: { _state: 'key' },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { key: false },
+  });
+  const { textInput } = context.RootBlocks.map;
+  expect(textInput.skeleton).toEqual({ _state: 'key' });
+  expect(textInput.eval.skeleton).toEqual(false);
+});
+
+test('default value for skeleton', async () => {
+  const rootBlock = {
+    blockId: 'root',
+    meta: {
+      category: 'container',
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            type: 'TextInput',
+            blockId: 'textInput',
+            meta: {
+              category: 'input',
+              valueType: 'string',
+            },
+          },
+        ],
+      },
+    },
+  };
+  const context = await testContext({
+    lowdefy,
+    rootBlock,
+    initState: { key: 'value' },
+  });
+  const { textInput } = context.RootBlocks.map;
+  expect(textInput.skeleton).toEqual({});
+  expect(textInput.eval.skeleton).toEqual(null);
+});
