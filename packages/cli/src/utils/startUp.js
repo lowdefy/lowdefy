@@ -32,9 +32,10 @@ async function startUp({ context, options = {}, command }) {
   context.print = createPrint();
 
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
-  const { cliConfig, lowdefyVersion } = await getLowdefyYaml(context);
+  const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;
+  context.plugins = plugins;
 
   const { appId } = await getCliJson(context);
   context.appId = appId;
