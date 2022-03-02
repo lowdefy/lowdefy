@@ -177,11 +177,17 @@ exports[`Render properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
     <span
       class="ant-statistic-content-prefix"
     >
-      <svg
-        class="emotion-0"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.prefixIcon: AccountBookFilled_prefixIcon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-0"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+          title="AccountBookFilled"
+        />
+      </span>
     </span>
     <span
       class="ant-statistic-content-value"
@@ -261,11 +267,17 @@ exports[`Render properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
     <span
       class="ant-statistic-content-suffix"
     >
-      <svg
-        class="emotion-0"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.suffixIcon: AccountBookFilled_suffixIcon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-0"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.suffixIcon: AccountBookFilled_suffixIcon"
+          title="AccountBookFilled"
+        />
+      </span>
     </span>
   </div>
 </div>
@@ -374,6 +386,419 @@ exports[`Render properties.value: '3.45' as string - value[0] 1`] = `
 `;
 
 exports[`Render properties.value: 3.45 as number - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        0
+      </span>
+      
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.decimalSeparator: ',' - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        ,45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.groupSeparator: ',' - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3.565.542
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        ,45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.loading: true - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
+  </div>
+  <div
+    class="ant-skeleton"
+  >
+    <div
+      class="ant-skeleton-content"
+    >
+      <h3
+        class="ant-skeleton-title"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.precision: 2 - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.prefix: R - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    <span
+      class="ant-statistic-content-prefix"
+    >
+      R
+    </span>
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.prefixIcon: AccountBookFilled - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    <span
+      class="ant-statistic-content-prefix"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-0"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.prefixIcon: AccountBookFilled_prefixIcon"
+          title="AccountBookFilled"
+        />
+      </span>
+    </span>
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.suffix: Rand - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      Rand
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.suffixIcon: AccountBookFilled - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-0"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.suffixIcon: AccountBookFilled_suffixIcon"
+          title="AccountBookFilled"
+        />
+      </span>
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      Statistic title
+    </span>
+  </div>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        0
+      </span>
+      
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.title with html - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-title"
+  >
+    <span
+      class="emotion-0"
+    >
+      <div
+        style="color:blue;"
+      >
+        Very Html
+      </div>
+    </span>
+  </div>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        100
+      </span>
+      
+    </span>
+    <span
+      class="ant-statistic-content-suffix"
+    >
+      %
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.value: '3.45' as string - value[0] 1`] = `
+<div
+  class="ant-statistic emotion-0"
+>
+  <div
+    class="ant-statistic-content"
+  >
+    
+    <span
+      class="ant-statistic-content-value"
+    >
+      <span
+        class="ant-statistic-content-value-int"
+      >
+        
+        3
+      </span>
+      <span
+        class="ant-statistic-content-value-decimal"
+      >
+        .45
+      </span>
+    </span>
+    
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.value: 3.45 as number - value[0] 1`] = `
 <div
   class="ant-statistic emotion-0"
 >

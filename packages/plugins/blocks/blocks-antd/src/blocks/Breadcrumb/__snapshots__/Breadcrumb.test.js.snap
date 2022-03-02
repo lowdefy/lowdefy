@@ -8,10 +8,6 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.icon - value[0] 1`] = `
-.emotion-2 {
-  padding-right: 8px;
-}
-
 <div
   class="ant-breadcrumb emotion-0"
   id="properties.list.icon"
@@ -20,16 +16,13 @@ exports[`Render properties.list.icon - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon_0_icon"
-        />
-        label 1
-      </span>
+        data-testid="link-undefined"
+        icon="AiOutlineSave"
+        id="properties.list.icon_0"
+        label="label 1"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -41,16 +34,13 @@ exports[`Render properties.list.icon - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon_1_icon"
-        />
-        label 2
-      </span>
+        data-testid="link-undefined"
+        icon="AiOutlineDelete"
+        id="properties.list.icon_1"
+        label="label 2"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -66,10 +56,6 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
   cursor: pointer;
 }
 
-.emotion-2 {
-  padding-right: 8px;
-}
-
 <div
   class="ant-breadcrumb emotion-0"
   id="properties.list.icon with onClick"
@@ -78,16 +64,13 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon with onClick_0_icon"
-        />
-        label 1
-      </span>
+        data-testid="link-undefined"
+        icon="AiOutlineSave"
+        id="properties.list.icon with onClick_0"
+        label="label 1"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -99,16 +82,13 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon with onClick_1_icon"
-        />
-        label 2
-      </span>
+        data-testid="link-undefined"
+        icon="AiOutlineDelete"
+        id="properties.list.icon with onClick_1"
+        label="label 2"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -128,11 +108,11 @@ exports[`Render properties.list.label strings - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page One
-      </span>
+        data-testid="link-undefined"
+        id="properties.list.label strings_0"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -144,11 +124,11 @@ exports[`Render properties.list.label strings - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page two
-      </span>
+        data-testid="link-undefined"
+        id="properties.list.label strings_1"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -170,11 +150,10 @@ exports[`Render properties.list.pageId - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-/page1"
-        href="/page1"
-      >
-        page1
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId_0"
+        pageid="page1"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -188,11 +167,10 @@ exports[`Render properties.list.pageId - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-/page2"
-        href="/page2"
-      >
-        page2
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId_1"
+        pageid="page2"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -214,11 +192,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-/page1"
-        href="/page1"
-      >
-        page1
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_0"
+        pageid="page1"
+        url="https://www.url.com"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -232,11 +210,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-https://www.url.com"
-        href="https://www.url.com"
-      >
-        label url
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_1"
+        label="label url"
+        url="https://www.url.com"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -250,11 +228,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-/page2"
-        href="/page2"
-      >
-        label pageId
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_2"
+        label="label pageId"
+        pageid="page2"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -268,11 +246,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-/page3"
-        href="/page3"
-      >
-        page3
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_3"
+        pageid="page3"
+        url="https://docs.url.com"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -284,11 +262,12 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        label4
-      </span>
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_4"
+        label="label4"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -316,11 +295,13 @@ exports[`Render properties.list.style - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page One
-      </span>
+        data-testid="link-undefined"
+        id="properties.list.style_0"
+        label="Page One"
+        style="color: blue;"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -332,11 +313,13 @@ exports[`Render properties.list.style - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-2"
-      >
-        Page two
-      </span>
+        data-testid="link-undefined"
+        id="properties.list.style_1"
+        label="Page two"
+        style="color: red;"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -358,11 +341,10 @@ exports[`Render properties.list.url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-https://www.url.com"
-        href="https://www.url.com"
-      >
-        https://www.url.com
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.url_0"
+        url="https://www.url.com"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -376,11 +358,10 @@ exports[`Render properties.list.url - value[0] 1`] = `
     >
       <a
         class="emotion-1"
-        data-testid="link-https://docs.url.com"
-        href="https://docs.url.com"
-      >
-        https://docs.url.com
-      </a>
+        data-testid="link-undefined"
+        id="properties.list.url_1"
+        url="https://docs.url.com"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -400,11 +381,12 @@ exports[`Render properties.separator - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page One
-      </span>
+        data-testid="link-undefined"
+        id="properties.separator_0"
+        label="Page One"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -416,11 +398,12 @@ exports[`Render properties.separator - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page two
-      </span>
+        data-testid="link-undefined"
+        id="properties.separator_1"
+        label="Page two"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -444,11 +427,12 @@ exports[`Render properties.style: fontSize: 18 - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page One
-      </span>
+        data-testid="link-undefined"
+        id="properties.style: fontSize: 18_0"
+        label="Page One"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -460,11 +444,472 @@ exports[`Render properties.style: fontSize: 18 - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
+      <a
         class="emotion-1"
-      >
-        Page two
-      </span>
+        data-testid="link-undefined"
+        id="properties.style: fontSize: 18_1"
+        label="Page two"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="default"
+/>
+`;
+
+exports[`Render required = true properties.list.icon - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.icon"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        icon="AiOutlineSave"
+        id="properties.list.icon_0"
+        label="label 1"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        icon="AiOutlineDelete"
+        id="properties.list.icon_1"
+        label="label 2"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.icon with onClick - value[0] 1`] = `
+.emotion-1 {
+  cursor: pointer;
+}
+
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.icon with onClick"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        icon="AiOutlineSave"
+        id="properties.list.icon with onClick_0"
+        label="label 1"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        icon="AiOutlineDelete"
+        id="properties.list.icon with onClick_1"
+        label="label 2"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.label strings - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.label strings"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.label strings_0"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.label strings_1"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.pageId - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.pageId"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId_0"
+        pageid="page1"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId_1"
+        pageid="page2"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.pageId label and url - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.pageId label and url"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_0"
+        pageid="page1"
+        url="https://www.url.com"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_1"
+        label="label url"
+        url="https://www.url.com"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_2"
+        label="label pageId"
+        pageid="page2"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_3"
+        pageid="page3"
+        url="https://docs.url.com"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.pageId label and url_4"
+        label="label4"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.style - value[0] 1`] = `
+.emotion-1 {
+  color: blue;
+}
+
+.emotion-2 {
+  color: red;
+}
+
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.style"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.style_0"
+        label="Page One"
+        style="color: blue;"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-2"
+        data-testid="link-undefined"
+        id="properties.list.style_1"
+        label="Page two"
+        style="color: red;"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.url - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.url"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.url_0"
+        url="https://www.url.com"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.list.url_1"
+        url="https://docs.url.com"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.separator - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.separator"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.separator_0"
+        label="Page One"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      -&gt;
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.separator_1"
+        label="Page two"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      -&gt;
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.style: fontSize: 18 - value[0] 1`] = `
+.emotion-0 {
+  font-size: 18px;
+}
+
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.style: fontSize: 18"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.style: fontSize: 18_0"
+        label="Page One"
+      />
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        class="emotion-1"
+        data-testid="link-undefined"
+        id="properties.style: fontSize: 18_1"
+        label="Page two"
+      />
     </span>
     <span
       class="ant-breadcrumb-separator"

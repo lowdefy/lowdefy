@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Divider 1`] = `
+exports[`Mock render - default - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -17,7 +19,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.dashed: true - value[0] - Divider 1`] = `
+exports[`Mock render - properties.dashed: true - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.dashed: true - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -34,7 +38,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.orientation: center - value[0] - Divider 1`] = `
+exports[`Mock render - properties.orientation: center - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.orientation: center - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -61,7 +67,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.orientation: left - value[0] - Divider 1`] = `
+exports[`Mock render - properties.orientation: left - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.orientation: left - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -88,7 +96,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.orientation: right - value[0] - Divider 1`] = `
+exports[`Mock render - properties.orientation: right - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.orientation: right - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -115,7 +125,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Divider 1`] = `
+exports[`Mock render - properties.title - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -142,7 +154,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: horizontal - value[0] - Divider 1`] = `
+exports[`Mock render - properties.type: horizontal - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.type: horizontal - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -169,7 +183,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: true - value[0] - Divider 1`] = `
+exports[`Mock render - properties.type: true - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.type: true - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -196,7 +212,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: vertical - value[0] - Divider 1`] = `
+exports[`Mock render - properties.type: vertical - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - properties.type: vertical - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {
@@ -223,7 +241,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in title - value[0] - Divider 1`] = `
+exports[`Mock render - with html in title - value[0] - Divider 1`] = `mocked`;
+
+exports[`Mock render - with html in title - value[0] - Divider 2`] = `
 Array [
   Array [
     Object {

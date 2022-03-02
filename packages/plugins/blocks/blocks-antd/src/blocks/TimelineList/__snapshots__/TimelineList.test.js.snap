@@ -29,11 +29,18 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -55,11 +62,18 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -81,11 +95,18 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -119,11 +140,18 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -145,11 +173,18 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -171,11 +206,18 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: alternate_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -209,11 +251,18 @@ exports[`Render properties.mode: left - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -235,11 +284,18 @@ exports[`Render properties.mode: left - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -261,11 +317,18 @@ exports[`Render properties.mode: left - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -299,11 +362,18 @@ exports[`Render properties.mode: left - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -325,11 +395,18 @@ exports[`Render properties.mode: left - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -351,11 +428,18 @@ exports[`Render properties.mode: left - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: left_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -389,11 +473,18 @@ exports[`Render properties.mode: right - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -415,11 +506,18 @@ exports[`Render properties.mode: right - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -441,11 +539,18 @@ exports[`Render properties.mode: right - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -479,11 +584,18 @@ exports[`Render properties.mode: right - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -505,11 +617,18 @@ exports[`Render properties.mode: right - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -531,11 +650,18 @@ exports[`Render properties.mode: right - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.mode: right_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -569,11 +695,18 @@ exports[`Render properties.pending: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -595,11 +728,18 @@ exports[`Render properties.pending: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -621,11 +761,18 @@ exports[`Render properties.pending: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -692,11 +839,18 @@ exports[`Render properties.pending: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -718,11 +872,18 @@ exports[`Render properties.pending: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -744,11 +905,18 @@ exports[`Render properties.pending: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pending: true_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -819,11 +987,18 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -845,11 +1020,18 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -871,11 +1053,18 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -897,11 +1086,16 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-4"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _pendingDotIcon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-4"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _pendingDotIcon"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -932,11 +1126,18 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -958,11 +1159,18 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -984,11 +1192,18 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1010,11 +1225,16 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-4"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.pendingDotIcon: _pendingDotIcon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-4"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _pendingDotIcon"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1041,11 +1261,18 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1067,11 +1294,18 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1093,11 +1327,18 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1131,11 +1372,18 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_2_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1157,11 +1405,18 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_1_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"
@@ -1183,11 +1438,1483 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
     <div
       class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
     >
-      <svg
-        class="emotion-1"
-        data-testid="AiOutlineExclamationCircle"
-        id="properties.reverse: true_0_icon"
-      />
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline emotion-0"
+  id="default"
+/>
+`;
+
+exports[`Render required = true properties.mode: alternate - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-alternate emotion-0"
+  id="properties.mode: alternate"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.mode: alternate - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-alternate emotion-0"
+  id="properties.mode: alternate"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: alternate_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.mode: left - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-left emotion-0"
+  id="properties.mode: left"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.mode: left - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-left emotion-0"
+  id="properties.mode: left"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-left"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: left_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.mode: right - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-right emotion-0"
+  id="properties.mode: right"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.mode: right - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-right emotion-0"
+  id="properties.mode: right"
+>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.mode: right_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.pending: true - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-pending emotion-0"
+  id="properties.pending: true"
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-pending"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        aria-label="loading"
+        class="anticon anticon-loading anticon-spin"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="loading"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 1024 1024"
+          width="1em"
+        >
+          <path
+            d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    />
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.pending: true - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-pending emotion-0"
+  id="properties.pending: true"
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pending: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-pending"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        aria-label="loading"
+        class="anticon anticon-loading anticon-spin"
+        role="img"
+      >
+        <svg
+          aria-hidden="true"
+          data-icon="loading"
+          fill="currentColor"
+          focusable="false"
+          height="1em"
+          viewBox="0 0 1024 1024"
+          width="1em"
+        >
+          <path
+            d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 00-94.3-139.9 437.71 437.71 0 00-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z"
+          />
+        </svg>
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    />
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+.emotion-4 {
+  font-size: 16px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-pending emotion-0"
+  id="properties.pendingDotIcon: "
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-pending"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-4"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _pendingDotIcon"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    />
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+.emotion-4 {
+  font-size: 16px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-pending emotion-0"
+  id="properties.pendingDotIcon: "
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-pending"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-4"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.pendingDotIcon: _pendingDotIcon"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    />
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.reverse: true - value[0] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-reverse emotion-0"
+  id="properties.reverse: true"
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-0-Title 1"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Title 1
+      </div>
+    </div>
+  </li>
+</ul>
+`;
+
+exports[`Render required = true properties.reverse: true - value[1] 1`] = `
+.emotion-0 {
+  padding: 5px 0px 0px 5px;
+}
+
+<ul
+  class="ant-timeline ant-timeline-reverse emotion-0"
+  id="properties.reverse: true"
+>
+  <li
+    class="ant-timeline-item"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-blue"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="blue"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_2_icon"
+          title="AiOutlineRocket"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-2-Text 3"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 3
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-right"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-green"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="green"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_1_icon"
+          title="AiOutlineSetting"
+        />
+      </span>
+    </div>
+    <div
+      class="ant-timeline-item-content"
+    >
+      <div
+        data-testid="list-1-Text 2"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        Text 2
+      </div>
+    </div>
+  </li>
+  <li
+    class="ant-timeline-item ant-timeline-item-last"
+  >
+    <div
+      class="ant-timeline-item-tail"
+    />
+    <div
+      class="ant-timeline-item-head ant-timeline-item-head-custom ant-timeline-item-head-red"
+    >
+      <span
+        class="anticon"
+        role="img"
+      >
+        <svg
+          class="emotion-1"
+          color="red"
+          data-testid="AiOutlineExclamationCircle"
+          id="properties.reverse: true_0_icon"
+          title="AiOutlineFire"
+        />
+      </span>
     </div>
     <div
       class="ant-timeline-item-content"

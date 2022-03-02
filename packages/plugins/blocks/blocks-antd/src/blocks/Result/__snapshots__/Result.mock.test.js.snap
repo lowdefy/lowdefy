@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.extra - value[0] - Result 1`] = `
+exports[`Mock render - areas.extra - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - areas.extra - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -37,7 +39,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Result 1`] = `
+exports[`Mock render - default - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -64,7 +68,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. icon: ApiFilled - value[0] - Result 1`] = `
+exports[`Mock render - properties. icon: ApiFilled - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. icon: ApiFilled - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -80,7 +86,7 @@ Array [
         content
       </div>,
       "extra": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties. icon: ApiFilled_icon"
         components={Object {}}
@@ -117,7 +123,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: 403 - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: 403 - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: 403 - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -144,7 +152,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: 404 - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: 404 - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: 404 - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -171,7 +181,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: 500 - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: 500 - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: 500 - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -198,7 +210,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: error - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: error - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: error - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -225,7 +239,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: info - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: info - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: info - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -252,7 +268,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: success  default is info - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: success  default is info - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: success  default is info - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -279,7 +297,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. status: warning - value[0] - Result 1`] = `
+exports[`Mock render - properties. status: warning - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties. status: warning - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -306,7 +326,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.subTitle: subTitle text - value[0] - Result 1`] = `
+exports[`Mock render - properties.subTitle: subTitle text - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties.subTitle: subTitle text - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -343,7 +365,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Result 1`] = `
+exports[`Mock render - properties.title - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -380,7 +404,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with properties.subTitle in html - value[0] - Result 1`] = `
+exports[`Mock render - with properties.subTitle in html - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - with properties.subTitle in html - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -419,7 +445,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with properties.title in html - value[0] - Result 1`] = `
+exports[`Mock render - with properties.title in html - value[0] - Result 1`] = `mocked`;
+
+exports[`Mock render - with properties.title in html - value[0] - Result 2`] = `
 Array [
   Array [
     Object {

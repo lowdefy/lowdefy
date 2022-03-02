@@ -47,11 +47,17 @@ exports[`Render default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -110,11 +116,17 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -160,11 +172,17 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -257,11 +275,17 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -273,7 +297,7 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -293,7 +317,7 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -317,14 +341,20 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -336,7 +366,7 @@ exports[`Render properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -356,7 +386,7 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -380,14 +410,20 @@ exports[`Render properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] =
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -446,11 +482,17 @@ exports[`Render properties.size: large - value[0] 1`] = `
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -509,11 +551,17 @@ exports[`Render properties.size: small - value[0] 1`] = `
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -587,11 +635,17 @@ exports[`Render properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -650,11 +704,17 @@ exports[`Render required = true default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -713,11 +773,17 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -763,11 +829,17 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -860,11 +932,17 @@ exports[`Render required = true properties.noDataTitle: No title display - value
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -876,7 +954,7 @@ exports[`Render required = true properties.noDataTitle: No title display - value
 </div>
 `;
 
-exports[`Render required = true properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render required = true properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -896,7 +974,7 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -920,14 +998,20 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -939,7 +1023,7 @@ exports[`Render required = true properties.removeItemIcon: DeleteOutlined - valu
 </div>
 `;
 
-exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render required = true properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -959,7 +1043,7 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -983,14 +1067,20 @@ exports[`Render required = true properties.removeItemIcon: name: DeleteOutlined 
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1049,11 +1139,17 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1112,11 +1208,17 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1190,11 +1292,17 @@ exports[`Render required = true properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -1253,11 +1361,17 @@ exports[`Render validation.status = error default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1316,11 +1430,17 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1366,11 +1486,17 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1463,11 +1589,17 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1479,7 +1611,7 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
 </div>
 `;
 
-exports[`Render validation.status = error properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = error properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1499,7 +1631,7 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -1523,14 +1655,20 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1542,7 +1680,7 @@ exports[`Render validation.status = error properties.removeItemIcon: DeleteOutli
 </div>
 `;
 
-exports[`Render validation.status = error properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = error properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1562,7 +1700,7 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -1586,14 +1724,20 @@ exports[`Render validation.status = error properties.removeItemIcon: name: Delet
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1652,11 +1796,17 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1715,11 +1865,17 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1793,11 +1949,17 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -1856,11 +2018,17 @@ exports[`Render validation.status = null default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1919,11 +2087,17 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -1969,11 +2143,17 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2066,11 +2246,17 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2082,7 +2268,7 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
 </div>
 `;
 
-exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = null properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2102,7 +2288,7 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -2126,14 +2312,20 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2145,7 +2337,7 @@ exports[`Render validation.status = null properties.removeItemIcon: DeleteOutlin
 </div>
 `;
 
-exports[`Render validation.status = null properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = null properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2165,7 +2357,7 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -2189,14 +2381,20 @@ exports[`Render validation.status = null properties.removeItemIcon: name: Delete
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2255,11 +2453,17 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2318,11 +2522,17 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2396,11 +2606,17 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -2459,11 +2675,17 @@ exports[`Render validation.status = success default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2522,11 +2744,17 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2572,11 +2800,17 @@ exports[`Render validation.status = success properties.addToFront: true - value[
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2669,11 +2903,17 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2685,7 +2925,7 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
 </div>
 `;
 
-exports[`Render validation.status = success properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = success properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2705,7 +2945,7 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -2729,14 +2969,20 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2748,7 +2994,7 @@ exports[`Render validation.status = success properties.removeItemIcon: DeleteOut
 </div>
 `;
 
-exports[`Render validation.status = success properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = success properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2768,7 +3014,7 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -2792,14 +3038,20 @@ exports[`Render validation.status = success properties.removeItemIcon: name: Del
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2858,11 +3110,17 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2921,11 +3179,17 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -2999,11 +3263,17 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -3062,11 +3332,17 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
         id="default_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="default_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="default_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3125,11 +3401,17 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
         id="properties.addItemButton: title: Add new Item_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addItemButton: title: Add new Item_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addItemButton: title: Add new Item_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3175,11 +3457,17 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
         id="properties.addToFront: true_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.addToFront: true_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.addToFront: true_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3272,11 +3560,17 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
         id="properties.noDataTitle: No title display_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.noDataTitle: No title display_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.noDataTitle: No title display_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3288,7 +3582,7 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
 </div>
 `;
 
-exports[`Render validation.status = warning properties.removeItemIcon: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = warning properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3308,7 +3602,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: DeleteOutlined"
+  id="properties.removeItemIcon: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -3332,14 +3626,20 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3351,7 +3651,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: DeleteOut
 </div>
 `;
 
-exports[`Render validation.status = warning properties.removeItemIcon: name: DeleteOutlined - value[0] 1`] = `
+exports[`Render validation.status = warning properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] = `
 .emotion-0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3371,7 +3671,7 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
 
 <div
   class="ant-list ant-list-split ant-list-bordered ant-list-something-after-last-item"
-  id="properties.removeItemIcon: name: DeleteOutlined"
+  id="properties.removeItemIcon: name: AiOutlineDelete"
 >
   <div
     class="ant-spin-nested-loading"
@@ -3395,14 +3695,20 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: Del
       <br />
       <button
         class="ant-btn ant-btn-dashed emotion-1"
-        id="properties.removeItemIcon: name: DeleteOutlined_add_button"
+        id="properties.removeItemIcon: name: AiOutlineDelete_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.removeItemIcon: name: DeleteOutlined_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3461,11 +3767,17 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
         id="properties.size: large_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: large_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: large_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3524,11 +3836,17 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
         id="properties.size: small_add_button"
         type="button"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.size: small_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-2"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.size: small_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-2"
         >
@@ -3602,11 +3920,17 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
         id="properties.title_add_button"
         type="button"
       >
-        <svg
-          class="emotion-3"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.title_add_button_icon"
-        />
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            class="emotion-3"
+            data-testid="AiOutlineExclamationCircle"
+            id="properties.title_add_button_icon"
+            title="AiOutlinePlus"
+          />
+        </span>
         <span
           class="emotion-3"
         >
@@ -3638,13 +3962,13 @@ exports[`Test Schema properties.noDataTitle: No title display 1`] = `true`;
 
 exports[`Test Schema properties.noDataTitle: No title display 2`] = `null`;
 
-exports[`Test Schema properties.removeItemIcon: DeleteOutlined 1`] = `true`;
+exports[`Test Schema properties.removeItemIcon: AiOutlineDelete 1`] = `true`;
 
-exports[`Test Schema properties.removeItemIcon: DeleteOutlined 2`] = `null`;
+exports[`Test Schema properties.removeItemIcon: AiOutlineDelete 2`] = `null`;
 
-exports[`Test Schema properties.removeItemIcon: name: DeleteOutlined 1`] = `true`;
+exports[`Test Schema properties.removeItemIcon: name: AiOutlineDelete 1`] = `true`;
 
-exports[`Test Schema properties.removeItemIcon: name: DeleteOutlined 2`] = `null`;
+exports[`Test Schema properties.removeItemIcon: name: AiOutlineDelete 2`] = `null`;
 
 exports[`Test Schema properties.size: large 1`] = `true`;
 

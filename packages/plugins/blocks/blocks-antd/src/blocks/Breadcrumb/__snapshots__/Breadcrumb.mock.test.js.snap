@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - default - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
@@ -14,108 +16,32 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.icon - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.icon - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.icon - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "icon": "SaveOutlined",
-                "label": "label 1",
-              }
-            }
+            icon="AiOutlineSave"
+            id="properties.list.icon_0"
+            label="label 1"
           >
-            <IconComp1
-              basePath=""
-              blockId="properties.list.icon_0_icon"
-              components={Object {}}
-              content={Object {}}
-              events={Object {}}
-              list={Array []}
-              menus={Array []}
-              methods={
-                Object {
-                  "makeCssClass": [Function],
-                  "registerEvent": [Function],
-                  "registerMethod": [Function],
-                  "triggerEvent": [Function],
-                }
-              }
-              properties={
-                Object {
-                  "name": "SaveOutlined",
-                  "style": Object {
-                    "paddingRight": 8,
-                  },
-                }
-              }
-              required={false}
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
-            />
-            label 1
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "icon": "DeleteOutlined",
-                "label": "label 2",
-              }
-            }
+            icon="AiOutlineDelete"
+            id="properties.list.icon_1"
+            label="label 2"
           >
-            <IconComp1
-              basePath=""
-              blockId="properties.list.icon_1_icon"
-              components={Object {}}
-              content={Object {}}
-              events={Object {}}
-              list={Array []}
-              menus={Array []}
-              methods={
-                Object {
-                  "makeCssClass": [Function],
-                  "registerEvent": [Function],
-                  "registerMethod": [Function],
-                  "triggerEvent": [Function],
-                }
-              }
-              properties={
-                Object {
-                  "name": "DeleteOutlined",
-                  "style": Object {
-                    "paddingRight": 8,
-                  },
-                }
-              }
-              required={false}
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
-            />
-            label 2
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -127,7 +53,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.icon with onClick - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.icon with onClick - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.icon with onClick - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
@@ -135,112 +63,26 @@ Array [
         <mockConstructor
           onClick={[Function]}
         >
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
-            link={
-              Object {
-                "icon": "SaveOutlined",
-                "label": "label 1",
-              }
-            }
+            icon="AiOutlineSave"
+            id="properties.list.icon with onClick_0"
+            label="label 1"
           >
-            <IconComp1
-              basePath=""
-              blockId="properties.list.icon with onClick_0_icon"
-              components={Object {}}
-              content={Object {}}
-              events={
-                Object {
-                  "onClick": Array [],
-                }
-              }
-              list={Array []}
-              menus={Array []}
-              methods={
-                Object {
-                  "makeCssClass": [Function],
-                  "registerEvent": [Function],
-                  "registerMethod": [Function],
-                  "triggerEvent": [Function],
-                }
-              }
-              properties={
-                Object {
-                  "name": "SaveOutlined",
-                  "style": Object {
-                    "paddingRight": 8,
-                  },
-                }
-              }
-              required={false}
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
-            />
-            label 1
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor
           onClick={[Function]}
         >
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{\\"cursor\\":\\"pointer\\"},null]}"
-            link={
-              Object {
-                "icon": "DeleteOutlined",
-                "label": "label 2",
-              }
-            }
+            icon="AiOutlineDelete"
+            id="properties.list.icon with onClick_1"
+            label="label 2"
           >
-            <IconComp1
-              basePath=""
-              blockId="properties.list.icon with onClick_1_icon"
-              components={Object {}}
-              content={Object {}}
-              events={
-                Object {
-                  "onClick": Array [],
-                }
-              }
-              list={Array []}
-              menus={Array []}
-              methods={
-                Object {
-                  "makeCssClass": [Function],
-                  "registerEvent": [Function],
-                  "registerMethod": [Function],
-                  "triggerEvent": [Function],
-                }
-              }
-              properties={
-                Object {
-                  "name": "DeleteOutlined",
-                  "style": Object {
-                    "paddingRight": 8,
-                  },
-                }
-              }
-              required={false}
-              user={Object {}}
-              validation={
-                Object {
-                  "errors": Array [],
-                  "status": null,
-                  "warnings": Array [],
-                }
-              }
-            />
-            label 2
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -252,30 +94,44 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.label strings - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.label strings - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.label strings - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
+            0="P"
+            1="a"
+            2="g"
+            3="e"
+            4=" "
+            5="O"
+            6="n"
+            7="e"
             className="{\\"style\\":[{},null]}"
-            link="Page One"
+            id="properties.list.label strings_0"
           >
-            Page One
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
+            0="P"
+            1="a"
+            2="g"
+            3="e"
+            4=" "
+            5="t"
+            6="w"
+            7="o"
             className="{\\"style\\":[{},null]}"
-            link="Page two"
+            id="properties.list.label strings_1"
           >
-            Page two
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -287,38 +143,30 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.pageId - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.pageId - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.pageId - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "pageId": "page1",
-              }
-            }
+            id="properties.list.pageId_0"
+            pageId="page1"
           >
-            page1
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "pageId": "page2",
-              }
-            }
+            id="properties.list.pageId_1"
+            pageId="page2"
           >
-            page2
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -330,84 +178,61 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.pageId label and url - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.pageId label and url - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.pageId label and url - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "pageId": "page1",
-                "url": "https://www.url.com",
-              }
-            }
+            id="properties.list.pageId label and url_0"
+            pageId="page1"
+            url="https://www.url.com"
           >
-            page1
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "label url",
-                "url": "https://www.url.com",
-              }
-            }
+            id="properties.list.pageId label and url_1"
+            label="label url"
+            url="https://www.url.com"
           >
-            label url
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "label pageId",
-                "pageId": "page2",
-              }
-            }
+            id="properties.list.pageId label and url_2"
+            label="label pageId"
+            pageId="page2"
           >
-            label pageId
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "pageId": "page3",
-                "url": "https://docs.url.com",
-              }
-            }
+            id="properties.list.pageId label and url_3"
+            pageId="page3"
+            url="https://docs.url.com"
           >
-            page3
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "label4",
-              }
-            }
+            id="properties.list.pageId label and url_4"
+            label="label4"
           >
-            label4
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -419,44 +244,40 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.style - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.style - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.style - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},{\\"color\\":\\"blue\\"}]}"
-            link={
+            id="properties.list.style_0"
+            label="Page One"
+            style={
               Object {
-                "label": "Page One",
-                "style": Object {
-                  "color": "blue",
-                },
+                "color": "blue",
               }
             }
           >
-            Page One
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},{\\"color\\":\\"red\\"}]}"
-            link={
+            id="properties.list.style_1"
+            label="Page two"
+            style={
               Object {
-                "label": "Page two",
-                "style": Object {
-                  "color": "red",
-                },
+                "color": "red",
               }
             }
           >
-            Page two
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -468,38 +289,30 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.list.url - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.list.url - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.list.url - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "url": "https://www.url.com",
-              }
-            }
+            id="properties.list.url_0"
+            url="https://www.url.com"
           >
-            https://www.url.com
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "url": "https://docs.url.com",
-              }
-            }
+            id="properties.list.url_1"
+            url="https://docs.url.com"
           >
-            https://docs.url.com
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -511,38 +324,30 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.separator - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.separator - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.separator - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "Page One",
-              }
-            }
+            id="properties.separator_0"
+            label="Page One"
           >
-            Page One
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "Page two",
-              }
-            }
+            id="properties.separator_1"
+            label="Page two"
           >
-            Page two
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{}",
@@ -554,38 +359,30 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.style: fontSize: 18 - value[0] - Breadcrumb 1`] = `
+exports[`Mock render - properties.style: fontSize: 18 - value[0] - Breadcrumb 1`] = `mocked`;
+
+exports[`Mock render - properties.style: fontSize: 18 - value[0] - Breadcrumb 2`] = `
 Array [
   Array [
     Object {
       "children": Array [
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "Page One",
-              }
-            }
+            id="properties.style: fontSize: 18_0"
+            label="Page One"
           >
-            Page One
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
         <mockConstructor>
-          <ItemLink
-            Link={[Function]}
-            basePath=""
+          <Link
             className="{\\"style\\":[{},null]}"
-            link={
-              Object {
-                "label": "Page two",
-              }
-            }
+            id="properties.style: fontSize: 18_1"
+            label="Page two"
           >
-            Page two
-          </ItemLink>
+            [Function]
+          </Link>
         </mockConstructor>,
       ],
       "className": "{\\"style\\":{\\"fontSize\\":18}}",

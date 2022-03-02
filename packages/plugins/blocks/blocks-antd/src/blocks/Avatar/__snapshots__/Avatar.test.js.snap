@@ -91,11 +91,18 @@ exports[`Render properties.icon object - value[0] 1`] = `
   class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
   id="properties.icon object"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon object_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      color="red"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon object_icon"
+      title="AiOutlineUser"
+    />
+  </span>
 </span>
 `;
 
@@ -104,11 +111,17 @@ exports[`Render properties.icon string - value[0] 1`] = `
   class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
   id="properties.icon string"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon string_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string_icon"
+      title="AiOutlineUser"
+    />
+  </span>
 </span>
 `;
 
@@ -117,11 +130,17 @@ exports[`Render properties.icon string properties.shape square - value[0] 1`] = 
   class="ant-avatar ant-avatar-square ant-avatar-icon emotion-0"
   id="properties.icon string properties.shape square"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon string properties.shape square_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string properties.shape square_icon"
+      title="AiOutlineUser"
+    />
+  </span>
 </span>
 `;
 
@@ -162,6 +181,197 @@ exports[`Render properties.size small - value[0] 1`] = `
 `;
 
 exports[`Render properties.src - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle ant-avatar-image emotion-0"
+  id="properties.src"
+>
+  <img
+    src="https://docs.lowdefy.com/images/favicon.png"
+  />
+</span>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="default"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.alt - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="properties.alt"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.color - value[0] 1`] = `
+.emotion-0 {
+  background-color: #f12345;
+}
+
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="properties.color"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.content - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="properties.content"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  >
+    Avatar
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.content - value[0] 2`] = `
+.emotion-0 {
+  border: 1px solid red;
+}
+
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="properties.content"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  >
+    Avatar
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.gap - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle emotion-0"
+  id="properties.gap"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  >
+    Avatar
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.icon object - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
+  id="properties.icon object"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      color="red"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon object_icon"
+      title="AiOutlineUser"
+    />
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.icon string - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-circle ant-avatar-icon emotion-0"
+  id="properties.icon string"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string_icon"
+      title="AiOutlineUser"
+    />
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.icon string properties.shape square - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-square ant-avatar-icon emotion-0"
+  id="properties.icon string properties.shape square"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string properties.shape square_icon"
+      title="AiOutlineUser"
+    />
+  </span>
+</span>
+`;
+
+exports[`Render required = true properties.shape - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-square emotion-0"
+  id="properties.shape"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.size large - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-lg ant-avatar-circle emotion-0"
+  id="properties.size large"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.size small - value[0] 1`] = `
+<span
+  class="ant-avatar ant-avatar-sm ant-avatar-circle emotion-0"
+  id="properties.size small"
+>
+  <span
+    class="ant-avatar-string"
+    style="transform: scale(1) translateX(-50%);"
+  />
+</span>
+`;
+
+exports[`Render required = true properties.src - value[0] 1`] = `
 <span
   class="ant-avatar ant-avatar-circle ant-avatar-image emotion-0"
   id="properties.src"

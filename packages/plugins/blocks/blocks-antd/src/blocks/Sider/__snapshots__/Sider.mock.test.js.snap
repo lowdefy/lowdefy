@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Sider 1`] = `
+exports[`Mock render - default - value[0] - Sider 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Sider 2`] = `
 Array [
   Array [
     Object {
@@ -31,7 +33,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.theme - value[0] - Sider 1`] = `
+exports[`Mock render - properties.theme - value[0] - Sider 1`] = `mocked`;
+
+exports[`Mock render - properties.theme - value[0] - Sider 2`] = `
 Array [
   Array [
     Object {

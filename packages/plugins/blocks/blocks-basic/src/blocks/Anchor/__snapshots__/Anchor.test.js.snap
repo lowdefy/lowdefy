@@ -148,6 +148,26 @@ exports[`Render properties.icon, properties.title and properties.disabled - valu
 </span>
 `;
 
+exports[`Render properties.pageId and rel - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.pageId and rel"
+  pageid="https://lowdefy.com"
+  rel="noopener"
+/>
+`;
+
+exports[`Render properties.pageId and target - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.pageId and target"
+  pageid="/Button"
+  title="To Button"
+/>
+`;
+
 exports[`Render properties.strong - value[0] 1`] = `
 <a
   class="emotion-0"
@@ -213,6 +233,181 @@ exports[`Render properties.title - value[0] 1`] = `
 </a>
 `;
 
+exports[`Render properties.url - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.url"
+  url="https://lowdefy.com"
+/>
+`;
+
+exports[`Render properties.url, title and target - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.url, title and target"
+  title="New tab Website"
+  url="https://lowdefy.com"
+/>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="default"
+/>
+`;
+
+exports[`Render required = true properties.disabled - value[0] 1`] = `
+.emotion-0 {
+  color: #BEBEBE;
+  cursor: not-allowed;
+}
+
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  disabled=""
+  id="properties.disabled"
+  title="disabled"
+/>
+`;
+
+exports[`Render required = true properties.icon and properties.title - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  icon="LinkOutlined"
+  id="properties.icon and properties.title"
+  title="This is the anchor title"
+/>
+`;
+
+exports[`Render required = true properties.icon object - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  icon="[object Object]"
+  id="properties.icon object"
+  title="Click here"
+/>
+`;
+
+exports[`Render required = true properties.icon string - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  icon="FireFilled"
+  id="properties.icon string"
+/>
+`;
+
+exports[`Render required = true properties.icon, properties.title and properties.disabled - value[0] 1`] = `
+.emotion-0 {
+  color: #BEBEBE;
+  cursor: not-allowed;
+}
+
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  disabled=""
+  icon="LinkOutlined"
+  id="properties.icon, properties.title and properties.disabled"
+  title="This is the anchor title"
+/>
+`;
+
+exports[`Render required = true properties.pageId and rel - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.pageId and rel"
+  pageid="https://lowdefy.com"
+  rel="noopener"
+/>
+`;
+
+exports[`Render required = true properties.pageId and target - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.pageId and target"
+  pageid="/Button"
+  title="To Button"
+/>
+`;
+
+exports[`Render required = true properties.strong - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.strong"
+  title="Strong"
+/>
+`;
+
+exports[`Render required = true properties.style - value[0] 1`] = `
+.emotion-0 {
+  color: green!important;
+  font-size: 18px;
+}
+
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.style"
+  style="font-size: 18px;"
+  title="Click here"
+/>
+`;
+
+exports[`Render required = true properties.style with icon - value[0] 1`] = `
+.emotion-0 {
+  color: green!important;
+  font-size: 8px;
+}
+
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  icon="LinkOutlined"
+  id="properties.style with icon"
+  style="font-size: 8px;"
+  title="Click here"
+/>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.title"
+  title="Anchor title"
+/>
+`;
+
+exports[`Render required = true properties.url - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.url"
+  url="https://lowdefy.com"
+/>
+`;
+
+exports[`Render required = true properties.url, title and target - value[0] 1`] = `
+<a
+  class="emotion-0"
+  data-testid="link-undefined"
+  id="properties.url, title and target"
+  title="New tab Website"
+  url="https://lowdefy.com"
+/>
+`;
+
 exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
@@ -253,6 +448,14 @@ exports[`Test Schema properties.icon, properties.title and properties.disabled 1
 
 exports[`Test Schema properties.icon, properties.title and properties.disabled 2`] = `null`;
 
+exports[`Test Schema properties.pageId and rel 1`] = `true`;
+
+exports[`Test Schema properties.pageId and rel 2`] = `null`;
+
+exports[`Test Schema properties.pageId and target 1`] = `true`;
+
+exports[`Test Schema properties.pageId and target 2`] = `null`;
+
 exports[`Test Schema properties.strong 1`] = `true`;
 
 exports[`Test Schema properties.strong 2`] = `null`;
@@ -268,3 +471,11 @@ exports[`Test Schema properties.style with icon 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.url 1`] = `true`;
+
+exports[`Test Schema properties.url 2`] = `null`;
+
+exports[`Test Schema properties.url, title and target 1`] = `true`;
+
+exports[`Test Schema properties.url, title and target 2`] = `null`;

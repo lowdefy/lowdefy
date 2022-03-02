@@ -106,11 +106,17 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
   id="properties.hideTitle: true"
   type="button"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.hideTitle: true_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.hideTitle: true_icon"
+      title="AiOutlineDelete"
+    />
+  </span>
 </button>
 `;
 
@@ -134,11 +140,18 @@ exports[`Render properties.icon object - value[0] 1`] = `
   id="properties.icon object"
   type="button"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon object_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      color="red"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon object_icon"
+      title="AiOutlineSave"
+    />
+  </span>
   <span
     class="emotion-1"
   >
@@ -153,11 +166,17 @@ exports[`Render properties.icon string - value[0] 1`] = `
   id="properties.icon string"
   type="button"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon string_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string_icon"
+      title="AiOutlineSave"
+    />
+  </span>
   <span
     class="emotion-1"
   >
@@ -306,6 +325,378 @@ exports[`Render properties.type: text - value[0] 1`] = `
 </button>
 `;
 
+exports[`Render required = true default - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="default"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    default
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.block: true - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-block emotion-0"
+  id="properties.block: true"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.block: true
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.color: #9c27b0 - value[0] 1`] = `
+.emotion-0 {
+  background-color: #9c27b0;
+  border-color: #9c27b0;
+}
+
+.emotion-0:active {
+  background-color: #75178a;
+  border-color: #75178a;
+}
+
+.emotion-0:hover {
+  background-color: #af48bd;
+  border-color: #af48bd;
+}
+
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="properties.color: #9c27b0"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.color: #9c27b0
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.danger: true - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-dangerous emotion-0"
+  id="properties.danger: true"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.danger: true
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.disabled: true - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  disabled=""
+  id="properties.disabled: true"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.disabled: true
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.ghost: true - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-background-ghost emotion-0"
+  id="properties.ghost: true"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.ghost: true
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.hideTitle: true - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+  id="properties.hideTitle: true"
+  type="button"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.hideTitle: true_icon"
+      title="AiOutlineDelete"
+    />
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.href: www.lowdefy.com - value[0] 1`] = `
+<a
+  class="ant-btn ant-btn-primary emotion-0"
+  href="https://www.lowdefy.com"
+  id="properties.href: www.lowdefy.com"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.href: www.lowdefy.com
+  </span>
+</a>
+`;
+
+exports[`Render required = true properties.icon object - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="properties.icon object"
+  type="button"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      color="red"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon object_icon"
+      title="AiOutlineSave"
+    />
+  </span>
+  <span
+    class="emotion-1"
+  >
+    properties.icon object
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.icon string - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="properties.icon string"
+  type="button"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="properties.icon string_icon"
+      title="AiOutlineSave"
+    />
+  </span>
+  <span
+    class="emotion-1"
+  >
+    properties.icon string
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.shape: circle - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-circle emotion-0"
+  id="properties.shape: circle"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.shape: circle
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.shape: round - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-round emotion-0"
+  id="properties.shape: round"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.shape: round
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.size: large - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-lg emotion-0"
+  id="properties.size: large"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.size: large
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.size: small - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary ant-btn-sm emotion-0"
+  id="properties.size: small"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.size: small
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="properties.title"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    Button title
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.type: danger - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-danger emotion-0"
+  id="properties.type: danger"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.type: danger
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.type: dashed - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-dashed emotion-0"
+  id="properties.type: dashed"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.type: dashed
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.type: default - value[0] 1`] = `
+<button
+  class="ant-btn emotion-0"
+  id="properties.type: default"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.type: default
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.type: link - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-link emotion-0"
+  id="properties.type: link"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.type: link
+  </span>
+</button>
+`;
+
+exports[`Render required = true properties.type: text - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-text emotion-0"
+  id="properties.type: text"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    properties.type: text
+  </span>
+</button>
+`;
+
+exports[`Render required = true with html in title - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="with html in title"
+  type="button"
+>
+  <span
+    class="emotion-1"
+  >
+    <div
+      style="color: orange;"
+    >
+      Title
+    </div>
+  </span>
+</button>
+`;
+
+exports[`Render required = true with html in title and icon - value[0] 1`] = `
+<button
+  class="ant-btn ant-btn-primary emotion-0"
+  id="with html in title and icon"
+  type="button"
+>
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="with html in title and icon_icon"
+      title="AiOutlineSave"
+    />
+  </span>
+  <span
+    class="emotion-1"
+  >
+    <div
+      style="color: red;"
+    >
+      Title
+    </div>
+  </span>
+</button>
+`;
+
 exports[`Render with html in title - value[0] 1`] = `
 <button
   class="ant-btn ant-btn-primary emotion-0"
@@ -330,11 +721,17 @@ exports[`Render with html in title and icon - value[0] 1`] = `
   id="with html in title and icon"
   type="button"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="with html in title and icon_icon"
-  />
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      class="emotion-1"
+      data-testid="AiOutlineExclamationCircle"
+      id="with html in title and icon_icon"
+      title="AiOutlineSave"
+    />
+  </span>
   <span
     class="emotion-1"
   >
