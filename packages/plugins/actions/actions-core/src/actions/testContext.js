@@ -41,7 +41,6 @@ const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) =>
   };
   const _internal = ctx._internal;
   _internal.parser = new WebParser({ context: ctx, contexts: {}, operators: operators || {} });
-  await _internal.parser.init();
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);

@@ -86,7 +86,7 @@ test('action invocation', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -126,7 +126,7 @@ test('error params action invocation', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
