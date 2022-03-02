@@ -16,19 +16,19 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `{%- for import in imports -%}
-import { {{ import.type }} } from '{{ import.package }}/{{ importPath }}';
+import { {{ import.originalTypeName }} as {{ import.typeName }} } from '{{ import.package }}/{{ importPath }}';
 {% endfor -%}
 export default {
   {% for import in imports -%}
-  {{ import.type }},
+  {{ import.typeName }},
   {% endfor -%}
-}`;
+};`;
 
 function generateImportFile({ types, importPath }) {
   const templateFn = nunjucksFunction(template);
-  const imports = Object.keys(types).map((type) => ({
-    type,
-    ...types[type],
+  const imports = Object.keys(types).map((typeName) => ({
+    typeName,
+    ...types[typeName],
   }));
   return templateFn({ imports, importPath });
 }
