@@ -14,11 +14,10 @@ exports[`Render backgroundColor: #016e1e - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -38,11 +37,10 @@ exports[`Render default - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="default_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -62,11 +60,10 @@ exports[`Render menus: default - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: default_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -86,11 +83,10 @@ exports[`Render menus: links[0] - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: links[0]_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: links[0]_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -110,11 +106,10 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: properties.menuId: menu_one_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: properties.menuId: menu_one_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -134,11 +129,10 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle pageId_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle pageId_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -158,11 +152,10 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle properties.title_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -182,11 +175,10 @@ exports[`Render menusTitle url - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle url_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle url_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -206,11 +198,10 @@ exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.MenuGroup with MenuLInks_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.MenuGroup with MenuLInks_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -230,11 +221,10 @@ exports[`Render properties.danger: true - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.danger: true_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.danger: true_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -254,11 +244,10 @@ exports[`Render properties.icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.icon_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.icon_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -278,11 +267,10 @@ exports[`Render properties.links - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.links_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.links_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -302,11 +290,10 @@ exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.subMenuCloseDelay: 3_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.subMenuCloseDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -326,11 +313,10 @@ exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.subMenuOpenDelay: 3_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.subMenuOpenDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -350,11 +336,10 @@ exports[`Render properties.title - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.title_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -374,11 +359,10 @@ exports[`Render required = true backgroundColor: #016e1e - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -398,11 +382,10 @@ exports[`Render required = true default - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="default_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -422,11 +405,10 @@ exports[`Render required = true menus: default - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: default_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -446,11 +428,10 @@ exports[`Render required = true menus: links[0] - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: links[0]_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: links[0]_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -470,11 +451,10 @@ exports[`Render required = true menus: properties.menuId: menu_one - value[0] 1`
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menus: properties.menuId: menu_one_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menus: properties.menuId: menu_one_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -494,11 +474,10 @@ exports[`Render required = true menusTitle pageId - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle pageId_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle pageId_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -518,11 +497,10 @@ exports[`Render required = true menusTitle properties.title - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle properties.title_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -542,11 +520,10 @@ exports[`Render required = true menusTitle url - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="menusTitle url_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"menusTitle url_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -566,11 +543,10 @@ exports[`Render required = true properties.MenuGroup with MenuLInks - value[0] 1
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.MenuGroup with MenuLInks_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.MenuGroup with MenuLInks_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -590,11 +566,10 @@ exports[`Render required = true properties.danger: true - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.danger: true_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.danger: true_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -614,11 +589,10 @@ exports[`Render required = true properties.icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.icon_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.icon_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -638,11 +612,10 @@ exports[`Render required = true properties.links - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.links_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.links_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -662,11 +635,10 @@ exports[`Render required = true properties.subMenuCloseDelay: 3 - value[0] 1`] =
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.subMenuCloseDelay: 3_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.subMenuCloseDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -686,11 +658,10 @@ exports[`Render required = true properties.subMenuOpenDelay: 3 - value[0] 1`] = 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.subMenuOpenDelay: 3_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.subMenuOpenDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -710,11 +681,10 @@ exports[`Render required = true properties.title - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.title_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -734,11 +704,10 @@ exports[`Render required = true selectedColor: #f16e1e - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="selectedColor: #f16e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"selectedColor: #f16e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -758,11 +727,10 @@ exports[`Render required = true selectedColor: #f16e1e, backgroundColor: #016e1e
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -782,11 +750,10 @@ exports[`Render required = true theme: light - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -806,11 +773,10 @@ exports[`Render required = true theme: light, selectedColor: #6C2ACB - value[0] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light, selectedColor: #6C2ACB_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light, selectedColor: #6C2ACB_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -830,11 +796,10 @@ exports[`Render required = true theme: light, selectedColor: #f16e1e, background
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -854,11 +819,10 @@ exports[`Render selectedColor: #f16e1e - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="selectedColor: #f16e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"selectedColor: #f16e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -878,11 +842,10 @@ exports[`Render selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -902,11 +865,10 @@ exports[`Render theme: light - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -926,11 +888,10 @@ exports[`Render theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light, selectedColor: #6C2ACB_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light, selectedColor: #6C2ACB_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>
@@ -950,11 +911,10 @@ exports[`Render theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e -
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-        title="AiOutlineMenuFold"
-      />
+      >
+        {"id":"theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
     </span>
   </button>
 </div>

@@ -34,12 +34,10 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: alternate_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -67,12 +65,10 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: alternate_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -100,12 +96,10 @@ exports[`Render properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: alternate_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -145,12 +139,10 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: alternate_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -178,12 +170,10 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: alternate_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -211,12 +201,10 @@ exports[`Render properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: alternate_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -256,12 +244,10 @@ exports[`Render properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: left_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -289,12 +275,10 @@ exports[`Render properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: left_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -322,12 +306,10 @@ exports[`Render properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: left_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -367,12 +349,10 @@ exports[`Render properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: left_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -400,12 +380,10 @@ exports[`Render properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: left_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -433,12 +411,10 @@ exports[`Render properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: left_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -478,12 +454,10 @@ exports[`Render properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: right_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -511,12 +485,10 @@ exports[`Render properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: right_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -544,12 +516,10 @@ exports[`Render properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: right_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -589,12 +559,10 @@ exports[`Render properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: right_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -622,12 +590,10 @@ exports[`Render properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: right_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -655,12 +621,10 @@ exports[`Render properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: right_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -700,12 +664,10 @@ exports[`Render properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pending: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -733,12 +695,10 @@ exports[`Render properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pending: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -766,12 +726,10 @@ exports[`Render properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pending: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -844,12 +802,10 @@ exports[`Render properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pending: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -877,12 +833,10 @@ exports[`Render properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pending: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -910,12 +864,10 @@ exports[`Render properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pending: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -970,10 +922,6 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
   padding: 5px 0px 0px 5px;
 }
 
-.emotion-4 {
-  font-size: 16px;
-}
-
 <ul
   class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
@@ -992,12 +940,10 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1025,12 +971,10 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1058,12 +1002,10 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1091,10 +1033,10 @@ exports[`Render properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-4"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _pendingDotIcon"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _pendingDotIcon","className":"css-1p87wkm","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1109,10 +1051,6 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
   padding: 5px 0px 0px 5px;
 }
 
-.emotion-4 {
-  font-size: 16px;
-}
-
 <ul
   class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
@@ -1131,12 +1069,10 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1164,12 +1100,10 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1197,12 +1131,10 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1230,10 +1162,10 @@ exports[`Render properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-4"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _pendingDotIcon"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _pendingDotIcon","className":"css-1p87wkm","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1266,12 +1198,10 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.reverse: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1299,12 +1229,10 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.reverse: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1332,12 +1260,10 @@ exports[`Render properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.reverse: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1377,12 +1303,10 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.reverse: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1410,12 +1334,10 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.reverse: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1443,12 +1365,10 @@ exports[`Render properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.reverse: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1499,12 +1419,10 @@ exports[`Render required = true properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: alternate_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1532,12 +1450,10 @@ exports[`Render required = true properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: alternate_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1565,12 +1481,10 @@ exports[`Render required = true properties.mode: alternate - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: alternate_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1610,12 +1524,10 @@ exports[`Render required = true properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: alternate_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1643,12 +1555,10 @@ exports[`Render required = true properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: alternate_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1676,12 +1586,10 @@ exports[`Render required = true properties.mode: alternate - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: alternate_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: alternate_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1721,12 +1629,10 @@ exports[`Render required = true properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: left_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1754,12 +1660,10 @@ exports[`Render required = true properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: left_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1787,12 +1691,10 @@ exports[`Render required = true properties.mode: left - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: left_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1832,12 +1734,10 @@ exports[`Render required = true properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: left_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1865,12 +1765,10 @@ exports[`Render required = true properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: left_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1898,12 +1796,10 @@ exports[`Render required = true properties.mode: left - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: left_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: left_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1943,12 +1839,10 @@ exports[`Render required = true properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: right_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -1976,12 +1870,10 @@ exports[`Render required = true properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: right_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2009,12 +1901,10 @@ exports[`Render required = true properties.mode: right - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: right_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2054,12 +1944,10 @@ exports[`Render required = true properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.mode: right_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2087,12 +1975,10 @@ exports[`Render required = true properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.mode: right_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2120,12 +2006,10 @@ exports[`Render required = true properties.mode: right - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.mode: right_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.mode: right_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2165,12 +2049,10 @@ exports[`Render required = true properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pending: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2198,12 +2080,10 @@ exports[`Render required = true properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pending: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2231,12 +2111,10 @@ exports[`Render required = true properties.pending: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pending: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2309,12 +2187,10 @@ exports[`Render required = true properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pending: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2342,12 +2218,10 @@ exports[`Render required = true properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pending: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2375,12 +2249,10 @@ exports[`Render required = true properties.pending: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pending: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pending: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2435,10 +2307,6 @@ exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
   padding: 5px 0px 0px 5px;
 }
 
-.emotion-4 {
-  font-size: 16px;
-}
-
 <ul
   class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
@@ -2457,12 +2325,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2490,12 +2356,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2523,12 +2387,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2556,10 +2418,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-4"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _pendingDotIcon"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _pendingDotIcon","className":"css-1p87wkm","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2574,10 +2436,6 @@ exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
   padding: 5px 0px 0px 5px;
 }
 
-.emotion-4 {
-  font-size: 16px;
-}
-
 <ul
   class="ant-timeline ant-timeline-pending emotion-0"
   id="properties.pendingDotIcon: "
@@ -2596,12 +2454,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2629,12 +2485,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2662,12 +2516,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2695,10 +2547,10 @@ exports[`Render required = true properties.pendingDotIcon:  - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-4"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.pendingDotIcon: _pendingDotIcon"
-        />
+        >
+          {"id":"properties.pendingDotIcon: _pendingDotIcon","className":"css-1p87wkm","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2731,12 +2583,10 @@ exports[`Render required = true properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.reverse: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2764,12 +2614,10 @@ exports[`Render required = true properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.reverse: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2797,12 +2645,10 @@ exports[`Render required = true properties.reverse: true - value[0] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.reverse: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2842,12 +2688,10 @@ exports[`Render required = true properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="blue"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_2_icon"
-          title="AiOutlineRocket"
-        />
+        >
+          {"id":"properties.reverse: true_2_icon","title":"AiOutlineRocket","className":"css-1xdhyk6","color":"blue","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2875,12 +2719,10 @@ exports[`Render required = true properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="green"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_1_icon"
-          title="AiOutlineSetting"
-        />
+        >
+          {"id":"properties.reverse: true_1_icon","title":"AiOutlineSetting","className":"css-1xdhyk6","color":"green","required":false}
+        </svg>
       </span>
     </div>
     <div
@@ -2908,12 +2750,10 @@ exports[`Render required = true properties.reverse: true - value[1] 1`] = `
         role="img"
       >
         <svg
-          class="emotion-1"
-          color="red"
           data-testid="AiOutlineExclamationCircle"
-          id="properties.reverse: true_0_icon"
-          title="AiOutlineFire"
-        />
+        >
+          {"id":"properties.reverse: true_0_icon","title":"AiOutlineFire","className":"css-1xdhyk6","color":"red","required":false}
+        </svg>
       </span>
     </div>
     <div

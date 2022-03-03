@@ -52,11 +52,10 @@ exports[`Render default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -121,11 +120,10 @@ exports[`Render properties.addItemButton: title: Add new Item - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -177,11 +175,10 @@ exports[`Render properties.addToFront: true - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -280,11 +277,10 @@ exports[`Render properties.noDataTitle: No title display - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -349,11 +345,10 @@ exports[`Render properties.removeItemIcon: AiOutlineDelete - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -418,11 +413,10 @@ exports[`Render properties.removeItemIcon: name: AiOutlineDelete - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -487,11 +481,10 @@ exports[`Render properties.size: large - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -556,11 +549,10 @@ exports[`Render properties.size: small - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -640,11 +632,10 @@ exports[`Render properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"
@@ -709,11 +700,10 @@ exports[`Render required = true default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -778,11 +768,10 @@ exports[`Render required = true properties.addItemButton: title: Add new Item - 
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -834,11 +823,10 @@ exports[`Render required = true properties.addToFront: true - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -937,11 +925,10 @@ exports[`Render required = true properties.noDataTitle: No title display - value
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1006,11 +993,10 @@ exports[`Render required = true properties.removeItemIcon: AiOutlineDelete - val
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1075,11 +1061,10 @@ exports[`Render required = true properties.removeItemIcon: name: AiOutlineDelete
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1144,11 +1129,10 @@ exports[`Render required = true properties.size: large - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1213,11 +1197,10 @@ exports[`Render required = true properties.size: small - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1297,11 +1280,10 @@ exports[`Render required = true properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"
@@ -1366,11 +1348,10 @@ exports[`Render validation.status = error default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1435,11 +1416,10 @@ exports[`Render validation.status = error properties.addItemButton: title: Add n
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1491,11 +1471,10 @@ exports[`Render validation.status = error properties.addToFront: true - value[0]
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1594,11 +1573,10 @@ exports[`Render validation.status = error properties.noDataTitle: No title displ
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1663,11 +1641,10 @@ exports[`Render validation.status = error properties.removeItemIcon: AiOutlineDe
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1732,11 +1709,10 @@ exports[`Render validation.status = error properties.removeItemIcon: name: AiOut
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1801,11 +1777,10 @@ exports[`Render validation.status = error properties.size: large - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1870,11 +1845,10 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -1954,11 +1928,10 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"
@@ -2023,11 +1996,10 @@ exports[`Render validation.status = null default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2092,11 +2064,10 @@ exports[`Render validation.status = null properties.addItemButton: title: Add ne
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2148,11 +2119,10 @@ exports[`Render validation.status = null properties.addToFront: true - value[0] 
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2251,11 +2221,10 @@ exports[`Render validation.status = null properties.noDataTitle: No title displa
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2320,11 +2289,10 @@ exports[`Render validation.status = null properties.removeItemIcon: AiOutlineDel
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2389,11 +2357,10 @@ exports[`Render validation.status = null properties.removeItemIcon: name: AiOutl
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2458,11 +2425,10 @@ exports[`Render validation.status = null properties.size: large - value[0] 1`] =
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2527,11 +2493,10 @@ exports[`Render validation.status = null properties.size: small - value[0] 1`] =
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2611,11 +2576,10 @@ exports[`Render validation.status = null properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"
@@ -2680,11 +2644,10 @@ exports[`Render validation.status = success default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2749,11 +2712,10 @@ exports[`Render validation.status = success properties.addItemButton: title: Add
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2805,11 +2767,10 @@ exports[`Render validation.status = success properties.addToFront: true - value[
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2908,11 +2869,10 @@ exports[`Render validation.status = success properties.noDataTitle: No title dis
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -2977,11 +2937,10 @@ exports[`Render validation.status = success properties.removeItemIcon: AiOutline
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3046,11 +3005,10 @@ exports[`Render validation.status = success properties.removeItemIcon: name: AiO
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3115,11 +3073,10 @@ exports[`Render validation.status = success properties.size: large - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3184,11 +3141,10 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3268,11 +3224,10 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"
@@ -3337,11 +3292,10 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="default_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"default_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3406,11 +3360,10 @@ exports[`Render validation.status = warning properties.addItemButton: title: Add
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addItemButton: title: Add new Item_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addItemButton: title: Add new Item_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3462,11 +3415,10 @@ exports[`Render validation.status = warning properties.addToFront: true - value[
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.addToFront: true_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.addToFront: true_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3565,11 +3517,10 @@ exports[`Render validation.status = warning properties.noDataTitle: No title dis
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.noDataTitle: No title display_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.noDataTitle: No title display_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3634,11 +3585,10 @@ exports[`Render validation.status = warning properties.removeItemIcon: AiOutline
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3703,11 +3653,10 @@ exports[`Render validation.status = warning properties.removeItemIcon: name: AiO
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.removeItemIcon: name: AiOutlineDelete_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.removeItemIcon: name: AiOutlineDelete_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3772,11 +3721,10 @@ exports[`Render validation.status = warning properties.size: large - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: large_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: large_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3841,11 +3789,10 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.size: small_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.size: small_add_button_icon","title":"AiOutlinePlus","className":"emotion-2","required":false}
+          </svg>
         </span>
         <span
           class="emotion-2"
@@ -3925,11 +3872,10 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.title_add_button_icon"
-            title="AiOutlinePlus"
-          />
+          >
+            {"id":"properties.title_add_button_icon","title":"AiOutlinePlus","className":"emotion-3","required":false}
+          </svg>
         </span>
         <span
           class="emotion-3"

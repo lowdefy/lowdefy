@@ -96,12 +96,10 @@ exports[`Render properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineUser","className":"css-0","color":"red","required":false}
+    </svg>
   </span>
 </span>
 `;
@@ -116,11 +114,10 @@ exports[`Render properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineUser","className":"css-0","required":false}
+    </svg>
   </span>
 </span>
 `;
@@ -135,11 +132,10 @@ exports[`Render properties.icon string properties.shape square - value[0] 1`] = 
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string properties.shape square_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon string properties.shape square_icon","title":"AiOutlineUser","className":"css-0","required":false}
+    </svg>
   </span>
 </span>
 `;
@@ -287,12 +283,10 @@ exports[`Render required = true properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineUser","className":"css-0","color":"red","required":false}
+    </svg>
   </span>
 </span>
 `;
@@ -307,11 +301,10 @@ exports[`Render required = true properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineUser","className":"css-0","required":false}
+    </svg>
   </span>
 </span>
 `;
@@ -326,11 +319,10 @@ exports[`Render required = true properties.icon string properties.shape square -
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string properties.shape square_icon"
-      title="AiOutlineUser"
-    />
+    >
+      {"id":"properties.icon string properties.shape square_icon","title":"AiOutlineUser","className":"css-0","required":false}
+    </svg>
   </span>
 </span>
 `;

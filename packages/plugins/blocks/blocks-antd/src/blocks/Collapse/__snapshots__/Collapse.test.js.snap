@@ -560,12 +560,10 @@ exports[`Render properties.expandIcon: AiOutlineArrowRight - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="ant-collapse-arrow"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.expandIcon: AiOutlineArrowRight_expandIcon"
-            rotate="90"
-            title="AiOutlineArrowRight"
-          />
+          >
+            {"id":"properties.expandIcon: AiOutlineArrowRight_expandIcon","title":"AiOutlineArrowRight","className":"ant-collapse-arrow","rotate":90,"required":false}
+          </svg>
         </span>
       </div>
       <span
@@ -604,12 +602,10 @@ exports[`Render properties.expandIcon: AiOutlineArrowRight - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="ant-collapse-arrow"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.expandIcon: AiOutlineArrowRight_expandIcon"
-            rotate="0"
-            title="AiOutlineArrowRight"
-          />
+          >
+            {"id":"properties.expandIcon: AiOutlineArrowRight_expandIcon","title":"AiOutlineArrowRight","className":"ant-collapse-arrow","rotate":0,"required":false}
+          </svg>
         </span>
       </div>
       <span
@@ -1838,12 +1834,10 @@ exports[`Render required = true properties.expandIcon: AiOutlineArrowRight - val
           role="img"
         >
           <svg
-            class="ant-collapse-arrow"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.expandIcon: AiOutlineArrowRight_expandIcon"
-            rotate="90"
-            title="AiOutlineArrowRight"
-          />
+          >
+            {"id":"properties.expandIcon: AiOutlineArrowRight_expandIcon","title":"AiOutlineArrowRight","className":"ant-collapse-arrow","rotate":90,"required":false}
+          </svg>
         </span>
       </div>
       <span
@@ -1882,12 +1876,10 @@ exports[`Render required = true properties.expandIcon: AiOutlineArrowRight - val
           role="img"
         >
           <svg
-            class="ant-collapse-arrow"
             data-testid="AiOutlineExclamationCircle"
-            id="properties.expandIcon: AiOutlineArrowRight_expandIcon"
-            rotate="0"
-            title="AiOutlineArrowRight"
-          />
+          >
+            {"id":"properties.expandIcon: AiOutlineArrowRight_expandIcon","title":"AiOutlineArrowRight","className":"ant-collapse-arrow","rotate":0,"required":false}
+          </svg>
         </span>
       </div>
       <span

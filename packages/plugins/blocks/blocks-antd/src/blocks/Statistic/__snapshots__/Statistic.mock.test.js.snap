@@ -168,21 +168,21 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.prefixIcon: AccountBookFilled - value[0] - Statistic 1`] = `mocked`;
+exports[`Mock render - properties.prefixIcon: AiFillAccountBook - value[0] - Statistic 1`] = `mocked`;
 
-exports[`Mock render - properties.prefixIcon: AccountBookFilled - value[0] - Statistic 2`] = `
+exports[`Mock render - properties.prefixIcon: AiFillAccountBook - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
       "groupSeparator": undefined,
-      "id": "properties.prefixIcon: AccountBookFilled",
+      "id": "properties.prefixIcon: AiFillAccountBook",
       "loading": undefined,
       "precision": undefined,
       "prefix": <AntIcon
         basePath=""
-        blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
+        blockId="properties.prefixIcon: AiFillAccountBook_prefixIcon"
         components={Object {}}
         content={Object {}}
         events={Object {}}
@@ -196,7 +196,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AccountBookFilled"
+        properties="AiFillAccountBook"
         required={false}
         user={Object {}}
         validation={
@@ -240,22 +240,22 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.suffixIcon: AccountBookFilled - value[0] - Statistic 1`] = `mocked`;
+exports[`Mock render - properties.suffixIcon: AiFillAccountBook - value[0] - Statistic 1`] = `mocked`;
 
-exports[`Mock render - properties.suffixIcon: AccountBookFilled - value[0] - Statistic 2`] = `
+exports[`Mock render - properties.suffixIcon: AiFillAccountBook - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
       "groupSeparator": undefined,
-      "id": "properties.suffixIcon: AccountBookFilled",
+      "id": "properties.suffixIcon: AiFillAccountBook",
       "loading": undefined,
       "precision": undefined,
       "prefix": "",
       "suffix": <AntIcon
         basePath=""
-        blockId="properties.suffixIcon: AccountBookFilled_suffixIcon"
+        blockId="properties.suffixIcon: AiFillAccountBook_suffixIcon"
         components={Object {}}
         content={Object {}}
         events={Object {}}
@@ -269,7 +269,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AccountBookFilled"
+        properties="AiFillAccountBook"
         required={false}
         user={Object {}}
         validation={

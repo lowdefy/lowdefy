@@ -96,7 +96,7 @@ exports[`Render default - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
+exports[`Render properties. icon: AiFillApi - value[0] 1`] = `
 <div
   class="ant-result ant-result-info"
 >
@@ -108,11 +108,10 @@ exports[`Render properties. icon: ApiFilled - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-0"
         data-testid="AiOutlineExclamationCircle"
-        id="properties. icon: ApiFilled_icon"
-        title="ApiFilled"
-      />
+      >
+        {"id":"properties. icon: AiFillApi_icon","title":"AiFillApi","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
   <div
@@ -1495,7 +1494,7 @@ exports[`Render required = true default - value[0] 1`] = `
 </div>
 `;
 
-exports[`Render required = true properties. icon: ApiFilled - value[0] 1`] = `
+exports[`Render required = true properties. icon: AiFillApi - value[0] 1`] = `
 <div
   class="ant-result ant-result-info"
 >
@@ -1507,11 +1506,10 @@ exports[`Render required = true properties. icon: ApiFilled - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-0"
         data-testid="AiOutlineExclamationCircle"
-        id="properties. icon: ApiFilled_icon"
-        title="ApiFilled"
-      />
+      >
+        {"id":"properties. icon: AiFillApi_icon","title":"AiFillApi","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
   <div
@@ -3024,9 +3022,9 @@ exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
-exports[`Test Schema properties. icon: ApiFilled 1`] = `true`;
+exports[`Test Schema properties. icon: AiFillApi 1`] = `true`;
 
-exports[`Test Schema properties. icon: ApiFilled 2`] = `null`;
+exports[`Test Schema properties. icon: AiFillApi 2`] = `null`;
 
 exports[`Test Schema properties. status: 403 1`] = `true`;
 

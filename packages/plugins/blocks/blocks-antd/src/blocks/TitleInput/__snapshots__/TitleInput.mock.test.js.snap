@@ -113,7 +113,7 @@ Array [
               "triggerEvent": [Function],
             }
           }
-          properties="WarningOutlined"
+          properties="AiOutlineWarning"
           required={false}
           user={Object {}}
           validation={
@@ -174,7 +174,7 @@ Array [
                 "triggerEvent": [Function],
               }
             }
-            properties="WarningOutlined"
+            properties="AiOutlineWarning"
             required={false}
             user={Object {}}
             validation={
@@ -425,7 +425,7 @@ Array [
               "triggerEvent": [Function],
             }
           }
-          properties="PlusOutlined"
+          properties="AiOutlinePlus"
           required={false}
           user={Object {}}
           validation={

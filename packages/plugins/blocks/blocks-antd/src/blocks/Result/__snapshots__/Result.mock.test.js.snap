@@ -68,9 +68,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties. icon: ApiFilled - value[0] - Result 1`] = `mocked`;
+exports[`Mock render - properties. icon: AiFillApi - value[0] - Result 1`] = `mocked`;
 
-exports[`Mock render - properties. icon: ApiFilled - value[0] - Result 2`] = `
+exports[`Mock render - properties. icon: AiFillApi - value[0] - Result 2`] = `
 Array [
   Array [
     Object {
@@ -88,7 +88,7 @@ Array [
       "extra": undefined,
       "icon": <AntIcon
         basePath=""
-        blockId="properties. icon: ApiFilled_icon"
+        blockId="properties. icon: AiFillApi_icon"
         components={Object {}}
         content={Object {}}
         events={Object {}}
@@ -102,7 +102,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="ApiFilled"
+        properties="AiFillApi"
         required={false}
         user={Object {}}
         validation={
@@ -113,7 +113,7 @@ Array [
           }
         }
       />,
-      "id": "properties. icon: ApiFilled",
+      "id": "properties. icon: AiFillApi",
       "status": undefined,
       "subTitle": undefined,
       "title": undefined,

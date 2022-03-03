@@ -150,7 +150,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -159,7 +159,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -527,7 +527,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -788,7 +788,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -1026,7 +1026,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -1271,7 +1271,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "pageId_page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                     },
                     "type": "MenuLink",
                   },
@@ -1491,7 +1491,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -1711,7 +1711,7 @@ Array [
                   Object {
                     "id": "menu_item_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                     },
                     "type": "MenuLink",
                     "url": "http://page.com",
@@ -2259,7 +2259,7 @@ Array [
                   "pageId": "page_2",
                   "properties": Object {
                     "danger": true,
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -2473,7 +2473,7 @@ Array [
                   "id": "Menu_item_one",
                   "pageId": "page_1",
                   "properties": Object {
-                    "icon": "RocketFilled",
+                    "icon": "AiFillRocket",
                   },
                   "type": "MenuLink",
                 },
@@ -2481,7 +2481,7 @@ Array [
                   "id": "Menu Item two",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                   },
                   "type": "MenuLink",
                 },
@@ -3371,7 +3371,7 @@ Array [
                   "id": "Menu_item_one",
                   "pageId": "page_1",
                   "properties": Object {
-                    "icon": "RocketFilled",
+                    "icon": "AiFillRocket",
                     "title": "Title Menu Item 1",
                   },
                   "type": "MenuLink",
@@ -3380,7 +3380,7 @@ Array [
                   "id": "Menu Item two",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3636,7 +3636,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3645,7 +3645,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -3908,7 +3908,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3917,7 +3917,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4179,7 +4179,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4188,7 +4188,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4449,7 +4449,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4458,7 +4458,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4721,7 +4721,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4730,7 +4730,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",

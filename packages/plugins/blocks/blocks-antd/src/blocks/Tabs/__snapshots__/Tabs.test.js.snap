@@ -1826,11 +1826,10 @@ exports[`Render properties.tabs.icon - value[0] 1`] = `
                 role="img"
               >
                 <svg
-                  class="emotion-0"
                   data-testid="AiOutlineExclamationCircle"
-                  id="properties.tabs.icon_icon"
-                  title="AiOutlineWarning"
-                />
+                >
+                  {"id":"properties.tabs.icon_icon","title":"AiOutlineWarning","className":"emotion-0","required":false}
+                </svg>
               </span>
               Title One
             </span>
@@ -1873,11 +1872,10 @@ exports[`Render properties.tabs.icon - value[0] 1`] = `
                 role="img"
               >
                 <svg
-                  class="emotion-0"
                   data-testid="AiOutlineExclamationCircle"
-                  id="properties.tabs.icon_icon"
-                  title="AiOutlineSave"
-                />
+                >
+                  {"id":"properties.tabs.icon_icon","title":"AiOutlineSave","className":"emotion-0","required":false}
+                </svg>
               </span>
               Title Three
             </span>
@@ -4104,11 +4102,10 @@ exports[`Render required = true properties.tabs.icon - value[0] 1`] = `
                 role="img"
               >
                 <svg
-                  class="emotion-0"
                   data-testid="AiOutlineExclamationCircle"
-                  id="properties.tabs.icon_icon"
-                  title="AiOutlineWarning"
-                />
+                >
+                  {"id":"properties.tabs.icon_icon","title":"AiOutlineWarning","className":"emotion-0","required":false}
+                </svg>
               </span>
               Title One
             </span>
@@ -4151,11 +4148,10 @@ exports[`Render required = true properties.tabs.icon - value[0] 1`] = `
                 role="img"
               >
                 <svg
-                  class="emotion-0"
                   data-testid="AiOutlineExclamationCircle"
-                  id="properties.tabs.icon_icon"
-                  title="AiOutlineSave"
-                />
+                >
+                  {"id":"properties.tabs.icon_icon","title":"AiOutlineSave","className":"emotion-0","required":false}
+                </svg>
               </span>
               Title Three
             </span>

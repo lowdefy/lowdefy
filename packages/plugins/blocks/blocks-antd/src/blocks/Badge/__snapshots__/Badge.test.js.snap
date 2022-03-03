@@ -116,11 +116,10 @@ exports[`Render properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-scroll-number-custom-component"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineNotification"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineNotification","className":"ant-scroll-number-custom-component","required":false,"style":{}}
+    </svg>
   </span>
 </span>
 `;
@@ -141,11 +140,10 @@ exports[`Render properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-scroll-number-custom-component"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineNotification"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineNotification","className":"ant-scroll-number-custom-component","required":false,"style":{}}
+    </svg>
   </span>
 </span>
 `;
@@ -477,11 +475,10 @@ exports[`Render required = true properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-scroll-number-custom-component"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineNotification"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineNotification","className":"ant-scroll-number-custom-component","required":false,"style":{}}
+    </svg>
   </span>
 </span>
 `;
@@ -502,11 +499,10 @@ exports[`Render required = true properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-scroll-number-custom-component"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineNotification"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineNotification","className":"ant-scroll-number-custom-component","required":false,"style":{}}
+    </svg>
   </span>
 </span>
 `;

@@ -273,11 +273,10 @@ exports[`Render properties.copyable: icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -328,11 +327,10 @@ exports[`Render properties.copyable: icon - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -383,11 +381,10 @@ exports[`Render properties.copyable: icon: [] - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -438,11 +435,10 @@ exports[`Render properties.copyable: icon: [] - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -992,11 +988,10 @@ exports[`Render properties.editable.icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -1020,11 +1015,10 @@ exports[`Render properties.editable.icon - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -2559,11 +2553,10 @@ exports[`Render required = true properties.copyable: icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -2614,11 +2607,10 @@ exports[`Render required = true properties.copyable: icon - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -2669,11 +2661,10 @@ exports[`Render required = true properties.copyable: icon: [] - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -2724,11 +2715,10 @@ exports[`Render required = true properties.copyable: icon: [] - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -3278,11 +3268,10 @@ exports[`Render required = true properties.editable.icon - value[0] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -3306,11 +3295,10 @@ exports[`Render required = true properties.editable.icon - value[1] 1`] = `
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -4845,11 +4833,10 @@ exports[`Render validation.status = error properties.copyable: icon - value[0] 1
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -4900,11 +4887,10 @@ exports[`Render validation.status = error properties.copyable: icon - value[1] 1
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -4955,11 +4941,10 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -5010,11 +4995,10 @@ exports[`Render validation.status = error properties.copyable: icon: [] - value[
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -5564,11 +5548,10 @@ exports[`Render validation.status = error properties.editable.icon - value[0] 1`
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -5592,11 +5575,10 @@ exports[`Render validation.status = error properties.editable.icon - value[1] 1`
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7131,11 +7113,10 @@ exports[`Render validation.status = null properties.copyable: icon - value[0] 1`
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7186,11 +7167,10 @@ exports[`Render validation.status = null properties.copyable: icon - value[1] 1`
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7241,11 +7221,10 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[0
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7296,11 +7275,10 @@ exports[`Render validation.status = null properties.copyable: icon: [] - value[1
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7850,11 +7828,10 @@ exports[`Render validation.status = null properties.editable.icon - value[0] 1`]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -7878,11 +7855,10 @@ exports[`Render validation.status = null properties.editable.icon - value[1] 1`]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -9417,11 +9393,10 @@ exports[`Render validation.status = success properties.copyable: icon - value[0]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -9472,11 +9447,10 @@ exports[`Render validation.status = success properties.copyable: icon - value[1]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -9527,11 +9501,10 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -9582,11 +9555,10 @@ exports[`Render validation.status = success properties.copyable: icon: [] - valu
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -10136,11 +10108,10 @@ exports[`Render validation.status = success properties.editable.icon - value[0] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -10164,11 +10135,10 @@ exports[`Render validation.status = success properties.editable.icon - value[1] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -11703,11 +11673,10 @@ exports[`Render validation.status = warning properties.copyable: icon - value[0]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -11758,11 +11727,10 @@ exports[`Render validation.status = warning properties.copyable: icon - value[1]
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon_copyable_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon_copyable_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -11813,11 +11781,10 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -11868,11 +11835,10 @@ exports[`Render validation.status = warning properties.copyable: icon: [] - valu
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.copyable: icon: []_copyable_before_icon"
-        title="WarningOutlined"
-      />
+      >
+        {"id":"properties.copyable: icon: []_copyable_before_icon","title":"AiOutlineWarning","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -12422,11 +12388,10 @@ exports[`Render validation.status = warning properties.editable.icon - value[0] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>
@@ -12450,11 +12415,10 @@ exports[`Render validation.status = warning properties.editable.icon - value[1] 
       role="img"
     >
       <svg
-        class="emotion-1"
         data-testid="AiOutlineExclamationCircle"
-        id="properties.editable.icon_editable_icon"
-        title="PlusOutlined"
-      />
+      >
+        {"id":"properties.editable.icon_editable_icon","title":"AiOutlinePlus","className":"css-0","required":false}
+      </svg>
     </span>
   </div>
 </h1>

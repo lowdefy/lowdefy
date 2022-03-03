@@ -409,7 +409,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -428,7 +428,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -531,7 +531,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -550,7 +550,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -607,7 +607,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -626,7 +626,7 @@ Array [
             pageId="pageId_page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
               }
             }
             type="MenuLink"
@@ -682,7 +682,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -701,7 +701,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -758,7 +758,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -776,7 +776,7 @@ Array [
             id="menu_item_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
               }
             }
             type="MenuLink"
@@ -971,7 +971,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -990,7 +990,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -1017,7 +1017,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1036,7 +1036,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -1233,7 +1233,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1252,7 +1252,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -1279,7 +1279,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1298,7 +1298,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -1495,7 +1495,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1514,7 +1514,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -1541,7 +1541,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1560,7 +1560,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -1755,7 +1755,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1774,7 +1774,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -1801,7 +1801,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -1820,7 +1820,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -2017,7 +2017,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2036,7 +2036,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -2063,7 +2063,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2082,7 +2082,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -2279,7 +2279,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2298,7 +2298,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -2325,7 +2325,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2344,7 +2344,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -2540,7 +2540,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2559,7 +2559,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -2586,7 +2586,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2605,7 +2605,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -2801,7 +2801,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2820,7 +2820,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -2847,7 +2847,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -2866,7 +2866,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -3063,7 +3063,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3082,7 +3082,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -3109,7 +3109,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3128,7 +3128,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -3325,7 +3325,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3344,7 +3344,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -3371,7 +3371,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3390,7 +3390,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -3591,7 +3591,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3610,7 +3610,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -3637,7 +3637,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3656,7 +3656,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -3855,7 +3855,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3874,7 +3874,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -3901,7 +3901,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -3920,7 +3920,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -4119,7 +4119,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4138,7 +4138,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -4165,7 +4165,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4184,7 +4184,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -4385,7 +4385,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4404,7 +4404,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -4431,7 +4431,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4450,7 +4450,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -4651,7 +4651,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4670,7 +4670,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -4697,7 +4697,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4716,7 +4716,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -4916,7 +4916,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4935,7 +4935,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -4962,7 +4962,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -4981,7 +4981,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -5181,7 +5181,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5200,7 +5200,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -5227,7 +5227,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5246,7 +5246,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -5447,7 +5447,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5466,7 +5466,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -5493,7 +5493,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5512,7 +5512,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -5713,7 +5713,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5732,7 +5732,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -5759,7 +5759,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5778,7 +5778,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -5979,7 +5979,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -5998,7 +5998,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -6025,7 +6025,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6044,7 +6044,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -6241,7 +6241,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6260,7 +6260,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -6287,7 +6287,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6306,7 +6306,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -6501,7 +6501,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6520,7 +6520,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -6547,7 +6547,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6566,7 +6566,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -6763,7 +6763,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6782,7 +6782,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -6809,7 +6809,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -6828,7 +6828,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -7025,7 +7025,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7044,7 +7044,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -7071,7 +7071,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7090,7 +7090,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -7286,7 +7286,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7305,7 +7305,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -7332,7 +7332,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7351,7 +7351,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -7547,7 +7547,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7566,7 +7566,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -7593,7 +7593,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7612,7 +7612,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -7809,7 +7809,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7828,7 +7828,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -7855,7 +7855,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -7874,7 +7874,7 @@ Array [
             pageId="page_3"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 3",
               }
             }
@@ -8102,7 +8102,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -8122,7 +8122,7 @@ Array [
             properties={
               Object {
                 "danger": true,
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }
@@ -8309,7 +8309,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="RocketFilled"
+              properties="AiFillRocket"
               required={false}
               user={Object {}}
               validation={
@@ -8328,7 +8328,7 @@ Array [
             pageId="page_1"
             properties={
               Object {
-                "icon": "RocketFilled",
+                "icon": "AiFillRocket",
               }
             }
             type="MenuLink"
@@ -8354,7 +8354,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -8373,7 +8373,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
               }
             }
             type="MenuLink"
@@ -8677,7 +8677,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="RocketFilled"
+              properties="AiFillRocket"
               required={false}
               user={Object {}}
               validation={
@@ -8696,7 +8696,7 @@ Array [
             pageId="page_1"
             properties={
               Object {
-                "icon": "RocketFilled",
+                "icon": "AiFillRocket",
                 "title": "Title Menu Item 1",
               }
             }
@@ -8723,7 +8723,7 @@ Array [
                   "triggerEvent": [Function],
                 }
               }
-              properties="VideoCameraFilled"
+              properties="AiFillVideoCamera"
               required={false}
               user={Object {}}
               validation={
@@ -8742,7 +8742,7 @@ Array [
             pageId="page_2"
             properties={
               Object {
-                "icon": "VideoCameraFilled",
+                "icon": "AiFillVideoCamera",
                 "title": "Title Menu Item 2",
               }
             }

@@ -111,11 +111,10 @@ exports[`Render properties.hideTitle: true - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.hideTitle: true_icon"
-      title="AiOutlineDelete"
-    />
+    >
+      {"id":"properties.hideTitle: true_icon","title":"AiOutlineDelete","className":"css-0","required":false}
+    </svg>
   </span>
 </button>
 `;
@@ -145,12 +144,10 @@ exports[`Render properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineSave","className":"emotion-1","color":"red","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"
@@ -171,11 +168,10 @@ exports[`Render properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineSave","className":"emotion-1","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"
@@ -436,11 +432,10 @@ exports[`Render required = true properties.hideTitle: true - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.hideTitle: true_icon"
-      title="AiOutlineDelete"
-    />
+    >
+      {"id":"properties.hideTitle: true_icon","title":"AiOutlineDelete","className":"css-0","required":false}
+    </svg>
   </span>
 </button>
 `;
@@ -470,12 +465,10 @@ exports[`Render required = true properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineSave","className":"emotion-1","color":"red","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"
@@ -496,11 +489,10 @@ exports[`Render required = true properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineSave","className":"emotion-1","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"
@@ -679,11 +671,10 @@ exports[`Render required = true with html in title and icon - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="with html in title and icon_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"with html in title and icon_icon","title":"AiOutlineSave","className":"emotion-1","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"
@@ -726,11 +717,10 @@ exports[`Render with html in title and icon - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="emotion-1"
       data-testid="AiOutlineExclamationCircle"
-      id="with html in title and icon_icon"
-      title="AiOutlineSave"
-    />
+    >
+      {"id":"with html in title and icon_icon","title":"AiOutlineSave","className":"emotion-1","required":false}
+    </svg>
   </span>
   <span
     class="emotion-1"

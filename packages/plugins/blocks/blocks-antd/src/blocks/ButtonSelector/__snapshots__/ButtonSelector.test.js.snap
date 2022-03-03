@@ -4443,7 +4443,7 @@ exports[`Render validation.status = error default - value[0] 1`] = `
   min-height: 32px;
 }
 
-.emotion-6 {
+.emotion-5 {
   margin-top: 0;
 }
 
@@ -4488,16 +4488,15 @@ exports[`Render validation.status = error default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-6"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-5"
     >
       validation error
     </div>
@@ -4522,7 +4521,7 @@ exports[`Render validation.status = error properties.buttonStyle: outline - valu
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -4616,16 +4615,15 @@ exports[`Render validation.status = error properties.buttonStyle: outline - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -4655,7 +4653,7 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
   border-color: red!important;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -4749,16 +4747,15 @@ exports[`Render validation.status = error properties.color_red - value[0] 1`] = 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -4788,7 +4785,7 @@ exports[`Render validation.status = error properties.color_yellow - value[0] 1`]
   border-color: yellow!important;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -4882,16 +4879,15 @@ exports[`Render validation.status = error properties.color_yellow - value[0] 1`]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -4916,7 +4912,7 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5012,16 +5008,15 @@ exports[`Render validation.status = error properties.disabled: true - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5046,7 +5041,7 @@ exports[`Render validation.status = error properties.label.colon: false - value[
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5140,16 +5135,15 @@ exports[`Render validation.status = error properties.label.colon: false - value[
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5162,7 +5156,7 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
   margin-bottom: 0;
 }
 
-.emotion-5 {
+.emotion-4 {
   margin-top: 0;
 }
 
@@ -5241,16 +5235,15 @@ exports[`Render validation.status = error properties.label.disabled: true - valu
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-2","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-5"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-4"
     >
       validation error
     </div>
@@ -5275,7 +5268,7 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5369,16 +5362,15 @@ exports[`Render validation.status = error properties.label.extra: showingextra -
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5403,7 +5395,7 @@ exports[`Render validation.status = error properties.label: align_right - value[
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5497,16 +5489,15 @@ exports[`Render validation.status = error properties.label: align_right - value[
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5535,7 +5526,7 @@ exports[`Render validation.status = error properties.label: inline_true - value[
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5631,16 +5622,15 @@ exports[`Render validation.status = error properties.label: inline_true - value[
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5665,7 +5655,7 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -5759,16 +5749,15 @@ exports[`Render validation.status = error properties.label: span_12 - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -5793,7 +5782,7 @@ exports[`Render validation.status = error properties.options.label: html - value
   min-height: 32px;
 }
 
-.emotion-12 {
+.emotion-11 {
   margin-top: 0;
 }
 
@@ -5922,16 +5911,15 @@ exports[`Render validation.status = error properties.options.label: html - value
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-12"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-11"
     >
       validation error
     </div>
@@ -5956,7 +5944,7 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
   min-height: 32px;
 }
 
-.emotion-9 {
+.emotion-8 {
   margin-top: 0;
 }
 
@@ -6085,16 +6073,15 @@ exports[`Render validation.status = error properties.options: html - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-9"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
     >
       validation error
     </div>
@@ -6119,7 +6106,7 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -6213,16 +6200,15 @@ exports[`Render validation.status = error properties.options-boolean - value[0] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -6247,7 +6233,7 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -6341,16 +6327,15 @@ exports[`Render validation.status = error properties.options-number - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -6375,7 +6360,7 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
   min-height: 32px;
 }
 
-.emotion-10 {
+.emotion-9 {
   margin-top: 0;
 }
 
@@ -6469,16 +6454,15 @@ exports[`Render validation.status = error properties.options-object - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-10"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-9"
     >
       validation error
     </div>
@@ -6503,7 +6487,7 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -6597,16 +6581,15 @@ exports[`Render validation.status = error properties.options-string - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -6635,7 +6618,7 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
   background: red;
 }
 
-.emotion-10 {
+.emotion-9 {
   margin-top: 0;
 }
 
@@ -6729,16 +6712,15 @@ exports[`Render validation.status = error properties.options-style - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-10"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-9"
     >
       validation error
     </div>
@@ -6763,7 +6745,7 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
   min-height: 24px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: -4px;
 }
 
@@ -6857,16 +6839,15 @@ exports[`Render validation.status = error properties.size: small - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -6891,7 +6872,7 @@ exports[`Render validation.status = error properties.size_large - value[0] 1`] =
   min-height: 40px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -6985,16 +6966,15 @@ exports[`Render validation.status = error properties.size_large - value[0] 1`] =
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -7019,7 +6999,7 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -7113,16 +7093,15 @@ exports[`Render validation.status = error properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCloseCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCloseCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-error emotion-7"
     >
       validation error
     </div>
@@ -9401,11 +9380,10 @@ exports[`Render validation.status = success default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -9520,11 +9498,10 @@ exports[`Render validation.status = success properties.buttonStyle: outline - va
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -9644,11 +9621,10 @@ exports[`Render validation.status = success properties.color_red - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -9768,11 +9744,10 @@ exports[`Render validation.status = success properties.color_yellow - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -9889,11 +9864,10 @@ exports[`Render validation.status = success properties.disabled: true - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10008,11 +9982,10 @@ exports[`Render validation.status = success properties.label.colon: false - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10100,11 +10073,10 @@ exports[`Render validation.status = success properties.label.disabled: true - va
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-2","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10129,7 +10101,7 @@ exports[`Render validation.status = success properties.label.extra: showingextra
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -10223,16 +10195,15 @@ exports[`Render validation.status = success properties.label.extra: showingextra
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra emotion-8"
+      class="ant-form-item-explain ant-form-item-extra emotion-7"
     >
       <span
         class="emotion-3"
@@ -10351,11 +10322,10 @@ exports[`Render validation.status = success properties.label: align_right - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10476,11 +10446,10 @@ exports[`Render validation.status = success properties.label: inline_true - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10595,11 +10564,10 @@ exports[`Render validation.status = success properties.label: span_12 - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10749,11 +10717,10 @@ exports[`Render validation.status = success properties.options.label: html - val
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -10903,11 +10870,10 @@ exports[`Render validation.status = success properties.options: html - value[0] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11022,11 +10988,10 @@ exports[`Render validation.status = success properties.options-boolean - value[0
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11141,11 +11106,10 @@ exports[`Render validation.status = success properties.options-number - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11260,11 +11224,10 @@ exports[`Render validation.status = success properties.options-object - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11379,11 +11342,10 @@ exports[`Render validation.status = success properties.options-string - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11502,11 +11464,10 @@ exports[`Render validation.status = success properties.options-style - value[0] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11621,11 +11582,10 @@ exports[`Render validation.status = success properties.size: small - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11740,11 +11700,10 @@ exports[`Render validation.status = success properties.size_large - value[0] 1`]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11859,11 +11818,10 @@ exports[`Render validation.status = success properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillCheckCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillCheckCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
@@ -11888,7 +11846,7 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
   min-height: 32px;
 }
 
-.emotion-6 {
+.emotion-5 {
   margin-top: 0;
 }
 
@@ -11933,16 +11891,15 @@ exports[`Render validation.status = warning default - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-6"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-5"
     >
       validation warning
     </div>
@@ -11967,7 +11924,7 @@ exports[`Render validation.status = warning properties.buttonStyle: outline - va
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12061,16 +12018,15 @@ exports[`Render validation.status = warning properties.buttonStyle: outline - va
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12100,7 +12056,7 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
   border-color: red!important;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12194,16 +12150,15 @@ exports[`Render validation.status = warning properties.color_red - value[0] 1`] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12233,7 +12188,7 @@ exports[`Render validation.status = warning properties.color_yellow - value[0] 1
   border-color: yellow!important;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12327,16 +12282,15 @@ exports[`Render validation.status = warning properties.color_yellow - value[0] 1
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12361,7 +12315,7 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12457,16 +12411,15 @@ exports[`Render validation.status = warning properties.disabled: true - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12491,7 +12444,7 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12585,16 +12538,15 @@ exports[`Render validation.status = warning properties.label.colon: false - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12607,7 +12559,7 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
   margin-bottom: 0;
 }
 
-.emotion-5 {
+.emotion-4 {
   margin-top: 0;
 }
 
@@ -12686,16 +12638,15 @@ exports[`Render validation.status = warning properties.label.disabled: true - va
           role="img"
         >
           <svg
-            class="emotion-2"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-2","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-5"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-4"
     >
       validation warning
     </div>
@@ -12720,7 +12671,7 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12814,16 +12765,15 @@ exports[`Render validation.status = warning properties.label.extra: showingextra
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12848,7 +12798,7 @@ exports[`Render validation.status = warning properties.label: align_right - valu
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -12942,16 +12892,15 @@ exports[`Render validation.status = warning properties.label: align_right - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -12980,7 +12929,7 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -13076,16 +13025,15 @@ exports[`Render validation.status = warning properties.label: inline_true - valu
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -13110,7 +13058,7 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -13204,16 +13152,15 @@ exports[`Render validation.status = warning properties.label: span_12 - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -13238,7 +13185,7 @@ exports[`Render validation.status = warning properties.options.label: html - val
   min-height: 32px;
 }
 
-.emotion-12 {
+.emotion-11 {
   margin-top: 0;
 }
 
@@ -13367,16 +13314,15 @@ exports[`Render validation.status = warning properties.options.label: html - val
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-12"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-11"
     >
       validation warning
     </div>
@@ -13401,7 +13347,7 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
   min-height: 32px;
 }
 
-.emotion-9 {
+.emotion-8 {
   margin-top: 0;
 }
 
@@ -13530,16 +13476,15 @@ exports[`Render validation.status = warning properties.options: html - value[0] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-9"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
     >
       validation warning
     </div>
@@ -13564,7 +13509,7 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -13658,16 +13603,15 @@ exports[`Render validation.status = warning properties.options-boolean - value[0
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -13692,7 +13636,7 @@ exports[`Render validation.status = warning properties.options-number - value[0]
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -13786,16 +13730,15 @@ exports[`Render validation.status = warning properties.options-number - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -13820,7 +13763,7 @@ exports[`Render validation.status = warning properties.options-object - value[0]
   min-height: 32px;
 }
 
-.emotion-10 {
+.emotion-9 {
   margin-top: 0;
 }
 
@@ -13914,16 +13857,15 @@ exports[`Render validation.status = warning properties.options-object - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-10"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-9"
     >
       validation warning
     </div>
@@ -13948,7 +13890,7 @@ exports[`Render validation.status = warning properties.options-string - value[0]
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -14042,16 +13984,15 @@ exports[`Render validation.status = warning properties.options-string - value[0]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -14080,7 +14021,7 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
   background: red;
 }
 
-.emotion-10 {
+.emotion-9 {
   margin-top: 0;
 }
 
@@ -14174,16 +14115,15 @@ exports[`Render validation.status = warning properties.options-style - value[0] 
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-10"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-9"
     >
       validation warning
     </div>
@@ -14208,7 +14148,7 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
   min-height: 24px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: -4px;
 }
 
@@ -14302,16 +14242,15 @@ exports[`Render validation.status = warning properties.size: small - value[0] 1`
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -14336,7 +14275,7 @@ exports[`Render validation.status = warning properties.size_large - value[0] 1`]
   min-height: 40px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -14430,16 +14369,15 @@ exports[`Render validation.status = warning properties.size_large - value[0] 1`]
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>
@@ -14464,7 +14402,7 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
   min-height: 32px;
 }
 
-.emotion-8 {
+.emotion-7 {
   margin-top: 0;
 }
 
@@ -14558,16 +14496,15 @@ exports[`Render validation.status = warning properties.title - value[0] 1`] = `
           role="img"
         >
           <svg
-            class="emotion-3"
             data-testid="AiOutlineExclamationCircle"
-            id="undefined_id"
-            title="AiFillExclamationCircle"
-          />
+          >
+            {"id":"undefined_id","title":"AiFillExclamationCircle","className":"emotion-3","required":false}
+          </svg>
         </span>
       </span>
     </div>
     <div
-      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-8"
+      class="ant-form-item-explain ant-form-item-extra ant-form-item-explain-feedback ant-form-item-explain-warning emotion-7"
     >
       validation warning
     </div>

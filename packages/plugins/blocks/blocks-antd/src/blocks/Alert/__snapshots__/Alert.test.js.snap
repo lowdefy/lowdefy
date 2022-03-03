@@ -282,12 +282,10 @@ exports[`Render properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineSetting"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineSetting","className":"ant-alert-icon","color":"red","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -316,11 +314,10 @@ exports[`Render properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineCheckCircle"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineCheckCircle","className":"ant-alert-icon","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -1077,12 +1074,10 @@ exports[`Render required = true properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon object_icon"
-      title="AiOutlineSetting"
-    />
+    >
+      {"id":"properties.icon object_icon","title":"AiOutlineSetting","className":"ant-alert-icon","color":"red","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -1111,11 +1106,10 @@ exports[`Render required = true properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
       data-testid="AiOutlineExclamationCircle"
-      id="properties.icon string_icon"
-      title="AiOutlineCheckCircle"
-    />
+    >
+      {"id":"properties.icon string_icon","title":"AiOutlineCheckCircle","className":"ant-alert-icon","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -1823,12 +1817,10 @@ exports[`Render required = true with description properties.icon object - value[
     role="img"
   >
     <svg
-      class="ant-alert-icon"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="with description properties.icon object_icon"
-      title="AiOutlineSetting"
-    />
+    >
+      {"id":"with description properties.icon object_icon","title":"AiOutlineSetting","className":"ant-alert-icon","color":"red","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -1866,11 +1858,10 @@ exports[`Render required = true with description properties.icon string - value[
     role="img"
   >
     <svg
-      class="ant-alert-icon"
       data-testid="AiOutlineExclamationCircle"
-      id="with description properties.icon string_icon"
-      title="AiOutlineCheckCircle"
-    />
+    >
+      {"id":"with description properties.icon string_icon","title":"AiOutlineCheckCircle","className":"ant-alert-icon","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -2831,12 +2822,10 @@ exports[`Render with description properties.icon object - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
-      color="red"
       data-testid="AiOutlineExclamationCircle"
-      id="with description properties.icon object_icon"
-      title="AiOutlineSetting"
-    />
+    >
+      {"id":"with description properties.icon object_icon","title":"AiOutlineSetting","className":"ant-alert-icon","color":"red","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
@@ -2874,11 +2863,10 @@ exports[`Render with description properties.icon string - value[0] 1`] = `
     role="img"
   >
     <svg
-      class="ant-alert-icon"
       data-testid="AiOutlineExclamationCircle"
-      id="with description properties.icon string_icon"
-      title="AiOutlineCheckCircle"
-    />
+    >
+      {"id":"with description properties.icon string_icon","title":"AiOutlineCheckCircle","className":"ant-alert-icon","required":false}
+    </svg>
   </span>
   <div
     class="ant-alert-content"
