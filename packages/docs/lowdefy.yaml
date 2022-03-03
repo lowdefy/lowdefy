@@ -19,6 +19,10 @@ licence: Apache-2.0
 cli:
   disableTelemetry: true
 
+plugins:
+  - name: '@lowdefy/docs'
+    version: '4.0.0-alpha.7'
+
 global:
   all_icons:
     _ref: blocks/all_icons.yaml
@@ -30,8 +34,6 @@ app:
   html:
     appendHead:
       _ref: head.html
-    appendBody:
-      _ref: body.html
 
 connections:
   - id: discord_channel

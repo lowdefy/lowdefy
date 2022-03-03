@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import * as actions from './actions.js';
+import * as operatorsClient from './operatorsClient.js';
 
 export default {
-  actions: Object.keys(actions),
+  operators: {
+    client: Object.keys(operatorsClient),
+  },
 };

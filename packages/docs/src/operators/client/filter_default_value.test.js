@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import filterDefaultValue from '../filterDefaultValue';
+import filter_default_value from './filter_default_value.js';
 
 test('no default value', () => {
   const value = { a: 1 };
-  expect(filterDefaultValue(value, {})).toEqual({ a: 1 });
+  expect(filter_default_value({ params: { value, defaultValue: {} } })).toEqual({ a: 1 });
 });
 
 test('remove null, empty objects and empty objects with all properties null or empty', () => {
@@ -30,7 +30,7 @@ test('remove null, empty objects and empty objects with all properties null or e
     g: { h: { i: { j: null, k: { l: null } } } },
     m: { n: null, o: null, p: null },
   };
-  expect(filterDefaultValue(value, {})).toEqual({});
+  expect(filter_default_value({ params: { value, defaultValue: {} } })).toEqual({});
 });
 
 test('remove a default value', () => {
@@ -42,7 +42,7 @@ test('remove a default value', () => {
     a: 1,
     b: 1,
   };
-  expect(filterDefaultValue(value, defaultValue)).toEqual({ b: 2 });
+  expect(filter_default_value({ params: { value, defaultValue } })).toEqual({ b: 2 });
 });
 
 test('remove a default value but keep arrays', () => {
@@ -64,7 +64,7 @@ test('remove a default value but keep arrays', () => {
     },
     e: ['1', '2'],
   };
-  expect(filterDefaultValue(value, defaultValue)).toEqual({
+  expect(filter_default_value({ params: { value, defaultValue } })).toEqual({
     a: {
       c: false,
       d: true,
@@ -87,5 +87,5 @@ test('only recurse getNestedValue on objects', () => {
       b: null,
     },
   };
-  expect(filterDefaultValue(value, defaultValue)).toEqual({ a: { b: { c: 1 } } });
+  expect(filter_default_value({ params: { value, defaultValue } })).toEqual({ a: { b: { c: 1 } } });
 });

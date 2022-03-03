@@ -14,8 +14,4 @@
   limitations under the License.
 */
 
-import * as actions from './actions.js';
-
-export default {
-  actions: Object.keys(actions),
-};
+export { default as _custom_filter_default_value } from './operators/client/filter_default_value.js';

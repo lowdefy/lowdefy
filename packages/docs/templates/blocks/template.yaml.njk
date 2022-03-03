@@ -192,14 +192,16 @@ areas:
             required:
               _state: block.required
             properties:
-              _js.filterDefaultValue:
-                - _ref:
+              _custom_filter_default_value:
+                value:
+                  _ref:
                         path:
                           _var: schema
                         vars:
                           block_type: {{ block_type }}
                         transformer: templates/blocks/propertiesGetterTransformer.js
-                - _ref:
+                defaultValue:
+                  _ref:
                     path:
                       _var: schema
                     transformer: templates/blocks/defaultValueTransformer.js
@@ -309,8 +311,9 @@ areas:
                         options:
                           sortKeys: false
                         on:
-                          _js.filterDefaultValue:
-                            - id: block_id
+                          _custom_filter_default_value:
+                            value:
+                              id: block_id
                               type: {{ block_type }}
                               required:
                                 _state: block.required
@@ -330,7 +333,8 @@ areas:
                                   vars:
                                     block_type: {{ block_type }}
                                   transformer: templates/blocks/propertiesGetterTransformer.js
-                            - required: false
+                            defaultValue:
+                              required: false
                               visible: true
                               layout:
                                 align: top
