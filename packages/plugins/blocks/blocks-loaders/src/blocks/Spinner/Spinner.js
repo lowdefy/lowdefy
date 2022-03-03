@@ -17,8 +17,6 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import LogoSpinner from '../LogoSpinner/LogoSpinner.js';
-
 const Spinner = ({ properties, methods }) => {
   return (
     <div
@@ -31,10 +29,6 @@ const Spinner = ({ properties, methods }) => {
       })}
     >
       <div style={{ width: properties.size || 50, margin: 'auto', height: properties.size || 50 }}>
-        <LogoSpinner
-          color={properties.color}
-          barColor={properties.barColor || (properties.shaded === true ? '#f1f1f1' : '#fff')}
-        />
         <div
           className={methods.makeCssClass({
             textAlign: 'center',
