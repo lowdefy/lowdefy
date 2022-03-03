@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
-import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import React from 'react';
+import { mockBlock, runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Block from './Anchor.js';
 import examples from './examples.yaml';
@@ -28,3 +31,18 @@ const testConfig = {
 
 runRenderTests({ Block, examples, schema, testConfig });
 runBlockSchemaTests({ examples, schema });
+
+const { before, methods, getProps } = mockBlock({ meta: Block.meta, schema });
+beforeEach(before);
+
+test('triggerEvent onClick', () => {
+  const block = {
+    id: 'one',
+    type: 'Box',
+  };
+  const Shell = () => <Block {...getProps(block)} methods={methods} />;
+  const { container } = render(<Shell />);
+  expect(container.firstChild).toMatchSnapshot();
+  userEvent.click(screen.getByTestId('one'));
+  expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
+});

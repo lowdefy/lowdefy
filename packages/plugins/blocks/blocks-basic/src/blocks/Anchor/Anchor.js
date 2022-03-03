@@ -19,8 +19,8 @@ import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, properties }) => {
-  const showLoading = get(events, 'onClick.loading');
-  const disabled = properties.disabled || showLoading;
+  const disabled = properties.disabled || get(events, 'onClick.loading');
+  const { icon, title, ...linkProperties } = properties;
   return (
     <Link
       id={blockId}
@@ -30,21 +30,22 @@ const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, pro
       ])}
       disabled={disabled}
       onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      {...properties}
+      {...linkProperties}
     >
       {(defaultTitle) => (
         <>
-          {properties.icon &&
-            (
-              <Icon
-                blockId={`${blockId}_icon`}
-                events={events}
-                properties={
-                  showLoading ? { name: 'AiOutlineLoading3Quarters', spin: true } : properties.icon
-                }
-              />
-            ) + ` `}
-          {properties.title || defaultTitle}
+          {icon && (
+            <Icon
+              blockId={`${blockId}_icon`}
+              events={events}
+              properties={
+                get(events, 'onClick.loading')
+                  ? { name: 'AiOutlineLoading3Quarters', spin: true }
+                  : icon
+              }
+            />
+          )}
+          {title || defaultTitle}
         </>
       )}
     </Link>
