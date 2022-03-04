@@ -17,43 +17,74 @@
 import React from 'react';
 import getContext from '@lowdefy/engine';
 
-import MountEvents from './block/MountEvents.js';
+import MountEvents from './MountEvents.js';
 
-const Context = ({ children, lowdefy, config }) => {
+const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
   const context = getContext({ config, lowdefy });
-
-  // TODO: WHY ??
-  // const loadingPage = context.id !== config.id;
-
-  // if (loadingPage) {
-  //   return children(context, loadingPage, 'pager');
-  // }
-
   return (
     <MountEvents
-      asyncEventName="onInitAsync"
       context={context}
-      eventName="onInit"
-      triggerEvent={({ name, context, async }) => {
-        if (!async) {
-          context._internal.update(); // TODO: do we need this?
+      parentLoading={false}
+      triggerEvent={async () => {
+        if (!context._internal.State.initialized) {
+          await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+            name: 'onInit',
+            progress: () => {
+              progressBarDispatcher({
+                type: 'increment',
+              });
+            },
+          });
+          // context._internal.update(); // TODO: do we need this?
           context._internal.State.freezeState();
         }
-        context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name });
+      }}
+      triggerEventAsync={() => {
+        if (!context._internal.State.initialized) {
+          context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+            name: 'onInitAsync',
+            progress: () => {
+              progressBarDispatcher({
+                type: 'increment',
+              });
+            },
+          });
+        }
       }}
     >
       {(loadingOnInit) => {
-        if (loadingOnInit) return ''; // TODO: handle onInit Loader
         return (
           <MountEvents
-            asyncEventName="onEnterAsync"
             context={context}
-            eventName="onEnter"
-            triggerEvent={({ name, context }) =>
-              context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
+            parentLoading={loadingOnInit}
+            triggerEvent={async () =>
+              await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+                name: 'onEnter',
+                progress: () => {
+                  progressBarDispatcher({
+                    type: 'increment',
+                  });
+                },
+              })
             }
+            triggerEventAsync={() => {
+              const onEnterAsync = async () => {
+                await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+                  name: 'onEnterAsync', // TODO: Do we want this to happen in the background, as in not effecting progress bar?
+                  progress: () => {
+                    progressBarDispatcher({
+                      type: 'increment',
+                    });
+                  },
+                });
+                progressBarDispatcher({
+                  type: 'done',
+                });
+              };
+              onEnterAsync();
+            }}
           >
-            {(loadingOnEnter) => children(context, loadingOnEnter, 'mounter')}
+            {(loadingOnEnter) => children(context, loadingOnEnter)}
           </MountEvents>
         );
       }}

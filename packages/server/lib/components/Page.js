@@ -21,14 +21,15 @@ import { useRouter } from 'next/router';
 
 import Context from './Context.js';
 import Head from './Head.js';
+import ProgressBarController from './ProgressBarController.js';
 import Block from './block/Block.js';
 import setupLink from '../utils/setupLink.js';
 import createComponents from './createComponents.js';
 
-const LoadingBlock = () => <div>Loading...</div>;
-
 const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
+  lowdefy._internal.window = window;
+  lowdefy._internal.document = document;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.components = createComponents(lowdefy);
@@ -40,24 +41,36 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
 
   return (
-    <Context config={pageConfig} lowdefy={lowdefy}>
-      {(context, loading) => {
-        if (loading) {
-          return <LoadingBlock />;
-        }
-        return (
-          <>
-            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
-            <Block
-              block={context._internal.RootBlocks.map[pageConfig.id]}
-              Blocks={context._internal.RootBlocks}
-              context={context}
-              lowdefy={lowdefy}
-            />
-          </>
-        );
-      }}
-    </Context>
+    <ProgressBarController
+      id="page-loader"
+      ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
+      lowdefy={lowdefy}
+    >
+      {(progressBarDispatcher) => (
+        <Context
+          config={pageConfig}
+          lowdefy={lowdefy}
+          progressBarDispatcher={progressBarDispatcher}
+        >
+          {(context, loading) => {
+            return (
+              <>
+                <Head
+                  properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
+                />
+                <Block
+                  block={context._internal.RootBlocks.map[pageConfig.id]}
+                  Blocks={context._internal.RootBlocks}
+                  context={context}
+                  parentLoading={loading}
+                  lowdefy={lowdefy}
+                />
+              </>
+            );
+          }}
+        </Context>
+      )}
+    </ProgressBarController>
   );
 };
 

@@ -20,19 +20,23 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import CategorySwitch from './CategorySwitch.js';
 import LoadingBlock from './LoadingBlock.js';
-import MountEvents from './MountEvents.js';
+import MountEvents from '../MountEvents.js';
 
-const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
+const Block = ({ block, Blocks, context, isRoot, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
   return (
     <ErrorBoundary>
       <Suspense fallback={<LoadingBlock block={block} lowdefy={lowdefy} />}>
         <MountEvents
-          asyncEventName="onMountAsync"
           context={context}
-          eventName="onMount"
-          triggerEvent={block.triggerEvent}
+          parentLoading={parentLoading}
+          triggerEvent={async () => {
+            await block.triggerEvent({ name: 'onMount' });
+          }}
+          triggerEventAsync={() => {
+            block.triggerEvent({ name: 'onMount' });
+          }}
         >
           {(loading) =>
             loading ? (
