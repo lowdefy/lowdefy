@@ -41,25 +41,24 @@ async function createCustomTypesMap({ directories }) {
       server: {},
     },
     requests: {},
-    styles: {},
+    styles: {
+      packages: {},
+      blocks: {},
+    },
   };
 
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
-  // TODO: Prefixes in icons and styles
-  // TODO: Should be resolved in order
-  await Promise.all(
-    pluginDefinitions.map(async (plugin) => {
-      const { default: types } = await import(`${plugin.name}/types`);
-      createPluginTypesMap({
-        packageTypes: types,
-        typesMap: customTypesMap,
-        packageName: plugin.name,
-        version: plugin.version,
-        typePrefix: plugin.typePrefix,
-      });
-    })
-  );
+  for (const plugin of pluginDefinitions) {
+    const { default: types } = await import(`${plugin.name}/types`);
+    createPluginTypesMap({
+      packageTypes: types,
+      typesMap: customTypesMap,
+      packageName: plugin.name,
+      version: plugin.version,
+      typePrefix: plugin.typePrefix,
+    });
+  }
 
   return customTypesMap;
 }

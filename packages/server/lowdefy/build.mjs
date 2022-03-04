@@ -40,7 +40,6 @@ async function run() {
   };
 
   const customTypesMap = await createCustomTypesMap({ directories });
-  console.log(customTypesMap);
   await build({
     customTypesMap,
     directories,

@@ -14,22 +14,24 @@
   limitations under the License.
 */
 
-function filterDefaultValue(value, defaultValue) {
-  const isObject = (obj) => typeof obj === 'object' && obj !== null && !Array.isArray(obj);
-  const isEmptyObject = (obj) => isObject(obj) && Object.keys(obj).length === 0;
+import { type } from '@lowdefy/helpers';
+
+function custom_filter_default_value({ params }) {
+  const { value, defaultValue } = params;
+  const isEmptyObject = (obj) => type.isObject(obj) && Object.keys(obj).length === 0;
 
   const getNestedValue = (obj, path) => {
     const keys = [...path];
     const key = keys.shift();
     const value = obj[key];
-    if (keys.length > 0 && isObject(value)) return getNestedValue(value, keys);
+    if (keys.length > 0 && type.isObject(value)) return getNestedValue(value, keys);
     return value;
   };
 
   const filterObject = ({ obj, path }) => {
     Object.keys(obj).forEach((key) => {
       const propPath = path.concat([key]);
-      if (isObject(obj[key])) {
+      if (type.isObject(obj[key])) {
         filterObject({ obj: obj[key], path: propPath });
       }
       const dv = getNestedValue(defaultValue, propPath);
@@ -45,4 +47,4 @@ function filterDefaultValue(value, defaultValue) {
   return filterObject({ obj: value, path: [] });
 }
 
-export default filterDefaultValue;
+export default custom_filter_default_value;

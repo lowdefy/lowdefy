@@ -14,23 +14,4 @@
   limitations under the License.
 */
 
-function buildStyles({ components, context }) {
-  components.styles = [];
-  const styles = new Set();
-
-  Object.entries(components.types.blocks).forEach(([blockName, block]) => {
-    styles.add(
-      ...(context.typesMap.styles.packages[block.package] || []).map(
-        (style) => `${block.package}/${style}`
-      )
-    );
-    styles.add(
-      ...(context.typesMap.styles.blocks[blockName] || []).map(
-        (style) => `${block.package}/${style}`
-      )
-    );
-  });
-  components.styles = [...styles].filter((style) => !!style);
-}
-
-export default buildStyles;
+export { default as _custom_filter_default_value } from './operators/client/filter_default_value.js';

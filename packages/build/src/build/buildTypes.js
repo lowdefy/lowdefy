@@ -28,6 +28,7 @@ function buildTypeClass(
       throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
     }
     store[typeName] = {
+      originalTypeName: definitions[typeName].originalTypeName,
       package: definitions[typeName].package,
       version: definitions[typeName].version,
       count: counts[typeName],
