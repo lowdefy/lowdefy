@@ -14,37 +14,33 @@
   limitations under the License.
 */
 
-import React from 'react';
-
 import actions from '../../build/plugins/actions.js';
 import callRequest from '../utils/callRequest.js';
 import blockComponents from '../../build/plugins/blocks.js';
 import operators from '../../build/plugins/operatorsClient.js';
 
-const LowdefyContext = ({ children, lowdefy }) => {
-  if (!lowdefy._internal) {
-    lowdefy._internal = {
+function initLowdefyContext() {
+  const lowdefy = {
+    _internal: {
       actions,
       blockComponents,
       callRequest,
       components: {},
-      document,
       operators,
       updaters: {},
-      window,
       displayMessage: ({ content }) => {
         console.log(content);
         return () => undefined;
       },
       link: () => undefined,
-    };
-    lowdefy.contexts = {};
-    lowdefy.inputs = {};
-    lowdefy.lowdefyGlobal = {};
-  }
+    },
+    contexts: {},
+    inputs: {},
+    lowdefyGlobal: {},
+  };
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
-  return <>{children}</>;
-};
+  return lowdefy;
+}
 
-export default LowdefyContext;
+export default initLowdefyContext;
