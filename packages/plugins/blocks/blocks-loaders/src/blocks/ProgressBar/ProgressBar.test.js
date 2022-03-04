@@ -13,3 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
+
+import Block from './ProgressBar.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
+
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
+
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

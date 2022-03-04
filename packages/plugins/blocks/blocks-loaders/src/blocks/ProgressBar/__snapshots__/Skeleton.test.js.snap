@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render default - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Render required = true sizedefault - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Render required = true sizesmall - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Render sizedefault - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Render sizesmall - value[0] 1`] = `
+<div
+  class="skeleton emotion-0"
+  style="width: 100%; height: 100%;"
+/>
+`;
+
+exports[`Test Schema default 1`] = `true`;
+
+exports[`Test Schema default 2`] = `null`;
+
+exports[`Test Schema sizedefault 1`] = `true`;
+
+exports[`Test Schema sizedefault 2`] = `null`;
+
+exports[`Test Schema sizesmall 1`] = `true`;
+
+exports[`Test Schema sizesmall 2`] = `null`;
