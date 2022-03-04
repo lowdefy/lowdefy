@@ -38,9 +38,19 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
+  // Add Mandatory Types
   // Add operators used by form validation
   typeCounters.operators.client.increment('_not');
   typeCounters.operators.client.increment('_type');
+  // Add loaders and skeletons
+  typeCounters.blocks.increment('IconSpinner');
+  typeCounters.blocks.increment('ProgressBar');
+  typeCounters.blocks.increment('Skeleton');
+  typeCounters.blocks.increment('SkeletonAvatar');
+  typeCounters.blocks.increment('SkeletonButton');
+  typeCounters.blocks.increment('SkeletonInput');
+  typeCounters.blocks.increment('SkeletonParagraph');
+  typeCounters.blocks.increment('Spinner');
 
   components.types = {
     actions: {},
