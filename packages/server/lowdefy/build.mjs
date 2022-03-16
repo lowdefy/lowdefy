@@ -19,8 +19,7 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import build from '@lowdefy/build';
-import createCustomTypesMap from './createCustomTypesMap.mjs';
+import build, { createCustomPluginTypesMap } from '@lowdefy/build';
 
 const argv = yargs(hideBin(process.argv)).argv;
 
@@ -39,7 +38,7 @@ async function run() {
     ),
   };
 
-  const customTypesMap = await createCustomTypesMap({ directories });
+  const customTypesMap = await createCustomPluginTypesMap({ directories });
   await build({
     customTypesMap,
     directories,

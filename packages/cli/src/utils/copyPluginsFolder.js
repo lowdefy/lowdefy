@@ -18,13 +18,13 @@ import path from 'path';
 import fs from 'fs';
 import { copyDirectory } from '@lowdefy/node-utils';
 
-async function copyPluginsFolder({ context }) {
-  if (context.directories.config === context.directories.server) return;
+async function copyPluginsFolder({ context, directory }) {
+  if (context.directories.config === directory) return;
   if (!fs.existsSync(path.resolve(context.directories.config, 'plugins'))) return;
 
   await copyDirectory(
     path.resolve(context.directories.config, 'plugins'),
-    path.resolve(context.directories.server, 'plugins')
+    path.resolve(directory, 'plugins')
   );
 }
 

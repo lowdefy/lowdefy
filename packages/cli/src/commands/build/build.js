@@ -25,7 +25,7 @@ async function build({ context }) {
   context.print.info('Starting build.');
   const directory = context.directories.server;
   await getServer({ context, packageName: '@lowdefy/server', directory });
-  await copyPluginsFolder({ context });
+  await copyPluginsFolder({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
