@@ -17,13 +17,13 @@
 import generateImportFile from './generateImportFile.js';
 
 async function writeConnectionImports({ components, context }) {
-  await context.writeBuildArtifact({
-    filePath: 'plugins/connections.js',
-    content: generateImportFile({
+  await context.writeBuildArtifact(
+    'plugins/connections.js',
+    generateImportFile({
       types: components.types.connections,
       importPath: 'connections',
-    }),
-  });
+    })
+  );
 }
 
 export default writeConnectionImports;

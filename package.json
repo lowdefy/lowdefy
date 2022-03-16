@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -32,26 +32,42 @@
   "scripts": {
     "build": "lerna run build",
     "build:dev": "NODE_ENV=development lerna run build",
+    "build:plugins": "yarn build:blocks && yarn build:connections && yarn build:operators",
+    "build:blocks": "lerna run --scope '@lowdefy/blocks-*' build",
+    "build:connections": "lerna run --scope '@lowdefy/connection-*' build",
+    "build:operators": "lerna run --scope '@lowdefy/operators-*' build",
     "clean": "lerna run clean",
     "lerna:version": "lerna version --no-git-tag-version",
     "lerna:publish": "lerna publish from-git",
     "postversion": "yarn install",
     "prettier": "prettier --config .prettierrc --write **/*.js",
-    "test": "lerna run test",
-    "test:ci": "yarn install --immutable --immutable-cache --check-cache && yarn build && yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/block-dev'"
+    "start": "yarn start:server:app",
+    "start:cli:build:app": "yarn workspace lowdefy build && yarn workspace lowdefy start build --config-directory ../../app --server-directory ../server --output-directory ../",
+    "start:cli:build:docs": "yarn workspace lowdefy build && yarn workspace lowdefy start build --config-directory ../docs --server-directory ../server --output-directory ../",
+    "start:cli:dev:app": "yarn workspace lowdefy build && yarn workspace lowdefy start dev --config-directory ../../app --dev-directory ../server-dev",
+    "start:cli:dev:docs": "yarn workspace lowdefy build && yarn workspace lowdefy start dev --config-directory ../docs --dev-directory ../server-dev",
+    "start:cli:start:app": "yarn workspace lowdefy build && yarn workspace lowdefy start start --config-directory ../../app --server-directory ../server --output-directory ../",
+    "start:cli:start:docs": "yarn workspace lowdefy build && yarn workspace lowdefy start start --config-directory ../docs --server-directory ../server --output-directory ../",
+    "start:server-dev:app": "yarn workspace @lowdefy/server-dev start --package-manager yarn --config-directory ../../app",
+    "start:server-dev:docs": "yarn workspace @lowdefy/server-dev start --package-manager yarn --config-directory ../docs",
+    "start:server:app": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
+    "start:server:docs": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../docs && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
+    "start:server:next-dev:app": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../../app && yarn && yarn workspace @lowdefy/server dev",
+    "start:server:next-dev:docs": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../docs && yarn && yarn workspace @lowdefy/server dev",
+    "test": "lerna run test"
   },
   "devDependencies": {
-    "@yarnpkg/pnpify": "3.1.0-rc.2",
-    "eslint": "8.3.0",
+    "@yarnpkg/pnpify": "3.1.1-rc.13",
+    "eslint": "8.8.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-import-resolver-node": "0.3.6",
-    "eslint-plugin-import": "2.25.3",
+    "eslint-plugin-import": "2.25.4",
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.27.1",
+    "eslint-plugin-react": "7.28.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "lerna": "4.0.0",
-    "prettier": "2.4.1"
+    "prettier": "2.5.1"
   },
   "packageManager": "yarn@3.1.0"
 }

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ['**/*.js'],
@@ -7,6 +7,7 @@ module.exports = {
     '<rootDir>/.lowdefy/',
     '<rootDir>/jest.config.js',
     '<rootDir>/coverage/',
+    '<rootDir>/howto/',
   ],
   coverageReporters: [['lcov', { projectRoot: '../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
@@ -15,5 +16,9 @@ module.exports = {
     '<rootDir>/.lowdefy/',
     '<rootDir>/jest.config.js',
     '<rootDir>/coverage/',
+    '<rootDir>/howto/',
   ],
+  transform: {
+    '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
+  },
 };

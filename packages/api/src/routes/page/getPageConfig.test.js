@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import getPageConfig from './getPageConfig.js';
 import testContext from '../../test/testContext.js';
 
@@ -40,9 +42,6 @@ test('getPageConfig, public', async () => {
   const res = await getPageConfig(context, { pageId: 'pageId' });
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: {
-      public: true,
-    },
   });
 });
 
@@ -81,9 +80,6 @@ test('getPageConfig, protected, with user', async () => {
   );
   expect(res).toEqual({
     id: 'page:pageId',
-    auth: {
-      public: false,
-    },
   });
 });
 

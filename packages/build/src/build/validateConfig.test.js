@@ -19,6 +19,48 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
+test('validateConfig no config defined', async () => {
+  const components = {};
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {},
+    },
+  });
+});
+
+test('validate config theme', async () => {
+  const components = {
+    config: {
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  };
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      theme: {
+        lessVariables: {
+          'primary-color': '#FF00FF',
+        },
+      },
+    },
+  });
+});
+
 test('validateConfig config not an object', async () => {
   const components = {
     config: 'config',
@@ -111,5 +153,33 @@ test('validateConfig config error when protected or public are false.', async ()
   };
   await expect(validateConfig({ components, context })).rejects.toThrow(
     'Public pages can not be set to false.'
+  );
+});
+
+test('validateConfig config error when basePath does not start with "/".', async () => {
+  let components = {
+    config: {
+      basePath: '/base',
+    },
+  };
+  const result = await validateConfig({ components, context });
+  expect(result).toEqual({
+    config: {
+      auth: {
+        pages: {
+          roles: {},
+        },
+      },
+      basePath: '/base',
+      theme: {},
+    },
+  });
+  components = {
+    config: {
+      basePath: 'base',
+    },
+  };
+  await expect(validateConfig({ components, context })).rejects.toThrow(
+    'Base path must start with "/".'
   );
 });

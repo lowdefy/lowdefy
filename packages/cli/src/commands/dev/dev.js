@@ -14,57 +14,24 @@
   limitations under the License.
 */
 
-import opener from 'opener';
-
-import buildWatcher from './buildWatcher.js';
-import envWatcher from './envWatcher.js';
-import getBuild from './getBuild.js';
-import getExpress from './getExpress.js';
-import getGraphQL from './getGraphQL.js';
-import prepare from './prepare.js';
-import versionWatcher from './versionWatcher.js';
-
-async function initialBuild({ context }) {
-  const build = await getBuild({ context });
-  try {
-    await build();
-    // eslint-disable-next-line no-empty
-  } catch (error) {}
-  return build;
-}
-
-async function serverSetup({ context }) {
-  const gqlServer = await getGraphQL({ context });
-  return getExpress({ context, gqlServer });
-}
+import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import installServer from '../../utils/installServer.js';
+import mergePackageJson from '../../utils/mergePackageJson.js';
+import runDevServer from './runDevServer.js';
+import getServer from '../../utils/getServer.js';
 
 async function dev({ context }) {
-  await prepare({ context });
-  const initialBuildPromise = initialBuild({ context });
-  const serverSetupPromise = serverSetup({ context });
-
-  const [build, { expressApp, reloadFn }] = await Promise.all([
-    initialBuildPromise,
-    serverSetupPromise,
-  ]);
-
-  buildWatcher({ build, context, reloadFn });
-  envWatcher({ context });
-  versionWatcher({ context });
-
-  context.print.log('Starting Lowdefy development server.');
-
-  const port = expressApp.get('port');
-  expressApp.listen(port, function () {
-    context.print.info(`Development server listening on port ${port}`);
+  const directory = context.directories.dev;
+  context.print.info('Starting development server.');
+  await getServer({ context, packageName: '@lowdefy/server-dev', directory });
+  await mergePackageJson({
+    context,
+    serverDirectory: directory,
   });
-  opener(`http://localhost:${port}`);
-
-  await context.sendTelemetry({
-    data: {
-      type: 'startup',
-    },
-  });
+  await addCustomPluginsAsDeps({ context, directory });
+  await installServer({ context, directory });
+  context.sendTelemetry();
+  await runDevServer({ context, directory });
 }
 
 export default dev;

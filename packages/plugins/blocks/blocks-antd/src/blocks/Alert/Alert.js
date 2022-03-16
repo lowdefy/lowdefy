@@ -59,7 +59,8 @@ AlertBlock.meta = {
       height: 40,
     },
   },
+  icons: [],
+  styles: ['blocks/Alert/style.less'],
 };
-AlertBlock.styles = ['blocks/Alert/style.less'];
 
 export default AlertBlock;

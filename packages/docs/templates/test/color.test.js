@@ -14,22 +14,20 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'string',
-          description: 'description',
-          docs: {
-            displayType: 'color',
-          },
+      field: {
+        type: 'string',
+        description: 'description',
+        docs: {
+          displayType: 'color',
         },
       },
     },
@@ -45,25 +43,6 @@ test('color propertiesFormTransformer', () => {
           "_global": "settings_input_layout",
         },
         "properties": Object {
-          "circleSize": 14,
-          "circleSpacing": 8,
-          "colors": Array [
-            "#f5222d",
-            "#fa541c",
-            "#fa8c16",
-            "#faad14",
-            "#fadb14",
-            "#a0d911",
-            "#52c41a",
-            "#13c2c2",
-            "#1890ff",
-            "#2f54eb",
-            "#722ed1",
-            "#eb2f96",
-            "#595959",
-            "#bfbfbf",
-            "#d9d9d9",
-          ],
           "label": Object {
             "align": "right",
             "extra": "description",
@@ -74,7 +53,7 @@ test('color propertiesFormTransformer', () => {
           "title": "field",
         },
         "required": false,
-        "type": "CircleColorSelector",
+        "type": "ColorSelector",
       },
     ]
   `);
@@ -103,18 +82,16 @@ test('color defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'string',
-            default: 'value',
-            description: 'description',
-            docs: {
-              displayType: 'color',
-            },
+        field: {
+          type: 'string',
+          default: 'value',
+          description: 'description',
+          docs: {
+            displayType: 'color',
           },
         },
       },

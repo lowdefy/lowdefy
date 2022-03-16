@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **blocks-markdown:** Refactored tests to use new Block config. ([b963944](https://github.com/lowdefy/lowdefy/commit/b96394456f972386fe3395331ac0c1fb82c3ac07))
+* **deps:** Update dependency dompurify to v2.3.5. ([41dbc3d](https://github.com/lowdefy/lowdefy/commit/41dbc3d67f0bc55214add6125cda06946eca7ac1))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **deps:** Update dependency react-markdown to v8.0.0. ([f04e35b](https://github.com/lowdefy/lowdefy/commit/f04e35bff26393f425f5711a66ac23dc4031a943))
+* **deps:** Update dependency rehype-raw to v6.1.1. ([e13b0f1](https://github.com/lowdefy/lowdefy/commit/e13b0f18c2c974845421821899ac132fe25f871d))
+* **deps:** Update emotion css packages. ([3380594](https://github.com/lowdefy/lowdefy/commit/33805944e30e919c57e3e7e1876b9c6723c3988d))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **blocks-markdown:** Upgraded react markdown dependencies. ([9eb7c3a](https://github.com/lowdefy/lowdefy/commit/9eb7c3acbd8ab4088db75637ec8f17e36289787f))
+* **blocks:** Updated block meta, types and buildIcons. ([1d774a3](https://github.com/lowdefy/lowdefy/commit/1d774a310a71e125fc7bf7d0d7ef5171632a56a8))
+* Fix blocks-markdown package dependencies. ([035b0c1](https://github.com/lowdefy/lowdefy/commit/035b0c108b9447570fe7d37a5386d9ea414714fa))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 

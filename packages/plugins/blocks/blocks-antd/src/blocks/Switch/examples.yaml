@@ -47,10 +47,10 @@
   type: Switch
   properties:
     uncheckedText: Unchecked
-- id: 'properties.checkedIcon: CheckCircleOutlined'
+- id: 'properties.checkedIcon: AiOutlineCheckCircle'
   type: Switch
   properties:
-    checkedIcon: CheckCircleOutlined
+    checkedIcon: AiOutlineCheckCircle
 - id: 'properties.uncheckedIcon: UnlockFilled'
   type: Switch
   properties:

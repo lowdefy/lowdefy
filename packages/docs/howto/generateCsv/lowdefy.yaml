@@ -1,4 +1,4 @@
-lowdefy: 3.23.1
+lowdefy: 3.23.2
 name: Generate PDF from data with Lowdefy
 
 app:
@@ -23,36 +23,37 @@ pages:
               color: '#1890ff'
             events:
               onClick:
-                - id: generate_csv
-                  type: JsAction
-                  params:
-                    name: csvMake
-                    args:
-                      - profiles.csv # csv filename
-                      - - Username: booker12 # an array of data, usually a reference
-                          Identifier: 9012
-                          FirstName: Rachel
-                          LastName: Booker
-                        - Username: grey07
-                          Identifier: 2070
-                          FirstName: Laura
-                          LastName: Grey
-                        - Username: johnson81
-                          Identifier: 4081
-                          FirstName: Craig
-                          LastName: Johnson
-                        - Username: jenkins46
-                          Identifier: 9346
-                          FirstName: Mary
-                          LastName: Jenkins
-                        - Username: smith79
-                          Identifier: 5079
-                          FirstName: Jamie
-                          LastName: Smith
-                      - - Username # an array of field definitions
-                        - Identifier
-                        - FirstName
-                        - LastName
+                []
+                # - id: generate_csv
+                #   type: JsAction # TODO:
+                #   params:
+                #     name: csvMake
+                #     args:
+                #       - profiles.csv # csv filename
+                #       - - Username: booker12 # an array of data, usually a reference
+                #           Identifier: 9012
+                #           FirstName: Rachel
+                #           LastName: Booker
+                #         - Username: grey07
+                #           Identifier: 2070
+                #           FirstName: Laura
+                #           LastName: Grey
+                #         - Username: johnson81
+                #           Identifier: 4081
+                #           FirstName: Craig
+                #           LastName: Johnson
+                #         - Username: jenkins46
+                #           Identifier: 9346
+                #           FirstName: Mary
+                #           LastName: Jenkins
+                #         - Username: smith79
+                #           Identifier: 5079
+                #           FirstName: Jamie
+                #           LastName: Smith
+                #       - - Username # an array of field definitions
+                #         - Identifier
+                #         - FirstName
+                #         - LastName
       footer:
         blocks:
           - id: footer

@@ -16,8 +16,9 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
-async function mongodbInsertOne({ request, connection }) {
+async function MongodbInsertOne({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { doc, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection });
@@ -29,8 +30,14 @@ async function mongodbInsertOne({ request, connection }) {
     throw error;
   }
   await client.close();
-  const { insertedCount, insertedId, ops } = serialize(res);
-  return { insertedCount, insertedId, ops };
+  const { acknowledged, insertedId } = serialize(res);
+  return { acknowledged, insertedId };
 }
 
-export default mongodbInsertOne;
+MongodbInsertOne.schema = schema;
+MongodbInsertOne.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default MongodbInsertOne;

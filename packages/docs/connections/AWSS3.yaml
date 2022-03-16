@@ -186,7 +186,7 @@ _ref:
                         "https://YOUR_LOWDEFY_DOMAIN_HERE"
                     ],
                     "ExposeHeaders": []
-                },
+                }
             ]
             ```
 

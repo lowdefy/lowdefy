@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **api:** Fix callRequest tests. ([58655cb](https://github.com/lowdefy/lowdefy/commit/58655cba190a3a2371e301d2bf4779bd13651ad5))
+* **cli:** Fix jest es module mocks. ([78480e8](https://github.com/lowdefy/lowdefy/commit/78480e80022f79a0ab449a9a8d804e6213b676c4))
+* **operators-js:** Fix array, function, operator, type tests ([4d19d48](https://github.com/lowdefy/lowdefy/commit/4d19d48f5bdc48442820946c18d5d08c000d9c1c))
+* **operators-js:** Fix getter operator tests. ([c774f3f](https://github.com/lowdefy/lowdefy/commit/c774f3f31fcbdf16aabd99d1cf76714cfa4b109f))
+* **operators-js:** Fix menu and location tests ([3fac862](https://github.com/lowdefy/lowdefy/commit/3fac862c58dea6b293d9556f4e8f17dd169021d8))
+* **operators-js:** Update request tests. ([f78405f](https://github.com/lowdefy/lowdefy/commit/f78405f48602f97b6954ceb07bf2e9dfb5bf5e7a))
+* **operators-js:** Update shared operators tests. ([1c6cb87](https://github.com/lowdefy/lowdefy/commit/1c6cb87c59116ca02dfe02d7f76450345afa7918))
+* **operators-js:** Update test name and license wording. ([708beac](https://github.com/lowdefy/lowdefy/commit/708beacc11f8de1c09c7abef3fae724f74c70d6a))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+**Note:** Version bump only for package @lowdefy/operators-js
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 

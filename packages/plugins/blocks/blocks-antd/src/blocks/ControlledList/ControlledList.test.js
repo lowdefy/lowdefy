@@ -17,17 +17,15 @@
 import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
 import Block from './ControlledList.js';
-import block from './index.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 import validationsExamples from '../../validationExamples.js';
 
-// tests: {
-//   validation: true,
-//   required: true,
-// }
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
-const { meta, tests } = block;
-
-runRenderTests({ examples, Block, meta, schema, tests, validationsExamples });
-runBlockSchemaTests({ examples, meta, schema });
+runRenderTests({ Block, examples, schema, testConfig, validationsExamples });
+runBlockSchemaTests({ examples, schema });

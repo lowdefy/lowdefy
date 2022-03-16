@@ -22,7 +22,13 @@ async function runTransformer({ context, input, refDef }) {
       context,
       filePath: refDef.transformer,
     });
-    return transformerFn(input, refDef.vars);
+    try {
+      return transformerFn(input, refDef.vars);
+    } catch (error) {
+      throw Error(
+        `Error calling transformer "${refDef.transformer}" from "${refDef.path}": ${error.message}`
+      );
+    }
   }
   return input;
 }

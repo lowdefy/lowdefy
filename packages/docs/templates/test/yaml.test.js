@@ -14,22 +14,20 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          docs: {
-            displayType: 'yaml',
-          },
+      field: {
+        type: 'object',
+        description: 'description',
+        docs: {
+          displayType: 'yaml',
         },
       },
     },
@@ -77,17 +75,19 @@ test('yaml propertiesGetterTransformer', () => {
         },
         Object {
           "field": Object {
-            "_yaml.parse": Object {
-              "_if_none": Array [
-                Object {
-                  "_state": Object {
-                    "contextId": "Block:Block:{}",
-                    "key": "block.properties.field",
+            "_yaml.parse": Array [
+              Object {
+                "_if_none": Array [
+                  Object {
+                    "_state": Object {
+                      "contextId": "Block:Block:{}",
+                      "key": "block.properties.field",
+                    },
                   },
-                },
-                "",
-              ],
-            },
+                  "",
+                ],
+              },
+            ],
           },
         },
       ],
@@ -98,18 +98,16 @@ test('yaml propertiesGetterTransformer', () => {
 test('yaml defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            default: 'value',
-            description: 'description',
-            docs: {
-              displayType: 'yaml',
-            },
+        field: {
+          type: 'object',
+          default: 'value',
+          description: 'description',
+          docs: {
+            displayType: 'yaml',
           },
         },
       },
@@ -123,21 +121,19 @@ test('yaml defaultValueTransformer', () => {
 });
 
 const schemaNested = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        obj: {
-          type: 'object',
-          description: 'obj description',
-          properties: {
-            field: {
-              type: 'object',
-              description: 'field description',
-              docs: {
-                displayType: 'yaml',
-              },
+      obj: {
+        type: 'object',
+        description: 'obj description',
+        properties: {
+          field: {
+            type: 'object',
+            description: 'field description',
+            docs: {
+              displayType: 'yaml',
             },
           },
         },
@@ -213,17 +209,19 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
               },
               Object {
                 "field": Object {
-                  "_yaml.parse": Object {
-                    "_if_none": Array [
-                      Object {
-                        "_state": Object {
-                          "contextId": "Block:Block:{}",
-                          "key": "block.properties.obj.field",
+                  "_yaml.parse": Array [
+                    Object {
+                      "_if_none": Array [
+                        Object {
+                          "_state": Object {
+                            "contextId": "Block:Block:{}",
+                            "key": "block.properties.obj.field",
+                          },
                         },
-                      },
-                      "",
-                    ],
-                  },
+                        "",
+                      ],
+                    },
+                  ],
                 },
               },
             ],
@@ -237,22 +235,20 @@ test('yaml schemaNested propertiesGetterTransformer', () => {
 test('yaml schemaNested defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          obj: {
-            type: 'object',
-            description: 'obj description',
-            properties: {
-              field: {
-                type: 'object',
-                default: { a: 1 },
-                description: 'field description',
-                docs: {
-                  displayType: 'yaml',
-                },
+        obj: {
+          type: 'object',
+          description: 'obj description',
+          properties: {
+            field: {
+              type: 'object',
+              default: { a: 1 },
+              description: 'field description',
+              docs: {
+                displayType: 'yaml',
               },
             },
           },
@@ -272,20 +268,18 @@ test('yaml schemaNested defaultValueTransformer', () => {
 });
 
 const schemaYamlInArray = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        arr: {
-          type: 'array',
-          description: 'arr description',
-          items: {
-            type: 'object',
-            description: 'yaml description',
-            docs: {
-              displayType: 'yaml',
-            },
+      arr: {
+        type: 'array',
+        description: 'arr description',
+        items: {
+          type: 'object',
+          description: 'yaml description',
+          docs: {
+            displayType: 'yaml',
           },
         },
       },
@@ -352,17 +346,19 @@ test('yaml schemaYamlInArray propertiesGetterTransformer', () => {
             "_array.map": Object {
               "callback": Object {
                 "_function": Object {
-                  "__yaml.parse": Object {
-                    "__if_none": Array [
-                      Object {
-                        "__args": Object {
-                          "contextId": undefined,
-                          "key": "0",
+                  "__yaml.parse": Array [
+                    Object {
+                      "__if_none": Array [
+                        Object {
+                          "__args": Object {
+                            "contextId": undefined,
+                            "key": "0",
+                          },
                         },
-                      },
-                      "",
-                    ],
-                  },
+                        "",
+                      ],
+                    },
+                  ],
                 },
               },
               "on": Object {
@@ -391,21 +387,19 @@ test('yaml schemaYamlInArray defaultValueTransformer', () => {
     }
   `);
   const schemaYamlInArrayDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          arr: {
-            type: 'array',
-            default: [{ a: 1 }],
-            description: 'arr description',
-            items: {
-              type: 'object',
-              description: 'yaml description',
-              docs: {
-                displayType: 'yaml',
-              },
+        arr: {
+          type: 'array',
+          default: [{ a: 1 }],
+          description: 'arr description',
+          items: {
+            type: 'object',
+            description: 'yaml description',
+            docs: {
+              displayType: 'yaml',
             },
           },
         },
@@ -424,24 +418,22 @@ test('yaml schemaYamlInArray defaultValueTransformer', () => {
 });
 
 const schemaYamlInObjectInArray = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        arr: {
-          type: 'array',
-          description: 'arr description',
-          items: {
-            type: 'object',
-            description: 'obj description',
-            properties: {
-              yaml: {
-                type: 'object',
-                description: 'yaml description',
-                docs: {
-                  displayType: 'yaml',
-                },
+      arr: {
+        type: 'array',
+        description: 'arr description',
+        items: {
+          type: 'object',
+          description: 'obj description',
+          properties: {
+            yaml: {
+              type: 'object',
+              description: 'yaml description',
+              docs: {
+                displayType: 'yaml',
               },
             },
           },
@@ -538,17 +530,19 @@ test('yaml schemaYamlInObjectInArray propertiesGetterTransformer', () => {
                     },
                     Object {
                       "yaml": Object {
-                        "__yaml.parse": Object {
-                          "__if_none": Array [
-                            Object {
-                              "__args": Object {
-                                "contextId": undefined,
-                                "key": "0.yaml",
+                        "__yaml.parse": Array [
+                          Object {
+                            "__if_none": Array [
+                              Object {
+                                "__args": Object {
+                                  "contextId": undefined,
+                                  "key": "0.yaml",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                   ],
@@ -580,25 +574,23 @@ test('yaml schemaYamlInObjectInArray defaultValueTransformer', () => {
     }
   `);
   const schemaYamlInObjectInArrayDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          arr: {
-            type: 'array',
-            description: 'arr description',
-            default: [{ yaml: { b: 1 } }],
-            items: {
-              type: 'object',
-              description: 'obj description',
-              properties: {
-                yaml: {
-                  type: 'object',
-                  description: 'yaml description',
-                  docs: {
-                    displayType: 'yaml',
-                  },
+        arr: {
+          type: 'array',
+          description: 'arr description',
+          default: [{ yaml: { b: 1 } }],
+          items: {
+            type: 'object',
+            description: 'obj description',
+            properties: {
+              yaml: {
+                type: 'object',
+                description: 'yaml description',
+                docs: {
+                  displayType: 'yaml',
                 },
               },
             },

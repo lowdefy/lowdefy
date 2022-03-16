@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-echarts",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "license": "Apache-2.0",
   "description": "ECharts Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -8,7 +8,8 @@
     "lowdefy",
     "lowdefy blocks",
     "echarts",
-    "charts"
+    "charts",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -21,6 +22,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Sandile Memela",
+      "url": "https://github.com/sah-memela"
     }
   ],
   "repository": {
@@ -46,26 +51,25 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.5",
-    "echarts": "5.2.1",
-    "echarts-for-react": "3.0.1",
-    "react": "18.0.0-alpha-327d5c484-20211106",
-    "react-dom": "18.0.0-alpha-327d5c484-20211106"
+    "@lowdefy/block-utils": "4.0.0-alpha.7",
+    "echarts": "5.3.0",
+    "echarts-for-react": "3.0.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.16.0",
-    "@emotion/jest": "11.5.0",
-    "@lowdefy/block-dev": "4.0.0-alpha.5",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
-    "@testing-library/dom": "8.10.1",
+    "@emotion/jest": "11.7.1",
+    "@lowdefy/block-dev": "4.0.0-alpha.7",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "@testing-library/dom": "8.11.3",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
     "copyfiles": "2.4.1",
-    "jest": "27.3.1",
+    "jest": "27.5.1",
     "jest-serializer-html": "7.1.0",
-    "jest-transform-yaml": "0.1.2"
+    "jest-transform-yaml": "1.0.0"
   },
   "publishConfig": {
     "access": "public"

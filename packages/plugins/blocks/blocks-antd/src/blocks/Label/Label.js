@@ -21,7 +21,7 @@ import React from 'react';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Col, Row } from 'antd';
 import classNames from 'classnames';
-import CSSMotion from 'rc-animate/lib/CSSMotion.js';
+import CSSMotion from 'rc-motion';
 
 import labelLogic from './labelLogic.js';
 
@@ -55,10 +55,10 @@ const Label = ({
   } = labelLogic({ blockId, content, methods, properties, required, validation });
   if (!iconMap) {
     iconMap = {
-      error: () => <Icon properties="AiFilledCloseCircle" />,
-      success: () => <Icon properties="AiFilledCheckCircle" />,
-      validating: () => <Icon properties="AiOutlinedLoading" />,
-      warning: () => <Icon properties="AiFilledExclamationCircle" />,
+      error: () => <Icon properties="AiFillCloseCircle" />,
+      success: () => <Icon properties="AiFillCheckCircle" />,
+      validating: () => <Icon properties="AiOutlineLoading" />,
+      warning: () => <Icon properties="AiFillExclamationCircle" />,
     };
   }
   const IconNode = validation.status && iconMap[validation.status];
@@ -108,7 +108,8 @@ Label.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: ['AiFillCloseCircle', 'AiFillCheckCircle', 'AiOutlineLoading', 'AiFillExclamationCircle'],
+  styles: ['blocks/Label/style.less'],
 };
-Label.styles = ['blocks/Label/style.less'];
 
 export default Label;

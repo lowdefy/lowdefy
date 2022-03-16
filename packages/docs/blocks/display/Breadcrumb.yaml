@@ -17,13 +17,12 @@ _ref:
   vars:
     block_type: Breadcrumb
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Breadcrumb/Breadcrumb.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Breadcrumb/schema.json
     filePath: blocks/display/Breadcrumb.yaml
     init_state_values:
       __type_block.properties.list: string[]
       __string_arr_block.properties.list:
-        - First 
+        - First
         - Second
     description_content: |
       A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy with provided links.
-

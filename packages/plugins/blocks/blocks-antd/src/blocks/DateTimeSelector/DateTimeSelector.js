@@ -73,7 +73,7 @@ const DateTimeSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    properties={properties.suffixIcon || 'CalendarOutlined'}
+                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
                   />
                 )
               }
@@ -116,7 +116,8 @@ DateTimeSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
+  styles: ['blocks/DateTimeSelector/style.less'],
 };
-DateTimeSelector.styles = ['blocks/DateTimeSelector/style.less'];
 
 export default DateTimeSelector;

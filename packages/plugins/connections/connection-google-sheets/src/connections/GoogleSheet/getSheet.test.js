@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import { wait } from '@lowdefy/helpers';
 // eslint-disable-next-line no-unused-vars
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import getSheet from './getSheet';
+import getSheet from './getSheet.js';
 
 // Not testing if spreadsheetId is given to GoogleSpreadsheet class in
 // const doc = new GoogleSpreadsheet(spreadsheetId);
@@ -41,12 +42,6 @@ jest.mock('google-spreadsheet', () => {
     GoogleSpreadsheet,
   };
 });
-
-async function wait(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
 
 const useApiKeyDefaultImp = (apiKey) => {
   if (apiKey !== 'valid') {

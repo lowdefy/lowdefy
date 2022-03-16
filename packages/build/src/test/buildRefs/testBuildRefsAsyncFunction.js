@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-const wait = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
+import { wait } from '@lowdefy/helpers';
 
 async function asyncFn() {
   await wait(20);
   return { async: true };
 }
 
-module.exports = asyncFn;
+export default asyncFn;

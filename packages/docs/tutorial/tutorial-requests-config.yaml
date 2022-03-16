@@ -54,13 +54,13 @@ _ref:
                   - id: new-ticket
                     type: MenuLink
                     properties:
-                      icon: AlertOutlined
+                      icon: AiOutlineAlert
                       title: New ticket
                     pageId: new-ticket
                   - id: welcome
                     type: MenuLink
                     properties:
-                      icon: HomeOutlined
+                      icon: AiOutlineHome
                       title: Home
                     pageId: welcome
 
@@ -160,7 +160,7 @@ _ref:
                       title: Reset
                       block: true # Make the button fill all the space available to it
                       type: default # Make the button a plain button
-                      icon: ClearOutlined
+                      icon: AiOutlineClear
                     events:
                       onClick:
                         - id: reset
@@ -173,7 +173,7 @@ _ref:
                       title: Submit
                       block: true
                       type: primary # Make the button a primary button with color
-                      icon: SaveOutlined
+                      icon: AiOutlineSave
                     events:
                       onClick:
                         - id: validate

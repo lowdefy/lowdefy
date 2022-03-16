@@ -66,7 +66,7 @@ const WeekSelector = ({
                   <Icon
                     blockId={`${blockId}_suffixIcon`}
                     events={events}
-                    properties={properties.suffixIcon || 'CalendarOutlined'}
+                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
                   />
                 )
               }
@@ -94,7 +94,8 @@ WeekSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons, 'AiOutlineCalendar'],
+  styles: ['blocks/WeekSelector/style.less'],
 };
-WeekSelector.styles = ['blocks/WeekSelector/style.less'];
 
 export default WeekSelector;

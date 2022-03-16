@@ -22,7 +22,7 @@ jobs:
         run: yarn build
       # format tests don't pass on node 12 since icu is missing and tests don't work with locales
       - name: Test packages
-        run: yarn test --ignore='@lowdefy/format'
+        run: yarn test --ignore='@lowdefy/engine' --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*' --ignore='@lowdefy/plugin-aws'
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Upload coverage to codeclimate

@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Convert link to pass pathname and query separately. ([1294914](https://github.com/lowdefy/lowdefy/commit/1294914fae0cafbe9165db230b2cf418a97e71b7))
+* **engine:** Changed method action from getRequest to getRequestDetails. ([32c0b7c](https://github.com/lowdefy/lowdefy/commit/32c0b7c96f07e16c5a4b16b8501ea44da3f2ba76))
+* **engine:** Fixed validate action method context reference. ([576e3a9](https://github.com/lowdefy/lowdefy/commit/576e3a9fe8234a61ed5f3237ea44cc309e4cb27d))
+* **engine:** Reset input when link is followed with no input. ([fab9e2a](https://github.com/lowdefy/lowdefy/commit/fab9e2a3fb1d59ff604bee2b95edf0e8464f0a42))
+* **engine:** Reverted index based block id change in callMethod action test. ([46ad3c0](https://github.com/lowdefy/lowdefy/commit/46ad3c07982dacb481b1513750db19b55fe89382))
+* **engine:** Update set global action method global object reference. ([91fa543](https://github.com/lowdefy/lowdefy/commit/91fa543969a33e119df23b716d04acca55edcaf0))
+* **engine:** Updated callMethod action method to use action & block plugin config. ([ddd849e](https://github.com/lowdefy/lowdefy/commit/ddd849e2de6b9691041d098fe53ace1db5940451))
+* **engine:** Updated link action method test to use action & block plugin config. ([1306698](https://github.com/lowdefy/lowdefy/commit/1306698ebbd9fe6b41c77628da70c2b7f95a4e13))
+* **engine:** Updated login action method test to use action & block plugin config. ([4cbd863](https://github.com/lowdefy/lowdefy/commit/4cbd863cfe8f2b325dc3e9bea4d54d1f4c1d97b7))
+* **engine:** Updated logout action method test to use action & block plugin config. ([e120fe8](https://github.com/lowdefy/lowdefy/commit/e120fe88beb39fb59661151c15429c4d926782be))
+* **engine:** Updated message action method test to use action & block plugin config. ([48cd251](https://github.com/lowdefy/lowdefy/commit/48cd2515e51ba769437dd3509f55b68f571a0757))
+* **engine:** Updated request action method test to use action & block plugin config. ([d2bd2f5](https://github.com/lowdefy/lowdefy/commit/d2bd2f5fc207eeb15ec86559dc4bec726e037071))
+* **engine:** Updated reset action method test to use action & block plugin config. ([d46add8](https://github.com/lowdefy/lowdefy/commit/d46add8f05279253cf99955315e6acda9b42a516))
+* **engine:** Updated resetValidation action method test to use new plugin config. ([107a1a5](https://github.com/lowdefy/lowdefy/commit/107a1a50000d9ca731370cc41bca2e5f7d564bad))
+* **engine:** Updated setGlobal action method test to use new plugin config. ([ceceec3](https://github.com/lowdefy/lowdefy/commit/ceceec34da9973d054d2138232832b2fd5aeb5aa))
+* **engine:** Updated setState action method test to use new plugin config. ([27838bc](https://github.com/lowdefy/lowdefy/commit/27838bcf75bba256d13f7a72b1bfd6e1d41bceeb))
+* **engine:** Updated testContext to use rootBlock config. ([c8524c6](https://github.com/lowdefy/lowdefy/commit/c8524c6742d3f45109f15ace6e2d84b6114b92d8))
+* **engine:** Updated validate action method test to use new plugin config. ([f8962c6](https://github.com/lowdefy/lowdefy/commit/f8962c6451e92c467ae882c55ac0859e92ca2ba0))
+* Update createLink tests. ([2e531b3](https://github.com/lowdefy/lowdefy/commit/2e531b385248361fc6f015e0102838462299af06))
+
+
+### Features
+
+* **actions-core:** Refactored @lowdefy/engine and added actions-core package to plugins. ([b08ef1d](https://github.com/lowdefy/lowdefy/commit/b08ef1d3944503be83beffb006a284e4460660d9))
+* **engine:** Added action methods to Actions class. ([e3a32aa](https://github.com/lowdefy/lowdefy/commit/e3a32aae4079fe85124039c1ac736cffb784bd4a))
+* **engine:** Added getActions action method test. ([c79c7ed](https://github.com/lowdefy/lowdefy/commit/c79c7ed11da18923395aa8385fb542b5a41c7f96))
+* **engine:** Added getBlockId action method test. ([5802217](https://github.com/lowdefy/lowdefy/commit/5802217d3c6b20af5412af2a491f1b9f7852c175))
+* **engine:** Added getEvent action method test. ([031535c](https://github.com/lowdefy/lowdefy/commit/031535c553e1f2c7806e810d8b609f3fb3550de3))
+* **engine:** Added getGlobal action method test. ([61d23a2](https://github.com/lowdefy/lowdefy/commit/61d23a282ab98202b0b431f7043e381fad7a87c7))
+* **engine:** Added getInput action method test. ([5578f46](https://github.com/lowdefy/lowdefy/commit/5578f46978ae78189b90e0ce39c1133add59499d))
+* **engine:** Added getPageId action method test. ([602e114](https://github.com/lowdefy/lowdefy/commit/602e114040dcf51cf9f0c259d84a62ab847c2b0d))
+* **engine:** Added getRequestDetails action method test. ([55519c5](https://github.com/lowdefy/lowdefy/commit/55519c5c5945ccb2d754ff38798f8917a49bfb5a))
+* **engine:** Added getState action method test. ([384d264](https://github.com/lowdefy/lowdefy/commit/384d2645d7f6b56bc9e17937f6d5e82c2c45adbe))
+* **engine:** Added getUrlQuery action method test. ([6665f2e](https://github.com/lowdefy/lowdefy/commit/6665f2eaa06c604fedb4de64d0fb414d153af6b4))
+* **engine:** Added getUser action method test. ([f7156f5](https://github.com/lowdefy/lowdefy/commit/f7156f5e6f9ebf1178821b46f73ddeba6e6d134a))
+* **engine:** BREAKING CHANGE - The Message action was renamed to DisplayMessage. ([6c3abb7](https://github.com/lowdefy/lowdefy/commit/6c3abb71e8e82612c18148c00add90d6d8e1f36f))
+* **engine:** Update link to include noLink and disableLink, fix logic. ([b9633e4](https://github.com/lowdefy/lowdefy/commit/b9633e4f105c07efbf192f09038438a0f61b0390))
+
+
+### BREAKING CHANGES
+
+* **engine:** The Message action was renamed to DisplayMessage.
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Features
+
+* Create wait helper function. ([42c09f4](https://github.com/lowdefy/lowdefy/commit/42c09f467b3d4a3b51298a2a67364137def7896d))
+* **server-dev:** Dev server soft reload working. ([dd5ee07](https://github.com/lowdefy/lowdefy/commit/dd5ee07b5b39c3c22e702b5b1c8404e7a86ab500))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 
@@ -23,6 +91,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package @lowdefy/engine
 

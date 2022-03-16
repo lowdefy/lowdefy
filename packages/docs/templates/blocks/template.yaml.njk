@@ -75,10 +75,10 @@ events:
         _var: init_state_values
 
   onEnterAsync:
-    - id: connect_docsearch
-      type: JsAction
+    {# - id: connect_docsearch
+      type: JsAction # TODO:
       params:
-        name: connectDocsearch
+        name: connectDocsearch #}
     - id: post_telemetry
       type: Request
       messages:
@@ -182,9 +182,9 @@ areas:
               _state: block.layout
             style:
               _yaml.parse:
-                _if_none:
-                  - _state: style_block_input
-                  - ''
+                - _if_none:
+                    - _state: style_block_input
+                    - ''
             {% if category != "context" %}
             visible:
               _state: block.visible
@@ -320,9 +320,9 @@ areas:
                                 _state: block.layout
                               style:
                                 _yaml.parse:
-                                  _if_none:
-                                    - _state: style_block_input
-                                    - ''
+                                  - _if_none:
+                                      - _state: style_block_input
+                                      - ''
                               properties:
                                 _ref:
                                   path:
@@ -493,4 +493,3 @@ areas:
                 path:
                   _var: schema
                 transformer: templates/blocks/schemaTransformer.js
-

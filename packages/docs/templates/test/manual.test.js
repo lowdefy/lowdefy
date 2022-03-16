@@ -14,28 +14,26 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          docs: {
-            displayType: 'manual',
-            block: {
-              id: 'manual',
-              type: 'TestInput',
-            },
-            getter: {
-              a: 1,
-            },
+      field: {
+        type: 'object',
+        description: 'description',
+        docs: {
+          displayType: 'manual',
+          block: {
+            id: 'manual',
+            type: 'TestInput',
+          },
+          getter: {
+            a: 1,
           },
         },
       },
@@ -78,24 +76,22 @@ test('manual propertiesGetterTransformer', () => {
 test('manual defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            default: 'value',
-            description: 'description',
-            docs: {
-              displayType: 'manual',
-              block: {
-                id: 'manual',
-                type: 'TestInput',
-              },
-              getter: {
-                a: 1,
-              },
+        field: {
+          type: 'object',
+          default: 'value',
+          description: 'description',
+          docs: {
+            displayType: 'manual',
+            block: {
+              id: 'manual',
+              type: 'TestInput',
+            },
+            getter: {
+              a: 1,
             },
           },
         },
@@ -110,27 +106,25 @@ test('manual defaultValueTransformer', () => {
 });
 
 const schemaNested = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        obj: {
-          type: 'object',
-          description: 'obj description',
-          properties: {
-            field: {
-              type: 'object',
-              description: 'field description',
-              docs: {
-                displayType: 'manual',
-                block: {
-                  id: 'manual',
-                  type: 'TestInput',
-                },
-                getter: {
-                  a: 1,
-                },
+      obj: {
+        type: 'object',
+        description: 'obj description',
+        properties: {
+          field: {
+            type: 'object',
+            description: 'field description',
+            docs: {
+              displayType: 'manual',
+              block: {
+                id: 'manual',
+                type: 'TestInput',
+              },
+              getter: {
+                a: 1,
               },
             },
           },
@@ -204,28 +198,26 @@ test('manual schemaNested propertiesGetterTransformer', () => {
 test('manual schemaNested defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaNested)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          obj: {
-            type: 'object',
-            description: 'obj description',
-            properties: {
-              field: {
-                type: 'object',
-                default: { a: 1 },
-                description: 'field description',
-                docs: {
-                  displayType: 'manual',
-                  block: {
-                    id: 'manual',
-                    type: 'TestInput',
-                  },
-                  getter: {
-                    a: 1,
-                  },
+        obj: {
+          type: 'object',
+          description: 'obj description',
+          properties: {
+            field: {
+              type: 'object',
+              default: { a: 1 },
+              description: 'field description',
+              docs: {
+                displayType: 'manual',
+                block: {
+                  id: 'manual',
+                  type: 'TestInput',
+                },
+                getter: {
+                  a: 1,
                 },
               },
             },

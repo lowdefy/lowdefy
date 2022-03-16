@@ -186,11 +186,11 @@
             pageId: page_1_2
             properties:
               title: Menu Item two
-- id: 'properties.expandIcon: CheckOutlined'
+- id: 'properties.expandIcon: AiOutlineCheck'
   type: Menu
   properties:
     expandIcon:
-      name: CheckOutlined
+      name: AiOutlineCheck
       color: '#ff00f0'
     links:
       - id: menu_group_1

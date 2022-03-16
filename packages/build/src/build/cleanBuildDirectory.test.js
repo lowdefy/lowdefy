@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-jest.mock('@lowdefy/node-utils', () => {
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
     cleanDirectory: jest.fn(),
   };

@@ -66,7 +66,7 @@ _ref:
       ```yaml
       # lowdefy.yaml
       name: intercom-example
-      lowdefy: '3.23.1'
+      lowdefy: '3.23.2'
       app:
         html:
           appendBody: |
@@ -94,7 +94,7 @@ _ref:
           events:
             onInitAsync:
               - id: set_intercom_user
-                type: JsAction
+                type: JsAction # TODO:
                 params:
                   name: setIntercomUser
           blocks:
@@ -137,7 +137,7 @@ _ref:
       ```yaml
       # file: lowdefy.yaml
       name: text-highlight-example
-      lowdefy: '3.23.1'
+      lowdefy: '3.23.2'
       app:
         html:
           # Load the custom modules into the index.html head tag.
@@ -196,14 +196,14 @@ _ref:
               type: TextInput
               properties:
                 title: Type to search products
-                prefix: SearchOutlined
+                prefix: AiOutlineSearch
               events:
                 onChange:
                   - id: get_search # get search_products query for search.input
                     type: Request
                     params: search_products
                   - id: apply_highlight # apply the highlight transformation to the request data.
-                    type: JsAction
+                    type: JsAction # TODO:
                     params:
                       name: highlightText
                       args:
@@ -271,7 +271,7 @@ _ref:
       events:
         onClick:
           - id: loop_requests
-            type: JsAction
+            type: JsAction # TODO:
             params:
               name: loopRequests
               args:

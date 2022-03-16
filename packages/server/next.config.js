@@ -1,10 +1,12 @@
 const withLess = require('next-with-less');
-const appConfig = require('./build/app.json');
+const lowdefyConfig = require('./build/config.json');
 
+// TODO: Trace env and args from cli that is required on the server.
 module.exports = withLess({
+  basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
   lessLoaderOptions: {
     lessOptions: {
-      modifyVars: appConfig.style.lessVariables,
+      modifyVars: lowdefyConfig.theme.lessVariables,
     },
   },
   reactStrictMode: true,
@@ -17,7 +19,7 @@ module.exports = withLess({
         events: false,
         fs: false,
         path: false,
-        process: false,
+        process: require.resolve('process/browser'),
         util: false,
       };
     }

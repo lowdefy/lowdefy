@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* **operators-js:** Fix getter operator tests. ([c774f3f](https://github.com/lowdefy/lowdefy/commit/c774f3f31fcbdf16aabd99d1cf76714cfa4b109f))
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Features
+
+* Add additional operator plugins to generateDefaultTypes, and fix operaotr packages. ([a1d9c3b](https://github.com/lowdefy/lowdefy/commit/a1d9c3bf7c687603b2f79d0f75b794f703482b17))
+* Create operators-change-case plugin ([9aca6be](https://github.com/lowdefy/lowdefy/commit/9aca6be86d3246bc2028c9a559bf90be2f3c3298))
+* Create operators-diff plugin. ([97885be](https://github.com/lowdefy/lowdefy/commit/97885bef8cc8a325ae8b301b7dfc9234e4d0ddb5))
+* Create operators-mql plugin ([e3084aa](https://github.com/lowdefy/lowdefy/commit/e3084aaffa5c9d295faa699c25367883bfd690c7))
+* Create operators-uuid plugin. ([7ab243b](https://github.com/lowdefy/lowdefy/commit/7ab243bfc71f47ff2f7d81e87c7b41197fcd676d))
+* Create operators-yaml plugin. ([3a521ba](https://github.com/lowdefy/lowdefy/commit/3a521ba8c11e575ce74c994a6a7f4d99f6563ee6))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 
@@ -29,6 +61,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package @lowdefy/operators
 

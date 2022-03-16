@@ -16,10 +16,12 @@
 
 import runStart from './runStart.js';
 
+// TODO: Handle "spawn yarn ENOENT" error if no built server exists.
+
 async function build({ context }) {
   context.print.info('Starting server.');
   context.sendTelemetry({ sendTypes: true });
-  await runStart({ context });
+  await runStart({ context, directory: context.directory.server });
 }
 
 export default build;

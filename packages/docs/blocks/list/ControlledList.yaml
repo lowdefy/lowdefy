@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: ControlledList
     category: list
-    schema: ../blocks/blocksAntd/src/blocks/ControlledList/ControlledList.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/schema.json
     filePath: blocks/ControlledList/ControlledList.yaml
     description_content: |
       The ControlledList block renders a content area for all items in the array into the list card and provides easy UI elements to add or remove items in the list. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
@@ -26,11 +26,11 @@ _ref:
     methods:
       - name: pushItem
         onClick:
-        - id: pushItem
-          type: CallMethod
-          params:
-            blockId: block_id
-            method: pushItem
+          - id: pushItem
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: pushItem
       - name: unshiftItem
         onClick:
           - id: unshiftItem
@@ -45,7 +45,7 @@ _ref:
             params:
               blockId: block_id
               method: removeItem
-              args: 
+              args:
                 - 1
       - name: for index 1 moveItemDown
         onClick:
@@ -54,7 +54,7 @@ _ref:
             params:
               blockId: block_id
               method: moveItemDown
-              args: 
+              args:
                 - 1
       - name: for index 1 moveItemUp
         onClick:
@@ -63,10 +63,10 @@ _ref:
             params:
               blockId: block_id
               method: moveItemUp
-              args: 
+              args:
                 - 1
     init_state_values:
-      todos:  
+      todos:
         - Add the noodles.
         - Let it cook for a minute.
         - Add some 🌶.
@@ -86,7 +86,7 @@ _ref:
           style:
             paddingTop: 16
           properties:
-            content: 
+            content:
               _nunjucks:
                 template: |
                   ###### Todos State Value:
@@ -97,10 +97,10 @@ _ref:
                   value:
                     _yaml.stringify:
                       on:
-                        todos: 
+                        todos:
                           _state: todos
                       options:
-                        sortKeys: false 
+                        sortKeys: false
       - title: List of Contacts
         block:
           id: contacts
@@ -126,7 +126,7 @@ _ref:
                 label:
                   span: 10
                   align: right
-            
+
             - id: contacts.$.date_of_birth
               type: DateSelector
               layout:
@@ -143,7 +143,7 @@ _ref:
                 span: 12
               required: true
               properties:
-                title: Email address 
+                title: Email address
                 label:
                   span: 10
                   align: right
@@ -174,7 +174,7 @@ _ref:
           style:
             paddingTop: 16
           properties:
-            content: 
+            content:
               _nunjucks:
                 template: |
                   ###### Contacts State Value:
@@ -185,7 +185,7 @@ _ref:
                   value:
                     _yaml.stringify:
                       on:
-                        contacts: 
+                        contacts:
                           _state: contacts
                       options:
-                        sortKeys: false 
+                        sortKeys: false

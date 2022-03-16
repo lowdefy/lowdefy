@@ -37,7 +37,7 @@ function transformer(obj) {
       type: 'Anchor',
       properties: {
         title: `${operatorName}.${method.name}`,
-        icon: 'LinkOutlined',
+        icon: 'AiOutlineLink',
       },
       events: {
         onClick: [
@@ -116,4 +116,4 @@ function transformer(obj) {
   return obj.page;
 }
 
-module.exports = transformer;
+export default transformer;

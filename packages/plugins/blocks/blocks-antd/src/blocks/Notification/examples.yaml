@@ -38,7 +38,7 @@
   type: Notification
   properties:
     button:
-      icon: SaveOutlined
+      icon: AiOutlineSave
       title: Close
     message: Notification message
 - id: 'properties.duration: 6'
@@ -51,10 +51,10 @@
   properties:
     icon: AccountBookFilled
     message: Notification message
-- id: 'properties.closeIcon: AlertOutlined'
+- id: 'properties.closeIcon: AiOutlineAlert'
   type: Notification
   properties:
-    closeIcon: AlertOutlined
+    closeIcon: AiOutlineAlert
     message: Notification message
 - id: 'properties.placement: topLeft'
   type: Notification

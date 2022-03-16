@@ -106,7 +106,7 @@
 - { label: 'CalculatorOutlined', value: 'CalculatorOutlined' }
 - { label: 'CalculatorTwoTone', value: 'CalculatorTwoTone' }
 - { label: 'CalendarFilled', value: 'CalendarFilled' }
-- { label: 'CalendarOutlined', value: 'CalendarOutlined' }
+- { label: 'AiOutlineCalendar', value: 'AiOutlineCalendar' }
 - { label: 'CalendarTwoTone', value: 'CalendarTwoTone' }
 - { label: 'CameraFilled', value: 'CameraFilled' }
 - { label: 'CameraOutlined', value: 'CameraOutlined' }
@@ -340,7 +340,7 @@
 - { label: 'FilterOutlined', value: 'FilterOutlined' }
 - { label: 'FilterTwoTone', value: 'FilterTwoTone' }
 - { label: 'FireFilled', value: 'FireFilled' }
-- { label: 'FireOutlined', value: 'FireOutlined' }
+- { label: 'AiOutlineFire', value: 'AiOutlineFire' }
 - { label: 'FireTwoTone', value: 'FireTwoTone' }
 - { label: 'FlagFilled', value: 'FlagFilled' }
 - { label: 'FlagOutlined', value: 'FlagOutlined' }
@@ -371,7 +371,10 @@
 - { label: 'FunctionOutlined', value: 'FunctionOutlined' }
 - { label: 'FundFilled', value: 'FundFilled' }
 - { label: 'FundOutlined', value: 'FundOutlined' }
-- { label: 'FundProjectionScreenOutlined', value: 'FundProjectionScreenOutlined' }
+- {
+    label: 'FundProjectionScreenOutlined',
+    value: 'FundProjectionScreenOutlined',
+  }
 - { label: 'FundTwoTone', value: 'FundTwoTone' }
 - { label: 'FundViewOutlined', value: 'FundViewOutlined' }
 - { label: 'FunnelPlotFilled', value: 'FunnelPlotFilled' }
@@ -617,7 +620,7 @@
 - { label: 'RobotFilled', value: 'RobotFilled' }
 - { label: 'RobotOutlined', value: 'RobotOutlined' }
 - { label: 'RocketFilled', value: 'RocketFilled' }
-- { label: 'RocketOutlined', value: 'RocketOutlined' }
+- { label: 'AiOutlineRocket', value: 'AiOutlineRocket' }
 - { label: 'RocketTwoTone', value: 'RocketTwoTone' }
 - { label: 'RollbackOutlined', value: 'RollbackOutlined' }
 - { label: 'RotateLeftOutlined', value: 'RotateLeftOutlined' }

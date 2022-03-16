@@ -38,7 +38,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          icon: WarningFilled
+          icon: AiFillWarning
           message: Stateful JSON Web Tokens are used for authentication
           description: Lowdefy uses stateful JSON Web Tokens for user authentication, since the Lowdefy server is stateless and does not maintain a database of user sessions. This means that once a token is issued, it is valid until the token expires. Any changes to the user's access will only reflect after the token has expired, and the user obtains (or fails to obtain) a new token from the OpenID Connect provider. We recommend making sure tokens have a relatively short expiry time (the default is 4 hours), and evaluating if the security provided by this system is appropriate for your use case.
 
@@ -48,7 +48,7 @@ _ref:
           content: |
             Most authorization and authentication settings are configured in the `config.auth` object in the Lowdefy configuration. The following config can be set:
             ```yaml
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             config:
               auth:
                 openId:

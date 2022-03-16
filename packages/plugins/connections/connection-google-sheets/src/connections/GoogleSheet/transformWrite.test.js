@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { transformWrite } from './transformTypes';
+import { transformWrite } from './transformTypes.js';
 
 test('transformWrite invalid input', () => {
   expect(() => transformWrite({ input: 1 })).toThrow(

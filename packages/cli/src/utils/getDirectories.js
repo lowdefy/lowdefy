@@ -16,18 +16,21 @@
 
 import path from 'path';
 
-function getDirectories({ baseDirectory, options }) {
+function getDirectories({ configDirectory, options }) {
   let dotLowdefy;
   if (options.outputDirectory) {
     dotLowdefy = path.resolve(options.outputDirectory);
   } else {
-    dotLowdefy = path.resolve(baseDirectory, '.lowdefy');
+    dotLowdefy = path.resolve(configDirectory, '.lowdefy');
   }
   return {
-    base: baseDirectory,
+    config: configDirectory,
     build: path.join(dotLowdefy, 'server', 'build'),
     dotLowdefy,
-    server: path.join(dotLowdefy, 'server'),
+    server: options.serverDirectory
+      ? path.resolve(options.serverDirectory)
+      : path.join(dotLowdefy, 'server'),
+    dev: options.devDirectory ? path.resolve(options.devDirectory) : path.join(dotLowdefy, 'dev'),
   };
 }
 

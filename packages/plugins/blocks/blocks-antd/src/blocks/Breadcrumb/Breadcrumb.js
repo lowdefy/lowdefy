@@ -19,26 +19,7 @@ import { type, get } from '@lowdefy/helpers';
 import { Breadcrumb } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const ItemLink = ({ basePath, children, className, link, Link }) => {
-  if (type.isString(link.pageId)) {
-    return (
-      <Link href={`${basePath}/${link.pageId}`} className={className}>
-        {children}
-      </Link>
-    );
-  }
-  if (type.isString(link.url)) {
-    return (
-      <Link href={link.url} className={className}>
-        {children}
-      </Link>
-    );
-  }
-  return <span className={className}>{children}</span>;
-};
-
 const BreadcrumbBlock = ({
-  basePath,
   blockId,
   events,
   components: { Icon, Link },
@@ -61,30 +42,33 @@ const BreadcrumbBlock = ({
             (() => methods.triggerEvent({ name: onClickActionName, event: { link, index } }))
           }
         >
-          <ItemLink
-            basePath={basePath}
+          <Link
+            id={`${blockId}_${index}`}
             className={methods.makeCssClass([
               {
                 cursor: events[onClickActionName] && 'pointer',
               },
               link.style,
             ])}
-            link={link}
-            Link={Link}
+            {...link}
           >
-            {link.icon && (
-              <Icon
-                blockId={`${blockId}_${index}_icon`}
-                events={events}
-                properties={{
-                  name: type.isString(link.icon) && link.icon,
-                  ...(type.isObject(link.icon) ? link.icon : {}),
-                  style: { paddingRight: 8, ...(link.icon.style || {}) },
-                }}
-              />
+            {(defaultTitle) => (
+              <>
+                {link.icon && (
+                  <Icon
+                    blockId={`${blockId}_${index}_icon`}
+                    events={events}
+                    properties={{
+                      name: type.isString(link.icon) && link.icon,
+                      ...(type.isObject(link.icon) ? link.icon : {}),
+                      style: { paddingRight: 8, ...(link.icon.style || {}) },
+                    }}
+                  />
+                )}
+                {type.isString(link) ? link : link.label || defaultTitle}
+              </>
             )}
-            {type.isString(link) ? link : link.label || link.pageId || link.url || `Link ${index}`}
-          </ItemLink>
+          </Link>
         </Breadcrumb.Item>
       ))}
     </Breadcrumb>
@@ -100,7 +84,8 @@ BreadcrumbBlock.meta = {
       lines: 1,
     },
   },
+  icons: [],
+  styles: ['blocks/Breadcrumb/style.less'],
 };
-BreadcrumbBlock.styles = ['blocks/Breadcrumb/style.less'];
 
 export default BreadcrumbBlock;

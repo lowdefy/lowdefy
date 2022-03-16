@@ -29,6 +29,7 @@ _ref:
       - id: md1
         type: MarkdownWithCode
         properties:
+          # TODO: Remove JsAction reference.
           content: |
             Lowdefy runs as a single page web app (SPA). It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` to of the default `index.html` page.
 
@@ -53,7 +54,7 @@ _ref:
 
             ```yaml
             name: google-analytics-example
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             # ...
             app:
               html:
@@ -98,7 +99,7 @@ _ref:
             ```yaml
             # /lowdefy.yaml
             name: json-todos
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             app:
               html:
                 appendHead:
@@ -109,7 +110,7 @@ _ref:
                 events:
                   onEnter:
                     - id: get_todos
-                      type: JsAction
+                      type: JsAction # TODO:
                       params:
                         name: fetchTodos # Trigger the custom JavaScript action.
                         args:
@@ -156,7 +157,7 @@ _ref:
             ```yaml
             # /lowdefy.yaml
             name: operator-example
-            lowdefy: 3.23.1
+            lowdefy: 3.23.2
             app:
               html:
                 appendHead:

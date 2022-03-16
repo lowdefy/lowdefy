@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -27,11 +27,12 @@
   },
   "files": [
     "src/*",
+    "public/*",
     "next.config.js",
     ".eslintrc.yaml"
   ],
   "scripts": {
-    "build:lowdefy": "lowdefy-build",
+    "build:lowdefy": "node lowdefy/build.mjs",
     "build:next": "next build",
     "dev": "next dev",
     "start": "next start",
@@ -39,24 +40,28 @@
     "next": "next"
   },
   "dependencies": {
-    "@lowdefy/api": "4.0.0-alpha.5",
-    "@lowdefy/block-utils": "4.0.0-alpha.5",
-    "@lowdefy/engine": "4.0.0-alpha.5",
-    "@lowdefy/helpers": "4.0.0-alpha.5",
-    "@lowdefy/layout": "4.0.0-alpha.5",
-    "@lowdefy/operators-js": "4.0.0-alpha.5",
-    "next": "12.0.3",
-    "next-auth": "4.0.0-beta.6",
-    "react": "18.0.0-alpha-327d5c484-20211106",
-    "react-dom": "18.0.0-alpha-327d5c484-20211106",
+    "@lowdefy/api": "4.0.0-alpha.7",
+    "@lowdefy/block-utils": "4.0.0-alpha.7",
+    "@lowdefy/engine": "4.0.0-alpha.7",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
+    "@lowdefy/layout": "4.0.0-alpha.7",
+    "@lowdefy/node-utils": "4.0.0-alpha.7",
+    "@lowdefy/operators-js": "4.0.0-alpha.7",
+    "next": "12.0.10",
+    "next-auth": "4.1.2",
+    "process": "0.11.10",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-icons": "4.3.1"
   },
   "devDependencies": {
-    "@lowdefy/build": "4.0.0-alpha.5",
-    "@next/eslint-plugin-next": "12.0.4",
+    "@lowdefy/build": "4.0.0-alpha.7",
+    "@next/eslint-plugin-next": "12.0.10",
     "less": "4.1.2",
     "less-loader": "10.2.0",
-    "next-with-less": "2.0.2"
+    "next-with-less": "2.0.4",
+    "yaml": "1.10.2",
+    "yargs": "17.3.1"
   },
   "publishConfig": {
     "access": "public"

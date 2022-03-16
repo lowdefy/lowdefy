@@ -56,15 +56,15 @@
   type: DateRangeSelector
   properties:
     size: large
-- id: 'property.suffixIcon: CalendarOutlined'
+- id: 'property.suffixIcon: AiOutlineCalendar'
   type: DateRangeSelector
   properties:
-    suffixIcon: CalendarOutlined
-- id: 'property.suffixIcon Red: CalendarOutlined'
+    suffixIcon: AiOutlineCalendar
+- id: 'property.suffixIcon Red: AiOutlineCalendar'
   type: DateRangeSelector
   properties:
     suffixIcon:
-      name: CalendarOutlined
+      name: AiOutlineCalendar
       color: Red
 - id: 'properties.inputStyle: CSS style applied'
   type: DateRangeSelector

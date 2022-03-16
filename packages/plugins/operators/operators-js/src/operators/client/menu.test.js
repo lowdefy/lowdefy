@@ -16,6 +16,7 @@
 
 /* eslint-disable max-classes-per-file */
 import { WebParser } from '@lowdefy/operators';
+import _menu from './menu.js';
 
 const arrayIndices = [1];
 
@@ -24,7 +25,17 @@ const context = {
     lowdefy: {
       inputs: { id: true },
       lowdefyGlobal: { global: true },
-      menus: [{ menus: true }],
+      menus: [
+        {
+          menuId: 'default',
+        },
+        {
+          menuId: 'm_1',
+        },
+        {
+          menuId: 'm_2',
+        },
+      ],
       urlQuery: { urlQuery: true },
       user: { user: true },
     },
@@ -35,11 +46,15 @@ const context = {
   state: { state: true },
 };
 
+const operators = {
+  _menu,
+};
+
 console.error = () => {};
 
 test('_menu using string menuId', async () => {
   const input = { a: { _menu: 'default' } };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -52,7 +67,7 @@ test('_menu using string menuId', async () => {
 
 test('_menu using index', async () => {
   const input = { a: { _menu: 1 } };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -65,7 +80,7 @@ test('_menu using index', async () => {
 
 test('_menu in object', async () => {
   const input = { a: { _menu: 'default' } };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({
@@ -78,7 +93,7 @@ test('_menu in object', async () => {
 
 test('_menu full menus', async () => {
   const input = { _menu: true };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -97,7 +112,7 @@ test('_menu full menus', async () => {
 
 test('_menu null', async () => {
   const input = { _menu: null };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -114,7 +129,7 @@ test('_menu param object value', async () => {
       value: 'm_2',
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
@@ -127,7 +142,7 @@ test('_menu param object index', async () => {
       index: 2,
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
@@ -140,7 +155,7 @@ test('_menu params object value not string', async () => {
       value: 1,
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -157,7 +172,7 @@ test('_menu params object index not number', async () => {
       index: 'a',
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
@@ -174,7 +189,7 @@ test('_menu param object all', async () => {
       all: true,
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -198,7 +213,7 @@ test('_menu param object all and value', async () => {
       value: 'default',
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([
@@ -221,7 +236,7 @@ test('_menu param object invalid', async () => {
       other: true,
     },
   };
-  const parser = new WebParser({ context });
+  const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **connection-stripe:** Add license comments in schema files. ([cf4a614](https://github.com/lowdefy/lowdefy/commit/cf4a614d77035fd954f4a2bc3111dd270d6604e9))
+* **connection-stripe:** Fix connection-stripe plugin structure to work with version 4. ([3a35829](https://github.com/lowdefy/lowdefy/commit/3a35829edae64dcd5d558698d7bc469fe9d55f0e))
+* **deps:** Update dependency stripe to v8.201.0. ([964efb4](https://github.com/lowdefy/lowdefy/commit/964efb445bfbcc36625405f33895afbef1a9c686))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+**Note:** Version bump only for package @lowdefy/connection-stripe
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 **Note:** Version bump only for package @lowdefy/connection-stripe

@@ -1,0 +1,84 @@
+{
+  "name": "@lowdefy/server-dev",
+  "version": "4.0.0-alpha.7",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "server"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "files": [
+    "src/*",
+    "public/*",
+    "next.config.js",
+    ".eslintrc.yaml"
+  ],
+  "scripts": {
+    "build:lowdefy": "lowdefy-build",
+    "build:next": "next build",
+    "start": "node manager/run.mjs",
+    "lint": "next lint",
+    "next": "next"
+  },
+  "dependencies": {
+    "@lowdefy/api": "4.0.0-alpha.7",
+    "@lowdefy/block-utils": "4.0.0-alpha.7",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.7",
+    "@lowdefy/blocks-basic": "4.0.0-alpha.7",
+    "@lowdefy/blocks-color-selectors": "4.0.0-alpha.7",
+    "@lowdefy/blocks-echarts": "4.0.0-alpha.7",
+    "@lowdefy/blocks-loaders": "4.0.0-alpha.7",
+    "@lowdefy/blocks-markdown": "4.0.0-alpha.7",
+    "@lowdefy/build": "4.0.0-alpha.7",
+    "@lowdefy/connection-axios-http": "4.0.0-alpha.7",
+    "@lowdefy/engine": "4.0.0-alpha.7",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
+    "@lowdefy/layout": "4.0.0-alpha.7",
+    "@lowdefy/node-utils": "4.0.0-alpha.7",
+    "@lowdefy/operators-change-case": "4.0.0-alpha.7",
+    "@lowdefy/operators-diff": "4.0.0-alpha.7",
+    "@lowdefy/operators-js": "4.0.0-alpha.7",
+    "@lowdefy/operators-mql": "4.0.0-alpha.7",
+    "@lowdefy/operators-nunjucks": "4.0.0-alpha.7",
+    "@lowdefy/operators-uuid": "4.0.0-alpha.7",
+    "@lowdefy/operators-yaml": "4.0.0-alpha.7",
+    "chokidar": "3.5.3",
+    "dotenv": "15.0.0",
+    "next": "12.0.10",
+    "next-auth": "4.1.2",
+    "opener": "1.5.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-icons": "4.3.1",
+    "swr": "1.1.2",
+    "yaml": "2.0.0-10",
+    "yargs": "17.3.1"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "12.0.10",
+    "less": "4.1.2",
+    "less-loader": "10.2.0",
+    "next-with-less": "2.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

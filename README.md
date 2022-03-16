@@ -102,7 +102,15 @@ All changes to this project are documented in [CHANGELOG.md](https://github.com/
 
 ## Contributing
 
-Please see [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md).
+Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
+
+- `yarn start`: Starts the production server.
+- `yarn start:dev`: Starts the production server in next development mode, useful for debugging Lowdefy code changes.
+- `yarn start:server-dev`: Starts the development server in next production mode, useful for developing your Lowdefy config locally.
+
+> `yarn install` and `yarn build` should be executed manually during development, this allows you to build only the package you are working on. Server needs to be restarted after package rebuild.
+
+Please also see [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md).
 
 ## Security
 

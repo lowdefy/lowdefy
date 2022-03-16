@@ -7,28 +7,7 @@
         "type": "string",
         "description": "Title to describe the input component, if no title is specified the block id is displayed."
       },
-      "colors": {
-        "type": "array",
-        "description": "Colors to display.",
-        "default": [
-          "#D9E3F0",
-          "#F47373",
-          "#697689",
-          "#37D67A",
-          "#2CCCE4",
-          "#555555",
-          "#dce775",
-          "#ff8a65",
-          "#ba68c8"
-        ],
-        "items": {
-          "type": "string",
-          "docs": {
-            "displayType": "color"
-          }
-        }
-      },
-      "defaultColor": {
+      "undefinedColor": {
         "type": "string",
         "default": "#000000",
         "description": "Default color to display if input value is null.",
@@ -43,19 +22,15 @@
           "displayType": "yaml"
         }
       },
-      "triangle": {
+      "disabled": {
         "type": "boolean",
-        "enum": ["hide", "top"],
-        "default": "hide",
-        "description": "Show triangle on color selector border."
+        "default": false,
+        "description": "If true, the input is disabled."
       },
-      "width": {
-        "type": ["string", "number"],
-        "description": "Color selector width.",
-        "default": "100%",
-        "docs": {
-          "displayType": "string"
-        }
+      "hideInput": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, the input is hidden."
       },
       "label": {
         "type": "object",

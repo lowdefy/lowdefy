@@ -111,7 +111,8 @@ RadioSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/RadioSelector/style.less'],
 };
-RadioSelector.styles = ['blocks/RadioSelector/style.less'];
 
 export default RadioSelector;

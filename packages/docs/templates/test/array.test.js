@@ -14,21 +14,19 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        options: {
-          type: 'array',
-          items: {
-            type: 'string',
-            description: 'string description',
-          },
+      options: {
+        type: 'array',
+        items: {
+          type: 'string',
+          description: 'string description',
         },
       },
     },
@@ -96,17 +94,15 @@ test('array defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
       properties: {
-        type: 'object',
-        properties: {
-          options: {
-            type: 'array',
-            default: ['a'],
-            items: {
-              type: 'string',
-              description: 'string description',
-            },
+        options: {
+          type: 'array',
+          default: ['a'],
+          items: {
+            type: 'string',
+            description: 'string description',
           },
         },
       },
@@ -122,23 +118,21 @@ test('array defaultValueTransformer', () => {
 });
 
 const schemaArrayObject = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        options: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              str: {
-                type: 'string',
-                description: 'string description',
-              },
-              num: {
-                type: 'number',
-                description: 'number description',
-              },
+      options: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            str: {
+              type: 'string',
+              description: 'string description',
+            },
+            num: {
+              type: 'number',
+              description: 'number description',
             },
           },
         },
@@ -275,24 +269,22 @@ test('array schemaArrayObject defaultValueTransformer', () => {
     }
   `);
   const schemaArrayObjectDV = {
-    schema: {
+    properties: {
+      type: 'object',
       properties: {
-        type: 'object',
-        properties: {
-          options: {
-            type: 'array',
-            default: [{ str: 'a' }],
-            items: {
-              type: 'object',
-              properties: {
-                str: {
-                  type: 'string',
-                  description: 'string description',
-                },
-                num: {
-                  type: 'number',
-                  description: 'numebr description',
-                },
+        options: {
+          type: 'array',
+          default: [{ str: 'a' }],
+          items: {
+            type: 'object',
+            properties: {
+              str: {
+                type: 'string',
+                description: 'string description',
+              },
+              num: {
+                type: 'number',
+                description: 'numebr description',
               },
             },
           },
@@ -312,24 +304,22 @@ test('array schemaArrayObject defaultValueTransformer', () => {
 });
 
 const schemaOneOfPrimitive = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        options: {
-          type: 'array',
-          items: {
-            oneOf: [
-              {
-                type: 'string',
-                description: 'string description',
-              },
-              {
-                type: 'number',
-                description: 'number description',
-              },
-            ],
-          },
+      options: {
+        type: 'array',
+        items: {
+          oneOf: [
+            {
+              type: 'string',
+              description: 'string description',
+            },
+            {
+              type: 'number',
+              description: 'number description',
+            },
+          ],
         },
       },
     },
@@ -554,25 +544,23 @@ test('array schemaOneOfPrimitive defaultValueTransformer', () => {
     }
   `);
   const schemaOneOfPrimitiveDV = {
-    schema: {
+    properties: {
+      type: 'object',
       properties: {
-        type: 'object',
-        properties: {
-          options: {
-            type: 'array',
-            default: ['a', 'b'],
-            items: {
-              oneOf: [
-                {
-                  type: 'string',
-                  description: 'string description',
-                },
-                {
-                  type: 'number',
-                  description: 'number description',
-                },
-              ],
-            },
+        options: {
+          type: 'array',
+          default: ['a', 'b'],
+          items: {
+            oneOf: [
+              {
+                type: 'string',
+                description: 'string description',
+              },
+              {
+                type: 'number',
+                description: 'number description',
+              },
+            ],
           },
         },
       },
@@ -589,28 +577,26 @@ test('array schemaOneOfPrimitive defaultValueTransformer', () => {
 });
 
 const schemaPrimitiveOneOf = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        options: {
-          oneOf: [
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                description: 'string description',
-              },
+      options: {
+        oneOf: [
+          {
+            type: 'array',
+            items: {
+              type: 'string',
+              description: 'string description',
             },
-            {
-              type: 'array',
-              items: {
-                type: 'number',
-                description: 'number description',
-              },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'number',
+              description: 'number description',
             },
-          ],
-        },
+          },
+        ],
       },
     },
   },
@@ -829,29 +815,27 @@ test('array schemaPrimitiveOneOf defaultValueTransformer', () => {
     }
   `);
   const schemaPrimitiveOneOfDV = {
-    schema: {
+    properties: {
+      type: 'object',
       properties: {
-        type: 'object',
-        properties: {
-          options: {
-            default: ['a', 'b'],
-            oneOf: [
-              {
-                type: 'array',
-                items: {
-                  type: 'string',
-                  description: 'string description',
-                },
+        options: {
+          default: ['a', 'b'],
+          oneOf: [
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                description: 'string description',
               },
-              {
-                type: 'array',
-                items: {
-                  type: 'number',
-                  description: 'number description',
-                },
+            },
+            {
+              type: 'array',
+              items: {
+                type: 'number',
+                description: 'number description',
               },
-            ],
-          },
+            },
+          ],
         },
       },
     },
@@ -867,31 +851,29 @@ test('array schemaPrimitiveOneOf defaultValueTransformer', () => {
 });
 
 const schemaOneOfArrayStrArrayYaml = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        options: {
-          oneOf: [
-            {
-              type: 'array',
-              items: {
-                type: 'string',
-                description: 'string description',
+      options: {
+        oneOf: [
+          {
+            type: 'array',
+            items: {
+              type: 'string',
+              description: 'string description',
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'object',
+              description: 'number description',
+              docs: {
+                displayType: 'yaml',
               },
             },
-            {
-              type: 'array',
-              items: {
-                type: 'object',
-                description: 'number description',
-                docs: {
-                  displayType: 'yaml',
-                },
-              },
-            },
-          ],
-        },
+          },
+        ],
       },
     },
   },
@@ -1090,17 +1072,19 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
                         "_array.map": Object {
                           "callback": Object {
                             "_function": Object {
-                              "__yaml.parse": Object {
-                                "__if_none": Array [
-                                  Object {
-                                    "__args": Object {
-                                      "contextId": undefined,
-                                      "key": "0",
+                              "__yaml.parse": Array [
+                                Object {
+                                  "__if_none": Array [
+                                    Object {
+                                      "__args": Object {
+                                        "contextId": undefined,
+                                        "key": "0",
+                                      },
                                     },
-                                  },
-                                  "",
-                                ],
-                              },
+                                    "",
+                                  ],
+                                },
+                              ],
                             },
                           },
                           "on": Object {
@@ -1131,30 +1115,28 @@ test('array schemaOneOfArrayStrArrayYaml propertiesGetterTransformer', () => {
 });
 
 const schemaNestedArray = {
-  schema: {
+  properties: {
+    type: 'object',
     properties: {
-      type: 'object',
-      properties: {
-        arr1: {
-          type: 'array',
+      arr1: {
+        type: 'array',
+        description: 'string description',
+        items: {
+          type: 'object',
           description: 'string description',
-          items: {
-            type: 'object',
-            description: 'string description',
-            properties: {
-              obj: {
+          properties: {
+            obj: {
+              type: 'object',
+              docs: {
+                displayType: 'yaml',
+              },
+            },
+            arr2: {
+              type: 'array',
+              items: {
                 type: 'object',
                 docs: {
                   displayType: 'yaml',
-                },
-              },
-              arr2: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  docs: {
-                    displayType: 'yaml',
-                  },
                 },
               },
             },
@@ -1287,17 +1269,19 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                     },
                     Object {
                       "obj": Object {
-                        "__yaml.parse": Object {
-                          "__if_none": Array [
-                            Object {
-                              "__args": Object {
-                                "contextId": undefined,
-                                "key": "0.obj",
+                        "__yaml.parse": Array [
+                          Object {
+                            "__if_none": Array [
+                              Object {
+                                "__args": Object {
+                                  "contextId": undefined,
+                                  "key": "0.obj",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                     Object {
@@ -1305,17 +1289,19 @@ test('array propertiesGetterTransformer schemaNestedArray', () => {
                         "__array.map": Object {
                           "callback": Object {
                             "__function": Object {
-                              "___yaml.parse": Object {
-                                "___if_none": Array [
-                                  Object {
-                                    "___args": Object {
-                                      "contextId": undefined,
-                                      "key": "0",
+                              "___yaml.parse": Array [
+                                Object {
+                                  "___if_none": Array [
+                                    Object {
+                                      "___args": Object {
+                                        "contextId": undefined,
+                                        "key": "0",
+                                      },
                                     },
-                                  },
-                                  "",
-                                ],
-                              },
+                                    "",
+                                  ],
+                                },
+                              ],
                             },
                           },
                           "on": Object {

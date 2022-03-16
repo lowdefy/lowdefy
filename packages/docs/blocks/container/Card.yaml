@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Card
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Card/Card.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Card/schema.json
     filePath: blocks/container/Card.yaml
     description_content: |
       A Card container places blocks on a white background with a card border.

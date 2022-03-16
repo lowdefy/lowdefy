@@ -24,13 +24,12 @@ const runRenderTests = ({
   Block,
   examples,
   logger,
-  meta,
   reset = () => null,
   schema,
-  tests,
+  testConfig,
   validationsExamples,
 }) => {
-  const { before, methods, getProps } = mockBlock({ meta, logger, schema });
+  const { before, methods, getProps } = mockBlock({ meta: Block.meta, logger, schema });
 
   beforeEach(() => {
     reset();
@@ -38,12 +37,12 @@ const runRenderTests = ({
   });
 
   examples.forEach((ex) => {
-    const values = [type.enforceType(meta.valueType, null)];
+    const values = [type.enforceType(Block.meta.valueType, null)];
     if (!type.isNone(ex.value)) {
       values.push(ex.value);
     }
-    if (type.isArray(meta.values)) {
-      values.push(...meta.values);
+    if (type.isArray(testConfig.values)) {
+      values.push(...testConfig.values);
     }
     values.forEach((value, v) => {
       test(`Render ${ex.id} - value[${v}]`, async () => {
@@ -53,7 +52,7 @@ const runRenderTests = ({
         await waitFor(() => expect(container.firstChild).toMatchSnapshot());
       });
 
-      if (tests && tests.validation) {
+      if (testConfig && testConfig.validation) {
         (validationsExamples || []).map((validationEx) => {
           test(`Render validation.status = ${validationEx.status} ${ex.id} - value[${v}]`, async () => {
             // create shell to setup react hooks with getProps before render;
@@ -66,7 +65,7 @@ const runRenderTests = ({
         });
       }
 
-      if (tests && tests.required) {
+      if (testConfig && testConfig.required) {
         test(`Render required = true ${ex.id} - value[${v}]`, async () => {
           // create shell to setup react hooks with getProps before render;
           const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} required />;

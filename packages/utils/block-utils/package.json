@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-utils",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "licence": "Apache-2.0",
   "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
@@ -39,24 +39,24 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@emotion/css": "11.5.0",
-    "@emotion/react": "11.5.0",
-    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@ant-design/icons": "4.7.0",
+    "@emotion/css": "11.7.1",
+    "@emotion/react": "11.7.1",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
     "classnames": "2.3.1",
-    "dompurify": "2.3.3",
-    "react": "18.0.0-alpha-327d5c484-20211106",
-    "react-dom": "18.0.0-alpha-327d5c484-20211106"
+    "dompurify": "2.3.5",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "@babel/preset-react": "7.16.0",
-    "@emotion/jest": "11.5.0",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
-    "@testing-library/dom": "8.10.1",
+    "@emotion/jest": "11.7.1",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "@testing-library/dom": "8.11.3",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
-    "jest": "27.3.1",
+    "jest": "27.5.1",
     "jest-serializer-html": "7.1.0"
   },
   "publishConfig": {

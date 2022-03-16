@@ -19,6 +19,7 @@ import classNames from 'classnames';
 import { keyframes } from '@emotion/react';
 import { css } from '@emotion/css';
 import { omit, type } from '@lowdefy/helpers';
+import Icon from '@ant-design/icons';
 
 import blockDefaultProps from './blockDefaultProps.js';
 import ErrorBoundary from './ErrorBoundary.js';
@@ -30,7 +31,6 @@ const lowdefyProps = [
   'components',
   'content',
   'eventLog',
-  'homePageId',
   'list',
   'loading',
   'menus',
@@ -59,7 +59,7 @@ const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
-  const IconComp = ({ blockId, events, methods, properties, ...props }) => {
+  const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const iconProps = {
       id: blockId,
@@ -68,6 +68,9 @@ const createIcon = (Icons) => {
         [spinClass]: propertiesObj.spin,
       }),
       rotate: propertiesObj.rotate,
+      color: propertiesObj.color,
+      title: propertiesObj.name,
+      size: propertiesObj.size,
       // twoToneColor: propertiesObj.color, // TODO: track https://github.com/react-icons/react-icons/issues/508
       ...omit(props, lowdefyProps),
     };
@@ -101,8 +104,9 @@ const createIcon = (Icons) => {
       </>
     );
   };
-  IconComp.defaultProps = blockDefaultProps;
-  return IconComp;
+  const AntIcon = (all) => <Icon component={() => <IconBlock {...all} />} />;
+  AntIcon.defaultProps = blockDefaultProps;
+  return AntIcon;
 };
 
 export default createIcon;

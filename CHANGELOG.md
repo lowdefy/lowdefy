@@ -3,6 +3,293 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **actions-core:** Added scrollTo with no params error test. ([1402180](https://github.com/lowdefy/lowdefy/commit/140218075f0f9ce00c0e930a7b18db5629bb1ab0))
+* **actions-core:** Added testContext for action testing. ([2f6189b](https://github.com/lowdefy/lowdefy/commit/2f6189b6405ccaa1e0ffbf055669970f60300476))
+* **actions-core:** Changed param type check in DisplayMessage action. ([3d85e26](https://github.com/lowdefy/lowdefy/commit/3d85e26ac5b5f33897032d04ebd6e20ab1944168))
+* **actions-core:** Refactored actions to use actions interface. ([563900b](https://github.com/lowdefy/lowdefy/commit/563900ba49e6025862e9444743a485952c0d2c1c))
+* **actions-core:** Updated ScrollTo action tests. ([ae202f2](https://github.com/lowdefy/lowdefy/commit/ae202f2d1db7f5e56c60d4da384c2f15d8a53a18))
+* **actions-core:** Updated ScrollTo action to include param error handling. ([25b656f](https://github.com/lowdefy/lowdefy/commit/25b656f115da074b7da266ce81c0bc975db2c109))
+* **actions-core:** Updated Throw action tests to use new plugin config. ([ccf4fd1](https://github.com/lowdefy/lowdefy/commit/ccf4fd14c3a112f74d89939166db0e17972c95a7))
+* **actions-core:** Updated Wait action tests to use new plugin config. ([abb74af](https://github.com/lowdefy/lowdefy/commit/abb74afc8e68e32960cb1c50f7930e79bbcfbed8))
+* Add missing api and helpers tests. ([aa1d72c](https://github.com/lowdefy/lowdefy/commit/aa1d72c19122eb7d4343108ba6ad21c423dc2493))
+* Add operators used by validation to plugin imports. ([02abd41](https://github.com/lowdefy/lowdefy/commit/02abd41e8eb7e9d1f2637de8f85fbe5dfee350ee))
+* Add packages/cli/server/ to git ignore. ([20f02bd](https://github.com/lowdefy/lowdefy/commit/20f02bdef929184338a62875c6207c2ffd584e81))
+* Add yarn install to dev scripts for server. ([dc7f988](https://github.com/lowdefy/lowdefy/commit/dc7f98827e5b97fe96ac2008779b8d2f456d0adb))
+* **api:** Fix callRequest tests. ([58655cb](https://github.com/lowdefy/lowdefy/commit/58655cba190a3a2371e301d2bf4779bd13651ad5))
+* **api:** Fixes using  jest with es modules. ([d69a4dc](https://github.com/lowdefy/lowdefy/commit/d69a4dca33d49c639b3c80d90eed4ffa6ef28950))
+* **blocks-antd:** Refactored tests to use new Block config. ([1919560](https://github.com/lowdefy/lowdefy/commit/191956023512213203b78f66bfcdebc451202eb0))
+* **blocks-antd:** Temporary for schema for TimelineList. ([ce8640d](https://github.com/lowdefy/lowdefy/commit/ce8640d85b5ff7daa3610fe145a4569ec4c91777))
+* **blocks-basic:** Refactored tests to use new Block config. ([37ba69d](https://github.com/lowdefy/lowdefy/commit/37ba69dd60301cbdbbba88bbab2f0b9573c77608))
+* **blocks-color-selectors:** Fix typo in style import. ([7a90f5b](https://github.com/lowdefy/lowdefy/commit/7a90f5b3edbf8e081aa73bf40db2768bf43c2107))
+* **blocks-color-selectors:** Refactored tests to use new Block config. ([bd38975](https://github.com/lowdefy/lowdefy/commit/bd389752dccb8030ad80da0f717e8ecaba71c7fd))
+* **blocks-echarts:** Refactored tests to use new Block config. ([d17e34e](https://github.com/lowdefy/lowdefy/commit/d17e34ebf82a40f7f8fc28e97917e1f2f971e733))
+* **blocks-loaders:** Refactored tests to use new Block config. ([e4f4590](https://github.com/lowdefy/lowdefy/commit/e4f45908e934c0f4929288db7204fba1dc66fb1e))
+* **blocks-markdown:** Refactored tests to use new Block config. ([b963944](https://github.com/lowdefy/lowdefy/commit/b96394456f972386fe3395331ac0c1fb82c3ac07))
+* **bock-utils:** Fix icon properties, size might be an issue. ([cd2b9ad](https://github.com/lowdefy/lowdefy/commit/cd2b9ad3957cb9a30019b94e3129a17ff6f3fc3f))
+* **build:** Add writeActionImports to build. ([f0889d2](https://github.com/lowdefy/lowdefy/commit/f0889d238ca2e0558a59913b6f68069b018bc25f))
+* **build:** Events with try defined should add default for catch. ([bb36b55](https://github.com/lowdefy/lowdefy/commit/bb36b55d7c3a06dea1a448fb6b588b12547141b4))
+* **build:** Fix build tests. ([417f5cb](https://github.com/lowdefy/lowdefy/commit/417f5cb0043ca4e62bcedac192a5965217b0219c))
+* **build:** Fix error message when block is not an object. ([5bc113b](https://github.com/lowdefy/lowdefy/commit/5bc113b18cc30090d9862d95dc6d021b0fe9af6b))
+* **build:** Fix jest with es modules. ([a4d089a](https://github.com/lowdefy/lowdefy/commit/a4d089afa25363a19cddb0ee62d4e0211f1cfda3))
+* **build:** Move page not an object error to addDefaultPages. ([b3c980d](https://github.com/lowdefy/lowdefy/commit/b3c980d2bfc99d1ef4f48a5fb9ef6f99353a4fd6))
+* **build:** Throw better error for incorrect user transformer functions. ([d796de3](https://github.com/lowdefy/lowdefy/commit/d796de3cc7e3bf8602d76e5190cfd1d4f71c775a))
+* **build:** Throw instead of logging error for build. ([cccaabc](https://github.com/lowdefy/lowdefy/commit/cccaabcdaeb357dc8c1382310166cd96af10b2e0))
+* **cli:** Change additional base dir references to config. ([e20cfdf](https://github.com/lowdefy/lowdefy/commit/e20cfdfdcb1f079ea80450b87608ae57ab4e30f8))
+* **cli:** Fix icon in init command. ([295faba](https://github.com/lowdefy/lowdefy/commit/295faba2bf0c9dec826fa0c589e3a7e729e635e9))
+* **cli:** Fix jest es module mocks. ([78480e8](https://github.com/lowdefy/lowdefy/commit/78480e80022f79a0ab449a9a8d804e6213b676c4))
+* **connection-elasticsearch:** Add license comments in schema files. ([43ec9a0](https://github.com/lowdefy/lowdefy/commit/43ec9a07c988fdf85ee4b217fff767290f0f88a2))
+* **connection-elasticsearch:** Fix connection-elasticsearch plugin structure to work with version 4. ([f0c55e8](https://github.com/lowdefy/lowdefy/commit/f0c55e8afd69da8581285c9b1805e72e858e4dad))
+* **connection-google-sheets:** Add license comments in schema files. ([c230318](https://github.com/lowdefy/lowdefy/commit/c23031842a2ff7cd1177235874f16a9747121801))
+* **connection-google-sheets:** Fix connection-google-sheets plugin structure to work with version 4. ([2c19747](https://github.com/lowdefy/lowdefy/commit/2c1974748625a2262edb068f3a8317474eaaee50))
+* **connection-google-sheets:** Revert mingo system imports. ([66a42c7](https://github.com/lowdefy/lowdefy/commit/66a42c7dc53c3bd3e54cbf3f16661750416a0d33))
+* **connection-knex:** Add license comments in schema files. ([916452b](https://github.com/lowdefy/lowdefy/commit/916452b8106668f8d5e65773863abfd122b46b95))
+* **connection-knex:** Fix connection-knex plugin structure to work with version 4. ([ffc9c35](https://github.com/lowdefy/lowdefy/commit/ffc9c351590921f0008192c4106ba4fab8c82e73))
+* **connection-mongodb:** Add license comments in schema files. ([0872590](https://github.com/lowdefy/lowdefy/commit/08725905456a3c00d0c00ae3ed2fc5cdde2bd24e))
+* **connection-mongodb:** Fix connection-mongodb plugin structure to work with version 4. ([a8b9da9](https://github.com/lowdefy/lowdefy/commit/a8b9da9707fe7aa77e64f042ac36a8efb135329b))
+* **connection-mongodb:** Update dependency mongodb to v4.4.0. ([0655365](https://github.com/lowdefy/lowdefy/commit/065536568199fb5cee12d8108b910b675ac5981d))
+* **connection-mongodb:** Update MongoDB connection docs ([7f0fccf](https://github.com/lowdefy/lowdefy/commit/7f0fccffe308a14331c8c6f3ddb3c4579387facb))
+* **connection-sendgrid:** Add license comments in schema files. ([1850af3](https://github.com/lowdefy/lowdefy/commit/1850af3336bf4983d34b6386bdc77419b51815ed))
+* **connection-sendgrid:** Fix connection-sendgrid plugin structure to work with version 4. ([1baeb0f](https://github.com/lowdefy/lowdefy/commit/1baeb0faaac7a9a008984f7a333e902d8b3be4dc))
+* **connection-stripe:** Add license comments in schema files. ([cf4a614](https://github.com/lowdefy/lowdefy/commit/cf4a614d77035fd954f4a2bc3111dd270d6604e9))
+* **connection-stripe:** Fix connection-stripe plugin structure to work with version 4. ([3a35829](https://github.com/lowdefy/lowdefy/commit/3a35829edae64dcd5d558698d7bc469fe9d55f0e))
+* Convert link to pass pathname and query separately. ([1294914](https://github.com/lowdefy/lowdefy/commit/1294914fae0cafbe9165db230b2cf418a97e71b7))
+* Convert links to use pathname and query. ([1189a8b](https://github.com/lowdefy/lowdefy/commit/1189a8bdbb6ade52eee7e8223603dc4d2dcd6223))
+* **deps:** Downgrade dependency swr to v1.1.2. ([80b047f](https://github.com/lowdefy/lowdefy/commit/80b047fb8e5684d032026d9e10b50114a67af89f))
+* **deps:** Update dependecy next to v12.0.10 ([c058935](https://github.com/lowdefy/lowdefy/commit/c05893578f8d5f625391b560ec24411d16df902d))
+* **deps:** Update dependency @elastic/elasticsearch to v7.16.0. ([ed1346e](https://github.com/lowdefy/lowdefy/commit/ed1346ebd45a2cc6f7b2802c6cd3fb032cbaab92))
+* **deps:** Update dependency @sendgrid/mail to v7.6.0. ([f44d267](https://github.com/lowdefy/lowdefy/commit/f44d267e6f2dfd060c40bbae7c6d1d6296b8f0a9))
+* **deps:** Update dependency ajv to v8.9.0. ([efd18da](https://github.com/lowdefy/lowdefy/commit/efd18da6b146a60db286af00353bac0e12667884))
+* **deps:** Update dependency aws-sdk to v2.1066.0. ([766acde](https://github.com/lowdefy/lowdefy/commit/766acde8de455290076e1aba97fd2ed7f8c50610))
+* **deps:** Update dependency axios to v0.25.0. ([ddf13bb](https://github.com/lowdefy/lowdefy/commit/ddf13bb7f891bbb328f1ac6aea3e34894d80c42c))
+* **deps:** Update dependency chokidar to v3.5.3. ([4513321](https://github.com/lowdefy/lowdefy/commit/45133218d83e9751746e1c71c6f9fa44a5b50ead))
+* **deps:** Update dependency commander to v9.0.0. ([aebd5be](https://github.com/lowdefy/lowdefy/commit/aebd5bec6b28d0242d60d3ac92a667b5e39c8aca))
+* **deps:** Update dependency dompurify to v2.3.5. ([41dbc3d](https://github.com/lowdefy/lowdefy/commit/41dbc3d67f0bc55214add6125cda06946eca7ac1))
+* **deps:** Update dependency dotenv to v15.0.0. ([682620c](https://github.com/lowdefy/lowdefy/commit/682620c99c0e53d31467b6c3d5146f0eba596ab1))
+* **deps:** Update dependency echarts to v5.3.0. ([6571f98](https://github.com/lowdefy/lowdefy/commit/6571f988c07e02df4d1ba076f4b214918358e3e9))
+* **deps:** Update dependency echarts-for-react to v3.0.2. ([e5f7ed6](https://github.com/lowdefy/lowdefy/commit/e5f7ed6494c0fa2a39dc598fc2148eacfb3b9568))
+* **deps:** Update dependency google-spreadsheet to v3.2.0. ([2c62cc2](https://github.com/lowdefy/lowdefy/commit/2c62cc2d328ad4dbb6927844c2ab5b8d5a48380e))
+* **deps:** Update dependency knex to v1.0.1. ([26863fc](https://github.com/lowdefy/lowdefy/commit/26863fc41bacec7adbd24ced1331639d1334e169))
+* **deps:** Update dependency mingo  to v6.0.0. ([145dcda](https://github.com/lowdefy/lowdefy/commit/145dcdacc13074070ce8f9c4fc0bac46d8523cd6))
+* **deps:** Update dependency mssql to v8.0.1. ([6848ade](https://github.com/lowdefy/lowdefy/commit/6848ade275da966b829282f29f32303845fe9ac7))
+* **deps:** Update dependency next-auth to v4.1.2. ([4b63c87](https://github.com/lowdefy/lowdefy/commit/4b63c8774fab7adbc3e11f92a5e808b38d22f4c9))
+* **deps:** Update dependency next-with-less to v2.0.4. ([7c71492](https://github.com/lowdefy/lowdefy/commit/7c714926ee0caeba362af78b594698635f34c70f))
+* **deps:** Update dependency query-string to v7.1.0. ([f434ee9](https://github.com/lowdefy/lowdefy/commit/f434ee942e7a58228b84db4406cfeb03f55e5e5f))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **deps:** Update dependency react-markdown to v8.0.0. ([f04e35b](https://github.com/lowdefy/lowdefy/commit/f04e35bff26393f425f5711a66ac23dc4031a943))
+* **deps:** Update dependency redis to v4.0.3. ([c4b0e75](https://github.com/lowdefy/lowdefy/commit/c4b0e757960b994593166d58298c23ded4269bbf))
+* **deps:** Update dependency rehype-raw to v6.1.1. ([e13b0f1](https://github.com/lowdefy/lowdefy/commit/e13b0f18c2c974845421821899ac132fe25f871d))
+* **deps:** Update dependency stripe to v8.201.0. ([964efb4](https://github.com/lowdefy/lowdefy/commit/964efb445bfbcc36625405f33895afbef1a9c686))
+* **deps:** Update dependency swr to v1.2.0. ([8c55376](https://github.com/lowdefy/lowdefy/commit/8c55376080ea89f015f208262c097e5201c21d79))
+* **deps:** Update dependency yargs to v17.3.1. ([277776c](https://github.com/lowdefy/lowdefy/commit/277776c7294e57a95dfcf86d300bb20ea4742043))
+* **deps:** Update emotion css packages. ([3380594](https://github.com/lowdefy/lowdefy/commit/33805944e30e919c57e3e7e1876b9c6723c3988d))
+* **docs:** Add CircleColorSelector to transformer and fix typo. ([9eea4f1](https://github.com/lowdefy/lowdefy/commit/9eea4f10b145929ace661f52809594cb02580a00))
+* **docs:** Add docs on ES Modules in build resolvers and transformers. ([8a3605e](https://github.com/lowdefy/lowdefy/commit/8a3605e840b9f0a86fbf58f47ecbb507e85605fe))
+* **docs:** Comment our JsAction usage. ([27a2361](https://github.com/lowdefy/lowdefy/commit/27a2361fc626a78a7b34b2bcdd074bc352a6a677))
+* **docs:** Update paths for all blocks and some icon name fixes. ([e4369bb](https://github.com/lowdefy/lowdefy/commit/e4369bb3453c19d76f083b139f317de7dd96e090))
+* Downgrade dependency ora to v5.4.1 ([ea28ea5](https://github.com/lowdefy/lowdefy/commit/ea28ea51c2c2371e0636d3f9bc66b07470563bce))
+* **engine:** Changed method action from getRequest to getRequestDetails. ([32c0b7c](https://github.com/lowdefy/lowdefy/commit/32c0b7c96f07e16c5a4b16b8501ea44da3f2ba76))
+* **engine:** Fixed validate action method context reference. ([576e3a9](https://github.com/lowdefy/lowdefy/commit/576e3a9fe8234a61ed5f3237ea44cc309e4cb27d))
+* **engine:** Reset input when link is followed with no input. ([fab9e2a](https://github.com/lowdefy/lowdefy/commit/fab9e2a3fb1d59ff604bee2b95edf0e8464f0a42))
+* **engine:** Reverted index based block id change in callMethod action test. ([46ad3c0](https://github.com/lowdefy/lowdefy/commit/46ad3c07982dacb481b1513750db19b55fe89382))
+* **engine:** Update set global action method global object reference. ([91fa543](https://github.com/lowdefy/lowdefy/commit/91fa543969a33e119df23b716d04acca55edcaf0))
+* **engine:** Updated callMethod action method to use action & block plugin config. ([ddd849e](https://github.com/lowdefy/lowdefy/commit/ddd849e2de6b9691041d098fe53ace1db5940451))
+* **engine:** Updated link action method test to use action & block plugin config. ([1306698](https://github.com/lowdefy/lowdefy/commit/1306698ebbd9fe6b41c77628da70c2b7f95a4e13))
+* **engine:** Updated login action method test to use action & block plugin config. ([4cbd863](https://github.com/lowdefy/lowdefy/commit/4cbd863cfe8f2b325dc3e9bea4d54d1f4c1d97b7))
+* **engine:** Updated logout action method test to use action & block plugin config. ([e120fe8](https://github.com/lowdefy/lowdefy/commit/e120fe88beb39fb59661151c15429c4d926782be))
+* **engine:** Updated message action method test to use action & block plugin config. ([48cd251](https://github.com/lowdefy/lowdefy/commit/48cd2515e51ba769437dd3509f55b68f571a0757))
+* **engine:** Updated request action method test to use action & block plugin config. ([d2bd2f5](https://github.com/lowdefy/lowdefy/commit/d2bd2f5fc207eeb15ec86559dc4bec726e037071))
+* **engine:** Updated reset action method test to use action & block plugin config. ([d46add8](https://github.com/lowdefy/lowdefy/commit/d46add8f05279253cf99955315e6acda9b42a516))
+* **engine:** Updated resetValidation action method test to use new plugin config. ([107a1a5](https://github.com/lowdefy/lowdefy/commit/107a1a50000d9ca731370cc41bca2e5f7d564bad))
+* **engine:** Updated setGlobal action method test to use new plugin config. ([ceceec3](https://github.com/lowdefy/lowdefy/commit/ceceec34da9973d054d2138232832b2fd5aeb5aa))
+* **engine:** Updated setState action method test to use new plugin config. ([27838bc](https://github.com/lowdefy/lowdefy/commit/27838bcf75bba256d13f7a72b1bfd6e1d41bceeb))
+* **engine:** Updated testContext to use rootBlock config. ([c8524c6](https://github.com/lowdefy/lowdefy/commit/c8524c6742d3f45109f15ace6e2d84b6114b92d8))
+* **engine:** Updated validate action method test to use new plugin config. ([f8962c6](https://github.com/lowdefy/lowdefy/commit/f8962c6451e92c467ae882c55ac0859e92ca2ba0))
+* Fix docs transformer fns tests. ([8a0e331](https://github.com/lowdefy/lowdefy/commit/8a0e3313abe15bee9ce28aa2d8b8f91a3482bae3))
+* Fix import issues for build. ([64a076c](https://github.com/lowdefy/lowdefy/commit/64a076cdc91b77a4b067972f77e99bfc2c571650))
+* Fix util package tests. ([9d0cc45](https://github.com/lowdefy/lowdefy/commit/9d0cc45cffd3a373492bc842ba54a7254f7c509f))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* Move S3UploadButton to plugin-aws. ([540aa03](https://github.com/lowdefy/lowdefy/commit/540aa035d2ed0672b0f3e233c1cee90e82d4bb52))
+* **node-utils:** Convert writeFile function prototype. ([5371430](https://github.com/lowdefy/lowdefy/commit/53714307123f3477240767a91c5332a70a292d93))
+* **node-utils:** Do not throw if readFile path is not resolved. ([b451c29](https://github.com/lowdefy/lowdefy/commit/b451c29b4a904bfdbaa31e9316b488935bdf8571))
+* **operators-js:** Fix array, function, operator, type tests ([4d19d48](https://github.com/lowdefy/lowdefy/commit/4d19d48f5bdc48442820946c18d5d08c000d9c1c))
+* **operators-js:** Fix getter operator tests. ([c774f3f](https://github.com/lowdefy/lowdefy/commit/c774f3f31fcbdf16aabd99d1cf76714cfa4b109f))
+* **operators-js:** Fix menu and location tests ([3fac862](https://github.com/lowdefy/lowdefy/commit/3fac862c58dea6b293d9556f4e8f17dd169021d8))
+* **operators-js:** Update request tests. ([f78405f](https://github.com/lowdefy/lowdefy/commit/f78405f48602f97b6954ceb07bf2e9dfb5bf5e7a))
+* **operators-js:** Update shared operators tests. ([1c6cb87](https://github.com/lowdefy/lowdefy/commit/1c6cb87c59116ca02dfe02d7f76450345afa7918))
+* **operators-js:** Update test name and license wording. ([708beac](https://github.com/lowdefy/lowdefy/commit/708beacc11f8de1c09c7abef3fae724f74c70d6a))
+* **operators-nunjucks:** Fix tests. ([6b5d8c8](https://github.com/lowdefy/lowdefy/commit/6b5d8c81b1a14a98c0dfc0f4febb87f0fb6f6ba0))
+* **plugin-aws:** Convert @lowdefy/plugin-aws to new plugin package structure. ([64043d3](https://github.com/lowdefy/lowdefy/commit/64043d3ddee84fcfc40b60ed777eff688517c2c8))
+* Remove rc-animate from yarnrc config. ([0a037d1](https://github.com/lowdefy/lowdefy/commit/0a037d1218e652e02e03df36fbb8bf676c16a5d0))
+* **server-dev:** Add dev server manager description. ([18cf9c2](https://github.com/lowdefy/lowdefy/commit/18cf9c2941f0001d98eed5c79dac2b111f6c6eee))
+* **server-dev:** Do not error if .env file does not exist. ([fa389a1](https://github.com/lowdefy/lowdefy/commit/fa389a17eff8d716e4cc45c1262f4e3d69bdb71d))
+* **server-dev:** Fix redirect. ([96ed764](https://github.com/lowdefy/lowdefy/commit/96ed764458ebed076d5bee246622c2fb457d9f33))
+* **server:** Maintain the lowdefy objects during page transitions. ([4b3d061](https://github.com/lowdefy/lowdefy/commit/4b3d061a0de79b86b0fa8be9ff8948a9dc0caeb7))
+* **servr-dev:** Fix 404 redirect so that browser back works. ([9df6579](https://github.com/lowdefy/lowdefy/commit/9df6579198c0dd0aef9092a98c1b455fac41a761))
+* Strip auth prop from page config in api. ([693667d](https://github.com/lowdefy/lowdefy/commit/693667db5bece8081865e74dc2e4391b62f10f93))
+* Update createLink tests. ([2e531b3](https://github.com/lowdefy/lowdefy/commit/2e531b385248361fc6f015e0102838462299af06))
+* Update docs for Anchor. ([53117b8](https://github.com/lowdefy/lowdefy/commit/53117b88cf759991539265ca84c0f47a9b45a911))
+
+
+### Features
+
+* **actions-core:** Added CallMethod action test. ([f9333e5](https://github.com/lowdefy/lowdefy/commit/f9333e5a4fd3e7a47100000de1c9ee70488f37ca))
+* **actions-core:** Added Link action test. ([d04cc03](https://github.com/lowdefy/lowdefy/commit/d04cc031d9e831c18f01b96a1ae7a05851d92cb6))
+* **actions-core:** Added Login action test. ([ba6ac71](https://github.com/lowdefy/lowdefy/commit/ba6ac71731b24c3a003585b5fe4ab4763c40e186))
+* **actions-core:** Added Logout action test. ([b67e77d](https://github.com/lowdefy/lowdefy/commit/b67e77d56c415b9349b84b31a49d505dda2af2ff))
+* **actions-core:** Added Message action test. ([0404c0d](https://github.com/lowdefy/lowdefy/commit/0404c0d326c18d9447349520fe0e6c64d2512023))
+* **actions-core:** Added Request action test. ([696d816](https://github.com/lowdefy/lowdefy/commit/696d8163c1a8128e8ec3e0704e16378b173039c5))
+* **actions-core:** Added Reset action test. ([c53d111](https://github.com/lowdefy/lowdefy/commit/c53d111da0811d7822b122641d5cc36d9e61a384))
+* **actions-core:** Added ResetValidation action test. ([b5fc499](https://github.com/lowdefy/lowdefy/commit/b5fc49915bdfabca2721c71cf5d5653ee62d27b9))
+* **actions-core:** Added SetGlobal action test. ([66c8218](https://github.com/lowdefy/lowdefy/commit/66c8218578a3f3da77c9b722ef3141d205262499))
+* **actions-core:** Added SetState action test. ([bfab2e4](https://github.com/lowdefy/lowdefy/commit/bfab2e4b6602c9b2ecf7e720dda7f49725ecb0af))
+* **actions-core:** Added Validate action test. ([171aec3](https://github.com/lowdefy/lowdefy/commit/171aec380b7be3ee9ce2d003e2359bf80c82af4a))
+* **actions-core:** BREAKING CHANGE - The Message action was renamed to DisplayMessage. ([a9bfe65](https://github.com/lowdefy/lowdefy/commit/a9bfe65f42094d53cd4eee60aa34fbd0a5e180a6))
+* **actions-core:** Refactored @lowdefy/engine and added actions-core package to plugins. ([b08ef1d](https://github.com/lowdefy/lowdefy/commit/b08ef1d3944503be83beffb006a284e4460660d9))
+* **actions-core:** Updated DisplayMessage action and tests to include edge cases. ([1d70f64](https://github.com/lowdefy/lowdefy/commit/1d70f64983922070916537c0a81b4ed343810365))
+* Add build scripts for plugings. ([d37db36](https://github.com/lowdefy/lowdefy/commit/d37db362801de9f0e4d9640fc77e431edeca757a))
+* Add start, start:dev and start:server-dev scripts for easy dev ⚡️. ([da813c3](https://github.com/lowdefy/lowdefy/commit/da813c3d13b39fcfdbd50b8d53c3e0b1f5e7e8e2))
+* Add start:dev-docs start script. ([0c494fe](https://github.com/lowdefy/lowdefy/commit/0c494fe2ad68d02d9fac0b65a1267ee0ebaf4874))
+* Add watch and ignore paths, default ref resolver to dev server and build. ([c700d9f](https://github.com/lowdefy/lowdefy/commit/c700d9fb0efbdb20dcfe5f8916e256de81acd79e))
+* **blocks:** Implement Link in blocks. ([2bcf600](https://github.com/lowdefy/lowdefy/commit/2bcf600bd1ae477325cf205069952006e3032b63))
+* **build:** Add buildPath to config. ([1cce024](https://github.com/lowdefy/lowdefy/commit/1cce024339bc89e4192d86f09d1a9ec233663f02))
+* **build:** Add command line args for build, config and server directories. ([1ef213b](https://github.com/lowdefy/lowdefy/commit/1ef213b19d5eea582f7597310200468a787e897c))
+* **build:** Added @lowdefy/actions-core plugin to build process. ([a144735](https://github.com/lowdefy/lowdefy/commit/a144735e2cf7647db5e48b434a53c974d907b4f9))
+* **build:** Copy files in config public folder to next public folder. ([ceafdc8](https://github.com/lowdefy/lowdefy/commit/ceafdc8cfca0011425e7a2979e50cd2b32d883b9))
+* **build:** Use dynamic import for build resolver and transformer functions. ([c9db72a](https://github.com/lowdefy/lowdefy/commit/c9db72ac55109a85cfc821dfbbf87e54b4881d59))
+* **cli:** Add config option for server-dev and server directories. ([07902b0](https://github.com/lowdefy/lowdefy/commit/07902b0e06f9c72a04168842d7f9bb8de470c424))
+* **cli:** Add port option for start command. ([9e16e2f](https://github.com/lowdefy/lowdefy/commit/9e16e2f9b920a44ce1ed95172b4e960afe404ffa))
+* **cli:** Add port setting to dev command. ([546798a](https://github.com/lowdefy/lowdefy/commit/546798a8fc3ac877b851f31316eb5b0a49d7ac9f))
+* **cli:** Pass package manager setting to dev server. ([0425f07](https://github.com/lowdefy/lowdefy/commit/0425f07e4ada328e76488e3ec0aa164ff475df5c))
+* **cli:** Rename base-directory to config-directory. ([f09c569](https://github.com/lowdefy/lowdefy/commit/f09c569f0e4207ce31a9e5e002f8eb30ea221bc5))
+* **docs:** Add docs for the Link component. ([37b80b1](https://github.com/lowdefy/lowdefy/commit/37b80b172bc078ab4b83f5932fc8d0908c5baf6f))
+* **engine:** Added action methods to Actions class. ([e3a32aa](https://github.com/lowdefy/lowdefy/commit/e3a32aae4079fe85124039c1ac736cffb784bd4a))
+* **engine:** Added getActions action method test. ([c79c7ed](https://github.com/lowdefy/lowdefy/commit/c79c7ed11da18923395aa8385fb542b5a41c7f96))
+* **engine:** Added getBlockId action method test. ([5802217](https://github.com/lowdefy/lowdefy/commit/5802217d3c6b20af5412af2a491f1b9f7852c175))
+* **engine:** Added getEvent action method test. ([031535c](https://github.com/lowdefy/lowdefy/commit/031535c553e1f2c7806e810d8b609f3fb3550de3))
+* **engine:** Added getGlobal action method test. ([61d23a2](https://github.com/lowdefy/lowdefy/commit/61d23a282ab98202b0b431f7043e381fad7a87c7))
+* **engine:** Added getInput action method test. ([5578f46](https://github.com/lowdefy/lowdefy/commit/5578f46978ae78189b90e0ce39c1133add59499d))
+* **engine:** Added getPageId action method test. ([602e114](https://github.com/lowdefy/lowdefy/commit/602e114040dcf51cf9f0c259d84a62ab847c2b0d))
+* **engine:** Added getRequestDetails action method test. ([55519c5](https://github.com/lowdefy/lowdefy/commit/55519c5c5945ccb2d754ff38798f8917a49bfb5a))
+* **engine:** Added getState action method test. ([384d264](https://github.com/lowdefy/lowdefy/commit/384d2645d7f6b56bc9e17937f6d5e82c2c45adbe))
+* **engine:** Added getUrlQuery action method test. ([6665f2e](https://github.com/lowdefy/lowdefy/commit/6665f2eaa06c604fedb4de64d0fb414d153af6b4))
+* **engine:** Added getUser action method test. ([f7156f5](https://github.com/lowdefy/lowdefy/commit/f7156f5e6f9ebf1178821b46f73ddeba6e6d134a))
+* **engine:** BREAKING CHANGE - The Message action was renamed to DisplayMessage. ([6c3abb7](https://github.com/lowdefy/lowdefy/commit/6c3abb71e8e82612c18148c00add90d6d8e1f36f))
+* **engine:** Update link to include noLink and disableLink, fix logic. ([b9633e4](https://github.com/lowdefy/lowdefy/commit/b9633e4f105c07efbf192f09038438a0f61b0390))
+* Ignore app/** test config. ([f5fad82](https://github.com/lowdefy/lowdefy/commit/f5fad82a9d2e4237c660164bcce3f74dc69c677a))
+* Link and basePath implementation for dev server. ([d487a1c](https://github.com/lowdefy/lowdefy/commit/d487a1c7fd496d4342a786ec7c96da13bafafc12))
+* **node-utils:** Add copyDirectory. ([852a77a](https://github.com/lowdefy/lowdefy/commit/852a77a6277f0fe9c98cb39e329f60dccdb0793e))
+* **node-utils:** Replace rimraf with fs-extra. ([e15031d](https://github.com/lowdefy/lowdefy/commit/e15031d32de3bc60eef5248b9f8440fc14ea11ef))
+* **operators:** Change dependancy from js-yaml to yaml. ([cbb71d8](https://github.com/lowdefy/lowdefy/commit/cbb71d809b3117dbaf89b23c17a2229a24235308))
+* **server-dev:** Add .env and lowdefy version watchers. ([bc52268](https://github.com/lowdefy/lowdefy/commit/bc522684abce8c050873ef20a3da66ca023cfa32))
+* **server-dev:** Add port setting to server-dev. ([f5b0e7e](https://github.com/lowdefy/lowdefy/commit/f5b0e7e80f8a6002e6d6c6ea426a2b6fee8953bf))
+* **server-dev:** Added import for actions plugins to the lowdefy context. ([20133bb](https://github.com/lowdefy/lowdefy/commit/20133bb0589d35b1494cd3f996ff0ea5421ee560))
+* **server-dev:** Clean up server-dev manager. ([ad3511c](https://github.com/lowdefy/lowdefy/commit/ad3511cce781bdcaf4cba634c87ed541e07b0123))
+* **server-dev:** Dev server plugin install and next build working. ([cf66a6f](https://github.com/lowdefy/lowdefy/commit/cf66a6f83952016b4282985b44f8eb10e7f72ea4))
+* **server-dev:** Optimise dev server next build time. ([34aa84a](https://github.com/lowdefy/lowdefy/commit/34aa84acf92288ecbada387ecf9c7eefc1c0968e))
+* **server-dev:** Skip calling next and lowdefy build using npm/yarn start. ([1a8699a](https://github.com/lowdefy/lowdefy/commit/1a8699a0124ba45202cc4d57255d5d0d6ff6abb7))
+* **server:** Add ariaLabel and rel properties to Link. ([95b4447](https://github.com/lowdefy/lowdefy/commit/95b44473a3f67741951e4d020a0ad84a90805d94))
+* **server:** Add Next Link component implementation. ([6104ae0](https://github.com/lowdefy/lowdefy/commit/6104ae0254909fa969bd9f641e540700d8d8b268))
+* **server:** Add replace and scroll to Link. ([9d6ac04](https://github.com/lowdefy/lowdefy/commit/9d6ac04b09f7c2281ebc699de504bba8b8b5e13b))
+* **server:** Added import for actions plugins to the lowdefy context. ([f28052c](https://github.com/lowdefy/lowdefy/commit/f28052cb510a0757310d20068105d193e2f6856c))
+
+
+### Reverts
+
+* Revert "chore: Update yarn.lock" ([f894cb4](https://github.com/lowdefy/lowdefy/commit/f894cb421e89b40d7b8a49b253930198938eabc3))
+* Revert "chore: Update yarn lock to fix removal of rc-animate." ([ab3e513](https://github.com/lowdefy/lowdefy/commit/ab3e513bb95d4bacfe10794b4a77beda82cc6c29))
+
+
+### BREAKING CHANGES
+
+* **connection-mongodb:** The MongoDB driver was updated to v4, which has some changes to the option variable names.
+* **operators:** _yaml.parse now takes an array or an object data instead of a string.
+* href and strong property removed for Anchor block, replaced with Link properties.
+* **engine:** The Message action was renamed to DisplayMessage.
+* **deps:** The Knex driver has been updated to v1.0.1 which has some changes in the returned values. See https://github.com/knex/knex/releases.
+* **deps:** # marks the beginning of a comment in .env files (UNLESS the value is wrapped in quotes. Please update your .env files to wrap in quotes any values containing #.
+* **cli:** Rename base-directory to config-directory.
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Added deboucing condition to Selector and MultipleSelector. ([ce1d3e4](https://github.com/lowdefy/lowdefy/commit/ce1d3e45d5e3add137a97c17461fcf57159dc3e2))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* Add loading and error icons to icon plugin import. ([3c98732](https://github.com/lowdefy/lowdefy/commit/3c98732584325622c56ebd042b1dab9df0427e02))
+* **blocks-antd:** Added debounce condition to Selector and MultipleSelector ([910bee0](https://github.com/lowdefy/lowdefy/commit/910bee0837ad1bd55d456f339a7750ed37aa5d0c))
+* **blocks-antd:** Swap rc-animation for rc-motion in Label to fix modules build. ([8660b6e](https://github.com/lowdefy/lowdefy/commit/8660b6e1f00c4c28e4ed4b4500b982986c712864))
+* **blocks-markdown:** Upgraded react markdown dependencies. ([9eb7c3a](https://github.com/lowdefy/lowdefy/commit/9eb7c3acbd8ab4088db75637ec8f17e36289787f))
+* **blocks:** Updated block meta, types and buildIcons. ([1d774a3](https://github.com/lowdefy/lowdefy/commit/1d774a310a71e125fc7bf7d0d7ef5171632a56a8))
+* **build:** Updated write icon imports template. ([425823d](https://github.com/lowdefy/lowdefy/commit/425823de7f64e2e6a688ac9487d13b42bb101eb2))
+* **cli:** Fix CLI dev server command. ([49f6c20](https://github.com/lowdefy/lowdefy/commit/49f6c208ec400265526487c96b9a55e36894e87d))
+* **connection-redis:** Add test for connection with url string and remove custom message for connection errors. ([095b890](https://github.com/lowdefy/lowdefy/commit/095b89072e53f9f888ec24f7649ad810554d3c0c))
+* **connection-redis:** Add tests with mocked redis client and bumped @swc/core version. ([11cef00](https://github.com/lowdefy/lowdefy/commit/11cef0059f684e77854344451f46c9916c0102cd))
+* **connection-redis:** Pin redis dependency to a fixed version and fix error messages. ([068461f](https://github.com/lowdefy/lowdefy/commit/068461fd2f34de3e7a622ba4e983e8141bd644b0))
+* **docs:** Added redis connection documentation. ([ee1620b](https://github.com/lowdefy/lowdefy/commit/ee1620bb41d8aa3f32e05e9b7e03c7986365c59f))
+* Fix antd styles. ([62a752d](https://github.com/lowdefy/lowdefy/commit/62a752d66c9b7cf4ebfd07fcc92d8a195ed43be4))
+* Fix blocks-echarts yarn berry packageExtensions. ([a908c1c](https://github.com/lowdefy/lowdefy/commit/a908c1c1f8ccaab37643bf8a043a6cec8f82f243))
+* Fix blocks-markdown package dependencies. ([035b0c1](https://github.com/lowdefy/lowdefy/commit/035b0c108b9447570fe7d37a5386d9ea414714fa))
+* Fix layout style import. ([b318343](https://github.com/lowdefy/lowdefy/commit/b3183437fe76dc49378590967671891206dcdf39))
+* Fix static files. ([d2e343e](https://github.com/lowdefy/lowdefy/commit/d2e343eb8b644d953babac628470e785af641237))
+* Refactored connection-redis plugin to have non restrictive schemas. ([f8d9f8e](https://github.com/lowdefy/lowdefy/commit/f8d9f8e149413a31f9f30c5665b570208a4d535b))
+* **server:** Home is also returned in getRootConfig. ([b138485](https://github.com/lowdefy/lowdefy/commit/b13848527749eb6f030bd944b1b169e8bd04af5d))
+
+
+### Features
+
+* 404 page working with next server ([270c92e](https://github.com/lowdefy/lowdefy/commit/270c92e16a42a5e9988b890f2abd41b16da6f673))
+* Add _diff to client operators as well as server. ([4e23fec](https://github.com/lowdefy/lowdefy/commit/4e23fec8a4985d7453dfcf750298bc0bedeb34a2))
+* Add additional operator plugins to generateDefaultTypes, and fix operaotr packages. ([a1d9c3b](https://github.com/lowdefy/lowdefy/commit/a1d9c3bf7c687603b2f79d0f75b794f703482b17))
+* Add icons and webmanifest to next server. ([6a254ed](https://github.com/lowdefy/lowdefy/commit/6a254ed88282a4965aa6e7399250668a409310a3))
+* Add rest of operators-diff files. ([fde3a94](https://github.com/lowdefy/lowdefy/commit/fde3a94ed9f67c62789029eaa6ef5a089cd5691c))
+* Add secrets to v4 servers ([9ef2ccd](https://github.com/lowdefy/lowdefy/commit/9ef2ccd131149e72ba87aee20f1720a99dbd9e07))
+* Add server manager and file watcher in reload event stream. ([8474aaf](https://github.com/lowdefy/lowdefy/commit/8474aaf63c0475cb19a76ca3df9459c05f263986))
+* Add Server Sent Event reload rout and component. ([a556eab](https://github.com/lowdefy/lowdefy/commit/a556eabdbb4da2e98088e810b3cc24cccefacd4f))
+* **build:** Move app.style.lessVariables to config.theme.lessVariables. ([cb14f17](https://github.com/lowdefy/lowdefy/commit/cb14f1712f9f064e96d2f71bf12bb3922aff46eb))
+* **cli:** Add v4 dev command to CLI. ([02770f5](https://github.com/lowdefy/lowdefy/commit/02770f57096710afc9047403e5e4a616957c3a93))
+* **clie:** Update BatchChanges to repeat and pass args to callback function. ([6dd29c5](https://github.com/lowdefy/lowdefy/commit/6dd29c5ca998ff6536d9ce3807583f4c549f070b))
+* Create connection-redis plugin. ([ee2315d](https://github.com/lowdefy/lowdefy/commit/ee2315d69c678f89a8e38de8879c374895f9cb8b))
+* Create operators-change-case plugin ([9aca6be](https://github.com/lowdefy/lowdefy/commit/9aca6be86d3246bc2028c9a559bf90be2f3c3298))
+* Create operators-diff plugin. ([97885be](https://github.com/lowdefy/lowdefy/commit/97885bef8cc8a325ae8b301b7dfc9234e4d0ddb5))
+* Create operators-mql plugin ([e3084aa](https://github.com/lowdefy/lowdefy/commit/e3084aaffa5c9d295faa699c25367883bfd690c7))
+* Create operators-uuid plugin. ([7ab243b](https://github.com/lowdefy/lowdefy/commit/7ab243bfc71f47ff2f7d81e87c7b41197fcd676d))
+* Create operators-yaml plugin. ([3a521ba](https://github.com/lowdefy/lowdefy/commit/3a521ba8c11e575ce74c994a6a7f4d99f6563ee6))
+* Create wait helper function. ([42c09f4](https://github.com/lowdefy/lowdefy/commit/42c09f467b3d4a3b51298a2a67364137def7896d))
+* Init @lowdefy/server-dev package. ([e76b40e](https://github.com/lowdefy/lowdefy/commit/e76b40e8399567bda70404dc85f06c6c2db7e837))
+* **server-dev:** Add browser opener to dev server. ([ddf9d36](https://github.com/lowdefy/lowdefy/commit/ddf9d36d8689caf30f4d008e1ec2be0c48699a34))
+* **server-dev:** Add dev server startup and config file watcher. ([a29576d](https://github.com/lowdefy/lowdefy/commit/a29576d45e58720f02896e5d0523f728fad036a5))
+* **server-dev:** Add the abilty to restart the dev server. ([b610a63](https://github.com/lowdefy/lowdefy/commit/b610a63a522afebe66dee8481cf8caf029334201))
+* **server-dev:** Dev server soft reload working. ([dd5ee07](https://github.com/lowdefy/lowdefy/commit/dd5ee07b5b39c3c22e702b5b1c8404e7a86ab500))
+* **server-dev:** Fetch Lowdefy config client-side using swr. ([ce126df](https://github.com/lowdefy/lowdefy/commit/ce126df4374d74a27a2a40439aa1bf56a63723f5))
+* **server-dev:** Reload client window if dev server is restarted. ([b8c1d58](https://github.com/lowdefy/lowdefy/commit/b8c1d58ea8b0056fdd9ce042590f7c7f90bcc439))
+* **server-dev:** Updates to dev server manager. ([b4861d0](https://github.com/lowdefy/lowdefy/commit/b4861d0892ee9a91ff49b3bb72498d8c42c02778))
+
+
+### BREAKING CHANGES
+
+* The 404 page is now always publically accessible.
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 
@@ -291,6 +578,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **operators:** Getter operators can no longer get from another context.
 * **operators:** The _index operator is no longer supported in node env.
 * The _event, _global, _input, _state, and _url_query operators are no longer evaluated in connections or requests.
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
+
+
+## Changes
+
+### Blocks
+- Fix an issue where the `Selector` and `MultipleSelector` blocks were not handling bounced `onSearch` events correctly and leaving the loading state early. Closes #968.
+
+## Commits
+
+### Bug Fixes
+
+* **blocksAntd:** Added deboucing condition to Selector and MultipleSelector. ([ce1d3e4](https://github.com/lowdefy/lowdefy/commit/ce1d3e45d5e3add137a97c17461fcf57159dc3e2))
 
 
 

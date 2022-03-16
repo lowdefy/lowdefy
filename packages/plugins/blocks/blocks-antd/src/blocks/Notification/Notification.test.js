@@ -16,44 +16,45 @@
 
 import { runBlockSchemaTests, runMockMethodTests } from '@lowdefy/block-dev';
 
-import block from './index.js';
+import Block from './Notification.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-// test: {
-//   methods: [
-//     {
-//       name: 'open',
-//       args: {},
-//     },
-//     {
-//       name: 'open',
-//       args: {
-//         status: 'warning',
-//       },
-//     },
-//     {
-//       name: 'open',
-//       args: {
-//         message: 'Args message',
-//       },
-//     },
-//     {
-//       name: 'open',
-//       args: {
-//         description: 'Args description',
-//       },
-//     },
-//     {
-//       name: 'open',
-//       args: {
-//         duration: 1,
-//       },
-//     },
-//   ],
-// }
-
-const { meta, tests } = block;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+  methods: [
+    {
+      name: 'open',
+      args: {},
+    },
+    {
+      name: 'open',
+      args: {
+        status: 'warning',
+      },
+    },
+    {
+      name: 'open',
+      args: {
+        message: 'Args message',
+      },
+    },
+    {
+      name: 'open',
+      args: {
+        description: 'Args description',
+      },
+    },
+    {
+      name: 'open',
+      args: {
+        duration: 1,
+      },
+    },
+  ],
+};
 
 jest.mock('antd', () => {
   const comp = jest.fn(() => 'mocked');
@@ -86,5 +87,5 @@ const mocks = [
   },
 ];
 
-runMockMethodTests({ examples, meta, mocks, schema, tests });
-runBlockSchemaTests({ examples, meta, schema });
+runMockMethodTests({ Block, examples, mocks, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

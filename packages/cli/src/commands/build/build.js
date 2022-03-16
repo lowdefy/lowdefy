@@ -14,18 +14,26 @@
   limitations under the License.
 */
 
-import getServer from './getServer.js';
-import installServer from './installServer.js';
-import runLowdefyBuild from './runLowdefyBuild.js';
-import runNextBuild from './runNextBuild.js';
+import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import getServer from '../../utils/getServer.js';
+import installServer from '../../utils/installServer.js';
+import mergePackageJson from '../../utils/mergePackageJson.js';
+import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
+import runNextBuild from '../../utils/runNextBuild.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
-  await getServer({ context });
-  await installServer({ context });
-  await runLowdefyBuild({ context });
-  await installServer({ context });
-  await runNextBuild({ context });
+  const directory = context.directories.server;
+  await getServer({ context, packageName: '@lowdefy/server', directory });
+  await mergePackageJson({
+    context,
+    serverDirectory: directory,
+  });
+  await addCustomPluginsAsDeps({ context, directory });
+  await installServer({ context, directory });
+  await runLowdefyBuild({ context, directory });
+  await installServer({ context, directory });
+  await runNextBuild({ context, directory });
   await context.sendTelemetry({ sendTypes: true });
   context.print.succeed(`Build successful.`);
 }

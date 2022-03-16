@@ -53,7 +53,8 @@ SkeletonAvatar.defaultProps = blockDefaultProps;
 SkeletonAvatar.meta = {
   category: 'display',
   loading: false,
+  icons: [],
+  styles: ['blocks/SkeletonAvatar/style.less'],
 };
-SkeletonAvatar.styles = ['blocks/SkeletonAvatar/style.less'];
 
 export default SkeletonAvatar;

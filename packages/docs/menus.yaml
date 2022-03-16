@@ -5,12 +5,12 @@
       pageId: introduction
       properties:
         title: Introduction
-        icon: CoffeeOutlined
+        icon: AiOutlineCoffee
     - id: tutorial
       type: MenuGroup
       properties:
         title: Tutorial
-        icon: RocketOutlined
+        icon: AiOutlineRocket
       links:
         - id: tutorial-start
           type: MenuLink
@@ -51,7 +51,7 @@
       type: MenuGroup
       properties:
         title: How To
-        icon: QuestionOutlined
+        icon: AiOutlineQuestion
       links:
         - id: generate-csv
           type: MenuLink
@@ -67,7 +67,7 @@
       type: MenuGroup
       properties:
         title: Concepts
-        icon: BulbOutlined
+        icon: AiOutlineBulb
       links:
         - id: overview
           type: MenuLink
@@ -143,7 +143,7 @@
       type: MenuGroup
       properties:
         title: Deployment
-        icon: CloudUploadOutlined
+        icon: AiOutlineCloudUpload
       links:
         - id: aws-lambda
           type: MenuLink
@@ -169,7 +169,7 @@
       type: MenuGroup
       properties:
         title: User Authentication
-        icon: TeamOutlined
+        icon: AiOutlineTeam
       links:
         - id: users
           type: MenuLink
@@ -206,7 +206,7 @@
       type: MenuGroup
       properties:
         title: Input Blocks
-        icon: FormOutlined
+        icon: AiOutlineForm
       links:
         - id: AutoComplete
           type: MenuLink
@@ -220,18 +220,9 @@
         - id: CheckboxSwitch
           type: MenuLink
           pageId: CheckboxSwitch
-        - id: ChromeColorSelector
-          type: MenuLink
-          pageId: ChromeColorSelector
-        - id: CircleColorSelector
-          type: MenuLink
-          pageId: CircleColorSelector
         - id: ColorSelector
           type: MenuLink
           pageId: ColorSelector
-        - id: CompactColorSelector
-          type: MenuLink
-          pageId: CompactColorSelector
         - id: DateRangeSelector
           type: MenuLink
           pageId: DateRangeSelector
@@ -241,9 +232,6 @@
         - id: DateTimeSelector
           type: MenuLink
           pageId: DateTimeSelector
-        - id: GithubColorSelector
-          type: MenuLink
-          pageId: GithubColorSelector
         - id: MonthSelector
           type: MenuLink
           pageId: MonthSelector
@@ -268,18 +256,12 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
-        - id: S3UploadButton
-          type: MenuLink
-          pageId: S3UploadButton
+        # - id: S3UploadButton
+        #   type: MenuLink
+        #   pageId: S3UploadButton
         - id: Selector
           type: MenuLink
           pageId: Selector
-        - id: SliderColorSelector
-          type: MenuLink
-          pageId: SliderColorSelector
-        - id: SwatchesColorSelector
-          type: MenuLink
-          pageId: SwatchesColorSelector
         - id: Switch
           type: MenuLink
           pageId: Switch
@@ -292,9 +274,6 @@
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
-        - id: TwitterColorSelector
-          type: MenuLink
-          pageId: TwitterColorSelector
         - id: WeekSelector
           type: MenuLink
           pageId: WeekSelector
@@ -302,7 +281,7 @@
       type: MenuGroup
       properties:
         title: Display Blocks
-        icon: PictureOutlined
+        icon: AiOutlinePicture
       links:
         - id: Alert
           type: MenuLink
@@ -381,7 +360,7 @@
       type: MenuGroup
       properties:
         title: Container Blocks
-        icon: ContainerOutlined
+        icon: AiOutlineContainer
       links:
         - id: Affix
           type: MenuLink
@@ -437,9 +416,9 @@
         - id: Span
           type: MenuLink
           pageId: Span
-        - id: Spin
-          type: MenuLink
-          pageId: Spin
+        # - id: Spin
+        #   type: MenuLink
+        #   pageId: Spin
         - id: Tabs
           type: MenuLink
           pageId: Tabs
@@ -451,7 +430,7 @@
       type: MenuGroup
       properties:
         title: List Blocks
-        icon: OrderedListOutlined
+        icon: AiOutlineOrderedList
       links:
         - id: ControlledList
           type: MenuLink
@@ -463,7 +442,7 @@
       type: MenuGroup
       properties:
         title: Connections
-        icon: ApiOutlined
+        icon: AiOutlineApi
       links:
         - id: AmazonRedshift
           type: MenuLink
@@ -515,6 +494,9 @@
         - id: PostgreSQL
           type: MenuLink
           pageId: PostgreSQL
+        - id: Redis
+          type: MenuLink
+          pageId: Redis
         - id: SendGridMail
           type: MenuLink
           pageId: SendGridMail
@@ -530,14 +512,11 @@
       type: MenuGroup
       properties:
         title: Actions
-        icon: ThunderboltOutlined
+        icon: AiOutlineThunderbolt
       links:
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
-        - id: JsAction
-          type: MenuLink
-          pageId: JsAction
         - id: Link
           type: MenuLink
           pageId: Link
@@ -584,11 +563,11 @@
         - id: Wait
           type: MenuLink
           pageId: Wait
-    - id: operators
+    - id: operators-menu-group
       type: MenuGroup
       properties:
         title: Operators
-        icon: ToolOutlined
+        icon: AiOutlineTool
       links:
         - id: _actions
           type: MenuLink
@@ -656,9 +635,9 @@
         - id: _input
           type: MenuLink
           pageId: _input
-        - id: _js
-          type: MenuLink
-          pageId: _js
+        # - id: _js
+        #   type: MenuLink
+        #   pageId: _js
         - id: _json
           type: MenuLink
           pageId: _json
@@ -768,13 +747,13 @@
       type: MenuGroup
       properties:
         title: Lowdefy Versions
-        icon: BranchesOutlined
+        icon: AiOutlineBranches
       links:
-        - id: v3.23.1
+        - id: v3.23.2
           type: MenuLink
           url: https://docs.lowdefy.com
           properties:
-            title: v3.23.1
+            title: v3.23.2
         - id: v3.22.0
           type: MenuLink
           url: https://61519bcb8b8ed4412aae3057--lowdefy-docs.netlify.app

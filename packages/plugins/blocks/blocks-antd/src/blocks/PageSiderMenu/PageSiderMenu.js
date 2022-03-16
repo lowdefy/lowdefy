@@ -35,7 +35,6 @@ const PageSiderMenu = ({
   components: { Icon, Link },
   events,
   content,
-  homePageId,
   menus,
   methods,
   pageId,
@@ -117,7 +116,6 @@ const PageSiderMenu = ({
       properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
       content={{
         // TODO: use next/image
-        // TODO: Link to home=true
         content: () => (
           <>
             <Header
@@ -167,7 +165,7 @@ const PageSiderMenu = ({
                         />
                       </div>
                     </div>
-                    <Link href={`${basePath}/${homePageId}`}>
+                    <Link home={true}>
                       <img
                         src={
                           (properties.logo && properties.logo.src) ||
@@ -302,8 +300,8 @@ const PageSiderMenu = ({
                                           block: true,
                                           icon: {
                                             name: openSiderState
-                                              ? 'MenuFoldOutlined'
-                                              : 'MenuUnfoldOutlined',
+                                              ? 'AiOutlineMenuFold'
+                                              : 'AiOutlineMenuUnfold',
                                           },
                                           ...(properties.toggleSiderButton || {}),
                                         }}
@@ -388,7 +386,8 @@ PageSiderMenu.meta = {
       height: '100vh',
     },
   },
+  icons: ['AiOutlineMenuFold', 'AiOutlineMenuUnfold', ...MobileMenu.meta.icons],
+  styles: ['blocks/PageSiderMenu/style.less'],
 };
-PageSiderMenu.styles = ['blocks/PageSiderMenu/style.less'];
 
 export default PageSiderMenu;

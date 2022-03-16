@@ -1,12 +1,13 @@
 {
   "name": "@lowdefy/operators-change-case",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy operator"
+    "lowdefy operator",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -42,15 +43,15 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.5",
-    "@lowdefy/operators": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
+    "@lowdefy/operators": "4.0.0-alpha.7",
     "change-case": "4.1.2"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.51",
-    "@swc/core": "1.2.107",
-    "@swc/jest": "0.2.5",
-    "jest": "27.3.1"
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

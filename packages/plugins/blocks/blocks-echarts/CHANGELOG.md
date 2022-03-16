@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **blocks-echarts:** Refactored tests to use new Block config. ([d17e34e](https://github.com/lowdefy/lowdefy/commit/d17e34ebf82a40f7f8fc28e97917e1f2f971e733))
+* **deps:** Update dependency echarts to v5.3.0. ([6571f98](https://github.com/lowdefy/lowdefy/commit/6571f988c07e02df4d1ba076f4b214918358e3e9))
+* **deps:** Update dependency echarts-for-react to v3.0.2. ([e5f7ed6](https://github.com/lowdefy/lowdefy/commit/e5f7ed6494c0fa2a39dc598fc2148eacfb3b9568))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **deps:** Update emotion css packages. ([3380594](https://github.com/lowdefy/lowdefy/commit/33805944e30e919c57e3e7e1876b9c6723c3988d))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **blocks:** Updated block meta, types and buildIcons. ([1d774a3](https://github.com/lowdefy/lowdefy/commit/1d774a310a71e125fc7bf7d0d7ef5171632a56a8))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 

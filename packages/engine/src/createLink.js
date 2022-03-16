@@ -16,32 +16,51 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-function createLink({ backLink, lowdefy, newOriginLink, sameOriginLink }) {
-  function link({ back, home, input, newTab, pageId, url, urlQuery }) {
-    let pathname = pageId;
-    if (back) {
-      return backLink();
+function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink }) {
+  function link(props) {
+    if (props.disabled === true) {
+      return disabledLink(props);
     }
-    const lowdefyUrlQuery = type.isNone(urlQuery) ? '' : `?${urlQueryFn.stringify(urlQuery)}`;
-    if (home) {
-      if (lowdefy.home.configured) {
-        pathname = '';
-        pageId = lowdefy.home.pageId;
-      } else {
-        pathname = lowdefy.home.pageId;
-        pageId = lowdefy.home.pageId;
-      }
+    if ([!props.pageId, !props.back, !props.home, !props.url].filter((v) => !v).length > 1) {
+      throw Error(
+        `Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'pageId' or 'url' can be defined.`
+      );
     }
-    if (!type.isNone(pathname)) {
-      if (!type.isNone(input)) {
-        lowdefy.inputs[pageId] = input;
-      }
-      return sameOriginLink(`/${pathname}${lowdefyUrlQuery}`, newTab);
+    if (props.back === true) {
+      // Cannot set input or urlQuery on back
+      return backLink(props);
     }
-    if (!type.isNone(url)) {
-      return newOriginLink(`${url}${lowdefyUrlQuery}`, newTab);
+    const query = type.isNone(props.urlQuery) ? '' : `${urlQueryFn.stringify(props.urlQuery)}`;
+    if (props.home === true) {
+      const pathname = `/${lowdefy.home.configured ? '' : lowdefy.home.pageId}`;
+      return sameOriginLink({
+        ...props,
+        pathname,
+        query,
+        setInput: () => {
+          lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input || {};
+        },
+      });
     }
-    throw new Error(`Invalid Link.`);
+    if (type.isString(props.pageId)) {
+      return sameOriginLink({
+        ...props,
+        pathname: `/${props.pageId}`,
+        query,
+        setInput: () => {
+          lowdefy.inputs[`page:${props.pageId}`] = props.input || {};
+        },
+      });
+    }
+    if (type.isString(props.url)) {
+      const protocol = props.url.includes(':') ? '' : 'https://';
+      return newOriginLink({
+        ...props,
+        url: `${protocol}${props.url}`,
+        query,
+      });
+    }
+    return noLink(props);
   }
   return link;
 }

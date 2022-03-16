@@ -24,10 +24,10 @@ const template = `@import '@lowdefy/layout/style.less';
 
 async function writeStyleImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
-  await context.writeBuildArtifact({
-    filePath: 'plugins/styles.less',
-    content: templateFn({ styles: components.styles }),
-  });
+  await context.writeBuildArtifact(
+    'plugins/styles.less',
+    templateFn({ styles: components.styles })
+  );
 }
 
 export default writeStyleImports;

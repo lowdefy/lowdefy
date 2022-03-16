@@ -16,8 +16,9 @@
 
 import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
+import schema from './schema.js';
 
-async function mongodbInsertMany({ request, connection }) {
+async function MongodbInsertMany({ request, connection }) {
   const deserializedRequest = deserialize(request);
   const { docs, options } = deserializedRequest;
   const { collection, client } = await getCollection({ connection });
@@ -29,8 +30,14 @@ async function mongodbInsertMany({ request, connection }) {
     throw error;
   }
   await client.close();
-  const { insertedCount, ops } = serialize(res);
-  return { insertedCount, ops };
+  const { acknowledged, insertedCount } = serialize(res);
+  return { acknowledged, insertedCount };
 }
 
-export default mongodbInsertMany;
+MongodbInsertMany.schema = schema;
+MongodbInsertMany.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
+
+export default MongodbInsertMany;

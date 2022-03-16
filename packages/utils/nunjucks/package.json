@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/nunjucks",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,15 +40,15 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.5",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
     "moment": "2.29.1",
     "nunjucks": "3.2.3"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
-    "jest": "27.3.1"
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

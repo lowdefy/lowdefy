@@ -1,0 +1,62 @@
+{
+  "name": "@lowdefy/connection-redis",
+  "version": "4.0.0-alpha.7",
+  "licence": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy connection",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "João Correia",
+      "url": "https://github.com/correiarmjoao"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./connections": "./dist/connections.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "4.0.0-alpha.7",
+    "redis": "4.0.3"
+  },
+  "devDependencies": {
+    "@lowdefy/ajv": "4.0.0-alpha.7",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "jest": "27.5.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

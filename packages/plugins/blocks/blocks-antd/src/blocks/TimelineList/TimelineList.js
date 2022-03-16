@@ -87,7 +87,8 @@ TimelineList.meta = {
       height: 80,
     },
   },
+  icons: [],
+  styles: ['blocks/TimelineList/style.less'],
 };
-TimelineList.styles = ['blocks/TimelineList/style.less'];
 
 export default TimelineList;

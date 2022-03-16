@@ -16,7 +16,7 @@
 
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
-import getHome from './routes/rootConfig/getHome.js';
+import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 
@@ -29,13 +29,13 @@ import {
 } from './context/errors.js';
 
 export {
+  AuthenticationError,
   callRequest,
+  ConfigurationError,
   createApiContext,
-  getHome,
+  getHomeAndMenus,
   getPageConfig,
   getRootConfig,
-  AuthenticationError,
-  ConfigurationError,
   RequestError,
   ServerError,
   TokenExpiredError,

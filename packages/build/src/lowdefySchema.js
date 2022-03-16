@@ -63,12 +63,6 @@ export default {
             },
           },
         },
-        style: {
-          type: 'object',
-          errorMessage: {
-            type: 'App "app.style" should be an object.',
-          },
-        },
       },
     },
     authConfig: {
@@ -518,6 +512,38 @@ export default {
         },
       },
     },
+    plugin: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['name', 'version'],
+      properties: {
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "version" should be a string.',
+          },
+        },
+        typePrefix: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "typePrefix" should be a string.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Plugin should be an object.',
+        required: {
+          name: 'Plugin should have required property "name".',
+          version: 'Plugin should have required property "version".',
+        },
+      },
+    },
     request: {
       type: 'object',
       additionalProperties: false,
@@ -601,6 +627,16 @@ export default {
       },
       additionalProperties: false,
       properties: {
+        auth: {
+          $ref: '#/definitions/authConfig',
+        },
+        basePath: {
+          type: 'string',
+          description: 'App base path to apply to all routes. Base path must start with "/".',
+          errorMessage: {
+            type: 'App "config.basePath" should be a string.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:
@@ -609,23 +645,30 @@ export default {
             type: 'App "config.homePageId" should be a string.',
           },
         },
-        auth: {
-          $ref: '#/definitions/authConfig',
-        },
-      },
-    },
-    types: {
-      type: 'object',
-      patternProperties: {
-        '^.*$': {
-          url: 'string',
+        theme: {
+          type: 'object',
           errorMessage: {
-            enum: 'Type "url" should be a string.',
+            type: 'App "config.theme" should be an object.',
+          },
+          properties: {
+            lessVariables: {
+              type: 'object',
+              description: 'App theme less variables.',
+              errorMessage: {
+                type: 'App "config.theme.lessVariables" should be an object.',
+              },
+            },
           },
         },
       },
+    },
+    plugins: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/plugin',
+      },
       errorMessage: {
-        type: 'App "types" should be an object.',
+        type: 'App "plugins" should be an array.',
       },
     },
     global: {

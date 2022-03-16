@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Title
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Title/Title.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Title/schema.json
     filePath: blocks/display/Title.yaml
     init_state_values:
       __type_block.properties.copyable: boolean

@@ -14,23 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 async function writePage({ page, context }) {
-  if (!type.isObject(page)) {
-    throw new Error(`Page is not an object. Received ${JSON.stringify(page)}`);
-  }
-  await context.writeBuildArtifact({
-    filePath: `pages/${page.pageId}/${page.pageId}.json`,
-    content: JSON.stringify(page, null, 2),
-  });
+  await context.writeBuildArtifact(
+    `pages/${page.pageId}/${page.pageId}.json`,
+    JSON.stringify(page, null, 2)
+  );
 }
 
 async function writePages({ components, context }) {
-  if (type.isNone(components.pages)) return;
-  if (!type.isArray(components.pages)) {
-    throw new Error(`Pages is not an array.`);
-  }
   const writePromises = components.pages.map((page) => writePage({ page, context }));
   return Promise.all(writePromises);
 }

@@ -42,6 +42,7 @@ _ref:
 
             The config object has the following properties:
 
+            - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
             - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
             - `experimental_initPageId: string`: The pageId of the page that should be loaded when app is initialized. User is then redirected to requeted page. You can use onInit/onInitAsync/onEnter/onEnterAsync events to fetch and prepare global variables for other parts of the app.
 
@@ -105,11 +106,11 @@ _ref:
                     pageId: page1
                     properties:
                       title: Page 1
-                      icon: FileOutlined
+                      icon: AiOutlineFile
                   - id: top-group
                     properties:
                       title: Group
-                      icon: GroupOutlined
+                      icon: AiOutlineGroup
                     links:
                       - id: page2
                         type: MenuLink
@@ -136,13 +137,13 @@ _ref:
                     pageId: page1
                     properties:
                       title: Page 1
-                      icon: FileOutlined
+                      icon: AiOutlineFile
                   - id: page3
                     type: MenuLink
                     pageId: page3
                     properties:
                       title: Page 3
-                      icon: ControlOutlined
+                      icon: AiOutlineControl
             ```
 
             # Pages

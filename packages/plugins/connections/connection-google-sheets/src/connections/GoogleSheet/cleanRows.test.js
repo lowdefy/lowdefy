@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import cleanRows from './cleanRows';
+import cleanRows from './cleanRows.js';
 
 test('cleanRows removes objects with key _sheet from an array of rows', () => {
   expect(

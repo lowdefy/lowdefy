@@ -104,7 +104,8 @@ ButtonSelector.meta = {
   loading: {
     type: 'SkeletonInput',
   },
+  icons: [...Label.meta.icons],
+  styles: ['blocks/ButtonSelector/style.less'],
 };
-ButtonSelector.styles = ['blocks/ButtonSelector/style.less'];
 
 export default ButtonSelector;

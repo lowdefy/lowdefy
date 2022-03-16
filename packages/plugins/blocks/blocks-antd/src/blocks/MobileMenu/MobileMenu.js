@@ -54,7 +54,7 @@ const MobileMenu = ({
           hideTitle: true,
           type: 'primary',
           icon: {
-            name: openState ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined',
+            name: openState ? 'AiOutlineMenuUnfold' : 'AiOutlineMenuFold',
           },
           ...(properties.toggleMenuButton || {}),
         }}
@@ -122,7 +122,8 @@ MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
   loading: false,
+  icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
+  styles: ['blocks/MobileMenu/style.less'],
 };
-MobileMenu.styles = ['blocks/MobileMenu/style.less'];
 
 export default MobileMenu;

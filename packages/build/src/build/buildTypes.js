@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function buildTypeClass({ counter, definitions, store, typeClass }) {
+function buildTypeClass(
+  context,
+  { counter, definitions, store, typeClass, warnIfMissing = false }
+) {
   const counts = counter.getCounts();
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
+      if (warnIfMissing) {
+        context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
+        return;
+      }
       throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
     }
     store[typeName] = {
@@ -31,6 +38,10 @@ function buildTypeClass({ counter, definitions, store, typeClass }) {
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
+  // Add operators used by form validation
+  typeCounters.operators.client.increment('_not');
+  typeCounters.operators.client.increment('_type');
+
   components.types = {
     actions: {},
     blocks: {},
@@ -42,46 +53,48 @@ function buildTypes({ components, context }) {
     },
   };
 
-  // buildTypeClass({
-  //   counter: typeCounters.actions,
-  //   definitions: context.types.actions,
-  //   store: components.types.actions,
-  //   typeClass: 'Action',
-  // });
+  buildTypeClass(context, {
+    counter: typeCounters.actions,
+    definitions: context.typesMap.actions,
+    store: components.types.actions,
+    typeClass: 'Action',
+  });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.blocks,
-    definitions: context.types.blocks,
+    definitions: context.typesMap.blocks,
     store: components.types.blocks,
     typeClass: 'Block',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.connections,
-    definitions: context.types.connections,
+    definitions: context.typesMap.connections,
     store: components.types.connections,
     typeClass: 'Connection',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.requests,
-    definitions: context.types.requests,
+    definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.operators.client,
-    definitions: context.types.operators.client,
+    definitions: context.typesMap.operators.client,
     store: components.types.operators.client,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 
-  buildTypeClass({
+  buildTypeClass(context, {
     counter: typeCounters.operators.server,
-    definitions: context.types.operators.server,
+    definitions: context.typesMap.operators.server,
     store: components.types.operators.server,
     typeClass: 'Operator',
+    warnIfMissing: true,
   });
 }
 

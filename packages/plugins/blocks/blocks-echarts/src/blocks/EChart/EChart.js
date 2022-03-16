@@ -109,7 +109,8 @@ EChart.meta = {
       height: 300,
     },
   },
+  icons: [],
+  styles: [],
 };
-EChart.styles = [];
 
 export default EChart;

@@ -18,10 +18,9 @@ _ref:
     block_type: DateSelector
     value_type: date
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/DateSelector/DateSelector.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/DateSelector/schema.json
     filePath: blocks/input/DateSelector.yaml
     description_content: |
       The `DateSelector` block allows a user to select a date from a calender.
 
       > Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
-

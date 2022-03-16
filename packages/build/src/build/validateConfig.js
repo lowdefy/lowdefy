@@ -36,6 +36,14 @@ async function validateConfig({ components }) {
   if (type.isNone(components.config.auth.pages.roles)) {
     components.config.auth.pages.roles = {};
   }
+  if (type.isNone(components.config.theme)) {
+    components.config.theme = {};
+  }
+  if (type.isString(components.config.basePath)) {
+    if (components.config.basePath[0] !== '/') {
+      throw Error('Base path must start with "/".');
+    }
+  }
   validate({
     schema: lowdefySchema.definitions.authConfig,
     data: components.config.auth,

@@ -15,11 +15,10 @@
 */
 
 import StripeRequest from './StripeRequest/StripeRequest.js';
+import schema from './schema.js';
 
 export default {
-  import: {
-    schema: 'connections/Stripe/StripeSchema.json',
-  },
+  schema,
   requests: {
     StripeRequest,
   },

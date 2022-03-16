@@ -24,17 +24,18 @@ import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
 import getPackageManager from './getPackageManager.js';
 import getSendTelemetry from './getSendTelemetry.js';
-import createPrint from './print.js';
+import createPrint from './createPrint.js';
 
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
   context.commandLineOptions = options;
   context.print = createPrint();
 
-  context.baseDirectory = path.resolve(options.baseDirectory || process.cwd());
-  const { cliConfig, lowdefyVersion } = await getLowdefyYaml(context);
+  context.configDirectory = path.resolve(options.configDirectory || process.cwd());
+  const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;
+  context.plugins = plugins;
 
   const { appId } = await getCliJson(context);
   context.appId = appId;

@@ -14,28 +14,26 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          properties: {
-            str: {
-              type: 'string',
-              description: 'str description',
-            },
-            num: {
-              type: 'number',
-              description: 'num description',
-            },
+      field: {
+        type: 'object',
+        description: 'description',
+        properties: {
+          str: {
+            type: 'string',
+            description: 'str description',
+          },
+          num: {
+            type: 'number',
+            description: 'num description',
           },
         },
       },
@@ -140,44 +138,6 @@ test('object defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
-      properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            default: {
-              num: 1,
-            },
-            description: 'description',
-            properties: {
-              str: {
-                type: 'string',
-                description: 'str description',
-              },
-              num: {
-                type: 'number',
-                description: 'num description',
-              },
-            },
-          },
-        },
-      },
-    },
-  };
-  expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
-    Object {
-      "field": Object {
-        "num": 1,
-        "str": null,
-      },
-    }
-  `);
-});
-
-const schemaNested = {
-  schema: {
     properties: {
       type: 'object',
       additionalProperties: false,
@@ -197,19 +157,53 @@ const schemaNested = {
               type: 'number',
               description: 'num description',
             },
-            bool: {
-              type: 'boolean',
-              default: true,
-              description: 'bool description',
-            },
-            obj: {
-              type: 'object',
-              description: 'obj description',
-              properties: {
-                str: {
-                  type: 'string',
-                  description: 'obj.str description',
-                },
+          },
+        },
+      },
+    },
+  };
+  expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
+    Object {
+      "field": Object {
+        "num": 1,
+        "str": null,
+      },
+    }
+  `);
+});
+
+const schemaNested = {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      field: {
+        type: 'object',
+        default: {
+          num: 1,
+        },
+        description: 'description',
+        properties: {
+          str: {
+            type: 'string',
+            description: 'str description',
+          },
+          num: {
+            type: 'number',
+            description: 'num description',
+          },
+          bool: {
+            type: 'boolean',
+            default: true,
+            description: 'bool description',
+          },
+          obj: {
+            type: 'object',
+            description: 'obj description',
+            properties: {
+              str: {
+                type: 'string',
+                description: 'obj.str description',
               },
             },
           },
@@ -383,42 +377,40 @@ test('object schemaNested defaultValueTransformer', () => {
     }
   `);
   const schemaDVNested = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            default: {
-              num: 1,
+        field: {
+          type: 'object',
+          default: {
+            num: 1,
+          },
+          description: 'description',
+          properties: {
+            str: {
+              type: 'string',
+              description: 'str description',
             },
-            description: 'description',
-            properties: {
-              str: {
-                type: 'string',
-                description: 'str description',
+            num: {
+              type: 'number',
+              description: 'num description',
+            },
+            bool: {
+              type: 'boolean',
+              default: true,
+              description: 'bool description',
+            },
+            obj: {
+              type: 'object',
+              default: {
+                str: 'a',
               },
-              num: {
-                type: 'number',
-                description: 'num description',
-              },
-              bool: {
-                type: 'boolean',
-                default: true,
-                description: 'bool description',
-              },
-              obj: {
-                type: 'object',
-                default: {
-                  str: 'a',
-                },
-                description: 'obj description',
-                properties: {
-                  str: {
-                    type: 'string',
-                    description: 'obj.str description',
-                  },
+              description: 'obj description',
+              properties: {
+                str: {
+                  type: 'string',
+                  description: 'obj.str description',
                 },
               },
             },

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Fix util package tests. ([9d0cc45](https://github.com/lowdefy/lowdefy/commit/9d0cc45cffd3a373492bc842ba54a7254f7c509f))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* **node-utils:** Convert writeFile function prototype. ([5371430](https://github.com/lowdefy/lowdefy/commit/53714307123f3477240767a91c5332a70a292d93))
+* **node-utils:** Do not throw if readFile path is not resolved. ([b451c29](https://github.com/lowdefy/lowdefy/commit/b451c29b4a904bfdbaa31e9316b488935bdf8571))
+
+
+### Features
+
+* **build:** Add buildPath to config. ([1cce024](https://github.com/lowdefy/lowdefy/commit/1cce024339bc89e4192d86f09d1a9ec233663f02))
+* **node-utils:** Add copyDirectory. ([852a77a](https://github.com/lowdefy/lowdefy/commit/852a77a6277f0fe9c98cb39e329f60dccdb0793e))
+* **node-utils:** Replace rimraf with fs-extra. ([e15031d](https://github.com/lowdefy/lowdefy/commit/e15031d32de3bc60eef5248b9f8440fc14ea11ef))
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Features
+
+* Add server manager and file watcher in reload event stream. ([8474aaf](https://github.com/lowdefy/lowdefy/commit/8474aaf63c0475cb19a76ca3df9459c05f263986))
+* **server-dev:** Updates to dev server manager. ([b4861d0](https://github.com/lowdefy/lowdefy/commit/b4861d0892ee9a91ff49b3bb72498d8c42c02778))
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 **Note:** Version bump only for package @lowdefy/node-utils

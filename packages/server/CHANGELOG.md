@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Convert links to use pathname and query. ([1189a8b](https://github.com/lowdefy/lowdefy/commit/1189a8bdbb6ade52eee7e8223603dc4d2dcd6223))
+* **deps:** Update dependecy next to v12.0.10 ([c058935](https://github.com/lowdefy/lowdefy/commit/c05893578f8d5f625391b560ec24411d16df902d))
+* **deps:** Update dependency next-auth to v4.1.2. ([4b63c87](https://github.com/lowdefy/lowdefy/commit/4b63c8774fab7adbc3e11f92a5e808b38d22f4c9))
+* **deps:** Update dependency next-with-less to v2.0.4. ([7c71492](https://github.com/lowdefy/lowdefy/commit/7c714926ee0caeba362af78b594698635f34c70f))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **server:** Maintain the lowdefy objects during page transitions. ([4b3d061](https://github.com/lowdefy/lowdefy/commit/4b3d061a0de79b86b0fa8be9ff8948a9dc0caeb7))
+
+
+### Features
+
+* Add start, start:dev and start:server-dev scripts for easy dev ⚡️. ([da813c3](https://github.com/lowdefy/lowdefy/commit/da813c3d13b39fcfdbd50b8d53c3e0b1f5e7e8e2))
+* **build:** Add buildPath to config. ([1cce024](https://github.com/lowdefy/lowdefy/commit/1cce024339bc89e4192d86f09d1a9ec233663f02))
+* **build:** Use dynamic import for build resolver and transformer functions. ([c9db72a](https://github.com/lowdefy/lowdefy/commit/c9db72ac55109a85cfc821dfbbf87e54b4881d59))
+* **server:** Add ariaLabel and rel properties to Link. ([95b4447](https://github.com/lowdefy/lowdefy/commit/95b44473a3f67741951e4d020a0ad84a90805d94))
+* **server:** Add Next Link component implementation. ([6104ae0](https://github.com/lowdefy/lowdefy/commit/6104ae0254909fa969bd9f641e540700d8d8b268))
+* **server:** Add replace and scroll to Link. ([9d6ac04](https://github.com/lowdefy/lowdefy/commit/9d6ac04b09f7c2281ebc699de504bba8b8b5e13b))
+* **server:** Added import for actions plugins to the lowdefy context. ([f28052c](https://github.com/lowdefy/lowdefy/commit/f28052cb510a0757310d20068105d193e2f6856c))
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
+# [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
+
+
+### Bug Fixes
+
+* **blocks-markdown:** Upgraded react markdown dependencies. ([9eb7c3a](https://github.com/lowdefy/lowdefy/commit/9eb7c3acbd8ab4088db75637ec8f17e36289787f))
+* Fix antd styles. ([62a752d](https://github.com/lowdefy/lowdefy/commit/62a752d66c9b7cf4ebfd07fcc92d8a195ed43be4))
+* Fix blocks-echarts yarn berry packageExtensions. ([a908c1c](https://github.com/lowdefy/lowdefy/commit/a908c1c1f8ccaab37643bf8a043a6cec8f82f243))
+* Fix blocks-markdown package dependencies. ([035b0c1](https://github.com/lowdefy/lowdefy/commit/035b0c108b9447570fe7d37a5386d9ea414714fa))
+* Fix static files. ([d2e343e](https://github.com/lowdefy/lowdefy/commit/d2e343eb8b644d953babac628470e785af641237))
+* **server:** Home is also returned in getRootConfig. ([b138485](https://github.com/lowdefy/lowdefy/commit/b13848527749eb6f030bd944b1b169e8bd04af5d))
+
+
+### Features
+
+* 404 page working with next server ([270c92e](https://github.com/lowdefy/lowdefy/commit/270c92e16a42a5e9988b890f2abd41b16da6f673))
+* Add icons and webmanifest to next server. ([6a254ed](https://github.com/lowdefy/lowdefy/commit/6a254ed88282a4965aa6e7399250668a409310a3))
+* Add secrets to v4 servers ([9ef2ccd](https://github.com/lowdefy/lowdefy/commit/9ef2ccd131149e72ba87aee20f1720a99dbd9e07))
+* Add server manager and file watcher in reload event stream. ([8474aaf](https://github.com/lowdefy/lowdefy/commit/8474aaf63c0475cb19a76ca3df9459c05f263986))
+* **build:** Move app.style.lessVariables to config.theme.lessVariables. ([cb14f17](https://github.com/lowdefy/lowdefy/commit/cb14f1712f9f064e96d2f71bf12bb3922aff46eb))
+* **server-dev:** Reload client window if dev server is restarted. ([b8c1d58](https://github.com/lowdefy/lowdefy/commit/b8c1d58ea8b0056fdd9ce042590f7c7f90bcc439))
+
+
+### BREAKING CHANGES
+
+* The 404 page is now always publically accessible.
+
+
+
+
+
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 
@@ -34,6 +96,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 # [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package @lowdefy/server
 

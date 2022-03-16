@@ -15,18 +15,22 @@
 */
 
 import cleanDirectory from './cleanDirectory.js';
+import copyDirectory from './copyDirectory.js';
 import getConfigFromEnv from './getConfigFromEnv.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 
 export {
   cleanDirectory,
+  copyDirectory,
   getConfigFromEnv,
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,
+  spawnProcess,
   readFile,
   writeFile,
 };

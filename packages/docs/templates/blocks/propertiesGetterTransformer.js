@@ -72,9 +72,11 @@ const arrayGetter = ({ contextId, data, items, path, underscores }) => {
 const propertyGetter = ({ contextId, data, path, property, underscores }) => {
   if (property.docs && property.docs.displayType === 'yaml') {
     return {
-      [`${underscores}yaml.parse`]: {
-        [`${underscores}if_none`]: [{ [`${underscores}${data}`]: { key: path, contextId } }, ''],
-      },
+      [`${underscores}yaml.parse`]: [
+        {
+          [`${underscores}if_none`]: [{ [`${underscores}${data}`]: { key: path, contextId } }, ''],
+        },
+      ],
     };
   }
   if (property.docs && property.docs.displayType === 'manual' && property.docs.getter != null) {
@@ -124,9 +126,9 @@ const transformer = (obj, vars) => {
     contextId,
     data: 'state',
     path: 'block.properties',
-    properties: obj.schema.properties.properties,
+    properties: obj.properties.properties,
     underscores: '_',
   });
 };
 
-module.exports = transformer;
+export default transformer;

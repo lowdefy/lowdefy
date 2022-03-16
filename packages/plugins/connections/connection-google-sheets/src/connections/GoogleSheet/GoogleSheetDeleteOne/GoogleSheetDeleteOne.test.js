@@ -15,11 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import googleSheetDeleteOne from './GoogleSheetDeleteOne.js';
-import requestIndex from './index.js';
-import schema from './GoogleSheetDeleteOneSchema.json';
+import GoogleSheetDeleteOne from './GoogleSheetDeleteOne.js';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = GoogleSheetDeleteOne.meta;
+const schema = GoogleSheetDeleteOne.schema;
 
 const mockGetRows = jest.fn();
 const mockDelete = jest.fn();
@@ -79,7 +78,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 
 test('googleSheetDeleteMany, match one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetDeleteOne({
+  const res = await GoogleSheetDeleteOne({
     request: {
       filter: { id: '1' },
     },
@@ -103,7 +102,7 @@ test('googleSheetDeleteMany, match one', async () => {
 
 test('googleSheetDeleteMany, match nothing', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetDeleteOne({
+  const res = await GoogleSheetDeleteOne({
     request: {
       filter: { id: 'does_not_exist' },
     },
@@ -117,7 +116,7 @@ test('googleSheetDeleteMany, match nothing', async () => {
 
 test('googleSheetDeleteMany, match more than one', async () => {
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
-  const res = await googleSheetDeleteOne({
+  const res = await GoogleSheetDeleteOne({
     request: {
       filter: { _rowNumber: { $gt: 3 } },
     },

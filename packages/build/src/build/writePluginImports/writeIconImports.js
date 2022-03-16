@@ -17,24 +17,18 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `{%- for package in packages -%}
-{%- for icon in package.icons -%}
-import { {{ icon }} } from '{{ package.package }}';
-{% endfor -%}
-{% endfor -%}
+{% if package.icons.length %}import { {% for icon in package.icons -%}{% if not loop.last -%} {{ icon }}, {% else -%} {{ icon }} } from '{{ package.package }}';
+{% endif -%}{% endfor %}{% endif %}{% endfor -%}
 export default {
-  {% for package in packages -%}
-  {%- for icon in package.icons -%}
-  {{ icon }},
-  {% endfor -%}{%- endfor -%}
-};
-`;
+  {%- for package in packages -%}
+  {%- for icon in package.icons %}
+  {{ icon }},{% endfor %}
+{%- endfor %}
+};`;
 
 async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
-  await context.writeBuildArtifact({
-    filePath: 'plugins/icons.js',
-    content: templateFn({ packages: components.icons }),
-  });
+  await context.writeBuildArtifact('plugins/icons.js', templateFn({ packages: components.icons }));
 }
 
 export default writeIconImports;

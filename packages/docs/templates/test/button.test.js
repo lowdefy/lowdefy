@@ -14,22 +14,20 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          type: 'object',
-          description: 'description',
-          docs: {
-            displayType: 'button',
-          },
+      field: {
+        type: 'object',
+        description: 'description',
+        docs: {
+          displayType: 'button',
         },
       },
     },
@@ -137,22 +135,20 @@ test('button propertiesGetterTransformer', () => {
 test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schema)).toMatchInlineSnapshot(`Object {}`);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            type: 'object',
-            description: 'description',
-            docs: {
-              displayType: 'button',
-            },
-            default: {
-              icon: 'UploadOutlined',
-              title: 'Upload',
-              type: 'default',
-            },
+        field: {
+          type: 'object',
+          description: 'description',
+          docs: {
+            displayType: 'button',
+          },
+          default: {
+            icon: 'AiOutlineUpload',
+            title: 'Upload',
+            type: 'default',
           },
         },
       },
@@ -161,7 +157,7 @@ test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
     Object {
       "field": Object {
-        "icon": "UploadOutlined",
+        "icon": "AiOutlineUpload",
         "title": "Upload",
         "type": "default",
       },

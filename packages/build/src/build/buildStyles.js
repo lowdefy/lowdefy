@@ -20,12 +20,12 @@ function buildStyles({ components, context }) {
 
   Object.entries(components.types.blocks).forEach(([blockName, block]) => {
     styles.add(
-      ...(context.types.styles[block.package].default || []).map(
+      ...(context.typesMap.styles[block.package].default || []).map(
         (style) => `${block.package}/${style}`
       )
     );
     styles.add(
-      ...(context.types.styles[block.package][blockName] || []).map(
+      ...(context.typesMap.styles[block.package][blockName] || []).map(
         (style) => `${block.package}/${style}`
       )
     );

@@ -15,6 +15,15 @@
 */
 
 import { NodeParser } from '@lowdefy/operators';
+import _type from './type.js';
+import _date from './date.js';
+
+const operators = {
+  _date,
+  _type,
+};
+
+const location = 'location';
 
 const state = {
   string: 'Some String',
@@ -25,136 +34,79 @@ const state = {
 
 console.error = () => {};
 
-test('_type with on, pass', async () => {
-  const input = { _type: { type: 'string', on: 'a' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+test('_type with on, pass', () => {
+  expect(_type({ params: { type: 'string', on: 'a' }, location })).toEqual(true);
+});
+test('_type with on, fail', () => {
+  expect(_type({ params: { type: 'number', on: 'a' }, location })).toEqual(false);
+});
+test('_type with key, pass', () => {
+  expect(_type({ params: { type: 'string', key: 'string' }, location, state })).toEqual(true);
+});
+test('_type with key, fail', () => {
+  expect(_type({ params: { type: 'string', key: 'number' }, location, state })).toEqual(false);
+});
+test('_type with null on, pass', () => {
+  expect(_type({ params: { type: 'null', on: null }, location })).toEqual(true);
+});
+test('_type with null on, fail', () => {
+  expect(_type({ params: { type: 'boolean', on: null }, location })).toEqual(false);
+});
+test('_type with nonexistent key', () => {
+  expect(_type({ params: { type: 'boolean', key: 'notThere' }, location, state })).toEqual(false);
+});
+test('_type with null key', () => {
+  expect(_type({ params: { type: 'boolean', key: null }, location, state })).toEqual(false);
+});
+test('_type null', () => {
+  expect(() => _type({ params: null, location })).toThrow(
+    'Operator Error: _type.type must be a string. Received: null at location.'
+  );
+});
+test('_type with non-string on', () => {
+  expect(_type({ params: { type: 'number', on: 5 }, location })).toEqual(true);
+});
+test('_type with unknown type', () => {
+  expect(() => _type({ params: { type: 'strings' }, location })).toThrow(
+    'Operator Error: "strings" is not a valid _type test. Received: {"type":"strings"} at location.'
+  );
+});
+test('_type date on string date fail', () => {
+  expect(_type({ params: { type: 'date', on: '2019-11-28T08:10:09.844Z' }, location })).toEqual(
+    false
+  );
+});
+test('_type date on date object pass', () => {
+  expect(_type({ params: { type: 'date', on: new Date() }, location })).toEqual(true);
 });
 
-test('_type with on, fail', async () => {
-  const input = { _type: { type: 'number', on: 'b' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+test('_type array', () => {
+  expect(_type({ params: { type: 'array', key: 'arr' }, location, state })).toEqual(true);
+});
+test('_type object', () => {
+  expect(_type({ params: { type: 'object', on: { key: 'value' } }, location, state })).toEqual(
+    true
+  );
+});
+test('_type primitive', () => {
+  expect(_type({ params: { type: 'primitive', on: 'Primitive string' }, location, state })).toEqual(
+    true
+  );
+});
+test('_type integer', () => {
+  expect(_type({ params: { type: 'integer', on: 42 }, location, state })).toEqual(true);
+});
+test('_type undefined', () => {
+  expect(_type({ params: { type: 'undefined', on: undefined }, location, state })).toEqual(true);
+});
+test('_type none', () => {
+  expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
 });
 
-// NOTE: key not supported by NodeParser
-// test('_type with key, pass', async () => {
-//   const input = { _type: { type: 'string', key: 'string' } };
-//   const parser = new NodeParser({ state });
-//   await parser.init();
-//   const res = parser.parse({ input, location: 'locationId' });
-//   expect(res.output).toBe(true);
-//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
-// });
-
-// test('_type with key, fail', async () => {
-//   const input = { _type: { type: 'number', key: 'string' } };
-//   const parser = new NodeParser({ state });
-//   await parser.init();
-//   const res = parser.parse({ input, location: 'locationId' });
-//   expect(res.output).toBe(false);
-//   expect(res.errors).toMatchInlineSnapshot(`Array []`);
-// });
-
-test('_type with null on pass', async () => {
-  const input = { _type: { type: 'null', on: null } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-test('_type with null on fail', async () => {
-  const input = { _type: { type: 'boolean', on: null } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type with nonexistent key', async () => {
-  const input = { _type: { type: 'string', key: 'notThere' } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type with nonexistent key', async () => {
-  const input = { _type: { type: 'string', key: null } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type null', async () => {
-  const input = { _type: null };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _type.type must be a string. Received: null at locationId.],
-    ]
-  `);
-});
-
-test('_type with non-string on', async () => {
-  const input = { _type: { type: 'number', on: 5 } };
-  const parser = new NodeParser({ state });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type with unknown type', async () => {
-  const input = { _type: 'strings' };
-  const parser = new NodeParser({ state, arrayIndices: [] });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId' });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: "strings" is not a valid _type test. Received: "strings" at locationId.],
-    ]
-  `);
-});
-
-test('_type date with on packed date pass', async () => {
+test('_type date with on packed date pass and calls NodeParser', async () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
-  const parser = new NodeParser({ state, arrayIndices: [] });
+  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
   await parser.init();
-  const res = parser.parse({ input, id: '1', location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type date on string date fail', async () => {
-  const input = { _type: { type: 'date', on: '2019-11-28T08:10:09.844Z' } };
-  const parser = new NodeParser({ state, arrayIndices: [] });
-  await parser.init();
-  const res = parser.parse({ input, id: '1', location: 'locationId' });
-  expect(res.output).toBe(false);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_type date on date object pass', async () => {
-  const input = { _type: { type: 'date', on: new Date() } };
-  const parser = new NodeParser({ state, arrayIndices: [] });
-  await parser.init();
-  const res = parser.parse({ input, id: '1', location: 'locationId' });
-  expect(res.output).toBe(true);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  const res = parser.parse({ input, location });
+  expect(res.output).toEqual(true);
 });

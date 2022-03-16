@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBFindOne from './MongoDBFindOne.js';
+import MongoDBFindOne from './MongoDBFindOne.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBFindOneSchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBFindOne.meta;
+const schema = MongoDBFindOne.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -39,7 +38,7 @@ test('findOne', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBFindOne({ request, connection });
+  const res = await MongoDBFindOne({ request, connection });
   expect(res).toEqual({
     _id: 1,
   });
@@ -55,7 +54,7 @@ test('findOne only find one', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBFindOne({ request, connection });
+  const res = await MongoDBFindOne({ request, connection });
   expect(res).toEqual({
     _id: 2,
   });
@@ -72,7 +71,7 @@ test('find options', async () => {
     collection,
     read: true,
   };
-  const res = await mongoDBFindOne({ request, connection });
+  const res = await MongoDBFindOne({ request, connection });
   expect(res).toEqual({
     _id: 2,
   });
@@ -86,8 +85,8 @@ test('findOne connection error', async () => {
     collection,
     read: true,
   };
-  await expect(mongoDBFindOne({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+  await expect(MongoDBFindOne({ request, connection })).rejects.toThrow(
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
@@ -99,7 +98,7 @@ test('findOne mongodb error', async () => {
     collection,
     read: true,
   };
-  await expect(mongoDBFindOne({ request, connection })).rejects.toThrow('unknown operator: $badOp');
+  await expect(MongoDBFindOne({ request, connection })).rejects.toThrow('unknown operator: $badOp');
 });
 
 test('checkRead should be true', async () => {

@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        str: {
-          type: 'string',
-          description: 'String description.',
-        },
+      str: {
+        type: 'string',
+        description: 'String description.',
       },
     },
   },
@@ -80,16 +78,14 @@ test('string defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          str: {
-            type: 'string',
-            default: 'str_default',
-            description: 'String description.',
-          },
+        str: {
+          type: 'string',
+          default: 'str_default',
+          description: 'String description.',
         },
       },
     },

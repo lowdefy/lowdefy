@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Modal
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Modal/Modal.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Modal/schema.json
     filePath: blocks/container/Modal.yaml
     description_content: |
       A popup container, presenting the user with a modal dialog.

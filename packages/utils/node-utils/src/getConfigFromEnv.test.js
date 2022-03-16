@@ -27,7 +27,8 @@ test('Get config from env', () => {
     LOWDEFY_SERVER_BUILD_DIRECTORY: 'build',
     LOWDEFY_SERVER_PUBLIC_DIRECTORY: 'public',
     LOWDEFY_SERVER_PORT: '8080',
-    LOWDEFY_SERVER_BASE_PATH: 'base',
+    LOWDEFY_BASE_PATH: 'base',
+    LOWDEFY_SERVER_LOG_LEVEL: 'verbose',
     OTHER_VAR: 'other',
     ANOTHER_VAR: 'another',
     ASDF_GHJK: 'asdfghjk',
@@ -35,9 +36,10 @@ test('Get config from env', () => {
   const config = getConfigFromEnv();
   expect(config).toEqual({
     buildDirectory: 'build',
+    logLevel: 'verbose',
     publicDirectory: 'public',
     port: 8080,
-    serverBasePath: 'base',
+    basePath: 'base',
   });
 });
 

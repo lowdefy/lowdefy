@@ -26,6 +26,7 @@ import swap from './swap.js';
 import type from './type.js';
 import unset from './unset.js';
 import urlQuery from './urlQuery.js';
+import wait from './wait.js';
 
 export {
   applyArrayIndices,
@@ -40,4 +41,5 @@ export {
   type,
   unset,
   urlQuery,
+  wait,
 };

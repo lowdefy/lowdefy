@@ -1,12 +1,13 @@
 {
   "name": "@lowdefy/connection-mongodb",
-  "version": "4.0.0-alpha.5",
+  "version": "4.0.0-alpha.7",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy connection"
+    "lowdefy connection",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -27,8 +28,8 @@
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./connections/*": "./dist/connections/*"
+    "./connections": "./dist/connections.js",
+    "./types": "./dist/types.js"
   },
   "files": [
     "dist/*"
@@ -41,17 +42,17 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.5",
-    "mongodb": "3.7.3",
+    "@lowdefy/helpers": "4.0.0-alpha.7",
+    "mongodb": "4.4.0",
     "saslprep": "1.0.3"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.5",
-    "@shelf/jest-mongodb": "2.1.0",
-    "@swc/cli": "0.1.52",
-    "@swc/core": "1.2.112",
-    "@swc/jest": "0.2.9",
-    "jest": "27.3.1"
+    "@lowdefy/ajv": "4.0.0-alpha.7",
+    "@shelf/jest-mongodb": "2.2.0",
+    "@swc/cli": "0.1.55",
+    "@swc/core": "1.2.135",
+    "@swc/jest": "0.2.17",
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

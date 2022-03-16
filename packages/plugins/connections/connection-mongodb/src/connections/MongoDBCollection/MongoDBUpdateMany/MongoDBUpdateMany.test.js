@@ -15,12 +15,11 @@
 */
 
 import { validate } from '@lowdefy/ajv';
-import mongoDBUpdateMany from './MongoDBUpdateMany.js';
+import MongoDBUpdateMany from './MongoDBUpdateMany.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
-import requestIndex from './index.js';
-import schema from './MongoDBUpdateManySchema.json';
 
-const { checkRead, checkWrite } = requestIndex.meta;
+const { checkRead, checkWrite } = MongoDBUpdateMany.meta;
+const schema = MongoDBUpdateMany.schema;
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
@@ -50,7 +49,7 @@ test('updateMany - Single Document', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 1,
     upsertedId: null,
@@ -70,7 +69,7 @@ test('updateMany - Multiple Documents', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 3,
     upsertedId: null,
@@ -90,7 +89,7 @@ test('updateMany - Multiple Documents one field', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 3,
     upsertedId: null,
@@ -111,13 +110,10 @@ test('updateMany upsert', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
-    upsertedId: {
-      _id: 'updateMany_upsert',
-      index: 0,
-    },
+    upsertedId: 'updateMany_upsert',
     upsertedCount: 1,
     matchedCount: 0,
   });
@@ -135,7 +131,7 @@ test('updateMany upsert false', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -155,7 +151,7 @@ test('updateMany upsert default false', async () => {
     collection,
     write: true,
   };
-  const res = await mongoDBUpdateMany({ request, connection });
+  const res = await MongoDBUpdateMany({ request, connection });
   expect(res).toEqual({
     modifiedCount: 0,
     upsertedId: null,
@@ -175,8 +171,8 @@ test('updateMany connection error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBUpdateMany({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+  await expect(MongoDBUpdateMany({ request, connection })).rejects.toThrow(
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 
@@ -191,7 +187,7 @@ test('updateMany mongodb error', async () => {
     collection,
     write: true,
   };
-  await expect(mongoDBUpdateMany({ request, connection })).rejects.toThrow(
+  await expect(MongoDBUpdateMany({ request, connection })).rejects.toThrow(
     'Unknown modifier: $badOp'
   );
 });
