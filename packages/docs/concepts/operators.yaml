@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO: Add docs for build time operators
+
 _ref:
   path: templates/general.yaml.njk
   vars:
@@ -32,7 +34,7 @@ _ref:
 
             ## Client or server operators
 
-            Some operators are only available on either the client or the server. For example, the [`_menu`](/_menu) operator is only useful on the client and is thus not included in server requests. Likewise, the [`_secret`](/_secret) operator is only available on the server for security reasons. 
+            Some operators are only available on either the client or the server. For example, the [`_menu`](/_menu) operator is only useful on the client and is thus not included in server requests. Likewise, the [`_secret`](/_secret) operator is only available on the server for security reasons.
 
             If a operator has special environment considerations, it is indicated on the individual operator documentation page. If no indication is made, the operator can be used under both environments.
 
@@ -50,7 +52,7 @@ _ref:
             - [_secret](/_secret)
             - [_uuid](/_uuid)
 
-            Operators that are client side only cannot be used in `Requests` and `Connections`, and operators which are server side only cannot be used in `Blocks` and `Actions`. 
+            Operators that are client side only cannot be used in `Requests` and `Connections`, and operators which are server side only cannot be used in `Blocks` and `Actions`.
 
             ## Build time operators
 
