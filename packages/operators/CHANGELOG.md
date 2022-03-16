@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **operators:** Fix operators failing tests. ([c25b6b6](https://github.com/lowdefy/lowdefy/commit/c25b6b6ea3a6f1100daba2653b263f8aed64a8c4))
+* Remove _user from build operators and rogue console.log ([bc39f77](https://github.com/lowdefy/lowdefy/commit/bc39f77ba9b94ebecdda164a6260caf69cf89c34))
+
+
+### Features
+
+* **operators:** Update parse for build operators. ([d2f5f45](https://github.com/lowdefy/lowdefy/commit/d2f5f45766a59320a7234dad31f291443da38b9b))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 

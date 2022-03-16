@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **actions-core:** Fix Throw action error message if params are not an object. ([057ff7e](https://github.com/lowdefy/lowdefy/commit/057ff7eb84171e7fd68a9725133bd0472a771895))
+* **actions-core:** Improve Throw action error messages. ([9ffddd6](https://github.com/lowdefy/lowdefy/commit/9ffddd6778bcc626ccd055be2dcd5b1cdde2400b))
+* **block-utils:** Update test snapshots. ([445d20d](https://github.com/lowdefy/lowdefy/commit/445d20dd5ad93dfe57b420d14878f6e5b436fc55))
+* **block-utils:** Wrap Icon in antd Icon component. ([07dc80a](https://github.com/lowdefy/lowdefy/commit/07dc80a08defbb322f77f9de350b5bb4a08a3d54))
+* **blocks-antd:** Fix Icon name in switch. ([96e5e46](https://github.com/lowdefy/lowdefy/commit/96e5e460d02ef4016a6bcfa2e613e8e8fe9eee01))
+* **blocks-antd:** Icon name corrections. ([7fa29e4](https://github.com/lowdefy/lowdefy/commit/7fa29e4290d533f252390cf48f2059c178ca7c34))
+* **build:** Do not use ref resolver for lowdefy.yml files. ([3c05e57](https://github.com/lowdefy/lowdefy/commit/3c05e57749b2c9315589d77750198c99f4fe3526))
+* Change swc react transform to classic runtime. ([55bb5c9](https://github.com/lowdefy/lowdefy/commit/55bb5c927e7314084fc2fbe9471d58f5099909bd))
+* **cli:** Do not merge app and server package jsons ([7a97261](https://github.com/lowdefy/lowdefy/commit/7a972615431ed8993a207c69839837ebe4e69c4a))
+* **cli:** Fix CLI tests. ([1c8dc54](https://github.com/lowdefy/lowdefy/commit/1c8dc544af0ed052697ba9ff0e7a47124ffb6a03))
+* **docs:** Correct icon names for react-icons. ([4cae725](https://github.com/lowdefy/lowdefy/commit/4cae725caabc72848bf96ad1dc29d797d152cf27))
+* **docs:** Fix _yaml.parse takes an array. ([0943aa0](https://github.com/lowdefy/lowdefy/commit/0943aa0812ac84535d82e01825681c186fcb14ca))
+* **docs:** Fix image route paths in docs. ([895d26d](https://github.com/lowdefy/lowdefy/commit/895d26d2b1ba10bd5b4ece5af73e6dd2e163da1d))
+* **docs:** Fix JSON syntax error in S3 docs. ([0aa7501](https://github.com/lowdefy/lowdefy/commit/0aa7501bfcf88b144f6cf6f32a4395ea67647571))
+* **docs:** Fixes in tests. ([567afa4](https://github.com/lowdefy/lowdefy/commit/567afa449182834d3d673672c6408f1e8b57f420))
+* **operators:** Fix operators failing tests. ([c25b6b6](https://github.com/lowdefy/lowdefy/commit/c25b6b6ea3a6f1100daba2653b263f8aed64a8c4))
+* Remove _user from build operators and rogue console.log ([bc39f77](https://github.com/lowdefy/lowdefy/commit/bc39f77ba9b94ebecdda164a6260caf69cf89c34))
+* Remove _user from build operators. ([a812d71](https://github.com/lowdefy/lowdefy/commit/a812d71491528e6e3fa3a73b3492abdcc6a145c1))
+* Revert back to react 17.0.2. ([1b38fd3](https://github.com/lowdefy/lowdefy/commit/1b38fd3e743ee7286468c7c1e2f623838dd5ed84))
+* **server-dev:** Read next cli bin path from package.json. ([0146627](https://github.com/lowdefy/lowdefy/commit/01466276dcfffef1ee6f2d7b50205ddd4e48edad))
+* **server:** Add index to keys to resolve react warning. ([0f25b57](https://github.com/lowdefy/lowdefy/commit/0f25b5768f09327f68703b80f63f891b1645b1e3))
+* **server:** Disable ssr on _app. ([1b13e57](https://github.com/lowdefy/lowdefy/commit/1b13e5715c29783b076878ad935626a05f7ba343))
+
+
+### Features
+
+* Add operator-js dependency to build ([83d5b79](https://github.com/lowdefy/lowdefy/commit/83d5b79cec2dc7cdc62c5b51a96dd3d50b1b26c4))
+* Add support for typePrefix on custom plugins. ([d66d395](https://github.com/lowdefy/lowdefy/commit/d66d395e01688af917bda0722beba7a8a5886085))
+* **blocks-color-seletors:** Replace color selectors with single color selector using react-colorful. ([7830890](https://github.com/lowdefy/lowdefy/commit/78308908c41a35b6611af07abfb84a8ee8368d93))
+* **cli:** Add install custom plugins as dev dependencies. ([b6ab43b](https://github.com/lowdefy/lowdefy/commit/b6ab43bae01f10a9b2762b180d1f7d92df712e80))
+* **cli:** Copy plugins folder to server. ([9f4ff92](https://github.com/lowdefy/lowdefy/commit/9f4ff92573b164c0cbfe42087e54adac60b6a74a))
+* **cli:** Merge user package json into server package json. ([899a15f](https://github.com/lowdefy/lowdefy/commit/899a15f6c515d3be28d67126b653124fb7acf92c))
+* Create _env operator and build operators. ([e7421bd](https://github.com/lowdefy/lowdefy/commit/e7421bd237d77d0cc9c95ab0cffaf38ba96b2035))
+* Create types map for custom plugins. ([5ddf739](https://github.com/lowdefy/lowdefy/commit/5ddf739103b7bdea57bf0a5903433555368c43c3))
+* Custom plugins on dev server. ([9f65d13](https://github.com/lowdefy/lowdefy/commit/9f65d130d70494ebd74fb0ae3cf6edb4cbf31415))
+* **docs:** Implement docs filter default value operator as plugin. ([fa46d22](https://github.com/lowdefy/lowdefy/commit/fa46d2267559dede520e0ddba0d070105bb85545))
+* **docs:** Replace color selectors with react-colorful selector. ([3d146aa](https://github.com/lowdefy/lowdefy/commit/3d146aae853d2d437fa2a128380c13b09949365c))
+* Evaluate build operators in refs. ([f8e2214](https://github.com/lowdefy/lowdefy/commit/f8e22143868b3de69147648f40c17c6d26191b22))
+* **operators:** Update parse for build operators. ([d2f5f45](https://github.com/lowdefy/lowdefy/commit/d2f5f45766a59320a7234dad31f291443da38b9b))
+* Simplify _function with new operatorPrefix ([139dae6](https://github.com/lowdefy/lowdefy/commit/139dae657c4ccbd462b59744eaf5f5951f1741b3))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 
