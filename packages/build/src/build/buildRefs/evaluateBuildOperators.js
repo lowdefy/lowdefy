@@ -23,7 +23,6 @@ async function evaluateBuildOperators({ context, input, refDef }) {
     operators,
   });
 
-  await operatorsParser.init();
   const { output, errors } = operatorsParser.parse({
     input,
     location: refDef.path,

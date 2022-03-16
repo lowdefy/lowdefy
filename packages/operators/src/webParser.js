@@ -58,11 +58,10 @@ class WebParser {
     const reviver = (_, value) => {
       if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
 
-      let key = Object.keys(value)[0];
+      const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;
 
-      key = `_${key.substring(operatorPrefix.length)}`;
-      const [op, methodName] = key.split('.');
+      const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(operators[op])) return value;
 
       try {
