@@ -30,7 +30,7 @@ async function getPluginDefinitions({ directories }) {
   return get(lowdefy, 'plugins', { default: [] });
 }
 
-async function createCustomTypesMap({ directories }) {
+async function createCustomPluginTypesMap({ directories }) {
   const customTypesMap = {
     actions: {},
     blocks: {},
@@ -63,4 +63,4 @@ async function createCustomTypesMap({ directories }) {
   return customTypesMap;
 }
 
-export default createCustomTypesMap;
+export default createCustomPluginTypesMap;

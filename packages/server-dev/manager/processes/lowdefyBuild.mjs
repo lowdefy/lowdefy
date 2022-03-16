@@ -14,24 +14,17 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import build from '@lowdefy/build';
+import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
-function lowdefyBuild({ bin, directories, options }) {
+function lowdefyBuild({ directories, options }) {
   return async () => {
-    await spawnProcess({
-      command: 'node',
-      args: [bin.lowdefyBuild],
+    const customTypesMap = await createCustomPluginTypesMap({ directories });
+    await build({
+      customTypesMap,
+      directories,
       logger: console,
-      processOptions: {
-        env: {
-          ...process.env,
-          LOWDEFY_BUILD_REF_RESOLVER: options.refResolver,
-          LOWDEFY_DIRECTORY_BUILD: directories.build,
-          LOWDEFY_DIRECTORY_CONFIG: directories.config,
-          LOWDEFY_DIRECTORY_SERVER: process.cwd(),
-        },
-      },
-      silent: false,
+      refResolver: options.refResolver,
     });
   };
 }

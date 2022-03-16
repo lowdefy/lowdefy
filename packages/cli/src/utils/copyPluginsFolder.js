@@ -14,23 +14,18 @@
   limitations under the License.
 */
 
-function buildStyles({ components, context }) {
-  components.styles = [];
-  const styles = new Set();
+import path from 'path';
+import fs from 'fs';
+import { copyDirectory } from '@lowdefy/node-utils';
 
-  Object.entries(components.types.blocks).forEach(([blockName, block]) => {
-    styles.add(
-      ...(context.typesMap.styles.packages[block.package] || []).map(
-        (style) => `${block.package}/${style}`
-      )
-    );
-    styles.add(
-      ...(context.typesMap.styles.blocks[blockName] || []).map(
-        (style) => `${block.package}/${style}`
-      )
-    );
-  });
-  components.styles = [...styles].filter((style) => !!style);
+async function copyPluginsFolder({ context, directory }) {
+  if (context.directories.config === directory) return;
+  if (!fs.existsSync(path.resolve(context.directories.config, 'plugins'))) return;
+
+  await copyDirectory(
+    path.resolve(context.directories.config, 'plugins'),
+    path.resolve(directory, 'plugins')
+  );
 }
 
-export default buildStyles;
+export default copyPluginsFolder;

@@ -36,11 +36,13 @@ const require = createRequire(import.meta.url);
 async function getContext() {
   const env = process.env;
 
+  const nextPageJson = require('next/package.json');
   const context = {
     bin: {
-      // TODO: The string replace is a little hacky and will fail if the location of the bin changes,
-      lowdefyBuild: require.resolve('@lowdefy/build').replace('index.js', 'scripts/run.js'),
-      next: require.resolve('next').replace('server/next.js', 'bin/next'),
+      next: path.join(
+        require.resolve('next').replace(nextPageJson.main.substring(1), ''),
+        nextPageJson.bin.next
+      ),
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
@@ -56,7 +58,7 @@ async function getContext() {
         argv.watchIgnore || env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
-      // TODO: read option from from env
+      // TODO: read option from env
       verbose: argv.verbose || false,
     },
     packageManager: argv.packageManager || env.LOWDEFY_PACKAGE_MANAGER || 'npm',
