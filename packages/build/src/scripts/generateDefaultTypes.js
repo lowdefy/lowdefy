@@ -57,7 +57,10 @@ async function generateDefaultTypesMap() {
       server: {},
     },
     requests: {},
-    styles: {},
+    styles: {
+      packages: {},
+      blocks: {},
+    },
   };
 
   await Promise.all(

@@ -32,8 +32,6 @@
     ".eslintrc.yaml"
   ],
   "scripts": {
-    "build:lowdefy": "lowdefy-build",
-    "build:next": "next build",
     "start": "node manager/run.mjs",
     "lint": "next lint",
     "next": "next"
