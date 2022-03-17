@@ -19,7 +19,8 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import build, { createCustomPluginTypesMap } from '@lowdefy/build';
+import build from '@lowdefy/build';
+import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
 

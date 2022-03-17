@@ -66,7 +66,8 @@ async function generateDefaultTypesMap() {
   await Promise.all(
     defaultPackages.map(async (packageName) => {
       const { default: types } = await import(`${packageName}/types`);
-      const version = packageFile.devDependencies[packageName];
+      const version =
+        packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
       createPluginTypesMap({
         packageTypes: types,
         typesMap: defaultTypesMap,
