@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+**Note:** Version bump only for package @lowdefy/api
+
+
+
+
+
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* Add missing api and helpers tests. ([aa1d72c](https://github.com/lowdefy/lowdefy/commit/aa1d72c19122eb7d4343108ba6ad21c423dc2493))
+* **api:** Fix callRequest tests. ([58655cb](https://github.com/lowdefy/lowdefy/commit/58655cba190a3a2371e301d2bf4779bd13651ad5))
+* **api:** Fixes using  jest with es modules. ([d69a4dc](https://github.com/lowdefy/lowdefy/commit/d69a4dca33d49c639b3c80d90eed4ffa6ef28950))
+* **cli:** Fix jest es module mocks. ([78480e8](https://github.com/lowdefy/lowdefy/commit/78480e80022f79a0ab449a9a8d804e6213b676c4))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* Strip auth prop from page config in api. ([693667d](https://github.com/lowdefy/lowdefy/commit/693667db5bece8081865e74dc2e4391b62f10f93))
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 **Note:** Version bump only for package @lowdefy/api

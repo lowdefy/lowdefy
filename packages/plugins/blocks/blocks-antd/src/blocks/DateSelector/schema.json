@@ -158,7 +158,7 @@
       },
       "suffixIcon": {
         "type": ["string", "object"],
-        "default": "CalendarOutlined",
+        "default": "AiOutlineCalendar",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on right-hand side of the date picker.",
         "docs": {
           "displayType": "icon"

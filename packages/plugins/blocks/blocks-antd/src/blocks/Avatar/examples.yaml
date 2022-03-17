@@ -35,12 +35,12 @@
 - id: properties.icon string
   type: Avatar
   properties:
-    icon: UserOutlined
+    icon: AiOutlineUser
 - id: properties.icon object
   type: Avatar
   properties:
     icon:
-      name: UserOutlined
+      name: AiOutlineUser
       color: red
 - id: properties.shape
   type: Avatar
@@ -50,7 +50,7 @@
   type: Avatar
   properties:
     shape: square
-    icon: UserOutlined
+    icon: AiOutlineUser
 - id: properties.size small
   type: Avatar
   properties:

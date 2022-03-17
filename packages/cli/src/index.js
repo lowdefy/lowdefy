@@ -17,7 +17,8 @@
 
 import { readFile } from '@lowdefy/node-utils';
 
-import program from 'commander';
+import { Command } from 'commander';
+
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
@@ -27,9 +28,11 @@ import runCommand from './utils/runCommand.js';
 const packageJson = JSON.parse(
   await readFile(new URL('../package.json', import.meta.url).pathname)
 );
-const { description, version } = packageJson;
+const { description, version: cliVersion } = packageJson;
 
-program.name('lowdefy').description(description).version(version, '-v, --version');
+const program = new Command();
+
+program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
 
 program
   .command('build')
@@ -52,7 +55,11 @@ program
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
-  .action(runCommand({ cliVersion: version })(build));
+  .option(
+    '--server-directory <server-directory>',
+    'Change the server directory. Default is "<config-directory>/.lowdefy/server".'
+  )
+  .action(runCommand({ cliVersion, handler: build }));
 
 program
   .command('dev')
@@ -68,28 +75,29 @@ program
     'The package manager to use. Options are "npm" or "yarn".'
   )
   .option('--port <port>', 'Change the port the development server is hosted at. Default is 3000.')
-  // TODO:
   .option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
   )
-  // TODO:
   .option(
     '--watch <paths...>',
-    'A list of paths to files or directories that should be watched for changes.'
+    'A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.'
   )
-  // TODO:
   .option(
     '--watch-ignore <paths...>',
-    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.'
+    'A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.'
   )
-  .action(runCommand({ cliVersion: version })(dev));
+  .option(
+    '--dev-directory <dev-directory>',
+    'Change the development server directory. Default is "<config-directory>/.lowdefy/dev".'
+  )
+  .action(runCommand({ cliVersion, handler: dev }));
 
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
   .usage(`[options]`)
-  .action(runCommand({ cliVersion: version })(init));
+  .action(runCommand({ cliVersion, handler: init }));
 
 program
   .command('start')
@@ -109,6 +117,10 @@ program
     'The package manager to use. Options are "npm" or "yarn".'
   )
   .option('--port <port>', 'Change the port the server is hosted at. Default is 3000.')
-  .action(runCommand({ cliVersion: version })(start));
+  .option(
+    '--server-directory <server-directory>',
+    'Change the server directory. Default is "<config-directory>/.lowdefy/server".'
+  )
+  .action(runCommand({ cliVersion, handler: start }));
 
 program.parse(process.argv);

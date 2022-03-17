@@ -17,23 +17,67 @@
 import getDirectories from './getDirectories.js';
 
 test('default directories', () => {
-  const { cacheDirectory, buildDirectory } = getDirectories({
+  const directories = getDirectories({
     configDirectory: '/test/config',
     options: {},
   });
 
-  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
-  expect(buildDirectory).toEqual('/test/config/.lowdefy/build');
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/config/.lowdefy/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/config/.lowdefy/server',
+  });
 });
 
 test('specify outputDirectory in options', () => {
-  const { cacheDirectory, buildDirectory } = getDirectories({
+  const directories = getDirectories({
     configDirectory: '/test/config',
     options: {
-      outputDirectory: '/test/build',
+      outputDirectory: '/test/out',
     },
   });
 
-  expect(cacheDirectory).toEqual('/test/config/.lowdefy/.cache');
-  expect(buildDirectory).toEqual('/test/build');
+  expect(directories).toEqual({
+    build: '/test/out/server/build',
+    config: '/test/config',
+    dev: '/test/out/dev',
+    dotLowdefy: '/test/out',
+    server: '/test/out/server',
+  });
+});
+
+test('specify serverDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      serverDirectory: '/test/server',
+    },
+  });
+
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/config/.lowdefy/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/server',
+  });
+});
+
+test('specify devDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      devDirectory: '/test/dev',
+    },
+  });
+
+  expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
+    config: '/test/config',
+    dev: '/test/dev',
+    dotLowdefy: '/test/config/.lowdefy',
+    server: '/test/config/.lowdefy/server',
+  });
 });

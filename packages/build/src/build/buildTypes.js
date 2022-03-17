@@ -28,6 +28,7 @@ function buildTypeClass(
       throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
     }
     store[typeName] = {
+      originalTypeName: definitions[typeName].originalTypeName,
       package: definitions[typeName].package,
       version: definitions[typeName].version,
       count: counts[typeName],
@@ -37,6 +38,10 @@ function buildTypeClass(
 
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
+
+  // Add operators used by form validation
+  typeCounters.operators.client.increment('_not');
+  typeCounters.operators.client.increment('_type');
 
   components.types = {
     actions: {},
@@ -49,37 +54,37 @@ function buildTypes({ components, context }) {
     },
   };
 
-  // buildTypeClass({
-  //   counter: typeCounters.actions,
-  //   definitions: context.types.actions,
-  //   store: components.types.actions,
-  //   typeClass: 'Action',
-  // });
+  buildTypeClass(context, {
+    counter: typeCounters.actions,
+    definitions: context.typesMap.actions,
+    store: components.types.actions,
+    typeClass: 'Action',
+  });
 
   buildTypeClass(context, {
     counter: typeCounters.blocks,
-    definitions: context.types.blocks,
+    definitions: context.typesMap.blocks,
     store: components.types.blocks,
     typeClass: 'Block',
   });
 
   buildTypeClass(context, {
     counter: typeCounters.connections,
-    definitions: context.types.connections,
+    definitions: context.typesMap.connections,
     store: components.types.connections,
     typeClass: 'Connection',
   });
 
   buildTypeClass(context, {
     counter: typeCounters.requests,
-    definitions: context.types.requests,
+    definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
   });
 
   buildTypeClass(context, {
     counter: typeCounters.operators.client,
-    definitions: context.types.operators.client,
+    definitions: context.typesMap.operators.client,
     store: components.types.operators.client,
     typeClass: 'Operator',
     warnIfMissing: true,
@@ -87,7 +92,7 @@ function buildTypes({ components, context }) {
 
   buildTypeClass(context, {
     counter: typeCounters.operators.server,
-    definitions: context.types.operators.server,
+    definitions: context.typesMap.operators.server,
     store: components.types.operators.server,
     typeClass: 'Operator',
     warnIfMissing: true,

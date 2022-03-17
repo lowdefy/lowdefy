@@ -36,7 +36,7 @@
       style:
         marginLeft: -22
       properties:
-        name: SearchOutlined
+        name: AiOutlineSearch
 - id: why_button
   type: Button
   visible:
@@ -128,7 +128,7 @@
   properties:
     title: Star on Github
     type: text
-    icon: GithubFilled
+    icon: AiFillGithub
     size: large
   events:
     onClick:

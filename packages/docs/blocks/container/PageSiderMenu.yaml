@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageSiderMenu
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/PageSiderMenu/PageSiderMenu.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSiderMenu/schema.json
     filePath: blocks/container/PageSiderMenu.yaml
     description_content: |
       The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
@@ -27,13 +27,13 @@ _ref:
           type: MenuLink
           pageId: home
           properties:
-            icon: HomeOutlined
+            icon: AiOutlineHome
             title: Home
         - id: pages
           type: MenuGroup
           properties:
             title: Pages
-            icon: LayoutOutlined
+            icon: AiOutlineLayout
           links:
             - id: page1
               type: MenuLink

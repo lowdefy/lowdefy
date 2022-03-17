@@ -77,12 +77,12 @@
 - id: 'properties.icon string'
   type: Badge
   properties:
-    icon: NotificationOutlined
+    icon: AiOutlineNotification
 - id: 'properties.icon object'
   type: Badge
   properties:
     icon:
-      name: NotificationOutlined
+      name: AiOutlineNotification
       spin: true
 - id: 'properties.size: small'
   type: Badge

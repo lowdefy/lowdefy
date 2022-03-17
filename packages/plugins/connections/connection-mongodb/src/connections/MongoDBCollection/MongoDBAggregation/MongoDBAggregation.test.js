@@ -69,7 +69,7 @@ test('aggregation connection error', async () => {
     read: true,
   };
   await expect(MongoDBAggregation({ request, connection })).rejects.toThrow(
-    'Invalid connection string'
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
   );
 });
 

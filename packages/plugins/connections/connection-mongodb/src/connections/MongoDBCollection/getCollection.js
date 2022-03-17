@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import Mongo from 'mongodb';
-const { MongoClient } = Mongo;
+import { MongoClient } from 'mongodb';
 
 async function getCollection({ connection }) {
   let client;

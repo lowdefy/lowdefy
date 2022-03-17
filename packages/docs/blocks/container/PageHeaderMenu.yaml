@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageHeaderMenu
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/PageHeaderMenu/PageHeaderMenu.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHeaderMenu/schema.json
     filePath: blocks/container/PageHeaderMenu.yaml
     description_content: |
       The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
@@ -27,13 +27,13 @@ _ref:
           type: MenuLink
           pageId: home
           properties:
-            icon: HomeOutlined
+            icon: AiOutlineHome
             title: Home
         - id: pages
           type: MenuGroup
           properties:
             title: Pages
-            icon: LayoutOutlined
+            icon: AiOutlineLayout
           links:
             - id: page1
               type: MenuLink

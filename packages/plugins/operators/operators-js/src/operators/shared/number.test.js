@@ -56,7 +56,7 @@ test('_number valid functions', () => {
   );
   expect(
     _number({ methodName: 'toLocaleString', params: [123456.789, 'de-DE'], location: 'locationId' })
-  ).toBe('123,456.789');
+  ).toBe('123.456,789');
   expect(
     _number({ methodName: 'toPrecision', params: [5.123456, 2], location: 'locationId' })
   ).toBe('5.1');

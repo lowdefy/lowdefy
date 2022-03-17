@@ -21,12 +21,12 @@
 - id: properties.icon string
   type: Button
   properties:
-    icon: SaveOutlined
+    icon: AiOutlineSave
 - id: properties.icon object
   type: Button
   properties:
     icon:
-      name: SaveOutlined
+      name: AiOutlineSave
       color: red
 - id: 'properties.shape: circle'
   type: Button
@@ -88,7 +88,7 @@
   type: Button
   properties:
     hideTitle: true
-    icon: DeleteOutlined
+    icon: AiOutlineDelete
 - id: 'properties.href: www.lowdefy.com'
   type: Button
   properties:
@@ -100,5 +100,5 @@
 - id: 'with html in title and icon'
   type: Button
   properties:
-    icon: SaveOutlined
+    icon: AiOutlineSave
     title: '<div style="color: red;">Title</div>'

@@ -18,6 +18,7 @@ packages/server/build/**
 packages/server-dev/build/**
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
+packages/cli/server/**
 
 .DS_Store
 
@@ -31,3 +32,5 @@ packages/utils/node-utils/test/writeFile/writeFile.txt
 packages/utils/node-utils/test/copyDirectory/**
 
 app/**
+packages/server-dev/plugins/**
+packages/server/plugins/**

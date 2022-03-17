@@ -24,9 +24,9 @@ _ref:
         type: Markdown
         properties:
           content: |
-            A Lowdefy app provides a convenient method to host __public__ files under the `/public/*` app route. Add content to be hosted publicly by creating a folder named `public` in the root of a Lowdefy project folder, next to the `lowdefy.yaml` file. Place the public content in this folder to host this content with your app.
+            A Lowdefy app provides a convenient method to host __public__ files under the `/*` app route. Add content to be hosted publicly by creating a folder named `public` in the root of a Lowdefy project folder, next to the `lowdefy.yaml` file. Place the public content in this folder to host this content with your app.
 
-            All content in this folder will be publicly accessible at `{{ APP_URL }}/public/{{ FILE_PATH_NAME }}`. For example, the logo at the top of this page is hosted at [`https://docs.lowdefy.com/public/logo-light-theme.png`](http://localhost:3000/public/logo-light-theme.png). Sub-folders inside the public folder are supported.
+            All content in this folder will be publicly accessible at `{{ APP_URL }}/{{ FILE_PATH_NAME }}`. For example, the logo at the top of this page is hosted at [`https://docs.lowdefy.com/logo-light-theme.png`](http://localhost:3000/logo-light-theme.png). Sub-folders inside the public folder are supported.
 
             By default, the `public` folder of a Lowdefy app will serve some files which most apps need:
             - `apple-touch-icon.png`: A 180x180px png image file to be used as the apple PWA icon.
@@ -39,7 +39,7 @@ _ref:
             - `logo-square-light-theme.png`: A ~125x125px png image used as the header image for `PageHeaderMenu` and `PageSiderMenu` blocks on mobile when the block theme is set to `light`.
             - `manifest.webmanifest`: The app [web manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest).
 
-            Any of these files can be overwritten by replacing the file with a modified version. For example, to replace the logo inside the header of `PageSiderMenu` on all pages, add a ~250x72px logo inside the project folder at `/public/logo-light-theme.png`.
+            Any of these files can be overwritten by replacing the file with a modified version. For example, to replace the logo inside the header of `PageSiderMenu` on all pages, add a ~250x72px logo inside the project folder at `/logo-light-theme.png`.
 
       - _ref:
           path: templates/navigation_buttons.yaml

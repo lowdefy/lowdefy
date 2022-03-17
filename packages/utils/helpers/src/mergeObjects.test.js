@@ -96,3 +96,13 @@ test('merge list of objects, larger indices overwrite smaller', () => {
     }
   `);
 });
+
+test('merge objects with null', () => {
+  const obj = {
+    a: 'a',
+    b: 1,
+    c: { a: 'b' },
+  };
+  expect(mergeObjects([obj, null])).toEqual(obj);
+  expect(mergeObjects([null, obj])).toEqual(obj);
+});

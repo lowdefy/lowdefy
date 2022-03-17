@@ -23,16 +23,3 @@ export default {
     .map((connection) => Object.keys(connections[connection].requests))
     .flat(),
 };
-
-// export default {
-//   connections: ['GoogleSheet'],
-//   requests: [
-//     GoogleSheetAppendMany,
-//     GoogleSheetAppendOne,
-//     GoogleSheetDeleteOne,
-//     GoogleSheetGetMany,
-//     GoogleSheetGetOne,
-//     GoogleSheetUpdateOne,
-//     GoogleSheetUpdateMany,
-//   ],
-// };

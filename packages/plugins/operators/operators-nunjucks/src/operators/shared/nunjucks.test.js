@@ -14,24 +14,11 @@
   limitations under the License.
 */
 
-import { NodeParser, WebParser } from '@lowdefy/operators';
+import { NodeParser } from '@lowdefy/operators';
+import _nunjucks from './nunjucks.js';
 
-const arrayIndices = [1];
-
-const context = {
-  _internal: {
-    lowdefy: {
-      inputs: { id: true },
-      lowdefyGlobal: { global: true },
-      menus: [{ menus: true }],
-      urlQuery: { urlQuery: true },
-      user: { user: true },
-    },
-  },
-  eventLog: [{ eventLog: true }],
-  id: 'id',
-  requests: [{ requests: true }],
-  state: { state: true },
+const operators = {
+  _nunjucks,
 };
 
 const payload = {
@@ -44,7 +31,7 @@ console.error = () => {};
 
 test('_nunjucks string template', async () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with Some String embedded');
@@ -53,7 +40,7 @@ test('_nunjucks string template', async () => {
 
 test('_nunjucks null', async () => {
   const input = { _nunjucks: null };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
@@ -64,7 +51,7 @@ test('_nunjucks { template: , on: }', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
@@ -73,7 +60,7 @@ test('_nunjucks { template: , on: }', async () => {
 
 test('_nunjucks template not a string', async () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
@@ -84,7 +71,7 @@ test('_nunjucks params on template not a string', async () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
@@ -95,7 +82,7 @@ test('_nunjucks on not a object', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
@@ -106,7 +93,7 @@ test('_nunjucks on null', async () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
@@ -115,7 +102,7 @@ test('_nunjucks on null', async () => {
 
 test('_nunjucks invalid template', async () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
-  const parser = new NodeParser({ payload });
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);

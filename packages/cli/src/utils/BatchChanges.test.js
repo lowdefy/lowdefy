@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import BatchChanges from './BatchChanges.js';
-
+import { jest } from '@jest/globals';
 import { wait } from '@lowdefy/helpers';
+
+import BatchChanges from './BatchChanges.js';
 
 const context = {};
 

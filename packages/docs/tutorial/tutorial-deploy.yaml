@@ -82,7 +82,7 @@ _ref:
         type: Alert
         properties:
           type: info
-          icon: InfoCircleFilled
+          icon: AiFillInfoCircle
           description: If your repository isn't found, click "Configure Netlify on Github", and give Netlify access to your repository.
 
       - id: body_configure_netlify
@@ -99,7 +99,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          icon: WarningFilled
+          icon: AiFillWarning
           description: Your site won't work yet. You first need to configure the Lowdefy server in the next step.
 
       - id: body_configure_functions

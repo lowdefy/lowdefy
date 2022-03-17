@@ -94,3 +94,46 @@ should be string
 - pages
  - [0:1:_ERROR_MISSING_TYPE_].id`);
 });
+
+test('Additional properties as root config.', async () => {
+  const components = {
+    additional: true,
+    pages: [
+      {
+        id: 'page_1',
+        blocks: [],
+      },
+    ],
+  };
+  const error = {
+    instancePath: '',
+    message: 'must NOT have additional properties',
+  };
+  const res = formatErrorMessage({ error, components });
+  expect(res).toEqual(`Schema Error
+must NOT have additional properties
+`);
+});
+
+test('Block is null.', async () => {
+  const components = {
+    additional: true,
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        blocks: [null],
+      },
+    ],
+  };
+  const error = {
+    instancePath: '/pages/0/blocks/0',
+    message: 'Block should be an object.',
+  };
+  const res = formatErrorMessage({ error, components });
+  expect(res).toEqual(`Schema Error
+Block should be an object.
+- pages
+ - [0:page_1:Box].blocks
+  - [0]`);
+});

@@ -512,6 +512,38 @@ export default {
         },
       },
     },
+    plugin: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['name', 'version'],
+      properties: {
+        name: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "name" should be a string.',
+          },
+        },
+        version: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "version" should be a string.',
+          },
+        },
+        typePrefix: {
+          type: 'string',
+          errorMessage: {
+            type: 'Plugin "typePrefix" should be a string.',
+          },
+        },
+      },
+      errorMessage: {
+        type: 'Plugin should be an object.',
+        required: {
+          name: 'Plugin should have required property "name".',
+          version: 'Plugin should have required property "version".',
+        },
+      },
+    },
     request: {
       type: 'object',
       additionalProperties: false,
@@ -598,6 +630,13 @@ export default {
         auth: {
           $ref: '#/definitions/authConfig',
         },
+        basePath: {
+          type: 'string',
+          description: 'App base path to apply to all routes. Base path must start with "/".',
+          errorMessage: {
+            type: 'App "config.basePath" should be a string.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:
@@ -623,18 +662,13 @@ export default {
         },
       },
     },
-    types: {
-      type: 'object',
-      patternProperties: {
-        '^.*$': {
-          url: 'string',
-          errorMessage: {
-            enum: 'Type "url" should be a string.',
-          },
-        },
+    plugins: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/plugin',
       },
       errorMessage: {
-        type: 'App "types" should be an object.',
+        type: 'App "plugins" should be an array.',
       },
     },
     global: {

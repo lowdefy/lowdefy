@@ -16,6 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 import mingo from 'mingo';
+
+// TODO: fix build to work with:
+// import 'mingo/init/system';
+
 import { useOperators, OperatorType } from 'mingo/core.js';
 import * as accumulatorOperators from 'mingo/operators/accumulator/index.js';
 import * as expressionOperators from 'mingo/operators/expression/index.js';

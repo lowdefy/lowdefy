@@ -14,28 +14,26 @@
   limitations under the License.
 */
 
-import propertiesFormTransformer from '../blocks/propertiesFormTransformer';
-import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer';
-import defaultValueTransformer from '../blocks/defaultValueTransformer';
+import propertiesFormTransformer from '../blocks/propertiesFormTransformer.js';
+import propertiesGetterTransformer from '../blocks/propertiesGetterTransformer.js';
+import defaultValueTransformer from '../blocks/defaultValueTransformer.js';
 
 const schema = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          oneOf: [
-            {
-              type: 'number',
-              description: 'number description',
-            },
-            {
-              type: 'string',
-              description: 'string description',
-            },
-          ],
-        },
+      field: {
+        oneOf: [
+          {
+            type: 'number',
+            description: 'number description',
+          },
+          {
+            type: 'string',
+            description: 'string description',
+          },
+        ],
       },
     },
   },
@@ -225,24 +223,22 @@ test('oneOf defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            default: 1,
-            oneOf: [
-              {
-                type: 'number',
-                description: 'number description',
-              },
-              {
-                type: 'string',
-                description: 'string description',
-              },
-            ],
-          },
+        field: {
+          default: 1,
+          oneOf: [
+            {
+              type: 'number',
+              description: 'number description',
+            },
+            {
+              type: 'string',
+              description: 'string description',
+            },
+          ],
         },
       },
     },
@@ -256,33 +252,31 @@ test('oneOf defaultValueTransformer', () => {
 
 // for string object
 const schemaStrObj = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          oneOf: [
-            {
-              type: 'string',
-              description: 'string description',
-            },
-            {
-              type: 'object',
-              description: 'object description',
-              properties: {
-                str: {
-                  type: 'string',
-                  description: 'str description',
-                },
-                bool: {
-                  type: 'boolean',
-                  description: 'bool description',
-                },
+      field: {
+        oneOf: [
+          {
+            type: 'string',
+            description: 'string description',
+          },
+          {
+            type: 'object',
+            description: 'object description',
+            properties: {
+              str: {
+                type: 'string',
+                description: 'str description',
+              },
+              bool: {
+                type: 'boolean',
+                description: 'bool description',
               },
             },
-          ],
-        },
+          },
+        ],
       },
     },
   },
@@ -509,36 +503,34 @@ test('oneOf schemaStrObj defaultValueTransformer', () => {
     }
   `);
   const schemaDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            default: {
-              str: 'x',
+        field: {
+          default: {
+            str: 'x',
+          },
+          oneOf: [
+            {
+              type: 'string',
+              description: 'string description',
             },
-            oneOf: [
-              {
-                type: 'string',
-                description: 'string description',
-              },
-              {
-                type: 'object',
-                description: 'object description',
-                properties: {
-                  str: {
-                    type: 'string',
-                    description: 'str description',
-                  },
-                  bool: {
-                    type: 'boolean',
-                    description: 'bool description',
-                  },
+            {
+              type: 'object',
+              description: 'object description',
+              properties: {
+                str: {
+                  type: 'string',
+                  description: 'str description',
+                },
+                bool: {
+                  type: 'boolean',
+                  description: 'bool description',
                 },
               },
-            ],
-          },
+            },
+          ],
         },
       },
     },
@@ -553,26 +545,24 @@ test('oneOf schemaStrObj defaultValueTransformer', () => {
 });
 
 const schemaOneOfStrYaml = {
-  schema: {
+  properties: {
+    type: 'object',
+    additionalProperties: false,
     properties: {
-      type: 'object',
-      additionalProperties: false,
-      properties: {
-        field: {
-          oneOf: [
-            {
-              type: 'string',
-              description: 'string description',
+      field: {
+        oneOf: [
+          {
+            type: 'string',
+            description: 'string description',
+          },
+          {
+            type: 'object',
+            description: 'object description',
+            docs: {
+              displayType: 'yaml',
             },
-            {
-              type: 'object',
-              description: 'object description',
-              docs: {
-                displayType: 'yaml',
-              },
-            },
-          ],
-        },
+          },
+        ],
       },
     },
   },
@@ -740,17 +730,19 @@ test('oneOf propertiesGetterTransformer schemaOneOfStrYaml', () => {
                         ],
                       },
                       "then": Object {
-                        "_yaml.parse": Object {
-                          "_if_none": Array [
-                            Object {
-                              "_state": Object {
-                                "contextId": "Block:Block:{}",
-                                "key": "__object_block.properties.field",
+                        "_yaml.parse": Array [
+                          Object {
+                            "_if_none": Array [
+                              Object {
+                                "_state": Object {
+                                  "contextId": "Block:Block:{}",
+                                  "key": "__object_block.properties.field",
+                                },
                               },
-                            },
-                            "",
-                          ],
-                        },
+                              "",
+                            ],
+                          },
+                        ],
                       },
                     },
                   ],
@@ -773,27 +765,25 @@ test('oneOf defaultValueTransformer schemaOneOfStrYaml', () => {
     }
   `);
   const schemaOneOfStrYamlDV = {
-    schema: {
+    properties: {
+      type: 'object',
+      additionalProperties: false,
       properties: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          field: {
-            default: 'str',
-            oneOf: [
-              {
-                type: 'number',
-                description: 'number description',
+        field: {
+          default: 'str',
+          oneOf: [
+            {
+              type: 'number',
+              description: 'number description',
+            },
+            {
+              type: 'object',
+              description: 'object description',
+              docs: {
+                displayType: 'yaml',
               },
-              {
-                type: 'object',
-                description: 'object description',
-                docs: {
-                  displayType: 'yaml',
-                },
-              },
-            ],
-          },
+            },
+          ],
         },
       },
     },

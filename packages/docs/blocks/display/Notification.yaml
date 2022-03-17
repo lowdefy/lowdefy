@@ -17,13 +17,13 @@ _ref:
   vars:
     block_type: Notification
     category: display
-    schema: ../blocks/blocksAntd/src/blocks/Notification/Notification.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Notification/schema.json
     filePath: blocks/display/Notification.yaml
     description_content: |
       Display a popup notification on the page.
 
       > To display a notification, invoke the open method.
-      
+
     methods:
       - name: open
         onClick:

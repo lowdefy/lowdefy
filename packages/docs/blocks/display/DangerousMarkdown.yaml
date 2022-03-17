@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: DangerousMarkdown
     category: display
-    schema: ../blocks/blocksMarkdown/src/blocks/DangerousMarkdown/DangerousMarkdown.json
+    schema: ../plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown/schema.json
     filePath: blocks/display/DangerousMarkdown.yaml
     init_property_values:
       content: |

@@ -18,7 +18,7 @@ _ref:
     block_type: Switch
     value_type: boolean
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/Switch/Switch.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Switch/schema.json
     filePath: blocks/input/Switch.yaml
     description_content: |
       The `Switch` block is an on/off input. It has a boolean value (true/false).

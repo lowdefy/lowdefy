@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { MongoClient } from 'mongodb';
+import { MongoClient, Collection } from 'mongodb';
 
 import getCollection from './getCollection.js';
 
@@ -27,7 +27,7 @@ test('get collection', async () => {
   };
   const res = await getCollection({ connection });
   expect(res.client).toBeInstanceOf(MongoClient);
-  expect(res.collection).toBeInstanceOf(MongoClient.connect.Collection);
+  expect(res.collection).toBeInstanceOf(Collection);
   await res.client.close();
 });
 
@@ -38,7 +38,7 @@ test('get collection, no databaseName, uses databaseUri', async () => {
   };
   const res = await getCollection({ connection });
   expect(res.client).toBeInstanceOf(MongoClient);
-  expect(res.collection).toBeInstanceOf(MongoClient.connect.Collection);
+  expect(res.collection).toBeInstanceOf(Collection);
   await res.client.close();
 });
 
@@ -48,7 +48,9 @@ test('invalid databaseUri', async () => {
     databaseName: 'test',
     collection: 'getCollection',
   };
-  await expect(() => getCollection({ connection })).rejects.toThrow('Invalid connection string');
+  await expect(() => getCollection({ connection })).rejects.toThrow(
+    'Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"'
+  );
 });
 
 test('invalid databaseName', async () => {
@@ -58,7 +60,7 @@ test('invalid databaseName', async () => {
     collection: 'getCollection',
   };
   await expect(() => getCollection({ connection })).rejects.toThrow(
-    'database name must be a string'
+    'Database name must be a string'
   );
 });
 
@@ -69,6 +71,6 @@ test('invalid collection', async () => {
     collection: {},
   };
   await expect(() => getCollection({ connection })).rejects.toThrow(
-    'collection name must be a String'
+    'Collection name must be a String'
   );
 });

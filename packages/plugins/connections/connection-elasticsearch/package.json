@@ -1,12 +1,13 @@
 {
   "name": "@lowdefy/connection-elasticsearch",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.0-alpha.8",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy connection"
+    "lowdefy connection",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -41,15 +42,15 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "7.15.0",
-    "@lowdefy/helpers": "4.0.0-alpha.6"
+    "@elastic/elasticsearch": "7.16.0",
+    "@lowdefy/helpers": "4.0.0-alpha.8"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.6",
+    "@lowdefy/ajv": "4.0.0-alpha.8",
     "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.130",
+    "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "jest": "27.3.1"
+    "jest": "27.5.1"
   },
   "publishConfig": {
     "access": "public"

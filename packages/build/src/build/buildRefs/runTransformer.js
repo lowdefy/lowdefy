@@ -16,15 +16,21 @@
 
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
-async function runTransformer({ context, parsedFile, refDef }) {
+async function runTransformer({ context, input, refDef }) {
   if (refDef.transformer) {
     const transformerFn = await getUserJavascriptFunction({
       context,
       filePath: refDef.transformer,
     });
-    return transformerFn(parsedFile, refDef.vars);
+    try {
+      return transformerFn(input, refDef.vars);
+    } catch (error) {
+      throw Error(
+        `Error calling transformer "${refDef.transformer}" from "${refDef.path}": ${error.message}`
+      );
+    }
   }
-  return parsedFile;
+  return input;
 }
 
 export default runTransformer;

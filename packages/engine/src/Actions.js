@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import actions from './actions/index.js';
+import getActionMethods from './actions/getActionMethods.js';
 
 class Actions {
   constructor(context) {
@@ -24,7 +24,7 @@ class Actions {
     this.callActionLoop = this.callActionLoop.bind(this);
     this.callActions = this.callActions.bind(this);
     this.displayMessage = this.displayMessage.bind(this);
-    this.actions = actions;
+    this.actions = context._internal.lowdefy._internal.actions;
   }
 
   async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
@@ -126,7 +126,7 @@ class Actions {
   }
 
   async callAction({ action, arrayIndices, block, event, index, responses }) {
-    if (!actions[action.type]) {
+    if (!this.actions[action.type]) {
       throw {
         error: new Error(`Invalid action type "${action.type}" at "${block.blockId}".`),
         type: action.type,
@@ -155,12 +155,17 @@ class Actions {
       status: 'loading',
     });
     try {
-      response = await actions[action.type]({
-        arrayIndices,
-        blockId: block.blockId,
-        context: this.context,
-        event,
+      response = await this.actions[action.type]({
+        methods: getActionMethods({
+          actions: responses,
+          arrayIndices,
+          blockId: block.blockId,
+          context: this.context,
+          event,
+        }),
+        document: this.context._internal.lowdefy._internal.document,
         params: parsedAction.params,
+        window: this.context._internal.lowdefy._internal.window,
       });
     } catch (error) {
       responses[action.id] = { error, index, type: action.type };

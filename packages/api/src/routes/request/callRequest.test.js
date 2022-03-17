@@ -13,16 +13,46 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 import callRequest from './callRequest.js';
 import testContext from '../../test/testContext.js';
 
 import { ConfigurationError, RequestError } from '../../context/errors.js';
 
+const { _date, _payload, _secret, _user } = operatorsServer;
+
 console.error = () => {};
 
 const mockReadConfigFile = jest.fn();
-const mockTestRequestResolver = jest.fn();
+const mockTestRequest = jest.fn();
+const mockTestRequestCheckRead = jest.fn();
+const mockTestRequestCheckWrite = jest.fn();
+
+mockTestRequest.schema = {
+  type: 'object',
+  properties: {
+    schemaPropString: {
+      type: 'string',
+    },
+  },
+};
+mockTestRequestCheckRead.schema = {};
+mockTestRequestCheckWrite.schema = {};
+
+mockTestRequest.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
+mockTestRequestCheckRead.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+mockTestRequestCheckWrite.meta = {
+  checkRead: false,
+  checkWrite: true,
+};
 
 const connections = {
   TestConnection: {
@@ -35,28 +65,20 @@ const connections = {
       },
     },
     requests: {
-      TestRequest: {
-        resolver: mockTestRequestResolver,
-        schema: {
-          type: 'object',
-          properties: {
-            schemaPropString: {
-              type: 'string',
-            },
-          },
-        },
-      },
-      TestRequestCheckRead: {
-        resolver: mockTestRequestResolver,
-        schema: {},
-        checkRead: true,
-      },
-      TestRequestCheckWrite: {
-        resolver: mockTestRequestResolver,
-        schema: {},
-        checkWrite: true,
-      },
+      TestRequest: mockTestRequest,
+      TestRequestCheckRead: mockTestRequestCheckRead,
+      TestRequestCheckWrite: mockTestRequestCheckWrite,
     },
+  },
+};
+
+const operators = {
+  _date,
+  _payload,
+  _secret,
+  _user,
+  _error: () => {
+    throw new Error('Test error.');
   },
 };
 
@@ -65,10 +87,16 @@ const secrets = {
   REQUEST: 'requestSecret',
 };
 
-const context = testContext({ connections, readConfigFile: mockReadConfigFile, secrets });
+const context = testContext({
+  connections,
+  readConfigFile: mockReadConfigFile,
+  operators,
+  secrets,
+});
 const authenticatedContext = testContext({
   connections,
   readConfigFile: mockReadConfigFile,
+  operators,
   secrets,
   user: { sub: 'sub' },
 });
@@ -117,12 +145,14 @@ const defaultResolverImp = ({ request, connection }) => ({
 
 beforeEach(() => {
   mockReadConfigFile.mockReset();
-  mockTestRequestResolver.mockReset();
+  mockTestRequest.mockReset();
+  mockTestRequestCheckRead.mockReset();
+  mockTestRequestCheckWrite.mockReset();
 });
 
 test('call request, public auth', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
     id: 'request:pageId:requestId',
@@ -154,7 +184,7 @@ test('call request, protected auth with user', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(authenticatedContext, defaultParams);
   expect(res).toEqual({
@@ -187,7 +217,7 @@ test('call request, protected auth without user', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -197,7 +227,7 @@ test('call request, protected auth without user', async () => {
 
 test('request does not exist', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
   const params = {
     pageId: 'pageId',
     payload: {},
@@ -224,7 +254,7 @@ test('request does not have a connectionId', async () => {
     })
   );
 
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -247,7 +277,7 @@ test('request is not a valid request type', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -270,7 +300,7 @@ test('connection does not exist', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -291,7 +321,7 @@ test('connection does not have correct type', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -315,7 +345,7 @@ test('deserialize inputs', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await callRequest(context, {
     blockId: 'contextId',
@@ -325,7 +355,7 @@ test('deserialize inputs', async () => {
     pageId: 'pageId',
     requestId: 'requestId',
   });
-  expect(mockTestRequestResolver.mock.calls).toEqual([
+  expect(mockTestRequest.mock.calls).toEqual([
     [
       {
         connection: {
@@ -356,7 +386,7 @@ test('parse request properties for operators', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(authenticatedContext, {
     blockId: 'contextId',
@@ -396,7 +426,7 @@ test('parse connection properties for operators', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(authenticatedContext, {
     blockId: 'contextId',
@@ -422,7 +452,7 @@ test('parse connection properties for operators', async () => {
   });
 });
 
-test('parse secrets', async () => {
+test('evaluate secrets', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       connectionConfig: {
@@ -445,7 +475,7 @@ test('parse secrets', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -475,7 +505,7 @@ test('request properties default value', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -501,7 +531,7 @@ test('connection properties default value', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -527,17 +557,15 @@ test('request properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _get: null },
+          willError: { _error: null },
         },
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Error: Operator Error: _get takes an object as params. Received: null at requestId.'
-  );
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 
 test('connection properties operator error', async () => {
@@ -549,22 +577,20 @@ test('connection properties operator error', async () => {
         connectionId: 'testConnection',
         auth: { public: true },
         properties: {
-          willError: { _get: null },
+          willError: { _error: null },
         },
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(
-    'Error: Operator Error: _get takes an object as params. Received: null at testConnection.'
-  );
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 
 test('request resolver throws  error', async () => {
   mockReadConfigFile.mockImplementation(defaultReadConfigImp());
-  mockTestRequestResolver.mockImplementation(() => {
+  mockTestRequest.mockImplementation(() => {
     throw new Error('Test error.');
   });
 
@@ -585,7 +611,7 @@ test('connection properties schema error', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
@@ -606,7 +632,7 @@ test('request properties schema error', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow('must be string');
@@ -633,7 +659,7 @@ test('checkRead, read explicitly true', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckRead.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -670,7 +696,7 @@ test('checkRead, read explicitly false', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckRead.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -698,7 +724,7 @@ test('checkRead, read not set', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckRead.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -733,7 +759,7 @@ test('checkWrite, write explicitly true', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
 
   const res = await callRequest(context, defaultParams);
   expect(res).toEqual({
@@ -770,7 +796,7 @@ test('checkWrite, write explicitly false', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(
@@ -797,7 +823,7 @@ test('checkWrite, write not set', async () => {
       },
     })
   );
-  mockTestRequestResolver.mockImplementation(defaultResolverImp);
+  mockTestRequestCheckWrite.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(ConfigurationError);
   await expect(callRequest(context, defaultParams)).rejects.toThrow(

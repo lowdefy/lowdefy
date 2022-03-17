@@ -26,4 +26,4 @@ function transformer(obj, vars) {
   };
 }
 
-module.exports = transformer;
+export default transformer;

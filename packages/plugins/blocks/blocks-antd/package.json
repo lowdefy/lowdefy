@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-antd",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.0-alpha.8",
   "license": "Apache-2.0",
   "description": "Lowdefy Ant Design Blocks",
   "homepage": "https://lowdefy.com",
@@ -8,7 +8,8 @@
     "lowdefy",
     "lowdefy blocks",
     "antd",
-    "ant design"
+    "ant design",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -51,32 +52,30 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.7.0",
-    "@lowdefy/block-utils": "4.0.0-alpha.6",
-    "@lowdefy/helpers": "4.0.0-alpha.6",
-    "antd": "4.17.0-alpha.7",
+    "@lowdefy/block-utils": "4.0.0-alpha.8",
+    "@lowdefy/helpers": "4.0.0-alpha.8",
+    "antd": "4.18.2",
     "classnames": "2.3.1",
     "moment": "2.29.1",
     "rc-motion": "2.4.4",
-    "react": "18.0.0-alpha-327d5c484-20211106",
-    "react-dom": "18.0.0-alpha-327d5c484-20211106",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "tinycolor2": "1.4.2"
   },
   "devDependencies": {
-    "@babel/core": "7.16.0",
-    "@babel/preset-react": "7.16.0",
-    "@emotion/jest": "11.5.0",
-    "@lowdefy/block-dev": "4.0.0-alpha.6",
-    "@lowdefy/node-utils": "4.0.0-alpha.6",
+    "@emotion/jest": "11.7.1",
+    "@lowdefy/block-dev": "4.0.0-alpha.8",
+    "@lowdefy/node-utils": "4.0.0-alpha.8",
     "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.130",
+    "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
-    "@testing-library/dom": "8.11.1",
+    "@testing-library/dom": "8.11.3",
     "@testing-library/react": "13.0.0-alpha.4",
     "@testing-library/user-event": "14.0.0-alpha.14",
     "copyfiles": "2.4.1",
-    "jest": "27.3.1",
+    "jest": "27.5.1",
     "jest-serializer-html": "7.1.0",
-    "jest-transform-yaml": "0.1.2"
+    "jest-transform-yaml": "1.0.0"
   },
   "publishConfig": {
     "access": "public"

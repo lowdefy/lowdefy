@@ -68,7 +68,7 @@ pages:
                   title: Generate PDF from data with Lowdefy
                   subTitle: <a href="https://docs.lowdefy.com/generate-pdf-document-from-data">Read the full how to guide</a>
                   icon:
-                    name: PrinterTwoTone
+                    name: AiTwoTonePrinter
                     color: '#ff0000'
                 areas:
                   extra:
@@ -99,13 +99,14 @@ pages:
                           color: '#1890ff'
                         events:
                           onClick:
-                            - id: make_pdf
-                              type: JsAction
-                              params:
-                                name: pdfMake
-                                args:
-                                  _ref:
-                                    path: inv_template.yaml
+                            []
+                            # - id: make_pdf
+                            #   type: JsAction # TODO:
+                            #   params:
+                            #     name: pdfMake
+                            #     args:
+                            #       _ref:
+                            #         path: inv_template.yaml
       footer:
         blocks:
           - id: footer

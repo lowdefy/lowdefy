@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* Revert back to react 17.0.2. ([1b38fd3](https://github.com/lowdefy/lowdefy/commit/1b38fd3e743ee7286468c7c1e2f623838dd5ed84))
+
+
+### Features
+
+* **blocks-color-seletors:** Replace color selectors with single color selector using react-colorful. ([7830890](https://github.com/lowdefy/lowdefy/commit/78308908c41a35b6611af07abfb84a8ee8368d93))
+
+
+
+
+
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **blocks-color-selectors:** Fix typo in style import. ([7a90f5b](https://github.com/lowdefy/lowdefy/commit/7a90f5b3edbf8e081aa73bf40db2768bf43c2107))
+* **blocks-color-selectors:** Refactored tests to use new Block config. ([bd38975](https://github.com/lowdefy/lowdefy/commit/bd389752dccb8030ad80da0f717e8ecaba71c7fd))
+* **deps:** Update dependency react to v18.0.0-rc.0 ([2345330](https://github.com/lowdefy/lowdefy/commit/23453301716f541a1e044f63a740aae09d635237))
+* **deps:** Update emotion css packages. ([3380594](https://github.com/lowdefy/lowdefy/commit/33805944e30e919c57e3e7e1876b9c6723c3988d))
+* Fix import issues for build. ([64a076c](https://github.com/lowdefy/lowdefy/commit/64a076cdc91b77a4b067972f77e99bfc2c571650))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 

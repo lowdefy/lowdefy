@@ -28,37 +28,19 @@ const avatar = (path) => ({
   blocks: [
     {
       id: `${path}.color`,
-      type: 'Selector', // TODO: change back to CircleColorSelector
+      type: 'ColorSelector',
       layout: {
         _global: 'settings_input_layout',
       },
       properties: {
         title: 'color',
         size: 'small',
+        showValue: true,
         label: {
           span: 8,
           align: 'right',
           extra: 'The background color of the avatar. Should be a hex color string.',
         },
-        circleSize: 14,
-        circleSpacing: 8,
-        colors: [
-          '#f5222d',
-          '#fa541c',
-          '#fa8c16',
-          '#faad14',
-          '#fadb14',
-          '#a0d911',
-          '#52c41a',
-          '#13c2c2',
-          '#1890ff',
-          '#2f54eb',
-          '#722ed1',
-          '#eb2f96',
-          '#595959',
-          '#bfbfbf',
-          '#d9d9d9',
-        ],
       },
     },
     {
@@ -258,27 +240,9 @@ function makeBlockDefinition({
         };
         return block;
       case 'color':
-        block.type = 'Selector'; // TODO: change back to CircleColorSelector
-        block.properties.circleSize = 14;
-        block.properties.circleSpacing = 8;
-        block.properties.colors = [
-          '#f5222d',
-          '#fa541c',
-          '#fa8c16',
-          '#faad14',
-          '#fadb14',
-          '#a0d911',
-          '#52c41a',
-          '#13c2c2',
-          '#1890ff',
-          '#2f54eb',
-          '#722ed1',
-          '#eb2f96',
-          '#595959',
-          '#bfbfbf',
-          '#d9d9d9',
-        ];
+        block.type = 'ColorSelector';
         block.properties.showValue = true;
+        block.properties.size = 'small';
         return block;
       case 'date':
         block.type = 'DateSelector';

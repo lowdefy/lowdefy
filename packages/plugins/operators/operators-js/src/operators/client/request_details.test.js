@@ -14,182 +14,41 @@
   limitations under the License.
 */
 
-/* eslint-disable max-classes-per-file */
-import { WebParser } from '@lowdefy/operators';
+import request_details from './request_details.js';
 
-const arrayIndices = [1];
+jest.mock('@lowdefy/operators', () => ({
+  getFromObject: jest.fn(),
+}));
 
-const context = {
-  _internal: {
-    lowdefy: {
-      inputs: { id: true },
-      lowdefyGlobal: { global: true },
-      menus: [{ menus: true }],
-      urlQuery: { urlQuery: true },
-      user: { user: true },
+test('request_details calls getFromObject', async () => {
+  const lowdefyOperators = await import('@lowdefy/operators');
+  request_details({
+    requests: {
+      request_id: {
+        response: 'returned from action',
+        loading: false,
+        error: [],
+      },
     },
-  },
-  eventLog: [{ eventLog: true }],
-  id: 'id',
-  requests: [{ requests: true }],
-  state: { state: true },
-};
-
-console.error = () => {};
-
-test('_request_details in object', async () => {
-  const input = { _request_details: 'string' };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ loading: false, response: 'request String' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details all requests', async () => {
-  const input = { _request_details: true };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-    returnsNull: { loading: false, response: null },
+    arrayIndices: [0],
+    location: 'location',
+    params: 'params',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details null', async () => {
-  const input = { _request_details: null };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request_details params must be of type string, integer, boolean or object. Received: null at locationId.],
-    ]
-  `);
-});
-
-test('_request_details nested', async () => {
-  const input = { _request_details: 'string.response' };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('request String');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details param object key', async () => {
-  const input = {
-    _request_details: {
-      key: 'string',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ loading: false, response: 'request String' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details param object all', async () => {
-  const input = {
-    _request_details: {
-      all: true,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-    returnsNull: { loading: false, response: null },
-  });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details param object all and key', async () => {
-  const input = {
-    _request_details: {
-      all: true,
-      key: 'string',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    not_loaded: { loading: true, response: 'fail' },
-    string: { loading: false, response: 'request String' },
-    number: { loading: false, response: 500 },
-    arr: { loading: false, response: [{ a: 'request a1' }, { a: 'request a2' }] },
-    returnsNull: { loading: false, response: null },
-  });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details param object invalid', async () => {
-  const input = {
-    _request_details: {
-      other: true,
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request_details.key must be of type string or integer. Received: {"other":true} at locationId.],
-    ]
-  `);
-});
-
-test('_request_details param array', async () => {
-  const input = {
-    _request_details: ['string'],
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request_details params must be of type string, integer, boolean or object. Received: ["string"] at locationId.],
-    ]
-  `);
-});
-
-test('_request_details param object with string default', async () => {
-  const input = {
-    _request_details: {
-      key: 'notFound',
-      default: 'defaultValue',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('defaultValue');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_request_details param object with no default', async () => {
-  const input = {
-    _request_details: {
-      key: 'notFound',
-    },
-  };
-  const parser = new WebParser({ context });
-  await parser.init();
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
+    [
+      {
+        arrayIndices: [0],
+        location: 'location',
+        object: {
+          request_id: {
+            response: 'returned from action',
+            loading: false,
+            error: [],
+          },
+        },
+        operator: '_request_details',
+        params: 'params',
+      },
+    ],
+  ]);
 });

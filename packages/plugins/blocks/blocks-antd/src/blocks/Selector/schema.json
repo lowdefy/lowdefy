@@ -21,7 +21,7 @@
       },
       "clearIcon": {
         "type": ["string", "object"],
-        "default": "CloseCircleOutlined",
+        "default": "AiOutlineCloseCircle",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
         "docs": {
           "displayType": "icon"
@@ -207,7 +207,7 @@
       },
       "suffixIcon": {
         "type": ["string", "object"],
-        "default": "DownOutlined",
+        "default": "AiOutlineDown",
         "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at the drop-down position of the selector.",
         "docs": {
           "displayType": "icon"

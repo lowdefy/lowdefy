@@ -28,26 +28,8 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
   return menu.links || [];
 };
 
-const getTitle = (id, properties, defaultTitle) =>
-  (properties && properties.title) || defaultTitle || id;
-
-const MenuTitle = ({ basePath, id, Link, linkStyle, makeCssClass, pageId, properties, url }) => {
-  if (type.isString(pageId)) {
-    return (
-      <Link href={`${basePath}/${pageId}`} className={makeCssClass([linkStyle])}>
-        {getTitle(id, properties, pageId)}
-      </Link>
-    );
-  }
-  if (url) {
-    return (
-      <Link href={url} className={makeCssClass([linkStyle])}>
-        {getTitle(id, properties, url)}
-      </Link>
-    );
-  }
-  return <span className={makeCssClass([linkStyle])}>{getTitle(id, properties)}</span>;
-};
+const getTitle = ({ id, properties, pageId, url }) =>
+  (properties && properties.title) || pageId || url || id;
 
 const getNestedColors = (menuColor, background) => {
   const fontColor = color(menuColor, 6);
@@ -69,7 +51,6 @@ const getNestedColors = (menuColor, background) => {
 };
 
 const MenuComp = ({
-  basePath,
   blockId,
   components: { Icon, Link },
   events,
@@ -218,14 +199,13 @@ const MenuComp = ({
                 ])}
                 key={`${link.pageId || link.id}_${i}`}
                 title={
-                  <MenuTitle
-                    basePath={basePath}
-                    Link={Link}
-                    linkStyle={methods.makeCssClass(link.style, true)}
-                    id={link.id}
-                    makeCssClass={methods.makeCssClass}
-                    properties={link.properties}
-                  />
+                  <Link
+                    id={`${link.pageId || link.id}_${i}`}
+                    className={methods.makeCssClass(link.style, true)}
+                    {...link}
+                  >
+                    {getTitle(link)}
+                  </Link>
                 }
                 icon={
                   link.properties &&
@@ -253,14 +233,13 @@ const MenuComp = ({
                         <Menu.ItemGroup
                           key={`${subLink.pageId || subLink.id}_${j}`}
                           title={
-                            <MenuTitle
-                              basePath={basePath}
-                              Link={Link}
-                              linkStyle={methods.makeCssClass(subLink.style, true)}
-                              id={subLink.id}
-                              makeCssClass={methods.makeCssClass}
-                              properties={subLink.properties}
-                            />
+                            <Link
+                              id={`${subLink.pageId || subLink.id}_${j}`}
+                              className={methods.makeCssClass(subLink.style, true)}
+                              {...subLink}
+                            >
+                              {getTitle(subLink)}
+                            </Link>
                           }
                         >
                           {subLink.links.map((subLinkGroup, k) => {
@@ -288,16 +267,13 @@ const MenuComp = ({
                                   )
                                 }
                               >
-                                <MenuTitle
-                                  basePath={basePath}
-                                  Link={Link}
-                                  linkStyle={methods.makeCssClass(subLinkGroup.style, true)}
-                                  id={subLinkGroup.id}
-                                  makeCssClass={methods.makeCssClass}
-                                  pageId={subLinkGroup.pageId}
-                                  properties={subLinkGroup.properties}
-                                  url={subLinkGroup.url}
-                                />
+                                <Link
+                                  id={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
+                                  className={methods.makeCssClass(subLinkGroup.style, true)}
+                                  {...subLinkGroup}
+                                >
+                                  {getTitle(subLinkGroup)}
+                                </Link>
                               </Menu.Item>
                             );
                           })}
@@ -320,16 +296,13 @@ const MenuComp = ({
                             )
                           }
                         >
-                          <MenuTitle
-                            basePath={basePath}
-                            Link={Link}
-                            linkStyle={methods.makeCssClass(subLink.style, true)}
-                            id={subLink.id}
-                            makeCssClass={methods.makeCssClass}
-                            pageId={subLink.pageId}
-                            properties={subLink.properties}
-                            url={subLink.url}
-                          />
+                          <Link
+                            id={`${subLink.pageId || subLink.id}_${j}`}
+                            className={methods.makeCssClass(subLink.style, true)}
+                            {...subLink}
+                          >
+                            {getTitle(subLink)}
+                          </Link>
                         </Menu.Item>
                       );
                   }
@@ -353,16 +326,13 @@ const MenuComp = ({
                   )
                 }
               >
-                <MenuTitle
-                  basePath={basePath}
-                  Link={Link}
-                  linkStyle={methods.makeCssClass(link.style, true)}
-                  id={link.id}
-                  makeCssClass={methods.makeCssClass}
-                  pageId={link.pageId}
-                  properties={link.properties}
-                  url={link.url}
-                />
+                <Link
+                  id={`${link.pageId || link.id}_${i}`}
+                  className={methods.makeCssClass(link.style, true)}
+                  {...link}
+                >
+                  {getTitle(link)}
+                </Link>
               </Menu.Item>
             );
         }

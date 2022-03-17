@@ -7,7 +7,7 @@
     },
     "target": "es2020",
     "keepClassNames": true,
-    "transform": { "react": { "runtime": "automatic" } }
+    "transform": { "react": { "runtime": "classic" } }
   },
   "module": {
     "type": "es6",

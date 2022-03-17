@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Icon name corrections. ([7fa29e4](https://github.com/lowdefy/lowdefy/commit/7fa29e4290d533f252390cf48f2059c178ca7c34))
+* **docs:** Correct icon names for react-icons. ([4cae725](https://github.com/lowdefy/lowdefy/commit/4cae725caabc72848bf96ad1dc29d797d152cf27))
+* **docs:** Fix _yaml.parse takes an array. ([0943aa0](https://github.com/lowdefy/lowdefy/commit/0943aa0812ac84535d82e01825681c186fcb14ca))
+* **docs:** Fix image route paths in docs. ([895d26d](https://github.com/lowdefy/lowdefy/commit/895d26d2b1ba10bd5b4ece5af73e6dd2e163da1d))
+* **docs:** Fix JSON syntax error in S3 docs. ([0aa7501](https://github.com/lowdefy/lowdefy/commit/0aa7501bfcf88b144f6cf6f32a4395ea67647571))
+* **docs:** Fixes in tests. ([567afa4](https://github.com/lowdefy/lowdefy/commit/567afa449182834d3d673672c6408f1e8b57f420))
+
+
+### Features
+
+* **docs:** Implement docs filter default value operator as plugin. ([fa46d22](https://github.com/lowdefy/lowdefy/commit/fa46d2267559dede520e0ddba0d070105bb85545))
+* **docs:** Replace color selectors with react-colorful selector. ([3d146aa](https://github.com/lowdefy/lowdefy/commit/3d146aae853d2d437fa2a128380c13b09949365c))
+
+
+
+
+
+# [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
+
+
+### Bug Fixes
+
+* **cli:** Change additional base dir references to config. ([e20cfdf](https://github.com/lowdefy/lowdefy/commit/e20cfdfdcb1f079ea80450b87608ae57ab4e30f8))
+* **connection-mongodb:** Update MongoDB connection docs ([7f0fccf](https://github.com/lowdefy/lowdefy/commit/7f0fccffe308a14331c8c6f3ddb3c4579387facb))
+* **docs:** Add CircleColorSelector to transformer and fix typo. ([9eea4f1](https://github.com/lowdefy/lowdefy/commit/9eea4f10b145929ace661f52809594cb02580a00))
+* **docs:** Add docs on ES Modules in build resolvers and transformers. ([8a3605e](https://github.com/lowdefy/lowdefy/commit/8a3605e840b9f0a86fbf58f47ecbb507e85605fe))
+* **docs:** Comment our JsAction usage. ([27a2361](https://github.com/lowdefy/lowdefy/commit/27a2361fc626a78a7b34b2bcdd074bc352a6a677))
+* **docs:** Update paths for all blocks and some icon name fixes. ([e4369bb](https://github.com/lowdefy/lowdefy/commit/e4369bb3453c19d76f083b139f317de7dd96e090))
+* Fix docs transformer fns tests. ([8a0e331](https://github.com/lowdefy/lowdefy/commit/8a0e3313abe15bee9ce28aa2d8b8f91a3482bae3))
+* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
+* Move S3UploadButton to plugin-aws. ([540aa03](https://github.com/lowdefy/lowdefy/commit/540aa035d2ed0672b0f3e233c1cee90e82d4bb52))
+* Update docs for Anchor. ([53117b8](https://github.com/lowdefy/lowdefy/commit/53117b88cf759991539265ca84c0f47a9b45a911))
+
+
+### Features
+
+* **build:** Add buildPath to config. ([1cce024](https://github.com/lowdefy/lowdefy/commit/1cce024339bc89e4192d86f09d1a9ec233663f02))
+* **build:** Use dynamic import for build resolver and transformer functions. ([c9db72a](https://github.com/lowdefy/lowdefy/commit/c9db72ac55109a85cfc821dfbbf87e54b4881d59))
+* **cli:** Rename base-directory to config-directory. ([f09c569](https://github.com/lowdefy/lowdefy/commit/f09c569f0e4207ce31a9e5e002f8eb30ea221bc5))
+* **docs:** Add docs for the Link component. ([37b80b1](https://github.com/lowdefy/lowdefy/commit/37b80b172bc078ab4b83f5932fc8d0908c5baf6f))
+* **operators:** Change dependancy from js-yaml to yaml. ([cbb71d8](https://github.com/lowdefy/lowdefy/commit/cbb71d809b3117dbaf89b23c17a2229a24235308))
+* **server:** Add ariaLabel and rel properties to Link. ([95b4447](https://github.com/lowdefy/lowdefy/commit/95b44473a3f67741951e4d020a0ad84a90805d94))
+* **server:** Add replace and scroll to Link. ([9d6ac04](https://github.com/lowdefy/lowdefy/commit/9d6ac04b09f7c2281ebc699de504bba8b8b5e13b))
+
+
+### BREAKING CHANGES
+
+* **connection-mongodb:** The MongoDB driver was updated to v4, which has some changes to the option variable names.
+* **operators:** _yaml.parse now takes an array or an object data instead of a string.
+* href and strong property removed for Anchor block, replaced with Link properties.
+* **cli:** Rename base-directory to config-directory.
+
+
+
+## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v3.23.2) (2021-11-29)
+
+
+
+
+
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 ### Bug Fixes

@@ -30,8 +30,8 @@ async function MongodbInsertOne({ request, connection }) {
     throw error;
   }
   await client.close();
-  const { insertedCount, insertedId, ops } = serialize(res);
-  return { insertedCount, insertedId, ops };
+  const { acknowledged, insertedId } = serialize(res);
+  return { acknowledged, insertedId };
 }
 
 MongodbInsertOne.schema = schema;

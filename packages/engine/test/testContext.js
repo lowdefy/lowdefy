@@ -50,7 +50,7 @@ const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) =>
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
   _internal.RootBlocks = new Blocks({
-    areas: { root: { blocks: [_internal.rootBlock] } },
+    areas: _internal.rootBlock.areas,
     context: ctx,
   });
   _internal.RootBlocks.init();

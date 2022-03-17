@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: PageHCSF
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/PageHCSF/PageHCSF.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHCSF/schema.json
     filePath: blocks/container/PageHCSF.yaml
     description_content: |
       Page HCSF provides a minimal layout structure for a page container with a header, content, sider and footer arrangement.

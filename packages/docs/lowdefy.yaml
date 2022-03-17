@@ -13,11 +13,15 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: 3.23.2
+lowdefy: 4.0.0-alpha.8
 licence: Apache-2.0
 
 cli:
   disableTelemetry: true
+
+plugins:
+  - name: '@lowdefy/docs'
+    version: '4.0.0-alpha.7'
 
 global:
   all_icons:
@@ -30,8 +34,6 @@ app:
   html:
     appendHead:
       _ref: head.html
-    appendBody:
-      _ref: body.html
 
 connections:
   - id: discord_channel

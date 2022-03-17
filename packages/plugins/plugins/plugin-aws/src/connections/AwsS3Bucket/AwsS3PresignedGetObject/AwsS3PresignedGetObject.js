@@ -15,8 +15,9 @@
 */
 
 import AWS from 'aws-sdk';
+import schema from './schema.js';
 
-function awsS3PresignedGetObject({ request, connection }) {
+function AwsS3PresignedGetObject({ request, connection }) {
   const { accessKeyId, secretAccessKey, region, bucket } = connection;
   const { expires, key, versionId, responseContentDisposition, responseContentType } = request;
   const params = {
@@ -31,4 +32,10 @@ function awsS3PresignedGetObject({ request, connection }) {
   return s3.getSignedUrl('getObject', params);
 }
 
-export default awsS3PresignedGetObject;
+AwsS3PresignedGetObject.schema = schema;
+AwsS3PresignedGetObject.meta = {
+  checkRead: true,
+  checkWrite: false,
+};
+
+export default AwsS3PresignedGetObject;

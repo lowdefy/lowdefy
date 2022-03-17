@@ -164,7 +164,6 @@ test('operator returns value', async () => {
               "state": true,
             },
           },
-          "env": "web",
           "event": Object {
             "event": true,
           },
@@ -326,7 +325,6 @@ test('context._internal.lowdefy empty object', async () => {
               "state": true,
             },
           },
-          "env": "web",
           "event": Object {
             "event": true,
           },
@@ -414,6 +412,16 @@ test('operator should be object with 1 key', async () => {
   const parser = new WebParser({ context, operators });
   await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
+  expect(res.output).toEqual(input);
+  expect(res.errors).toEqual([]);
+});
+
+test('operatorPrefix invalid', async () => {
+  const input = { a: { _test: { params: true }, x: 1 } };
+  const operatorPrefix = 'invalid';
+  const parser = new WebParser({ context, operators });
+  await parser.init();
+  const res = parser.parse({ actions, args, arrayIndices, event, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });

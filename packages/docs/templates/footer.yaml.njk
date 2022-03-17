@@ -213,7 +213,7 @@
                 size: auto
               properties:
                 title: Send
-                icon: SendOutlined
+                icon: AiOutlineSend
                 color: '#1890ff'
               events:
                 onClick:
@@ -250,7 +250,7 @@
         size: auto
       properties:
         title: Edit this page on Github
-        href: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
+        url: https://github.com/lowdefy/lowdefy/blob/main/packages/docs/{{ filePath }}
         newTab: true
 {% endif %}
 
@@ -283,7 +283,7 @@
           type: Html
           properties:
             html: |
-              <p><a href="https://lowdefy.com"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
+              <p><a href="https://lowdefy.com"><img src="/logo-light-theme.png" width="126px" /></a></p>
               <p style="font-size: 0.85rem;" >Build internal tools with YAML.</p>
               <p><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
         - id: community_links
@@ -297,7 +297,7 @@
               layout:
                 size: auto
               properties:
-                name: TwitterOutlined
+                name: AiOutlineTwitter
                 size: 24
               events:
                 onClick:
@@ -310,7 +310,7 @@
               layout:
                 size: auto
               properties:
-                name: CommentOutlined
+                name: AiOutlineComment
                 size: 24
               events:
                 onClick:
@@ -348,7 +348,7 @@
               layout:
                 size: auto
               properties:
-                name: GithubOutlined
+                name: AiOutlineGithub
                 size: 24
               events:
                 onClick:
@@ -361,7 +361,7 @@
               layout:
                 size: auto
               properties:
-                name: YoutubeOutlined
+                name: AiOutlineYoutube
                 size: 24
               events:
                 onClick:
@@ -474,43 +474,43 @@
           type: Anchor
           properties:
             title: Why Lowdefy
-            href: https://lowdefy.com
-            ref: 'noopener'
+            url: https://lowdefy.com
+            rel: 'noopener'
         - id: tutorial_anchor
           type: Anchor
           properties:
             title: Quick Start Tutorial
-            href: /tutorial-development-server
+            pageId: tutorial-development-server
             rel: 'noopener'
         - id: netlify_anchor
           type: Anchor
           properties:
             title: Deploy to Netlify
-            href: /tutorial-start
+            pageId: tutorial-start
             rel: 'noopener'
         - id: concepts_anchor
           type: Anchor
           properties:
             title: How Lowdefy Works
-            href: /overview
+            pageId: overview
             rel: 'noopener'
         - id: github_anchor
           type: Anchor
           properties:
             title: Github Repository
-            href: https://github.com/lowdefy/lowdefy
+            url: https://github.com/lowdefy/lowdefy
             newTab: true
         - id: changelog_anchor
           type: Anchor
           properties:
             title: Version Changelog
-            href: https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
+            url: https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md
             newTab: true
         - id: license_anchor
           type: Anchor
           properties:
             title: Apache-2.0 License
-            href: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
+            url: https://github.com/lowdefy/lowdefy/blob/main/LICENSE
             newTab: true
     - id: footer_logo_box_sm
       type: Box
@@ -529,7 +529,7 @@
           type: Html
           properties:
             html: |
-              <p style="text-align: center;"><a href="https://lowdefy.com" ref="noopener"><img src="/public/logo-light-theme.png" width="126px" /></a></p>
+              <p style="text-align: center;"><a href="https://lowdefy.com" ref="noopener"><img src="/logo-light-theme.png" width="126px" /></a></p>
               <p style="text-align: center; font-size: 0.85rem;" >Build internal tools with YAML.</p>
               <p style="text-align: center;"><a href="mailto:hello@lowdefy.com">hello@lowdefy.com</a></p>
         - id: community_links
@@ -543,7 +543,7 @@
               layout:
                 size: auto
               properties:
-                name: TwitterOutlined
+                name: AiOutlineTwitter
                 size: 24
               events:
                 onClick:
@@ -557,7 +557,7 @@
               layout:
                 size: auto
               properties:
-                name: CommentOutlined
+                name: AiOutlineComment
                 size: 24
               events:
                 onClick:
@@ -571,7 +571,7 @@
               layout:
                 size: auto
               properties:
-                name: GithubOutlined
+                name: AiOutlineGithub
                 size: 24
               events:
                 onClick:
@@ -585,7 +585,7 @@
               layout:
                 size: auto
               properties:
-                name: YoutubeOutlined
+                name: AiOutlineYoutube
                 size: 24
               events:
                 onClick:

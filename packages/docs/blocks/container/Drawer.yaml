@@ -17,7 +17,7 @@ _ref:
   vars:
     block_type: Drawer
     category: container
-    schema: ../blocks/blocksAntd/src/blocks/Drawer/Drawer.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Drawer/schema.json
     filePath: blocks/container/Drawer.yaml
     description_content: |
       A panel which slides in from the edge of the screen.

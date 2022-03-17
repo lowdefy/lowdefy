@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import Mongo from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { type } from '@lowdefy/helpers';
-
-const { ObjectId } = Mongo;
 
 function replacer(_, value) {
   if (type.isObject(value)) {

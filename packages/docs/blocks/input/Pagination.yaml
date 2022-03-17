@@ -18,16 +18,16 @@ _ref:
     block_type: Pagination
     value_type: object
     category: input
-    schema: ../blocks/blocksAntd/src/blocks/Pagination/Pagination.json
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Pagination/schema.json
     filePath: blocks/input/Pagination.yaml
     init_property_values:
       pageSizeOptions: [10, 20, 30, 40]
     init_state_values:
-      block_id: 
+      block_id:
         current: 0
         pageSize: 10
         skip: 0
     description_content: |
       The `Pagination` controls user input for pagination purposes.
-      
+
       > This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.

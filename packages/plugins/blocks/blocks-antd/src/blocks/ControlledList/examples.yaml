@@ -45,13 +45,13 @@
   properties:
     addItemButton:
       title: Add new Item
-- id: 'properties.removeItemIcon: DeleteOutlined'
+- id: 'properties.removeItemIcon: AiOutlineDelete'
   type: ControlledList
   properties:
-    removeItemIcon: DeleteOutlined
+    removeItemIcon: AiOutlineDelete
 - id: 'properties.removeItemIcon:
-    name: DeleteOutlined'
+    name: AiOutlineDelete'
   type: ControlledList
   properties:
     removeItemIcon:
-      name: DeleteOutlined
+      name: AiOutlineDelete

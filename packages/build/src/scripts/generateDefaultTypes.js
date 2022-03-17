@@ -16,13 +16,15 @@
 */
 
 import path from 'path';
-import { type } from '@lowdefy/helpers';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
+import createPluginTypesMap from '../utils/createPluginTypesMap.js';
+
 const defaultPackages = [
+  '@lowdefy/actions-core',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
-  // '@lowdefy/blocks-color-selectors',
+  '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
@@ -35,101 +37,49 @@ const defaultPackages = [
   '@lowdefy/connection-sendgrid',
   '@lowdefy/connection-stripe',
   '@lowdefy/operators-change-case',
-  // '@lowdefy/operators-diff',
+  '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
-  // '@lowdefy/operators-mql',
+  '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
 ];
 
-function createTypeDefinitions({ typeNames, store, packageName, version }) {
-  if (type.isArray(typeNames)) {
-    typeNames.forEach((typeName) => {
-      store[typeName] = {
-        package: packageName,
-        version,
-      };
-    });
-  }
-}
-
-async function generateDefaultTypes() {
+async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
-  const defaultTypes = {
+  const defaultTypesMap = {
     actions: {},
     blocks: {},
     connections: {},
-    requests: {},
+    icons: {},
     operators: {
       client: {},
       server: {},
     },
-    icons: {},
-    styles: {},
+    requests: {},
+    styles: {
+      packages: {},
+      blocks: {},
+    },
   };
 
   await Promise.all(
     defaultPackages.map(async (packageName) => {
       const { default: types } = await import(`${packageName}/types`);
       const version = packageFile.devDependencies[packageName];
-
-      createTypeDefinitions({
-        typeNames: types.actions,
-        store: defaultTypes.actions,
+      createPluginTypesMap({
+        packageTypes: types,
+        typesMap: defaultTypesMap,
         packageName,
         version,
       });
-
-      createTypeDefinitions({
-        typeNames: types.blocks,
-        store: defaultTypes.blocks,
-        packageName,
-        version,
-      });
-
-      createTypeDefinitions({
-        typeNames: types.connections,
-        store: defaultTypes.connections,
-        packageName,
-        version,
-      });
-
-      createTypeDefinitions({
-        typeNames: types.requests,
-        store: defaultTypes.requests,
-        packageName,
-        version,
-      });
-
-      createTypeDefinitions({
-        typeNames: type.isObject(types.operators) ? types.operators.client : [],
-        store: defaultTypes.operators.client,
-        packageName,
-        version,
-      });
-
-      createTypeDefinitions({
-        typeNames: type.isObject(types.operators) ? types.operators.server : [],
-        store: defaultTypes.operators.server,
-        packageName,
-        version,
-      });
-
-      if (type.isObject(types.styles)) {
-        defaultTypes.styles[packageName] = types.styles;
-      }
-
-      if (type.isObject(types.icons)) {
-        defaultTypes.icons[packageName] = types.icons;
-      }
     })
   );
 
   await writeFile(
-    path.resolve(process.cwd(), './dist/defaultTypes.json'),
-    JSON.stringify(defaultTypes, null, 2)
+    path.resolve(process.cwd(), './dist/defaultTypesMap.json'),
+    JSON.stringify(defaultTypesMap, null, 2)
   );
 }
 
-generateDefaultTypes();
+generateDefaultTypesMap();

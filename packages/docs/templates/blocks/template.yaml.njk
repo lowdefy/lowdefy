@@ -75,10 +75,10 @@ events:
         _var: init_state_values
 
   onEnterAsync:
-    - id: connect_docsearch
-      type: JsAction
+    {# - id: connect_docsearch
+      type: JsAction # TODO:
       params:
-        name: connectDocsearch
+        name: connectDocsearch #}
     - id: post_telemetry
       type: Request
       messages:
@@ -182,9 +182,9 @@ areas:
               _state: block.layout
             style:
               _yaml.parse:
-                _if_none:
-                  - _state: style_block_input
-                  - ''
+                - _if_none:
+                    - _state: style_block_input
+                    - ''
             {% if category != "context" %}
             visible:
               _state: block.visible
@@ -192,14 +192,16 @@ areas:
             required:
               _state: block.required
             properties:
-              _js.filterDefaultValue:
-                - _ref:
+              _custom_filter_default_value:
+                value:
+                  _ref:
                         path:
                           _var: schema
                         vars:
                           block_type: {{ block_type }}
                         transformer: templates/blocks/propertiesGetterTransformer.js
-                - _ref:
+                defaultValue:
+                  _ref:
                     path:
                       _var: schema
                     transformer: templates/blocks/defaultValueTransformer.js
@@ -309,8 +311,9 @@ areas:
                         options:
                           sortKeys: false
                         on:
-                          _js.filterDefaultValue:
-                            - id: block_id
+                          _custom_filter_default_value:
+                            value:
+                              id: block_id
                               type: {{ block_type }}
                               required:
                                 _state: block.required
@@ -320,9 +323,9 @@ areas:
                                 _state: block.layout
                               style:
                                 _yaml.parse:
-                                  _if_none:
-                                    - _state: style_block_input
-                                    - ''
+                                  - _if_none:
+                                      - _state: style_block_input
+                                      - ''
                               properties:
                                 _ref:
                                   path:
@@ -330,7 +333,8 @@ areas:
                                   vars:
                                     block_type: {{ block_type }}
                                   transformer: templates/blocks/propertiesGetterTransformer.js
-                            - required: false
+                            defaultValue:
+                              required: false
                               visible: true
                               layout:
                                 align: top

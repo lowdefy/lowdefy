@@ -17,25 +17,25 @@
 - id: 'properties.mode: alternate'
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     mode: alternate
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
@@ -56,25 +56,25 @@
 - id: 'properties.mode: right'
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     mode: right
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
@@ -95,25 +95,25 @@
 - id: 'properties.mode: left'
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     mode: left
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
@@ -134,25 +134,25 @@
 - id: 'properties.reverse: true'
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     reverse: true
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
@@ -173,25 +173,25 @@
 - id: 'properties.pending: true'
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     pending: true
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
@@ -212,26 +212,26 @@
 - id: 'properties.pendingDotIcon: '
   type: TimelineList
   value:
-    - icon: FireOutlined
+    - icon: AiOutlineFire
       color: red
       position: left
-    - icon: SettingOutlined
+    - icon: AiOutlineSetting
       color: green
       position: right
-    - icon: RocketOutlined
+    - icon: AiOutlineRocket
       color: blue
       position: left
   properties:
     pending: true
     pendingDotIcon: FireFilled
     data:
-      - icon: FireOutlined
+      - icon: AiOutlineFire
         color: red
         position: left
-      - icon: SettingOutlined
+      - icon: AiOutlineSetting
         color: green
         position: right
-      - icon: RocketOutlined
+      - icon: AiOutlineRocket
         color: blue
         position: left
   blocks:
