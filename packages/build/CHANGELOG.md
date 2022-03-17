@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **build:** Do not use ref resolver for lowdefy.yml files. ([3c05e57](https://github.com/lowdefy/lowdefy/commit/3c05e57749b2c9315589d77750198c99f4fe3526))
+* **operators:** Fix operators failing tests. ([c25b6b6](https://github.com/lowdefy/lowdefy/commit/c25b6b6ea3a6f1100daba2653b263f8aed64a8c4))
+
+
+### Features
+
+* Add operator-js dependency to build ([83d5b79](https://github.com/lowdefy/lowdefy/commit/83d5b79cec2dc7cdc62c5b51a96dd3d50b1b26c4))
+* Add support for typePrefix on custom plugins. ([d66d395](https://github.com/lowdefy/lowdefy/commit/d66d395e01688af917bda0722beba7a8a5886085))
+* Create types map for custom plugins. ([5ddf739](https://github.com/lowdefy/lowdefy/commit/5ddf739103b7bdea57bf0a5903433555368c43c3))
+* Evaluate build operators in refs. ([f8e2214](https://github.com/lowdefy/lowdefy/commit/f8e22143868b3de69147648f40c17c6d26191b22))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 

@@ -16,7 +16,7 @@
 
 import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
-
+// TODO: build operators aren't evaluated in lowdefy.yaml file. Move recursive call up a layer or something.
 async function buildRefs({ context }) {
   const components = await recursiveBuild({
     context,

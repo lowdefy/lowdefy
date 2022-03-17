@@ -14,21 +14,16 @@
   limitations under the License.
 */
 
-function _function({ arrayIndices, event, location, operatorPrefix, params, parser }) {
-  return (...args) => {
-    const { output, errors } = parser.parse({
-      arrayIndices,
-      args,
-      event,
-      input: params,
-      location,
-      operatorPrefix: `_${operatorPrefix}`,
-    });
-    if (errors.length > 0) {
-      throw new Error(errors[0]);
-    }
-    return output;
-  };
+import { getFromObject } from '@lowdefy/operators';
+
+function _env({ arrayIndices, env, location, params }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: env,
+    operator: '_env',
+    params,
+  });
 }
 
-export default _function;
+export default _env;

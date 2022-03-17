@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **cli:** Do not merge app and server package jsons ([7a97261](https://github.com/lowdefy/lowdefy/commit/7a972615431ed8993a207c69839837ebe4e69c4a))
+* **cli:** Fix CLI tests. ([1c8dc54](https://github.com/lowdefy/lowdefy/commit/1c8dc544af0ed052697ba9ff0e7a47124ffb6a03))
+
+
+### Features
+
+* Add support for typePrefix on custom plugins. ([d66d395](https://github.com/lowdefy/lowdefy/commit/d66d395e01688af917bda0722beba7a8a5886085))
+* **cli:** Add install custom plugins as dev dependencies. ([b6ab43b](https://github.com/lowdefy/lowdefy/commit/b6ab43bae01f10a9b2762b180d1f7d92df712e80))
+* **cli:** Copy plugins folder to server. ([9f4ff92](https://github.com/lowdefy/lowdefy/commit/9f4ff92573b164c0cbfe42087e54adac60b6a74a))
+* **cli:** Merge user package json into server package json. ([899a15f](https://github.com/lowdefy/lowdefy/commit/899a15f6c515d3be28d67126b653124fb7acf92c))
+* Create types map for custom plugins. ([5ddf739](https://github.com/lowdefy/lowdefy/commit/5ddf739103b7bdea57bf0a5903433555368c43c3))
+* Custom plugins on dev server. ([9f65d13](https://github.com/lowdefy/lowdefy/commit/9f65d130d70494ebd74fb0ae3cf6edb4cbf31415))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 

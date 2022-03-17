@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Icon name corrections. ([7fa29e4](https://github.com/lowdefy/lowdefy/commit/7fa29e4290d533f252390cf48f2059c178ca7c34))
+* **docs:** Correct icon names for react-icons. ([4cae725](https://github.com/lowdefy/lowdefy/commit/4cae725caabc72848bf96ad1dc29d797d152cf27))
+* **docs:** Fix _yaml.parse takes an array. ([0943aa0](https://github.com/lowdefy/lowdefy/commit/0943aa0812ac84535d82e01825681c186fcb14ca))
+* **docs:** Fix image route paths in docs. ([895d26d](https://github.com/lowdefy/lowdefy/commit/895d26d2b1ba10bd5b4ece5af73e6dd2e163da1d))
+* **docs:** Fix JSON syntax error in S3 docs. ([0aa7501](https://github.com/lowdefy/lowdefy/commit/0aa7501bfcf88b144f6cf6f32a4395ea67647571))
+* **docs:** Fixes in tests. ([567afa4](https://github.com/lowdefy/lowdefy/commit/567afa449182834d3d673672c6408f1e8b57f420))
+
+
+### Features
+
+* **docs:** Implement docs filter default value operator as plugin. ([fa46d22](https://github.com/lowdefy/lowdefy/commit/fa46d2267559dede520e0ddba0d070105bb85545))
+* **docs:** Replace color selectors with react-colorful selector. ([3d146aa](https://github.com/lowdefy/lowdefy/commit/3d146aae853d2d437fa2a128380c13b09949365c))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 

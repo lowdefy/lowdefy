@@ -32,6 +32,8 @@ const operators = {
 
 const location = 'location';
 
+const operatorPrefix = '_';
+
 const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
 beforeAll(async () => {
   await parser.init();
@@ -154,7 +156,12 @@ describe('_array.copyWithin', () => {
 
 describe('_array.every', () => {
   const methodName = 'every';
-  const callback = _function({ location, params: { __gt: [{ __args: '0' }, 3] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({
@@ -275,7 +282,12 @@ describe('_array.fill', () => {
 
 describe('_array.filter', () => {
   const methodName = 'filter';
-  const callback = _function({ location, params: { __gt: [{ __args: '0' }, 3] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({
@@ -330,7 +342,12 @@ describe('_array.filter', () => {
 
 describe('_array.find', () => {
   const methodName = 'find';
-  const callback = _function({ location, params: { __gt: [{ __args: '0' }, 3] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({
@@ -385,7 +402,12 @@ describe('_array.find', () => {
 
 describe('_array.findIndex', () => {
   const methodName = 'findIndex';
-  const callback = _function({ location, params: { __gt: [{ __args: '0' }, 3] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({
@@ -706,7 +728,12 @@ describe('_array.lastIndexOf', () => {
 
 describe('_array.map', () => {
   const methodName = 'map';
-  const callback = _function({ location, params: { __sum: [{ __args: '0' }, 1] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __sum: [{ __args: '0' }, 1] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({
@@ -763,6 +790,7 @@ describe('_array.reduce', () => {
   const methodName = 'reduce';
   const callback = _function({
     location,
+    operatorPrefix,
     params: { __sum: [{ __args: '0' }, { __args: '1' }] },
     parser,
   });
@@ -833,6 +861,7 @@ describe('_array.reduceRight', () => {
   const methodName = 'reduceRight';
   const callback = _function({
     location,
+    operatorPrefix,
     params: { __sum: [{ __args: '0' }, { __args: '1' }] },
     parser,
   });
@@ -1047,7 +1076,12 @@ describe('_array.splice', () => {
 
 describe('_array.some', () => {
   const methodName = 'some';
-  const callback = _function({ location, params: { __gt: [{ __args: '0' }, 3] }, parser });
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
   test('valid', () => {
     expect(
       _array({

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-js",
-  "version": "4.0.0-alpha.7",
+  "version": "4.0.0-alpha.8",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -20,6 +20,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Johann Möller",
+      "url": "https://github.com/JohannMoller"
     }
   ],
   "repository": {
@@ -29,6 +33,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
+    "./operators/build": "./dist/operatorsBuild.js",
     "./operators/client": "./dist/operatorsClient.js",
     "./operators/server": "./dist/operatorsServer.js",
     "./types": "./dist/types.js"
@@ -44,8 +49,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.7",
-    "@lowdefy/operators": "4.0.0-alpha.7"
+    "@lowdefy/helpers": "4.0.0-alpha.8",
+    "@lowdefy/operators": "4.0.0-alpha.8"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
