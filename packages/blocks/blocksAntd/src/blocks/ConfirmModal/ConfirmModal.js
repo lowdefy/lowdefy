@@ -41,7 +41,7 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
           properties.okButton && properties.okButton.icon
             ? {
                 ...properties.okButton,
-                icon: properties.icon && (
+                icon: properties.okButton.icon && (
                   <Icon
                     blockId={`${blockId}_ok_icon`}
                     events={events}
@@ -51,18 +51,18 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
               }
             : properties.okButton,
         cancelButtonProps:
-          properties.cancelButtonProps && properties.cancelButtonProps.icon
+          properties.cancelButton && properties.cancelButton.icon
             ? {
-                ...properties.cancelButtonProps,
-                icon: properties.icon && (
+                ...properties.cancelButton,
+                icon: properties.cancelButton.icon && (
                   <Icon
                     blockId={`${blockId}_ok_icon`}
                     events={events}
-                    properties={properties.cancelButtonProps.icon}
+                    properties={properties.cancelButton.icon}
                   />
                 ),
               }
-            : properties.cancelButtonProps,
+            : properties.cancelButton,
         cancelText: properties.cancelText || 'Cancel',
         centered: properties.centered || false,
         mask: properties.mask !== undefined ? properties.mask : true,
