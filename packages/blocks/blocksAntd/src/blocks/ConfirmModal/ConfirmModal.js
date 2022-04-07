@@ -37,8 +37,32 @@ const ConfirmModal = ({ blockId, events, content, methods, properties }) => {
           renderHtml({ html: properties.content, methods }),
         className: methods.makeCssClass(properties.modalStyle),
         okText: properties.okText || 'Ok',
-        okButtonProps: properties.okButton,
-        cancelButtonProps: properties.cancelButton,
+        okButtonProps:
+          properties.okButton && properties.okButton.icon
+            ? {
+                ...properties.okButton,
+                icon: properties.icon && (
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    events={events}
+                    properties={properties.okButton.icon}
+                  />
+                ),
+              }
+            : properties.okButton,
+        cancelButtonProps:
+          properties.cancelButtonProps && properties.cancelButtonProps.icon
+            ? {
+                ...properties.cancelButtonProps,
+                icon: properties.icon && (
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    events={events}
+                    properties={properties.cancelButtonProps.icon}
+                  />
+                ),
+              }
+            : properties.cancelButtonProps,
         cancelText: properties.cancelText || 'Cancel',
         centered: properties.centered || false,
         mask: properties.mask !== undefined ? properties.mask : true,

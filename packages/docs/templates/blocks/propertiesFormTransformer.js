@@ -88,7 +88,7 @@ const button = (path) => ({
   },
   properties: {
     size: 'small',
-    title: 'button:',
+    title: `${path}:`,
     inner: true,
   },
   blocks: [
