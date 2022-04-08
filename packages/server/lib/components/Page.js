@@ -45,32 +45,30 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
       id="page-loader"
       ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
       lowdefy={lowdefy}
-    >
-      {(progressBarDispatcher) => (
-        <Context
-          config={pageConfig}
-          lowdefy={lowdefy}
-          progressBarDispatcher={progressBarDispatcher}
-        >
-          {(context, loading) => {
-            return (
-              <>
-                <Head
-                  properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
-                />
-                <Block
-                  block={context._internal.RootBlocks.map[pageConfig.id]}
-                  Blocks={context._internal.RootBlocks}
-                  context={context}
-                  parentLoading={loading}
-                  lowdefy={lowdefy}
-                />
-              </>
-            );
-          }}
-        </Context>
-      )}
-    </ProgressBarController>
+      content={{
+        content: (progress) => (
+          <Context config={pageConfig} lowdefy={lowdefy} progress={progress}>
+            {(context, loading) => {
+              return (
+                <>
+                  <Head
+                    properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
+                  />
+                  <Block
+                    block={context._internal.RootBlocks.map[pageConfig.id]}
+                    Blocks={context._internal.RootBlocks}
+                    context={context}
+                    lowdefy={lowdefy}
+                    parentLoading={loading}
+                    progress={progress}
+                  />
+                </>
+              );
+            }}
+          </Context>
+        ),
+      }}
+    />
   );
 };
 

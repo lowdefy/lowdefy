@@ -46,7 +46,7 @@ const ProgressBarController = ({ id, ProgressBar, children, lowdefy }) => {
       properties={{ ...state }}
       user={lowdefy.user}
       content={{
-        content: () => children(dispatch),
+        content: () => children({ state, dispatch }),
       }}
     />
   );

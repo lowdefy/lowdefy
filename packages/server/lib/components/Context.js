@@ -19,7 +19,7 @@ import getContext from '@lowdefy/engine';
 
 import MountEvents from './MountEvents.js';
 
-const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
+const Context = ({ children, config, lowdefy, progress }) => {
   const context = getContext({ config, lowdefy });
   return (
     <MountEvents
@@ -30,7 +30,7 @@ const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
           await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
             name: 'onInit',
             progress: () => {
-              progressBarDispatcher({
+              progress.dispatch({
                 type: 'increment',
               });
             },
@@ -44,7 +44,7 @@ const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
           context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
             name: 'onInitAsync',
             progress: () => {
-              progressBarDispatcher({
+              progress.dispatch({
                 type: 'increment',
               });
             },
@@ -61,7 +61,7 @@ const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
               await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
                 name: 'onEnter',
                 progress: () => {
-                  progressBarDispatcher({
+                  progress.dispatch({
                     type: 'increment',
                   });
                 },
@@ -72,12 +72,12 @@ const Context = ({ children, config, lowdefy, progressBarDispatcher }) => {
                 await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
                   name: 'onEnterAsync', // TODO: Do we want this to happen in the background, as in not effecting progress bar?
                   progress: () => {
-                    progressBarDispatcher({
+                    progress.dispatch({
                       type: 'increment',
                     });
                   },
                 });
-                progressBarDispatcher({
+                progress.dispatch({
                   type: 'done',
                 });
               };

@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import React, { Suspense, useState } from 'react';
+import React, { useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import CategorySwitch from './CategorySwitch.js';
-import LoadingBlock from './LoadingBlock.js';
 import MountEvents from '../MountEvents.js';
 
 const Block = ({ block, Blocks, context, isRoot, lowdefy, parentLoading }) => {
@@ -27,33 +26,28 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy, parentLoading }) => {
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
   return (
     <ErrorBoundary>
-      <Suspense fallback={<LoadingBlock block={block} lowdefy={lowdefy} />}>
-        <MountEvents
-          context={context}
-          parentLoading={parentLoading}
-          triggerEvent={async () => {
-            await block.triggerEvent({ name: 'onMount' });
-          }}
-          triggerEventAsync={() => {
-            block.triggerEvent({ name: 'onMount' });
-          }}
-        >
-          {(loading) =>
-            loading ? (
-              <LoadingBlock block={block} lowdefy={lowdefy} />
-            ) : (
-              <CategorySwitch
-                block={block}
-                Blocks={Blocks}
-                context={context}
-                isRoot={isRoot}
-                lowdefy={lowdefy}
-                updates={updates}
-              />
-            )
-          }
-        </MountEvents>
-      </Suspense>
+      <MountEvents
+        context={context}
+        parentLoading={parentLoading}
+        triggerEvent={async () => {
+          await block.triggerEvent({ name: 'onMount' });
+        }}
+        triggerEventAsync={() => {
+          block.triggerEvent({ name: 'onMount' });
+        }}
+      >
+        {(loading) => (
+          <CategorySwitch
+            block={block}
+            Blocks={Blocks}
+            context={context}
+            isRoot={isRoot}
+            loading={loading}
+            lowdefy={lowdefy}
+            updates={updates}
+          />
+        )}
+      </MountEvents>
     </ErrorBoundary>
   );
 };
