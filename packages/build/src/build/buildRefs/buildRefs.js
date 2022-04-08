@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
-
+// TODO: build operators aren't evaluated in lowdefy.yaml file. Move recursive call up a layer or something.
 async function buildRefs({ context }) {
   const components = await recursiveBuild({
     context,

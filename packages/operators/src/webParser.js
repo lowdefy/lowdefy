@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ class WebParser {
     this.operators = operators;
   }
 
-  parse({ actions, args, arrayIndices, event, input, location }) {
+  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
     const operators = this.operators;
     const context = this.context;
 
@@ -42,41 +42,41 @@ class WebParser {
     const errors = [];
     const { inputs, lowdefyGlobal, menus, urlQuery, user } = context._internal.lowdefy;
     const reviver = (_, value) => {
-      if (type.isObject(value) && Object.keys(value).length === 1) {
-        const key = Object.keys(value)[0];
-        const [op, methodName] = key.split('.');
-        try {
-          if (!type.isUndefined(operators[op])) {
-            const res = operators[op]({
-              eventLog: context.eventLog,
-              actions,
-              args,
-              arrayIndices,
-              context: context,
-              env: 'web',
-              event,
-              input: inputs ? inputs[context.id] : {},
-              location: applyArrayIndices(arrayIndices, location),
-              lowdefyGlobal: lowdefyGlobal || {},
-              menus: menus || {},
-              methodName,
-              operators: operators,
-              params: value[key],
-              requests: context.requests,
-              state: context.state,
-              urlQuery: urlQuery || {},
-              user: user || {},
-              parser: this,
-            });
-            return res;
-          }
-        } catch (e) {
-          errors.push(e);
-          console.error(e);
-          return null;
-        }
+      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+
+      const key = Object.keys(value)[0];
+      if (!key.startsWith(operatorPrefix)) return value;
+
+      const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
+      if (type.isUndefined(operators[op])) return value;
+
+      try {
+        const res = operators[op]({
+          eventLog: context.eventLog,
+          actions,
+          args,
+          arrayIndices,
+          context: context,
+          event,
+          input: inputs ? inputs[context.id] : {},
+          location: applyArrayIndices(arrayIndices, location),
+          lowdefyGlobal: lowdefyGlobal || {},
+          menus: menus || {},
+          methodName,
+          operators: operators,
+          params: value[key],
+          requests: context.requests,
+          state: context.state,
+          urlQuery: urlQuery || {},
+          user: user || {},
+          parser: this,
+        });
+        return res;
+      } catch (e) {
+        errors.push(e);
+        console.error(e);
+        return null;
       }
-      return value;
     };
     return {
       output: serializer.copy(input, { reviver }),

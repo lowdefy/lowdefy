@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -83,9 +83,10 @@ test('operator returns value', () => {
             },
           ],
           "arrayIndices": Array [],
-          "env": "node",
+          "env": undefined,
           "location": "location",
           "methodName": undefined,
+          "operatorPrefix": "_",
           "operators": Object {
             "_error": [MockFunction],
             "_init": [MockFunction],
@@ -103,6 +104,7 @@ test('operator returns value', () => {
             "params": true,
           },
           "parser": NodeParser {
+            "env": undefined,
             "operators": Object {
               "_error": [MockFunction],
               "_init": [MockFunction],
@@ -147,6 +149,15 @@ test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new NodeParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
+  expect(res.output).toEqual(input);
+  expect(res.errors).toEqual([]);
+});
+
+test('operatorPrefix invalid', () => {
+  const input = { a: { _test: { params: true }, x: 1 } };
+  const operatorPrefix = 'invalid';
+  const parser = new NodeParser({ operators, payload, secrets, user });
+  const res = parser.parse({ args, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@
 
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
-async function runTransformer({ context, parsedFile, refDef }) {
+async function runTransformer({ context, input, refDef }) {
   if (refDef.transformer) {
     const transformerFn = await getUserJavascriptFunction({
       context,
       filePath: refDef.transformer,
     });
     try {
-      return transformerFn(parsedFile, refDef.vars);
+      return transformerFn(input, refDef.vars);
     } catch (error) {
       throw Error(
         `Error calling transformer "${refDef.transformer}" from "${refDef.path}": ${error.message}`
       );
     }
   }
-  return parsedFile;
+  return input;
 }
 
 export default runTransformer;

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ async function build({ context }) {
   context.print.info('Starting build.');
   const directory = context.directories.server;
   await getServer({ context, packageName: '@lowdefy/server', directory });
-  await copyPluginsFolder({ context });
+  await copyPluginsFolder({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });

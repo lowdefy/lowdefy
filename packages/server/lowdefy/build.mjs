@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import build from '@lowdefy/build';
-import createCustomTypesMap from './createCustomTypesMap.mjs';
+import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
 
@@ -39,7 +39,7 @@ async function run() {
     ),
   };
 
-  const customTypesMap = await createCustomTypesMap({ directories });
+  const customTypesMap = await createCustomPluginTypesMap({ directories });
   await build({
     customTypesMap,
     directories,

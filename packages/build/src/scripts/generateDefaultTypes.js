@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -66,7 +66,8 @@ async function generateDefaultTypesMap() {
   await Promise.all(
     defaultPackages.map(async (packageName) => {
       const { default: types } = await import(`${packageName}/types`);
-      const version = packageFile.devDependencies[packageName];
+      const version =
+        packageFile.devDependencies[packageName] || packageFile.dependencies[packageName];
       createPluginTypesMap({
         packageTypes: types,
         typesMap: defaultTypesMap,

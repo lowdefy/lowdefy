@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ async function getPluginDefinitions({ directories }) {
   return get(lowdefy, 'plugins', { default: [] });
 }
 
-async function createCustomTypesMap({ directories }) {
+async function createCustomPluginTypesMap({ directories }) {
   const customTypesMap = {
     actions: {},
     blocks: {},
@@ -63,4 +63,4 @@ async function createCustomTypesMap({ directories }) {
   return customTypesMap;
 }
 
-export default createCustomTypesMap;
+export default createCustomPluginTypesMap;

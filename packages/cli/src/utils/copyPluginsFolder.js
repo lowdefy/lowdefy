@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ import path from 'path';
 import fs from 'fs';
 import { copyDirectory } from '@lowdefy/node-utils';
 
-async function copyPluginsFolder({ context }) {
-  if (context.directories.config === context.directories.server) return;
+async function copyPluginsFolder({ context, directory }) {
+  if (context.directories.config === directory) return;
   if (!fs.existsSync(path.resolve(context.directories.config, 'plugins'))) return;
 
   await copyDirectory(
     path.resolve(context.directories.config, 'plugins'),
-    path.resolve(context.directories.server, 'plugins')
+    path.resolve(directory, 'plugins')
   );
 }
 

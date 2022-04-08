@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
@@ -50,9 +50,15 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       referencedFrom: refDef.path,
     });
 
+    const evaluatedOperators = await evaluateBuildOperators({
+      context,
+      input: parsedFile,
+      refDef: parsedRefDef,
+    });
+
     const transformedFile = await runTransformer({
       context,
-      parsedFile,
+      input: evaluatedOperators,
       refDef: parsedRefDef,
     });
 

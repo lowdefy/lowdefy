@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
+
+
+### Bug Fixes
+
+* **actions-core:** Fix Throw action error message if params are not an object. ([057ff7e](https://github.com/lowdefy/lowdefy/commit/057ff7eb84171e7fd68a9725133bd0472a771895))
+* **actions-core:** Improve Throw action error messages. ([9ffddd6](https://github.com/lowdefy/lowdefy/commit/9ffddd6778bcc626ccd055be2dcd5b1cdde2400b))
+
+
+### Features
+
+* **docs:** Implement docs filter default value operator as plugin. ([fa46d22](https://github.com/lowdefy/lowdefy/commit/fa46d2267559dede520e0ddba0d070105bb85545))
+
+
+
+
+
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
 
 

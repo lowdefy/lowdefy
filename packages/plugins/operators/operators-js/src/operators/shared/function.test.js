@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -57,10 +57,20 @@ const context = {
 
 console.error = () => {};
 
+// TODO: Test cases with different operatorPrefix
+
 test('NodeParser, _function that gets from payload', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: 'string' };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
+  expect(fn).toBeInstanceOf(Function);
+  expect(fn()).toEqual('Some String');
+});
+
+test('NodeParser, nested function call', () => {
+  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const params = { ___payload: 'string' };
+  const fn = _function({ location, params, parser, operatorPrefix: '__' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
@@ -68,7 +78,7 @@ test('NodeParser, _function that gets from payload', () => {
 test('NodeParser, _function gives args as an array', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __args: true };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
@@ -76,7 +86,7 @@ test('NodeParser, _function gives args as an array', () => {
 test('NodeParser, _function throws on parser errors', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: [] };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn).toThrow(
     'Error: Operator Error: _payload params must be of type string, integer, boolean or object. Received: [] at location.'
   );
@@ -85,7 +95,7 @@ test('NodeParser, _function throws on parser errors', () => {
 test('WebParser, _function that gets from state', () => {
   const parser = new WebParser({ context, operators });
   const params = { __state: 'string' };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
   expect(fn()).toEqual('Some String');
@@ -94,7 +104,7 @@ test('WebParser, _function that gets from state', () => {
 test('WebParser, _function gives args as an array', () => {
   const parser = new WebParser({ context, operators });
   const params = { __args: true };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
@@ -102,7 +112,7 @@ test('WebParser, _function gives args as an array', () => {
 test('WebParser, _function throws on parser errors', () => {
   const parser = new WebParser({ context, operators });
   const params = { __state: [] };
-  const fn = _function({ location, params, parser });
+  const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn).toThrow(
     'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at location.'
   );

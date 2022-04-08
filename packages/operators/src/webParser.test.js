@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -145,7 +145,6 @@ test('operator returns value', () => {
               "state": true,
             },
           },
-          "env": "web",
           "event": Object {
             "event": true,
           },
@@ -305,7 +304,6 @@ test('context._internal.lowdefy empty object', () => {
               "state": true,
             },
           },
-          "env": "web",
           "event": Object {
             "event": true,
           },
@@ -391,6 +389,15 @@ test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
+  expect(res.output).toEqual(input);
+  expect(res.errors).toEqual([]);
+});
+
+test('operatorPrefix invalid', () => {
+  const input = { a: { _test: { params: true }, x: 1 } };
+  const operatorPrefix = 'invalid';
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ actions, args, arrayIndices, event, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
