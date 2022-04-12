@@ -24,6 +24,7 @@ const ColorSelector = ({
   blockId,
   components,
   events,
+  loading,
   methods,
   properties,
   required,
@@ -55,7 +56,7 @@ const ColorSelector = ({
             undefinedColor={properties.undefinedColor}
             value={value}
             hideInput={properties.hideInput}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             methods={methods}
           />
         ),
@@ -68,14 +69,7 @@ ColorSelector.defaultProps = blockDefaultProps;
 ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: [
-    {
-      type: 'Skeleton',
-      properties: {
-        height: 216,
-      },
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/ColorSelector/style.less'],
 };

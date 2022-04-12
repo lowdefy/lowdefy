@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const ProgressBar = ({ blockId, methods, style, properties, content }) => {
   const {
     progress = 30,
     height = 3,
-    // color = 'red', // TODO: get primary from theme ??
     transitionTime = 1000,
     // loaderSpeed = 500,
     // waitingTime = 1000,
@@ -59,4 +58,4 @@ ProgressBar.meta = {
   styles: ['blocks/ProgressBar/style.less'],
 };
 
-export default forwardRef(ProgressBar);
+export default ProgressBar;

@@ -24,6 +24,7 @@ const CheckboxSwitch = ({
   blockId,
   components,
   events,
+  loading,
   properties,
   required,
   validation,
@@ -43,7 +44,7 @@ const CheckboxSwitch = ({
           <Checkbox
             id={`${blockId}_input`}
             checked={value}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             className={methods.makeCssClass([
               properties.color && {
                 '& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span': {
@@ -73,11 +74,7 @@ CheckboxSwitch.defaultProps = blockDefaultProps;
 CheckboxSwitch.meta = {
   valueType: 'boolean',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSwitch/style.less'],
 };

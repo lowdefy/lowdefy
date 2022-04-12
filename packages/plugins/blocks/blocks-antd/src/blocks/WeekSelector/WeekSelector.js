@@ -29,6 +29,7 @@ const WeekSelector = ({
   blockId,
   components: { Icon, Link },
   events,
+  loading,
   methods,
   properties,
   required,
@@ -53,7 +54,7 @@ const WeekSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-wo'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
@@ -89,11 +90,7 @@ WeekSelector.defaultProps = blockDefaultProps;
 WeekSelector.meta = {
   valueType: 'date',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/WeekSelector/style.less'],
 };

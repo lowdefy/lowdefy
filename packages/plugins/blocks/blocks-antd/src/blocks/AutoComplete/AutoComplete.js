@@ -28,6 +28,7 @@ const AutoCompleteInput = ({
   blockId,
   components,
   events,
+  loading,
   methods,
   properties,
   required,
@@ -52,7 +53,7 @@ const AutoCompleteInput = ({
             bordered={properties.bordered}
             className={methods.makeCssClass(properties.inputStyle)}
             defaultOpen={properties.defaultOpen}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             placeholder={properties.placeholder || 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
@@ -112,11 +113,7 @@ AutoCompleteInput.defaultProps = blockDefaultProps;
 AutoCompleteInput.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/AutoComplete/style.less'],
 };

@@ -24,6 +24,7 @@ const NumberInput = ({
   blockId,
   events,
   components,
+  loading,
   methods,
   properties,
   required,
@@ -48,7 +49,7 @@ const NumberInput = ({
             className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
             controls={properties.controls}
             decimalSeparator={properties.decimalSeparator}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             formatter={properties.formatter}
             keyboard={properties.keyboard}
             max={properties.max}
@@ -76,11 +77,7 @@ NumberInput.defaultProps = blockDefaultProps;
 NumberInput.meta = {
   valueType: 'number',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/NumberInput/style.less'],
 };

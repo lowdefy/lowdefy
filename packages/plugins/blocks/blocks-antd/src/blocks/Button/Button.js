@@ -23,8 +23,9 @@ import color from '../../color.js';
 
 const ButtonBlock = ({
   blockId,
-  events,
   components: { Icon },
+  events,
+  loading,
   methods,
   onClick,
   properties,
@@ -49,7 +50,7 @@ const ButtonBlock = ({
         },
         properties.style,
       ])}
-      disabled={properties.disabled || get(events, `${onClickActionName}.loading`)}
+      disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
@@ -77,11 +78,7 @@ const ButtonBlock = ({
 ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
-  skeleton: [
-    {
-      type: 'SkeletonButton',
-    },
-  ],
+  skeleton: false,
   icons: [],
   styles: ['blocks/Button/style.less'],
 };

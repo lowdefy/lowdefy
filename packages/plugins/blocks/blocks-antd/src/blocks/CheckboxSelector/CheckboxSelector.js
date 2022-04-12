@@ -27,6 +27,7 @@ const CheckboxSelector = ({
   blockId,
   components,
   events,
+  loading,
   properties,
   required,
   validation,
@@ -55,7 +56,7 @@ const CheckboxSelector = ({
               },
               properties.inputStyle,
             ])}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             onChange={(newVal) => {
               const val = [];
               newVal.forEach((nv) => {
@@ -106,11 +107,7 @@ CheckboxSelector.defaultProps = blockDefaultProps;
 CheckboxSelector.meta = {
   valueType: 'array',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSelector/style.less'],
 };

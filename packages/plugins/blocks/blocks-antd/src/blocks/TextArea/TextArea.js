@@ -28,6 +28,7 @@ const TextAreaBlock = ({
   blockId,
   components,
   events,
+  loading,
   properties,
   required,
   validation,
@@ -52,7 +53,7 @@ const TextAreaBlock = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               showCount={properties.showCount}
@@ -89,11 +90,7 @@ TextAreaBlock.defaultProps = blockDefaultProps;
 TextAreaBlock.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/TextArea/style.less'],
 };

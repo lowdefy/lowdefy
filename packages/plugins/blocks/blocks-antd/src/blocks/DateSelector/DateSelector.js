@@ -25,8 +25,9 @@ import disabledDate from '../../disabledDate.js';
 
 const DateSelector = ({
   blockId,
-  events,
   components: { Icon },
+  events,
+  loading,
   methods,
   properties,
   required,
@@ -51,7 +52,7 @@ const DateSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               format={properties.format || 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               placeholder={properties.placeholder || 'Select Date'}
@@ -88,11 +89,7 @@ DateSelector.defaultProps = blockDefaultProps;
 DateSelector.meta = {
   valueType: 'date',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateSelector/style.less'],
 };

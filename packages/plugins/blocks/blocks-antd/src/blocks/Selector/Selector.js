@@ -29,6 +29,7 @@ const Selector = ({
   blockId,
   components: { Icon, Link },
   events,
+  loading,
   methods,
   properties,
   required,
@@ -56,7 +57,7 @@ const Selector = ({
               mode="single"
               autoFocus={properties.autoFocus}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               placeholder={get(properties, 'placeholder', { default: 'Select item' })}
               suffixIcon={
                 properties.suffixIcon && (
@@ -140,11 +141,7 @@ Selector.defaultProps = blockDefaultProps;
 Selector.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/Selector/style.less'],
 };

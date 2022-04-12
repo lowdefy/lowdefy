@@ -73,6 +73,7 @@ const RatingSlider = ({
   blockId,
   components: { Icon, Link },
   events,
+  loading,
   methods,
   properties,
   required,
@@ -124,6 +125,7 @@ const RatingSlider = ({
                     label: { disabled: true },
                     options: [{ value: true, label: properties.notApplicableLabel || 'N/A' }],
                     color: properties.color,
+                    disabled: properties.disabled || loading,
                   },
                   properties.CheckboxInput,
                   { style: styles.checkbox },
@@ -179,7 +181,11 @@ const RatingSlider = ({
                 methods.makeCssClass(properties.inputStyle)
               )}
               autoFocus={properties.autoFocus}
-              disabled={properties.disabled || (check === true && !properties.disableNotApplicable)}
+              disabled={
+                properties.disabled ||
+                (check === true && !properties.disableNotApplicable) ||
+                loading
+              }
               dots={get(properties, 'showDots', { default: true })}
               tooltipVisible={
                 value === null || properties.tooltipVisible === 'never'

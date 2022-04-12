@@ -29,6 +29,7 @@ const RadioSelector = ({
   blockId,
   components,
   events,
+  loading,
   properties,
   required,
   validation,
@@ -59,7 +60,7 @@ const RadioSelector = ({
               },
               properties.inputStyle,
             ])}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             onChange={(event) => {
               methods.setValue(
                 type.isPrimitive(uniqueValueOptions[event.target.value])
@@ -106,11 +107,7 @@ RadioSelector.defaultProps = blockDefaultProps;
 RadioSelector.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/RadioSelector/style.less'],
 };

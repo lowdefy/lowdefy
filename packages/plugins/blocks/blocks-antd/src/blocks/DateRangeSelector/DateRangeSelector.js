@@ -35,6 +35,7 @@ const DateRangeSelector = ({
   blockId,
   components: { Icon },
   events,
+  loading,
   methods,
   properties,
   required,
@@ -59,7 +60,7 @@ const DateRangeSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
@@ -103,11 +104,7 @@ DateRangeSelector.defaultProps = blockDefaultProps;
 DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateRangeSelector/style.less'],
 };

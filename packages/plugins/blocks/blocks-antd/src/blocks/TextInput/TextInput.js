@@ -25,6 +25,7 @@ const TextInput = ({
   blockId,
   components: { Icon, Link },
   events,
+  loading,
   methods,
   properties,
   required,
@@ -49,7 +50,7 @@ const TextInput = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               size={properties.size}
@@ -98,11 +99,7 @@ TextInput.defaultProps = blockDefaultProps;
 TextInput.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/TextInput/style.less'],
 };

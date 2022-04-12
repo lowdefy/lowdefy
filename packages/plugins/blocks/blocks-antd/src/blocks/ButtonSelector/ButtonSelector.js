@@ -27,6 +27,7 @@ const ButtonSelector = ({
   blockId,
   components,
   events,
+  loading,
   properties,
   required,
   validation,
@@ -56,7 +57,7 @@ const ButtonSelector = ({
               },
               properties.inputStyle,
             ])}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             size={properties.size}
             buttonStyle={properties.buttonStyle ? properties.buttonStyle : 'solid'}
             onChange={(event) => {
@@ -99,11 +100,7 @@ ButtonSelector.defaultProps = blockDefaultProps;
 ButtonSelector.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
+  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/ButtonSelector/style.less'],
 };

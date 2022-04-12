@@ -21,7 +21,15 @@ import { type } from '@lowdefy/helpers';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, events, components: { Icon }, properties, methods, value }) => {
+const ParagraphInput = ({
+  blockId,
+  components: { Icon },
+  events,
+  loading,
+  methods,
+  properties,
+  value,
+}) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -80,7 +88,7 @@ const ParagraphInput = ({ blockId, events, components: { Icon }, properties, met
           : properties.copyable
       }
       delete={properties.delete}
-      disabled={properties.disabled}
+      disabled={properties.disabled || loading}
       ellipsis={
         type.isObject(properties.ellipsis)
           ? {
@@ -135,11 +143,7 @@ ParagraphInput.defaultProps = blockDefaultProps;
 ParagraphInput.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonParagraph',
-    },
-  ],
+  skeleton: false,
   icons: [],
   styles: ['blocks/ParagraphInput/style.less'],
 };
