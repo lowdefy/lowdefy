@@ -33,7 +33,7 @@ function reducer(state, action) {
 }
 
 // TODO: inc every second
-const ProgressBarController = ({ id, ProgressBar, children, lowdefy }) => {
+const ProgressBarController = ({ id, ProgressBar, content, lowdefy }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <ProgressBar
@@ -46,7 +46,7 @@ const ProgressBarController = ({ id, ProgressBar, children, lowdefy }) => {
       properties={{ ...state }}
       user={lowdefy.user}
       content={{
-        content: () => children({ state, dispatch }),
+        content: () => content.content({ state, dispatch }),
       }}
     />
   );

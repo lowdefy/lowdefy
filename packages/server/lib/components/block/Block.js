@@ -21,7 +21,7 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 import CategorySwitch from './CategorySwitch.js';
 import MountEvents from '../MountEvents.js';
 
-const Block = ({ block, Blocks, context, isRoot, lowdefy, parentLoading }) => {
+const Block = ({ block, Blocks, context, isRoot, loading, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
   return (
@@ -36,13 +36,13 @@ const Block = ({ block, Blocks, context, isRoot, lowdefy, parentLoading }) => {
           block.triggerEvent({ name: 'onMount' });
         }}
       >
-        {(loading) => (
+        {(eventLoading) => (
           <CategorySwitch
             block={block}
             Blocks={Blocks}
             context={context}
             isRoot={isRoot}
-            loading={loading}
+            loading={eventLoading || loading || block.eval.loading}
             lowdefy={lowdefy}
             updates={updates}
           />

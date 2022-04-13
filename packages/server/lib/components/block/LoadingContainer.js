@@ -18,34 +18,32 @@ import React from 'react';
 import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
-import Block from './Block.js';
+import LoadingBlock from './LoadingBlock.js';
 
-const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skeleton }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
-  const areas = Blocks.subBlocks[block.id][0].areas;
-  Object.keys(areas).forEach((areaKey, i) => {
+  Object.keys(skeleton.areas).forEach((areaKey, i) => {
     content[areaKey] = (areaStyle) => (
       <Area
-        id={`ar-${block.blockId}-${areaKey}`}
-        key={`ar-${block.blockId}-${areaKey}-${i}`}
         area={layoutParamsToArea({
-          area: block.eval.areas[areaKey] || {},
+          area: skeleton.areas[areaKey] || {},
           areaKey,
-          layout: block.eval.layout || {},
+          layout,
         })}
-        areaStyle={[areaStyle, block.eval.areas[areaKey] && block.eval.areas[areaKey].style]}
+        areaStyle={[areaStyle, skeleton.areas[areaKey] && skeleton.areas[areaKey].style]}
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
+        id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
+        key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
         makeCssClass={makeCssClass}
       >
-        {areas[areaKey].blocks.map((bl, k) => (
-          <Block
-            key={`co-${bl.blockId}-${k}`}
-            Blocks={Blocks.subBlocks[block.id][0]}
-            block={bl}
+        {skeleton.areas[areaKey].blocks.map((skl, k) => (
+          <LoadingBlock
+            blockId={blockId}
             context={context}
-            loading={loading}
+            key={`s-co-${skl.id}-${k}`}
             lowdefy={lowdefy}
+            skeleton={skl}
           />
         ))}
       </Area>
@@ -53,35 +51,26 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      id={`bl-${block.blockId}`}
-      blockStyle={block.eval.style}
+      blockStyle={skeleton.style}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
-      layout={block.eval.layout || {}}
+      id={`s-bl-${blockId}-${skeleton.id}`}
+      layout={layout}
       makeCssClass={makeCssClass}
     >
       <Component
-        methods={Object.assign(block.methods, {
-          makeCssClass,
-          registerEvent: block.registerEvent,
-          registerMethod: block.registerMethod,
-          triggerEvent: block.triggerEvent,
-        })}
         basePath={lowdefy.basePath}
-        blockId={block.blockId}
+        blockId={blockId}
         components={lowdefy._internal.components}
         content={content}
-        events={block.eval.events}
-        key={block.blockId}
-        loading={loading}
+        key={skeleton.id}
         menus={lowdefy.menus}
+        methods={{ makeCssClass }}
         pageId={lowdefy.pageId}
-        properties={block.eval.properties}
-        required={block.eval.required}
+        properties={skeleton.properties}
         user={lowdefy.user}
-        validation={block.eval.validation}
       />
     </BlockLayout>
   );
 };
 
-export default Container;
+export default LoadingContainer;
