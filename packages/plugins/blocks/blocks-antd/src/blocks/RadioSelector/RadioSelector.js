@@ -107,7 +107,6 @@ RadioSelector.defaultProps = blockDefaultProps;
 RadioSelector.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/RadioSelector/style.less'],
 };

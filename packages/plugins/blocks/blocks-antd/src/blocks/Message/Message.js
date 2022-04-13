@@ -44,7 +44,6 @@ const MessageBlock = ({ blockId, components: { Icon }, events, methods, properti
 MessageBlock.defaultProps = blockDefaultProps;
 MessageBlock.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Message/style.less'],
 };

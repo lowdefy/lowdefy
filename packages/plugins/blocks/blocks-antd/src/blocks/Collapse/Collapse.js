@@ -74,14 +74,6 @@ const CollapseBlock = ({ blockId, events, content, components: { Icon }, methods
 CollapseBlock.defaultProps = blockDefaultProps;
 CollapseBlock.meta = {
   category: 'container',
-  skeleton: [
-    {
-      type: 'Skeleton',
-      properties: {
-        height: 80,
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/Collapse/style.less'],
 };

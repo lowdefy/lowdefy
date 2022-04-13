@@ -107,7 +107,6 @@ CheckboxSelector.defaultProps = blockDefaultProps;
 CheckboxSelector.meta = {
   valueType: 'array',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSelector/style.less'],
 };

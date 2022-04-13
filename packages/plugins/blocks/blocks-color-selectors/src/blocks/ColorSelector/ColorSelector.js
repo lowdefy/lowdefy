@@ -69,7 +69,6 @@ ColorSelector.defaultProps = blockDefaultProps;
 ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/ColorSelector/style.less'],
 };

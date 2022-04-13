@@ -45,14 +45,6 @@ const TooltipBlock = ({ blockId, content, properties, methods }) => (
 TooltipBlock.defaultProps = blockDefaultProps;
 TooltipBlock.meta = {
   category: 'container',
-  skeleton: [
-    {
-      type: 'Skeleton',
-      properties: {
-        height: 80,
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/Tooltip/style.less'],
 };

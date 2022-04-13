@@ -344,7 +344,6 @@ const MenuComp = ({
 MenuComp.defaultProps = blockDefaultProps;
 MenuComp.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Menu/style.less'],
 };

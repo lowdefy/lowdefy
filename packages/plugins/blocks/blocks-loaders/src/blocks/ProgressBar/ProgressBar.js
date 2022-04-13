@@ -53,7 +53,6 @@ const ProgressBar = ({ blockId, methods, style, properties, content }) => {
 ProgressBar.defaultProps = blockDefaultProps;
 ProgressBar.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/ProgressBar/style.less'],
 };

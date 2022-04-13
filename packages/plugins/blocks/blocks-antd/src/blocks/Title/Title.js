@@ -113,14 +113,6 @@ const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods
 TitleBlock.defaultProps = blockDefaultProps;
 TitleBlock.meta = {
   category: 'display',
-  skeleton: [
-    {
-      type: 'SkeletonParagraph',
-      properties: {
-        lines: 1,
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/Title/style.less'],
 };

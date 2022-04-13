@@ -89,7 +89,6 @@ DateSelector.defaultProps = blockDefaultProps;
 DateSelector.meta = {
   valueType: 'date',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateSelector/style.less'],
 };

@@ -78,14 +78,6 @@ const BreadcrumbBlock = ({
 BreadcrumbBlock.defaultProps = blockDefaultProps;
 BreadcrumbBlock.meta = {
   category: 'display',
-  skeleton: [
-    {
-      type: 'SkeletonParagraph',
-      properties: {
-        lines: 1,
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/Breadcrumb/style.less'],
 };

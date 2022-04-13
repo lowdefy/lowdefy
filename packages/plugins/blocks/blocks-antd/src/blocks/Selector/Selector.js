@@ -141,7 +141,6 @@ Selector.defaultProps = blockDefaultProps;
 Selector.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/Selector/style.less'],
 };

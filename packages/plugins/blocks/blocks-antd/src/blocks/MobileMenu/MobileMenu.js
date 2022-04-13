@@ -121,7 +121,6 @@ const MobileMenu = ({
 MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
-  loading: false,
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
   styles: ['blocks/MobileMenu/style.less'],
 };

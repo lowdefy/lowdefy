@@ -90,7 +90,6 @@ TextAreaBlock.defaultProps = blockDefaultProps;
 TextAreaBlock.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/TextArea/style.less'],
 };

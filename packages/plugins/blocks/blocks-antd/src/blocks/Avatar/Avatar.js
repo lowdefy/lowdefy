@@ -47,11 +47,6 @@ const AvatarBlock = ({ blockId, events, components: { Icon }, methods, propertie
 AvatarBlock.defaultProps = blockDefaultProps;
 AvatarBlock.meta = {
   category: 'display',
-  skeleton: [
-    {
-      type: 'SkeletonAvatar',
-    },
-  ],
   icons: [],
   styles: ['blocks/Avatar/style.less'],
 };

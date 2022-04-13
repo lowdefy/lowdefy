@@ -143,7 +143,6 @@ ParagraphInput.defaultProps = blockDefaultProps;
 ParagraphInput.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: false,
   icons: [],
   styles: ['blocks/ParagraphInput/style.less'],
 };

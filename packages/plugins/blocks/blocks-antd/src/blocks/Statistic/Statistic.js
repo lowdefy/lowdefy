@@ -58,14 +58,6 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
 StatisticBlock.defaultProps = blockDefaultProps;
 StatisticBlock.meta = {
   category: 'display',
-  skeleton: [
-    {
-      type: 'Skeleton',
-      properties: {
-        height: 80,
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/Statistic/style.less'],
 };

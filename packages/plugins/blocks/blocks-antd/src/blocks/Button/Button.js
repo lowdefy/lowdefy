@@ -78,7 +78,6 @@ const ButtonBlock = ({
 ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
-  skeleton: false,
   icons: [],
   styles: ['blocks/Button/style.less'],
 };

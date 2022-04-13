@@ -240,11 +240,6 @@ RatingSlider.defaultProps = blockDefaultProps;
 RatingSlider.meta = {
   valueType: 'any',
   category: 'input',
-  skeleton: [
-    {
-      type: 'SkeletonInput',
-    },
-  ],
   icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
   styles: ['blocks/RatingSlider/style.less'],
 };

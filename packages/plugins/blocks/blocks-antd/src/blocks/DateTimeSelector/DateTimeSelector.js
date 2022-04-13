@@ -112,7 +112,6 @@ DateTimeSelector.defaultProps = blockDefaultProps;
 DateTimeSelector.meta = {
   valueType: 'date',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateTimeSelector/style.less'],
 };

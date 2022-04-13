@@ -104,7 +104,6 @@ DateRangeSelector.defaultProps = blockDefaultProps;
 DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateRangeSelector/style.less'],
 };

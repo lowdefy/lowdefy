@@ -84,7 +84,6 @@ PaginationBlock.meta = {
     skip: 0,
   },
   category: 'input',
-  skeleton: false,
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };

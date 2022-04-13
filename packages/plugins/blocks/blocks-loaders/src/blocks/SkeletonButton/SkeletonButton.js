@@ -49,7 +49,6 @@ const SkeletonButton = ({ properties, methods }) => {
 SkeletonButton.defaultProps = blockDefaultProps;
 SkeletonButton.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/SkeletonButton/style.less'],
 };

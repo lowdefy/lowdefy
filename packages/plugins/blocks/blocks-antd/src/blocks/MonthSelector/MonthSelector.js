@@ -93,7 +93,6 @@ MonthSelector.defaultProps = blockDefaultProps;
 MonthSelector.meta = {
   valueType: 'date',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/MonthSelector/style.less'],
 };

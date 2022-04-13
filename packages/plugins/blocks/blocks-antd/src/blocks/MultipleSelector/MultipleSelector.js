@@ -152,7 +152,6 @@ MultipleSelector.defaultProps = blockDefaultProps;
 MultipleSelector.meta = {
   valueType: 'array',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/MultipleSelector/style.less'],
 };

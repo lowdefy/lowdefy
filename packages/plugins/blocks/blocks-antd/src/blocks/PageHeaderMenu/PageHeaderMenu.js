@@ -252,14 +252,6 @@ const PageHeaderMenu = ({
 PageHeaderMenu.defaultProps = blockDefaultProps;
 PageHeaderMenu.meta = {
   category: 'container',
-  skeleton: [
-    {
-      type: 'Spinner',
-      properties: {
-        height: '100vh',
-      },
-    },
-  ],
   icons: [...MobileMenu.meta.icons],
   styles: ['blocks/PageHeaderMenu/style.less'],
 };

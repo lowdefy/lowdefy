@@ -99,7 +99,6 @@ TextInput.defaultProps = blockDefaultProps;
 TextInput.meta = {
   valueType: 'string',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/TextInput/style.less'],
 };

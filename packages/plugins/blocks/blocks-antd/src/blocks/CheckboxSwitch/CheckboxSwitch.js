@@ -74,7 +74,6 @@ CheckboxSwitch.defaultProps = blockDefaultProps;
 CheckboxSwitch.meta = {
   valueType: 'boolean',
   category: 'input',
-  skeleton: false,
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSwitch/style.less'],
 };

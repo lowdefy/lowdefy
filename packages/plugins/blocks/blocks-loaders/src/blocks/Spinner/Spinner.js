@@ -49,7 +49,6 @@ const Spinner = ({ properties, methods }) => {
 Spinner.defaultProps = blockDefaultProps;
 Spinner.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Spinner/style.less'],
 };

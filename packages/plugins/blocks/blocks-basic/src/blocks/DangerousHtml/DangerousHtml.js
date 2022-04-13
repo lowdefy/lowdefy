@@ -63,7 +63,6 @@ class DangerousHtml extends React.Component {
 DangerousHtml.defaultProps = blockDefaultProps;
 DangerousHtml.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: [],
 };

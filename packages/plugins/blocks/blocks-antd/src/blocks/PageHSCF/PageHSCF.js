@@ -109,14 +109,6 @@ const PageHSCF = ({ blockId, components, content, events, methods, properties })
 PageHSCF.defaultProps = blockDefaultProps;
 PageHSCF.meta = {
   category: 'container',
-  skeleton: [
-    {
-      type: 'Spinner',
-      properties: {
-        height: '100vh',
-      },
-    },
-  ],
   icons: [],
   styles: ['blocks/PageHSCF/style.less'],
 };
