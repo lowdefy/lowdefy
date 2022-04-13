@@ -22,7 +22,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
-import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github.js';
+import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import javascript from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript.js';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript.js';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python.js';
@@ -50,11 +50,21 @@ SyntaxHighlighter.registerLanguage('xml', xml.default);
 SyntaxHighlighter.registerLanguage('yaml', yaml.default);
 
 const components = {
-  code: ({ language, children }) => (
-    <SyntaxHighlighter style={github} language={language}>
-      {children}
-    </SyntaxHighlighter>
-  ),
+  code({ inline, className, children, ...props }) {
+    return !inline ? (
+      <SyntaxHighlighter
+        style={github}
+        language={String(className).replace('language-', '')}
+        {...props}
+      >
+        {children}
+      </SyntaxHighlighter>
+    ) : (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
 };
 const MarkdownWithCode = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>

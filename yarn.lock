@@ -2196,7 +2196,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     react-markdown: 8.0.0
-    react-syntax-highlighter: 15.4.5
+    react-syntax-highlighter: 15.5.0
     rehype-raw: 6.1.1
     remark-gfm: 3.0.1
   languageName: unknown
@@ -2673,8 +2673,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
+    "@lowdefy/actions-core": 4.0.0-alpha.8
     "@lowdefy/api": 4.0.0-alpha.8
     "@lowdefy/block-utils": 4.0.0-alpha.8
+    "@lowdefy/blocks-antd": 4.0.0-alpha.8
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.8
     "@lowdefy/build": 4.0.0-alpha.8
     "@lowdefy/engine": 4.0.0-alpha.8
     "@lowdefy/helpers": 4.0.0-alpha.8
@@ -12397,17 +12400,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismjs@npm:^1.25.0":
-  version: 1.26.0
-  resolution: "prismjs@npm:1.26.0"
-  checksum: 6de058930ce767d44d60322e625bbc255f5107c7bf82c441ade19a289358e01e35040cea0c17adf8f7b829f17aa48e2d84b40866b5b3f8c75a12c6b3f0ead231
-  languageName: node
-  linkType: hard
-
-"prismjs@npm:~1.25.0":
-  version: 1.25.0
-  resolution: "prismjs@npm:1.25.0"
-  checksum: 04d8eae9d1b26b76c350bc65621584c8f8cab80ace7da3953f8aef2f9a8dd4b4f71c1d15bc5c67f126ddc90cd5af613919dc1340589a6c57355bed86fa3ac010
+"prismjs@npm:^1.27.0, prismjs@npm:~1.27.0":
+  version: 1.27.0
+  resolution: "prismjs@npm:1.27.0"
+  checksum: 85c7f4a3e999073502cc9e1882af01e3709706369ec254b60bff1149eda701f40d02512acab956012dc7e61cfd61743a3a34c1bd0737e8dbacd79141e5698bbc
   languageName: node
   linkType: hard
 
@@ -13293,18 +13289,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-syntax-highlighter@npm:15.4.5":
-  version: 15.4.5
-  resolution: "react-syntax-highlighter@npm:15.4.5"
+"react-syntax-highlighter@npm:15.5.0":
+  version: 15.5.0
+  resolution: "react-syntax-highlighter@npm:15.5.0"
   dependencies:
     "@babel/runtime": ^7.3.1
     highlight.js: ^10.4.1
     lowlight: ^1.17.0
-    prismjs: ^1.25.0
-    refractor: ^3.2.0
+    prismjs: ^1.27.0
+    refractor: ^3.6.0
   peerDependencies:
     react: ">= 0.14.0"
-  checksum: 120bac5cfbd65eb47e513b8057e3cb71843ce15241bbf933c1818c294965b87d8e074c7929a8fc2ced66c3e3f38c4cc6bf04365a8345e3a382cd524d0093949f
+  checksum: c082b48f30f8ba8d0c55ed1d761910630860077c7ff5793c4c912adcb5760df06436ed0ad62be0de28113aac9ad2af55eccd995f8eee98df53382e4ced2072fb
   languageName: node
   linkType: hard
 
@@ -13543,14 +13539,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"refractor@npm:^3.2.0":
-  version: 3.5.0
-  resolution: "refractor@npm:3.5.0"
+"refractor@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "refractor@npm:3.6.0"
   dependencies:
     hastscript: ^6.0.0
     parse-entities: ^2.0.0
-    prismjs: ~1.25.0
-  checksum: e8e8bfe8fc035fb6b0a9427ba19abbd2ec1ad78197dcb0027fca95c94fa046ed14f253682b2dcee42e87591300c9237924714ccddf18173a21a18622521a20b7
+    prismjs: ~1.27.0
+  checksum: 39b01c4168c77c5c8486f9bf8907bbb05f257f15026057ba5728535815a2d90eed620468a4bfbb2b8ceefbb3ce3931a1be8b17152dbdbc8b0eef92450ff750a2
   languageName: node
   linkType: hard
 
