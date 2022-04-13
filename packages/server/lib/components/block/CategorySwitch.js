@@ -47,22 +47,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
       />
     );
   }
-  // component skeleton:
-  // false - Render component
-  // object - Render component skeleton
-  if (loading && Component.meta.skeleton !== false && !type.isNone(Component.meta.skeleton)) {
-    if (!type.isObject(Component.meta.skeleton) && Component.meta.skeleton !== true) {
-      throw new Error(`Block Error: Block type ${block.type} has an invalid skeleton definition.`);
-    }
-    return (
-      <LoadingBlock
-        skeleton={Component.meta.skeleton}
-        context={context}
-        lowdefy={lowdefy}
-        layout={block.eval.layout || {}}
-      />
-    );
-  }
 
   switch (Component.meta.category) {
     case 'list':
