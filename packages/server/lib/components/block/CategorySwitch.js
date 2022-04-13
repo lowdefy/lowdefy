@@ -28,16 +28,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
   let Component = lowdefy._internal.blockComponents[block.type];
-  // block skeleton:
-  // undefined, null, true - Try render component skeleton
-  // object - Render skeleton
-  // false - Render component
-  if (loading && block.eval.skeleton !== false && !type.isNone(block.eval.skeleton)) {
-    if (!type.isObject(block.eval.skeleton) && block.eval.skeleton !== true) {
-      throw new Error(
-        `Config Error: Invalid skeleton definition at block id ${block.blockId}. Skeleton config must be a boolean or an object.`
-      );
-    }
+
+  if (loading && type.isObject(block.eval.skeleton)) {
     return (
       <LoadingBlock
         blockLayout={block.eval.layout}

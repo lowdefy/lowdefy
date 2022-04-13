@@ -26,6 +26,9 @@ const Context = ({ children, config, lowdefy, progress }) => {
       context={context}
       parentLoading={false}
       triggerEvent={async () => {
+        progress.dispatch({
+          type: 'increment',
+        });
         if (!context._internal.State.initialized) {
           await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
             name: 'onInit',

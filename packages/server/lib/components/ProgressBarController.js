@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 const initialState = {
@@ -24,7 +24,9 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case 'increment':
-      return { progress: state.progress + (state.progress - 100) / 3 };
+      return { progress: state.progress + (100 - state.progress) / 3 };
+    case 'auto-increment':
+      return { progress: state.progress + (100 - state.progress) / 200 };
     case 'done':
       return { progress: 100 };
     default:
@@ -32,9 +34,13 @@ function reducer(state, action) {
   }
 }
 
-// TODO: inc every second
 const ProgressBarController = ({ id, ProgressBar, content, lowdefy }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(() => {
+    const timer =
+      state.progress < 95 && setInterval(() => dispatch({ type: 'auto-increment' }), 500);
+    return () => clearInterval(timer);
+  }, [state]);
   return (
     <ProgressBar
       basePath={lowdefy.basePath}
