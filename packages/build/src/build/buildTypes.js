@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import basicTypes from '@lowdefy/blocks-basic/types';
+import loaderTypes from '@lowdefy/blocks-loaders/types';
+
 function buildTypeClass(
   context,
   { counter, definitions, store, typeClass, warnIfMissing = false }
@@ -43,15 +46,9 @@ function buildTypes({ components, context }) {
   // Add operators used by form validation
   typeCounters.operators.client.increment('_not');
   typeCounters.operators.client.increment('_type');
-  // Add loaders and skeletons
-  typeCounters.blocks.increment('IconSpinner');
-  typeCounters.blocks.increment('ProgressBar');
-  typeCounters.blocks.increment('Skeleton');
-  typeCounters.blocks.increment('SkeletonAvatar');
-  typeCounters.blocks.increment('SkeletonButton');
-  typeCounters.blocks.increment('SkeletonInput');
-  typeCounters.blocks.increment('SkeletonParagraph');
-  typeCounters.blocks.increment('Spinner');
+  // Add loaders and basic
+  basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
 
   components.types = {
     actions: {},

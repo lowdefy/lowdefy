@@ -14,19 +14,8 @@
   limitations under the License.
 */
 
-import countOperators from '../../../utils/countOperators.js';
-
-function countBlockOperators(block, { typeCounters }) {
-  // eslint-disable-next-line no-unused-vars
-  const { requests, areas, ...webBlock } = block;
-
-  countOperators(webBlock, { counter: typeCounters.operators.client });
-  (requests || []).forEach((request) => {
-    countOperators(request.payload || {}, { counter: typeCounters.operators.client });
-    countOperators(request.properties || {}, {
-      counter: typeCounters.operators.server,
-    });
-  });
+function countBlockTypes(block, { typeCounters }) {
+  typeCounters.blocks.increment(block.type);
 }
 
-export default countBlockOperators;
+export default countBlockTypes;
