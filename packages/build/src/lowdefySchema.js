@@ -220,9 +220,9 @@ export default {
           },
         },
         skeleton: {
-          type: 'array',
+          type: 'object',
           errorMessage: {
-            type: 'Block "skeleton" should be an array.',
+            type: 'Block "skeleton" should be an object.',
           },
         },
         style: {

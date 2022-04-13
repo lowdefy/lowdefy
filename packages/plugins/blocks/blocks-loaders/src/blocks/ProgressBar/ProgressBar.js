@@ -20,7 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 const ProgressBar = ({ blockId, methods, style, properties, content }) => {
   const {
     progress = 30,
-    height = 3,
+    height = 4,
     transitionTime = 1000,
     // loaderSpeed = 500,
     // waitingTime = 1000,
