@@ -3524,11 +3524,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/server/",
           "packageDependencies": [
             ["@lowdefy/server", "workspace:packages/server"],
-            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
-            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
-            ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],
             ["@lowdefy/build", "workspace:packages/build"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
