@@ -13,8 +13,6 @@
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  line-height: 1.55;
-  font-size: 16px;
   word-wrap: break-word;
 }
 
@@ -40,11 +38,6 @@
   font-weight: bolder;
 }
 
-.markdown-body h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
-
 .markdown-body img {
   border-style: none;
 }
@@ -62,28 +55,8 @@
   overflow: visible;
 }
 
-.markdown-body input {
-  font: inherit;
-  margin: 0 0.67em 0 0;
-}
-
-.markdown-body input {
-  overflow: visible;
-}
-
-.markdown-body [type='checkbox'] {
-  box-sizing: border-box;
-  padding: 0;
-}
-
 .markdown-body * {
   box-sizing: border-box;
-}
-
-.markdown-body input {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
 }
 
 .markdown-body a {
@@ -132,60 +105,6 @@
   cursor: pointer;
 }
 
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-.markdown-body h1 {
-  font-size: 32px;
-}
-
-.markdown-body h1,
-.markdown-body h2 {
-  font-weight: 600;
-}
-
-.markdown-body h2 {
-  font-size: 24px;
-}
-
-.markdown-body h3 {
-  font-size: 20px;
-}
-
-.markdown-body h3,
-.markdown-body h4 {
-  font-weight: 600;
-}
-
-.markdown-body h4 {
-  font-size: 16px;
-}
-
-.markdown-body h5 {
-  font-size: 14px;
-}
-
-.markdown-body h5,
-.markdown-body h6 {
-  font-weight: 600;
-}
-
-.markdown-body h6 {
-  font-size: 12px;
-}
-
-.markdown-body p {
-  margin-bottom: 10px;
-  margin-top: 0;
-}
-
 .markdown-body blockquote {
   margin: 0;
 }
@@ -216,12 +135,15 @@
 .markdown-body code,
 .markdown-body pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
-  font-size: 12px;
+  font-size: 0.95em;
+}
+
+.markdown-body code {
+  background-color: rgba(27, 31, 35, 0.05);
 }
 
 .markdown-body pre {
-  margin-bottom: 0;
-  margin-top: 0;
+  margin-bottom: 1em;
 }
 
 .markdown-body input::-webkit-inner-spin-button,
@@ -259,10 +181,10 @@
 .markdown-body dl,
 .markdown-body ol,
 .markdown-body p,
-.markdown-body pre,
+.markdown-body pre
 .markdown-body table,
 .markdown-body ul {
-  margin-bottom: 16px;
+  margin-bottom: 1em;
   margin-top: 0;
 }
 
@@ -270,7 +192,7 @@
   background-color: #e1e4e8;
   border: 0;
   height: 0.25em;
-  margin: 24px 0;
+  margin: 1em 0;
   padding: 0;
 }
 
@@ -296,32 +218,20 @@
   box-shadow: inset 0 -1px 0 #959da5;
   color: #444d56;
   display: inline-block;
-  font-size: 11px;
   line-height: 11px;
   padding: 3px 5px;
   vertical-align: middle;
 }
 
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
-  font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 16px;
-  margin-top: 24px;
-}
-
-.markdown-body h1 {
-  font-size: 2em;
-}
 
 .markdown-body h1,
 .markdown-body h2 {
   border-bottom: 1px solid #eaecef;
   padding-bottom: 0.3em;
+}
+
+.markdown-body h1 {
+  font-size: 1.75em;
 }
 
 .markdown-body h2 {
@@ -337,12 +247,12 @@
 }
 
 .markdown-body h5 {
-  font-size: 0.875em;
+  font-size: 0.95em;
 }
 
 .markdown-body h6 {
   color: #6a737d;
-  font-size: 0.85em;
+  font-size: 0.9em;
 }
 
 .markdown-body ol,
@@ -363,7 +273,7 @@
 }
 
 .markdown-body li > p {
-  margin-top: 16px;
+  margin-top: 1em;
 }
 
 .markdown-body li + li {
@@ -378,13 +288,13 @@
   font-size: 1em;
   font-style: italic;
   font-weight: 600;
-  margin-top: 16px;
+  margin-top: 1em;
   padding: 0;
 }
 
 .markdown-body dl dd {
-  margin-bottom: 16px;
-  padding: 0 16px;
+  margin-bottom: 1em;
+  padding: 0 1em;
 }
 
 .markdown-body table {
@@ -427,32 +337,12 @@
 }
 
 .markdown-body code {
-  background-color: rgba(27, 31, 35, 0.05);
-  border-radius: 3px;
-  font-size: 85%;
   margin: 0;
   padding: 0.2em 0.4em;
 }
 
-// .markdown-body pre {
-//   word-wrap: normal;
-//   background-color: rgba(27, 31, 35, 0.05);
-//   border-radius: 3px;
-//   font-size: 85%;
-//   padding: 0.2em 0.4em;
-// }
-
-.markdown-body pre > code {
-  background: transparent;
-  border: 0;
-  font-size: 100%;
-  margin: 0;
-  padding: 0;
-  white-space: pre;
-  word-break: normal;
-}
-
 .markdown-body pre code {
+  border-radius: 3px;
   background-color: transparent;
   border: 0;
   display: inline;
@@ -472,8 +362,7 @@
   box-shadow: inset 0 -1px 0 #c6cbd1;
   color: #444d56;
   display: inline-block;
-  font: 11px SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
-  line-height: 11px;
+  font: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
   padding: 3px 5px;
   vertical-align: middle;
 }
