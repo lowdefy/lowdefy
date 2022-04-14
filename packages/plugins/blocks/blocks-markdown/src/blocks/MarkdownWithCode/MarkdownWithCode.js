@@ -22,7 +22,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
-import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';
 import javascript from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript.js';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript.js';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python.js';
