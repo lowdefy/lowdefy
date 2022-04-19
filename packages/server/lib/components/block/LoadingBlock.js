@@ -13,18 +13,38 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingContainer from './LoadingContainer.js';
 import LoadingList from './LoadingList.js';
 
+const blockMethods = {
+  makeCssClass,
+  moveItemDown: () => null,
+  moveItemUp: () => null,
+  pushItem: () => null,
+  registerEvent: () => null,
+  registerMethod: () => null,
+  removeItem: () => null,
+  setValue: () => null,
+  triggerEvent: () => null,
+  unshiftItem: () => null,
+};
+
 const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
   let Component = lowdefy._internal.blockComponents[skeleton.type];
+  useEffect(() => {
+    if (!lowdefy._internal.blockComponents[skeleton.type]) {
+      console.warn(
+        `Skeleton block type not found for ${skeleton.type} in ${blockId}. Only '@lowdefy/blocks-basic' and '@lowdefy/blocks-loaders' block types are supported for skeletons.`
+      );
+    }
+    return;
+  }, []);
   if (!Component) {
     // default to box when a skeleton block is not found - should be a basic or loader block.
-    // TODO: Always throw a warning if blocks other than basic or loader are used in a skeleton.
     Component = lowdefy._internal.blockComponents.Box;
   }
   const layout = skeleton.layout || blockLayout || {};
@@ -66,7 +86,7 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
             components={lowdefy._internal.components}
             key={`s-${blockId}-${skeleton.id}`}
             menus={lowdefy.menus}
-            methods={{ makeCssClass }}
+            methods={blockMethods}
             pageId={lowdefy.pageId}
             properties={skeleton.properties}
             user={lowdefy.user}
