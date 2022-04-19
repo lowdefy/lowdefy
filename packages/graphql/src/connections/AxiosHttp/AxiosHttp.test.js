@@ -69,3 +69,21 @@ test('url is not a string', () => {
     'AxiosHttp property "url" should be a string.'
   );
 });
+
+test('data is a string', () => {
+  const connection = {
+    method: 'post',
+    url: 'https://example.com/api',
+    data: 'value',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('data is an array', () => {
+  const connection = {
+    method: 'post',
+    url: 'https://example.com/api',
+    data: [{ key: 'value' }],
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
