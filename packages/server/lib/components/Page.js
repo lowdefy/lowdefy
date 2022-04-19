@@ -49,7 +49,7 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
       content={{
         content: (progress) => (
           <Context config={pageConfig} lowdefy={lowdefy} progress={progress}>
-            {(context, loading) => {
+            {(context) => {
               return (
                 <>
                   <Head
@@ -60,7 +60,8 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
                     Blocks={context._internal.RootBlocks}
                     context={context}
                     lowdefy={lowdefy}
-                    parentLoading={loading}
+                    progress={progress}
+                    parentLoading={false}
                   />
                 </>
               );

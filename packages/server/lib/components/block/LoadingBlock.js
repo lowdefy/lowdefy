@@ -22,15 +22,15 @@ import LoadingList from './LoadingList.js';
 
 const blockMethods = {
   makeCssClass,
-  moveItemDown: () => null,
-  moveItemUp: () => null,
-  pushItem: () => null,
-  registerEvent: () => null,
-  registerMethod: () => null,
-  removeItem: () => null,
-  setValue: () => null,
-  triggerEvent: () => null,
-  unshiftItem: () => null,
+  moveItemDown: () => {},
+  moveItemUp: () => {},
+  pushItem: () => {},
+  registerEvent: () => {},
+  registerMethod: () => {},
+  removeItem: () => {},
+  setValue: () => {},
+  triggerEvent: () => {},
+  unshiftItem: () => {},
 };
 
 const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {

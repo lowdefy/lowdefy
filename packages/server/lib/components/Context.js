@@ -24,7 +24,7 @@ const Context = ({ children, config, lowdefy, progress }) => {
   return (
     <MountEvents
       context={context}
-      parentLoading={false}
+      ename="onInit"
       triggerEvent={async () => {
         progress.dispatch({
           type: 'increment',
@@ -38,7 +38,6 @@ const Context = ({ children, config, lowdefy, progress }) => {
               });
             },
           });
-          // context._internal.update(); // TODO: do we need this?
           context._internal.State.freezeState();
         }
       }}
@@ -56,40 +55,8 @@ const Context = ({ children, config, lowdefy, progress }) => {
       }}
     >
       {(loadingOnInit) => {
-        return (
-          <MountEvents
-            context={context}
-            parentLoading={loadingOnInit}
-            triggerEvent={async () =>
-              await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
-                name: 'onEnter',
-                progress: () => {
-                  progress.dispatch({
-                    type: 'increment',
-                  });
-                },
-              })
-            }
-            triggerEventAsync={() => {
-              const onEnterAsync = async () => {
-                await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
-                  name: 'onEnterAsync', // TODO: Do we want this to happen in the background, as in not effecting progress bar?
-                  progress: () => {
-                    progress.dispatch({
-                      type: 'increment',
-                    });
-                  },
-                });
-                progress.dispatch({
-                  type: 'done',
-                });
-              };
-              onEnterAsync();
-            }}
-          >
-            {(loadingOnEnter) => children(context, loadingOnEnter)}
-          </MountEvents>
-        );
+        if (loadingOnInit) return '';
+        return children(context);
       }}
     </MountEvents>
   );

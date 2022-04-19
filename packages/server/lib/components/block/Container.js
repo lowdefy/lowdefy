@@ -44,7 +44,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
             Blocks={Blocks.subBlocks[block.id][0]}
             block={bl}
             context={context}
-            loading={loading}
+            parentLoading={loading}
             lowdefy={lowdefy}
           />
         ))}

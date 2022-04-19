@@ -44,7 +44,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
               Blocks={SBlock}
               block={bl}
               context={context}
-              loading={loading}
+              parentLoading={loading}
               lowdefy={lowdefy}
             />
           ))}

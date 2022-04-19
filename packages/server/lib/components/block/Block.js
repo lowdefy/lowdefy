@@ -21,19 +21,44 @@ import { ErrorBoundary } from '@lowdefy/block-utils';
 import CategorySwitch from './CategorySwitch.js';
 import MountEvents from '../MountEvents.js';
 
-const Block = ({ block, Blocks, context, loading, lowdefy, parentLoading }) => {
+const Block = ({
+  block,
+  Blocks,
+  context,
+  lowdefy,
+  parentLoading,
+  progress = { dispatch: () => {} },
+}) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
+
   return (
     <ErrorBoundary>
       <MountEvents
         context={context}
-        parentLoading={parentLoading}
+        ename={`${block.id}-onMount`}
         triggerEvent={async () => {
-          await block.triggerEvent({ name: 'onMount' });
+          await block.triggerEvent({
+            name: 'onMount',
+            progress: () => {
+              progress.dispatch({
+                type: 'increment',
+              });
+            },
+          });
         }}
         triggerEventAsync={() => {
-          block.triggerEvent({ name: 'onMountAsync' });
+          block.triggerEvent({
+            name: 'onMountAsync',
+            progress: () => {
+              progress.dispatch({
+                type: 'increment',
+              });
+            },
+          });
+          progress.dispatch({
+            type: 'done',
+          });
         }}
       >
         {(eventLoading) => (
@@ -41,7 +66,7 @@ const Block = ({ block, Blocks, context, loading, lowdefy, parentLoading }) => {
             block={block}
             Blocks={Blocks}
             context={context}
-            loading={eventLoading || loading || block.eval.loading}
+            loading={eventLoading || parentLoading || block.eval.loading}
             lowdefy={lowdefy}
             updates={updates}
           />
