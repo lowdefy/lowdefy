@@ -22,13 +22,6 @@ import MountEvents from './block/MountEvents.js';
 const Context = ({ children, lowdefy, config }) => {
   const context = getContext({ config, lowdefy });
 
-  // TODO: WHY ??
-  // const loadingPage = context.id !== config.id;
-
-  // if (loadingPage) {
-  //   return children(context, loadingPage, 'pager');
-  // }
-
   return (
     <MountEvents
       asyncEventName="onInitAsync"
@@ -53,7 +46,7 @@ const Context = ({ children, lowdefy, config }) => {
               context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
             }
           >
-            {(loadingOnEnter) => children(context, loadingOnEnter, 'mounter')}
+            {(loadingOnEnter) => children(context, loadingOnEnter)}
           </MountEvents>
         );
       }}
