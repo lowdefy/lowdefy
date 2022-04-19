@@ -12,15 +12,7 @@
     },
     "method": {
       "type": "string",
-      "enum": [
-        "get",
-        "delete",
-        "head",
-        "options",
-        "post",
-        "put",
-        "patch"
-      ],
+      "enum": ["get", "delete", "head", "options", "post", "put", "patch"],
       "description": "The request method to be used when making the request",
       "errorMessage": {
         "type": "AxiosHttp property \"method\" should be a string.",
@@ -36,7 +28,7 @@
     },
     "headers": {
       "type": "object",
-      "description": "An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.",
+      "description": "An object with custom headers to be sent with the request. The object keys should be header names, and the values should be the string header values.",
       "errorMessage": {
         "type": "AxiosHttp property \"headers\" should be an object."
       }
@@ -49,11 +41,7 @@
       }
     },
     "data": {
-      "type": ["string", "object"],
-      "description": "The data to be sent as the request body. Only applicable for request methods 'put', 'post', and 'patch'. Can be an object or a string in the format 'Country=USA&City=New York'.",
-      "errorMessage": {
-        "type": "AxiosHttp property \"data\" should be an object or string."
-      }
+      "description": "The data to be sent as the request body. Only applicable for request methods 'put', 'post', and 'patch'. Can be an object, array or a string in the format 'Country=USA&City=New York'."
     },
     "timeout": {
       "type": "number",
@@ -81,7 +69,6 @@
             "type": "AxiosHttp property \"auth.password\" should be a string."
           }
         }
-
       },
       "errorMessage": {
         "type": "AxiosHttp property \"auth\" should be an object."
@@ -89,11 +76,7 @@
     },
     "responseType": {
       "type": "string",
-      "enum": [
-        "json",
-        "document",
-        "text"
-      ],
+      "enum": ["json", "document", "text"],
       "description": "The type of data that the server should respond with.",
       "default": "json",
       "errorMessage": {
