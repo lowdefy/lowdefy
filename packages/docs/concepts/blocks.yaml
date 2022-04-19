@@ -65,7 +65,7 @@ _ref:
             - `events: object`: Used to defined [`actions`](/events-and-actions) that run when the block triggers an [`event`](/events-and-actions).
             - `layout: object`: Used to define the [layout](/layout) properties for a block. __Operators are evaluated__.
             - `skeleton: object`: Used to overwrite a block's default loading behavior by rendering a skeleton. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used in the skeleton definition, including sub-blocks.
-            - `loading: boolean`: When true, renders the block's in loading. If a `skeleton` is defined, it will be rendered else, the block's default loading behavior will be rendered.
+            - `loading: boolean`: When true, renders the block in loading. If a `skeleton` is defined, it will be rendered, else the block's default loading behavior will be rendered.
             - `required: boolean | string`: For `input` blocks, whether or not a value value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
             - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
             - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
@@ -191,61 +191,6 @@ _ref:
                       content: Lorem ipsum dolor sit amet.
                   # ...
             ```
-
-      # TODO: We can remove this since loader blocks are now documented as normal blocks?
-
-      # ## Loading placeholder types
-
-      # The following loading placeholder types are available:
-
-      # ##### Spinner
-      # A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo. The following `properties` apply to `Spinner`:
-
-      # - `barColor: string`: Color of the bars in the Lowdefy spinner logo.
-      # - `color: string`: Color of spinner logo. Default is `#f1f1f1`.
-      # - `height: number | string`: Height of the spinner block including background. Default is `100%`.
-      # - `shaded: boolean`: Masks the spinner block including background.
-      # - `size: number | string`: Size of the spinner icon. Default is `50px`.
-
-      # ##### IconSpinner
-      # A spinning loading icon. The following `properties` apply to `IconSpinner`:
-
-      # - `size: number | enum`: Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
-
-      # ##### Skeleton
-      # A rectangular loading skeleton to fill the full size of the block. The following `properties` apply to `Skeleton`:
-
-      # - `height: number | string`: Height of the skeleton block. Default is `100%`.
-      # - `width: number | string`: Width of the skeleton block. Default is `100%`.
-
-      # ##### SkeletonAvatar
-      # A avatar loading skeleton. The following `properties` apply to `SkeletonAvatar`:
-
-      # - `size: number | enum`: Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is `32px`.
-      # - `shape: enum`: Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
-
-      # ##### SkeletonButton
-      # A button loading skeleton, matches the size of [`Button`](/Button) blocks. The following `properties` apply to `SkeletonButton`:
-
-      # - `size: enum`: Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-      # - `shape: enum`: Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
-      # - `height: number | string`: Height of the button skeleton. Overwrites the size setting.
-      # - `width: number | string`: Width of the button skeleton. Default is `100%`.
-
-      # ##### SkeletonInput
-      # A input loading skeleton, used as a placeholder for input blocks with labels. The following `properties` apply to `SkeletonInput`:
-
-      # - `size: enum`: Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-      # - `labelHeight: number | string`: Height of the label part of the input skeleton.
-      # - `inputHeight: number | string`: Height of the input part of the input skeleton. Overwrites the size setting.
-      # - `labelWidth: number | string`: Width of the label part of the input skeleton. Default is `100%`.
-      # - `width: number | string`: Width of the input part of input skeleton. Default is `100%`.
-
-      # ##### SkeletonParagraph
-      # A paragraph loading skeleton, used as a placeholder for text intensive section. The following `properties` apply to `SkeletonParagraph`:
-
-      # - `lines: number`: The number of paragraph lines to render. Default is `4`.
-      # - `width: number | string`: Width of the paragraph skeleton. Default is `100%`.
 
       - _ref:
           path: templates/navigation_buttons.yaml
