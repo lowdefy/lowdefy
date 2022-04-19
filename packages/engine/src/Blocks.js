@@ -79,7 +79,7 @@ class Blocks {
       block.required = type.isNone(block.required) ? false : block.required;
       block.skeleton = type.isNone(block.skeleton) ? null : block.skeleton;
       block.style = type.isNone(block.style) ? {} : block.style;
-      block.validate = type.isNone(block.validate) ? block.validate : [];
+      block.validate = type.isNone(block.validate) ? [] : block.validate;
       block.visible = type.isNone(block.visible) ? true : block.visible;
 
       block.areasLayoutEval = {};

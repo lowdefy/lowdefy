@@ -482,7 +482,7 @@ test('parse block loading', () => {
     initState: { key: false },
   });
   const { textInput } = context.RootBlocks.map;
-  expect(textInput.loading).toEqual({ _state: true });
+  expect(textInput.loading).toEqual({ _state: 'key' });
   expect(textInput.eval.loading).toEqual(true);
 });
 
