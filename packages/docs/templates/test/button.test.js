@@ -110,7 +110,7 @@ test('button propertiesFormTransformer', () => {
         "properties": Object {
           "inner": true,
           "size": "small",
-          "title": "button:",
+          "title": "block.properties.field:",
         },
         "type": "Card",
       },
