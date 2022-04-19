@@ -43,6 +43,7 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   return (
     <ProgressBarController
       id="page-loader"
+      key={pageConfig.id}
       ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
       lowdefy={lowdefy}
       content={{
@@ -60,7 +61,6 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
                     context={context}
                     lowdefy={lowdefy}
                     parentLoading={loading}
-                    progress={progress}
                   />
                 </>
               );
