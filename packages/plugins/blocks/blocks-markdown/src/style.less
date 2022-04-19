@@ -8,12 +8,16 @@
 .markdown-body h5:hover a,
 .markdown-body h6:hover a {
   text-decoration: none;
+  color: @heading-color;
 }
 
 .markdown-body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   word-wrap: break-word;
+  font-family: @font-family;
+  color: @text-color;
+  line-height: @line-height-base;
 }
 
 .markdown-body details {
@@ -45,8 +49,16 @@
 .markdown-body code,
 .markdown-body kbd,
 .markdown-body pre {
-  font-family: monospace, monospace;
-  font-size: 1em;
+  font-family: @code-family;
+  font-size: @font-size-base;
+}
+
+.markdown-body code {
+  background-color: @background-color-base;
+}
+
+.markdown-body pre {
+  margin-bottom: 1em;
 }
 
 .markdown-body hr {
@@ -74,9 +86,9 @@
 .markdown-body hr {
   background: transparent;
   border: 0;
-  border-bottom: 1px solid #dfe2e5;
+  border-bottom: 1px solid @divider-color;
   height: 0;
-  margin: 15px 0;
+  margin: 1em 0;
   overflow: hidden;
 }
 
@@ -132,20 +144,6 @@
   margin-left: 0;
 }
 
-.markdown-body code,
-.markdown-body pre {
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
-  font-size: 0.95em;
-}
-
-.markdown-body code {
-  background-color: rgba(27, 31, 35, 0.05);
-}
-
-.markdown-body pre {
-  margin-bottom: 1em;
-}
-
 .markdown-body input::-webkit-inner-spin-button,
 .markdown-body input::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -189,16 +187,17 @@
 }
 
 .markdown-body hr {
-  background-color: #e1e4e8;
+  background: transparent;
   border: 0;
-  height: 0.25em;
+  border-bottom: 1px solid @divider-color;
+  height: 0;
   margin: 1em 0;
-  padding: 0;
+  overflow: hidden;
 }
 
 .markdown-body blockquote {
   border-left: 0.25em solid #dfe2e5;
-  color: #6a737d;
+  color: @text-color-secondary;
   padding: 0 1em;
 }
 
@@ -226,38 +225,38 @@
 
 .markdown-body h1,
 .markdown-body h2 {
-  border-bottom: 1px solid #eaecef;
+  border-bottom: 1px solid @divider-color;
   padding-bottom: 0.3em;
 }
 
 .markdown-body h1 {
-  font-size: 1.75em;
+  font-size: @heading-1-size;
 }
 
 .markdown-body h2 {
-  font-size: 1.5em;
+  font-size: @heading-2-size;
 }
 
 .markdown-body h3 {
-  font-size: 1.25em;
+  font-size: @heading-3-size;
 }
 
 .markdown-body h4 {
-  font-size: 1em;
+  font-size: @heading-4-size;
 }
 
 .markdown-body h5 {
-  font-size: 0.95em;
+  font-size: @heading-5-size;
 }
 
 .markdown-body h6 {
-  color: #6a737d;
-  font-size: 0.9em;
+  color: @text-color-secondary;
+  font-size: @font-size-base;
 }
 
 .markdown-body ol,
 .markdown-body ul {
-  padding-left: 2em;
+  padding-left: @list-item-padding;
 }
 
 .markdown-body ol ol,
@@ -301,6 +300,7 @@
   display: block;
   overflow: auto;
   width: 100%;
+  font-size: @table-font-size;
 }
 
 .markdown-body table th {
@@ -309,21 +309,19 @@
 
 .markdown-body table td,
 .markdown-body table th {
-  border: 1px solid #dfe2e5;
+  border: 1px solid @table-border-color;
   padding: 6px 13px;
 }
 
 .markdown-body table tr {
-  background-color: #fff;
-  border-top: 1px solid #c6cbd1;
+  border-top: 1px solid @table-border-color;
 }
 
 .markdown-body table tr:nth-child(2n) {
-  background-color: #f6f8fa;
+  background-color: darken(@table-border-color, 2%);
 }
 
 .markdown-body img {
-  background-color: #fff;
   box-sizing: content-box;
   max-width: 100%;
 }
@@ -355,18 +353,14 @@
 }
 
 .markdown-body kbd {
-  background-color: #fafbfc;
+  background-color: @divider-color;
   border: 1px solid #d1d5da;
-  border-bottom-color: #c6cbd1;
+  border-bottom-color: darken(@table-border-color, 2%);
   border-radius: 3px;
-  box-shadow: inset 0 -1px 0 #c6cbd1;
+  box-shadow: inset 0 -1px 0 darken(@table-border-color, 2%);
   color: #444d56;
   display: inline-block;
-  font: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  font: @code-family;
   padding: 3px 5px;
   vertical-align: middle;
-}
-
-.markdown-body hr {
-  border-bottom-color: #eee;
 }
