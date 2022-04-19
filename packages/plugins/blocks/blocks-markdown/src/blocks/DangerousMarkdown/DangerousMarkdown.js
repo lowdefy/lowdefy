@@ -34,7 +34,7 @@ class DangerousMarkdown extends React.Component {
     return (
       <div id={blockId} className={methods.makeCssClass(properties.style)}>
         <ReactMarkdown
-          className="markdown-body"
+          className="markdown-body markdown-default-code"
           remarkPlugins={[gfm]}
           rehypePlugins={[rehypeRaw]}
           skipHtml={false}
@@ -50,7 +50,7 @@ DangerousMarkdown.defaultProps = blockDefaultProps;
 DangerousMarkdown.meta = {
   category: 'container',
   icons: [],
-  styles: [],
+  styles: ['codeblock.less'],
 };
 
 export default DangerousMarkdown;
