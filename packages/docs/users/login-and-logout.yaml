@@ -41,13 +41,13 @@ _ref:
             The `Login` action can be used to update the `user` object, for example to update the user profile after it has been edited, or to make sure the user token is still valid before editing or creating a record in a database.
 
             #### Examples
-
-            ###### A login page that redirects users in the onEnter event:
+            # TODO: is onMount a good idea here
+            ###### A login page that redirects users in the onMount event:
             ```yaml
             id: login
             type: Context
             events:
-              onEnter:
+              onMount:
                 # Redirect to "page1" if user is already logged in.
                 - id: logged_in_redirect
                   type: Link

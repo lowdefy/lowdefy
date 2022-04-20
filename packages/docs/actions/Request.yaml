@@ -25,11 +25,11 @@ _ref:
       (requestIds: string[]): void
       ```
     description: |
-      The `Request` action calls a request, or if used during an `onInit` or `onEnter` events, calls those requests while a page loads.
+      The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads.
       `Request` can be used to call all requests on a `context`, a list of requests, or a single request. The `Request` action is synchronous, actions defined after
       it will only run once all the called requests have returned.
 
-      To call requests that load data, the `onInitAsync` and `onEnterAsync` events can be used. These will execute the actions while the page begins to render. If the `onInit` or `onEnter` events are used, the page will only start rendering after the actions have completed.
+      To call requests that load data, the `onInitAsync`, `onMount` and `onMountAsync` events can be used. These will execute the actions while the page begins to render. If the `onInit` event is used, the page will only start rendering after the actions have completed.
 
       `Request` can be called without any parameters to call all requests in the `context`. It can also be called with a list of requestIds or a single requestId to call.
 

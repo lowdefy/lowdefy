@@ -108,7 +108,7 @@ _ref:
               - id: todos
                 type: PageHeaderMenu
                 events:
-                  onEnter:
+                  onInit:
                     - id: get_todos
                       type: JsAction # TODO:
                       params:

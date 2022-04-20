@@ -38,7 +38,7 @@ _ref:
               - All blocks have`onMount` and `onMountAsync` events.
               - Each block implements it's own additional events such as `onClick` etc.
               ##### Block loading
-              - Some blocks gracefully handle a loading state while `onInit` and `onEnter` events are being executed.
+              - Some blocks gracefully handle a loading state while `onMount` events are being executed.
               - A block's default loading can be overwritten by defining custom `skeleton` settings on a block.
 
             -------
@@ -165,7 +165,7 @@ _ref:
 
             # Block loading
 
-            While `onInit` and `onEnter` is executing on a page, all blocks will render with loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container and list block, will result in rendering all child blocks with loading active.
+            Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks with loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container and list block, will result in rendering all child blocks with loading active.
 
             Often it is useful te render a skeleton of blocks instead of the blocks' default loading behavior. When block definitions are provided to the `skeleton` property on a block, this `skeleton` definition will be rendered when loading is active. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used as the skeleton definition, including sub-blocks.
 
