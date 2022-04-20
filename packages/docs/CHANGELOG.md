@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.3](https://github.com/lowdefy/lowdefy/compare/v3.23.2...v3.23.3) (2022-04-20)
+
+
+### Bug Fixes
+
+* Fix axios docs after schema fix. ([2e3c632](https://github.com/lowdefy/lowdefy/commit/2e3c63228dd539b6ed4ee6c60f5fc359ff0104e7))
+* Update docs snapshot test ([e8445e8](https://github.com/lowdefy/lowdefy/commit/e8445e8877659477027e03509a5572874907a132))
+* **blocksAntd:** Pass icons to confirm modal, closes [#1160](https://github.com/lowdefy/lowdefy/issues/1160) ([2256b2b](https://github.com/lowdefy/lowdefy/commit/2256b2bb57851ad698836adf7e693a4c2550b0a3))
+
+
+
+
+
 ## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package @lowdefy/docs

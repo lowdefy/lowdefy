@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.3](https://github.com/lowdefy/lowdefy/compare/v3.23.2...v3.23.3) (2022-04-20)
+
+
+### Bug Fixes
+
+* **blocksAntd:** Pass icons to confirm modal, closes [#1160](https://github.com/lowdefy/lowdefy/issues/1160) ([2256b2b](https://github.com/lowdefy/lowdefy/commit/2256b2bb57851ad698836adf7e693a4c2550b0a3))
+
+
+
+
+
 ## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 

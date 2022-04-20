@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.3](https://github.com/lowdefy/lowdefy/compare/v3.23.2...v3.23.3) (2022-04-20)
+
+
+### Bug Fixes
+
+* **graphql:** Update AxiosHttp schema to allow for data arrays ([ff4d168](https://github.com/lowdefy/lowdefy/commit/ff4d1688220a0a7679909c3e9db8868bb34871e1)), closes [#1158](https://github.com/lowdefy/lowdefy/issues/1158)
+
+
+
+
+
 ## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package @lowdefy/graphql

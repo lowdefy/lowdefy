@@ -779,11 +779,11 @@
         title: Lowdefy Versions
         icon: BranchesOutlined
       links:
-        - id: v3.23.2
+        - id: v3.23.3
           type: MenuLink
           url: https://docs.lowdefy.com
           properties:
-            title: v3.23.2
+            title: v3.23.3
         - id: v3.22.0
           type: MenuLink
           url: https://61519bcb8b8ed4412aae3057--lowdefy-docs.netlify.app

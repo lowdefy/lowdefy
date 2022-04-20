@@ -88,7 +88,7 @@ _ref:
             ###### A basic full example requesting data from https://jsonplaceholder.typicode.com
 
             ```yaml
-            lowdefy: 3.23.2
+            lowdefy: 3.23.3
             name: Lowdefy starter
             connections:
               - id: my_api

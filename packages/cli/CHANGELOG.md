@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.23.3](https://github.com/lowdefy/lowdefy/compare/v3.23.2...v3.23.3) (2022-04-20)
+
+**Note:** Version bump only for package lowdefy
+
+
+
+
+
 ## [3.23.2](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v3.23.2) (2021-11-29)
 
 **Note:** Version bump only for package lowdefy
