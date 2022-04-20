@@ -24,34 +24,19 @@ const Context = ({ children, config, lowdefy, progress }) => {
   return (
     <MountEvents
       context={context}
-      ename="onInit"
       triggerEvent={async () => {
-        progress.dispatch({
-          type: 'increment',
-        });
-        if (!context._internal.State.initialized) {
-          await context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
-            name: 'onInit',
-            progress: () => {
-              progress.dispatch({
-                type: 'increment',
-              });
-            },
+        await context._internal.runOnInit(() => {
+          progress.dispatch({
+            type: 'increment',
           });
-          context._internal.State.freezeState();
-        }
+        });
       }}
       triggerEventAsync={() => {
-        if (!context._internal.State.initialized) {
-          context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({
-            name: 'onInitAsync',
-            progress: () => {
-              progress.dispatch({
-                type: 'increment',
-              });
-            },
+        context._internal.runOnInitAsync(() => {
+          progress.dispatch({
+            type: 'increment',
           });
-        }
+        });
       }}
     >
       {(loadingOnInit) => {

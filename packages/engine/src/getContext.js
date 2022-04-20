@@ -93,6 +93,26 @@ function getContext({ config, lowdefy, development = false }) {
   _internal.update = () => {
     _internal.RootBlocks.update();
   };
+  _internal.runOnInit = async (progress) => {
+    progress();
+    if (!_internal.State.initialized && !_internal.onInitDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInit',
+        progress,
+      });
+      _internal.State.freezeState();
+      _internal.onInitDone = true;
+    }
+  };
+  _internal.runOnInitAsync = async (progress) => {
+    if (!_internal.State.initialized && !_internal.onInitAsyncDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInitAsync',
+        progress,
+      });
+      _internal.onInitAsyncDone = true;
+    }
+  };
   lowdefy.contexts[id] = ctx;
   return ctx;
 }
