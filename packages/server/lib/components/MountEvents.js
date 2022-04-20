@@ -16,7 +16,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MountEvents = ({ ename, children, context, triggerEvent, triggerEventAsync }) => {
+const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
@@ -32,7 +32,6 @@ const MountEvents = ({ ename, children, context, triggerEvent, triggerEventAsync
         setError(err);
       }
     };
-    console.log(ename);
     mount(); // TODO: check only run once.
     return () => {
       mounted = false;

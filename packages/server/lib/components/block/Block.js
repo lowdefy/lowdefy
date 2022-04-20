@@ -36,7 +36,6 @@ const Block = ({
     <ErrorBoundary>
       <MountEvents
         context={context}
-        ename={`${block.id}-onMount`}
         triggerEvent={async () => {
           await block.triggerEvent({
             name: 'onMount',
