@@ -184,13 +184,13 @@ _ref:
 
             # Page initialization events
 
-            The first blocks on a page, usually a [`container`](/container) type block, can define `onInit` and `onInitAsync` events. All blocks on pages has `onMount` and `onMountAsync` events. These events can be used to initialize the page or blocks.
+            The first blocks on a page, usually a [`container`](/container) type block, can define `onInit` and `onInitAsync` events. All blocks have `onMount` and `onMountAsync` events, that can be used to initialize the page or blocks.
 
             The `onInit` event is triggered the first time a page is loaded. This event blocks page render, in other words, the page __will__ remain in a loading state, rendering only the progress bar, until all the actions have completed execution. It can be used to set up [`state`](/context-and-state). Actions that take a long time to execute, like `Request`, should be used sparingly here for a better user experience.
 
             The `onInitAsync` event is triggered the first time a page loaded, but does not block page render. In other words, the page __will not__ remain in a loading state until all the actions have completed execution. This is a good place to execute non-blocking tasks or requests that might take longer to execute.
 
-            The `onMount` event is triggered every time a block is mounted to a page, for example if a user left a page, and returns to it. This event can be used on any block on a page, and renders blocks in their loading state. It can be used to execute actions that should be run each time a block is loaded, like checking if an id is present in the [url query parameters](/_url_query), or fetching data using a [`Request`](/Request) action.
+            The `onMount` event is triggered every time a block is rendered on a page. This event can be used on any block, and causes the block and it's children to render in their loading state. It typically executes actions that should be run each time a block is loaded, like checking if an id is present in the [url query parameters](/_url_query), or fetching data for [`Selector`](/Selector) options using a [`Request`](/Request) action.
 
             The `onMountAsync` event is triggered every time a block is mounted, but does not render the block in loading.
 

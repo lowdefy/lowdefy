@@ -397,7 +397,7 @@
 - { label: 'GoogleCircleFilled', value: 'GoogleCircleFilled' }
 - { label: 'GoogleOutlined', value: 'GoogleOutlined' }
 - { label: 'GooglePlusCircleFilled', value: 'GooglePlusCircleFilled' }
-- { label: 'GoogleAiOutlinePlus', value: 'GoogleAiOutlinePlus' }
+- { label: 'AiOutlineGooglePlus', value: 'AiOutlineGooglePlus' }
 - { label: 'GooglePlusSquareFilled', value: 'GooglePlusSquareFilled' }
 - { label: 'GoogleSquareFilled', value: 'GoogleSquareFilled' }
 - { label: 'GroupOutlined', value: 'GroupOutlined' }

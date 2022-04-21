@@ -98,7 +98,7 @@ _ref:
                 url: https://blocks-cdn.lowdefy.com/v3.10.1/blocks-amcharts/meta/AmChartsXY.json
             pages:
               - id: example_dashboard
-                type: Context
+                type: Box
                 blocks:
                   - id: basic_chart
                     type: AmChartsXY
@@ -165,7 +165,7 @@ _ref:
 
             # Block loading
 
-            Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks with loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container and list block, will result in rendering all child blocks with loading active.
+            Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container and list block, will result in rendering all child blocks with loading active.
 
             Often it is useful te render a skeleton of blocks instead of the blocks' default loading behavior. When block definitions are provided to the `skeleton` property on a block, this `skeleton` definition will be rendered when loading is active. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used as the skeleton definition, including sub-blocks.
 
@@ -174,7 +174,7 @@ _ref:
             ```yaml
             pages:
               - id: page_one
-                type: Context
+                type: Box
                 blocks:
                   # ...
                   - id: paragraph_one

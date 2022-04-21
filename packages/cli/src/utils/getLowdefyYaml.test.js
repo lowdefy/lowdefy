@@ -121,7 +121,7 @@ test('No version specified', async () => {
       return `
       pages:
         - id: page1
-          type: Context
+          type: Box
       `;
     }
     return null;

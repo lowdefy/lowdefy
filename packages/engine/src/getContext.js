@@ -95,7 +95,7 @@ function getContext({ config, lowdefy, development = false }) {
   };
   _internal.runOnInit = async (progress) => {
     progress();
-    if (!_internal.State.initialized && !_internal.onInitDone) {
+    if (!_internal.onInitDone) {
       await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
         name: 'onInit',
         progress,
@@ -105,7 +105,7 @@ function getContext({ config, lowdefy, development = false }) {
     }
   };
   _internal.runOnInitAsync = async (progress) => {
-    if (!_internal.State.initialized && !_internal.onInitAsyncDone) {
+    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
       await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
         name: 'onInitAsync',
         progress,
