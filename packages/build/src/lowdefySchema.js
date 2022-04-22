@@ -185,6 +185,37 @@ export default {
             },
           },
         },
+        providers: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+              },
+            },
+            errorMessage: {
+              type: 'Auth provider should be an object.',
+              required: {
+                id: 'Auth provider should have required property "id".',
+                type: 'Auth provider should have required property "type".',
+              },
+            },
+          },
+        },
       },
     },
     block: {
@@ -615,6 +646,9 @@ export default {
     app: {
       $ref: '#/definitions/app',
     },
+    auth: {
+      $ref: '#/definitions/authConfig',
+    },
     cli: {
       type: 'object',
       errorMessage: {
@@ -628,9 +662,6 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        auth: {
-          $ref: '#/definitions/authConfig',
-        },
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',

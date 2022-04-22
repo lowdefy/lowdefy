@@ -39,20 +39,15 @@ import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
-import writeActionImports from './build/writePluginImports/writeActionImports.js';
 import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
-import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
+import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeConfig from './build/writeConfig.js';
-import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
-import writeIconImports from './build/writePluginImports/writeIconImports.js';
 import writeMenus from './build/writeMenus.js';
-import writeOperatorImports from './build/writePluginImports/writeOperatorImports.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
-import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
 async function createContext({ customTypesMap, directories, logger, refResolver }) {
@@ -67,6 +62,9 @@ async function createContext({ customTypesMap, directories, logger, refResolver 
     refResolver,
     typeCounters: {
       actions: createCounter(),
+      auth: {
+        providers: createCounter(),
+      },
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
@@ -96,7 +94,6 @@ async function build(options) {
   await buildIcons({ components, context });
   await buildStyles({ components, context });
   await cleanBuildDirectory({ context });
-  await writeActionImports({ components, context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
   await writeConnections({ components, context });
@@ -106,11 +103,7 @@ async function build(options) {
   await writeGlobal({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writeBlockImports({ components, context });
-  await writeConnectionImports({ components, context });
-  await writeOperatorImports({ components, context });
-  await writeStyleImports({ components, context });
-  await writeIconImports({ components, context });
+  await writePluginImports({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }

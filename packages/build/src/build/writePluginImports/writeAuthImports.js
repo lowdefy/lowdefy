@@ -16,21 +16,14 @@
 
 import generateImportFile from './generateImportFile.js';
 
-async function writeOperatorImports({ components, context }) {
+async function writeAuthImports({ components, context }) {
   await context.writeBuildArtifact(
-    'plugins/operators/client.js',
+    'plugins/auth/providers.js',
     generateImportFile({
-      types: components.types.operators.client,
-      importPath: 'operators/client',
-    })
-  );
-  await context.writeBuildArtifact(
-    'plugins/operators/server.js',
-    generateImportFile({
-      types: components.types.operators.server,
-      importPath: 'operators/server',
+      types: components.types.auth.providers,
+      importPath: 'auth/providers',
     })
   );
 }
 
-export default writeOperatorImports;
+export default writeAuthImports;

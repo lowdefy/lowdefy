@@ -33,10 +33,17 @@ async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth.pages.roles)) {
     components.auth.pages.roles = {};
   }
-  validate({
+
+  const { valid } = validate({
     schema: lowdefySchema.definitions.authConfig,
     data: components.auth,
+    returnErrors: true,
   });
+
+  if (!valid) {
+    throw new Error('lowdefy.auth does not match schema.'); // TODO: Better error message
+  }
+
   if (
     (components.auth.pages.protected === true && components.auth.pages.public === true) ||
     (type.isArray(components.auth.pages.protected) && type.isArray(components.auth.pages.public))
