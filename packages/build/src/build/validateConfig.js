@@ -17,8 +17,6 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { validate } from '@lowdefy/ajv';
-import lowdefySchema from '../lowdefySchema.js';
 
 async function validateConfig({ components }) {
   if (type.isNone(components.config)) {
@@ -27,15 +25,6 @@ async function validateConfig({ components }) {
   if (!type.isObject(components.config)) {
     throw new Error('lowdefy.config is not an object.');
   }
-  if (type.isNone(components.config.auth)) {
-    components.config.auth = {};
-  }
-  if (type.isNone(components.config.auth.pages)) {
-    components.config.auth.pages = {};
-  }
-  if (type.isNone(components.config.auth.pages.roles)) {
-    components.config.auth.pages.roles = {};
-  }
   if (type.isNone(components.config.theme)) {
     components.config.theme = {};
   }
@@ -43,26 +32,6 @@ async function validateConfig({ components }) {
     if (components.config.basePath[0] !== '/') {
       throw Error('Base path must start with "/".');
     }
-  }
-  validate({
-    schema: lowdefySchema.definitions.authConfig,
-    data: components.config.auth,
-  });
-  if (
-    (components.config.auth.pages.protected === true &&
-      components.config.auth.pages.public === true) ||
-    (type.isArray(components.config.auth.pages.protected) &&
-      type.isArray(components.config.auth.pages.public))
-  ) {
-    throw new Error(
-      'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
-    );
-  }
-  if (components.config.auth.pages.protected === false) {
-    throw new Error('Protected pages can not be set to false.');
-  }
-  if (components.config.auth.pages.public === false) {
-    throw new Error('Public pages can not be set to false.');
   }
   return components;
 }

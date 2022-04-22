@@ -14,21 +14,8 @@
   limitations under the License.
 */
 
-function getPageRoles({ components }) {
-  const roles = components.auth.pages.roles;
-  const pageRoles = {};
-  Object.keys(roles).forEach((roleName) => {
-    roles[roleName].forEach((pageId) => {
-      if (!pageRoles[pageId]) {
-        pageRoles[pageId] = new Set();
-      }
-      pageRoles[pageId].add(roleName);
-    });
-  });
-  Object.keys(pageRoles).forEach((pageId) => {
-    pageRoles[pageId] = [...pageRoles[pageId]];
-  });
-  return pageRoles;
+async function writeAuth({ components, context }) {
+  await context.writeBuildArtifact('auth.json', JSON.stringify(components.auth || {}, null, 2));
 }
 
-export default getPageRoles;
+export default writeAuth;

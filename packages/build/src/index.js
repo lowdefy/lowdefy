@@ -39,8 +39,9 @@ import testSchema from './build/testSchema.js';
 import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
-import writeApp from './build/writeApp.js';
 import writeActionImports from './build/writePluginImports/writeActionImports.js';
+import writeApp from './build/writeApp.js';
+import writeAuth from './build/writeAuth.js';
 import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
@@ -97,6 +98,7 @@ async function build(options) {
   await cleanBuildDirectory({ context });
   await writeActionImports({ components, context });
   await writeApp({ components, context });
+  await writeAuth({ components, context });
   await writeConnections({ components, context });
   await writeRequests({ components, context });
   await writePages({ components, context });

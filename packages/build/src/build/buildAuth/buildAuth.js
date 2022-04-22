@@ -19,13 +19,15 @@
 import { type } from '@lowdefy/helpers';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
+import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components }) {
+  validateAuthConfig({ components });
   const protectedPages = getProtectedPages({ components });
   const pageRoles = getPageRoles({ components });
   let configPublicPages = [];
-  if (type.isArray(components.config.auth.pages.public)) {
-    configPublicPages = components.config.auth.pages.public;
+  if (type.isArray(components.auth.pages.public)) {
+    configPublicPages = components.auth.pages.public;
   }
 
   (components.pages || []).forEach((page) => {
