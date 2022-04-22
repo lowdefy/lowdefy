@@ -38,6 +38,7 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
+  lowdefy.pageId = pageConfig.pageId;
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
 
   return (

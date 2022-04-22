@@ -197,10 +197,10 @@ const MenuComp = ({
                         nestedColorsBg,
                     },
                 ])}
-                key={`${link.pageId || link.id}_${i}`}
+                key={link.pageId || link.id || i}
                 title={
                   <Link
-                    id={`${link.pageId || link.id}_${i}`}
+                    id={link.pageId || link.id || i}
                     className={methods.makeCssClass(link.style, true)}
                     {...link}
                   >
@@ -231,10 +231,10 @@ const MenuComp = ({
                     case 'MenuGroup':
                       return (
                         <Menu.ItemGroup
-                          key={`${subLink.pageId || subLink.id}_${j}`}
+                          key={subLink.pageId || subLink.id || j}
                           title={
                             <Link
-                              id={`${subLink.pageId || subLink.id}_${j}`}
+                              id={subLink.pageId || subLink.id || j}
                               className={methods.makeCssClass(subLink.style, true)}
                               {...subLink}
                             >
@@ -254,7 +254,7 @@ const MenuComp = ({
                             }
                             return (
                               <Menu.Item
-                                key={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
+                                key={subLinkGroup.pageId || subLinkGroup.id || k}
                                 danger={get(subLinkGroup, 'properties.danger')}
                                 icon={
                                   subLinkGroup.properties &&
@@ -268,7 +268,7 @@ const MenuComp = ({
                                 }
                               >
                                 <Link
-                                  id={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
+                                  id={subLinkGroup.pageId || subLinkGroup.id || k}
                                   className={methods.makeCssClass(subLinkGroup.style, true)}
                                   {...subLinkGroup}
                                 >
@@ -283,7 +283,7 @@ const MenuComp = ({
                     default:
                       return (
                         <Menu.Item
-                          key={`${subLink.pageId || subLink.id}_${j}`}
+                          key={subLink.pageId || subLink.id || j}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
@@ -297,7 +297,7 @@ const MenuComp = ({
                           }
                         >
                           <Link
-                            id={`${subLink.pageId || subLink.id}_${j}`}
+                            id={subLink.pageId || subLink.id || j}
                             className={methods.makeCssClass(subLink.style, true)}
                             {...subLink}
                           >
@@ -313,7 +313,7 @@ const MenuComp = ({
           default:
             return (
               <Menu.Item
-                key={`${link.pageId || link.id}_${i}`}
+                key={link.pageId || link.id || i}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
@@ -327,7 +327,7 @@ const MenuComp = ({
                 }
               >
                 <Link
-                  id={`${link.pageId || link.id}_${i}`}
+                  id={link.pageId || link.id || i}
                   className={methods.makeCssClass(link.style, true)}
                   {...link}
                 >
