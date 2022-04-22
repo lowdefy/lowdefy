@@ -18,18 +18,16 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
-import LowdefyContext from '../lib/components/LowdefyContext.js';
+import initLowdefyContext from '../lib/utils/initLowdefyContext.js';
 
 import '../build/plugins/styles.less';
 
-const lowdefy = {};
+const lowdefy = initLowdefyContext();
 
 function App({ Component, pageProps }) {
   return (
     <ErrorBoundary>
-      <LowdefyContext lowdefy={lowdefy}>
-        <Component lowdefy={lowdefy} {...pageProps} />
-      </LowdefyContext>
+      <Component lowdefy={lowdefy} {...pageProps} />
     </ErrorBoundary>
   );
 }

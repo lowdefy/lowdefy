@@ -79,12 +79,6 @@ const DescriptionsBlock = ({ blockId, content, properties, methods }) => {
 DescriptionsBlock.defaultProps = blockDefaultProps;
 DescriptionsBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
-    },
-  },
   icons: [],
   styles: ['blocks/Descriptions/style.less'],
 };

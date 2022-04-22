@@ -166,7 +166,7 @@ test('RestValidation after required field', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     operators: lowdefy._internal.operators,

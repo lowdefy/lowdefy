@@ -39,7 +39,7 @@ const createChangeHandler =
     });
   };
 
-const PaginationBlock = ({ blockId, methods, properties, value }) => {
+const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
   const showTotal = type.isFunction(properties.showTotal)
     ? properties.showTotal
     : (total, range) => {
@@ -54,7 +54,7 @@ const PaginationBlock = ({ blockId, methods, properties, value }) => {
   return (
     <Pagination
       id={blockId}
-      disabled={properties.disabled}
+      disabled={properties.disabled || loading}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods })}
       onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods })}
@@ -84,12 +84,6 @@ PaginationBlock.meta = {
     skip: 0,
   },
   category: 'input',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 33,
-    },
-  },
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };

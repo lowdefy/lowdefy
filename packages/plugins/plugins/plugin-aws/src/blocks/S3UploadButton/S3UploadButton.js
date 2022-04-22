@@ -150,9 +150,6 @@ S3UploadButtonBlock.defaultProps = blockDefaultProps;
 S3UploadButtonBlock.meta = {
   valueType: 'object',
   category: 'input',
-  loading: {
-    type: 'SkeletonButton',
-  },
   icons: ['AiOutlineUpload'],
   styles: ['blocks/S3UploadButton/style.less'],
 };

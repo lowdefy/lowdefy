@@ -19,7 +19,6 @@
 import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
 
 import Events from './Events.js';
-import getFieldValues from './getFieldValues.js';
 
 class Blocks {
   constructor({ arrayIndices, areas, context }) {
@@ -46,7 +45,6 @@ class Blocks {
     this.resetValidation = this.resetValidation.bind(this);
     this.resetValidationRec = this.resetValidationRec.bind(this);
     this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.setBlocksLoadingCache = this.setBlocksLoadingCache.bind(this);
     this.update = this.update.bind(this);
     this.updateState = this.updateState.bind(this);
     this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
@@ -74,18 +72,22 @@ class Blocks {
         ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
         : block.blockId;
       this.context._internal.RootBlocks.map[block.id] = block;
-      block.visible = type.isNone(block.visible) ? true : block.visible;
-      block.required = type.isNone(block.required) ? false : block.required;
-      block.validate = type.isArray(block.validate) ? block.validate : [];
-      block.properties = type.isNone(block.properties) ? {} : block.properties;
-      block.style = type.isNone(block.style) ? {} : block.style;
-      block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.events = type.isNone(block.events) ? {} : block.events;
+      block.layout = type.isNone(block.layout) ? {} : block.layout;
+      block.loading = type.isNone(block.loading) ? false : block.loading;
+      block.properties = type.isNone(block.properties) ? {} : block.properties;
+      block.required = type.isNone(block.required) ? false : block.required;
+      block.skeleton = type.isNone(block.skeleton) ? null : block.skeleton;
+      block.style = type.isNone(block.style) ? {} : block.style;
+      block.validate = type.isNone(block.validate) ? [] : block.validate;
+      block.visible = type.isNone(block.visible) ? true : block.visible;
 
       block.areasLayoutEval = {};
       block.layoutEval = {};
+      block.loadingEval = {};
       block.propertiesEval = {};
       block.requiredEval = {};
+      block.skeletonEval = {};
       block.styleEval = {};
       block.validationEval = {};
       block.visibleEval = {};
@@ -103,14 +105,6 @@ class Blocks {
         block.areasLayout = {};
       }
 
-      block.requestKeys = getFieldValues(
-        '_request',
-        block.style,
-        block.properties,
-        block.validate,
-        block.visible,
-        block.required
-      );
       block.methods = {};
       block.registerMethod = (methodName, method) => {
         block.methods[methodName] = method;
@@ -282,8 +276,10 @@ class Blocks {
     return serializer.serializeToString({
       areasLayoutEval: block.areasLayoutEval,
       layoutEval: block.layoutEval,
+      loadingEval: block.loadingEval,
       propertiesEval: block.propertiesEval,
       requiredEval: block.requiredEval,
+      skeletonEval: block.skeletonEval,
       styleEval: block.styleEval,
       validationEval: block.validationEval,
       value: block.value,
@@ -387,6 +383,16 @@ class Blocks {
         });
         block.layoutEval = this.context._internal.parser.parse({
           input: block.layout,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
+        block.loadingEval = this.context._internal.parser.parse({
+          input: block.loading,
+          location: block.blockId,
+          arrayIndices: this.arrayIndices,
+        });
+        block.skeletonEval = this.context._internal.parser.parse({
+          input: block.skeleton,
           location: block.blockId,
           arrayIndices: this.arrayIndices,
         });
@@ -570,15 +576,12 @@ class Blocks {
     this.loopBlocks((block) => {
       if (block.update) {
         block.update = false;
-        block.loading = block.requestKeys.reduce(
-          (acc, key) =>
-            acc || (this.context.requests[key] ? this.context.requests[key].loading : true),
-          false
-        );
         block.eval = {
           areas: block.areasLayoutEval.output,
           events: type.isNone(block.Events.events) ? null : block.Events.events,
           properties: block.propertiesEval.output,
+          loading: block.loadingEval.output,
+          skeleton: block.skeletonEval.output,
           required: block.requiredEval.output,
           layout: block.layoutEval.output,
           style: block.styleEval.output,
@@ -595,25 +598,6 @@ class Blocks {
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
         subBlock.setBlocksCache();
-      });
-    });
-  }
-
-  setBlocksLoadingCache() {
-    this.loopBlocks((block) => {
-      block.loading_prev = block.loading;
-      block.loading = block.requestKeys.reduce(
-        (acc, key) =>
-          acc || (this.context.requests[key] ? this.context.requests[key].loading : true),
-        false
-      );
-      if (block.loading_prev !== block.loading) {
-        this.context._internal.lowdefy._internal.updateBlock(block.id);
-      }
-    });
-    Object.keys(this.subBlocks).forEach((subKey) => {
-      this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.setBlocksLoadingCache();
       });
     });
   }

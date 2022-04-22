@@ -791,23 +791,27 @@ describe('block areas', () => {
   });
 });
 
-test('user defined loading', async () => {
+test('user defined skeleton', async () => {
   const components = {
     pages: [
       {
         id: 'page_1',
         type: 'Container',
         auth,
-        loading: {
-          custom: true,
-        },
+        skeleton: [
+          {
+            custom: true,
+          },
+        ],
         blocks: [
           {
             id: 'block_1',
             type: 'Input',
-            loading: {
-              custom: true,
-            },
+            skeleton: [
+              {
+                custom: true,
+              },
+            ],
           },
         ],
       },
@@ -823,9 +827,11 @@ test('user defined loading', async () => {
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
-        loading: {
-          custom: true,
-        },
+        skeleton: [
+          {
+            custom: true,
+          },
+        ],
         requests: [],
         areas: {
           content: {
@@ -834,9 +840,11 @@ test('user defined loading', async () => {
                 id: 'block:page_1:block_1:0',
                 blockId: 'block_1',
                 type: 'Input',
-                loading: {
-                  custom: true,
-                },
+                skeleton: [
+                  {
+                    custom: true,
+                  },
+                ],
               },
             ],
           },

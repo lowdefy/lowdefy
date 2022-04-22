@@ -21,7 +21,15 @@ import { type } from '@lowdefy/helpers';
 
 const Title = Typography.Title;
 
-const TitleInput = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
+const TitleInput = ({
+  blockId,
+  components: { Icon },
+  events,
+  loading,
+  methods,
+  properties,
+  value,
+}) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -88,7 +96,7 @@ const TitleInput = ({ blockId, components: { Icon }, events, methods, properties
           : properties.copyable
       }
       delete={properties.delete}
-      disabled={properties.disabled}
+      disabled={properties.disabled || loading}
       ellipsis={
         type.isObject(properties.ellipsis)
           ? {
@@ -131,12 +139,6 @@ TitleInput.defaultProps = blockDefaultProps;
 TitleInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 1,
-    },
-  },
   icons: [],
   styles: ['blocks/TitleInput/style.less'],
 };

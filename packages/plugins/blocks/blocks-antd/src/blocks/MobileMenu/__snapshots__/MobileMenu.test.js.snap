@@ -9,11 +9,16 @@ exports[`Render backgroundColor: #016e1e - value[0] 1`] = `
     id="backgroundColor: #016e1e_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="backgroundColor: #016e1e_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -27,11 +32,16 @@ exports[`Render default - value[0] 1`] = `
     id="default_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="default_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -45,11 +55,16 @@ exports[`Render menus: default - value[0] 1`] = `
     id="menus: default_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menus: default_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -63,11 +78,16 @@ exports[`Render menus: links[0] - value[0] 1`] = `
     id="menus: links[0]_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menus: links[0]_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: links[0]_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -81,11 +101,16 @@ exports[`Render menus: properties.menuId: menu_one - value[0] 1`] = `
     id="menus: properties.menuId: menu_one_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menus: properties.menuId: menu_one_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: properties.menuId: menu_one_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -99,11 +124,16 @@ exports[`Render menusTitle pageId - value[0] 1`] = `
     id="menusTitle pageId_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menusTitle pageId_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle pageId_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -117,11 +147,16 @@ exports[`Render menusTitle properties.title - value[0] 1`] = `
     id="menusTitle properties.title_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menusTitle properties.title_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -135,11 +170,16 @@ exports[`Render menusTitle url - value[0] 1`] = `
     id="menusTitle url_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="menusTitle url_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle url_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -153,11 +193,16 @@ exports[`Render properties.MenuGroup with MenuLInks - value[0] 1`] = `
     id="properties.MenuGroup with MenuLInks_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.MenuGroup with MenuLInks_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.MenuGroup with MenuLInks_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -171,11 +216,16 @@ exports[`Render properties.danger: true - value[0] 1`] = `
     id="properties.danger: true_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.danger: true_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.danger: true_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -189,11 +239,16 @@ exports[`Render properties.icon - value[0] 1`] = `
     id="properties.icon_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.icon_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.icon_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -207,11 +262,16 @@ exports[`Render properties.links - value[0] 1`] = `
     id="properties.links_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.links_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.links_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -225,11 +285,16 @@ exports[`Render properties.subMenuCloseDelay: 3 - value[0] 1`] = `
     id="properties.subMenuCloseDelay: 3_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.subMenuCloseDelay: 3_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.subMenuCloseDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -243,11 +308,16 @@ exports[`Render properties.subMenuOpenDelay: 3 - value[0] 1`] = `
     id="properties.subMenuOpenDelay: 3_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.subMenuOpenDelay: 3_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.subMenuOpenDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -261,11 +331,476 @@ exports[`Render properties.title - value[0] 1`] = `
     id="properties.title_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="properties.title_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true backgroundColor: #016e1e - value[0] 1`] = `
+<div
+  id="backgroundColor: #016e1e"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="backgroundColor: #016e1e_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<div
+  id="default"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="default_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menus: default - value[0] 1`] = `
+<div
+  id="menus: default"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menus: default_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: default_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menus: links[0] - value[0] 1`] = `
+<div
+  id="menus: links[0]"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menus: links[0]_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: links[0]_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menus: properties.menuId: menu_one - value[0] 1`] = `
+<div
+  id="menus: properties.menuId: menu_one"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menus: properties.menuId: menu_one_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menus: properties.menuId: menu_one_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menusTitle pageId - value[0] 1`] = `
+<div
+  id="menusTitle pageId"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menusTitle pageId_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle pageId_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menusTitle properties.title - value[0] 1`] = `
+<div
+  id="menusTitle properties.title"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menusTitle properties.title_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true menusTitle url - value[0] 1`] = `
+<div
+  id="menusTitle url"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="menusTitle url_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"menusTitle url_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.MenuGroup with MenuLInks - value[0] 1`] = `
+<div
+  id="properties.MenuGroup with MenuLInks"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.MenuGroup with MenuLInks_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.MenuGroup with MenuLInks_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.danger: true - value[0] 1`] = `
+<div
+  id="properties.danger: true"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.danger: true_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.danger: true_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.icon - value[0] 1`] = `
+<div
+  id="properties.icon"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.icon_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.icon_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.links - value[0] 1`] = `
+<div
+  id="properties.links"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.links_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.links_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.subMenuCloseDelay: 3 - value[0] 1`] = `
+<div
+  id="properties.subMenuCloseDelay: 3"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.subMenuCloseDelay: 3_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.subMenuCloseDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.subMenuOpenDelay: 3 - value[0] 1`] = `
+<div
+  id="properties.subMenuOpenDelay: 3"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.subMenuOpenDelay: 3_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.subMenuOpenDelay: 3_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<div
+  id="properties.title"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="properties.title_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"properties.title_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true selectedColor: #f16e1e - value[0] 1`] = `
+<div
+  id="selectedColor: #f16e1e"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="selectedColor: #f16e1e_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"selectedColor: #f16e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
+<div
+  id="selectedColor: #f16e1e, backgroundColor: #016e1e"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="selectedColor: #f16e1e, backgroundColor: #016e1e_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true theme: light - value[0] 1`] = `
+<div
+  id="theme: light"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="theme: light_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
+<div
+  id="theme: light, selectedColor: #6C2ACB"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="theme: light, selectedColor: #6C2ACB_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light, selectedColor: #6C2ACB_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
+  </button>
+</div>
+`;
+
+exports[`Render required = true theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] = `
+<div
+  id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e"
+>
+  <button
+    class="ant-btn ant-btn-primary ant-btn-icon-only emotion-0"
+    id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button"
+    type="button"
+  >
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -279,11 +814,16 @@ exports[`Render selectedColor: #f16e1e - value[0] 1`] = `
     id="selectedColor: #f16e1e_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="selectedColor: #f16e1e_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"selectedColor: #f16e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -297,11 +837,16 @@ exports[`Render selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] 1`] 
     id="selectedColor: #f16e1e, backgroundColor: #016e1e_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -315,11 +860,16 @@ exports[`Render theme: light - value[0] 1`] = `
     id="theme: light_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="theme: light_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -333,11 +883,16 @@ exports[`Render theme: light, selectedColor: #6C2ACB - value[0] 1`] = `
     id="theme: light, selectedColor: #6C2ACB_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="theme: light, selectedColor: #6C2ACB_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light, selectedColor: #6C2ACB_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;
@@ -351,11 +906,16 @@ exports[`Render theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e -
     id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button"
     type="button"
   >
-    <svg
-      class="emotion-1"
-      data-testid="AiOutlineExclamationCircle"
-      id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
-    />
+    <span
+      class="anticon"
+      role="img"
+    >
+      <svg
+        data-testid="AiOutlineExclamationCircle"
+      >
+        {"id":"theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon","title":"AiOutlineMenuFold","className":"css-0","required":false}
+      </svg>
+    </span>
   </button>
 </div>
 `;

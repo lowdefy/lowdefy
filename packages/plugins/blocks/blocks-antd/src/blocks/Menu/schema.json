@@ -4,25 +4,11 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "backgroundColor": {
-        "type": "string",
-        "description": "Menu background color.",
-        "docs": {
-          "displayType": "color"
-        }
-      },
       "expandIcon": {
         "type": ["string", "object"],
         "description": "Menu expand icon.",
         "docs": {
           "displayType": "icon"
-        }
-      },
-      "selectedColor": {
-        "type": "string",
-        "description": "Menu primary selected color.",
-        "docs": {
-          "displayType": "color"
         }
       },
       "menuId": {

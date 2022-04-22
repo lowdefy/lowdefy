@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.content - value[0] - PageSHCF 1`] = `
+exports[`Mock render - areas.content - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - areas.content - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -50,7 +52,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - areas.footer - value[0] - PageSHCF 1`] = `
+exports[`Mock render - areas.footer - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - areas.footer - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -100,7 +104,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - areas.header - value[0] - PageSHCF 1`] = `
+exports[`Mock render - areas.header - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - areas.header - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -150,7 +156,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - areas.sider - value[0] - PageSHCF 1`] = `
+exports[`Mock render - areas.sider - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - areas.sider - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -248,7 +256,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - PageSHCF 1`] = `
+exports[`Mock render - default - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -298,7 +308,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.content.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.content.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.content.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -396,7 +408,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.footer.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.footer.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.footer.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -494,7 +508,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.header.color: #4432a8  - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.header.color: #4432a8  - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.header.color: #4432a8  - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -592,7 +608,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.header.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.header.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.header.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -690,7 +708,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.header.theme: light - dark is default - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.header.theme: light - dark is default - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.header.theme: light - dark is default - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -788,7 +808,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.main.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.main.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.main.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -892,7 +914,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.sider.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.sider.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.sider.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -996,7 +1020,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.sider.theme: light - dark is default - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.sider.theme: light - dark is default - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.sider.theme: light - dark is default - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {
@@ -1098,7 +1124,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `
+exports[`Mock render - properties.style: border: 5px solid blue - value[0] - PageSHCF 1`] = `mocked`;
+
+exports[`Mock render - properties.style: border: 5px solid blue - value[0] - PageSHCF 2`] = `
 Array [
   Array [
     Object {

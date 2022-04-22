@@ -17,15 +17,29 @@
 import React from 'react';
 import { BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 import Container from './Container.js';
 import List from './List.js';
+import LoadingBlock from './LoadingBlock.js';
 
-const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
-  if (!block.eval) return null; // Renderer updates before eval is executed for the first time on lists. See #520
+const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
+  if (!block.eval) return null; // TODO: check Renderer updates before eval is executed for the first time on lists. See #520
   if (block.eval.visible === false)
     return <div id={`vs-${block.blockId}`} style={{ display: 'none' }} />;
   const Component = lowdefy._internal.blockComponents[block.type];
+
+  if (loading && type.isObject(block.eval.skeleton)) {
+    return (
+      <LoadingBlock
+        blockLayout={block.eval.layout}
+        context={context}
+        lowdefy={lowdefy}
+        skeleton={block.eval.skeleton}
+      />
+    );
+  }
+
   switch (Component.meta.category) {
     case 'list':
       return (
@@ -34,6 +48,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
           Blocks={Blocks}
           Component={Component}
           context={context}
+          loading={loading}
           lowdefy={lowdefy}
         />
       );
@@ -44,6 +59,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
           Blocks={Blocks}
           Component={Component}
           context={context}
+          loading={loading}
           lowdefy={lowdefy}
         />
       );
@@ -69,7 +85,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
-            loading={block.loading}
+            loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
@@ -101,7 +117,7 @@ const CategorySwitch = ({ block, Blocks, context, lowdefy }) => {
             components={lowdefy._internal.components}
             events={block.eval.events}
             key={block.blockId}
-            loading={block.loading}
+            loading={loading}
             menus={lowdefy.menus}
             pageId={lowdefy.pageId}
             properties={block.eval.properties}

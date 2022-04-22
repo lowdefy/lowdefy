@@ -45,7 +45,6 @@ const SwitchBlock = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -60,8 +59,7 @@ const SwitchBlock = ({
               },
               properties.inputStyle,
             ])}
-            disabled={properties.disabled}
-            loading={loading}
+            disabled={properties.disabled || loading}
             id={`${blockId}_input`}
             size={properties.size}
             checkedChildren={
@@ -107,9 +105,6 @@ SwitchBlock.defaultProps = blockDefaultProps;
 SwitchBlock.meta = {
   valueType: 'boolean',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
   styles: ['blocks/Switch/style.less'],
 };

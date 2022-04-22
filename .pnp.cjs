@@ -3043,7 +3043,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:17.0.2"],
             ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:8.0.0"],
-            ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.4.5"],
+            ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.5.0"],
             ["rehype-raw", "npm:6.1.1"],
             ["remark-gfm", "npm:3.0.1"]
           ],
@@ -14947,17 +14947,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["prismjs", [
-        ["npm:1.25.0", {
-          "packageLocation": "./.yarn/cache/prismjs-npm-1.25.0-8d60169ac0-04d8eae9d1.zip/node_modules/prismjs/",
+        ["npm:1.27.0", {
+          "packageLocation": "./.yarn/cache/prismjs-npm-1.27.0-ca4e1667c6-85c7f4a3e9.zip/node_modules/prismjs/",
           "packageDependencies": [
-            ["prismjs", "npm:1.25.0"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:1.26.0", {
-          "packageLocation": "./.yarn/cache/prismjs-npm-1.26.0-15be1ab06b-6de058930c.zip/node_modules/prismjs/",
-          "packageDependencies": [
-            ["prismjs", "npm:1.26.0"]
+            ["prismjs", "npm:1.27.0"]
           ],
           "linkType": "HARD",
         }]
@@ -16507,24 +16500,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-syntax-highlighter", [
-        ["npm:15.4.5", {
-          "packageLocation": "./.yarn/cache/react-syntax-highlighter-npm-15.4.5-3bc1054513-120bac5cfb.zip/node_modules/react-syntax-highlighter/",
+        ["npm:15.5.0", {
+          "packageLocation": "./.yarn/cache/react-syntax-highlighter-npm-15.5.0-da5363373b-c082b48f30.zip/node_modules/react-syntax-highlighter/",
           "packageDependencies": [
-            ["react-syntax-highlighter", "npm:15.4.5"]
+            ["react-syntax-highlighter", "npm:15.5.0"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.4.5", {
-          "packageLocation": "./.yarn/__virtual__/react-syntax-highlighter-virtual-ec211cab09/0/cache/react-syntax-highlighter-npm-15.4.5-3bc1054513-120bac5cfb.zip/node_modules/react-syntax-highlighter/",
+        ["virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.5.0", {
+          "packageLocation": "./.yarn/__virtual__/react-syntax-highlighter-virtual-6e32523882/0/cache/react-syntax-highlighter-npm-15.5.0-da5363373b-c082b48f30.zip/node_modules/react-syntax-highlighter/",
           "packageDependencies": [
-            ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.4.5"],
+            ["react-syntax-highlighter", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:15.5.0"],
             ["@babel/runtime", "npm:7.16.7"],
             ["@types/react", null],
             ["highlight.js", "npm:10.7.3"],
             ["lowlight", "npm:1.20.0"],
-            ["prismjs", "npm:1.26.0"],
+            ["prismjs", "npm:1.27.0"],
             ["react", "npm:17.0.2"],
-            ["refractor", "npm:3.5.0"]
+            ["refractor", "npm:3.6.0"]
           ],
           "packagePeers": [
             "@types/react",
@@ -16770,13 +16763,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["refractor", [
-        ["npm:3.5.0", {
-          "packageLocation": "./.yarn/cache/refractor-npm-3.5.0-b381207772-e8e8bfe8fc.zip/node_modules/refractor/",
+        ["npm:3.6.0", {
+          "packageLocation": "./.yarn/cache/refractor-npm-3.6.0-63276910f9-39b01c4168.zip/node_modules/refractor/",
           "packageDependencies": [
-            ["refractor", "npm:3.5.0"],
+            ["refractor", "npm:3.6.0"],
             ["hastscript", "npm:6.0.0"],
             ["parse-entities", "npm:2.0.0"],
-            ["prismjs", "npm:1.25.0"]
+            ["prismjs", "npm:1.27.0"]
           ],
           "linkType": "HARD",
         }]

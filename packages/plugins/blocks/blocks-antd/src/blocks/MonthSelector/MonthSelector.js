@@ -41,7 +41,6 @@ const MonthSelector = ({
       blockId={blockId}
       components={{ Icon }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -55,7 +54,7 @@ const MonthSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
@@ -94,9 +93,6 @@ MonthSelector.defaultProps = blockDefaultProps;
 MonthSelector.meta = {
   valueType: 'date',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/MonthSelector/style.less'],
 };

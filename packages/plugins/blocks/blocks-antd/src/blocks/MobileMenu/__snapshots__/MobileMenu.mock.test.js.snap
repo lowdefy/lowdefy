@@ -1,6 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Mock render - backgroundColor: #016e1e - value[0] - MobileMenu 1`] = `
+<div
+  id="backgroundColor: #016e1e"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -141,7 +150,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -150,7 +159,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -208,7 +217,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
+exports[`Mock render - backgroundColor: #016e1e - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -219,7 +228,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="backgroundColor: #016e1e_button_icon"
         components={Object {}}
@@ -237,7 +246,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -263,6 +272,15 @@ Array [
 `;
 
 exports[`Mock render - default - value[0] - MobileMenu 1`] = `
+<div
+  id="default"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - default - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -402,7 +420,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - MobileMenu 2`] = `
+exports[`Mock render - default - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -413,7 +431,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="default_button_icon"
         components={Object {}}
@@ -431,7 +449,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -457,6 +475,15 @@ Array [
 `;
 
 exports[`Mock render - menus: default - value[0] - MobileMenu 1`] = `
+<div
+  id="menus: default"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menus: default - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -500,7 +527,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -654,7 +681,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menus: default - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menus: default - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -665,7 +692,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menus: default_button_icon"
         components={Object {}}
@@ -683,7 +710,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -709,6 +736,15 @@ Array [
 `;
 
 exports[`Mock render - menus: links[0] - value[0] - MobileMenu 1`] = `
+<div
+  id="menus: links[0]"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menus: links[0] - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -752,7 +788,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -883,7 +919,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menus: links[0] - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menus: links[0] - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -894,7 +930,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menus: links[0]_button_icon"
         components={Object {}}
@@ -912,7 +948,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -938,6 +974,15 @@ Array [
 `;
 
 exports[`Mock render - menus: properties.menuId: menu_one - value[0] - MobileMenu 1`] = `
+<div
+  id="menus: properties.menuId: menu_one"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menus: properties.menuId: menu_one - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -981,7 +1026,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -1136,7 +1181,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menus: properties.menuId: menu_one - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menus: properties.menuId: menu_one - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -1147,7 +1192,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menus: properties.menuId: menu_one_button_icon"
         components={Object {}}
@@ -1165,7 +1210,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -1191,6 +1236,15 @@ Array [
 `;
 
 exports[`Mock render - menusTitle pageId - value[0] - MobileMenu 1`] = `
+<div
+  id="menusTitle pageId"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menusTitle pageId - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -1217,7 +1271,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "pageId_page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                     },
                     "type": "MenuLink",
                   },
@@ -1347,7 +1401,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menusTitle pageId - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menusTitle pageId - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -1358,7 +1412,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menusTitle pageId_button_icon"
         components={Object {}}
@@ -1376,7 +1430,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -1402,6 +1456,15 @@ Array [
 `;
 
 exports[`Mock render - menusTitle properties.title - value[0] - MobileMenu 1`] = `
+<div
+  id="menusTitle properties.title"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menusTitle properties.title - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -1428,7 +1491,7 @@ Array [
                     "id": "menu_item_2",
                     "pageId": "page_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                       "title": "Title Menu Item 2",
                     },
                     "type": "MenuLink",
@@ -1559,7 +1622,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menusTitle properties.title - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menusTitle properties.title - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -1570,7 +1633,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menusTitle properties.title_button_icon"
         components={Object {}}
@@ -1588,7 +1651,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -1614,6 +1677,15 @@ Array [
 `;
 
 exports[`Mock render - menusTitle url - value[0] - MobileMenu 1`] = `
+<div
+  id="menusTitle url"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - menusTitle url - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -1639,7 +1711,7 @@ Array [
                   Object {
                     "id": "menu_item_2",
                     "properties": Object {
-                      "icon": "VideoCameraFilled",
+                      "icon": "AiFillVideoCamera",
                     },
                     "type": "MenuLink",
                     "url": "http://page.com",
@@ -1770,7 +1842,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - menusTitle url - value[0] - MobileMenu 2`] = `
+exports[`Mock render - menusTitle url - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -1781,7 +1853,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="menusTitle url_button_icon"
         components={Object {}}
@@ -1799,7 +1871,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -1825,6 +1897,15 @@ Array [
 `;
 
 exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.MenuGroup with MenuLInks"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -1991,7 +2072,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.MenuGroup with MenuLInks - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -2002,7 +2083,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.MenuGroup with MenuLInks_button_icon"
         components={Object {}}
@@ -2020,7 +2101,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -2046,6 +2127,15 @@ Array [
 `;
 
 exports[`Mock render - properties.danger: true - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.danger: true"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.danger: true - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -2169,7 +2259,7 @@ Array [
                   "pageId": "page_2",
                   "properties": Object {
                     "danger": true,
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -2222,7 +2312,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.danger: true - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.danger: true - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -2233,7 +2323,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.danger: true_button_icon"
         components={Object {}}
@@ -2251,7 +2341,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -2277,6 +2367,15 @@ Array [
 `;
 
 exports[`Mock render - properties.icon - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.icon"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.icon - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -2374,7 +2473,7 @@ Array [
                   "id": "Menu_item_one",
                   "pageId": "page_1",
                   "properties": Object {
-                    "icon": "RocketFilled",
+                    "icon": "AiFillRocket",
                   },
                   "type": "MenuLink",
                 },
@@ -2382,7 +2481,7 @@ Array [
                   "id": "Menu Item two",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                   },
                   "type": "MenuLink",
                 },
@@ -2434,7 +2533,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.icon - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -2445,7 +2544,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon_button_icon"
         components={Object {}}
@@ -2463,7 +2562,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -2489,6 +2588,15 @@ Array [
 `;
 
 exports[`Mock render - properties.links - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.links"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.links - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -2640,7 +2748,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.links - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.links - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -2651,7 +2759,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.links_button_icon"
         components={Object {}}
@@ -2669,7 +2777,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -2695,6 +2803,15 @@ Array [
 `;
 
 exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.subMenuCloseDelay: 3"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -2862,7 +2979,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.subMenuCloseDelay: 3 - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -2873,7 +2990,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.subMenuCloseDelay: 3_button_icon"
         components={Object {}}
@@ -2891,7 +3008,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -2917,6 +3034,15 @@ Array [
 `;
 
 exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.subMenuOpenDelay: 3"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -3084,7 +3210,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.subMenuOpenDelay: 3 - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -3095,7 +3221,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.subMenuOpenDelay: 3_button_icon"
         components={Object {}}
@@ -3113,7 +3239,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -3139,6 +3265,15 @@ Array [
 `;
 
 exports[`Mock render - properties.title - value[0] - MobileMenu 1`] = `
+<div
+  id="properties.title"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - properties.title - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -3236,7 +3371,7 @@ Array [
                   "id": "Menu_item_one",
                   "pageId": "page_1",
                   "properties": Object {
-                    "icon": "RocketFilled",
+                    "icon": "AiFillRocket",
                     "title": "Title Menu Item 1",
                   },
                   "type": "MenuLink",
@@ -3245,7 +3380,7 @@ Array [
                   "id": "Menu Item two",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3298,7 +3433,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - MobileMenu 2`] = `
+exports[`Mock render - properties.title - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -3309,7 +3444,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.title_button_icon"
         components={Object {}}
@@ -3327,7 +3462,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -3353,6 +3488,15 @@ Array [
 `;
 
 exports[`Mock render - selectedColor: #f16e1e - value[0] - MobileMenu 1`] = `
+<div
+  id="selectedColor: #f16e1e"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - selectedColor: #f16e1e - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -3492,7 +3636,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3501,7 +3645,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -3560,7 +3704,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - selectedColor: #f16e1e - value[0] - MobileMenu 2`] = `
+exports[`Mock render - selectedColor: #f16e1e - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -3571,7 +3715,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="selectedColor: #f16e1e_button_icon"
         components={Object {}}
@@ -3589,7 +3733,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -3615,6 +3759,15 @@ Array [
 `;
 
 exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 1`] = `
+<div
+  id="selectedColor: #f16e1e, backgroundColor: #016e1e"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -3755,7 +3908,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -3764,7 +3917,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -3823,7 +3976,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
+exports[`Mock render - selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -3834,7 +3987,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
         components={Object {}}
@@ -3852,7 +4005,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -3878,6 +4031,15 @@ Array [
 `;
 
 exports[`Mock render - theme: light - value[0] - MobileMenu 1`] = `
+<div
+  id="theme: light"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - theme: light - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -4017,7 +4179,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4026,7 +4188,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4084,7 +4246,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - theme: light - value[0] - MobileMenu 2`] = `
+exports[`Mock render - theme: light - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -4095,7 +4257,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="theme: light_button_icon"
         components={Object {}}
@@ -4113,7 +4275,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -4139,6 +4301,15 @@ Array [
 `;
 
 exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - MobileMenu 1`] = `
+<div
+  id="theme: light, selectedColor: #6C2ACB"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -4278,7 +4449,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4287,7 +4458,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4346,7 +4517,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - MobileMenu 2`] = `
+exports[`Mock render - theme: light, selectedColor: #6C2ACB - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -4357,7 +4528,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="theme: light, selectedColor: #6C2ACB_button_icon"
         components={Object {}}
@@ -4375,7 +4546,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}
@@ -4401,6 +4572,15 @@ Array [
 `;
 
 exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 1`] = `
+<div
+  id="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e"
+>
+  mocked
+  mocked
+</div>
+`;
+
+exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
 Array [
   Array [
     Object {
@@ -4541,7 +4721,7 @@ Array [
                   "id": "menu_item_2",
                   "pageId": "page_2",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 2",
                   },
                   "type": "MenuLink",
@@ -4550,7 +4730,7 @@ Array [
                   "id": "menu_item_3",
                   "pageId": "page_3",
                   "properties": Object {
-                    "icon": "VideoCameraFilled",
+                    "icon": "AiFillVideoCamera",
                     "title": "Title Menu Item 3",
                   },
                   "type": "MenuLink",
@@ -4609,7 +4789,7 @@ Array [
 ]
 `;
 
-exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 2`] = `
+exports[`Mock render - theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e - value[0] - MobileMenu 3`] = `
 Array [
   Array [
     Object {
@@ -4620,7 +4800,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e_button_icon"
         components={Object {}}
@@ -4638,7 +4818,7 @@ Array [
         }
         properties={
           Object {
-            "name": "MenuFoldOutlined",
+            "name": "AiOutlineMenuFold",
           }
         }
         required={false}

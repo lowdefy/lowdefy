@@ -71,7 +71,7 @@ const MobileMenu = ({
         components={components}
         properties={mergeObjects([
           {
-            bodyStyle: { padding: '3.1em 0 0 0', backgroundColor: properties.backgroundColor },
+            bodyStyle: { padding: '3.1em 0 0 0' },
           },
           properties.drawer,
         ])}
@@ -121,7 +121,6 @@ const MobileMenu = ({
 MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
-  loading: false,
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
   styles: ['blocks/MobileMenu/style.less'],
 };

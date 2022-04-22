@@ -53,7 +53,7 @@ class Events {
     this.events[name] = this.initEvent(actions);
   }
 
-  async triggerEvent({ name, event }) {
+  async triggerEvent({ name, event, progress }) {
     const eventDescription = this.events[name];
     let result = {
       blockId: this.block.blockId,
@@ -81,6 +81,7 @@ class Events {
         catchActions: eventDescription.catchActions,
         event,
         eventName: name,
+        progress,
       });
       eventDescription.history.unshift(res);
       this.context.eventLog.unshift(res);

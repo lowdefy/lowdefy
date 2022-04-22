@@ -66,7 +66,6 @@ const IconSpinner = ({ properties, methods }) => {
 IconSpinner.defaultProps = blockDefaultProps;
 IconSpinner.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/IconSpinner/style.less'],
 };

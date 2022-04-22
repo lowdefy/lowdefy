@@ -18,7 +18,7 @@ import countOperators from '../../../utils/countOperators.js';
 
 function countBlockOperators(block, { typeCounters }) {
   // eslint-disable-next-line no-unused-vars
-  const { requests, blocks, areas, ...webBlock } = block;
+  const { requests, areas, ...webBlock } = block;
 
   countOperators(webBlock, { counter: typeCounters.operators.client });
   (requests || []).forEach((request) => {

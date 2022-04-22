@@ -58,7 +58,6 @@ const SkeletonInput = ({ properties, methods }) => {
 SkeletonInput.defaultProps = blockDefaultProps;
 SkeletonInput.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/SkeletonInput/style.less'],
 };

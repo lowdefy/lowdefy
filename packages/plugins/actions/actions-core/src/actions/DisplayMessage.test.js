@@ -81,7 +81,7 @@ test('DisplayMessage params is not object', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -151,7 +151,7 @@ test('DisplayMessage params is null or undefined', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -209,7 +209,7 @@ test('DisplayMessage params.content is none', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -267,7 +267,7 @@ test('DisplayMessage params.content is ""', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -325,7 +325,7 @@ test('DisplayMessage params.content is falsy', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

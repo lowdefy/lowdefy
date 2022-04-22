@@ -25,7 +25,7 @@ const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, childre
       try {
         await triggerEvent({ name: eventName, context });
         if (mounted) {
-          triggerEvent({ name: asyncEventName, context });
+          triggerEvent({ name: asyncEventName, context, async: true });
           setLoading(false);
         }
       } catch (err) {

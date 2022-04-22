@@ -42,7 +42,6 @@ const MultipleSelector = ({
     <Label
       blockId={blockId}
       components={{ Icon }}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -56,7 +55,7 @@ const MultipleSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               mode="multiple"
               notFoundContent={fetchState ? 'Loading' : 'Not found'}
@@ -153,9 +152,6 @@ MultipleSelector.defaultProps = blockDefaultProps;
 MultipleSelector.meta = {
   valueType: 'array',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/MultipleSelector/style.less'],
 };

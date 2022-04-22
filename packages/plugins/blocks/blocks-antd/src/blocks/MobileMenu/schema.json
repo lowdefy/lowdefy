@@ -18,23 +18,9 @@
           "displayType": "yaml"
         }
       },
-      "backgroundColor": {
-        "type": "string",
-        "description": "Menu background color.",
-        "docs": {
-          "displayType": "color"
-        }
-      },
       "menuId": {
         "type": "string",
         "description": "App menu id used to get menu links."
-      },
-      "selectedColor": {
-        "type": "string",
-        "description": "Menu primary selected color.",
-        "docs": {
-          "displayType": "color"
-        }
       },
       "selectedKeys": {
         "type": "array",

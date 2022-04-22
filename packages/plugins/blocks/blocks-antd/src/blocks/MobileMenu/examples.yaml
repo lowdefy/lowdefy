@@ -32,12 +32,12 @@
         type: MenuLink
         pageId: page_1
         properties:
-          icon: RocketFilled
+          icon: AiFillRocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'properties.title'
   type: MobileMenu
   properties:
@@ -47,13 +47,13 @@
         pageId: page_1
         properties:
           title: Title Menu Item 1
-          icon: RocketFilled
+          icon: AiFillRocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 - id: 'properties.MenuGroup with MenuLInks'
   type: MobileMenu
   properties:
@@ -137,7 +137,7 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
           danger: true
 
 # mode inline
@@ -180,248 +180,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: VideoCameraFilled
-- id: 'backgroundColor: #016e1e'
-  type: MobileMenu
-  properties:
-    backgroundColor: '#016e1e'
-    selectedKeys:
-      - menu_item_1_1
-      - menu_item_3
-      - menu_item_1_2_2
-    links:
-      - id: menu_group_1
-        type: MenuGroup
-        properties:
-          title: Menu Group 1
-        links:
-          - id: menu_item_1_1
-            type: MenuLink
-            pageId: page_1_1
-            properties:
-              title: Menu Item one
-          - id: menu_item_1_2
-            type: MenuGroup
-            properties:
-              title: Menu Group
-            links:
-              - id: menu_item_1_2_1
-                type: MenuLink
-                pageId: page_1_2_1
-                properties:
-                  title: Menu Group one
-              - id: menu_item_1_2_2
-                type: MenuLink
-                pageId: page_1_2_2
-                properties:
-                  title: Menu Group two
-      - id: menu_item_2
-        type: MenuLink
-        pageId: page_2
-        properties:
-          title: Title Menu Item 2
-          icon: VideoCameraFilled
-      - id: menu_item_3
-        type: MenuLink
-        pageId: page_3
-        properties:
-          title: Title Menu Item 3
-          icon: VideoCameraFilled
-- id: 'selectedColor: #f16e1e'
-  type: MobileMenu
-  properties:
-    selectedColor: '#f16e1e'
-    selectedKeys:
-      - menu_item_1_1
-      - menu_item_3
-      - menu_item_1_2_2
-    links:
-      - id: menu_group_1
-        type: MenuGroup
-        properties:
-          title: Menu Group 1
-        links:
-          - id: menu_item_1_1
-            type: MenuLink
-            pageId: page_1_1
-            properties:
-              title: Menu Item one
-          - id: menu_item_1_2
-            type: MenuGroup
-            properties:
-              title: Menu Group
-            links:
-              - id: menu_item_1_2_1
-                type: MenuLink
-                pageId: page_1_2_1
-                properties:
-                  title: Menu Group one
-              - id: menu_item_1_2_2
-                type: MenuLink
-                pageId: page_1_2_2
-                properties:
-                  title: Menu Group two
-      - id: menu_item_2
-        type: MenuLink
-        pageId: page_2
-        properties:
-          title: Title Menu Item 2
-          icon: VideoCameraFilled
-      - id: menu_item_3
-        type: MenuLink
-        pageId: page_3
-        properties:
-          title: Title Menu Item 3
-          icon: VideoCameraFilled
-- id: 'selectedColor: #f16e1e, backgroundColor: #016e1e'
-  type: MobileMenu
-  properties:
-    selectedColor: '#f16e1e'
-    backgroundColor: '#016e1e'
-    selectedKeys:
-      - menu_item_1_1
-      - menu_item_3
-      - menu_item_1_2_2
-    links:
-      - id: menu_group_1
-        type: MenuGroup
-        properties:
-          title: Menu Group 1
-        links:
-          - id: menu_item_1_1
-            type: MenuLink
-            pageId: page_1_1
-            properties:
-              title: Menu Item one
-          - id: menu_item_1_2
-            type: MenuGroup
-            properties:
-              title: Menu Group
-            links:
-              - id: menu_item_1_2_1
-                type: MenuLink
-                pageId: page_1_2_1
-                properties:
-                  title: Menu Group one
-              - id: menu_item_1_2_2
-                type: MenuLink
-                pageId: page_1_2_2
-                properties:
-                  title: Menu Group two
-      - id: menu_item_2
-        type: MenuLink
-        pageId: page_2
-        properties:
-          title: Title Menu Item 2
-          icon: VideoCameraFilled
-      - id: menu_item_3
-        type: MenuLink
-        pageId: page_3
-        properties:
-          title: Title Menu Item 3
-          icon: VideoCameraFilled
-- id: 'theme: light, selectedColor: #f16e1e, backgroundColor: #016e1e'
-  type: MobileMenu
-  properties:
-    theme: light
-    selectedColor: '#f16e1e'
-    backgroundColor: '#91cfcf'
-    selectedKeys:
-      - menu_item_1_1
-      - menu_item_3
-      - menu_item_1_2_2
-    links:
-      - id: menu_group_1
-        type: MenuGroup
-        properties:
-          title: Menu Group 1
-        links:
-          - id: menu_item_1_1
-            type: MenuLink
-            pageId: page_1_1
-            properties:
-              title: Menu Item one
-          - id: menu_item_1_2
-            type: MenuGroup
-            properties:
-              title: Menu Group
-            links:
-              - id: menu_item_1_2_1
-                type: MenuLink
-                pageId: page_1_2_1
-                properties:
-                  title: Menu Group one
-              - id: menu_item_1_2_2
-                type: MenuLink
-                pageId: page_1_2_2
-                properties:
-                  title: Menu Group two
-      - id: menu_item_2
-        type: MenuLink
-        pageId: page_2
-        properties:
-          title: Title Menu Item 2
-          icon: VideoCameraFilled
-      - id: menu_item_3
-        type: MenuLink
-        pageId: page_3
-        properties:
-          title: Title Menu Item 3
-          icon: VideoCameraFilled
-
-- id: 'theme: light, selectedColor: #6C2ACB'
-  type: MobileMenu
-  properties:
-    theme: light
-    selectedColor: '#6C2ACB'
-    selectedKeys:
-      - menu_item_1_1
-      - menu_item_3
-      - menu_item_1_2_2
-    links:
-      - id: menu_group_1
-        type: MenuGroup
-        properties:
-          title: Menu Group 1
-        links:
-          - id: menu_item_1_1
-            type: MenuLink
-            pageId: page_1_1
-            properties:
-              title: Menu Item one
-          - id: menu_item_1_2
-            type: MenuGroup
-            properties:
-              title: Menu Group
-            links:
-              - id: menu_item_1_2_1
-                type: MenuLink
-                pageId: page_1_2_1
-                properties:
-                  title: Menu Group one
-              - id: menu_item_1_2_2
-                type: MenuLink
-                pageId: page_1_2_2
-                properties:
-                  title: Menu Group two
-      - id: menu_item_2
-        type: MenuLink
-        pageId: page_2
-        properties:
-          title: Title Menu Item 2
-          icon: VideoCameraFilled
-      - id: menu_item_3
-        type: MenuLink
-        pageId: page_3
-        properties:
-          title: Title Menu Item 3
-          icon: VideoCameraFilled
+          icon: AiFillVideoCamera
 
 - id: 'menus: links[0]'
   type: MobileMenu
@@ -444,7 +209,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 - id: 'menus: default'
   type: MobileMenu
   menus:
@@ -466,7 +231,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
     - id: menu_one
       menuId: default
       links:
@@ -504,7 +269,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
     - id: menu_one
       menuId: default
       links:
@@ -530,7 +295,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 
 - id: 'menusTitle pageId'
   type: MobileMenu
@@ -542,7 +307,7 @@
           type: MenuLink
           pageId: pageId_page_2
           properties:
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera
 
 - id: 'menusTitle url'
   type: MobileMenu
@@ -554,4 +319,4 @@
           type: MenuLink
           url: http://page.com
           properties:
-            icon: VideoCameraFilled
+            icon: AiFillVideoCamera

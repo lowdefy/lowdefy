@@ -20,7 +20,7 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
 
-const Container = ({ block, Blocks, Component, context, lowdefy }) => {
+const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   const areas = Blocks.subBlocks[block.id][0].areas;
@@ -44,6 +44,7 @@ const Container = ({ block, Blocks, Component, context, lowdefy }) => {
             Blocks={Blocks.subBlocks[block.id][0]}
             block={bl}
             context={context}
+            parentLoading={loading}
             lowdefy={lowdefy}
           />
         ))}
@@ -71,7 +72,7 @@ const Container = ({ block, Blocks, Component, context, lowdefy }) => {
         content={content}
         events={block.eval.events}
         key={block.blockId}
-        loading={block.loading}
+        loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
         properties={block.eval.properties}

@@ -22,7 +22,11 @@ import gfm from 'remark-gfm';
 
 const Markdown = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
-    <ReactMarkdown className="markdown-body" skipHtml={properties.skipHtml} remarkPlugins={[gfm]}>
+    <ReactMarkdown
+      className="markdown-body markdown-default-code"
+      skipHtml={properties.skipHtml}
+      remarkPlugins={[gfm]}
+    >
       {properties.content}
     </ReactMarkdown>
   </div>
@@ -31,14 +35,8 @@ const Markdown = ({ blockId, properties, methods }) => (
 Markdown.defaultProps = blockDefaultProps;
 Markdown.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 7,
-    },
-  },
   icons: [],
-  styles: [],
+  styles: ['codeblock.less'],
 };
 
 export default Markdown;

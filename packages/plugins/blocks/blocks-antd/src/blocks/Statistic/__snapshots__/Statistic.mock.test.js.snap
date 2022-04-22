@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Statistic 1`] = `
+exports[`Mock render - default - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -21,7 +23,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.decimalSeparator: ',' - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.decimalSeparator: ',' - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.decimalSeparator: ',' - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -42,7 +46,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.groupSeparator: ',' - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.groupSeparator: ',' - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.groupSeparator: ',' - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -63,7 +69,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.loading: true - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.loading: true - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.loading: true - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -114,7 +122,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.precision: 2 - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.precision: 2 - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.precision: 2 - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -135,7 +145,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.prefix: R - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.prefix: R - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.prefix: R - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -156,19 +168,21 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.prefixIcon: AccountBookFilled - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.prefixIcon: AiFillAccountBook - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.prefixIcon: AiFillAccountBook - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
       "groupSeparator": undefined,
-      "id": "properties.prefixIcon: AccountBookFilled",
+      "id": "properties.prefixIcon: AiFillAccountBook",
       "loading": undefined,
       "precision": undefined,
-      "prefix": <IconComp1
+      "prefix": <AntIcon
         basePath=""
-        blockId="properties.prefixIcon: AccountBookFilled_prefixIcon"
+        blockId="properties.prefixIcon: AiFillAccountBook_prefixIcon"
         components={Object {}}
         content={Object {}}
         events={Object {}}
@@ -182,7 +196,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AccountBookFilled"
+        properties="AiFillAccountBook"
         required={false}
         user={Object {}}
         validation={
@@ -203,7 +217,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.suffix: Rand - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.suffix: Rand - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.suffix: Rand - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -224,20 +240,22 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.suffixIcon: AccountBookFilled - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.suffixIcon: AiFillAccountBook - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.suffixIcon: AiFillAccountBook - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
       "className": "{}",
       "decimalSeparator": undefined,
       "groupSeparator": undefined,
-      "id": "properties.suffixIcon: AccountBookFilled",
+      "id": "properties.suffixIcon: AiFillAccountBook",
       "loading": undefined,
       "precision": undefined,
       "prefix": "",
-      "suffix": <IconComp1
+      "suffix": <AntIcon
         basePath=""
-        blockId="properties.suffixIcon: AccountBookFilled_suffixIcon"
+        blockId="properties.suffixIcon: AiFillAccountBook_suffixIcon"
         components={Object {}}
         content={Object {}}
         events={Object {}}
@@ -251,7 +269,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AccountBookFilled"
+        properties="AiFillAccountBook"
         required={false}
         user={Object {}}
         validation={
@@ -271,7 +289,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.title - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -322,7 +342,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title with html - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.title with html - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.title with html - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -375,7 +397,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.value: '3.45' as string - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.value: '3.45' as string - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.value: '3.45' as string - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {
@@ -396,7 +420,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.value: 3.45 as number - value[0] - Statistic 1`] = `
+exports[`Mock render - properties.value: 3.45 as number - value[0] - Statistic 1`] = `mocked`;
+
+exports[`Mock render - properties.value: 3.45 as number - value[0] - Statistic 2`] = `
 Array [
   Array [
     Object {

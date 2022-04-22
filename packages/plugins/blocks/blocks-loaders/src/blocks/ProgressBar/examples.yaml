@@ -13,5 +13,4 @@
 # limitations under the License.
 
 - id: default
-  type: LogoSpinner
-  description: Default
+  type: ProgressBar

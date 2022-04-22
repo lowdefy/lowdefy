@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import basicTypes from '@lowdefy/blocks-basic/types';
+import loaderTypes from '@lowdefy/blocks-loaders/types';
+
 function buildTypeClass(
   context,
   { counter, definitions, store, typeClass, warnIfMissing = false }
@@ -39,9 +42,13 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
+  // Add Mandatory Types
   // Add operators used by form validation
   typeCounters.operators.client.increment('_not');
   typeCounters.operators.client.increment('_type');
+  // Add loaders and basic
+  basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
 
   components.types = {
     actions: {},

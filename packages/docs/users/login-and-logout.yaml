@@ -42,12 +42,12 @@ _ref:
 
             #### Examples
 
-            ###### A login page that redirects users in the onEnter event:
+            ###### A login page that redirects users in the onMount event:
             ```yaml
             id: login
-            type: Context
+            type: Box
             events:
-              onEnter:
+              onMount:
                 # Redirect to "page1" if user is already logged in.
                 - id: logged_in_redirect
                   type: Link

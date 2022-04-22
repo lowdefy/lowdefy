@@ -44,7 +44,6 @@ const SkeletonParagraph = ({ properties, methods }) => {
 SkeletonParagraph.defaultProps = blockDefaultProps;
 SkeletonParagraph.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/SkeletonParagraph/style.less'],
 };

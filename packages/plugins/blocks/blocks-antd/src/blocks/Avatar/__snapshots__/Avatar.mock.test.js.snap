@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Avatar 1`] = `
+exports[`Mock render - default - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -20,7 +22,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.alt - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.alt - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.alt - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -40,7 +44,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.color - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.color - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.color - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -60,7 +66,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.content - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.content - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.content - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -80,7 +88,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.content - value[0] - Avatar 2`] = `
+exports[`Mock render - properties.content - value[0] - Avatar 3`] = `mocked`;
+
+exports[`Mock render - properties.content - value[0] - Avatar 4`] = `
 Array [
   Array [
     Object {
@@ -100,7 +110,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.gap - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.gap - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.gap - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -120,7 +132,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon object - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.icon object - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.icon object - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -128,7 +142,7 @@ Array [
       "children": undefined,
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon object_icon"
         components={Object {}}
@@ -147,7 +161,7 @@ Array [
         properties={
           Object {
             "color": "red",
-            "name": "UserOutlined",
+            "name": "AiOutlineUser",
           }
         }
         required={false}
@@ -171,7 +185,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon string - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.icon string - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.icon string - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -179,7 +195,7 @@ Array [
       "children": undefined,
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon string_icon"
         components={Object {}}
@@ -195,7 +211,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="UserOutlined"
+        properties="AiOutlineUser"
         required={false}
         user={Object {}}
         validation={
@@ -217,7 +233,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon string properties.shape square - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.icon string properties.shape square - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.icon string properties.shape square - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -225,7 +243,7 @@ Array [
       "children": undefined,
       "className": "{\\"style\\":[{},null]}",
       "gap": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon string properties.shape square_icon"
         components={Object {}}
@@ -241,7 +259,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="UserOutlined"
+        properties="AiOutlineUser"
         required={false}
         user={Object {}}
         validation={
@@ -263,7 +281,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.shape - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.shape - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.shape - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -283,7 +303,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size large - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.size large - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.size large - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -303,7 +325,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size small - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.size small - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.size small - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {
@@ -323,7 +347,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.src - value[0] - Avatar 1`] = `
+exports[`Mock render - properties.src - value[0] - Avatar 1`] = `mocked`;
+
+exports[`Mock render - properties.src - value[0] - Avatar 2`] = `
 Array [
   Array [
     Object {

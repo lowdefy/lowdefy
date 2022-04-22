@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - default - value[0] - Message 1`] = `
+<div
+  id="default"
+/>
+`;
 
 exports[`Mock render - default - value[0] - Message 2`] = `Array []`;
 
@@ -12,7 +16,13 @@ exports[`Mock render - default - value[0] - Message 5`] = `Array []`;
 
 exports[`Mock render - default - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.content - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - default - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.content - value[0] - Message 1`] = `
+<div
+  id="properties.content"
+/>
+`;
 
 exports[`Mock render - properties.content - value[0] - Message 2`] = `Array []`;
 
@@ -24,7 +34,13 @@ exports[`Mock render - properties.content - value[0] - Message 5`] = `Array []`;
 
 exports[`Mock render - properties.content - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.duration - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.content - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.duration - value[0] - Message 1`] = `
+<div
+  id="properties.duration"
+/>
+`;
 
 exports[`Mock render - properties.duration - value[0] - Message 2`] = `Array []`;
 
@@ -36,7 +52,13 @@ exports[`Mock render - properties.duration - value[0] - Message 5`] = `Array []`
 
 exports[`Mock render - properties.duration - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.icon - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.duration - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.icon - value[0] - Message 1`] = `
+<div
+  id="properties.icon"
+/>
+`;
 
 exports[`Mock render - properties.icon - value[0] - Message 2`] = `Array []`;
 
@@ -48,7 +70,13 @@ exports[`Mock render - properties.icon - value[0] - Message 5`] = `Array []`;
 
 exports[`Mock render - properties.icon - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.status: error - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.icon - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.status: error - value[0] - Message 1`] = `
+<div
+  id="properties.status: error"
+/>
+`;
 
 exports[`Mock render - properties.status: error - value[0] - Message 2`] = `Array []`;
 
@@ -60,7 +88,13 @@ exports[`Mock render - properties.status: error - value[0] - Message 5`] = `Arra
 
 exports[`Mock render - properties.status: error - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.status: info - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.status: error - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.status: info - value[0] - Message 1`] = `
+<div
+  id="properties.status: info"
+/>
+`;
 
 exports[`Mock render - properties.status: info - value[0] - Message 2`] = `Array []`;
 
@@ -72,7 +106,13 @@ exports[`Mock render - properties.status: info - value[0] - Message 5`] = `Array
 
 exports[`Mock render - properties.status: info - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.status: loading - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.status: info - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.status: loading - value[0] - Message 1`] = `
+<div
+  id="properties.status: loading"
+/>
+`;
 
 exports[`Mock render - properties.status: loading - value[0] - Message 2`] = `Array []`;
 
@@ -84,7 +124,13 @@ exports[`Mock render - properties.status: loading - value[0] - Message 5`] = `Ar
 
 exports[`Mock render - properties.status: loading - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - properties.status: warning - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.status: loading - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - properties.status: warning - value[0] - Message 1`] = `
+<div
+  id="properties.status: warning"
+/>
+`;
 
 exports[`Mock render - properties.status: warning - value[0] - Message 2`] = `Array []`;
 
@@ -96,7 +142,13 @@ exports[`Mock render - properties.status: warning - value[0] - Message 5`] = `Ar
 
 exports[`Mock render - properties.status: warning - value[0] - Message 6`] = `Array []`;
 
-exports[`Mock render - with html content - value[0] - Message 1`] = `Array []`;
+exports[`Mock render - properties.status: warning - value[0] - Message 7`] = `Array []`;
+
+exports[`Mock render - with html content - value[0] - Message 1`] = `
+<div
+  id="with html content"
+/>
+`;
 
 exports[`Mock render - with html content - value[0] - Message 2`] = `Array []`;
 
@@ -107,3 +159,5 @@ exports[`Mock render - with html content - value[0] - Message 4`] = `Array []`;
 exports[`Mock render - with html content - value[0] - Message 5`] = `Array []`;
 
 exports[`Mock render - with html content - value[0] - Message 6`] = `Array []`;
+
+exports[`Mock render - with html content - value[0] - Message 7`] = `Array []`;

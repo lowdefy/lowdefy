@@ -16,23 +16,23 @@
 
 import React, { useEffect, useState } from 'react';
 
-const MountEvents = ({ asyncEventName, context, eventName, triggerEvent, children }) => {
+const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
     let mounted = true;
     const mount = async () => {
       try {
-        await triggerEvent({ name: eventName, context });
+        await triggerEvent();
         if (mounted) {
-          triggerEvent({ name: asyncEventName, context });
+          triggerEventAsync();
           setLoading(false);
         }
       } catch (err) {
         setError(err);
       }
     };
-    mount();
+    mount(); // TODO: check only run once.
     return () => {
       mounted = false;
     };

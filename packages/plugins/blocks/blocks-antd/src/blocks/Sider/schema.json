@@ -18,13 +18,6 @@
         "type": "boolean",
         "description": "Whether can be collapsed"
       },
-      "color": {
-        "type": "string",
-        "description": "Sider color",
-        "docs": {
-          "displayType": "color"
-        }
-      },
       "initialCollapsed": {
         "type": "boolean",
         "default": true,

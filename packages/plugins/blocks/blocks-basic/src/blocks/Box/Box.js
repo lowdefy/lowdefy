@@ -34,7 +34,6 @@ const Box = ({ blockId, content, events, methods, properties }) => (
 Box.defaultProps = blockDefaultProps;
 Box.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: [],
 };

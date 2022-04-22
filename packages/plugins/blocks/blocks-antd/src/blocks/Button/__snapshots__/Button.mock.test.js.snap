@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Button 1`] = `
+exports[`Mock render - default - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -54,7 +56,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.block: true - value[0] - Button 1`] = `
+exports[`Mock render - properties.block: true - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.block: true - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -108,7 +112,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.color: #9c27b0 - value[0] - Button 1`] = `
+exports[`Mock render - properties.color: #9c27b0 - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.color: #9c27b0 - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -168,7 +174,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.danger: true - value[0] - Button 1`] = `
+exports[`Mock render - properties.danger: true - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.danger: true - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -222,7 +230,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.disabled: true - value[0] - Button 1`] = `
+exports[`Mock render - properties.disabled: true - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.disabled: true - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -276,7 +286,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.ghost: true - value[0] - Button 1`] = `
+exports[`Mock render - properties.ghost: true - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.ghost: true - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -330,7 +342,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.hideTitle: true - value[0] - Button 1`] = `
+exports[`Mock render - properties.hideTitle: true - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.hideTitle: true - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -341,7 +355,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.hideTitle: true_icon"
         components={Object {}}
@@ -357,7 +371,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="DeleteOutlined"
+        properties="AiOutlineDelete"
         required={false}
         user={Object {}}
         validation={
@@ -380,7 +394,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.href: www.lowdefy.com - value[0] - Button 1`] = `
+exports[`Mock render - properties.href: www.lowdefy.com - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.href: www.lowdefy.com - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -434,7 +450,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon object - value[0] - Button 1`] = `
+exports[`Mock render - properties.icon object - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.icon object - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -475,7 +493,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon object_icon"
         components={Object {}}
@@ -494,7 +512,7 @@ Array [
         properties={
           Object {
             "color": "red",
-            "name": "SaveOutlined",
+            "name": "AiOutlineSave",
           }
         }
         required={false}
@@ -519,7 +537,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon string - value[0] - Button 1`] = `
+exports[`Mock render - properties.icon string - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.icon string - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -560,7 +580,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon string_icon"
         components={Object {}}
@@ -576,7 +596,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="SaveOutlined"
+        properties="AiOutlineSave"
         required={false}
         user={Object {}}
         validation={
@@ -599,7 +619,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.shape: circle - value[0] - Button 1`] = `
+exports[`Mock render - properties.shape: circle - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.shape: circle - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -653,7 +675,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.shape: round - value[0] - Button 1`] = `
+exports[`Mock render - properties.shape: round - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.shape: round - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -707,7 +731,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: large - value[0] - Button 1`] = `
+exports[`Mock render - properties.size: large - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.size: large - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -761,7 +787,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: small - value[0] - Button 1`] = `
+exports[`Mock render - properties.size: small - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.size: small - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -815,7 +843,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Button 1`] = `
+exports[`Mock render - properties.title - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -869,7 +899,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: danger - value[0] - Button 1`] = `
+exports[`Mock render - properties.type: danger - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.type: danger - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -923,7 +955,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: dashed - value[0] - Button 1`] = `
+exports[`Mock render - properties.type: dashed - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.type: dashed - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -977,7 +1011,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: default - value[0] - Button 1`] = `
+exports[`Mock render - properties.type: default - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.type: default - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -1031,7 +1067,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: link - value[0] - Button 1`] = `
+exports[`Mock render - properties.type: link - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.type: link - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -1085,7 +1123,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: text - value[0] - Button 1`] = `
+exports[`Mock render - properties.type: text - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - properties.type: text - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -1139,7 +1179,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in title - value[0] - Button 1`] = `
+exports[`Mock render - with html in title - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - with html in title - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -1195,7 +1237,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in title and icon - value[0] - Button 1`] = `
+exports[`Mock render - with html in title and icon - value[0] - Button 1`] = `mocked`;
+
+exports[`Mock render - with html in title and icon - value[0] - Button 2`] = `
 Array [
   Array [
     Object {
@@ -1238,7 +1282,7 @@ Array [
       "disabled": undefined,
       "ghost": undefined,
       "href": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="with html in title and icon_icon"
         components={Object {}}
@@ -1254,7 +1298,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="SaveOutlined"
+        properties="AiOutlineSave"
         required={false}
         user={Object {}}
         validation={

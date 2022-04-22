@@ -55,59 +55,40 @@ const operators = {
 
 operators._init.init = jest.fn();
 
-test('parse input undefined', async () => {
+test('parse input undefined', () => {
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({});
   expect(res.output).toEqual();
   expect(res.errors).toEqual([]);
 });
 
-test('context._internal.lowdefy not object', async () => {
-  const context = {
-    _internal: {
-      lowdefy: 'not object',
-    },
-    eventLog: [{ eventLog: true }],
-    id: 'id',
-    requests: [{ requests: true }],
-    state: { state: true },
-  };
-  const parser = new WebParser({ context, operators });
-  await expect(() => parser.init()).rejects.toThrow('context._internal.lowdefy must be an object.');
-});
-
-test('parse args not array', async () => {
+test('parse args not array', () => {
   const input = {};
   const args = 'not an array';
   const parser = new WebParser({ context, operators });
-  await parser.init();
   expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
 });
 
-test('parse event not object', async () => {
+test('parse event not object', () => {
   const input = {};
   const event = 'not an array';
   const parser = new WebParser({ context, operators });
-  await parser.init();
   expect(() => parser.parse({ event, input })).toThrow('Operator parser event must be a object.');
 });
 
-test('parse location not string', async () => {
+test('parse location not string', () => {
   const input = {};
   const location = [];
   const parser = new WebParser({ context, operators });
-  await parser.init();
   expect(() => parser.parse({ args, input, location })).toThrow(
     'Operator parser location must be a string.'
   );
 });
 
-test('operator returns value', async () => {
+test('operator returns value', () => {
   const input = { a: { _test: { params: true } } };
   const location = 'location.$';
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
@@ -237,7 +218,6 @@ test('operator returns value', async () => {
                 "state": true,
               },
             },
-            "init": [Function],
             "operators": Object {
               "_error": [MockFunction],
               "_init": [MockFunction],
@@ -274,7 +254,7 @@ test('operator returns value', async () => {
   expect(res.errors).toEqual([]);
 });
 
-test('context._internal.lowdefy empty object', async () => {
+test('context._internal.lowdefy empty object', () => {
   const context = {
     _internal: {
       lowdefy: {},
@@ -286,7 +266,6 @@ test('context._internal.lowdefy empty object', async () => {
   };
   const input = { a: { _test: { params: true } } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
@@ -374,7 +353,6 @@ test('context._internal.lowdefy empty object', async () => {
                 "state": true,
               },
             },
-            "init": [Function],
             "operators": Object {
               "_error": [MockFunction],
               "_init": [MockFunction],
@@ -407,45 +385,35 @@ test('context._internal.lowdefy empty object', async () => {
   expect(res.errors).toEqual([]);
 });
 
-test('operator should be object with 1 key', async () => {
+test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
 
-test('operatorPrefix invalid', async () => {
+test('operatorPrefix invalid', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const operatorPrefix = 'invalid';
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
 
-test('undefined operator', async () => {
+test('undefined operator', () => {
   const input = { a: { _id: { params: true } } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
 });
 
-test('operator errors', async () => {
+test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toEqual([new Error('Test error.')]);
-});
-
-test('operator init', async () => {
-  const parser = new WebParser({ context, operators });
-  await parser.init();
-  expect(operators._init.init).toHaveBeenCalledTimes(1);
 });

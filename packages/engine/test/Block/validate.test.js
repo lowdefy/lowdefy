@@ -24,7 +24,7 @@ const lowdefy = { pageId };
 console.log = () => {};
 console.error = () => {};
 
-test('parse validate on fields', async () => {
+test('parse validate on fields', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -55,7 +55,7 @@ test('parse validate on fields', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text: 'a' },
@@ -87,7 +87,7 @@ test('parse validate on fields', async () => {
   });
 });
 
-test('validate should fail if parser has errors', async () => {
+test('validate should fail if parser has errors', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -114,7 +114,7 @@ test('validate should fail if parser has errors', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -129,7 +129,7 @@ test('validate should fail if parser has errors', async () => {
   expect(text.validationEval.errors.length > 0).toBe(true);
 });
 
-test('validate, only test where parser failed should fail', async () => {
+test('validate, only test where parser failed should fail', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -160,7 +160,7 @@ test('validate, only test where parser failed should fail', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -174,7 +174,7 @@ test('validate, only test where parser failed should fail', async () => {
   });
 });
 
-test('parse validate, validate an object not an array', async () => {
+test('parse validate, validate an object not an array', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -201,7 +201,7 @@ test('parse validate, validate an object not an array', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text: 'a' },
@@ -220,7 +220,7 @@ test('parse validate, validate an object not an array', async () => {
   expect(text.eval.validation).toEqual({ errors: [], status: 'success', warnings: [] });
 });
 
-test('RootBlock.validate(match) to ignore errors where field not visible', async () => {
+test('RootBlock.validate(match) to ignore errors where field not visible', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -279,7 +279,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -348,7 +348,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
   ]);
 });
 
-test('required on input to return validation error on RootBlock.validate(match)', async () => {
+test('required on input to return validation error on RootBlock.validate(match)', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -370,7 +370,7 @@ test('required on input to return validation error on RootBlock.validate(match)'
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -395,7 +395,7 @@ test('required on input to return validation error on RootBlock.validate(match)'
   ]);
 });
 
-test('required on input to return validation error with priority over validation errors on RootBlock.validate(match)', async () => {
+test('required on input to return validation error with priority over validation errors on RootBlock.validate(match)', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -424,7 +424,7 @@ test('required on input to return validation error with priority over validation
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -468,7 +468,7 @@ test('required on input to return validation error with priority over validation
   ]);
 });
 
-test('nested arrays with validate, and RootBlock.validate(match) returns all validation errors', async () => {
+test('nested arrays with validate, and RootBlock.validate(match) returns all validation errors', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -560,7 +560,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: {
@@ -761,7 +761,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
   ]);
 });
 
-test('validation warnings', async () => {
+test('validation warnings', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -794,7 +794,7 @@ test('validation warnings', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text: 'a' },
@@ -830,7 +830,7 @@ test('validation warnings', async () => {
   });
 });
 
-test('showValidation only on fields that matches for error', async () => {
+test('showValidation only on fields that matches for error', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -871,7 +871,7 @@ test('showValidation only on fields that matches for error', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text1: '3' },
@@ -894,7 +894,7 @@ test('showValidation only on fields that matches for error', async () => {
   expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
 });
 
-test('showValidation only on fields that matches for warning', async () => {
+test('showValidation only on fields that matches for warning', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -937,7 +937,7 @@ test('showValidation only on fields that matches for warning', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text1: '3' },
@@ -960,7 +960,7 @@ test('showValidation only on fields that matches for warning', async () => {
   expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
 });
 
-test('showValidation only on fields that matches for success', async () => {
+test('showValidation only on fields that matches for success', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1003,7 +1003,7 @@ test('showValidation only on fields that matches for success', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text1: '1' },
@@ -1026,7 +1026,7 @@ test('showValidation only on fields that matches for success', async () => {
   expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
 });
 
-test('drop showValidation on RootBlocks.reset()', async () => {
+test('drop showValidation on RootBlocks.reset()', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1069,7 +1069,7 @@ test('drop showValidation on RootBlocks.reset()', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text1: '1' },
@@ -1087,7 +1087,7 @@ test('drop showValidation on RootBlocks.reset()', async () => {
   expect(text2.showValidation).toBe(false);
 });
 
-test('drop showValidation on RootBlocks.resetValidation()', async () => {
+test('drop showValidation on RootBlocks.resetValidation()', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -1130,7 +1130,7 @@ test('drop showValidation on RootBlocks.resetValidation()', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { text1: '1' },

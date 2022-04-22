@@ -182,6 +182,188 @@ exports[`Render properties.zIndex: 100 - value[0] 1`] = `
 </span>
 `;
 
+exports[`Render required = true areas.content: - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.arrowPointAtCenter: true - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.autoAdjustOverflow: false - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.autoAdjustOverflow: true - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.color: blue - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.defaultVisible: true - value[0] 1`] = `
+<span
+  class="ant-tooltip-open"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.mouseEnterDelay: 1 - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.mouseLeaveDelay: 1 - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.overlayStyle: border: 5px solid blue - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.placement - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.title with html - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.trigger: click - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
+exports[`Render required = true properties.zIndex: 100 - value[0] 1`] = `
+<span>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+  
+</span>
+`;
+
 exports[`Test Schema areas.content: 1`] = `true`;
 
 exports[`Test Schema areas.content: 2`] = `null`;

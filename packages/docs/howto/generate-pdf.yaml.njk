@@ -163,7 +163,7 @@ _ref:
 
             ## 2. Register a custom JavaScript Action
 
-            Lowdefy actions are triggered by page events, like `onClick` when a user clicks a button, or `onEnter` when the page loads. Lowdefy comes with a list of predefined actions, however, sometimes custom code is the best awnser. Let's create a custom action which will generate a PDF based on pdfMake config.
+            Lowdefy actions are triggered by page events, like `onClick` when a user clicks a button, or `onInit` when the page loads. Lowdefy comes with a list of predefined actions, however, sometimes custom code is the best awnser. Let's create a custom action which will generate a PDF based on pdfMake config.
 
             1) Create a `public` folder inside your Lowdefy working directory.
             2) Since all content in the `public` folder is served by the Lowdefy server, simply create a `pdfMake.js` file inside the `public` folder.
@@ -316,7 +316,7 @@ _ref:
                 properties:
                   title: Example
                 events:
-                  onEnter:
+                  onMount:
                     - id: init_data
                       type: SetState
                       params:

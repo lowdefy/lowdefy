@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- { label: 'AccountBookFilled', value: 'AccountBookFilled' }
+- { label: 'AiFillAccountBook', value: 'AiFillAccountBook' }
 - { label: 'AccountBookOutlined', value: 'AccountBookOutlined' }
 - { label: 'AccountBookTwoTone', value: 'AccountBookTwoTone' }
 - { label: 'AimOutlined', value: 'AimOutlined' }
@@ -38,10 +38,10 @@
 - { label: 'AntCloudOutlined', value: 'AntCloudOutlined' }
 - { label: 'AntDesignOutlined', value: 'AntDesignOutlined' }
 - { label: 'ApartmentOutlined', value: 'ApartmentOutlined' }
-- { label: 'ApiFilled', value: 'ApiFilled' }
+- { label: 'AiFillApi', value: 'AiFillApi' }
 - { label: 'ApiOutlined', value: 'ApiOutlined' }
 - { label: 'ApiTwoTone', value: 'ApiTwoTone' }
-- { label: 'AppleFilled', value: 'AppleFilled' }
+- { label: 'AiFillApple', value: 'AiFillApple' }
 - { label: 'AppleOutlined', value: 'AppleOutlined' }
 - { label: 'AppstoreAddOutlined', value: 'AppstoreAddOutlined' }
 - { label: 'AppstoreFilled', value: 'AppstoreFilled' }
@@ -397,7 +397,7 @@
 - { label: 'GoogleCircleFilled', value: 'GoogleCircleFilled' }
 - { label: 'GoogleOutlined', value: 'GoogleOutlined' }
 - { label: 'GooglePlusCircleFilled', value: 'GooglePlusCircleFilled' }
-- { label: 'GooglePlusOutlined', value: 'GooglePlusOutlined' }
+- { label: 'AiOutlineGooglePlus', value: 'AiOutlineGooglePlus' }
 - { label: 'GooglePlusSquareFilled', value: 'GooglePlusSquareFilled' }
 - { label: 'GoogleSquareFilled', value: 'GoogleSquareFilled' }
 - { label: 'GroupOutlined', value: 'GroupOutlined' }
@@ -466,7 +466,7 @@
 - { label: 'LineChartOutlined', value: 'LineChartOutlined' }
 - { label: 'LineHeightOutlined', value: 'LineHeightOutlined' }
 - { label: 'LineOutlined', value: 'LineOutlined' }
-- { label: 'LinkOutlined', value: 'LinkOutlined' }
+- { label: 'AiOutlineLink', value: 'AiOutlineLink' }
 - { label: 'LinkedinFilled', value: 'LinkedinFilled' }
 - { label: 'LinkedinOutlined', value: 'LinkedinOutlined' }
 - { label: 'Loading3QuartersOutlined', value: 'Loading3QuartersOutlined' }
@@ -553,7 +553,7 @@
 - { label: 'PlusCircleFilled', value: 'PlusCircleFilled' }
 - { label: 'PlusCircleOutlined', value: 'PlusCircleOutlined' }
 - { label: 'PlusCircleTwoTone', value: 'PlusCircleTwoTone' }
-- { label: 'PlusOutlined', value: 'PlusOutlined' }
+- { label: 'AiOutlinePlus', value: 'AiOutlinePlus' }
 - { label: 'PlusSquareFilled', value: 'PlusSquareFilled' }
 - { label: 'PlusSquareOutlined', value: 'PlusSquareOutlined' }
 - { label: 'PlusSquareTwoTone', value: 'PlusSquareTwoTone' }
@@ -619,9 +619,9 @@
 - { label: 'RiseOutlined', value: 'RiseOutlined' }
 - { label: 'RobotFilled', value: 'RobotFilled' }
 - { label: 'RobotOutlined', value: 'RobotOutlined' }
-- { label: 'RocketFilled', value: 'RocketFilled' }
+- { label: 'AiFillRocket', value: 'AiFillRocket' }
 - { label: 'AiOutlineRocket', value: 'AiOutlineRocket' }
-- { label: 'RocketTwoTone', value: 'RocketTwoTone' }
+- { label: 'AiFillRocket', value: 'AiFillRocket' }
 - { label: 'RollbackOutlined', value: 'RollbackOutlined' }
 - { label: 'RotateLeftOutlined', value: 'RotateLeftOutlined' }
 - { label: 'RotateRightOutlined', value: 'RotateRightOutlined' }
@@ -772,14 +772,14 @@
 - { label: 'VerticalLeftOutlined', value: 'VerticalLeftOutlined' }
 - { label: 'VerticalRightOutlined', value: 'VerticalRightOutlined' }
 - { label: 'VideoCameraAddOutlined', value: 'VideoCameraAddOutlined' }
-- { label: 'VideoCameraFilled', value: 'VideoCameraFilled' }
+- { label: 'AiFillVideoCamera', value: 'AiFillVideoCamera' }
 - { label: 'VideoCameraOutlined', value: 'VideoCameraOutlined' }
 - { label: 'VideoCameraTwoTone', value: 'VideoCameraTwoTone' }
 - { label: 'WalletFilled', value: 'WalletFilled' }
 - { label: 'WalletOutlined', value: 'WalletOutlined' }
 - { label: 'WalletTwoTone', value: 'WalletTwoTone' }
 - { label: 'WarningFilled', value: 'WarningFilled' }
-- { label: 'WarningOutlined', value: 'WarningOutlined' }
+- { label: 'AiOutlineWarning', value: 'AiOutlineWarning' }
 - { label: 'WarningTwoTone', value: 'WarningTwoTone' }
 - { label: 'WechatFilled', value: 'WechatFilled' }
 - { label: 'WechatOutlined', value: 'WechatOutlined' }

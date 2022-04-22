@@ -53,13 +53,6 @@
               "displayType": "yaml"
             }
           },
-          "color": {
-            "type": "string",
-            "description": "Header color.",
-            "docs": {
-              "displayType": "color"
-            }
-          },
           "style": {
             "type": "object",
             "description": "Header css style object.",
@@ -196,22 +189,6 @@
       "onClose": {
         "type": "array",
         "description": "Trigger action when mobile menu is closed."
-      },
-      "onEnter": {
-        "type": "array",
-        "description": "Trigger actions every time a context is mounted and keep the page in loading until all actions have finished."
-      },
-      "onEnterAsync": {
-        "type": "array",
-        "description": "Trigger actions every time a context is mounted and do not keep the page in loading."
-      },
-      "onInit": {
-        "type": "array",
-        "description": "Trigger actions the first time a context is mounted and keep the page in loading until all actions have finished."
-      },
-      "onInitAsync": {
-        "type": "array",
-        "description": "Trigger actions the first time a context is mounted and do not keep the page in loading."
       },
       "onMenuItemClick": {
         "type": "array",

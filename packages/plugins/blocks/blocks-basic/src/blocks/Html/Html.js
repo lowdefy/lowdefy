@@ -30,7 +30,6 @@ const HtmlBlock = ({ blockId, properties, methods }) => (
 HtmlBlock.defaultProps = blockDefaultProps;
 HtmlBlock.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: [],
 };
