@@ -147,7 +147,6 @@ const PageSiderMenu = ({
                             {
                               mode: 'inline',
                               theme: get(properties, 'sider.theme') || 'light',
-                              backgroundColor: get(properties, 'sider.color'),
                             },
                             properties.menu,
                             properties.menuMd,
@@ -245,7 +244,6 @@ const PageSiderMenu = ({
                                 {
                                   mode: 'inline',
                                   theme: get(properties, 'sider.theme') || 'light',
-                                  backgroundColor: get(properties, 'sider.color'),
                                   // collapsed: !openSiderState,
                                 },
                                 properties.menu,
@@ -284,10 +282,9 @@ const PageSiderMenu = ({
                                     <div
                                       style={{
                                         background:
-                                          get(properties, 'sider.color') ||
-                                          (get(properties, 'sider.theme') === 'dark'
+                                          get(properties, 'sider.theme') === 'dark'
                                             ? '#30393e'
-                                            : 'white'),
+                                            : 'white',
                                       }}
                                     >
                                       <Button

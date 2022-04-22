@@ -46,10 +46,7 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
   return (
     <Sider
       id={blockId}
-      className={`${methods.makeCssClass([
-        { overflow: 'auto', backgroundColor: properties.color && `${properties.color} !important` },
-        properties.style,
-      ])} hide-on-print`}
+      className={`${methods.makeCssClass([{ overflow: 'auto' }, properties.style])} hide-on-print`}
       breakpoint={properties.breakpoint}
       collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}

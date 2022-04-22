@@ -113,25 +113,6 @@
           properties:
             icon: AiOutlineExclamationCircle
             title: Alert
-- id: 'properties.header.color'
-  type: PageHeaderMenu
-  properties:
-    header:
-      color: '#3f51b5'
-    menu:
-      links:
-        - id: Introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            icon: AiOutlineRocket
-            title: Introduction
-        - id: alert
-          type: MenuLink
-          pageId: Alert
-          properties:
-            icon: AiOutlineExclamationCircle
-            title: Alert
 - id: 'properties.header.theme: light'
   type: PageHeaderMenu
   properties:

@@ -15,13 +15,6 @@
             "default": "dark",
             "description": "Header theme color."
           },
-          "color": {
-            "type": "string",
-            "description": "Header color.",
-            "docs": {
-              "displayType": "color"
-            }
-          },
           "style": {
             "type": "object",
             "description": "Header css style object.",

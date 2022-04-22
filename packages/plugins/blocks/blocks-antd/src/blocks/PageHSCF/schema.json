@@ -15,13 +15,6 @@
             "default": "dark",
             "description": "Header theme color."
           },
-          "color": {
-            "type": "string",
-            "description": "Header color.",
-            "docs": {
-              "displayType": "color"
-            }
-          },
           "style": {
             "type": "object",
             "description": "Header css style object.",
@@ -78,13 +71,6 @@
             "type": "boolean",
             "default": true,
             "description": "Whether can be collapsed."
-          },
-          "color": {
-            "type": "string",
-            "description": "Sider color",
-            "docs": {
-              "displayType": "color"
-            }
           },
           "initialCollapsed": {
             "type": "boolean",

@@ -25,9 +25,6 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
     id={blockId}
     className={`${methods.makeCssClass([
       { backgroundColor: properties.theme === 'light' && '#fff' },
-      properties.color && {
-        backgroundColor: properties.color,
-      },
       properties.style,
     ])} hide-on-print`}
   >

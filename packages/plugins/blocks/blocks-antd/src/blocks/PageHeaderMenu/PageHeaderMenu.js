@@ -167,7 +167,6 @@ const PageHeaderMenu = ({
                               mode: 'horizontal',
                               collapsed: false,
                               theme: get(properties, 'header.theme') || 'dark',
-                              backgroundColor: get(properties, 'header.color'),
                             },
                             properties.menu,
                             properties.menuLg,
