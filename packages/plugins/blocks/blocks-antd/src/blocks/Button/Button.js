@@ -47,6 +47,10 @@ const ButtonBlock = ({
             backgroundColor: color(properties.color, 5),
             borderColor: color(properties.color, 5),
           },
+          '&:focus': properties.color && {
+            backgroundColor: properties.color,
+            borderColor: properties.color,
+          },
         },
         properties.style,
       ])}
