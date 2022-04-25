@@ -1505,39 +1505,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@emotion/react", [
-        ["npm:11.7.1", {
-          "packageLocation": "./.yarn/cache/@emotion-react-npm-11.7.1-29be6cd15f-3392aa71f9.zip/node_modules/@emotion/react/",
-          "packageDependencies": [
-            ["@emotion/react", "npm:11.7.1"]
-          ],
-          "linkType": "SOFT",
-        }],
-        ["virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.7.1", {
-          "packageLocation": "./.yarn/__virtual__/@emotion-react-virtual-c0347ba1b1/0/cache/@emotion-react-npm-11.7.1-29be6cd15f-3392aa71f9.zip/node_modules/@emotion/react/",
-          "packageDependencies": [
-            ["@emotion/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.7.1"],
-            ["@babel/core", null],
-            ["@babel/runtime", "npm:7.16.7"],
-            ["@emotion/cache", "npm:11.7.1"],
-            ["@emotion/serialize", "npm:1.0.2"],
-            ["@emotion/sheet", "npm:1.1.0"],
-            ["@emotion/utils", "npm:1.0.0"],
-            ["@emotion/weak-memoize", "npm:0.2.5"],
-            ["@types/babel__core", null],
-            ["@types/react", null],
-            ["hoist-non-react-statics", "npm:3.3.2"],
-            ["react", "npm:17.0.2"]
-          ],
-          "packagePeers": [
-            "@babel/core",
-            "@types/babel__core",
-            "@types/react",
-            "react"
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@emotion/serialize", [
         ["npm:1.0.2", {
           "packageLocation": "./.yarn/cache/@emotion-serialize-npm-1.0.2-a692afdb82-ff84fbe09e.zip/node_modules/@emotion/serialize/",
@@ -2861,7 +2828,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ant-design/icons", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:4.7.0"],
             ["@emotion/css", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.7.1"],
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.7.1"],
-            ["@emotion/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.7.1"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.55"],
             ["@swc/core", "npm:1.2.135"],
@@ -2870,6 +2836,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.0.0-alpha.4"],
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.0.0-alpha.14"],
             ["classnames", "npm:2.3.1"],
+            ["copyfiles", "npm:2.4.1"],
             ["dompurify", "npm:2.3.5"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
             ["jest-serializer-html", "npm:7.1.0"],
@@ -3524,14 +3491,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/server/",
           "packageDependencies": [
             ["@lowdefy/server", "workspace:packages/server"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
+            ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
+            ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],
+            ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],
+            ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],
+            ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],
             ["@lowdefy/build", "workspace:packages/build"],
+            ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],
+            ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/connection-mongodb"],
+            ["@lowdefy/docs", "workspace:packages/docs"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
             ["@lowdefy/layout", "workspace:packages/layout"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
+            ["@lowdefy/operators-mql", "workspace:packages/plugins/operators/operators-mql"],
+            ["@lowdefy/operators-nunjucks", "workspace:packages/plugins/operators/operators-nunjucks"],
+            ["@lowdefy/operators-yaml", "workspace:packages/plugins/operators/operators-yaml"],
             ["@next/eslint-plugin-next", "npm:12.0.10"],
             ["less", "npm:4.1.2"],
             ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:10.2.0"],
@@ -9634,16 +9614,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/highlight.js-npm-10.7.3-247e67d5c0-defeafcd54.zip/node_modules/highlight.js/",
           "packageDependencies": [
             ["highlight.js", "npm:10.7.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["hoist-non-react-statics", [
-        ["npm:3.3.2", {
-          "packageLocation": "./.yarn/cache/hoist-non-react-statics-npm-3.3.2-e7b709e6c1-b153827042.zip/node_modules/hoist-non-react-statics/",
-          "packageDependencies": [
-            ["hoist-non-react-statics", "npm:3.3.2"],
-            ["react-is", "npm:16.13.1"]
           ],
           "linkType": "HARD",
         }]
