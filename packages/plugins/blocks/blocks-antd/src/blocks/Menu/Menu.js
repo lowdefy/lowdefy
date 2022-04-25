@@ -41,6 +41,7 @@ const MenuComp = ({
 }) => {
   const styles = {
     lineHeight: '64px',
+    width: '100%',
     display: properties.mode === 'horizontal' && 'inline-block',
   };
   const exProps = {};
