@@ -17,7 +17,7 @@
 import { Actions, Blocks, Requests, State } from '@lowdefy/engine';
 import { WebParser } from '@lowdefy/operators';
 
-const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) => {
+const testContext = ({ lowdefy, operators, rootBlock, initState = {} }) => {
   const testLowdefy = {
     inputs: { test: {} },
     urlQuery: {},
