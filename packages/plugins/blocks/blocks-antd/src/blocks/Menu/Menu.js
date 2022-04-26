@@ -124,7 +124,7 @@ const MenuComp = ({
           case 'MenuGroup':
             return (
               <Menu.SubMenu
-                key={link.pageId || link.id || i}
+                key={`${link.pageId || link.id}_${i}`}
                 title={
                   <Link
                     id={link.pageId || link.id || i}
@@ -158,7 +158,7 @@ const MenuComp = ({
                     case 'MenuGroup':
                       return (
                         <Menu.ItemGroup
-                          key={subLink.pageId || subLink.id || j}
+                          key={`${subLink.pageId || subLink.id}_${j}`}
                           title={
                             <Link
                               id={subLink.pageId || subLink.id || j}
@@ -181,7 +181,7 @@ const MenuComp = ({
                             }
                             return (
                               <Menu.Item
-                                key={subLinkGroup.pageId || subLinkGroup.id || k}
+                                key={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
                                 danger={get(subLinkGroup, 'properties.danger')}
                                 icon={
                                   subLinkGroup.properties &&
@@ -210,7 +210,7 @@ const MenuComp = ({
                     default:
                       return (
                         <Menu.Item
-                          key={subLink.pageId || subLink.id || j}
+                          key={`${subLink.pageId || subLink.id}_${j}`}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
@@ -240,7 +240,7 @@ const MenuComp = ({
           default:
             return (
               <Menu.Item
-                key={link.pageId || link.id || i}
+                key={`${link.pageId || link.id}_${i}`}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
