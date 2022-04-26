@@ -12,7 +12,7 @@ pages:
     properties:
       title: Example
     events:
-      onEnter:
+      onMount:
         - id: init_data
           type: SetState
           params:

@@ -15,6 +15,7 @@
 */
 
 export { default as IconSpinner } from './blocks/IconSpinner/IconSpinner.js';
+export { default as ProgressBar } from './blocks/ProgressBar/ProgressBar.js';
 export { default as Skeleton } from './blocks/Skeleton/Skeleton.js';
 export { default as SkeletonAvatar } from './blocks/SkeletonAvatar/SkeletonAvatar.js';
 export { default as SkeletonButton } from './blocks/SkeletonButton/SkeletonButton.js';

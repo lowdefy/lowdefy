@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Affix 1`] = `
+exports[`Mock render - default - value[0] - Affix 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Affix 2`] = `
 Array [
   Array [
     Object {
@@ -26,7 +28,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.offsetBottom - value[0] - Affix 1`] = `
+exports[`Mock render - properties.offsetBottom - value[0] - Affix 1`] = `mocked`;
+
+exports[`Mock render - properties.offsetBottom - value[0] - Affix 2`] = `
 Array [
   Array [
     Object {
@@ -52,7 +56,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.offsetTop - value[0] - Affix 1`] = `
+exports[`Mock render - properties.offsetTop - value[0] - Affix 1`] = `mocked`;
+
+exports[`Mock render - properties.offsetTop - value[0] - Affix 2`] = `
 Array [
   Array [
     Object {
@@ -78,7 +84,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.style - value[0] - Affix 1`] = `
+exports[`Mock render - properties.style - value[0] - Affix 1`] = `mocked`;
+
+exports[`Mock render - properties.style - value[0] - Affix 2`] = `
 Array [
   Array [
     Object {

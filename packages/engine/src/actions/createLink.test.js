@@ -85,7 +85,7 @@ test('Link with string pageId params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -121,7 +121,7 @@ test('Link with object params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -164,7 +164,7 @@ test('Link error', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

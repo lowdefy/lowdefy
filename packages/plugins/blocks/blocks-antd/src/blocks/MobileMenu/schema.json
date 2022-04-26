@@ -18,23 +18,9 @@
           "displayType": "yaml"
         }
       },
-      "backgroundColor": {
-        "type": "string",
-        "description": "Menu background color.",
-        "docs": {
-          "displayType": "color"
-        }
-      },
       "menuId": {
         "type": "string",
         "description": "App menu id used to get menu links."
-      },
-      "selectedColor": {
-        "type": "string",
-        "description": "Menu primary selected color.",
-        "docs": {
-          "displayType": "color"
-        }
       },
       "selectedKeys": {
         "type": "array",
@@ -95,7 +81,7 @@
                 },
                 "icon": {
                   "type": ["string", "object"],
-                  "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item.",
+                  "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
                   "docs": {
                     "displayType": "icon"
                   }

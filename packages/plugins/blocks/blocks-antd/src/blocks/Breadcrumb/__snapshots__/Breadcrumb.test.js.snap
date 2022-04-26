@@ -8,10 +8,6 @@ exports[`Render default - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.icon - value[0] 1`] = `
-.emotion-2 {
-  padding-right: 8px;
-}
-
 <div
   class="ant-breadcrumb emotion-0"
   id="properties.list.icon"
@@ -20,16 +16,24 @@ exports[`Render properties.list.icon - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.icon_0"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon_0_icon"
-        />
+        Link Props:
+        {"className":"css-1u8qly9","label":"label 1","icon":"AiOutlineSave"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon_0_icon","title":"AiOutlineSave","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
         label 1
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -41,16 +45,24 @@ exports[`Render properties.list.icon - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.icon_1"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon_1_icon"
-        />
+        Link Props:
+        {"className":"css-1u8qly9","label":"label 2","icon":"AiOutlineDelete"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon_1_icon","title":"AiOutlineDelete","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
         label 2
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -62,14 +74,6 @@ exports[`Render properties.list.icon - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.icon with onClick - value[0] 1`] = `
-.emotion-1 {
-  cursor: pointer;
-}
-
-.emotion-2 {
-  padding-right: 8px;
-}
-
 <div
   class="ant-breadcrumb emotion-0"
   id="properties.list.icon with onClick"
@@ -78,16 +82,24 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.icon with onClick_0"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon with onClick_0_icon"
-        />
+        Link Props:
+        {"className":"css-z8opiu","label":"label 1","icon":"AiOutlineSave"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon with onClick_0_icon","title":"AiOutlineSave","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
         label 1
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -99,16 +111,24 @@ exports[`Render properties.list.icon with onClick - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.icon with onClick_1"
       >
-        <svg
-          class="emotion-2"
-          data-testid="AiOutlineExclamationCircle"
-          id="properties.list.icon with onClick_1_icon"
-        />
+        Link Props:
+        {"className":"css-z8opiu","label":"label 2","icon":"AiOutlineDelete"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon with onClick_1_icon","title":"AiOutlineDelete","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
         label 2
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -128,11 +148,14 @@ exports[`Render properties.list.label strings - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.label strings_0"
       >
+        Link Props:
+        {"0":"P","1":"a","2":"g","3":"e","4":" ","5":"O","6":"n","7":"e","className":"css-1u8qly9"}
+         
         Page One
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -144,11 +167,14 @@ exports[`Render properties.list.label strings - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.label strings_1"
       >
+        Link Props:
+        {"0":"P","1":"a","2":"g","3":"e","4":" ","5":"t","6":"w","7":"o","className":"css-1u8qly9"}
+         
         Page two
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -169,11 +195,12 @@ exports[`Render properties.list.pageId - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-/page1"
-        href="/page1"
+        data-testid="properties.list.pageId_0"
       >
-        page1
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page1"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -187,11 +214,12 @@ exports[`Render properties.list.pageId - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-/page2"
-        href="/page2"
+        data-testid="properties.list.pageId_1"
       >
-        page2
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page2"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -213,11 +241,12 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-/page1"
-        href="/page1"
+        data-testid="properties.list.pageId label and url_0"
       >
-        page1
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com","pageId":"page1"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -231,10 +260,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-https://www.url.com"
-        href="https://www.url.com"
+        data-testid="properties.list.pageId label and url_1"
       >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com","label":"label url"}
+         
         label url
       </a>
     </span>
@@ -249,10 +279,11 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-/page2"
-        href="/page2"
+        data-testid="properties.list.pageId label and url_2"
       >
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page2","label":"label pageId"}
+         
         label pageId
       </a>
     </span>
@@ -267,11 +298,12 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-/page3"
-        href="/page3"
+        data-testid="properties.list.pageId label and url_3"
       >
-        page3
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://docs.url.com","pageId":"page3"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -284,11 +316,14 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.pageId label and url_4"
       >
+        Link Props:
+        {"className":"css-1u8qly9","label":"label4"}
+         
         label4
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -300,14 +335,6 @@ exports[`Render properties.list.pageId label and url - value[0] 1`] = `
 `;
 
 exports[`Render properties.list.style - value[0] 1`] = `
-.emotion-1 {
-  color: blue;
-}
-
-.emotion-2 {
-  color: red;
-}
-
 <div
   class="ant-breadcrumb emotion-0"
   id="properties.list.style"
@@ -316,11 +343,14 @@ exports[`Render properties.list.style - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.list.style_0"
       >
+        Link Props:
+        {"className":"css-1yy2kbx","label":"Page One","style":{"color":"blue"}}
+         
         Page One
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -332,11 +362,14 @@ exports[`Render properties.list.style - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-2"
+      <a
+        data-testid="properties.list.style_1"
       >
+        Link Props:
+        {"className":"css-evmfe4","label":"Page two","style":{"color":"red"}}
+         
         Page two
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -357,11 +390,12 @@ exports[`Render properties.list.url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-https://www.url.com"
-        href="https://www.url.com"
+        data-testid="properties.list.url_0"
       >
-        https://www.url.com
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -375,11 +409,12 @@ exports[`Render properties.list.url - value[0] 1`] = `
       class="ant-breadcrumb-link"
     >
       <a
-        class="emotion-1"
-        data-testid="link-https://docs.url.com"
-        href="https://docs.url.com"
+        data-testid="properties.list.url_1"
       >
-        https://docs.url.com
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://docs.url.com"}
+         
+        default_title
       </a>
     </span>
     <span
@@ -400,11 +435,14 @@ exports[`Render properties.separator - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.separator_0"
       >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page One"}
+         
         Page One
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -416,11 +454,14 @@ exports[`Render properties.separator - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.separator_1"
       >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page two"}
+         
         Page two
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -444,11 +485,14 @@ exports[`Render properties.style: fontSize: 18 - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.style: fontSize: 18_0"
       >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page One"}
+         
         Page One
-      </span>
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"
@@ -460,11 +504,536 @@ exports[`Render properties.style: fontSize: 18 - value[0] 1`] = `
     <span
       class="ant-breadcrumb-link"
     >
-      <span
-        class="emotion-1"
+      <a
+        data-testid="properties.style: fontSize: 18_1"
       >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page two"}
+         
         Page two
-      </span>
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="default"
+/>
+`;
+
+exports[`Render required = true properties.list.icon - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.icon"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.icon_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"label 1","icon":"AiOutlineSave"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon_0_icon","title":"AiOutlineSave","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
+        label 1
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.icon_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"label 2","icon":"AiOutlineDelete"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon_1_icon","title":"AiOutlineDelete","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
+        label 2
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.icon with onClick - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.icon with onClick"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.icon with onClick_0"
+      >
+        Link Props:
+        {"className":"css-z8opiu","label":"label 1","icon":"AiOutlineSave"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon with onClick_0_icon","title":"AiOutlineSave","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
+        label 1
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.icon with onClick_1"
+      >
+        Link Props:
+        {"className":"css-z8opiu","label":"label 2","icon":"AiOutlineDelete"}
+         
+        <span
+          class="anticon"
+          role="img"
+        >
+          <svg
+            data-testid="AiOutlineExclamationCircle"
+          >
+            {"id":"properties.list.icon with onClick_1_icon","title":"AiOutlineDelete","className":"css-tfe6dx","required":false}
+          </svg>
+        </span>
+        label 2
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.label strings - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.label strings"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.label strings_0"
+      >
+        Link Props:
+        {"0":"P","1":"a","2":"g","3":"e","4":" ","5":"O","6":"n","7":"e","className":"css-1u8qly9"}
+         
+        Page One
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.label strings_1"
+      >
+        Link Props:
+        {"0":"P","1":"a","2":"g","3":"e","4":" ","5":"t","6":"w","7":"o","className":"css-1u8qly9"}
+         
+        Page two
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.pageId - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.pageId"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page1"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page2"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.pageId label and url - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.pageId label and url"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId label and url_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com","pageId":"page1"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId label and url_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com","label":"label url"}
+         
+        label url
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId label and url_2"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","pageId":"page2","label":"label pageId"}
+         
+        label pageId
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId label and url_3"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://docs.url.com","pageId":"page3"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.pageId label and url_4"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"label4"}
+         
+        label4
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.style - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.style"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.style_0"
+      >
+        Link Props:
+        {"className":"css-1yy2kbx","label":"Page One","style":{"color":"blue"}}
+         
+        Page One
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.style_1"
+      >
+        Link Props:
+        {"className":"css-evmfe4","label":"Page two","style":{"color":"red"}}
+         
+        Page two
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.list.url - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.list.url"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.url_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://www.url.com"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.list.url_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","url":"https://docs.url.com"}
+         
+        default_title
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.separator - value[0] 1`] = `
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.separator"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.separator_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page One"}
+         
+        Page One
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      -&gt;
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.separator_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page two"}
+         
+        Page two
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      -&gt;
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Render required = true properties.style: fontSize: 18 - value[0] 1`] = `
+.emotion-0 {
+  font-size: 18px;
+}
+
+<div
+  class="ant-breadcrumb emotion-0"
+  id="properties.style: fontSize: 18"
+>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.style: fontSize: 18_0"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page One"}
+         
+        Page One
+      </a>
+    </span>
+    <span
+      class="ant-breadcrumb-separator"
+    >
+      /
+    </span>
+  </span>
+  <span>
+    <span
+      class="ant-breadcrumb-link"
+    >
+      <a
+        data-testid="properties.style: fontSize: 18_1"
+      >
+        Link Props:
+        {"className":"css-1u8qly9","label":"Page two"}
+         
+        Page two
+      </a>
     </span>
     <span
       class="ant-breadcrumb-separator"

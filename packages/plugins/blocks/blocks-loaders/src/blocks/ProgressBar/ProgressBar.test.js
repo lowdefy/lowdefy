@@ -14,20 +14,17 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-function getFieldValues(operatorName, ...args) {
-  const result = new Set();
-  function reviver(key, value) {
-    if (key === operatorName) {
-      result.add(value);
-    }
-    return value;
-  }
-  [...args].forEach((element) => {
-    serializer.deserializeFromString(serializer.serializeToString(element), { reviver });
-  });
-  return [...result];
-}
+import Block from './ProgressBar.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-export default getFieldValues;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
+
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });

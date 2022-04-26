@@ -804,29 +804,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:11.7.1":
-  version: 11.7.1
-  resolution: "@emotion/react@npm:11.7.1"
-  dependencies:
-    "@babel/runtime": ^7.13.10
-    "@emotion/cache": ^11.7.1
-    "@emotion/serialize": ^1.0.2
-    "@emotion/sheet": ^1.1.0
-    "@emotion/utils": ^1.0.0
-    "@emotion/weak-memoize": ^0.2.5
-    hoist-non-react-statics: ^3.3.1
-  peerDependencies:
-    "@babel/core": ^7.0.0
-    react: ">=16.8.0"
-  peerDependenciesMeta:
-    "@babel/core":
-      optional: true
-    "@types/react":
-      optional: true
-  checksum: 3392aa71f9c68c16022947959f7f842174e6b075b3baf58e185462411cd9b5a87557109a9225b1abaa2d7200a08b7cb9d7f21aa035f0d36b2c89e19b2a124e02
-  languageName: node
-  linkType: hard
-
 "@emotion/serialize@npm:^1.0.0, @emotion/serialize@npm:^1.0.2":
   version: 1.0.2
   resolution: "@emotion/serialize@npm:1.0.2"
@@ -2031,7 +2008,6 @@ __metadata:
     "@ant-design/icons": 4.7.0
     "@emotion/css": 11.7.1
     "@emotion/jest": 11.7.1
-    "@emotion/react": 11.7.1
     "@lowdefy/helpers": 4.0.0-alpha.8
     "@swc/cli": 0.1.55
     "@swc/core": 1.2.135
@@ -2040,6 +2016,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
     classnames: 2.3.1
+    copyfiles: 2.4.1
     dompurify: 2.3.5
     jest: 27.5.1
     jest-serializer-html: 7.1.0
@@ -2673,8 +2650,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
+    "@lowdefy/actions-core": 4.0.0-alpha.8
     "@lowdefy/api": 4.0.0-alpha.8
     "@lowdefy/block-utils": 4.0.0-alpha.8
+    "@lowdefy/blocks-antd": 4.0.0-alpha.8
+    "@lowdefy/blocks-basic": 4.0.0-alpha.8
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.8
     "@lowdefy/build": 4.0.0-alpha.8
     "@lowdefy/engine": 4.0.0-alpha.8
     "@lowdefy/helpers": 4.0.0-alpha.8
@@ -7771,15 +7752,6 @@ __metadata:
   version: 10.7.3
   resolution: "highlight.js@npm:10.7.3"
   checksum: defeafcd546b535d710d8efb8e650af9e3b369ef53e28c3dc7893eacfe263200bba4c5fcf43524ae66d5c0c296b1af0870523ceae3e3104d24b7abf6374a4fea
-  languageName: node
-  linkType: hard
-
-"hoist-non-react-statics@npm:^3.3.1":
-  version: 3.3.2
-  resolution: "hoist-non-react-statics@npm:3.3.2"
-  dependencies:
-    react-is: ^16.7.0
-  checksum: b1538270429b13901ee586aa44f4cc3ecd8831c061d06cb8322e50ea17b3f5ce4d0e2e66394761e6c8e152cd8c34fb3b4b690116c6ce2bd45b18c746516cb9e8
   languageName: node
   linkType: hard
 
@@ -13247,7 +13219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0, react-is@npm:^16.13.1, react-is@npm:^16.7.0":
+"react-is@npm:^16.12.0, react-is@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f

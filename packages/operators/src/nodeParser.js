@@ -26,16 +26,6 @@ class NodeParser {
     this.parse = this.parse.bind(this);
   }
 
-  async init() {
-    await Promise.all(
-      Object.values(this.operators).map(async (operator) => {
-        if (operator.init) {
-          await operator.init();
-        }
-      })
-    );
-  }
-
   parse({ args, input, location, operatorPrefix = '_' }) {
     const env = this.env;
     const operators = this.operators;

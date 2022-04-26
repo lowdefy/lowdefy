@@ -14,30 +14,8 @@
   limitations under the License.
 */
 
-.loading-bar {
-  animation: loading-bar-morph 0.5s linear alternate 0s infinite;
-  transform-origin: bottom;
+function countBlockTypes(block, { typeCounters }) {
+  typeCounters.blocks.increment(block.type);
 }
 
-@keyframes loading-bar-morph {
-  0% {
-    transform: scaleY(0.6);
-  }
-  100% {
-    transform: scaleY(0.95) translateY(5%);
-  }
-}
-
-.loading-bar-sm {
-  animation: loading-bar-morph-sm 0.5s linear alternate 0s infinite;
-  transform-origin: bottom;
-}
-
-@keyframes loading-bar-morph-sm {
-  0% {
-    transform: scaleY(1.4) translateY(5%);
-  }
-  100% {
-    transform: scaleY(0.9);
-  }
-}
+export default countBlockTypes;

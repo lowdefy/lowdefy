@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - TimelineList 1`] = `
+exports[`Mock render - default - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -16,9 +18,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - default - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.mode: alternate - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.mode: alternate - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: alternate - value[0] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -26,7 +30,7 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
               blockId="properties.mode: alternate_0_icon"
               components={Object {}}
@@ -45,7 +49,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -77,7 +81,7 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
               blockId="properties.mode: alternate_1_icon"
               components={Object {}}
@@ -96,7 +100,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -128,7 +132,7 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
               blockId="properties.mode: alternate_2_icon"
               components={Object {}}
@@ -147,7 +151,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -189,9 +193,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mode: alternate - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.mode: alternate - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.mode: left - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.mode: alternate - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: alternate - value[1] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -199,9 +205,9 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.mode: left_0_icon"
+              blockId="properties.mode: alternate_0_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -218,7 +224,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -250,9 +256,9 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.mode: left_1_icon"
+              blockId="properties.mode: alternate_1_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -269,7 +275,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -301,7 +307,182 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: alternate_2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.mode: alternate",
+      "mode": "alternate",
+      "pending": undefined,
+      "pendingDot": undefined,
+      "reverse": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mode: alternate - value[1] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.mode: left - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: left - value[0] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: left_0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: left_1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
               basePath=""
               blockId="properties.mode: left_2_icon"
               components={Object {}}
@@ -320,7 +501,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -362,9 +543,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mode: left - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.mode: left - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.mode: right - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.mode: left - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: left - value[1] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -372,9 +555,9 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.mode: right_0_icon"
+              blockId="properties.mode: left_0_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -391,7 +574,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -423,9 +606,9 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.mode: right_1_icon"
+              blockId="properties.mode: left_1_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -442,7 +625,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -474,7 +657,182 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: left_2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.mode: left",
+      "mode": "left",
+      "pending": undefined,
+      "pendingDot": undefined,
+      "reverse": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mode: left - value[1] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.mode: right - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: right - value[0] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: right_0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: right_1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
               basePath=""
               blockId="properties.mode: right_2_icon"
               components={Object {}}
@@ -493,7 +851,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -535,9 +893,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mode: right - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.mode: right - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.pending: true - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.mode: right - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.mode: right - value[1] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -545,9 +905,9 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.pending: true_0_icon"
+              blockId="properties.mode: right_0_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -564,7 +924,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -596,9 +956,9 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.pending: true_1_icon"
+              blockId="properties.mode: right_1_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -615,7 +975,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -647,7 +1007,182 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
+              basePath=""
+              blockId="properties.mode: right_2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.mode: right",
+      "mode": "right",
+      "pending": undefined,
+      "pendingDot": undefined,
+      "reverse": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.mode: right - value[1] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.pending: true - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.pending: true - value[0] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.pending: true_0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.pending: true_1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
               basePath=""
               blockId="properties.pending: true_2_icon"
               components={Object {}}
@@ -666,7 +1201,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -707,9 +1242,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.pending: true - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.pending: true - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.pendingDotIcon:  - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.pending: true - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.pending: true - value[1] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -717,9 +1254,9 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.pendingDotIcon: _0_icon"
+              blockId="properties.pending: true_0_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -736,7 +1273,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -768,9 +1305,9 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.pendingDotIcon: _1_icon"
+              blockId="properties.pending: true_1_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -787,7 +1324,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -819,7 +1356,181 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
+              basePath=""
+              blockId="properties.pending: true_2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.pending: true",
+      "pending": true,
+      "pendingDot": undefined,
+      "reverse": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.pending: true - value[1] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.pendingDotIcon:  - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.pendingDotIcon:  - value[0] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.pendingDotIcon: _0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.pendingDotIcon: _1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
               basePath=""
               blockId="properties.pendingDotIcon: _2_icon"
               components={Object {}}
@@ -838,7 +1549,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -871,7 +1582,7 @@ Array [
       "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
       "id": "properties.pendingDotIcon: ",
       "pending": true,
-      "pendingDot": <IconComp1
+      "pendingDot": <AntIcon
         basePath=""
         blockId="properties.pendingDotIcon: _pendingDotIcon"
         components={Object {}}
@@ -911,9 +1622,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.pendingDotIcon:  - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.pendingDotIcon:  - value[0] - TimelineList 3`] = `Array []`;
 
-exports[`Mock render - properties.reverse: true - value[0] - TimelineList 1`] = `
+exports[`Mock render - properties.pendingDotIcon:  - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.pendingDotIcon:  - value[1] - TimelineList 2`] = `
 Array [
   Array [
     Object {
@@ -921,9 +1634,9 @@ Array [
         <mockConstructor
           color="red"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.reverse: true_0_icon"
+              blockId="properties.pendingDotIcon: _0_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -940,7 +1653,7 @@ Array [
               properties={
                 Object {
                   "color": "red",
-                  "name": "FireOutlined",
+                  "name": "AiOutlineFire",
                   "style": Object {},
                 }
               }
@@ -972,9 +1685,9 @@ Array [
         <mockConstructor
           color="green"
           dot={
-            <IconComp1
+            <AntIcon
               basePath=""
-              blockId="properties.reverse: true_1_icon"
+              blockId="properties.pendingDotIcon: _1_icon"
               components={Object {}}
               content={Object {}}
               events={Object {}}
@@ -991,7 +1704,7 @@ Array [
               properties={
                 Object {
                   "color": "green",
-                  "name": "SettingOutlined",
+                  "name": "AiOutlineSetting",
                   "style": Object {},
                 }
               }
@@ -1023,7 +1736,213 @@ Array [
         <mockConstructor
           color="blue"
           dot={
-            <IconComp1
+            <AntIcon
+              basePath=""
+              blockId="properties.pendingDotIcon: _2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.pendingDotIcon: ",
+      "pending": true,
+      "pendingDot": <AntIcon
+        basePath=""
+        blockId="properties.pendingDotIcon: _pendingDotIcon"
+        components={Object {}}
+        content={Object {}}
+        events={Object {}}
+        list={Array []}
+        menus={Array []}
+        methods={
+          Object {
+            "makeCssClass": [Function],
+            "registerEvent": [Function],
+            "registerMethod": [Function],
+            "triggerEvent": [Function],
+          }
+        }
+        properties={
+          Object {
+            "style": Object {
+              "fontSize": 16,
+            },
+          }
+        }
+        required={false}
+        user={Object {}}
+        validation={
+          Object {
+            "errors": Array [],
+            "status": null,
+            "warnings": Array [],
+          }
+        }
+      />,
+      "reverse": undefined,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.pendingDotIcon:  - value[1] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.reverse: true - value[0] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.reverse: true - value[0] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.reverse: true_0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.reverse: true_1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
               basePath=""
               blockId="properties.reverse: true_2_icon"
               components={Object {}}
@@ -1042,7 +1961,7 @@ Array [
               properties={
                 Object {
                   "color": "blue",
-                  "name": "RocketOutlined",
+                  "name": "AiOutlineRocket",
                   "style": Object {},
                 }
               }
@@ -1083,4 +2002,178 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.reverse: true - value[0] - TimelineList 2`] = `Array []`;
+exports[`Mock render - properties.reverse: true - value[0] - TimelineList 3`] = `Array []`;
+
+exports[`Mock render - properties.reverse: true - value[1] - TimelineList 1`] = `mocked`;
+
+exports[`Mock render - properties.reverse: true - value[1] - TimelineList 2`] = `
+Array [
+  Array [
+    Object {
+      "children": Array [
+        <mockConstructor
+          color="red"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.reverse: true_0_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "red",
+                  "name": "AiOutlineFire",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-0-Title 1"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Title 1
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="green"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.reverse: true_1_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "green",
+                  "name": "AiOutlineSetting",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="right"
+        >
+          <div
+            data-testid="list-1-Text 2"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 2
+          </div>
+        </mockConstructor>,
+        <mockConstructor
+          color="blue"
+          dot={
+            <AntIcon
+              basePath=""
+              blockId="properties.reverse: true_2_icon"
+              components={Object {}}
+              content={Object {}}
+              events={Object {}}
+              list={Array []}
+              menus={Array []}
+              methods={
+                Object {
+                  "makeCssClass": [Function],
+                  "registerEvent": [Function],
+                  "registerMethod": [Function],
+                  "triggerEvent": [Function],
+                }
+              }
+              properties={
+                Object {
+                  "color": "blue",
+                  "name": "AiOutlineRocket",
+                  "style": Object {},
+                }
+              }
+              required={false}
+              user={Object {}}
+              validation={
+                Object {
+                  "errors": Array [],
+                  "status": null,
+                  "warnings": Array [],
+                }
+              }
+            />
+          }
+          position="left"
+        >
+          <div
+            data-testid="list-2-Text 3"
+            style={
+              Object {
+                "border": "1px solid red",
+                "padding": 10,
+              }
+            }
+          >
+            Text 3
+          </div>
+        </mockConstructor>,
+      ],
+      "className": "{\\"style\\":[{\\"padding\\":\\"5px 0px 0px 5px\\"},null]}",
+      "id": "properties.reverse: true",
+      "pending": undefined,
+      "pendingDot": undefined,
+      "reverse": true,
+    },
+    Object {},
+  ],
+]
+`;
+
+exports[`Mock render - properties.reverse: true - value[1] - TimelineList 3`] = `Array []`;

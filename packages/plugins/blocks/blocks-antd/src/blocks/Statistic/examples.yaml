@@ -54,21 +54,21 @@
   properties:
     value: 3.45
     prefix: R
-- id: 'properties.prefixIcon: AccountBookFilled'
+- id: 'properties.prefixIcon: AiFillAccountBook'
   type: Statistic
   properties:
     value: 3.45
-    prefixIcon: AccountBookFilled
+    prefixIcon: AiFillAccountBook
 - id: 'properties.suffix: Rand'
   type: Statistic
   properties:
     value: 3.45
     suffix: Rand
-- id: 'properties.suffixIcon: AccountBookFilled'
+- id: 'properties.suffixIcon: AiFillAccountBook'
   type: Statistic
   properties:
     value: 3.45
-    suffixIcon: AccountBookFilled
+    suffixIcon: AiFillAccountBook
 - id: 'properties.title with html'
   type: Statistic
   properties:

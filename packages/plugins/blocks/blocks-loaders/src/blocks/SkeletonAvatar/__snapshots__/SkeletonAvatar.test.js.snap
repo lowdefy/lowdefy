@@ -11,6 +11,61 @@ exports[`Render default - value[0] 1`] = `
 />
 `;
 
+exports[`Render required = true default - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 16px;
+}
+
+<div
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
+/>
+`;
+
+exports[`Render required = true shapesquare - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 0;
+}
+
+<div
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
+/>
+`;
+
+exports[`Render required = true sizedefault - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 16px;
+}
+
+<div
+  class="skeleton emotion-0"
+  style="width: 32px; height: 32px;"
+/>
+`;
+
+exports[`Render required = true sizelarge - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 20px;
+}
+
+<div
+  class="skeleton emotion-0"
+  style="width: 40px; height: 40px;"
+/>
+`;
+
+exports[`Render required = true sizesmall - value[0] 1`] = `
+.emotion-0 {
+  border-radius: 12px;
+}
+
+<div
+  class="skeleton emotion-0"
+  style="width: 24px; height: 24px;"
+/>
+`;
+
 exports[`Render shapesquare - value[0] 1`] = `
 .emotion-0 {
   border-radius: 0;

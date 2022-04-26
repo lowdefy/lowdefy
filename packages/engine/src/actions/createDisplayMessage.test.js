@@ -36,7 +36,7 @@ const lowdefy = {
   },
 };
 
-test('DisplayMessage with content', async () => {
+test('DisplayMessage with content', () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -68,7 +68,7 @@ test('DisplayMessage with content', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -83,7 +83,7 @@ test('DisplayMessage with content', async () => {
   ]);
 });
 
-test('DisplayMessage with all params', async () => {
+test('DisplayMessage with all params', () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -120,7 +120,7 @@ test('DisplayMessage with all params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -138,7 +138,7 @@ test('DisplayMessage with all params', async () => {
   ]);
 });
 
-test('DisplayMessage with no params', async () => {
+test('DisplayMessage with no params', () => {
   const rootBlock = {
     id: 'block:root:root:0',
     blockId: 'root',
@@ -169,7 +169,7 @@ test('DisplayMessage with no params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

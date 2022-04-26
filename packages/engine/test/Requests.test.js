@@ -97,7 +97,7 @@ beforeEach(() => {
 });
 
 test('callRequest', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -112,7 +112,7 @@ test('callRequest', async () => {
 });
 
 test('callRequest, payload operators are evaluated', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState,
@@ -136,7 +136,7 @@ test('callRequest, payload operators are evaluated', async () => {
 });
 
 test('callRequests all requests', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -189,7 +189,7 @@ test('callRequests all requests', async () => {
 });
 
 test('callRequests', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -218,7 +218,7 @@ test('callRequests', async () => {
 });
 
 test('callRequest error', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -241,7 +241,7 @@ test('callRequest error', async () => {
 });
 
 test('callRequest request does not exist', async () => {
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -259,7 +259,7 @@ test('callRequest request does not exist', async () => {
 
 test('update function should be called', async () => {
   const updateFunction = jest.fn();
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -270,7 +270,7 @@ test('update function should be called', async () => {
 
 test('update function should be called if error', async () => {
   const updateFunction = jest.fn();
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -284,20 +284,16 @@ test('update function should be called if error', async () => {
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
-test('fetch should set blocks loading and call query every time it is called', async () => {
-  const context = await testContext({
+test('fetch should set call query every time it is called', async () => {
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
-  const setBlocksLoadingCacheFunction = jest.fn();
   context.RootBlocks = {
-    setBlocksLoadingCache: setBlocksLoadingCacheFunction,
     update: jest.fn(),
   };
   await context.Requests.callRequest({ requestId: 'req_one', onlyNew: true });
-  expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(1);
   expect(mockCallRequest).toHaveBeenCalledTimes(1);
   context.Requests.fetch({ requestId: 'req_one' });
-  expect(setBlocksLoadingCacheFunction).toHaveBeenCalledTimes(2);
   expect(mockCallRequest).toHaveBeenCalledTimes(2);
 });

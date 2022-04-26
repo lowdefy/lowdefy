@@ -103,12 +103,6 @@ class EChart extends React.Component {
 EChart.defaultProps = blockDefaultProps;
 EChart.meta = {
   category: 'display',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 300,
-    },
-  },
   icons: [],
   styles: [],
 };

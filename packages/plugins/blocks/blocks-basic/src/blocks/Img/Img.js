@@ -36,7 +36,6 @@ const ImgBlock = ({ blockId, events, properties, methods }) => {
 ImgBlock.defaultProps = blockDefaultProps;
 ImgBlock.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: [],
 };

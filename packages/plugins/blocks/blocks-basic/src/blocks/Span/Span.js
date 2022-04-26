@@ -34,7 +34,6 @@ const Span = ({ blockId, content, events, methods, properties }) => (
 Span.defaultProps = blockDefaultProps;
 Span.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: [],
 };

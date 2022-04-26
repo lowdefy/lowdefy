@@ -219,10 +219,10 @@ export default {
             type: 'Block "layout" should be an object.',
           },
         },
-        loading: {
+        skeleton: {
           type: 'object',
           errorMessage: {
-            type: 'Block "loading" should be an object.',
+            type: 'Block "skeleton" should be an object.',
           },
         },
         style: {
@@ -232,6 +232,7 @@ export default {
           },
         },
         visible: {},
+        loading: {},
         blocks: {
           type: 'array',
           items: {

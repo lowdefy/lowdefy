@@ -76,7 +76,7 @@ test('getEvent params is true', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -133,7 +133,7 @@ test('getEvent params is some', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -187,7 +187,7 @@ test('getEvent params is none', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -257,7 +257,7 @@ test('getEvent params.key is null', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -314,7 +314,7 @@ test('getEvent params.all is true', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -371,7 +371,7 @@ test('getEvent params.key is not string or int', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -446,7 +446,7 @@ test('getEvent params.key is some', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

@@ -74,7 +74,7 @@ events:
       params:
         _var: init_state_values
 
-  onEnterAsync:
+  onInitAsync:
     {# - id: connect_docsearch
       type: JsAction # TODO:
       params:
@@ -367,25 +367,6 @@ areas:
                   title: 'style:'
                 - key: events
                   title: 'events:'
-                  disabled:
-                    _not:
-                      _get:
-                        key: '0.events'
-                        from:
-                          _mql.aggregate:
-                            on:
-                              - events:
-                                  _get:
-                                    key: schema.events.properties
-                                    default: {}
-                                    from:
-                                      _ref:
-                                        path:
-                                          _var: schema
-                            pipeline:
-                              - $project:
-                                  events:
-                                    $objectToArray: $events
                 - key: required
                   title: 'required:'
                   disabled:
@@ -417,9 +398,6 @@ areas:
                   - id: event_description
                     type: Markdown
                     properties:
-                      style:
-                        '& > .markdown-body':
-                          fontSize: 14
                       content:
                         _nunjucks:
                           template: |
@@ -438,13 +416,20 @@ areas:
                                 _mql.aggregate:
                                   on:
                                     - events:
-                                        _get:
-                                          key: schema.events.properties
-                                          default: {}
-                                          from:
-                                            _ref:
-                                              path:
-                                                _var: schema
+                                        _object.assign:
+                                          - _get:
+                                              key: schema.events.properties
+                                              default: {}
+                                              from:
+                                                _ref:
+                                                  path:
+                                                    _var: schema
+                                          - onMount:
+                                              type: array
+                                              description: Trigger actions every time the block is mounted and render the block in its loading state until all actions have finished.
+                                            onMountAsync:
+                                              type: array
+                                              description: Trigger actions every time the block is mounted and do not render the block in its loading state.
                                   pipeline:
                                     - $project:
                                         events:

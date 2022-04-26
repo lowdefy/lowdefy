@@ -22,7 +22,6 @@ const IconBlock = ({ components: { Icon }, ...props }) => <Icon {...props} />;
 IconBlock.defaultProps = blockDefaultProps;
 IconBlock.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: [],
 };

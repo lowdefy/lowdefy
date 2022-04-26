@@ -39,7 +39,7 @@ export const ColorPicker = ({
     toggle(false);
     onChange(newColor);
   }, []);
-  useClickOutside(popover, close, value);
+  useClickOutside(popover, close, color);
   return (
     <div
       className={classNames({
@@ -68,7 +68,10 @@ export const ColorPicker = ({
             'ant-input-lg': size === 'large',
           })}
           color={color}
-          onChange={setColor}
+          onChange={(newColor) => {
+            setColor(newColor);
+            onChange(newColor);
+          }}
           prefixed={true}
           disabled={disabled}
         />

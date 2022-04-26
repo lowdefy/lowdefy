@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - default - value[0] - Modal 1`] = `
+<div
+  id="default"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - default - value[0] - Modal 2`] = `Array []`;
 
@@ -10,7 +16,15 @@ exports[`Mock render - default - value[0] - Modal 4`] = `Array []`;
 
 exports[`Mock render - default - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties.title - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - default - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties.title - value[0] - Modal 1`] = `
+<div
+  id="properties.title"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties.title - value[0] - Modal 2`] = `Array []`;
 
@@ -20,7 +34,15 @@ exports[`Mock render - properties.title - value[0] - Modal 4`] = `Array []`;
 
 exports[`Mock render - properties.title - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties.title - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - Modal 1`] = `
+<div
+  id="properties: bodyStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - Modal 2`] = `Array []`;
 
@@ -30,7 +52,15 @@ exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0]
 
 exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: bodyStyle: border: 10px solid blue - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - Modal 1`] = `
+<div
+  id="properties: cancelText: Text of the Cancel button"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - Modal 2`] = `Array []`;
 
@@ -40,7 +70,15 @@ exports[`Mock render - properties: cancelText: Text of the Cancel button - value
 
 exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: centered: true - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: cancelText: Text of the Cancel button - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: centered: true - value[0] - Modal 1`] = `
+<div
+  id="properties: centered: true"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: centered: true - value[0] - Modal 2`] = `Array []`;
 
@@ -50,7 +88,15 @@ exports[`Mock render - properties: centered: true - value[0] - Modal 4`] = `Arra
 
 exports[`Mock render - properties: centered: true - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: closable: false - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: centered: true - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: closable: false - value[0] - Modal 1`] = `
+<div
+  id="properties: closable: false"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: closable: false - value[0] - Modal 2`] = `Array []`;
 
@@ -60,7 +106,15 @@ exports[`Mock render - properties: closable: false - value[0] - Modal 4`] = `Arr
 
 exports[`Mock render - properties: closable: false - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: footer: false - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: closable: false - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: footer: false - value[0] - Modal 1`] = `
+<div
+  id="properties: footer: false"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: footer: false - value[0] - Modal 2`] = `Array []`;
 
@@ -70,7 +124,15 @@ exports[`Mock render - properties: footer: false - value[0] - Modal 4`] = `Array
 
 exports[`Mock render - properties: footer: false - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: mask: false - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: footer: false - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: mask: false - value[0] - Modal 1`] = `
+<div
+  id="properties: mask: false"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: mask: false - value[0] - Modal 2`] = `Array []`;
 
@@ -80,7 +142,15 @@ exports[`Mock render - properties: mask: false - value[0] - Modal 4`] = `Array [
 
 exports[`Mock render - properties: mask: false - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: maskClosable: false - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: mask: false - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: maskClosable: false - value[0] - Modal 1`] = `
+<div
+  id="properties: maskClosable: false"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: maskClosable: false - value[0] - Modal 2`] = `Array []`;
 
@@ -90,7 +160,15 @@ exports[`Mock render - properties: maskClosable: false - value[0] - Modal 4`] = 
 
 exports[`Mock render - properties: maskClosable: false - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: maskClosable: false - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - Modal 1`] = `
+<div
+  id="properties: maskStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - Modal 2`] = `Array []`;
 
@@ -100,7 +178,15 @@ exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0]
 
 exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: okText: Text of the OK button - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: maskStyle: border: 10px solid blue - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: okText: Text of the OK button - value[0] - Modal 1`] = `
+<div
+  id="properties: okText: Text of the OK button"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: okText: Text of the OK button - value[0] - Modal 2`] = `Array []`;
 
@@ -110,7 +196,15 @@ exports[`Mock render - properties: okText: Text of the OK button - value[0] - Mo
 
 exports[`Mock render - properties: okText: Text of the OK button - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: width: 350px - 520px is default - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: okText: Text of the OK button - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: width: 350px - 520px is default - value[0] - Modal 1`] = `
+<div
+  id="properties: width: 350px - 520px is default"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: width: 350px - 520px is default - value[0] - Modal 2`] = `Array []`;
 
@@ -120,7 +214,15 @@ exports[`Mock render - properties: width: 350px - 520px is default - value[0] - 
 
 exports[`Mock render - properties: width: 350px - 520px is default - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: width: 350px - 520px is default - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - Modal 1`] = `
+<div
+  id="properties: wrapperStyle: border: 10px solid blue"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - Modal 2`] = `Array []`;
 
@@ -130,7 +232,15 @@ exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value
 
 exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: wrapperStyle: border: 10px solid blue - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - Modal 1`] = `
+<div
+  id="properties: zIndex: 1200 - 1000 is the default"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - Modal 2`] = `Array []`;
 
@@ -140,7 +250,15 @@ exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0]
 
 exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - Modal 5`] = `Array []`;
 
-exports[`Mock render - with html in title - value[0] - Modal 1`] = `Array []`;
+exports[`Mock render - properties: zIndex: 1200 - 1000 is the default - value[0] - Modal 6`] = `Array []`;
+
+exports[`Mock render - with html in title - value[0] - Modal 1`] = `
+<div
+  id="with html in title"
+>
+  mocked
+</div>
+`;
 
 exports[`Mock render - with html in title - value[0] - Modal 2`] = `Array []`;
 
@@ -149,3 +267,5 @@ exports[`Mock render - with html in title - value[0] - Modal 3`] = `Array []`;
 exports[`Mock render - with html in title - value[0] - Modal 4`] = `Array []`;
 
 exports[`Mock render - with html in title - value[0] - Modal 5`] = `Array []`;
+
+exports[`Mock render - with html in title - value[0] - Modal 6`] = `Array []`;

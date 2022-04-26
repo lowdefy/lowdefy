@@ -102,7 +102,6 @@ const RatingSlider = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
@@ -126,6 +125,7 @@ const RatingSlider = ({
                     label: { disabled: true },
                     options: [{ value: true, label: properties.notApplicableLabel || 'N/A' }],
                     color: properties.color,
+                    disabled: properties.disabled || loading,
                   },
                   properties.CheckboxInput,
                   { style: styles.checkbox },
@@ -181,7 +181,11 @@ const RatingSlider = ({
                 methods.makeCssClass(properties.inputStyle)
               )}
               autoFocus={properties.autoFocus}
-              disabled={properties.disabled || (check === true && !properties.disableNotApplicable)}
+              disabled={
+                properties.disabled ||
+                (check === true && !properties.disableNotApplicable) ||
+                loading
+              }
               dots={get(properties, 'showDots', { default: true })}
               tooltipVisible={
                 value === null || properties.tooltipVisible === 'never'
@@ -236,9 +240,6 @@ RatingSlider.defaultProps = blockDefaultProps;
 RatingSlider.meta = {
   valueType: 'any',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
   styles: ['blocks/RatingSlider/style.less'],
 };

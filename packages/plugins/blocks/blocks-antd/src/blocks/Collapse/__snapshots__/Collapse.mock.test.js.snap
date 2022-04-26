@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Collapse 1`] = `
+exports[`Mock render - default - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -47,7 +49,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.accordion: true - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.accordion: true - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.accordion: true - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -121,7 +125,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.activeKey: content_two - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.activeKey: content_two - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.activeKey: content_two - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -196,7 +202,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.bordered: false - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.bordered: false - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.bordered: false - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -270,7 +278,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.defaultActiveKey: content_two - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.defaultActiveKey: content_two - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.defaultActiveKey: content_two - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -344,7 +354,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.destroyInactivePanel: true - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.destroyInactivePanel: true - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.destroyInactivePanel: true - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -418,7 +430,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.expandIcon: ArrowRightOutlined - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.expandIcon: AiOutlineArrowRight - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.expandIcon: AiOutlineArrowRight - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -484,7 +498,7 @@ Array [
       "destroyInactivePanel": undefined,
       "expandIcon": [Function],
       "expandIconPosition": undefined,
-      "id": "properties.expandIcon: ArrowRightOutlined",
+      "id": "properties.expandIcon: AiOutlineArrowRight",
       "onChange": [Function],
     },
     Object {},
@@ -492,7 +506,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.expandIconPosition: right - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.expandIconPosition: right - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.expandIconPosition: right - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -566,7 +582,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.forceRender: true - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.forceRender: true - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.forceRender: true - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -642,7 +660,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.panels - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.panels - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.panels - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -688,7 +708,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.panels.disabled - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.panels.disabled - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.panels.disabled - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -764,7 +786,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.panels.extraKey - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.panels.extraKey - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.panels.extraKey - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -864,7 +888,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.panels.title - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.panels.title - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.panels.title - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -938,7 +964,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.showArrow: false - value[0] - Collapse 1`] = `
+exports[`Mock render - properties.showArrow: false - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - properties.showArrow: false - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {
@@ -1014,7 +1042,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in panel title - value[0] - Collapse 1`] = `
+exports[`Mock render - with html in panel title - value[0] - Collapse 1`] = `mocked`;
+
+exports[`Mock render - with html in panel title - value[0] - Collapse 2`] = `
 Array [
   Array [
     Object {

@@ -93,7 +93,6 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
 ModalBlock.defaultProps = blockDefaultProps;
 ModalBlock.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/Modal/style.less'],
 };

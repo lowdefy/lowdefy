@@ -53,12 +53,6 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
 AlertBlock.defaultProps = blockDefaultProps;
 AlertBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 40,
-    },
-  },
   icons: [],
   styles: ['blocks/Alert/style.less'],
 };

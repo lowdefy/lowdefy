@@ -14,46 +14,35 @@
   limitations under the License.
 */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import getContext from '@lowdefy/engine';
 
-import MountEvents from './block/MountEvents.js';
+import MountEvents from './MountEvents.js';
 
-const Context = ({ children, lowdefy, config }) => {
-  const [context, setContext] = useState({});
-
-  useEffect(() => {
-    let mounted = true;
-    const mount = async () => {
-      const ctx = await getContext({
-        config,
-        lowdefy,
-      });
-      if (mounted) {
-        setContext(ctx);
-      }
-    };
-    mount();
-    return () => {
-      mounted = false;
-    };
-  }, [config, lowdefy]);
-  const loadingPage = context.id !== config.id;
-
-  if (loadingPage) {
-    return children(context, loadingPage, 'pager');
-  }
-
+const Context = ({ children, config, lowdefy, progress }) => {
+  const context = getContext({ config, lowdefy });
   return (
     <MountEvents
-      asyncEventName="onEnterAsync"
       context={context}
-      eventName="onEnter"
-      triggerEvent={({ name, context }) =>
-        context._internal.RootBlocks.areas.root.blocks[0].triggerEvent({ name })
-      }
+      triggerEvent={async () => {
+        await context._internal.runOnInit(() => {
+          progress.dispatch({
+            type: 'increment',
+          });
+        });
+      }}
+      triggerEventAsync={() => {
+        context._internal.runOnInitAsync(() => {
+          progress.dispatch({
+            type: 'increment',
+          });
+        });
+      }}
     >
-      {(loading) => children(context, loading, 'mounter')}
+      {(loadingOnInit) => {
+        if (loadingOnInit) return '';
+        return children(context);
+      }}
     </MountEvents>
   );
 };

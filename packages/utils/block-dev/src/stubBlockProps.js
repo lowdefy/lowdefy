@@ -22,12 +22,20 @@ import schemaTest from './schemaTest.js';
 
 const validate = {};
 const Icons = {
-  AiIcon: (props) => <svg {...props} data-testid="AiIcon"></svg>,
-  AiOutlineExclamationCircle: (props) => (
-    <svg {...props} data-testid="AiOutlineExclamationCircle"></svg>
+  AiIcon: ({ onClick, ...props }) => (
+    <svg data-testid="AiIcon" onClick={onClick}>
+      ICON PROPS: {JSON.stringify(props)}
+    </svg>
   ),
-  AiOutlineLoading3Quarters: (props) => (
-    <svg {...props} data-testid="AiOutlineLoading3Quarters"></svg>
+  AiOutlineExclamationCircle: ({ onClick, ...props }) => (
+    <svg data-testid="AiOutlineExclamationCircle" onClick={onClick}>
+      ICON PROPS: {JSON.stringify(props)}
+    </svg>
+  ),
+  AiOutlineLoading3Quarters: ({ onClick, ...props }) => (
+    <svg data-testid="AiOutlineLoading3Quarters" onClick={onClick}>
+      ICON PROPS: {JSON.stringify(props)}
+    </svg>
   ),
   ErrorIcon: () => {
     throw new Error('ErrorIcon');
@@ -36,7 +44,7 @@ const Icons = {
 
 const IconComponent = createIcon(Icons);
 
-const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
+const stubBlockProps = ({ block, meta, logger = () => null, initialValue, schema }) => {
   const [value, setState] = useState(type.enforceType(meta.valueType, block.value || initialValue));
   const setValue = (val) => {
     setState(type.enforceType(meta.valueType, val));
@@ -64,9 +72,9 @@ const stubBlockProps = ({ block, meta, logger, initialValue, schema }) => {
   block.eventLog = [];
   block.components = {
     Icon: IconComponent,
-    Link: (props) => (
-      <a data-testid={`link-${props.href}`} {...props}>
-        {props.children}
+    Link: ({ id, children, onClick, ...props }) => (
+      <a data-testid={id} onClick={onClick}>
+        LINK PROPS:{JSON.stringify(props)} - CHILDREN: {children('default_title')}
       </a>
     ),
   };

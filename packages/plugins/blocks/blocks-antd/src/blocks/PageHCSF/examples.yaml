@@ -48,20 +48,6 @@
       blocks: []
     sider:
       blocks: []
-- id: 'properties.header.color: #4432a8 '
-  type: PageHCSF
-  properties:
-    header:
-      color: '#4432a8'
-  areas:
-    content:
-      blocks: []
-    footer:
-      blocks: []
-    header:
-      blocks: []
-    sider:
-      blocks: []
 - id: 'properties.style: border: 5px solid blue'
   type: PageHCSF
   properties:

@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.extra: - value[0] - Drawer 1`] = `
+exports[`Mock render - areas.extra: - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - areas.extra: - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -50,7 +52,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Drawer 1`] = `
+exports[`Mock render - default - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -90,7 +94,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.closable: false - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.closable: false - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.closable: false - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -130,7 +136,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.contentWrapperStyle: border: 10px solid green - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.contentWrapperStyle: border: 10px solid green - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.contentWrapperStyle: border: 10px solid green - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -170,7 +178,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.height: 500 placement: top - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.height: 500 placement: top - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.height: 500 placement: top - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -210,7 +220,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.keyboard: false - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.keyboard: false - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.keyboard: false - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -250,7 +262,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mask - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.mask - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.mask - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -290,7 +304,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.maskClosable: false - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.maskClosable: false - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.maskClosable: false - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -330,7 +346,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.placement: bottom - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.placement: bottom - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.placement: bottom - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -370,7 +388,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.placement: left - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.placement: left - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.placement: left - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -410,7 +430,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.placement: top - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.placement: top - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.placement: top - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -450,7 +472,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.title - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -490,7 +514,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.width: 500 - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.width: 500 - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.width: 500 - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {
@@ -530,7 +556,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.zIndex: 1100 - value[0] - Drawer 1`] = `
+exports[`Mock render - properties.zIndex: 1100 - value[0] - Drawer 1`] = `mocked`;
+
+exports[`Mock render - properties.zIndex: 1100 - value[0] - Drawer 2`] = `
 Array [
   Array [
     Object {

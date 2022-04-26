@@ -105,7 +105,7 @@ _ref:
                     properties:
                       url: /posts
                 events:
-                  onEnter:
+                  onInit:
                     - id: fetch_get_posts
                       type: Request
                       params: get_posts

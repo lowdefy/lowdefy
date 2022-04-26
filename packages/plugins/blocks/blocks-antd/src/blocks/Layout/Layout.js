@@ -27,12 +27,6 @@ const LayoutBlock = ({ blockId, content, properties, methods }) => (
 LayoutBlock.defaultProps = blockDefaultProps;
 LayoutBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Spinner',
-    properties: {
-      height: '100vh',
-    },
-  },
   icons: [],
   styles: ['blocks/Layout/style.less'],
 };

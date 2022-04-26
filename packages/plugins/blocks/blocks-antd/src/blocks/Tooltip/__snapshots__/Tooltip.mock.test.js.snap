@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.content: - value[0] - Tooltip 1`] = `
+exports[`Mock render - areas.content: - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - areas.content: - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -61,7 +63,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Tooltip 1`] = `
+exports[`Mock render - default - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -99,7 +103,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.arrowPointAtCenter: true - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.arrowPointAtCenter: true - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.arrowPointAtCenter: true - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -160,7 +166,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.autoAdjustOverflow: false - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.autoAdjustOverflow: false - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.autoAdjustOverflow: false - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -221,7 +229,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.autoAdjustOverflow: true - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.autoAdjustOverflow: true - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.autoAdjustOverflow: true - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -282,7 +292,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.color: blue - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.color: blue - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.color: blue - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -343,7 +355,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.defaultVisible: true - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.defaultVisible: true - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.defaultVisible: true - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -404,7 +418,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mouseEnterDelay: 1 - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.mouseEnterDelay: 1 - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.mouseEnterDelay: 1 - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -465,7 +481,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mouseLeaveDelay: 1 - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.mouseLeaveDelay: 1 - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.mouseLeaveDelay: 1 - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -526,7 +544,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.overlayStyle: border: 5px solid blue - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.overlayStyle: border: 5px solid blue - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.overlayStyle: border: 5px solid blue - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -589,7 +609,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.placement - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.placement - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.placement - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -650,7 +672,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.title - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -711,7 +735,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title with html - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.title with html - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.title with html - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -774,7 +800,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.trigger: click - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.trigger: click - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.trigger: click - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {
@@ -835,7 +863,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.zIndex: 100 - value[0] - Tooltip 1`] = `
+exports[`Mock render - properties.zIndex: 100 - value[0] - Tooltip 1`] = `mocked`;
+
+exports[`Mock render - properties.zIndex: 100 - value[0] - Tooltip 2`] = `
 Array [
   Array [
     Object {

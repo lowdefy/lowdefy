@@ -18,17 +18,21 @@ import buildEvents from './buildEvents.js';
 import buildRequests from './buildRequests.js';
 import buildSubBlocks from './buildSubBlocks.js';
 import countBlockOperators from './countBlockOperators.js';
+import countBlockTypes from './countBlockTypes.js';
 import moveSubBlocksToArea from './moveSubBlocksToArea.js';
+import moveSkeletonBlocksToArea from './moveSkeletonBlocksToArea.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
 
 async function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
-  countBlockOperators(block, pageContext);
   setBlockId(block, pageContext);
+  countBlockOperators(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   moveSubBlocksToArea(block, pageContext);
+  moveSkeletonBlocksToArea(block, pageContext);
+  countBlockTypes(block, pageContext);
   await buildSubBlocks(block, pageContext);
 }
 

@@ -21,14 +21,15 @@ import { useRouter } from 'next/router';
 
 import Context from './Context.js';
 import Head from './Head.js';
+import ProgressBarController from './ProgressBarController.js';
 import Block from './block/Block.js';
 import setupLink from '../utils/setupLink.js';
 import createComponents from './createComponents.js';
 
-const LoadingBlock = () => <div>Loading...</div>;
-
 const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
+  lowdefy._internal.window = window;
+  lowdefy._internal.document = document;
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.components = createComponents(lowdefy);
@@ -37,27 +38,39 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   lowdefy.home = rootConfig.home;
   lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
   lowdefy.menus = rootConfig.menus;
+  lowdefy.pageId = pageConfig.pageId;
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
 
   return (
-    <Context config={pageConfig} lowdefy={lowdefy}>
-      {(context, loading) => {
-        if (loading) {
-          return <LoadingBlock />;
-        }
-        return (
-          <>
-            <Head properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties} />
-            <Block
-              block={context._internal.RootBlocks.map[pageConfig.id]}
-              Blocks={context._internal.RootBlocks}
-              context={context}
-              lowdefy={lowdefy}
-            />
-          </>
-        );
+    <ProgressBarController
+      id="page-loader"
+      key={pageConfig.id}
+      ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
+      lowdefy={lowdefy}
+      content={{
+        content: (progress) => (
+          <Context config={pageConfig} lowdefy={lowdefy} progress={progress}>
+            {(context) => {
+              return (
+                <>
+                  <Head
+                    properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
+                  />
+                  <Block
+                    block={context._internal.RootBlocks.map[pageConfig.id]}
+                    Blocks={context._internal.RootBlocks}
+                    context={context}
+                    lowdefy={lowdefy}
+                    progress={progress}
+                    parentLoading={false}
+                  />
+                </>
+              );
+            }}
+          </Context>
+        ),
       }}
-    </Context>
+    />
   );
 };
 

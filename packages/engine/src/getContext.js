@@ -55,7 +55,7 @@ const blockData = ({
   visible,
 });
 
-async function getContext({ config, lowdefy, development = false }) {
+function getContext({ config, lowdefy, development = false }) {
   if (!config) {
     throw new Error('A page must be provided to get context.');
   }
@@ -82,7 +82,6 @@ async function getContext({ config, lowdefy, development = false }) {
   };
   const _internal = ctx._internal;
   _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
-  await _internal.parser.init();
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
@@ -94,10 +93,26 @@ async function getContext({ config, lowdefy, development = false }) {
   _internal.update = () => {
     _internal.RootBlocks.update();
   };
-  await _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInit' });
-  _internal.update();
-  _internal.State.freezeState();
-  _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInitAsync' });
+  _internal.runOnInit = async (progress) => {
+    progress();
+    if (!_internal.onInitDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInit',
+        progress,
+      });
+      _internal.State.freezeState();
+      _internal.onInitDone = true;
+    }
+  };
+  _internal.runOnInitAsync = async (progress) => {
+    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInitAsync',
+        progress,
+      });
+      _internal.onInitAsyncDone = true;
+    }
+  };
   lowdefy.contexts[id] = ctx;
   return ctx;
 }

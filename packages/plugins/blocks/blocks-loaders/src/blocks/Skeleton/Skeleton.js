@@ -29,7 +29,6 @@ const Skeleton = ({ properties, methods }) => {
 Skeleton.defaultProps = blockDefaultProps;
 Skeleton.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Skeleton/style.less'],
 };

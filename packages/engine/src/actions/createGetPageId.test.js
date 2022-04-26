@@ -75,7 +75,7 @@ test('getPageId no params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

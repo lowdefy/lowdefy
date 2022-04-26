@@ -49,15 +49,14 @@ test('_or errors', () => {
   );
 });
 
-test('_or evaluated in NodeParser', async () => {
+test('_or evaluated in NodeParser', () => {
   const input = { a: { _or: [true, false] } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });
 
-test('_or evaluated in WebParser', async () => {
+test('_or evaluated in WebParser', () => {
   const context = {
     _internal: {
       lowdefy: {
@@ -75,7 +74,6 @@ test('_or evaluated in WebParser', async () => {
   };
   const input = { a: { _or: [true, false] } };
   const parser = new WebParser({ context, operators });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });

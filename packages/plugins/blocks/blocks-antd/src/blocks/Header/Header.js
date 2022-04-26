@@ -25,9 +25,6 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
     id={blockId}
     className={`${methods.makeCssClass([
       { backgroundColor: properties.theme === 'light' && '#fff' },
-      properties.color && {
-        backgroundColor: properties.color,
-      },
       properties.style,
     ])} hide-on-print`}
   >
@@ -38,7 +35,6 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
 HeaderBlock.defaultProps = blockDefaultProps;
 HeaderBlock.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/Header/style.less'],
 };

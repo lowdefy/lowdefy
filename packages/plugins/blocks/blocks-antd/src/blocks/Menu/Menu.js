@@ -19,8 +19,6 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Menu } from 'antd';
 import { type, get } from '@lowdefy/helpers';
 
-import color from '../../color.js';
-
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
   if (!type.isArray(menus)) return [];
@@ -30,25 +28,6 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
 
 const getTitle = ({ id, properties, pageId, url }) =>
   (properties && properties.title) || pageId || url || id;
-
-const getNestedColors = (menuColor, background) => {
-  const fontColor = color(menuColor, 6);
-  const bgColor = color(menuColor, 3);
-  return {
-    backgroundColor: background && `${bgColor} !important`,
-    color: `${fontColor} !important`,
-    '& > *': {
-      color: `${fontColor} !important`,
-    },
-    '& > * > *': {
-      color: `${fontColor} !important`,
-    },
-    borderColor: `${fontColor} !important`,
-    '&:after': {
-      borderColor: `${fontColor} !important`,
-    },
-  };
-};
 
 const MenuComp = ({
   blockId,
@@ -62,6 +41,7 @@ const MenuComp = ({
 }) => {
   const styles = {
     lineHeight: '64px',
+    width: '100%',
     display: properties.mode === 'horizontal' && 'inline-block',
   };
   const exProps = {};
@@ -71,15 +51,7 @@ const MenuComp = ({
   }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);
   const theme = properties.theme || 'dark';
-  const nestedColors = getNestedColors(properties.selectedColor);
-  const nestedColorsBg = getNestedColors(properties.selectedColor, true);
-  const bgColorDarker = {
-    backgroundColor:
-      properties.backgroundColor && `${color(properties.backgroundColor, 7)} !important`,
-  };
-  const bgColor = {
-    backgroundColor: properties.backgroundColor && `${properties.backgroundColor} !important`,
-  };
+
   return (
     <Menu
       id={blockId}
@@ -96,29 +68,7 @@ const MenuComp = ({
       mode={properties.mode}
       selectable={true}
       theme={theme}
-      className={methods.makeCssClass([
-        styles,
-        properties.backgroundColor && bgColor,
-        properties.selectedColor &&
-          theme === 'dark' && {
-            '& > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
-              nestedColorsBg,
-          },
-        properties.selectedColor &&
-          theme === 'light' && {
-            '& > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu-selected': nestedColors,
-            '& > li.ant-menu-item:hover': nestedColors,
-            '& > li.ant-menu-submenu:hover': nestedColors,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item:hover': nestedColors,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-selected': nestedColorsBg,
-            '& > li.ant-menu-submenu > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
-              nestedColorsBg,
-          },
-        properties.style,
-      ])}
+      className={methods.makeCssClass([styles, properties.style])}
       defaultOpenKeys={
         properties.defaultOpenKeys ||
         (properties.mode === 'inline' &&
@@ -174,33 +124,10 @@ const MenuComp = ({
           case 'MenuGroup':
             return (
               <Menu.SubMenu
-                className={methods.makeCssClass([
-                  {
-                    '& > ul': bgColorDarker,
-                  },
-                ])}
-                popupClassName={methods.makeCssClass([
-                  properties.backgroundColor && {
-                    '& > ul': bgColorDarker,
-                  },
-                  properties.selectedColor &&
-                    theme === 'dark' && {
-                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
-                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
-                        nestedColorsBg,
-                    },
-                  properties.selectedColor &&
-                    theme === 'light' && {
-                      '& > ul > li.ant-menu-item-selected': nestedColorsBg,
-                      '& > ul > li.ant-menu-item:hover': nestedColors,
-                      '& > ul > li.ant-menu-item-group > ul > li.ant-menu-item-selected':
-                        nestedColorsBg,
-                    },
-                ])}
                 key={`${link.pageId || link.id}_${i}`}
                 title={
                   <Link
-                    id={`${link.pageId || link.id}_${i}`}
+                    id={link.pageId || link.id || i}
                     className={methods.makeCssClass(link.style, true)}
                     {...link}
                   >
@@ -234,7 +161,7 @@ const MenuComp = ({
                           key={`${subLink.pageId || subLink.id}_${j}`}
                           title={
                             <Link
-                              id={`${subLink.pageId || subLink.id}_${j}`}
+                              id={subLink.pageId || subLink.id || j}
                               className={methods.makeCssClass(subLink.style, true)}
                               {...subLink}
                             >
@@ -268,7 +195,7 @@ const MenuComp = ({
                                 }
                               >
                                 <Link
-                                  id={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
+                                  id={subLinkGroup.pageId || subLinkGroup.id || k}
                                   className={methods.makeCssClass(subLinkGroup.style, true)}
                                   {...subLinkGroup}
                                 >
@@ -297,7 +224,7 @@ const MenuComp = ({
                           }
                         >
                           <Link
-                            id={`${subLink.pageId || subLink.id}_${j}`}
+                            id={subLink.pageId || subLink.id || j}
                             className={methods.makeCssClass(subLink.style, true)}
                             {...subLink}
                           >
@@ -327,7 +254,7 @@ const MenuComp = ({
                 }
               >
                 <Link
-                  id={`${link.pageId || link.id}_${i}`}
+                  id={link.pageId || link.id || i}
                   className={methods.makeCssClass(link.style, true)}
                   {...link}
                 >
@@ -344,7 +271,6 @@ const MenuComp = ({
 MenuComp.defaultProps = blockDefaultProps;
 MenuComp.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Menu/style.less'],
 };

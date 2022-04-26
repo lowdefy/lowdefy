@@ -95,7 +95,6 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
         <Comp
           blockId={block.id + randomId()}
           content={content}
-          loading={block.loading}
           makeCssClass={makeCssClass}
           properties={block.properties}
         />
@@ -104,7 +103,6 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
       return (
         <Comp
           blockId={block.id + randomId()}
-          loading={block.loading}
           makeCssClass={makeCssClass}
           properties={block.properties}
         />
@@ -115,7 +113,7 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
 const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
   return (
     <ErrorBoundary>
-      <Loading id={`${block.id}-loading`} loading={block.loading} showLoading>
+      <Loading id={`${block.id}-loading`} showLoading>
         <BlockLayout
           id={`bl-${block.id}` + randomId()}
           highlightBorders={highlightBorders}

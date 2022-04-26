@@ -14,42 +14,63 @@
   limitations under the License.
 */
 
-import React, { Suspense, useState } from 'react';
+import React, { useState } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import CategorySwitch from './CategorySwitch.js';
-import LoadingBlock from './LoadingBlock.js';
-import MountEvents from './MountEvents.js';
+import MountEvents from '../MountEvents.js';
 
-const Block = ({ block, Blocks, context, isRoot, lowdefy }) => {
+const Block = ({
+  block,
+  Blocks,
+  context,
+  lowdefy,
+  parentLoading,
+  progress = { dispatch: () => {} },
+}) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
+
   return (
     <ErrorBoundary>
-      <Suspense fallback={<LoadingBlock block={block} lowdefy={lowdefy} />}>
-        <MountEvents
-          asyncEventName="onMountAsync"
-          context={context}
-          eventName="onMount"
-          triggerEvent={block.triggerEvent}
-        >
-          {(loading) =>
-            loading ? (
-              <LoadingBlock block={block} lowdefy={lowdefy} />
-            ) : (
-              <CategorySwitch
-                block={block}
-                Blocks={Blocks}
-                context={context}
-                isRoot={isRoot}
-                lowdefy={lowdefy}
-                updates={updates}
-              />
-            )
-          }
-        </MountEvents>
-      </Suspense>
+      <MountEvents
+        context={context}
+        triggerEvent={async () => {
+          await block.triggerEvent({
+            name: 'onMount',
+            progress: () => {
+              progress.dispatch({
+                type: 'increment',
+              });
+            },
+          });
+        }}
+        triggerEventAsync={() => {
+          block.triggerEvent({
+            name: 'onMountAsync',
+            progress: () => {
+              progress.dispatch({
+                type: 'increment',
+              });
+            },
+          });
+          progress.dispatch({
+            type: 'done',
+          });
+        }}
+      >
+        {(eventLoading) => (
+          <CategorySwitch
+            block={block}
+            Blocks={Blocks}
+            context={context}
+            loading={eventLoading || parentLoading || block.eval.loading}
+            lowdefy={lowdefy}
+            updates={updates}
+          />
+        )}
+      </MountEvents>
     </ErrorBoundary>
   );
 };

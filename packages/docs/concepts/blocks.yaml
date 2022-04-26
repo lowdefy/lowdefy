@@ -38,8 +38,8 @@ _ref:
               - All blocks have`onMount` and `onMountAsync` events.
               - Each block implements it's own additional events such as `onClick` etc.
               ##### Block loading
-              - By default all blocks render a loading skeleton when the block's source code is fetched or while the block is waiting on data from a request.
-              - A block's default loading can be overwritten by defining custom `loading` settings on a block.
+              - Some blocks gracefully handle a loading state while `onMount` events are being executed.
+              - A block's default loading can be overwritten by defining custom `skeleton` settings on a block.
 
             -------
             A Lowdefy page is compiled out of an arrangement of blocks. Every HTML element of this page is render as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected.
@@ -64,7 +64,8 @@ _ref:
             - `blocks: array`: A array of blocks to render to the default `content` area for `container`, `context` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
             - `events: object`: Used to defined [`actions`](/events-and-actions) that run when the block triggers an [`event`](/events-and-actions).
             - `layout: object`: Used to define the [layout](/layout) properties for a block. __Operators are evaluated__.
-            - `loading: object`: Used to overwrite a block's default loading behavior.
+            - `skeleton: object`: Used to overwrite a block's default loading behavior by rendering a skeleton. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used in the skeleton definition, including sub-blocks.
+            - `loading: boolean`: When true, renders the block in loading. If a `skeleton` is defined, it will be rendered, else the block's default loading behavior will be rendered.
             - `required: boolean | string`: For `input` blocks, whether or not a value value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
             - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
             - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
@@ -97,7 +98,7 @@ _ref:
                 url: https://blocks-cdn.lowdefy.com/v3.10.1/blocks-amcharts/meta/AmChartsXY.json
             pages:
               - id: example_dashboard
-                type: Context
+                type: Box
                 blocks:
                   - id: basic_chart
                     type: AmChartsXY
@@ -164,21 +165,25 @@ _ref:
 
             # Block loading
 
-            Block loading renders a placeholder block while the block component is being fetched, or a block is waiting on a request to return before to rendering the block. This allows for a smoother user experience and reduces 'bounce' in the user interface as more blocks takes up their full width and height on the page while in a loading state.
+            Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container and list block, will result in rendering all child blocks with loading active.
 
-            By default, Lowdefy tries to give a reasonable definition for how much space a block should take up in while loading, however this can vary depending on how the block is used. The `loading` property on blocks allows the Lowdefy developer to set a custom loading configuration for a block.
+            Often it is useful te render a skeleton of blocks instead of the blocks' default loading behavior. When block definitions are provided to the `skeleton` property on a block, this `skeleton` definition will be rendered when loading is active. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used as the skeleton definition, including sub-blocks.
 
-            ##### Custom block `loading` example:
+            ##### Block `loading` and `skeleton` example:
 
             ```yaml
             pages:
               - id: page_one
-                type: Context
+                type: Box
                 blocks:
                   # ...
                   - id: paragraph_one
                     type: Title
                     loading:
+                      _eq:
+                        - _state: done
+                        - false
+                    skeleton:
                       type: SkeletonParagraph
                       properties:
                         lines: 1
@@ -186,59 +191,6 @@ _ref:
                       content: Lorem ipsum dolor sit amet.
                   # ...
             ```
-
-            ## Loading placeholder types
-
-            The following loading placeholder types are available:
-
-            ##### Spinner
-            A Lowdefy logo loading spinner placed at the center of the block. Often used as the full page loading spinner logo. The following `properties` apply to `Spinner`:
-
-            - `barColor: string`: Color of the bars in the Lowdefy spinner logo.
-            - `color: string`: Color of spinner logo. Default is `#f1f1f1`.
-            - `height: number | string`: Height of the spinner block including background. Default is `100%`.
-            - `shaded: boolean`: Masks the spinner block including background.
-            - `size: number | string`: Size of the spinner icon. Default is `50px`.
-
-            ##### IconSpinner
-            A spinning loading icon. The following `properties` apply to `IconSpinner`:
-
-            - `size: number | enum`: Size of the spinner icon. Options are `small`, `medium` and `large`. Default is `20px`.
-
-            ##### Skeleton
-            A rectangular loading skeleton to fill the full size of the block. The following `properties` apply to `Skeleton`:
-
-            - `height: number | string`: Height of the skeleton block. Default is `100%`.
-            - `width: number | string`: Width of the skeleton block. Default is `100%`.
-
-            ##### SkeletonAvatar
-            A avatar loading skeleton. The following `properties` apply to `SkeletonAvatar`:
-
-            - `size: number | enum`: Size of the avatar skeleton. Options are `small`, `medium` and `large`. Default is `32px`.
-            - `shape: enum`: Shape of the avatar skeleton. Options are `square` and `round`. Default is `round`.
-
-            ##### SkeletonButton
-            A button loading skeleton, matches the size of [`Button`](/Button) blocks. The following `properties` apply to `SkeletonButton`:
-
-            - `size: enum`: Size of the button skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-            - `shape: enum`: Shape of the button skeleton corners. Options are `square` and `round`. Default is `round`.
-            - `height: number | string`: Height of the button skeleton. Overwrites the size setting.
-            - `width: number | string`: Width of the button skeleton. Default is `100%`.
-
-            ##### SkeletonInput
-            A input loading skeleton, used as a placeholder for input blocks with labels. The following `properties` apply to `SkeletonInput`:
-
-            - `size: enum`: Size of the input skeleton. Options are `small`, `medium` and `large`. Default is `medium`.
-            - `labelHeight: number | string`: Height of the label part of the input skeleton.
-            - `inputHeight: number | string`: Height of the input part of the input skeleton. Overwrites the size setting.
-            - `labelWidth: number | string`: Width of the label part of the input skeleton. Default is `100%`.
-            - `width: number | string`: Width of the input part of input skeleton. Default is `100%`.
-
-            ##### SkeletonParagraph
-            A paragraph loading skeleton, used as a placeholder for text intensive section. The following `properties` apply to `SkeletonParagraph`:
-
-            - `lines: number`: The number of paragraph lines to render. Default is `4`.
-            - `width: number | string`: Width of the paragraph skeleton. Default is `100%`.
 
       - _ref:
           path: templates/navigation_buttons.yaml

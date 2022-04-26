@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Pagination 1`] = `
+exports[`Mock render - default - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -29,7 +31,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.disabled: true - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.disabled: true - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.disabled: true - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -58,7 +62,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.hideOnSinglePage: true, total: 1 - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.hideOnSinglePage: true, total: 1 - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.hideOnSinglePage: true, total: 1 - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -87,7 +93,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.hideOnSinglePage: true, total: 100 - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.hideOnSinglePage: true, total: 100 - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.hideOnSinglePage: true, total: 100 - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -116,7 +124,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.pageSizeOptions: [100, 200, 500] - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.pageSizeOptions: [100, 200, 500] - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.pageSizeOptions: [100, 200, 500] - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -144,7 +154,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.showQuickJumper: true - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.showQuickJumper: true - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.showQuickJumper: true - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -173,7 +185,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.showSizeChanger: false - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.showSizeChanger: false - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.showSizeChanger: false - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -202,7 +216,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.showTotal: 'This is the total' - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.showTotal: 'This is the total' - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.showTotal: 'This is the total' - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -231,7 +247,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.showTotal: true - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.showTotal: true - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.showTotal: true - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -260,7 +278,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.simple: true - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.simple: true - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.simple: true - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -289,7 +309,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: default - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.size: default - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.size: default - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -318,7 +340,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: small - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.size: small - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.size: small - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {
@@ -347,7 +371,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.total - value[0] - Pagination 1`] = `
+exports[`Mock render - properties.total - value[0] - Pagination 1`] = `mocked`;
+
+exports[`Mock render - properties.total - value[0] - Pagination 2`] = `
 Array [
   Array [
     Object {

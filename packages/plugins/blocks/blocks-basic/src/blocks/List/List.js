@@ -55,7 +55,6 @@ List.defaultProps = blockDefaultProps;
 List.meta = {
   category: 'list',
   valueType: 'array',
-  loading: false,
   icons: [],
   styles: [],
 };

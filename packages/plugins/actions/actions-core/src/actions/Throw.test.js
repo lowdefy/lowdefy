@@ -83,7 +83,7 @@ test('Throw no params', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -160,7 +160,7 @@ test('Throw params.throw true, no message or metaData', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -238,7 +238,7 @@ test('Throw params.throw true, message and  no metaData', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -316,7 +316,7 @@ test('Throw params.throw true, message and  metaData string', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -402,7 +402,7 @@ test('Throw params.throw true, message and metaData object', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -488,7 +488,7 @@ test('Throw params.throw false', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -544,7 +544,7 @@ test('Throw params.throw null', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -600,7 +600,7 @@ test('Throw params.throw should be a boolean.', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });

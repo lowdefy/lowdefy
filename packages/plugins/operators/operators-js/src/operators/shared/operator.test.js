@@ -43,10 +43,9 @@ const payload = {
 
 console.error = () => {};
 
-test('_operator, _payload', async () => {
+test('_operator, _payload', () => {
   const input = { a: { _operator: { name: '_payload', params: 'string' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({
     a: 'Some String',
@@ -54,10 +53,9 @@ test('_operator, _payload', async () => {
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_operator.name invalid', async () => {
+test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -67,10 +65,9 @@ test('_operator.name invalid', async () => {
   `);
 });
 
-test('_operator.name not allowed to include "experimental"', async () => {
+test('_operator.name not allowed to include "experimental"', () => {
   const input = { a: { _operator: { name: '_experimental_op' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -80,10 +77,9 @@ test('_operator.name not allowed to include "experimental"', async () => {
   `);
 });
 
-test('_operator.name not a string', async () => {
+test('_operator.name not a string', () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -93,10 +89,9 @@ test('_operator.name not a string', async () => {
   `);
 });
 
-test('_operator with value not a object', async () => {
+test('_operator with value not a object', () => {
   const input = { a: { _operator: 'a' } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -106,10 +101,9 @@ test('_operator with value not a object', async () => {
   `);
 });
 
-test('_operator cannot be set to _operator', async () => {
+test('_operator cannot be set to _operator', () => {
   const input = { a: { _operator: { name: '_operator' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toMatchInlineSnapshot(`
@@ -119,19 +113,17 @@ test('_operator cannot be set to _operator', async () => {
   `);
 });
 
-test('_operator, _not with no params', async () => {
+test('_operator, _not with no params', () => {
   const input = { a: { _operator: { name: '_not' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_operator, _json.parse with params', async () => {
+test('_operator, _json.parse with params', () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
   const parser = new NodeParser({ operators, payload });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({
     a: [{ a: 'a1' }],

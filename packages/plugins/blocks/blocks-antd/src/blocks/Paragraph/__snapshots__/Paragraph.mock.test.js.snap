@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Paragraph 1`] = `
+exports[`Mock render - default - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -23,7 +25,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.code: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.code: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.code: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -69,7 +73,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.content - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.content - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.content - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -115,7 +121,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.content short - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.content short - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.content short - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -161,7 +169,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.copyable: icon - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.copyable: icon - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.copyable: icon - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -192,7 +202,7 @@ Array [
       "className": "{}",
       "code": undefined,
       "copyable": Object {
-        "icon": <IconComp1
+        "icon": <AntIcon
           basePath=""
           blockId="properties.copyable: icon_copyable_icon"
           components={Object {}}
@@ -208,7 +218,7 @@ Array [
               "triggerEvent": [Function],
             }
           }
-          properties="WarningOutlined"
+          properties="AiOutlineWarning"
           required={false}
           user={Object {}}
           validation={
@@ -239,7 +249,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.copyable: icon: [] - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.copyable: icon: [] - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.copyable: icon: [] - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -271,7 +283,7 @@ Array [
       "code": undefined,
       "copyable": Object {
         "icon": Array [
-          <IconComp1
+          <AntIcon
             basePath=""
             blockId="properties.copyable: icon: []_copyable_before_icon"
             components={Object {}}
@@ -287,7 +299,7 @@ Array [
                 "triggerEvent": [Function],
               }
             }
-            properties="WarningOutlined"
+            properties="AiOutlineWarning"
             required={false}
             user={Object {}}
             validation={
@@ -298,7 +310,7 @@ Array [
               }
             }
           />,
-          <IconComp1
+          <AntIcon
             basePath=""
             blockId="properties.copyable: icon: []_copyable_after_icon"
             components={Object {}}
@@ -314,7 +326,7 @@ Array [
                 "triggerEvent": [Function],
               }
             }
-            properties="RocketOutlined"
+            properties="AiOutlineRocket"
             required={false}
             user={Object {}}
             validation={
@@ -346,7 +358,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.copyable: text: one - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.copyable: text: one - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.copyable: text: one - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -397,7 +411,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.copyable: tooltips: [] - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.copyable: tooltips: [] - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.copyable: tooltips: [] - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -452,7 +468,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.copyable: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.copyable: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.copyable: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -502,7 +520,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.delete: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.delete: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.delete: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -548,7 +568,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.disabled: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.disabled: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.disabled: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -594,7 +616,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.ellipsis: expandable, rows - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.ellipsis: expandable, rows - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.ellipsis: expandable, rows - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -645,7 +669,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.ellipsis: rows - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.ellipsis: rows - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.ellipsis: rows - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -696,7 +722,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.ellipsis: rows, suffix - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -747,7 +775,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.ellipsis: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.ellipsis: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.ellipsis: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -793,7 +823,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.italic: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.italic: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.italic: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -839,7 +871,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.mark: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.mark: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.mark: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -885,7 +919,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.strong: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.strong: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.strong: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -931,7 +967,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: danger - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.type: danger - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.type: danger - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -977,7 +1015,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: secondary - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.type: secondary - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.type: secondary - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -1023,7 +1063,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: warning - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.type: warning - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.type: warning - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -1069,7 +1111,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.underline: true - value[0] - Paragraph 1`] = `
+exports[`Mock render - properties.underline: true - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - properties.underline: true - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {
@@ -1115,7 +1159,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html content - value[0] - Paragraph 1`] = `
+exports[`Mock render - with html content - value[0] - Paragraph 1`] = `mocked`;
+
+exports[`Mock render - with html content - value[0] - Paragraph 2`] = `
 Array [
   Array [
     Object {

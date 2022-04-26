@@ -114,8 +114,8 @@ _ref:
 
             - `category: enum`: How this block should be rendered in the Lowdefy app. Can be either `display`, `input`, `container`, `context` or `list`.
             - `valueType: enum`: For blocks of the `input` block category, Lowdefy enforces a value type in `state`. This can be either a `boolean`, `number`, `string`, `object` or `array`. Lowdefy provides a default value for the block. This is usually `null`, but is `false` for boolean blocks, and the empty array, `[]`, for array blocks.
-            - `loading: boolean | object`: Settings for the default loading skeleton to render while the block is in a loading status. `false` will render an empty div element while `true` will render the default block skeleton based on the block category. Else an `object` can be provided for more refined settings, see the [loading placeholder types](/blocks) for more details  A Lowdefy app developer can over write these defaults by defining the `loading` settings when configuring a block.
             - `schema: object`: Provide a valid [JSON-Schema](https://json-schema.org/) definition for the block `properties` and `events`.
+            # TODO: add icon.
 
             ### Block React Component Props
 
@@ -156,6 +156,7 @@ _ref:
                         - `index: number`: Index of the action in the event array.
                         - `response: any`: The returned result of the action.
                         - `skipped: boolean`: True if the action was skipped.
+            - `loading: boolean`: True while loading is activated for the block.
             - `methods: object`: All application methods built into Lowdefy, available for the block.
               - `makeCssClass(cssObject | cssObject[]): string`: This methods creates a css class for the block to apply to DOM elements. Css classes are created using [Emotion](https://emotion.sh/docs/introduction). If a list of cssObject are given the cssObjects are shallow merged with the preceding objects properties being overwritten by the latter. Any valid css style object can be passed, including media queries. Default media queries are built in:
                 - `xs?: object`: Css object applied for screen media with max width of 576px.

@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.action and properties.description - value[0] - Alert 1`] = `
+exports[`Mock render - areas.action and properties.description - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - areas.action and properties.description - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -51,7 +53,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - areas.action and properties.message - value[0] - Alert 1`] = `
+exports[`Mock render - areas.action and properties.message - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - areas.action and properties.message - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -92,7 +96,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Alert 1`] = `
+exports[`Mock render - default - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -119,7 +125,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.closable: true - value[0] - Alert 1`] = `
+exports[`Mock render - properties.closable: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.closable: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -150,7 +158,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.closeText: Close Text - value[0] - Alert 1`] = `
+exports[`Mock render - properties.closeText: Close Text - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.closeText: Close Text - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -181,7 +191,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon object - value[0] - Alert 1`] = `
+exports[`Mock render - properties.icon object - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.icon object - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -191,7 +203,7 @@ Array [
       "closable": undefined,
       "closeText": undefined,
       "description": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon object_icon"
         components={Object {}}
@@ -210,7 +222,7 @@ Array [
         properties={
           Object {
             "color": "red",
-            "name": "SettingOutlined",
+            "name": "AiOutlineSetting",
             "spin": true,
           }
         }
@@ -245,7 +257,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.icon string - value[0] - Alert 1`] = `
+exports[`Mock render - properties.icon string - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.icon string - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -255,7 +269,7 @@ Array [
       "closable": undefined,
       "closeText": undefined,
       "description": undefined,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon string_icon"
         components={Object {}}
@@ -271,7 +285,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="CheckCircleOutlined"
+        properties="AiOutlineCheckCircle"
         required={false}
         user={Object {}}
         validation={
@@ -303,7 +317,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.message - value[0] - Alert 1`] = `
+exports[`Mock render - properties.message - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.message - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -334,7 +350,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: error - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: error - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: error - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -365,7 +383,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: error banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: error banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: error banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -396,7 +416,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: error showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: error showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: error showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -427,7 +449,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: info - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: info - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: info - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -458,7 +482,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: info banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: info banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: info banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -489,7 +515,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: info showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: info showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: info showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -520,7 +548,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: success - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: success - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: success - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -551,7 +581,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: success banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: success banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: success banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -582,7 +614,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: success showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: success showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: success showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -613,7 +647,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: warning - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: warning - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: warning - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -644,7 +680,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: warning banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: warning banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: warning banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -675,7 +713,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.type: warning showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - properties.type: warning showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - properties.type: warning showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -706,7 +746,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description only - value[0] - Alert 1`] = `
+exports[`Mock render - with description only - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description only - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -743,7 +785,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description only and icon false - value[0] - Alert 1`] = `
+exports[`Mock render - with description only and icon false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description only and icon false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -780,7 +824,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.closable: true - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.closable: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.closable: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -821,7 +867,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.closeText: Close Text - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.closeText: Close Text - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.closeText: Close Text - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -862,7 +910,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.icon object - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.icon object - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.icon object - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -882,7 +932,7 @@ Array [
           }
         }
       />,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="with description properties.icon object_icon"
         components={Object {}}
@@ -901,7 +951,7 @@ Array [
         properties={
           Object {
             "color": "red",
-            "name": "SettingOutlined",
+            "name": "AiOutlineSetting",
             "spin": true,
           }
         }
@@ -936,7 +986,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.icon string - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.icon string - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.icon string - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -956,7 +1008,7 @@ Array [
           }
         }
       />,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="with description properties.icon string_icon"
         components={Object {}}
@@ -972,7 +1024,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="CheckCircleOutlined"
+        properties="AiOutlineCheckCircle"
         required={false}
         user={Object {}}
         validation={
@@ -1004,7 +1056,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.message - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.message - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.message - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1045,7 +1099,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: error - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: error - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: error - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1086,7 +1142,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: error banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: error banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: error banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1127,7 +1185,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: error showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: error showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: error showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1168,7 +1228,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: info - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: info - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: info - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1209,7 +1271,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: info banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: info banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: info banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1250,7 +1314,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: info showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: info showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: info showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1291,7 +1357,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: success - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: success - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: success - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1332,7 +1400,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: success banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: success banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: success banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1373,7 +1443,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: success showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: success showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: success showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1414,7 +1486,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: warning - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: warning - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: warning - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1455,7 +1529,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: warning banner: true - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: warning banner: true - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: warning banner: true - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1496,7 +1572,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description properties.type: warning showIcon: false - value[0] - Alert 1`] = `
+exports[`Mock render - with description properties.type: warning showIcon: false - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description properties.type: warning showIcon: false - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1537,7 +1615,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with description uses html - value[0] - Alert 1`] = `
+exports[`Mock render - with description uses html - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with description uses html - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
@@ -1576,7 +1656,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with message uses html - value[0] - Alert 1`] = `
+exports[`Mock render - with message uses html - value[0] - Alert 1`] = `mocked`;
+
+exports[`Mock render - with message uses html - value[0] - Alert 2`] = `
 Array [
   Array [
     Object {
