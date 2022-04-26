@@ -44,10 +44,10 @@ const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
-  const IconBlock = ({ blockId, events, loading, methods, onClick, properties, ...props }) => {
+  const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
-      (propertiesObj.spin || loading || (events.onClick && events.onClick.loading)) &&
+      (propertiesObj.spin || (events.onClick && events.onClick.loading)) &&
       !propertiesObj.disableLoadingIcon;
     const iconProps = {
       id: blockId,
