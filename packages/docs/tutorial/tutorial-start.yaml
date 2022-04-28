@@ -137,7 +137,7 @@ _ref:
                       subTitle: We are excited to see what you are going to build
                       status: success
                       icon:
-                        name: AiTwoToneHeart
+                        name: AiOutlineHeart
                         color: '#f00'
                     areas:
                       extra:
@@ -203,7 +203,7 @@ _ref:
                               title: Welcome to your Lowdefy app
                               subTitle: We are excited to see what you are going to build
                               icon:
-                                name: AiTwoToneHeart
+                                name: AiOutlineHeart
                                 color: '#f00'
                             areas:
                               extra:

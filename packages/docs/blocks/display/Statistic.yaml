@@ -32,4 +32,4 @@ _ref:
           type: Statistic
           properties:
             value: 99.5
-            prefixIcon: AiTwoToneAlert
+            prefixIcon: AiOutlineAlert
