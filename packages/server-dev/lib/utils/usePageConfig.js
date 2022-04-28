@@ -18,7 +18,7 @@ import request from './request.js';
 // TODO: Handle TokenExpiredError
 
 function fetchPageConfig(url) {
-  return request({ url });
+  return request(url);
 }
 
 function usePageConfig(pageId, basePath) {

@@ -20,14 +20,13 @@ async function request({ url, method = 'GET', body }) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: body && JSON.stringify(body),
+    body: JSON.stringify(body),
   });
-  if (res.status === 404) {
-    return null;
-  }
   if (!res.ok) {
     // TODO: check
     const body = await res.json();
+    console.log(res);
+    console.log(body);
     throw new Error(body.message || 'Request error');
   }
   return res.json();

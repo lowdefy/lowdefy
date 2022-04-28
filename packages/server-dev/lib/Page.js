@@ -15,14 +15,29 @@
 */
 
 import React from 'react';
-import Head from 'next/head';
 
-const BindHead = ({ properties }) => {
+import Client from '@lowdefy/client';
+import usePageConfig from './utils/usePageConfig.js';
+
+const Page = ({ Components, config, pageId, router, types }) => {
+  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
+  if (!pageConfig) {
+    router.replace(`/404`);
+    return '';
+  }
   return (
-    <Head>
-      <title>{properties.title}</title>
-    </Head>
+    <Client
+      Components={Components}
+      config={{
+        ...config,
+        pageConfig,
+      }}
+      router={router}
+      stage="dev"
+      types={types}
+      window={window}
+    />
   );
 };
 
-export default BindHead;
+export default Page;
