@@ -14,21 +14,14 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
+import React from 'react';
 
-const template = `@import '@lowdefy/layout/style.less';
-@import '@lowdefy/client/style.less';
-{% for style in styles -%}
-@import '{{ style }}';
-{% endfor -%}
-`;
-
-async function writeStyleImports({ components, context }) {
-  const templateFn = nunjucksFunction(template);
-  await context.writeBuildArtifact(
-    'plugins/styles.less',
-    templateFn({ styles: components.styles })
+const BindHead = ({ Component, properties }) => {
+  return (
+    <Component>
+      <title>{properties.title}</title>
+    </Component>
   );
-}
+};
 
-export default writeStyleImports;
+export default BindHead;

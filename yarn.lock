@@ -2005,7 +2005,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-utils@workspace:packages/utils/block-utils"
   dependencies:
-    "@ant-design/icons": 4.7.0
     "@emotion/css": 11.7.1
     "@emotion/jest": 11.7.1
     "@lowdefy/helpers": 4.0.0-alpha.8
@@ -2015,7 +2014,6 @@ __metadata:
     "@testing-library/dom": 8.11.3
     "@testing-library/react": 13.0.0-alpha.4
     "@testing-library/user-event": 14.0.0-alpha.14
-    classnames: 2.3.1
     copyfiles: 2.4.1
     dompurify: 2.3.5
     jest: 27.5.1
@@ -2225,6 +2223,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/client@4.0.0-alpha.8, @lowdefy/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/client@workspace:packages/client"
+  dependencies:
+    "@ant-design/icons": 4.7.0
+    "@emotion/jest": 11.7.1
+    "@lowdefy/block-utils": 4.0.0-alpha.8
+    "@lowdefy/engine": 4.0.0-alpha.8
+    "@lowdefy/helpers": 4.0.0-alpha.8
+    "@lowdefy/layout": 4.0.0-alpha.8
+    "@swc/cli": 0.1.55
+    "@swc/core": 1.2.135
+    "@swc/jest": 0.2.17
+    "@testing-library/dom": 8.11.3
+    "@testing-library/react": 13.0.0-alpha.4
+    "@testing-library/user-event": 14.0.0-alpha.14
+    classnames: 2.3.1
+    copyfiles: 2.4.1
+    jest: 27.5.1
+    jest-serializer-html: 7.1.0
+    jest-transform-yaml: 1.0.0
+    react: 17.0.2
+    react-dom: 17.0.2
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/connection-axios-http@4.0.0-alpha.8, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http"
@@ -2345,7 +2369,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/docs@workspace:packages/docs":
+"@lowdefy/docs@4.0.0-alpha.8, @lowdefy/docs@workspace:packages/docs":
   version: 0.0.0-use.local
   resolution: "@lowdefy/docs@workspace:packages/docs"
   dependencies:
@@ -2607,8 +2631,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server-dev@workspace:packages/server-dev"
   dependencies:
+    "@lowdefy/actions-core": 4.0.0-alpha.8
     "@lowdefy/api": 4.0.0-alpha.8
-    "@lowdefy/block-utils": 4.0.0-alpha.8
     "@lowdefy/blocks-antd": 4.0.0-alpha.8
     "@lowdefy/blocks-basic": 4.0.0-alpha.8
     "@lowdefy/blocks-color-selectors": 4.0.0-alpha.8
@@ -2616,6 +2640,7 @@ __metadata:
     "@lowdefy/blocks-loaders": 4.0.0-alpha.8
     "@lowdefy/blocks-markdown": 4.0.0-alpha.8
     "@lowdefy/build": 4.0.0-alpha.8
+    "@lowdefy/client": 4.0.0-alpha.8
     "@lowdefy/connection-axios-http": 4.0.0-alpha.8
     "@lowdefy/engine": 4.0.0-alpha.8
     "@lowdefy/helpers": 4.0.0-alpha.8
@@ -2652,16 +2677,24 @@ __metadata:
   dependencies:
     "@lowdefy/actions-core": 4.0.0-alpha.8
     "@lowdefy/api": 4.0.0-alpha.8
-    "@lowdefy/block-utils": 4.0.0-alpha.8
     "@lowdefy/blocks-antd": 4.0.0-alpha.8
     "@lowdefy/blocks-basic": 4.0.0-alpha.8
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.8
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.8
     "@lowdefy/blocks-loaders": 4.0.0-alpha.8
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.8
     "@lowdefy/build": 4.0.0-alpha.8
-    "@lowdefy/engine": 4.0.0-alpha.8
+    "@lowdefy/client": 4.0.0-alpha.8
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.8
+    "@lowdefy/connection-mongodb": 4.0.0-alpha.8
+    "@lowdefy/docs": 4.0.0-alpha.8
     "@lowdefy/helpers": 4.0.0-alpha.8
     "@lowdefy/layout": 4.0.0-alpha.8
     "@lowdefy/node-utils": 4.0.0-alpha.8
     "@lowdefy/operators-js": 4.0.0-alpha.8
+    "@lowdefy/operators-mql": 4.0.0-alpha.8
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.8
+    "@lowdefy/operators-yaml": 4.0.0-alpha.8
     "@next/eslint-plugin-next": 12.0.10
     less: 4.1.2
     less-loader: 10.2.0
