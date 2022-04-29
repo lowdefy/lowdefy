@@ -23,7 +23,7 @@ import Link from 'next/link';
 
 import Reload from './Reload.js';
 import Page from './Page.js';
-import setPageId from './utils/setPageId.js';
+import setPageId from './setPageId.js';
 import useRootConfig from './utils/useRootConfig.js';
 
 import actions from '../build/plugins/actions.js';
@@ -31,13 +31,11 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operatorsClient.js';
 
-import '../build/plugins/styles.less';
-
 const App = () => {
   const router = useRouter();
   const { data: rootConfig } = useRootConfig(router.basePath);
 
-  const { redirect, pageId } = setPageId(router);
+  const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
     router.push(`/${pageId}`);
   }

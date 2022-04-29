@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
 function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <Suspense fallback="">
+      <Component {...pageProps} />
+    </Suspense>
+  );
 }
 
 const DynamicApp = dynamic(() => Promise.resolve(App), {
