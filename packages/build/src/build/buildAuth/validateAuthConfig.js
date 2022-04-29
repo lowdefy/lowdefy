@@ -33,6 +33,9 @@ async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth.pages.roles)) {
     components.auth.pages.roles = {};
   }
+  if (type.isNone(components.auth.providers)) {
+    components.auth.providers = [];
+  }
 
   const { valid } = validate({
     schema: lowdefySchema.definitions.authConfig,

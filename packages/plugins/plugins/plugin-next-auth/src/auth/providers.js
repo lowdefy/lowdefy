@@ -14,5 +14,13 @@
   limitations under the License.
 */
 
-export { default as Auth0Provider } from 'next-auth/providers/auth0';
-export { default as GoogleProvider } from 'next-auth/providers/google';
+// This syntax does not work because next-auth is not an es module.
+// export { default as Auth0Provider } from 'next-auth/providers/auth0';
+
+import _auth0 from 'next-auth/providers/auth0';
+import _google from 'next-auth/providers/google';
+
+const Auth0Provider = _auth0.default;
+const GoogleProvider = _google.default;
+
+export { Auth0Provider, GoogleProvider };

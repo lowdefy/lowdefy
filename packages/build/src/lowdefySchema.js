@@ -216,6 +216,9 @@ export default {
             },
           },
         },
+        theme: {
+          type: 'object',
+        },
       },
     },
     block: {
