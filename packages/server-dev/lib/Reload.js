@@ -16,13 +16,13 @@
 
 import React, { useEffect } from 'react';
 
-import useMutateCache from '../utils/useMutateCache.js';
-import waitForRestartedServer from '../utils/waitForRestartedServer.js';
+import useMutateCache from './utils/useMutateCache.js';
+import waitForRestartedServer from './utils/waitForRestartedServer.js';
 
-const Reload = ({ children, lowdefy }) => {
-  const mutateCache = useMutateCache(lowdefy.basePath);
+const Reload = ({ children, basePath }) => {
+  const mutateCache = useMutateCache(basePath);
   useEffect(() => {
-    const sse = new EventSource(`${lowdefy.basePath}/api/reload`);
+    const sse = new EventSource(`${basePath}/api/reload`);
 
     sse.addEventListener('reload', () => {
       mutateCache();
@@ -31,7 +31,7 @@ const Reload = ({ children, lowdefy }) => {
 
     sse.onerror = () => {
       sse.close();
-      waitForRestartedServer(lowdefy);
+      waitForRestartedServer(basePath);
     };
     return () => {
       sse.close();

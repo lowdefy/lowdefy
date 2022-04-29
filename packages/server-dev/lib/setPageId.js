@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
-import { createIcon } from '@lowdefy/block-utils';
+function setPageId(router, rootConfig) {
+  if (router.pathname === `/404`) {
+    return { redirect: false, pageId: '404' };
+  }
+  if (!router.query.pageId) {
+    if (rootConfig.home.configured === false) {
+      return { redirect: true, pageId: rootConfig.home.pageId };
+    }
+    return { redirect: false, pageId: rootConfig.home.pageId };
+  }
+  return { redirect: false, pageId: router.query.pageId };
+}
 
-import createLinkComponent from './createLinkComponent.js';
-import icons from '../../build/plugins/icons.js';
-
-const createComponents = (lowdefy) => {
-  return {
-    Link: createLinkComponent(lowdefy),
-    Icon: createIcon(icons),
-  };
-};
-
-export default createComponents;
+export default setPageId;

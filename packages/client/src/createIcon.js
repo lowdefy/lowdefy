@@ -18,10 +18,9 @@ import React from 'react';
 import classNames from 'classnames';
 import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
+import { blockDefaultProps, makeCssClass } from '@lowdefy/block-utils';
 
-import blockDefaultProps from './blockDefaultProps.js';
 import ErrorBoundary from './ErrorBoundary.js';
-import makeCssClass from './makeCssClass.js';
 
 const lowdefyProps = [
   'actionLog',

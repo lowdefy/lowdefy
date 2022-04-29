@@ -16,48 +16,36 @@
 
 import React from 'react';
 
-import { urlQuery } from '@lowdefy/helpers';
-import { useRouter } from 'next/router';
-
+import Block from './block/Block.js';
 import Context from './Context.js';
 import Head from './Head.js';
 import ProgressBarController from './ProgressBarController.js';
-import Block from './block/Block.js';
-import setupLink from '../utils/setupLink.js';
-import createComponents from './createComponents.js';
 
-const Page = ({ lowdefy, pageConfig, rootConfig }) => {
-  const router = useRouter();
-  lowdefy._internal.window = window;
-  lowdefy._internal.document = document;
-  lowdefy._internal.router = router;
-  lowdefy._internal.link = setupLink(lowdefy);
-  lowdefy._internal.components = createComponents(lowdefy);
+import initLowdefyContext from './initLowdefyContext.js';
 
-  lowdefy.basePath = lowdefy._internal.router.basePath;
-  lowdefy.home = rootConfig.home;
-  lowdefy.lowdefyGlobal = rootConfig.lowdefyGlobal;
-  lowdefy.menus = rootConfig.menus;
-  lowdefy.pageId = pageConfig.pageId;
-  lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
+const Client = ({ Components, config, router, stage, types, window }) => {
+  const lowdefy = initLowdefyContext({ Components, config, router, types, stage, window });
 
   return (
     <ProgressBarController
       id="page-loader"
-      key={pageConfig.id}
+      key={config.pageConfig.id}
       ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
       lowdefy={lowdefy}
       content={{
         content: (progress) => (
-          <Context config={pageConfig} lowdefy={lowdefy} progress={progress}>
+          <Context config={config.pageConfig} lowdefy={lowdefy} progress={progress}>
             {(context) => {
               return (
                 <>
                   <Head
-                    properties={context._internal.RootBlocks.map[pageConfig.id].eval.properties}
+                    Component={Components.Head}
+                    properties={
+                      context._internal.RootBlocks.map[config.pageConfig.id].eval.properties
+                    }
                   />
                   <Block
-                    block={context._internal.RootBlocks.map[pageConfig.id]}
+                    block={context._internal.RootBlocks.map[config.pageConfig.id]}
                     Blocks={context._internal.RootBlocks}
                     context={context}
                     lowdefy={lowdefy}
@@ -74,4 +62,4 @@ const Page = ({ lowdefy, pageConfig, rootConfig }) => {
   );
 };
 
-export default Page;
+export default Client;

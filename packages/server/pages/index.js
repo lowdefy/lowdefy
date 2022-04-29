@@ -16,7 +16,7 @@
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import Page from '../lib/components/Page.js';
+import Page from '../lib/Page.js';
 
 export async function getServerSideProps() {
   // TODO: is this build directory configurable from the cli?

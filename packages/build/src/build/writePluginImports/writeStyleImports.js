@@ -17,7 +17,7 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `@import '@lowdefy/layout/style.less';
-@import '@lowdefy/block-utils/style.less';
+@import '@lowdefy/client/style.less';
 {% for style in styles -%}
 @import '{{ style }}';
 {% endfor -%}
