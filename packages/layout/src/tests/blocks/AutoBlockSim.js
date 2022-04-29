@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { ErrorBoundary } from '@lowdefy/block-utils';
 import { Area, BlockLayout, layoutParamsToArea } from '../../../src/index.js';
 
 import Block from './Block.js';
@@ -112,24 +111,22 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
 
 const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
   return (
-    <ErrorBoundary>
-      <Loading id={`${block.id}-loading`} showLoading>
-        <BlockLayout
-          id={`bl-${block.id}` + randomId()}
-          highlightBorders={highlightBorders}
-          layout={block.layout || {}}
-          blockStyle={block.style}
+    <Loading id={`${block.id}-loading`} showLoading>
+      <BlockLayout
+        id={`bl-${block.id}` + randomId()}
+        highlightBorders={highlightBorders}
+        layout={block.layout || {}}
+        blockStyle={block.style}
+        makeCssClass={makeCssClass}
+      >
+        <AutoBlock
+          block={block}
+          state={state}
           makeCssClass={makeCssClass}
-        >
-          <AutoBlock
-            block={block}
-            state={state}
-            makeCssClass={makeCssClass}
-            highlightBorders={highlightBorders}
-          />
-        </BlockLayout>
-      </Loading>
-    </ErrorBoundary>
+          highlightBorders={highlightBorders}
+        />
+      </BlockLayout>
+    </Loading>
   );
 };
 
