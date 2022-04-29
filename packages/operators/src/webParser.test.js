@@ -164,6 +164,7 @@ test('operator returns value', () => {
             },
           ],
           "methodName": undefined,
+          "operatorPrefix": "_",
           "operators": Object {
             "_error": [MockFunction],
             "_init": [MockFunction],
@@ -317,6 +318,7 @@ test('context._internal.lowdefy empty object', () => {
           "lowdefyGlobal": Object {},
           "menus": Object {},
           "methodName": undefined,
+          "operatorPrefix": "_",
           "operators": Object {
             "_error": [MockFunction],
             "_init": [MockFunction],

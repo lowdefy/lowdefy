@@ -1,9 +1,8 @@
 import React from 'react';
-import NextLink from 'next/link';
 import { createLink } from '@lowdefy/engine';
 import { type } from '@lowdefy/helpers';
 
-const createLinkComponent = (lowdefy) => {
+const createLinkComponent = (lowdefy, Link) => {
   const backLink = ({ ariaLabel, children, className, id, rel }) => (
     <a
       id={id}
@@ -61,7 +60,7 @@ const createLinkComponent = (lowdefy) => {
           id={id}
           aria-label={ariaLabel}
           className={className}
-          href={`${window.location.origin}${lowdefy.basePath}${pathname}${
+          href={`${window.location.origin}${lowdefy._internal.router.basePath}${pathname}${
             query ? `?${query}` : ''
           }`}
           rel={rel || 'noopener noreferrer'}
@@ -72,11 +71,11 @@ const createLinkComponent = (lowdefy) => {
       );
     }
     return (
-      <NextLink href={{ pathname, query }} replace={replace} scroll={scroll}>
+      <Link href={{ pathname, query }} replace={replace} scroll={scroll}>
         <a id={id} aria-label={ariaLabel} className={className} rel={rel} onClick={setInput}>
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
-      </NextLink>
+      </Link>
     );
   };
   const noLink = ({ className, children, id }) => (

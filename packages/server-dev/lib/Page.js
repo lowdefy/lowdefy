@@ -14,16 +14,30 @@
   limitations under the License.
 */
 
-import { createIcon } from '@lowdefy/block-utils';
+import React from 'react';
 
-import createLinkComponent from './createLinkComponent.js';
-import icons from '../../build/plugins/icons.js';
+import Client from '@lowdefy/client';
+import usePageConfig from './utils/usePageConfig.js';
 
-const createComponents = (lowdefy) => {
-  return {
-    Link: createLinkComponent(lowdefy),
-    Icon: createIcon(icons),
-  };
+const Page = ({ Components, config, pageId, router, types }) => {
+  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
+  if (!pageConfig) {
+    router.replace(`/404`);
+    return '';
+  }
+  return (
+    <Client
+      Components={Components}
+      config={{
+        ...config,
+        pageConfig,
+      }}
+      router={router}
+      stage="dev"
+      types={types}
+      window={window}
+    />
+  );
 };
 
-export default createComponents;
+export default Page;

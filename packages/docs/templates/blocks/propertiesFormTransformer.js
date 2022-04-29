@@ -86,7 +86,8 @@ const button = (path) => ({
         label: {
           span: 8,
           align: 'right',
-          extra: 'Name of an Ant Design Icon or properties of an Icon block to use icon in button.',
+          extra:
+            'Name of an React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) or properties of an Icon block to use icon in button.',
         },
         showSearch: true,
         allowClear: true,

@@ -17,9 +17,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { makeCssClass } from '@lowdefy/block-utils';
 
 import createIcon from './createIcon.js';
-import makeCssClass from './makeCssClass.js';
 
 const methods = {
   makeCssClass,

@@ -27,11 +27,11 @@ import validateBlock from './validateBlock.js';
 async function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
   setBlockId(block, pageContext);
+  countBlockOperators(block, pageContext);
   buildEvents(block, pageContext);
   buildRequests(block, pageContext);
   moveSubBlocksToArea(block, pageContext);
   moveSkeletonBlocksToArea(block, pageContext);
-  countBlockOperators(block, pageContext);
   countBlockTypes(block, pageContext);
   await buildSubBlocks(block, pageContext);
 }

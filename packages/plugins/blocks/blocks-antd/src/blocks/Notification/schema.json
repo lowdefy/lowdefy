@@ -27,14 +27,14 @@
       },
       "icon": {
         "type": ["string", "object"],
-        "description": "Name of an Ant Design Icon or properties of an Icon block to customize notification icon.",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize notification icon.",
         "docs": {
           "displayType": "icon"
         }
       },
       "closeIcon": {
         "type": ["string", "object"],
-        "description": "Name of an Ant Design Icon or properties of an Icon block to customize close icon.",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize close icon.",
         "docs": {
           "displayType": "icon"
         }

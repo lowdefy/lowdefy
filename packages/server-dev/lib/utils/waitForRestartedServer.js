@@ -16,15 +16,15 @@
 
 import request from './request.js';
 
-function waitForRestartedServer(lowdefy) {
+function waitForRestartedServer(basePath) {
   setTimeout(async () => {
     try {
       await request({
-        url: `${lowdefy.basePath}/api/ping`,
+        url: `${basePath}/api/ping`,
       });
-      lowdefy._internal.window.location.reload();
+      window.location.reload();
     } catch (error) {
-      waitForRestartedServer(lowdefy);
+      waitForRestartedServer(basePath);
     }
   }, 1500);
 }

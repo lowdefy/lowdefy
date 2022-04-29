@@ -15,13 +15,12 @@
 */
 
 import React from 'react';
-import Head from 'next/head';
 
-const BindHead = ({ properties }) => {
+const BindHead = ({ Component, properties }) => {
   return (
-    <Head>
+    <Component>
       <title>{properties.title}</title>
-    </Head>
+    </Component>
   );
 };
 

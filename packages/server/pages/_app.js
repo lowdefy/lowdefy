@@ -16,20 +16,12 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { ErrorBoundary } from '@lowdefy/block-utils';
 
-import initLowdefyContext from '../lib/utils/initLowdefyContext.js';
-
+// Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-const lowdefy = initLowdefyContext();
-
 function App({ Component, pageProps }) {
-  return (
-    <ErrorBoundary>
-      <Component lowdefy={lowdefy} {...pageProps} />
-    </ErrorBoundary>
-  );
+  return <Component {...pageProps} />;
 }
 
 const DynamicApp = dynamic(() => Promise.resolve(App), {

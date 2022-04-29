@@ -16,14 +16,11 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import { keyframes } from '@emotion/react';
-import { css } from '@emotion/css';
 import { omit, type } from '@lowdefy/helpers';
 import Icon from '@ant-design/icons';
+import { blockDefaultProps, makeCssClass } from '@lowdefy/block-utils';
 
-import blockDefaultProps from './blockDefaultProps.js';
 import ErrorBoundary from './ErrorBoundary.js';
-import makeCssClass from './makeCssClass.js';
 
 const lowdefyProps = [
   'actionLog',
@@ -42,30 +39,23 @@ const lowdefyProps = [
   'validation',
 ];
 
-const spin = keyframes`{
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(359deg);
-  }
-}`;
-
-const spinClass = css`
-  animation: ${spin} 2s infinite linear;
-`;
-
 const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
-  const IconBlock = ({ blockId, events, methods, properties, ...props }) => {
+  const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
+    const spin =
+      (propertiesObj.spin || (events.onClick && events.onClick.loading)) &&
+      !propertiesObj.disableLoadingIcon;
     const iconProps = {
       id: blockId,
       className: classNames({
-        [makeCssClass(propertiesObj.style)]: true,
-        [spinClass]: propertiesObj.spin,
+        [makeCssClass([
+          { cursor: (onClick || events.onClick) && 'pointer' },
+          propertiesObj.style,
+        ])]: true,
+        'icon-spin': spin,
       }),
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,
@@ -80,8 +70,8 @@ const createIcon = (Icons) => {
     }
     return (
       <>
-        {events.onClick && events.onClick.loading && !propertiesObj.disableLoadingIcon ? (
-          <AiOutlineLoading3Quarters {...{ ...iconProps, spin: true }} />
+        {spin ? (
+          <AiOutlineLoading3Quarters {...iconProps} />
         ) : (
           <ErrorBoundary
             fallback={() => <AiOutlineExclamationCircle {...{ ...iconProps, color: '#F00' }} />}
@@ -89,11 +79,12 @@ const createIcon = (Icons) => {
             <IconComp
               id={blockId}
               onClick={
-                events.onClick &&
-                (() =>
-                  methods.triggerEvent({
-                    name: 'onClick',
-                  }))
+                onClick ||
+                (events.onClick &&
+                  (() =>
+                    methods.triggerEvent({
+                      name: 'onClick',
+                    })))
               }
               size={propertiesObj.size}
               title={propertiesObj.title}

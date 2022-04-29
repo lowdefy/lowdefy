@@ -14,6 +14,6 @@
   limitations under the License.
 */
 
-import App from '../lib/components/App.js';
+import App from '../lib/App.js';
 
 export default App;

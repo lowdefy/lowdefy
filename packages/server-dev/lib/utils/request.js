@@ -28,6 +28,8 @@ async function request({ url, method = 'GET', body }) {
   if (!res.ok) {
     // TODO: check
     const body = await res.json();
+    console.log(res);
+    console.log(body);
     throw new Error(body.message || 'Request error');
   }
   return res.json();

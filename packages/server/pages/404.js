@@ -16,7 +16,7 @@
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import Page from '../lib/components/Page.js';
+import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
   // TODO: get the right api context options

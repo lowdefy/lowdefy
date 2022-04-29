@@ -14,15 +14,6 @@
   limitations under the License.
 */
 
-import React from 'react';
-import Head from 'next/head';
+import Client from './Client.js';
 
-const BindHead = ({ properties }) => {
-  return (
-    <Head>
-      <title>{properties.title}</title>
-    </Head>
-  );
-};
-
-export default BindHead;
+export default Client;

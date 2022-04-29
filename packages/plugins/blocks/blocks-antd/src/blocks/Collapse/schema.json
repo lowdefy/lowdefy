@@ -29,7 +29,7 @@
       },
       "expandIcon": {
         "type": ["string", "object"],
-        "description": "Name of an Ant Design Icon or properties of an Icon block for expand icon on the right of selector.",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for expand icon on the right of selector.",
         "docs": {
           "displayType": "icon"
         }

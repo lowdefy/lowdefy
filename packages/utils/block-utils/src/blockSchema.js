@@ -90,7 +90,7 @@ export default {
                     icon: {
                       type: ['string', 'object'],
                       description:
-                        'Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item.',
+                        'Name of an React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) or properties of an Icon block to customize icon on menu item.',
                     },
                     danger: {
                       type: 'boolean',

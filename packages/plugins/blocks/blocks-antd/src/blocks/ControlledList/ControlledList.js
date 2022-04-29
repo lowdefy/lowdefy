@@ -122,7 +122,7 @@ const ControlledListBlock = ({
                   ...properties.removeItemIcon,
                   style: {
                     paddingLeft:
-                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
+                      properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
                     fontSize:
                       properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
                     ...(properties.removeItemIcon && properties.removeItemIcon.style

@@ -14,20 +14,16 @@
   limitations under the License.
 */
 
-function setPageId(lowdefy) {
-  if (lowdefy._internal.router.pathname === `/404`) {
-    lowdefy.pageId = '404';
-    return false;
-  }
-  if (!lowdefy._internal.router.query.pageId) {
-    lowdefy.pageId = lowdefy.home.pageId;
-    if (lowdefy.home.configured === false) {
-      return true;
-    }
-    return false;
-  }
-  lowdefy.pageId = lowdefy._internal.router.query.pageId;
-  return false;
+.icon-spin {
+  animation: spin 1s infinite linear;
 }
 
-export default setPageId;
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
