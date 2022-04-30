@@ -38,6 +38,7 @@ const App = () => {
   const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
     router.push(`/${pageId}`);
+    return '';
   }
   return (
     <Reload basePath={router.basePath}>
