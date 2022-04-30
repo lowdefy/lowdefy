@@ -25,40 +25,34 @@ import initLowdefyContext from './initLowdefyContext.js';
 
 const Client = ({ Components, config, router, stage, types, window }) => {
   const lowdefy = initLowdefyContext({ Components, config, router, types, stage, window });
-
   return (
-    <ProgressBarController
-      id="page-loader"
-      key={config.pageConfig.id}
-      ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
-      lowdefy={lowdefy}
-      content={{
-        content: (progress) => (
-          <Context config={config.pageConfig} lowdefy={lowdefy} progress={progress}>
-            {(context) => {
-              return (
-                <>
-                  <Head
-                    Component={Components.Head}
-                    properties={
-                      context._internal.RootBlocks.map[config.pageConfig.id].eval.properties
-                    }
-                  />
-                  <Block
-                    block={context._internal.RootBlocks.map[config.pageConfig.id]}
-                    Blocks={context._internal.RootBlocks}
-                    context={context}
-                    lowdefy={lowdefy}
-                    progress={progress}
-                    parentLoading={false}
-                  />
-                </>
-              );
-            }}
-          </Context>
-        ),
-      }}
-    />
+    <>
+      <ProgressBarController
+        id="page-loader"
+        key={`${config.pageConfig.id}-loader`}
+        lowdefy={lowdefy}
+      />
+      <Context key={config.pageConfig.id} config={config.pageConfig} lowdefy={lowdefy}>
+        {(context) => {
+          if (!context._internal.onInitDone) return '';
+          return (
+            <>
+              <Head
+                Component={Components.Head}
+                properties={context._internal.RootBlocks.map[config.pageConfig.id].eval.properties}
+              />
+              <Block
+                block={context._internal.RootBlocks.map[config.pageConfig.id]}
+                Blocks={context._internal.RootBlocks}
+                context={context}
+                lowdefy={lowdefy}
+                parentLoading={false}
+              />
+            </>
+          );
+        }}
+      </Context>
+    </>
   );
 };
 

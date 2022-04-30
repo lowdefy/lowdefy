@@ -31,6 +31,12 @@ const lowdefy = {
       return () => undefined;
     },
     link: () => undefined,
+    progress: {
+      state: {
+        progress: 0,
+      },
+      dispatch: () => undefined,
+    },
   },
   contexts: {},
   inputs: {},

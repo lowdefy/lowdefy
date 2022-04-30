@@ -19,21 +19,21 @@ import getContext from '@lowdefy/engine';
 
 import MountEvents from './MountEvents.js';
 
-const Context = ({ children, config, lowdefy, progress }) => {
+const Context = ({ children, config, lowdefy }) => {
   const context = getContext({ config, lowdefy });
   return (
     <MountEvents
       context={context}
       triggerEvent={async () => {
         await context._internal.runOnInit(() => {
-          progress.dispatch({
+          lowdefy._internal.progress.dispatch({
             type: 'increment',
           });
         });
       }}
       triggerEventAsync={() => {
         context._internal.runOnInitAsync(() => {
-          progress.dispatch({
+          lowdefy._internal.progress.dispatch({
             type: 'increment',
           });
         });
