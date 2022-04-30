@@ -2675,6 +2675,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
+    "@lowdefy/actions-core": 4.0.0-alpha.8
     "@lowdefy/api": 4.0.0-alpha.8
     "@lowdefy/blocks-antd": 4.0.0-alpha.8
     "@lowdefy/blocks-basic": 4.0.0-alpha.8

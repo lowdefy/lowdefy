@@ -40,6 +40,7 @@
     "next": "next"
   },
   "dependencies": {
+    "@lowdefy/actions-core": "4.0.0-alpha.8",
     "@lowdefy/api": "4.0.0-alpha.8",
     "@lowdefy/blocks-antd": "4.0.0-alpha.8",
     "@lowdefy/blocks-basic": "4.0.0-alpha.8",
