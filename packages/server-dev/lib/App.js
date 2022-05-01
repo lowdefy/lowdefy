@@ -42,20 +42,23 @@ const App = () => {
   }
   return (
     <Reload basePath={router.basePath}>
-      <Page
-        Components={{ Head, Link }}
-        config={{
-          rootConfig,
-        }}
-        pageId={pageId}
-        router={router}
-        types={{
-          actions,
-          blocks,
-          icons,
-          operators,
-        }}
-      />
+      {(resetContext) => (
+        <Page
+          Components={{ Head, Link }}
+          config={{
+            rootConfig,
+          }}
+          pageId={pageId}
+          resetContext={resetContext}
+          router={router}
+          types={{
+            actions,
+            blocks,
+            icons,
+            operators,
+          }}
+        />
+      )}
     </Reload>
   );
 };

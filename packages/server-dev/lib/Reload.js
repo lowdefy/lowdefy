@@ -14,18 +14,20 @@
   limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useMutateCache from './utils/useMutateCache.js';
 import waitForRestartedServer from './utils/waitForRestartedServer.js';
 
 const Reload = ({ children, basePath }) => {
+  const [reset, setReset] = useState(false);
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
     const sse = new EventSource(`${basePath}/api/reload`);
 
-    sse.addEventListener('reload', () => {
-      mutateCache();
+    sse.addEventListener('reload', async () => {
+      await mutateCache();
+      setReset(true);
       console.log('Reloaded config.');
     });
 
@@ -37,7 +39,8 @@ const Reload = ({ children, basePath }) => {
       sse.close();
     };
   }, []);
-  return <>{children}</>;
+  // TODO: reload needs to pass a flag that the server is restarting / installing types.
+  return <>{children({ reset, setReset })}</>;
 };
 
 export default Reload;
