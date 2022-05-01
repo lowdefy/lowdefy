@@ -18,6 +18,7 @@ import React from 'react';
 
 import Block from './block/Block.js';
 import Context from './Context.js';
+import DisplayMessage from './DisplayMessage.js';
 import Head from './Head.js';
 import ProgressBarController from './ProgressBarController.js';
 
@@ -36,10 +37,20 @@ const Client = ({
   return (
     <>
       <ProgressBarController
-        id="page-loader"
-        key={`${config.pageConfig.id}-loader`}
+        id="lowdefy-progress-bar"
+        key={`${config.pageConfig.id}-progress-bar`}
         lowdefy={lowdefy}
         resetContext={resetContext}
+      />
+      <DisplayMessage
+        id="lowdefy-displayy-message"
+        key={`${config.pageConfig.id}-display-message`}
+        Component={lowdefy._internal.blockComponents.Message}
+        methods={{
+          registerMethod: (_, method) => {
+            lowdefy._internal.displayMessage = method;
+          },
+        }}
       />
       <Context
         key={config.pageConfig.id}

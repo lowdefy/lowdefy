@@ -17,9 +17,9 @@
 import { urlQuery } from '@lowdefy/helpers';
 
 import callRequest from './callRequest.js';
-import setupLink from './setupLink.js';
-import createLinkComponent from './createLinkComponent.js';
 import createIcon from './createIcon.js';
+import createLinkComponent from './createLinkComponent.js';
+import setupLink from './setupLink.js';
 
 const lowdefy = {
   _internal: {
