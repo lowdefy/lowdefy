@@ -44,12 +44,17 @@ function reducer(state, action) {
         progress: state.onMounts - 1 === 0 ? 100 : state.progress,
         onMounts: state.onMounts - 1,
       };
+    case 'reset':
+      return {
+        progress: 0,
+        onMounts: 0,
+      };
     default:
       throw new Error('Invalid action type for ProgressBarController reducer.');
   }
 }
 
-const ProgressBarController = ({ id, lowdefy }) => {
+const ProgressBarController = ({ id, lowdefy, resetContext }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const ProgressBar = lowdefy._internal.blockComponents.ProgressBar;
   lowdefy._internal.progress.state = state;
@@ -59,6 +64,9 @@ const ProgressBarController = ({ id, lowdefy }) => {
       state.progress < 95 && setInterval(() => dispatch({ type: 'auto-increment' }), 500);
     return () => clearInterval(timer);
   }, [state]);
+  if (resetContext.reset && state.progress === 100) {
+    dispatch({ type: 'reset' });
+  }
   return (
     <ProgressBar
       basePath={lowdefy.basePath}

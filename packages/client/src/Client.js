@@ -23,16 +23,30 @@ import ProgressBarController from './ProgressBarController.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
 
-const Client = ({ Components, config, router, stage, types, window }) => {
-  const lowdefy = initLowdefyContext({ Components, config, router, types, stage, window });
+const Client = ({
+  Components,
+  config,
+  resetContext = { reset: false, setReset: () => undefined },
+  router,
+  stage,
+  types,
+  window,
+}) => {
+  const lowdefy = initLowdefyContext({ Components, config, router, stage, types, window });
   return (
     <>
       <ProgressBarController
         id="page-loader"
         key={`${config.pageConfig.id}-loader`}
         lowdefy={lowdefy}
+        resetContext={resetContext}
       />
-      <Context key={config.pageConfig.id} config={config.pageConfig} lowdefy={lowdefy}>
+      <Context
+        key={config.pageConfig.id}
+        config={config.pageConfig}
+        lowdefy={lowdefy}
+        resetContext={resetContext}
+      >
         {(context) => {
           if (!context._internal.onInitDone) return '';
           return (
