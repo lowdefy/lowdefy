@@ -91,8 +91,13 @@ class Blocks {
       block.styleEval = {};
       block.validationEval = {};
       block.visibleEval = {};
-
-      block.meta = this.context._internal.lowdefy._internal.blockComponents[block.type].meta;
+      try {
+        block.meta = this.context._internal.lowdefy._internal.blockComponents[block.type].meta;
+      } catch (error) {
+        throw new Error(
+          `Block type ${block.type} not found at ${block.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
+        );
+      }
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
