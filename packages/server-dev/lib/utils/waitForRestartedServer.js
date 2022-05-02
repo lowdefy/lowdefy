@@ -26,7 +26,7 @@ function waitForRestartedServer(basePath) {
     } catch (error) {
       waitForRestartedServer(basePath);
     }
-  }, 1500);
+  }, 500); // TODO: this ping should be shorter than rerender delay until we can pass a rebuild flag to reload.
 }
 
 export default waitForRestartedServer;

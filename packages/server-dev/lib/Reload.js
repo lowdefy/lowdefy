@@ -21,17 +21,24 @@ import waitForRestartedServer from './utils/waitForRestartedServer.js';
 
 const Reload = ({ children, basePath }) => {
   const [reset, setReset] = useState(false);
+  const [restarting, setRestarting] = useState(false);
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
     const sse = new EventSource(`${basePath}/api/reload`);
 
-    sse.addEventListener('reload', async () => {
-      await mutateCache();
-      setReset(true);
-      console.log('Reloaded config.');
+    sse.addEventListener('reload', () => {
+      // add a update delay to prevent rerender before server is shut down for rebuild, ideally we don't want to do this.
+      // TODO: We need to pass a flag when a rebuild will happen so that client does not trigger render.
+      setTimeout(async () => {
+        await mutateCache();
+        setReset(true);
+        console.log('Reloaded config.');
+      }, 600);
     });
 
     sse.onerror = () => {
+      setRestarting(true);
+      console.log('Rebuilding Lowdefy App.');
       sse.close();
       waitForRestartedServer(basePath);
     };
@@ -39,8 +46,7 @@ const Reload = ({ children, basePath }) => {
       sse.close();
     };
   }, []);
-  // TODO: reload needs to pass a flag that the server is restarting / installing types.
-  return <>{children({ reset, setReset })}</>;
+  return <>{children({ reset, setReset, restarting })}</>;
 };
 
 export default Reload;

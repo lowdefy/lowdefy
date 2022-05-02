@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-
 import Client from '@lowdefy/client';
+
+import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
 const Page = ({ Components, config, pageId, resetContext, router, types }) => {
@@ -24,6 +25,9 @@ const Page = ({ Components, config, pageId, resetContext, router, types }) => {
   if (!pageConfig) {
     router.replace(`/404`);
     return '';
+  }
+  if (resetContext.restarting) {
+    return <RestartingPage />;
   }
   return (
     <Client
