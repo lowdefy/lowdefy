@@ -36,7 +36,8 @@ const RestartingPage = () => {
       >
         <h3>Rebuilding Lowdefy App</h3>
         <p>
-          The server is reconfiguring Lowdefy types and restarting. The page will reload when ready.
+          The server is restarting because your configuration changed. The page will reload when
+          ready.
         </p>
       </div>
     </div>

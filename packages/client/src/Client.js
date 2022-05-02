@@ -43,7 +43,7 @@ const Client = ({
         resetContext={resetContext}
       />
       <DisplayMessage
-        id="lowdefy-displayy-message"
+        id="lowdefy-display-message"
         key={`${config.pageConfig.id}-display-message`}
         Component={lowdefy._internal.blockComponents.Message}
         methods={{
