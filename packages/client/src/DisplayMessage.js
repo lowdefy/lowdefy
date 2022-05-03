@@ -14,19 +14,22 @@
   limitations under the License.
 */
 
-import request from './request.js';
+import React from 'react';
+import { makeCssClass } from '@lowdefy/block-utils';
 
-function waitForRestartedServer(basePath) {
-  setTimeout(async () => {
-    try {
-      await request({
-        url: `${basePath}/api/ping`,
-      });
-      window.location.reload();
-    } catch (error) {
-      waitForRestartedServer(basePath);
-    }
-  }, 500); // TODO: this ping should be shorter than rerender delay until we can pass a rebuild flag to reload.
-}
+const DisplayMessage = ({ Component, id, methods }) => {
+  return (
+    <Component
+      blockId={id}
+      key={id}
+      methods={{
+        makeCssClass,
+        registerMethod: methods.registerMethod,
+        triggerEvent: () => undefined,
+      }}
+      properties={{}}
+    />
+  );
+};
 
-export default waitForRestartedServer;
+export default DisplayMessage;

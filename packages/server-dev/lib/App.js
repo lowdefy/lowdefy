@@ -38,23 +38,27 @@ const App = () => {
   const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
     router.push(`/${pageId}`);
+    return '';
   }
   return (
     <Reload basePath={router.basePath}>
-      <Page
-        Components={{ Head, Link }}
-        config={{
-          rootConfig,
-        }}
-        pageId={pageId}
-        router={router}
-        types={{
-          actions,
-          blocks,
-          icons,
-          operators,
-        }}
-      />
+      {(resetContext) => (
+        <Page
+          Components={{ Head, Link }}
+          config={{
+            rootConfig,
+          }}
+          pageId={pageId}
+          resetContext={resetContext}
+          router={router}
+          types={{
+            actions,
+            blocks,
+            icons,
+            operators,
+          }}
+        />
+      )}
     </Reload>
   );
 };

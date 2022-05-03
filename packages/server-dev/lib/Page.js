@@ -15,15 +15,19 @@
 */
 
 import React from 'react';
-
 import Client from '@lowdefy/client';
+
+import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
-const Page = ({ Components, config, pageId, router, types }) => {
+const Page = ({ Components, config, pageId, resetContext, router, types }) => {
   const { data: pageConfig } = usePageConfig(pageId, router.basePath);
   if (!pageConfig) {
     router.replace(`/404`);
     return '';
+  }
+  if (resetContext.restarting) {
+    return <RestartingPage />;
   }
   return (
     <Client
@@ -32,6 +36,7 @@ const Page = ({ Components, config, pageId, router, types }) => {
         ...config,
         pageConfig,
       }}
+      resetContext={resetContext}
       router={router}
       stage="dev"
       types={types}

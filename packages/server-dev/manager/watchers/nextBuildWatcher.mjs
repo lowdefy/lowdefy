@@ -24,6 +24,7 @@ const hashes = {};
 
 const watchedFiles = [
   'build/config.json',
+  'build/plugins/actions.js',
   'build/plugins/blocks.js',
   'build/plugins/connections.js',
   'build/plugins/icons.js',

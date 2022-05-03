@@ -54,6 +54,7 @@
     "start:server:docs": "yarn workspace @lowdefy/server build:lowdefy --config-directory ../docs && yarn && yarn workspace @lowdefy/server build:next && yarn workspace @lowdefy/server start",
     "start:server:next-dev:app": "yarn start:cli:build:app && yarn && yarn workspace @lowdefy/server dev",
     "start:server:next-dev:docs": "yarn start:cli:build:docs && yarn && yarn workspace @lowdefy/server dev",
+    "start:server-dev:next-dev:app": "yarn workspace lowdefy start build --config-directory ../../app --server-directory ../server-dev --output-directory ../ && yarn workspace @lowdefy/server-dev next dev",
     "test": "lerna run test",
     "test-ci": "yarn test --ignore='@lowdefy/engine' --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*' --ignore='@lowdefy/plugin-aws'"
   },
