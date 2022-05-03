@@ -38,6 +38,8 @@ function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
   function login({ providerId, callbackUrl, authUrl = {} }) {
+    // TODO: if only one provider exists, pass provider here
+    // to link directly to provider
     auth.signIn(
       providerId,
       { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },

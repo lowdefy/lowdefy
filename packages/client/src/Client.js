@@ -23,8 +23,8 @@ import ProgressBarController from './ProgressBarController.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
 
-const Client = ({ Components, config, router, stage, types, window }) => {
-  const lowdefy = initLowdefyContext({ Components, config, router, types, stage, window });
+const Client = ({ auth, Components, config, router, stage, types, window }) => {
+  const lowdefy = initLowdefyContext({ auth, Components, config, router, types, stage, window });
 
   return (
     <ProgressBarController

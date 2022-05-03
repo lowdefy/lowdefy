@@ -15,14 +15,17 @@
 */
 
 import NextAuth from 'next-auth';
-import Auth0Provider from 'next-auth/providers/auth0';
+import { getNextAuthConfig } from '@lowdefy/api';
 
-export default NextAuth({
-  providers: [
-    Auth0Provider({
-      clientId: process.env.AUTH0_CLIENT_ID,
-      clientSecret: process.env.AUTH0_CLIENT_SECRET,
-      issuer: process.env.AUTH0_ISSUER,
-    }),
-  ],
-});
+import authJson from '../../../build/auth.json';
+import providers from '../../../build/plugins/auth/providers.js';
+
+// If getNextAuthConfig needs to be async:
+// async function auth(req, res) {
+//   const config = await getNextAuthConfig();
+//   return await NextAuth(req, res, config);
+// }
+
+// export default auth;
+
+export default NextAuth(getNextAuthConfig({ authJson, plugins: { providers } }));

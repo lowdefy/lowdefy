@@ -17,6 +17,7 @@
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
+import getNextAuthConfig from './auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 
@@ -34,6 +35,7 @@ export {
   ConfigurationError,
   createApiContext,
   getHomeAndMenus,
+  getNextAuthConfig,
   getPageConfig,
   getRootConfig,
   RequestError,

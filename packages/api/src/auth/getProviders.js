@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-import providers from '../../../build/plugins/auth/providers.js';
-
 // TODO: docs:
 // Callback url to configure with provider will be: {{ protocol }}{{ host }}/api/auth/callback/{{ providerId }}
 // This depends on providerId, which might cause some issues if users copy an example and change the id.
 // We need to allow users to configure ids, since they might have more than one of the same type.
 
-function getProviders(authConfig) {
+function getProviders({ authConfig, plugins }) {
   return authConfig.providers.map((provider) =>
-    providers[provider.type]({
+    plugins.providers[provider.type]({
       ...provider.properties,
       id: provider.id,
     })

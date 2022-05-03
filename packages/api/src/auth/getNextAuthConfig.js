@@ -18,7 +18,6 @@ import { NodeParser } from '@lowdefy/operators';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
-import authJson from '../../../build/auth.json';
 import getProviders from './getProviders.js';
 
 const nextAuthConfig = {};
@@ -53,11 +52,10 @@ const callbacks = {
   },
 };
 
-function getNextAuthConfig() {
+function getNextAuthConfig({ authJson, plugins }) {
   if (initialized) return nextAuthConfig;
 
   const operatorsParser = new NodeParser({
-    // TODO: do we want to support other operators here?
     operators: { _secret },
     payload: {},
     secrets: getSecretsFromEnv(),
@@ -73,7 +71,7 @@ function getNextAuthConfig() {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.providers = getProviders(authConfig);
+  nextAuthConfig.providers = getProviders({ authConfig, plugins });
 
   // We can either configure this using auth config,
   // then the user configures this using the _secret operator
