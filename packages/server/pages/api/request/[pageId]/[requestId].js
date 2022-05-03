@@ -17,7 +17,7 @@
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import connections from '../../../../build/plugins/connections.js';
-import operators from '../../../../build/plugins/operatorsServer.js';
+import operators from '../../../../build/plugins/operators/server.js';
 
 export default async function handler(req, res) {
   try {
