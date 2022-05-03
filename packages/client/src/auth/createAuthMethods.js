@@ -15,7 +15,6 @@
 */
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
-import { signIn, signOut } from 'next-auth/react';
 
 function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   const { home, pageId, urlQuery } = callbackUrl;
@@ -35,12 +34,19 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   return undefined;
 }
 
-function getAuthMethods({ lowdefy }) {
+function createAuthMethods(lowdefy, auth) {
+  // login and logout are Lowdefy function that handle action params
+  // signIn and signOut are the next-auth methods
   function login({ providerId, callbackUrl, authUrl = {} }) {
-    signIn(providerId, { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) }, authUrl.urlQuery);
+    auth.signIn(
+      providerId,
+      { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
+      authUrl.urlQuery
+    );
   }
+  // TODO: fix callbackUrl
   function logout({ callbackUrl }) {
-    signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) });
+    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) });
   }
   return {
     login,
@@ -48,4 +54,4 @@ function getAuthMethods({ lowdefy }) {
   };
 }
 
-export default getAuthMethods;
+export default createAuthMethods;

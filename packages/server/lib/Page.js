@@ -20,8 +20,10 @@ import { useRouter } from 'next/router';
 import Client from '@lowdefy/client';
 import Head from 'next/head';
 import Link from 'next/link';
+import { signIn, signOut } from 'next-auth/react';
 
 import actions from '../build/plugins/actions.js';
+import authConfig from '../build/auth.json';
 import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
@@ -30,6 +32,7 @@ const Page = ({ pageConfig, rootConfig }) => {
   const router = useRouter();
   return (
     <Client
+      auth={{ authConfig, signIn, signOut }}
       Components={{ Head, Link }}
       config={{
         pageConfig,

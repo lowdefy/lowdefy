@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 
 import Head from 'next/head';
 import Link from 'next/link';
+import { signIn, signOut } from 'next-auth/react';
 
 import Reload from './Reload.js';
 import Page from './Page.js';
@@ -27,6 +28,7 @@ import setPageId from './setPageId.js';
 import useRootConfig from './utils/useRootConfig.js';
 
 import actions from '../build/plugins/actions.js';
+import authConfig from '../build/auth.json';
 import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
@@ -42,6 +44,7 @@ const App = () => {
   return (
     <Reload basePath={router.basePath}>
       <Page
+        auth={{ authConfig, signIn, signOut }}
         Components={{ Head, Link }}
         config={{
           rootConfig,
