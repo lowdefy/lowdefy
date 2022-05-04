@@ -47,8 +47,8 @@ function createAuthMethods(lowdefy, auth) {
     );
   }
   // TODO: fix callbackUrl
-  function logout({ callbackUrl }) {
-    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) });
+  function logout() {
+    auth.signOut();
   }
   return {
     login,

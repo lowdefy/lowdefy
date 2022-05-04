@@ -16,7 +16,16 @@
 
 import { ServerError } from '../context/errors.js';
 
-function createAuthorize({ authenticated = false, roles = [] }) {
+function createAuthorize({ session }) {
+  console.log('createAuthorize', session);
+
+  // Next-auth getSession provides a session object if the user is authenticated
+  // else session will be null
+
+  const authenticated = !!session;
+  console.log(authenticated);
+  // TODO: roles
+  const roles = [];
   function authorize({ auth }) {
     if (auth.public === true) return true;
     if (auth.public === false) {
