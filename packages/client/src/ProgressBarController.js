@@ -50,7 +50,6 @@ const ProgressBarController = ({ id, ProgressBar, content, lowdefy }) => {
       methods={{ makeCssClass }}
       pageId={lowdefy.pageId}
       properties={state}
-      user={lowdefy.user}
       content={{
         content: () => content.content({ state, dispatch }),
       }}

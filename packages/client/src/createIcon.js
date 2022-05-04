@@ -35,7 +35,6 @@ const lowdefyProps = [
   'registerEvent',
   'registerMethod',
   'schemaErrors',
-  'user',
   'validation',
 ];
 
