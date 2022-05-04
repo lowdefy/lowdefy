@@ -19,7 +19,6 @@ import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
-  // TODO: get the right api context options
   const apiContext = await createApiContext({ buildDirectory: './build' });
 
   const [rootConfig, pageConfig] = await Promise.all([

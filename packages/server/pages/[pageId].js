@@ -15,13 +15,18 @@
 */
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { getSession } from 'next-auth/react';
 
 import Page from '../lib/Page.js';
 
 export async function getServerSideProps(context) {
   const { pageId } = context.params;
-  // TODO: get the right api context options
-  const apiContext = await createApiContext({ buildDirectory: './build' });
+  const session = await getSession(context);
+  const apiContext = await createApiContext({
+    buildDirectory: './build',
+    logger: console,
+    session,
+  });
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(apiContext),
