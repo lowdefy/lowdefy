@@ -40,6 +40,7 @@
     "next": "next"
   },
   "dependencies": {
+    "@lowdefy/actions-core": "4.0.0-alpha.8",
     "@lowdefy/api": "4.0.0-alpha.8",
     "@lowdefy/blocks-antd": "4.0.0-alpha.8",
     "@lowdefy/blocks-basic": "4.0.0-alpha.8",
@@ -49,6 +50,7 @@
     "@lowdefy/layout": "4.0.0-alpha.8",
     "@lowdefy/node-utils": "4.0.0-alpha.8",
     "@lowdefy/operators-js": "4.0.0-alpha.8",
+    "@lowdefy/plugin-next-auth": "4.0.0-alpha.8",
     "next": "12.0.10",
     "next-auth": "4.3.3",
     "process": "0.11.10",

@@ -3543,6 +3543,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/server/",
           "packageDependencies": [
             ["@lowdefy/server", "workspace:packages/server"],
+            ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],
             ["@lowdefy/api", "workspace:packages/api"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],
@@ -3553,6 +3554,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/layout", "workspace:packages/layout"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],
+            ["@lowdefy/plugin-next-auth", "workspace:packages/plugins/plugins/plugin-next-auth"],
             ["@next/eslint-plugin-next", "npm:12.0.10"],
             ["less", "npm:4.1.2"],
             ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:10.2.0"],
