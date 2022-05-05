@@ -46,6 +46,7 @@ export async function getServerSideProps(context) {
     props: {
       pageConfig,
       rootConfig,
+      session,
     },
   };
 }

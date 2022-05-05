@@ -38,7 +38,7 @@ const lowdefy = {
   lowdefyGlobal: {},
 };
 
-function initLowdefyContext({ auth, Components, config, router, stage, types, window }) {
+function initLowdefyContext({ auth, Components, config, router, session, stage, types, window }) {
   if (stage === 'dev') {
     window.lowdefy = lowdefy;
   }
@@ -48,6 +48,7 @@ function initLowdefyContext({ auth, Components, config, router, stage, types, wi
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
+  lowdefy.user = session?.user ?? null;
 
   lowdefy._internal.window = window;
   lowdefy._internal.document = window.document;

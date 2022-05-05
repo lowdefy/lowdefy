@@ -19,7 +19,7 @@ function buildAuthPlugins({ components, context }) {
   if (type.isArray(components.auth.providers)) {
     components.auth.providers.forEach((provider) => {
       if (type.isUndefined(provider.id)) {
-        throw new Error(`Connection id missing.`);
+        throw new Error(`Auth provider id missing.`);
       }
       if (!type.isString(provider.id)) {
         throw new Error(
