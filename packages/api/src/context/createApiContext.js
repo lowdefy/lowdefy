@@ -36,6 +36,7 @@ async function createApiContext({
     operators,
     readConfigFile,
     secrets,
+    user: session?.user,
   };
 }
 
