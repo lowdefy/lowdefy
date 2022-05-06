@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **operators:** Pass operatorPrefix to operators methods. ([454523c](https://github.com/lowdefy/lowdefy/commit/454523c1ac3176c01318f9d2f59d7a4f4b7f5e7d))
+* **operators:** Update test snapshot. ([655eae5](https://github.com/lowdefy/lowdefy/commit/655eae5c57204c6fd17388568d5fdf419d9a1da1))
+
+
+### Features
+
+* **operators:** Remove init so parser is now sync. ([aabedad](https://github.com/lowdefy/lowdefy/commit/aabedad46c3b27687c8095360f313f5e9e7fe19d))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

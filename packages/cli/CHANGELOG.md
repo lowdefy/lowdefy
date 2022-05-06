@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* Fix icon names. ([2e81f58](https://github.com/lowdefy/lowdefy/commit/2e81f589fba193e7039dc7c099855831ff9a61fb))
+* Review feedback changes. ([6925625](https://github.com/lowdefy/lowdefy/commit/69256253142813f0b78c353d0698f13386d10929))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **blocks-loaders:** Remove LogoSpinner. ([3af64aa](https://github.com/lowdefy/lowdefy/commit/3af64aacaf5c8d3c64519dc82230b48842ca0fce))
+* **build:** Skeleton on block only a object in schema. ([98d9c57](https://github.com/lowdefy/lowdefy/commit/98d9c57d6cfb9e24ba0be897ce6812e4765b0d7b))
+* **client:** Render progress bar next to context, and event order fixes. ([fc32c75](https://github.com/lowdefy/lowdefy/commit/fc32c75ea2d8c5c97e21280b09fce5518ec14d37))
+* Update snapshots. ([19db923](https://github.com/lowdefy/lowdefy/commit/19db92316c4a1f6aeccf8bb31a3f9ba8e7e66d5a))
+
+
+### Features
+
+* **block-loaders:** Add progress block. ([a872dfc](https://github.com/lowdefy/lowdefy/commit/a872dfcf81e911a10996fcd4b179e6e8ed2e1262))
+* **blocks-antd:** Update snapshots. ([5f5ef00](https://github.com/lowdefy/lowdefy/commit/5f5ef001c203b6c85564184683ece5fd968eea37))
+* **blocks:** loading to render inputs but disable. ([1662f36](https://github.com/lowdefy/lowdefy/commit/1662f3668402bdce09a7ec814665525fc204f365))
+* **blocks:** Remove skeleton definition on blocks. ([f938a51](https://github.com/lowdefy/lowdefy/commit/f938a51268a7c0e5fa129c0628662890b635c8c7))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Fix confirm modal button icons, closes [#1160](https://github.com/lowdefy/lowdefy/issues/1160) ([bba35be](https://github.com/lowdefy/lowdefy/commit/bba35be1dbb6a8e142f70b2415e865dba59de47b))
+* **docs:** Cleanup skeleton docs change. ([6310d13](https://github.com/lowdefy/lowdefy/commit/6310d13af0c9cc709c5c3f50cc9800ebb0a4640a))
+* **docs:** Fix docs version plugin import and markdown template. ([3f3cf55](https://github.com/lowdefy/lowdefy/commit/3f3cf5569f5d15c0283f047f9a6aa404d9709fee))
+* Fix bugs in icon and icon usage in docs. ([03858f4](https://github.com/lowdefy/lowdefy/commit/03858f43502404de39024b38fac1c5f87d5c99ca))
+* Fix icon names. ([2e81f58](https://github.com/lowdefy/lowdefy/commit/2e81f589fba193e7039dc7c099855831ff9a61fb))
+* Review feedback changes. ([6925625](https://github.com/lowdefy/lowdefy/commit/69256253142813f0b78c353d0698f13386d10929))
+* Update docs snapshot test ([8987ad8](https://github.com/lowdefy/lowdefy/commit/8987ad8652158bfb66a7334d7745c99d6b49ce11))
+* Update snapshots. ([19db923](https://github.com/lowdefy/lowdefy/commit/19db92316c4a1f6aeccf8bb31a3f9ba8e7e66d5a))
+
+
+### Features
+
+* **docs:** Fix loading and skeleton definitions on blocks concept pages. ([b6207a9](https://github.com/lowdefy/lowdefy/commit/b6207a96ecd99b00e7ed0a3a2151f96ab48d509f))
+* **docs:** Remove onEnter and fix onInit and onMount definitions. ([051154f](https://github.com/lowdefy/lowdefy/commit/051154fb5b027407907659547905f87c1557e45a))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

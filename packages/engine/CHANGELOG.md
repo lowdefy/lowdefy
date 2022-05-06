@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **client:** Render progress bar next to context, and event order fixes. ([fc32c75](https://github.com/lowdefy/lowdefy/commit/fc32c75ea2d8c5c97e21280b09fce5518ec14d37))
+* **engine:** Catch block type not found error. ([7d95728](https://github.com/lowdefy/lowdefy/commit/7d957284ca082b8aa2aa8316b1dc8d7e1ca8a2c6))
+* **engine:** Init validate only if none. ([9b5bd70](https://github.com/lowdefy/lowdefy/commit/9b5bd707715ff1d65867957271f7a04298e360c9))
+* **engine:** Only init validate if none. ([e0d7dd6](https://github.com/lowdefy/lowdefy/commit/e0d7dd6a21859e090ec627e18548d8274307c5b5))
+* **engine:** Remove block.loading. ([31b8190](https://github.com/lowdefy/lowdefy/commit/31b8190b8d34cba8ad62b077864f3da009f0d659))
+* Review feedback changes. ([6925625](https://github.com/lowdefy/lowdefy/commit/69256253142813f0b78c353d0698f13386d10929))
+
+
+### Features
+
+* **client:** Apply reset context flag to recreate context on client. ([09f49a2](https://github.com/lowdefy/lowdefy/commit/09f49a2072f2803268b20f69655e03a57ef8f097))
+* **engine:** Add progress callAction — needs tests. ([771961c](https://github.com/lowdefy/lowdefy/commit/771961ca1dc69b197b2d3bb20d1427bb63916c0d))
+* **engine:** Add runOnInit method to getContext. ([2339a3a](https://github.com/lowdefy/lowdefy/commit/2339a3a77da875e688115f7111bde1e8d706761d))
+* **engine:** Add skeleton and loading eval. ([c3c35d1](https://github.com/lowdefy/lowdefy/commit/c3c35d164265576ecdf2e42bded041ba16b918f1))
+* **engine:** Make getContext sync, add skeleton and loading eval. ([a876b6f](https://github.com/lowdefy/lowdefy/commit/a876b6f8cf92d1bbfd3986bb051dc69a6e1d141f))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs",
-  "version": "4.0.0-alpha.8",
+  "version": "4.0.0-alpha.9",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,7 +43,7 @@
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.8"
+    "@lowdefy/helpers": "4.0.0-alpha.9"
   },
   "devDependencies": {
     "@jest/globals": "27.5.1",

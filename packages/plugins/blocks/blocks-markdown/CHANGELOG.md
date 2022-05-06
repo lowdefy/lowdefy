@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **blocks-markdown:** Cleanup markdown styles. ([5cd90fb](https://github.com/lowdefy/lowdefy/commit/5cd90fb0664c81082efc702d7ca6466d8f02da2a))
+* **blocks-markdown:** Fix react-syntax-highlighter styles import. ([bc6fed7](https://github.com/lowdefy/lowdefy/commit/bc6fed771ca09de583b4bdbd03469a75e0b6b4e8))
+* **blocks-markdown:** More style fixes. ([6498040](https://github.com/lowdefy/lowdefy/commit/64980406b5e11b1d052974e8f046c6880071bff3))
+* **blocks-markdown:** Updated and fixed MarkdownWithCode Syntax Highlighter@15.5.0 ([424bf3e](https://github.com/lowdefy/lowdefy/commit/424bf3ec8d101a92784ad39e75c088eaefc2147f))
+
+
+### Features
+
+* **blocks-markdown:** Use antd less style vars where possible. ([bc3dce4](https://github.com/lowdefy/lowdefy/commit/bc3dce444f629ab8964ef8b84ec2a468e0b23f17))
+* **blocks:** Add skeletons to blocks meta. ([ba34939](https://github.com/lowdefy/lowdefy/commit/ba349397359d4f54d7850536329ec0682ffcf89c))
+* **blocks:** Remove skeleton definition on blocks. ([f938a51](https://github.com/lowdefy/lowdefy/commit/f938a51268a7c0e5fa129c0628662890b635c8c7))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 
