@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-nunjucks",
-  "version": "4.0.0-alpha.9",
+  "version": "4.0.0-alpha.10",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,9 +43,9 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.9",
-    "@lowdefy/nunjucks": "4.0.0-alpha.9",
-    "@lowdefy/operators": "4.0.0-alpha.9"
+    "@lowdefy/helpers": "4.0.0-alpha.10",
+    "@lowdefy/nunjucks": "4.0.0-alpha.10",
+    "@lowdefy/operators": "4.0.0-alpha.10"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",

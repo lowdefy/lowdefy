@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-echarts",
-  "version": "4.0.0-alpha.9",
+  "version": "4.0.0-alpha.10",
   "license": "Apache-2.0",
   "description": "ECharts Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -51,7 +51,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.9",
+    "@lowdefy/block-utils": "4.0.0-alpha.10",
     "echarts": "5.3.0",
     "echarts-for-react": "3.0.2",
     "react": "17.0.2",
@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@emotion/jest": "11.7.1",
-    "@lowdefy/block-dev": "4.0.0-alpha.9",
+    "@lowdefy/block-dev": "4.0.0-alpha.10",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",
