@@ -16,7 +16,8 @@
 
 import { createLink } from '@lowdefy/engine';
 
-function setupLink(router, window) {
+function setupLink(lowdefy) {
+  const { router, window } = lowdefy._internal;
   const backLink = () => router.back();
   const disabledLink = () => {};
   const newOriginLink = ({ url, query, newTab }) => {
@@ -30,7 +31,7 @@ function setupLink(router, window) {
     if (newTab) {
       return window
         .open(
-          `${window.location.origin}${router.basePath}${pathname}${query ? `?${query}` : ''}`,
+          `${window.location.origin}${lowdefy.basePath}${pathname}${query ? `?${query}` : ''}`,
           '_blank'
         )
         .focus();
@@ -45,7 +46,7 @@ function setupLink(router, window) {
   const noLink = () => {
     throw new Error(`Invalid Link.`);
   };
-  return createLink({ backLink, disabledLink, router, newOriginLink, noLink, sameOriginLink });
+  return createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sameOriginLink });
 }
 
 export default setupLink;

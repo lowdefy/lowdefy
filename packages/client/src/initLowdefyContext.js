@@ -57,7 +57,7 @@ function initLowdefyContext({ Components, config, router, stage, types, window }
   lowdefy._internal.window = window;
   lowdefy._internal.document = window.document;
   lowdefy._internal.router = router;
-  lowdefy._internal.link = setupLink(router, window);
+  lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
   lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
