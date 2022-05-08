@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,13 +84,13 @@
   type: TitleInput
   properties:
     copyable:
-      icon: WarningOutlined
+      icon: AiOutlineWarning
 - id: 'properties.copyable: icon: []'
   type: TitleInput
   properties:
     copyable:
       icon:
-        - WarningOutlined
+        - AiOutlineWarning
         - AiOutlineRocket
 - id: 'properties.copyable: tooltips: []'
   type: TitleInput
@@ -150,7 +150,7 @@
   type: TitleInput
   properties:
     editable:
-      icon: PlusOutlined
+      icon: AiOutlinePlus
 - id: 'properties.editable.tooltip'
   type: TitleInput
   properties:

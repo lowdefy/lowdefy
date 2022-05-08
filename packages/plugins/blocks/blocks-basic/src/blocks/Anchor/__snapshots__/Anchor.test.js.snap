@@ -2,214 +2,473 @@
 
 exports[`Render default - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="default"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="default"
 >
-   undefined
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  default_title
+</a>
+`;
+
+exports[`Render events.onClick loading true - value[0] 1`] = `
+<a
+  data-testid="events.onClick loading true"
+>
+  Link Props:
+  {"className":"css-nspckc","disabled":true,"style":{"color":"green !important","fontSize":8}}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineLoading3Quarters"
+    >
+      {"id":"events.onClick loading true_icon","className":"css-0 css-1d1kexc","title":"AiOutlineLoading3Quarters","required":false,"spin":true}
+    </svg>
+  </span>
+  Click here
 </a>
 `;
 
 exports[`Render properties.disabled - value[0] 1`] = `
-.emotion-0 {
-  color: #BEBEBE;
-  cursor: not-allowed;
-}
-
-<span
-  class="emotion-0"
-  id="properties.disabled"
->
-   disabled
-</span>
-`;
-
-exports[`Render properties.href - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-https://lowdefy.com"
-  href="https://lowdefy.com"
-  id="properties.href"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.disabled"
 >
-   properties.href
-</a>
-`;
-
-exports[`Render properties.href and rel - value[0] 1`] = `
-<a
-  class="emotion-0"
-  data-testid="link-https://lowdefy.com"
-  href="https://lowdefy.com"
-  id="properties.href and rel"
-  rel="noopener"
-  target="_self"
->
-   properties.href and rel
-</a>
-`;
-
-exports[`Render properties.href and target - value[0] 1`] = `
-<a
-  class="emotion-0"
-  data-testid="link-/Button"
-  href="/Button"
-  id="properties.href and target"
-  rel="noopener noreferrer"
-  target="_blank"
->
-   To Button
-</a>
-`;
-
-exports[`Render properties.href, title and target - value[0] 1`] = `
-<a
-  class="emotion-0"
-  data-testid="link-https://lowdefy.com"
-  href="https://lowdefy.com"
-  id="properties.href, title and target"
-  rel="noopener noreferrer"
-  target="_blank"
->
-   New tab Website
+  Link Props:
+  {"className":"css-qavdfk","disabled":true}
+   
+  disabled
 </a>
 `;
 
 exports[`Render properties.icon and properties.title - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.icon and properties.title"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.icon and properties.title"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon and properties.title_icon"
-  />
-   This is the anchor title
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon and properties.title_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  This is the anchor title
 </a>
 `;
 
 exports[`Render properties.icon object - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.icon object"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.icon object"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon object_icon"
-  />
-   Click here
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon object_icon","title":"AiFillRocket","className":"css-0","color":"red","required":false}
+    </svg>
+  </span>
+  Click here
 </a>
 `;
 
 exports[`Render properties.icon string - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.icon string"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.icon string"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon string_icon"
-  />
-   undefined
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon string_icon","title":"AiFillFire","className":"css-0","required":false}
+    </svg>
+  </span>
+  default_title
 </a>
 `;
 
 exports[`Render properties.icon, properties.title and properties.disabled - value[0] 1`] = `
-.emotion-0 {
-  color: #BEBEBE;
-  cursor: not-allowed;
-}
-
-<span
-  class="emotion-0"
-  id="properties.icon, properties.title and properties.disabled"
+<a
+  data-testid="properties.icon, properties.title and properties.disabled"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.icon, properties.title and properties.disabled_icon"
-  />
-   This is the anchor title
-</span>
+  Link Props:
+  {"className":"css-qavdfk","disabled":true}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon, properties.title and properties.disabled_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  This is the anchor title
+</a>
 `;
 
-exports[`Render properties.strong - value[0] 1`] = `
+exports[`Render properties.pageId and ariaLabel - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.strong"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.pageId and ariaLabel"
 >
-  <b>
-     Strong
-  </b>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"/Button","ariaLabel":"aria_label"}
+   
+  To ariaLabel
+</a>
+`;
+
+exports[`Render properties.pageId and newTab - value[0] 1`] = `
+<a
+  data-testid="properties.pageId and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"/Button","newTab":true}
+   
+  To Button
+</a>
+`;
+
+exports[`Render properties.pageId and rel - value[0] 1`] = `
+<a
+  data-testid="properties.pageId and rel"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"https://lowdefy.com","rel":"noopener"}
+   
+  default_title
 </a>
 `;
 
 exports[`Render properties.style - value[0] 1`] = `
-.emotion-0 {
-  color: green!important;
-  font-size: 18px;
-}
-
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.style"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.style"
 >
-   Click here
+  Link Props:
+  {"className":"css-1ux8rz4","style":{"color":"green !important","fontSize":18}}
+   
+  Click here
 </a>
 `;
 
 exports[`Render properties.style with icon - value[0] 1`] = `
-.emotion-0 {
-  color: green!important;
-  font-size: 8px;
-}
-
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.style with icon"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.style with icon"
 >
-  <svg
-    class="emotion-1"
-    data-testid="AiOutlineExclamationCircle"
-    id="properties.style with icon_icon"
-  />
-   Click here
+  Link Props:
+  {"className":"css-2qztm7","style":{"color":"green !important","fontSize":8}}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.style with icon_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  Click here
 </a>
 `;
 
 exports[`Render properties.title - value[0] 1`] = `
 <a
-  class="emotion-0"
-  data-testid="link-undefined"
-  id="properties.title"
-  rel="noopener noreferrer"
-  target="_self"
+  data-testid="properties.title"
 >
-   Anchor title
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  Anchor title
+</a>
+`;
+
+exports[`Render properties.url - value[0] 1`] = `
+<a
+  data-testid="properties.url"
+>
+  Link Props:
+  {"className":"css-1u8qly9","url":"https://lowdefy.com"}
+   
+  default_title
+</a>
+`;
+
+exports[`Render properties.url, title and newTab - value[0] 1`] = `
+<a
+  data-testid="properties.url, title and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","url":"https://lowdefy.com","newTab":true}
+   
+  New tab Website
+</a>
+`;
+
+exports[`Render properties.url, title and newTab - value[0] 2`] = `
+<a
+  data-testid="properties.url, title and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"next","urlQuery":{"done":true,"number":1,"string":"Hello"}}
+   
+  Url Query
+</a>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<a
+  data-testid="default"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  default_title
+</a>
+`;
+
+exports[`Render required = true events.onClick loading true - value[0] 1`] = `
+<a
+  data-testid="events.onClick loading true"
+>
+  Link Props:
+  {"className":"css-nspckc","disabled":true,"style":{"color":"green !important","fontSize":8}}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineLoading3Quarters"
+    >
+      {"id":"events.onClick loading true_icon","className":"css-0 css-1d1kexc","title":"AiOutlineLoading3Quarters","required":false,"spin":true}
+    </svg>
+  </span>
+  Click here
+</a>
+`;
+
+exports[`Render required = true properties.disabled - value[0] 1`] = `
+<a
+  data-testid="properties.disabled"
+>
+  Link Props:
+  {"className":"css-qavdfk","disabled":true}
+   
+  disabled
+</a>
+`;
+
+exports[`Render required = true properties.icon and properties.title - value[0] 1`] = `
+<a
+  data-testid="properties.icon and properties.title"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon and properties.title_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  This is the anchor title
+</a>
+`;
+
+exports[`Render required = true properties.icon object - value[0] 1`] = `
+<a
+  data-testid="properties.icon object"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon object_icon","title":"AiFillRocket","className":"css-0","color":"red","required":false}
+    </svg>
+  </span>
+  Click here
+</a>
+`;
+
+exports[`Render required = true properties.icon string - value[0] 1`] = `
+<a
+  data-testid="properties.icon string"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon string_icon","title":"AiFillFire","className":"css-0","required":false}
+    </svg>
+  </span>
+  default_title
+</a>
+`;
+
+exports[`Render required = true properties.icon, properties.title and properties.disabled - value[0] 1`] = `
+<a
+  data-testid="properties.icon, properties.title and properties.disabled"
+>
+  Link Props:
+  {"className":"css-qavdfk","disabled":true}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.icon, properties.title and properties.disabled_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  This is the anchor title
+</a>
+`;
+
+exports[`Render required = true properties.pageId and ariaLabel - value[0] 1`] = `
+<a
+  data-testid="properties.pageId and ariaLabel"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"/Button","ariaLabel":"aria_label"}
+   
+  To ariaLabel
+</a>
+`;
+
+exports[`Render required = true properties.pageId and newTab - value[0] 1`] = `
+<a
+  data-testid="properties.pageId and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"/Button","newTab":true}
+   
+  To Button
+</a>
+`;
+
+exports[`Render required = true properties.pageId and rel - value[0] 1`] = `
+<a
+  data-testid="properties.pageId and rel"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"https://lowdefy.com","rel":"noopener"}
+   
+  default_title
+</a>
+`;
+
+exports[`Render required = true properties.style - value[0] 1`] = `
+<a
+  data-testid="properties.style"
+>
+  Link Props:
+  {"className":"css-1ux8rz4","style":{"color":"green !important","fontSize":18}}
+   
+  Click here
+</a>
+`;
+
+exports[`Render required = true properties.style with icon - value[0] 1`] = `
+<a
+  data-testid="properties.style with icon"
+>
+  Link Props:
+  {"className":"css-2qztm7","style":{"color":"green !important","fontSize":8}}
+   
+  <span
+    class="anticon"
+    role="img"
+  >
+    <svg
+      data-testid="AiOutlineExclamationCircle"
+    >
+      {"id":"properties.style with icon_icon","title":"AiOutlineLink","className":"css-0","required":false}
+    </svg>
+  </span>
+  Click here
+</a>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+<a
+  data-testid="properties.title"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  Anchor title
+</a>
+`;
+
+exports[`Render required = true properties.url - value[0] 1`] = `
+<a
+  data-testid="properties.url"
+>
+  Link Props:
+  {"className":"css-1u8qly9","url":"https://lowdefy.com"}
+   
+  default_title
+</a>
+`;
+
+exports[`Render required = true properties.url, title and newTab - value[0] 1`] = `
+<a
+  data-testid="properties.url, title and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","url":"https://lowdefy.com","newTab":true}
+   
+  New tab Website
+</a>
+`;
+
+exports[`Render required = true properties.url, title and newTab - value[0] 2`] = `
+<a
+  data-testid="properties.url, title and newTab"
+>
+  Link Props:
+  {"className":"css-1u8qly9","pageId":"next","urlQuery":{"done":true,"number":1,"string":"Hello"}}
+   
+  Url Query
 </a>
 `;
 
@@ -217,25 +476,13 @@ exports[`Test Schema default 1`] = `true`;
 
 exports[`Test Schema default 2`] = `null`;
 
+exports[`Test Schema events.onClick loading true 1`] = `true`;
+
+exports[`Test Schema events.onClick loading true 2`] = `null`;
+
 exports[`Test Schema properties.disabled 1`] = `true`;
 
 exports[`Test Schema properties.disabled 2`] = `null`;
-
-exports[`Test Schema properties.href 1`] = `true`;
-
-exports[`Test Schema properties.href 2`] = `null`;
-
-exports[`Test Schema properties.href and rel 1`] = `true`;
-
-exports[`Test Schema properties.href and rel 2`] = `null`;
-
-exports[`Test Schema properties.href and target 1`] = `true`;
-
-exports[`Test Schema properties.href and target 2`] = `null`;
-
-exports[`Test Schema properties.href, title and target 1`] = `true`;
-
-exports[`Test Schema properties.href, title and target 2`] = `null`;
 
 exports[`Test Schema properties.icon and properties.title 1`] = `true`;
 
@@ -253,9 +500,17 @@ exports[`Test Schema properties.icon, properties.title and properties.disabled 1
 
 exports[`Test Schema properties.icon, properties.title and properties.disabled 2`] = `null`;
 
-exports[`Test Schema properties.strong 1`] = `true`;
+exports[`Test Schema properties.pageId and ariaLabel 1`] = `true`;
 
-exports[`Test Schema properties.strong 2`] = `null`;
+exports[`Test Schema properties.pageId and ariaLabel 2`] = `null`;
+
+exports[`Test Schema properties.pageId and newTab 1`] = `true`;
+
+exports[`Test Schema properties.pageId and newTab 2`] = `null`;
+
+exports[`Test Schema properties.pageId and rel 1`] = `true`;
+
+exports[`Test Schema properties.pageId and rel 2`] = `null`;
 
 exports[`Test Schema properties.style 1`] = `true`;
 
@@ -268,3 +523,26 @@ exports[`Test Schema properties.style with icon 2`] = `null`;
 exports[`Test Schema properties.title 1`] = `true`;
 
 exports[`Test Schema properties.title 2`] = `null`;
+
+exports[`Test Schema properties.url 1`] = `true`;
+
+exports[`Test Schema properties.url 2`] = `null`;
+
+exports[`Test Schema properties.url, title and newTab 1`] = `true`;
+
+exports[`Test Schema properties.url, title and newTab 2`] = `null`;
+
+exports[`Test Schema properties.url, title and newTab 3`] = `true`;
+
+exports[`Test Schema properties.url, title and newTab 4`] = `null`;
+
+exports[`triggerEvent onClick 1`] = `
+<a
+  data-testid="one"
+>
+  Link Props:
+  {"className":"css-1u8qly9"}
+   
+  default_title
+</a>
+`;

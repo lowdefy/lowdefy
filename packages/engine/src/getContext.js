@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -55,16 +55,21 @@ const blockData = ({
   visible,
 });
 
-async function getContext({ config, lowdefy, development = false }) {
+function getContext({
+  config,
+  lowdefy,
+  resetContext = { reset: false, setReset: () => undefined },
+}) {
   if (!config) {
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  if (lowdefy.contexts[id] && !development) {
+  if (lowdefy.contexts[id] && !resetContext.reset) {
+    // memoize context if already created, eg between page transitions, unless the reset flag is raised
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
-
+  resetContext.setReset(false); // lower context reset flag.
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
   }
@@ -82,7 +87,6 @@ async function getContext({ config, lowdefy, development = false }) {
   };
   const _internal = ctx._internal;
   _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
-  await _internal.parser.init();
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
@@ -94,10 +98,28 @@ async function getContext({ config, lowdefy, development = false }) {
   _internal.update = () => {
     _internal.RootBlocks.update();
   };
-  await _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInit' });
-  _internal.update();
-  _internal.State.freezeState();
-  _internal.RootBlocks.map[ctx.id].triggerEvent({ name: 'onInitAsync' });
+  _internal.runOnInit = async (progress) => {
+    progress();
+    if (!_internal.onInitDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInit',
+        progress,
+      });
+      _internal.update();
+      _internal.State.freezeState();
+      _internal.onInitDone = true;
+    }
+  };
+  _internal.runOnInitAsync = async (progress) => {
+    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
+      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+        name: 'onInitAsync',
+        progress,
+      });
+      _internal.onInitAsyncDone = true;
+    }
+  };
+  ctx._internal.update();
   lowdefy.contexts[id] = ctx;
   return ctx;
 }

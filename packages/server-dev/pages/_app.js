@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,22 +17,13 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
-import { ErrorBoundary } from '@lowdefy/block-utils';
-
-import LowdefyContext from '../lib/components/LowdefyContext.js';
-
+// Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
-
-const lowdefy = {};
 
 function App({ Component, pageProps }) {
   return (
     <Suspense fallback="">
-      <ErrorBoundary>
-        <LowdefyContext lowdefy={lowdefy}>
-          <Component lowdefy={lowdefy} {...pageProps} />
-        </LowdefyContext>
-      </ErrorBoundary>
+      <Component {...pageProps} />
     </Suspense>
   );
 }

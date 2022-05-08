@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 import { Actions, Blocks, Requests, State } from '@lowdefy/engine';
 import { WebParser } from '@lowdefy/operators';
 
-const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) => {
+const testContext = ({ lowdefy, operators, rootBlock, initState = {} }) => {
   const testLowdefy = {
     inputs: { test: {} },
     urlQuery: {},
@@ -41,7 +41,6 @@ const testContext = async ({ lowdefy, operators, rootBlock, initState = {} }) =>
   };
   const _internal = ctx._internal;
   _internal.parser = new WebParser({ context: ctx, contexts: {}, operators: operators || {} });
-  await _internal.parser.init();
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);

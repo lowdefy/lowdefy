@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import Page from '../lib/components/Page.js';
+import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
   // TODO: get the right api context options

@@ -15,13 +15,6 @@
             "default": "dark",
             "description": "Header theme color."
           },
-          "color": {
-            "type": "string",
-            "description": "Header color.",
-            "docs": {
-              "displayType": "color"
-            }
-          },
           "style": {
             "type": "object",
             "description": "Header css style object.",
@@ -65,28 +58,6 @@
         "docs": {
           "displayType": "yaml"
         }
-      }
-    }
-  },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onEnter": {
-        "type": "array",
-        "description": "Trigger actions every time a context is mounted and keep the page in loading until all actions have finished."
-      },
-      "onEnterAsync": {
-        "type": "array",
-        "description": "Trigger actions every time a context is mounted and do not keep the page in loading."
-      },
-      "onInit": {
-        "type": "array",
-        "description": "Trigger actions the first time a context is mounted and keep the page in loading until all actions have finished."
-      },
-      "onInitAsync": {
-        "type": "array",
-        "description": "Trigger actions the first time a context is mounted and do not keep the page in loading."
       }
     }
   }

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -58,7 +58,6 @@ const SkeletonInput = ({ properties, methods }) => {
 SkeletonInput.defaultProps = blockDefaultProps;
 SkeletonInput.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/SkeletonInput/style.less'],
 };

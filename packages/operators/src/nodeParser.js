@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,16 +24,6 @@ class NodeParser {
     this.secrets = secrets;
     this.user = user;
     this.parse = this.parse.bind(this);
-  }
-
-  async init() {
-    await Promise.all(
-      Object.values(this.operators).map(async (operator) => {
-        if (operator.init) {
-          await operator.init();
-        }
-      })
-    );
   }
 
   parse({ args, input, location, operatorPrefix = '_' }) {

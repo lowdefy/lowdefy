@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ _ref:
                 type: Redis
                 properties:
                   connection:
-                    username: 
+                    username:
                       _secret: REDIS_USERNAME
-                    password: 
+                    password:
                       _secret: REDIS_PASSWORD
                     database:
                       _secret: REDIS_DATABASE

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -167,7 +167,6 @@ const PageHeaderMenu = ({
                               mode: 'horizontal',
                               collapsed: false,
                               theme: get(properties, 'header.theme') || 'dark',
-                              backgroundColor: get(properties, 'header.color'),
                             },
                             properties.menu,
                             properties.menuLg,
@@ -252,12 +251,6 @@ const PageHeaderMenu = ({
 PageHeaderMenu.defaultProps = blockDefaultProps;
 PageHeaderMenu.meta = {
   category: 'container',
-  loading: {
-    type: 'Spinner',
-    properties: {
-      height: '100vh',
-    },
-  },
   icons: [...MobileMenu.meta.icons],
   styles: ['blocks/PageHeaderMenu/style.less'],
 };

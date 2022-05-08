@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -108,9 +108,6 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
 ParagraphBlock.defaultProps = blockDefaultProps;
 ParagraphBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'SkeletonParagraph',
-  },
   icons: [],
   styles: ['blocks/Paragraph/style.less'],
 };

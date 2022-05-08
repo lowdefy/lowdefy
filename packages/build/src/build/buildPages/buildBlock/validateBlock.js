@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateBlock(block, { pageId, typeCounters }) {
+function validateBlock(block, { pageId }) {
   if (!type.isObject(block)) {
     throw new Error(
       `Expected block to be an object on page "${pageId}". Received ${JSON.stringify(block)}.`
@@ -40,7 +40,6 @@ function validateBlock(block, { pageId, typeCounters }) {
       )}.`
     );
   }
-  typeCounters.blocks.increment(block.type);
   if (!type.isNone(block.requests)) {
     if (!type.isArray(block.requests)) {
       throw new Error(

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -113,12 +113,6 @@ const TitleBlock = ({ blockId, components: { Icon }, events, properties, methods
 TitleBlock.defaultProps = blockDefaultProps;
 TitleBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 1,
-    },
-  },
   icons: [],
   styles: ['blocks/Title/style.less'],
 };

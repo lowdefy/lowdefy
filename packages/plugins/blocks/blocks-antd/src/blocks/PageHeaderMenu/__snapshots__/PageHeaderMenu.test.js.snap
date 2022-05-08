@@ -209,15 +209,14 @@ exports[`Render default - value[0] 1`] = `
     id="default_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -249,11 +248,17 @@ exports[`Render default - value[0] 1`] = `
             id="default_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="default_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="default_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -473,15 +478,14 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
     id="properties.breadcrumb.list_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -513,11 +517,17 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
             id="properties.breadcrumb.list_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.breadcrumb.list_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.breadcrumb.list_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -535,11 +545,11 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
         <span
           class="ant-breadcrumb-link"
         >
-          <span
+          <a
             class="emotion-7"
-          >
-            Link one
-          </span>
+            data-testid="link-undefined"
+            id="properties.breadcrumb.list_breadcrumb_0"
+          />
         </span>
         <span
           class="ant-breadcrumb-separator"
@@ -551,11 +561,11 @@ exports[`Render properties.breadcrumb.list - value[0] 1`] = `
         <span
           class="ant-breadcrumb-link"
         >
-          <span
+          <a
             class="emotion-7"
-          >
-            Link two
-          </span>
+            data-testid="link-undefined"
+            id="properties.breadcrumb.list_breadcrumb_1"
+          />
         </span>
         <span
           class="ant-breadcrumb-separator"
@@ -784,15 +794,14 @@ exports[`Render properties.content.style - value[0] 1`] = `
     id="properties.content.style_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -824,11 +833,17 @@ exports[`Render properties.content.style - value[0] 1`] = `
             id="properties.content.style_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.content.style_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.content.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -1065,15 +1080,14 @@ exports[`Render properties.footer.style - value[0] 1`] = `
     id="properties.footer.style_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -1105,11 +1119,17 @@ exports[`Render properties.footer.style - value[0] 1`] = `
             id="properties.footer.style_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.footer.style_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.footer.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -1269,7 +1289,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
   background-color: #3f51b5!important;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -1278,13 +1298,13 @@ exports[`Render properties.header.color - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1293,7 +1313,7 @@ exports[`Render properties.header.color - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1302,45 +1322,45 @@ exports[`Render properties.header.color - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -1354,15 +1374,14 @@ exports[`Render properties.header.color - value[0] 1`] = `
     id="properties.header.color_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -1385,18 +1404,26 @@ exports[`Render properties.header.color - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -1408,18 +1435,26 @@ exports[`Render properties.header.color - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -1471,32 +1506,38 @@ exports[`Render properties.header.color - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.header.color_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.header.color_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.header.color_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.color_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.header.color_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -1718,15 +1759,14 @@ exports[`Render properties.header.style - value[0] 1`] = `
     id="properties.header.style_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -1764,11 +1804,17 @@ exports[`Render properties.header.style - value[0] 1`] = `
             id="properties.header.style_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.header.style_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -1916,7 +1962,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -1925,13 +1971,13 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1940,7 +1986,7 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1949,45 +1995,45 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -2001,15 +2047,14 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
     id="properties.header.theme: light_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-light-theme.png"
-        srcset="/public/logo-square-light-theme.png 40w, /public/logo-light-theme.png 577w"
+        src="/logo-light-theme.png"
+        srcset="/logo-square-light-theme.png 40w, /logo-light-theme.png 577w"
       />
     </a>
     <div
@@ -2032,18 +2077,26 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -2055,18 +2108,26 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -2118,32 +2179,38 @@ exports[`Render properties.header.theme: light - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.header.theme: light_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.header.theme: light_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.header.theme: light_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.theme: light_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.header.theme: light_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -2279,7 +2346,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -2288,13 +2355,13 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2303,7 +2370,7 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2312,45 +2379,45 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -2364,15 +2431,14 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
     id="properties.logo.alt_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Header logo alt text"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -2395,18 +2461,26 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -2418,18 +2492,26 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -2481,32 +2563,38 @@ exports[`Render properties.logo.alt - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.logo.alt_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.logo.alt_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.logo.alt_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.alt_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.logo.alt_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -2642,7 +2730,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -2651,13 +2739,13 @@ exports[`Render properties.logo.size - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2666,7 +2754,7 @@ exports[`Render properties.logo.size - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2675,45 +2763,45 @@ exports[`Render properties.logo.size - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -2727,14 +2815,13 @@ exports[`Render properties.logo.size - value[0] 1`] = `
     id="properties.logo.size_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
+        src="/logo-dark-theme.png"
         srcset="(max-width: 767px) 40px, 768px"
       />
     </a>
@@ -2758,18 +2845,26 @@ exports[`Render properties.logo.size - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -2781,18 +2876,26 @@ exports[`Render properties.logo.size - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -2844,32 +2947,38 @@ exports[`Render properties.logo.size - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.logo.size_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.logo.size_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.logo.size_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.size_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.logo.size_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -3005,7 +3114,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -3014,13 +3123,13 @@ exports[`Render properties.logo.src - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3029,7 +3138,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3038,45 +3147,45 @@ exports[`Render properties.logo.src - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -3090,8 +3199,7 @@ exports[`Render properties.logo.src - value[0] 1`] = `
     id="properties.logo.src_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
@@ -3121,18 +3229,26 @@ exports[`Render properties.logo.src - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -3144,18 +3260,26 @@ exports[`Render properties.logo.src - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -3207,32 +3331,38 @@ exports[`Render properties.logo.src - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.logo.src_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.logo.src_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.logo.src_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.src_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.logo.src_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -3368,7 +3498,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -3377,13 +3507,13 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3392,7 +3522,7 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -3401,45 +3531,45 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -3453,14 +3583,13 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
     id="properties.logo.srcSet_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
+        src="/logo-dark-theme.png"
         srcset="https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w"
       />
     </a>
@@ -3484,18 +3613,26 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -3507,18 +3644,26 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -3570,32 +3715,38 @@ exports[`Render properties.logo.srcSet - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.logo.srcSet_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.logo.srcSet_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.logo.srcSet_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.srcSet_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.logo.srcSet_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -3817,15 +3968,14 @@ exports[`Render properties.logo.style - value[0] 1`] = `
     id="properties.logo.style_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -3857,11 +4007,17 @@ exports[`Render properties.logo.style - value[0] 1`] = `
             id="properties.logo.style_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.logo.style_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
@@ -4008,7 +4164,7 @@ exports[`Render properties.menu - value[0] 1`] = `
   display: inline-block;
 }
 
-.emotion-8 {
+.emotion-6 {
   display: block;
   -webkit-flex: 0 1 auto;
   -ms-flex: 0 1 auto;
@@ -4017,13 +4173,13 @@ exports[`Render properties.menu - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4032,7 +4188,7 @@ exports[`Render properties.menu - value[0] 1`] = `
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-8 {
+  .emotion-6 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4041,45 +4197,45 @@ exports[`Render properties.menu - value[0] 1`] = `
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-8 {
+  .emotion-6 {
     display: none;
   }
 }
 
-.emotion-11 {
+.emotion-9 {
   padding: 0 40px 40px 40px;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 10px 10px 10px;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 20px 20px 20px;
   }
 }
 
 @media screen and (min-width: 992px) {
-  .emotion-11 {
+  .emotion-9 {
     padding: 0 40px 40px 40px;
   }
 }
 
-.emotion-12 {
+.emotion-10 {
   padding: 20px 0;
 }
 
 @media screen and (min-width: 576px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 5px 0;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .emotion-12 {
+  .emotion-10 {
     padding: 10px 0;
   }
 }
@@ -4093,15 +4249,14 @@ exports[`Render properties.menu - value[0] 1`] = `
     id="properties.menu_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -4124,18 +4279,26 @@ exports[`Render properties.menu - value[0] 1`] = `
             style="opacity: 1; order: 0;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="Introduction_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/introduction"
-                href="/introduction"
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Introduction
               </a>
@@ -4147,18 +4310,26 @@ exports[`Render properties.menu - value[0] 1`] = `
             style="opacity: 1; order: 1;"
             tabindex="-1"
           >
-            <svg
-              class="ant-menu-item-icon"
-              data-testid="AiOutlineExclamationCircle"
-              id="alert_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
             <span
               class="ant-menu-title-content"
             >
               <a
-                class="emotion-6"
-                data-testid="link-/Alert"
-                href="/Alert"
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
               >
                 Alert
               </a>
@@ -4210,32 +4381,38 @@ exports[`Render properties.menu - value[0] 1`] = `
         />
       </div>
       <div
-        class="emotion-8"
+        class="emotion-6"
       >
         <div
           id="properties.menu_mobile_menu"
         >
           <button
-            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-9"
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
             id="properties.menu_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-10"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.menu_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.menu_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>
     </div>
   </header>
   <main
-    class="ant-layout-content emotion-11"
+    class="ant-layout-content emotion-9"
     id="properties.menu_content"
   >
     <div
-      class="emotion-12"
+      class="emotion-10"
     />
     <div
       data-testid="area-content"
@@ -4457,15 +4634,14 @@ exports[`Render properties.style - value[0] 1`] = `
     id="properties.style_header"
   >
     <a
-      data-testid="link-/undefined"
-      href="/undefined"
+      data-testid="link-undefined"
     >
       <img
         alt="Lowdefy"
         class="emotion-2"
         sizes="(max-width: 576px) 40px, 577px"
-        src="/public/logo-dark-theme.png"
-        srcset="/public/logo-square-dark-theme.png 40w, /public/logo-dark-theme.png 577w"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
       />
     </a>
     <div
@@ -4497,11 +4673,4723 @@ exports[`Render properties.style - value[0] 1`] = `
             id="properties.style_mobile_menu_button"
             type="button"
           >
-            <svg
-              class="emotion-8"
-              data-testid="AiOutlineExclamationCircle"
-              id="properties.style_mobile_menu_button_icon"
-            />
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.style_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="default"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="default_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="default_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="default_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="default_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="default_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="default_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.breadcrumb.list - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 16px 0;
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.breadcrumb.list"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.breadcrumb.list_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.breadcrumb.list_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.breadcrumb.list_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.breadcrumb.list_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.breadcrumb.list_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.breadcrumb.list_content"
+  >
+    <div
+      class="ant-breadcrumb emotion-10"
+      id="properties.breadcrumb.list_breadcrumb"
+    >
+      <span>
+        <span
+          class="ant-breadcrumb-link"
+        >
+          <a
+            class="emotion-7"
+            data-testid="link-undefined"
+            id="properties.breadcrumb.list_breadcrumb_0"
+          />
+        </span>
+        <span
+          class="ant-breadcrumb-separator"
+        >
+          /
+        </span>
+      </span>
+      <span>
+        <span
+          class="ant-breadcrumb-link"
+        >
+          <a
+            class="emotion-7"
+            data-testid="link-undefined"
+            id="properties.breadcrumb.list_breadcrumb_1"
+          />
+        </span>
+        <span
+          class="ant-breadcrumb-separator"
+        >
+          /
+        </span>
+      </span>
+    </div>
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.content.style - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  border: 5px solid blue;
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.content.style"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.content.style_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.content.style_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.content.style_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.content.style_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.content.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.content.style_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.footer.style - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+.emotion-11 {
+  margin: auto;
+  border: 5px solid blue;
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.footer.style"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.footer.style_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.footer.style_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.footer.style_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.footer.style_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.footer.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.footer.style_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+  <footer
+    class="ant-layout-footer emotion-11 hide-on-print"
+    id="properties.footer.style_footer"
+  >
+    <div
+      data-testid="area-footer"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      footer
+    </div>
+  </footer>
+</section>
+`;
+
+exports[`Render required = true properties.header.color - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  background-color: #3f51b5;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+  background-color: #3f51b5!important;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.header.color"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.header.color_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.header.color_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.header.color_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.header.color_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.header.color_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.header.color_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.header.color_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.color_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.header.color_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.header.style - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+  border: 5px solid blue;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.header.style"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.header.style_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.header.style_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        data-testid="area-header"
+        style="border: 1px solid red; padding: 10px;"
+      >
+        header
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.header.style_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.header.style_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.header.style_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.header.theme: light - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  background-color: #fff;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.header.theme: light"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.header.theme: light_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-light-theme.png"
+        srcset="/logo-square-light-theme.png 40w, /logo-light-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light emotion-5"
+          data-menu-list="true"
+          id="properties.header.theme: light_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.header.theme: light_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.header.theme: light_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.header.theme: light_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.header.theme: light_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.header.theme: light_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.header.theme: light_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.header.theme: light_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.logo.alt - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.logo.alt"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.logo.alt_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Header logo alt text"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.logo.alt_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.logo.alt_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.logo.alt_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.logo.alt_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.logo.alt_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.logo.alt_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.alt_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.logo.alt_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.logo.size - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.logo.size"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.logo.size_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="(max-width: 767px) 40px, 768px"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.logo.size_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.logo.size_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.logo.size_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.logo.size_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.logo.size_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.logo.size_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.size_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.logo.size_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.logo.src - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.logo.src"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.logo.src_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="https://lowdefy.com/logos/name_250.png"
+        srcset="https://lowdefy.com/logos/name_250.png"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.logo.src_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.logo.src_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.logo.src_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.logo.src_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.logo.src_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.logo.src_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.src_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.logo.src_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.logo.srcSet - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.logo.srcSet"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.logo.srcSet_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.logo.srcSet_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.logo.srcSet_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.logo.srcSet_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.logo.srcSet_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.logo.srcSet_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.logo.srcSet_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.srcSet_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.logo.srcSet_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.logo.style - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  border: 5px solid blue;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.logo.style"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.logo.style_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.logo.style_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.logo.style_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.logo.style_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.logo.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.logo.style_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.menu - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.menu"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.menu_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.menu_menu"
+          role="menu"
+          tabindex="0"
+        >
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            data-menu-id="properties.menu_menu-introduction_0"
+            role="menuitem"
+            style="opacity: 1; order: 0;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="Introduction_icon"
+                title="AiOutlineRocket"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="Introduction"
+                pageid="introduction"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Introduction
+              </a>
+            </span>
+          </li>
+          <li
+            class="ant-menu-overflow-item ant-menu-item"
+            role="menuitem"
+            style="opacity: 1; order: 1;"
+            tabindex="-1"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="ant-menu-item-icon"
+                data-testid="AiOutlineExclamationCircle"
+                id="alert_icon"
+                title="AiOutlineExclamationCircle"
+              />
+            </span>
+            <span
+              class="ant-menu-title-content"
+            >
+              <a
+                data-testid="link-undefined"
+                id="alert"
+                pageid="Alert"
+                properties="[object Object]"
+                type="MenuLink"
+              >
+                Alert
+              </a>
+            </span>
+          </li>
+          <li
+            aria-hidden="true"
+            class="ant-menu-overflow-item ant-menu-overflow-item-rest ant-menu-submenu ant-menu-submenu-horizontal"
+            role="none"
+            style="opacity: 0; height: 0px; overflow-y: hidden; order: 9007199254740991; pointer-events: none; position: absolute;"
+          >
+            <div
+              aria-controls="properties.menu_menu-rc-menu-more-popup"
+              aria-expanded="false"
+              aria-haspopup="true"
+              class="ant-menu-submenu-title"
+              data-menu-id="properties.menu_menu-rc-menu-more"
+              role="menuitem"
+              tabindex="-1"
+            >
+              <span
+                aria-label="ellipsis"
+                class="anticon anticon-ellipsis"
+                role="img"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="ellipsis"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
+                  />
+                </svg>
+              </span>
+              <i
+                class="ant-menu-submenu-arrow"
+              />
+            </div>
+          </li>
+        </ul>
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.menu_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.menu_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.menu_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main
+    class="ant-layout-content emotion-9"
+    id="properties.menu_content"
+  >
+    <div
+      class="emotion-10"
+    />
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </main>
+</section>
+`;
+
+exports[`Render required = true properties.style - value[0] 1`] = `
+.emotion-0 {
+  min-height: 100vh;
+  border: 5px solid blue;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 46px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-1 {
+    padding: 0 15px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-1 {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-1 {
+    padding: 0 46px;
+  }
+}
+
+.emotion-2 {
+  width: 130px;
+  margin: 0px 30px;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    width: 130px;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-2 {
+    margin: 0 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-2 {
+    margin: 0 15px;
+  }
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.emotion-4 {
+  display: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-4 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+.emotion-5 {
+  line-height: 64px;
+  display: inline-block;
+}
+
+.emotion-6 {
+  display: block;
+  -webkit-flex: 0 1 auto;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding-left: 1rem;
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-6 {
+    display: none;
+  }
+}
+
+.emotion-9 {
+  padding: 0 40px 40px 40px;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-9 {
+    padding: 0 10px 10px 10px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-9 {
+    padding: 0 20px 20px 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .emotion-9 {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+.emotion-10 {
+  padding: 20px 0;
+}
+
+@media screen and (min-width: 576px) {
+  .emotion-10 {
+    padding: 5px 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .emotion-10 {
+    padding: 10px 0;
+  }
+}
+
+<section
+  class="ant-layout emotion-0"
+  id="properties.style"
+>
+  <header
+    class="ant-layout-header emotion-1 hide-on-print"
+    id="properties.style_header"
+  >
+    <a
+      data-testid="link-undefined"
+    >
+      <img
+        alt="Lowdefy"
+        class="emotion-2"
+        sizes="(max-width: 576px) 40px, 577px"
+        src="/logo-dark-theme.png"
+        srcset="/logo-square-dark-theme.png 40w, /logo-dark-theme.png 577w"
+      />
+    </a>
+    <div
+      class="emotion-3"
+    >
+      <div
+        class="emotion-4"
+      >
+        <ul
+          class="ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-dark emotion-5"
+          data-menu-list="true"
+          id="properties.style_menu"
+          role="menu"
+          tabindex="0"
+        />
+        <div
+          aria-hidden="true"
+          style="display: none;"
+        />
+      </div>
+      <div
+        class="emotion-6"
+      >
+        <div
+          id="properties.style_mobile_menu"
+        >
+          <button
+            class="ant-btn ant-btn-primary ant-btn-icon-only emotion-7"
+            id="properties.style_mobile_menu_button"
+            type="button"
+          >
+            <span
+              class="anticon"
+              role="img"
+            >
+              <svg
+                class="emotion-8"
+                data-testid="AiOutlineExclamationCircle"
+                id="properties.style_mobile_menu_button_icon"
+                title="AiOutlineMenuFold"
+              />
+            </span>
           </button>
         </div>
       </div>

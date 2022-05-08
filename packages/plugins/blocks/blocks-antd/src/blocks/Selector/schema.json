@@ -22,7 +22,7 @@
       "clearIcon": {
         "type": ["string", "object"],
         "default": "AiOutlineCloseCircle",
-        "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
         "docs": {
           "displayType": "icon"
         }
@@ -208,7 +208,7 @@
       "suffixIcon": {
         "type": ["string", "object"],
         "default": "AiOutlineDown",
-        "description": "Name of an Ant Design Icon or properties of an Icon block to customize icon at the drop-down position of the selector.",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at the drop-down position of the selector.",
         "docs": {
           "displayType": "icon"
         }

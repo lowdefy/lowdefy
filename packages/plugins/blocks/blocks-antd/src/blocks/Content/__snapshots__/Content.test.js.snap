@@ -74,6 +74,80 @@ exports[`Render properties.style - value[0] 1`] = `
 </main>
 `;
 
+exports[`Render required = true areas.content - value[0] 1`] = `
+<main
+  class="ant-layout-content emotion-0"
+  id="areas.content"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</main>
+`;
+
+exports[`Render required = true areas.footer - value[0] 1`] = `
+<main
+  class="ant-layout-content emotion-0"
+  id="areas.footer"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</main>
+`;
+
+exports[`Render required = true areas.header - value[0] 1`] = `
+<main
+  class="ant-layout-content emotion-0"
+  id="areas.header"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</main>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+<main
+  class="ant-layout-content emotion-0"
+  id="default"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</main>
+`;
+
+exports[`Render required = true properties.style - value[0] 1`] = `
+.emotion-0 {
+  border: 1px solid blue;
+}
+
+<main
+  class="ant-layout-content emotion-0"
+  id="properties.style"
+>
+  <div
+    data-testid="area-content"
+    style="border: 1px solid red; padding: 10px;"
+  >
+    content
+  </div>
+</main>
+`;
+
 exports[`Test Schema areas.content 1`] = `true`;
 
 exports[`Test Schema areas.content 2`] = `null`;

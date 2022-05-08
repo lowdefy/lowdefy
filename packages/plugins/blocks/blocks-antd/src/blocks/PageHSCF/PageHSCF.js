@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -109,12 +109,6 @@ const PageHSCF = ({ blockId, components, content, events, methods, properties })
 PageHSCF.defaultProps = blockDefaultProps;
 PageHSCF.meta = {
   category: 'container',
-  loading: {
-    type: 'Spinner',
-    properties: {
-      height: '100vh',
-    },
-  },
   icons: [],
   styles: ['blocks/PageHSCF/style.less'],
 };

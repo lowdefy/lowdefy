@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ const CheckboxSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <Checkbox.Group
@@ -57,7 +56,7 @@ const CheckboxSelector = ({
               },
               properties.inputStyle,
             ])}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             onChange={(newVal) => {
               const val = [];
               newVal.forEach((nv) => {
@@ -108,9 +107,6 @@ CheckboxSelector.defaultProps = blockDefaultProps;
 CheckboxSelector.meta = {
   valueType: 'array',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSelector/style.less'],
 };

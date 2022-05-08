@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -39,13 +39,12 @@ const CheckboxSwitch = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <Checkbox
             id={`${blockId}_input`}
             checked={value}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             className={methods.makeCssClass([
               properties.color && {
                 '& > span.ant-checkbox-checked:not(.ant-checkbox-disabled) > span': {
@@ -75,9 +74,6 @@ CheckboxSwitch.defaultProps = blockDefaultProps;
 CheckboxSwitch.meta = {
   valueType: 'boolean',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/CheckboxSwitch/style.less'],
 };

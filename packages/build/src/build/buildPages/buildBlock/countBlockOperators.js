@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@ import countOperators from '../../../utils/countOperators.js';
 
 function countBlockOperators(block, { typeCounters }) {
   // eslint-disable-next-line no-unused-vars
-  const { requests, blocks, areas, ...webBlock } = block;
-
+  const { requests, areas, blocks, ...webBlock } = block;
   countOperators(webBlock, { counter: typeCounters.operators.client });
   (requests || []).forEach((request) => {
     countOperators(request.payload || {}, { counter: typeCounters.operators.client });

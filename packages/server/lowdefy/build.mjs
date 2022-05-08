@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ import path from 'path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import build, { createCustomPluginTypesMap } from '@lowdefy/build';
+import build from '@lowdefy/build';
+import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 
 const argv = yargs(hideBin(process.argv)).argv;
 

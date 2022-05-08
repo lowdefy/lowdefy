@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ const AutoCompleteInput = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <AutoComplete
@@ -54,7 +53,7 @@ const AutoCompleteInput = ({
             bordered={properties.bordered}
             className={methods.makeCssClass(properties.inputStyle)}
             defaultOpen={properties.defaultOpen}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             placeholder={properties.placeholder || 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
@@ -114,9 +113,6 @@ AutoCompleteInput.defaultProps = blockDefaultProps;
 AutoCompleteInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/AutoComplete/style.less'],
 };

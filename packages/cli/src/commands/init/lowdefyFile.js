@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ pages:
                   title: Welcome to your Lowdefy app
                   subTitle: We are excited to see what you are going to build
                   icon:
-                    name: AiTwoToneHeart
+                    name: AiOutlineHeart
                     color: '#f00'
                 areas:
                   extra:

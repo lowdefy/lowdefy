@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ const button = (path) => ({
   },
   properties: {
     size: 'small',
-    title: 'button:',
+    title: `${path}:`,
     inner: true,
   },
   blocks: [
@@ -86,7 +86,8 @@ const button = (path) => ({
         label: {
           span: 8,
           align: 'right',
-          extra: 'Name of an Ant Design Icon or properties of an Icon block to use icon in button.',
+          extra:
+            'Name of an React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) or properties of an Icon block to use icon in button.',
         },
         showSearch: true,
         allowClear: true,

@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.extra: - value[0] - Descriptions 1`] = `
+exports[`Mock render - areas.extra: - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - areas.extra: - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -546,7 +548,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - contentStyle: color: red - value[0] - Descriptions 1`] = `
+exports[`Mock render - contentStyle: color: red - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - contentStyle: color: red - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -1024,7 +1028,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Descriptions 1`] = `
+exports[`Mock render - default - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -1045,7 +1051,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default title - value[0] - Descriptions 1`] = `
+exports[`Mock render - default title - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - default title - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -1097,7 +1105,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - labelStyle: color: blue - value[0] - Descriptions 1`] = `
+exports[`Mock render - labelStyle: color: blue - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - labelStyle: color: blue - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -1575,7 +1585,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.bordered: true - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.bordered: true - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.bordered: true - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -2041,7 +2053,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.colon: false - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.colon: false - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.colon: false - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -2507,7 +2521,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.column: 2 - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.column: 2 - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.column: 2 - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -2973,7 +2989,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.itemOptions.span - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.itemOptions.span - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.itemOptions.span - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -3692,7 +3710,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.itemOptions.style - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.itemOptions.style - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.itemOptions.style - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -4426,7 +4446,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items html values - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items html values - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items html values - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -5150,7 +5172,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items.contentStyle - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items.contentStyle - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items.contentStyle - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -5426,7 +5450,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items.labelStyle - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items.labelStyle - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items.labelStyle - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -5702,7 +5728,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-falseish-values - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-falseish-values - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-falseish-values - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -7078,7 +7106,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-list - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-list - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-list - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -7617,7 +7647,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-list with new lines - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-list with new lines - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-list with new lines - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -7946,7 +7978,9 @@ new line 	 helps
 ]
 `;
 
-exports[`Mock render - properties.items-object - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-object - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-object - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -8482,7 +8516,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-object with new lines - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-object with new lines - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-object with new lines - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -8809,7 +8845,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.items-object-object - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.items-object-object - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.items-object-object - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -9360,7 +9398,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.layout: vertical - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.layout: vertical - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.layout: vertical - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -9826,7 +9866,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: default - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.size: default - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.size: default - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -10292,7 +10334,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: small - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.size: small - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.size: small - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -10758,7 +10802,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: small, properties.bordered: true - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.size: small, properties.bordered: true - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.size: small, properties.bordered: true - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {
@@ -12136,7 +12182,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title html value - value[0] - Descriptions 1`] = `
+exports[`Mock render - properties.title html value - value[0] - Descriptions 1`] = `mocked`;
+
+exports[`Mock render - properties.title html value - value[0] - Descriptions 2`] = `
 Array [
   Array [
     Object {

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class Actions {
     }
   }
 
-  async callActionLoop({ actions, arrayIndices, block, event, responses }) {
+  async callActionLoop({ actions, arrayIndices, block, event, progress, responses }) {
     for (const [index, action] of actions.entries()) {
       try {
         if (action.async === true) {
@@ -54,6 +54,7 @@ class Actions {
             block,
             event,
             index,
+            progress,
             responses,
           });
         } else {
@@ -63,6 +64,7 @@ class Actions {
             block,
             event,
             index,
+            progress,
             responses,
           });
           responses[action.id] = response;
@@ -77,15 +79,22 @@ class Actions {
     }
   }
 
-  async callActions({ actions, arrayIndices, block, catchActions, event, eventName }) {
+  async callActions({ actions, arrayIndices, block, catchActions, event, eventName, progress }) {
     const startTimestamp = new Date();
     const responses = {};
     try {
-      await this.callActionLoop({ actions, arrayIndices, block, event, responses });
+      await this.callActionLoop({ actions, arrayIndices, block, event, responses, progress });
     } catch (error) {
       console.error(error);
       try {
-        await this.callActionLoop({ actions: catchActions, arrayIndices, block, event, responses });
+        await this.callActionLoop({
+          actions: catchActions,
+          arrayIndices,
+          block,
+          event,
+          responses,
+          progress,
+        });
       } catch (errorCatch) {
         console.error(errorCatch);
         return {
@@ -125,7 +134,7 @@ class Actions {
     };
   }
 
-  async callAction({ action, arrayIndices, block, event, index, responses }) {
+  async callAction({ action, arrayIndices, block, event, index, progress, responses }) {
     if (!this.actions[action.type]) {
       throw {
         error: new Error(`Invalid action type "${action.type}" at "${block.blockId}".`),
@@ -167,6 +176,9 @@ class Actions {
         params: parsedAction.params,
         window: this.context._internal.lowdefy._internal.window,
       });
+      if (progress) {
+        progress();
+      }
     } catch (error) {
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({

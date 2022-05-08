@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { NodeParser } from '@lowdefy/operators';
 
 import { RequestError } from '../../context/errors.js';
 
-async function evaluateOperators(
+function evaluateOperators(
   { operators, secrets, user },
   { connectionConfig, payload, requestConfig }
 ) {
@@ -28,7 +28,6 @@ async function evaluateOperators(
     secrets,
     user,
   });
-  await operatorsParser.init();
   const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
     input: connectionConfig.properties || {},
     location: connectionConfig.connectionId,

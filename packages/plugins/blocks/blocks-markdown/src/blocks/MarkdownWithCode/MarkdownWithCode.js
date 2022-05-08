@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
 // See https://github.com/react-syntax-highlighter/react-syntax-highlighter/issues/393 for esm issue.
-import github from 'react-syntax-highlighter/dist/cjs/styles/hljs/github.js';
+import { github } from 'react-syntax-highlighter/dist/cjs/styles/hljs/index.js';
 import javascript from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript.js';
 import typescript from 'react-syntax-highlighter/dist/cjs/languages/hljs/typescript.js';
 import python from 'react-syntax-highlighter/dist/cjs/languages/hljs/python.js';
@@ -50,11 +50,21 @@ SyntaxHighlighter.registerLanguage('xml', xml.default);
 SyntaxHighlighter.registerLanguage('yaml', yaml.default);
 
 const components = {
-  code: ({ language, children }) => (
-    <SyntaxHighlighter style={github} language={language}>
-      {children}
-    </SyntaxHighlighter>
-  ),
+  code({ inline, className, children, ...props }) {
+    return !inline ? (
+      <SyntaxHighlighter
+        style={github}
+        language={String(className).replace('language-', '')}
+        {...props}
+      >
+        {children}
+      </SyntaxHighlighter>
+    ) : (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
 };
 const MarkdownWithCode = ({ blockId, properties, methods }) => (
   <div id={blockId} className={methods.makeCssClass(properties.style)}>
@@ -72,12 +82,6 @@ const MarkdownWithCode = ({ blockId, properties, methods }) => (
 MarkdownWithCode.defaultProps = blockDefaultProps;
 MarkdownWithCode.meta = {
   category: 'container',
-  loading: {
-    type: 'SkeletonParagraph',
-    properties: {
-      lines: 7,
-    },
-  },
   icons: [],
   styles: [],
 };

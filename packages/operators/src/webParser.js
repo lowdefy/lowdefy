@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,22 +19,8 @@ import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 class WebParser {
   constructor({ context, operators }) {
     this.context = context;
-    this.init = this.init.bind(this);
     this.parse = this.parse.bind(this);
     this.operators = operators;
-  }
-
-  async init() {
-    if (!type.isObject(this.context._internal.lowdefy)) {
-      throw new Error('context._internal.lowdefy must be an object.');
-    }
-    await Promise.all(
-      Object.values(this.operators).map(async (operator) => {
-        if (operator.init) {
-          await operator.init();
-        }
-      })
-    );
   }
 
   parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
@@ -70,14 +56,15 @@ class WebParser {
           actions,
           args,
           arrayIndices,
-          context: context,
+          context,
           event,
           input: inputs ? inputs[context.id] : {},
           location: applyArrayIndices(arrayIndices, location),
           lowdefyGlobal: lowdefyGlobal || {},
           menus: menus || {},
           methodName,
-          operators: operators,
+          operators,
+          operatorPrefix,
           params: value[key],
           requests: context.requests,
           state: context.state,

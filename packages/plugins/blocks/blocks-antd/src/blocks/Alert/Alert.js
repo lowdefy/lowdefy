@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -53,12 +53,6 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
 AlertBlock.defaultProps = blockDefaultProps;
 AlertBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 40,
-    },
-  },
   icons: [],
   styles: ['blocks/Alert/style.less'],
 };

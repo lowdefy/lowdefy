@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ const MobileMenu = ({
         components={components}
         properties={mergeObjects([
           {
-            bodyStyle: { padding: '3.1em 0 0 0', backgroundColor: properties.backgroundColor },
+            bodyStyle: { padding: '3.1em 0 0 0' },
           },
           properties.drawer,
         ])}
@@ -121,7 +121,6 @@ const MobileMenu = ({
 MobileMenu.defaultProps = blockDefaultProps;
 MobileMenu.meta = {
   category: 'display',
-  loading: false,
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
   styles: ['blocks/MobileMenu/style.less'],
 };

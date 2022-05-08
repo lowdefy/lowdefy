@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -104,14 +104,14 @@
   type: Title
   properties:
     copyable:
-      icon: WarningOutlined
+      icon: AiOutlineWarning
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: icon: []'
   type: Title
   properties:
     copyable:
       icon:
-        - WarningOutlined
+        - AiOutlineWarning
         - AiOutlineRocket
     content: Lorem ipsum dolor sit amet
 - id: 'properties.copyable: tooltips: []'

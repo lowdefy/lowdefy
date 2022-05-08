@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import color from '../../color.js';
 
 const ButtonBlock = ({
   blockId,
+  components: { Icon },
   events,
   loading,
-  components: { Icon },
   methods,
   onClick,
   properties,
@@ -47,15 +47,19 @@ const ButtonBlock = ({
             backgroundColor: color(properties.color, 5),
             borderColor: color(properties.color, 5),
           },
+          '&:focus': properties.color && {
+            backgroundColor: properties.color,
+            borderColor: properties.color,
+          },
         },
         properties.style,
       ])}
-      disabled={properties.disabled || get(events, `${onClickActionName}.loading`)}
+      disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
       id={blockId}
-      loading={loading || get(events, `${onClickActionName}.loading`)}
+      loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
       type={get(properties, 'type', { default: 'primary' })}
@@ -78,9 +82,6 @@ const ButtonBlock = ({
 ButtonBlock.defaultProps = blockDefaultProps;
 ButtonBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'SkeletonButton',
-  },
   icons: [],
   styles: ['blocks/Button/style.less'],
 };

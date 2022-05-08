@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ export const ColorPicker = ({
     toggle(false);
     onChange(newColor);
   }, []);
-  useClickOutside(popover, close, value);
+  useClickOutside(popover, close, color);
   return (
     <div
       className={classNames({
@@ -68,7 +68,10 @@ export const ColorPicker = ({
             'ant-input-lg': size === 'large',
           })}
           color={color}
-          onChange={setColor}
+          onChange={(newColor) => {
+            setColor(newColor);
+            onChange(newColor);
+          }}
           prefixed={true}
           disabled={disabled}
         />

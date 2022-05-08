@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -150,9 +150,6 @@ S3UploadButtonBlock.defaultProps = blockDefaultProps;
 S3UploadButtonBlock.meta = {
   valueType: 'object',
   category: 'input',
-  loading: {
-    type: 'SkeletonButton',
-  },
   icons: ['AiOutlineUpload'],
   styles: ['blocks/S3UploadButton/style.less'],
 };

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -83,12 +83,6 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
 TabsBlock.defaultProps = blockDefaultProps;
 TabsBlock.meta = {
   category: 'container',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
-    },
-  },
   icons: [],
   styles: ['blocks/Tabs/style.less'],
 };

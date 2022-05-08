@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import disabledDate from '../../disabledDate.js';
 
 const DateTimeSelector = ({
   blockId,
+  components: { Icon },
   events,
   loading,
-  components: { Icon },
   methods,
   properties,
   required,
@@ -49,7 +49,6 @@ const DateTimeSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -60,7 +59,7 @@ const DateTimeSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM-DD HH:mm'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
@@ -113,9 +112,6 @@ DateTimeSelector.defaultProps = blockDefaultProps;
 DateTimeSelector.meta = {
   valueType: 'date',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateTimeSelector/style.less'],
 };

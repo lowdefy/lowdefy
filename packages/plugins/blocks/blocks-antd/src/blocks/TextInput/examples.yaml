@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,15 +38,15 @@
   type: TextInput
   properties:
     prefix: Prefix to the text
-- id: 'properties.prefixIcon: AccountBookFilled'
+- id: 'properties.prefixIcon: AiFillAccountBook'
   type: TextInput
   properties:
-    prefixIcon: AccountBookFilled
+    prefixIcon: AiFillAccountBook
 - id: 'properties.prefixIcon.size: 24'
   type: TextInput
   properties:
     prefixIcon:
-      name: AccountBookFilled
+      name: AiFillAccountBook
       size: 24
 - id: 'properties.size: large'
   type: TextInput

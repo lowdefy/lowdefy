@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - areas.extra: - value[0] - Card 1`] = `
+exports[`Mock render - areas.extra: - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - areas.extra: - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -86,7 +88,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Card 1`] = `
+exports[`Mock render - default - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -118,7 +122,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.bodyStyle: border: 5px solid blue - value[0] - Card 1`] = `
+exports[`Mock render - properties.bodyStyle: border: 5px solid blue - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.bodyStyle: border: 5px solid blue - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -196,7 +202,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.bordered: false - value[0] - Card 1`] = `
+exports[`Mock render - properties.bordered: false - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.bordered: false - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -272,7 +280,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.headerStyle: border: 5px solid blue - value[0] - Card 1`] = `
+exports[`Mock render - properties.headerStyle: border: 5px solid blue - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.headerStyle: border: 5px solid blue - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -350,7 +360,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.hoverable: true - value[0] - Card 1`] = `
+exports[`Mock render - properties.hoverable: true - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.hoverable: true - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -426,7 +438,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.inner: true - value[0] - Card 1`] = `
+exports[`Mock render - properties.inner: true - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.inner: true - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -502,7 +516,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.size: small - value[0] - Card 1`] = `
+exports[`Mock render - properties.size: small - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.size: small - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -578,7 +594,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Card 1`] = `
+exports[`Mock render - properties.title - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -654,7 +672,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with html in title - value[0] - Card 1`] = `
+exports[`Mock render - with html in title - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - with html in title - value[0] - Card 2`] = `
 Array [
   Array [
     Object {
@@ -732,7 +752,9 @@ Array [
 ]
 `;
 
-exports[`Mock render - with onClick event - value[0] - Card 1`] = `
+exports[`Mock render - with onClick event - value[0] - Card 1`] = `mocked`;
+
+exports[`Mock render - with onClick event - value[0] - Card 2`] = `
 Array [
   Array [
     Object {

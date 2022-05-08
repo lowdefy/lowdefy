@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,15 @@ import { type } from '@lowdefy/helpers';
 
 const Paragraph = Typography.Paragraph;
 
-const ParagraphInput = ({ blockId, events, components: { Icon }, properties, methods, value }) => {
+const ParagraphInput = ({
+  blockId,
+  components: { Icon },
+  events,
+  loading,
+  methods,
+  properties,
+  value,
+}) => {
   const [editing, setEdit] = useState(false);
   const editableEvents = {
     onStart: () => {
@@ -80,7 +88,7 @@ const ParagraphInput = ({ blockId, events, components: { Icon }, properties, met
           : properties.copyable
       }
       delete={properties.delete}
-      disabled={properties.disabled}
+      disabled={properties.disabled || loading}
       ellipsis={
         type.isObject(properties.ellipsis)
           ? {
@@ -135,9 +143,6 @@ ParagraphInput.defaultProps = blockDefaultProps;
 ParagraphInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonParagraph',
-  },
   icons: [],
   styles: ['blocks/ParagraphInput/style.less'],
 };

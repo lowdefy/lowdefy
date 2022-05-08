@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ export default {
                     icon: {
                       type: ['string', 'object'],
                       description:
-                        'Name of an Ant Design Icon or properties of an Icon block to customize icon on menu item.',
+                        'Name of an React-Icon (See <a href="https://react-icons.github.io/react-icons/">all icons</a>) or properties of an Icon block to customize icon on menu item.',
                     },
                     danger: {
                       type: 'boolean',

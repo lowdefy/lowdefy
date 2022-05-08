@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ test('button propertiesFormTransformer', () => {
               "allowClear": true,
               "label": Object {
                 "align": "right",
-                "extra": "Name of an Ant Design Icon or properties of an Icon block to use icon in button.",
+                "extra": "Name of an React-Icon (See <a href=\\"https://react-icons.github.io/react-icons/\\">all icons</a>) or properties of an Icon block to use icon in button.",
                 "span": 8,
               },
               "options": Object {
@@ -108,7 +108,7 @@ test('button propertiesFormTransformer', () => {
         "properties": Object {
           "inner": true,
           "size": "small",
-          "title": "button:",
+          "title": "block.properties.field:",
         },
         "type": "Card",
       },

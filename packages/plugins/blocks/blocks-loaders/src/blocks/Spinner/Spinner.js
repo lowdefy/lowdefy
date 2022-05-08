@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-import LogoSpinner from '../LogoSpinner/LogoSpinner.js';
-
 const Spinner = ({ properties, methods }) => {
   return (
     <div
@@ -31,10 +29,6 @@ const Spinner = ({ properties, methods }) => {
       })}
     >
       <div style={{ width: properties.size || 50, margin: 'auto', height: properties.size || 50 }}>
-        <LogoSpinner
-          color={properties.color}
-          barColor={properties.barColor || (properties.shaded === true ? '#f1f1f1' : '#fff')}
-        />
         <div
           className={methods.makeCssClass({
             textAlign: 'center',
@@ -55,7 +49,6 @@ const Spinner = ({ properties, methods }) => {
 Spinner.defaultProps = blockDefaultProps;
 Spinner.meta = {
   category: 'display',
-  loading: false,
   icons: [],
   styles: ['blocks/Spinner/style.less'],
 };

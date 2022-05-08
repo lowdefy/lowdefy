@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import basicTypes from '@lowdefy/blocks-basic/types';
+import loaderTypes from '@lowdefy/blocks-loaders/types';
 
 function buildTypeClass(
   context,
@@ -39,9 +42,14 @@ function buildTypeClass(
 function buildTypes({ components, context }) {
   const { typeCounters } = context;
 
+  // Add Mandatory Types
   // Add operators used by form validation
   typeCounters.operators.client.increment('_not');
   typeCounters.operators.client.increment('_type');
+  // Add loaders and basic
+  basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
+  typeCounters.blocks.increment('Message'); // Used for DisplayMessage in @lowdefy/client
 
   components.types = {
     actions: {},

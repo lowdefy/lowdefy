@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mock render - default - value[0] - Label 1`] = `
+exports[`Mock render - default - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - default - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -131,14 +133,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -149,9 +151,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - default - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - default - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - inline and long extra default size - value[0] - Label 1`] = `
+exports[`Mock render - inline and long extra default size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - inline and long extra default size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -266,14 +270,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -363,9 +367,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - inline and long extra default size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - inline and long extra default size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - inline and long extra large size - value[0] - Label 1`] = `
+exports[`Mock render - inline and long extra large size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - inline and long extra large size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -480,14 +486,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -577,9 +583,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - inline and long extra large size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - inline and long extra large size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - inline and long extra small size - value[0] - Label 1`] = `
+exports[`Mock render - inline and long extra small size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - inline and long extra small size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -694,14 +702,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
@@ -791,9 +799,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - inline and long extra small size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - inline and long extra small size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.align: left - value[0] - Label 1`] = `
+exports[`Mock render - properties.align: left - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.align: left - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -924,14 +934,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -942,9 +952,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.align: left - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.align: left - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.align: right - value[0] - Label 1`] = `
+exports[`Mock render - properties.align: right - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.align: right - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1075,14 +1087,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -1093,9 +1105,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.align: right - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.align: right - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.colon: false - value[0] - Label 1`] = `
+exports[`Mock render - properties.colon: false - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.colon: false - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1226,14 +1240,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -1244,9 +1258,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.colon: false - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.colon: false - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.colon: true - value[0] - Label 1`] = `
+exports[`Mock render - properties.colon: true - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.colon: true - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1377,14 +1393,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -1395,9 +1411,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.colon: true - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.colon: true - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.disabled: true - value[0] - Label 1`] = `
+exports[`Mock render - properties.disabled: true - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.disabled: true - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1435,14 +1453,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -1453,9 +1471,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.disabled: true - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.disabled: true - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra long - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra long - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra long - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1586,14 +1606,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -1683,9 +1703,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra long - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra long - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra long with inline = true - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra long with inline = true - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -1798,14 +1820,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -1895,9 +1917,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra long with inline = true - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra long with inline = true - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -2010,14 +2034,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -2107,9 +2131,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra long with inline = true, size = large - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -2222,14 +2248,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
@@ -2319,9 +2345,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra long with inline = true, size = small - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -2436,14 +2464,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
@@ -2454,9 +2482,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra long with inline true - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: Extra text - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: Extra text - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: Extra text - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -2587,14 +2617,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -2683,9 +2713,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: Extra text - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: Extra text - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extra: html in extra - value[0] - Label 1`] = `
+exports[`Mock render - properties.extra: html in extra - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extra: html in extra - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -2816,14 +2848,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -2914,9 +2946,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extra: html in extra - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extra: html in extra - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.extraStyle: border 1px purple - value[0] - Label 1`] = `
+exports[`Mock render - properties.extraStyle: border 1px purple - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.extraStyle: border 1px purple - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3049,14 +3083,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},{\\"border\\":\\"1px solid purple\\"}]}"
           >
@@ -3147,9 +3181,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.extraStyle: border 1px purple - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.extraStyle: border 1px purple - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.feedbackStyle: border 1px blue - value[0] - Label 1`] = `
+exports[`Mock render - properties.feedbackStyle: border 1px blue - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.feedbackStyle: border 1px blue - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3282,14 +3318,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -3380,9 +3416,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.feedbackStyle: border 1px blue - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.feedbackStyle: border 1px blue - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.inline: true - value[0] - Label 1`] = `
+exports[`Mock render - properties.inline: true - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.inline: true - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3495,14 +3533,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"flexWrap\\":\\"inherit\\",\\"marginBottom\\":0}}",
@@ -3513,9 +3551,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.inline: true - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.inline: true - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.span: 2 - value[0] - Label 1`] = `
+exports[`Mock render - properties.span: 2 - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.span: 2 - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3656,14 +3696,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -3674,9 +3714,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.span: 2 - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.span: 2 - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.span: 2 with long work title - value[0] - Label 1`] = `
+exports[`Mock render - properties.span: 2 with long work title - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.span: 2 with long work title - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3817,14 +3859,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -3835,9 +3877,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.span: 2 with long work title - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.span: 2 with long work title - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.title - value[0] - Label 1`] = `
+exports[`Mock render - properties.title - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.title - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -3968,14 +4012,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -3986,9 +4030,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.title - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.title long - value[0] - Label 1`] = `
+exports[`Mock render - properties.title long - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.title long - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -4121,14 +4167,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -4139,9 +4185,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title long - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.title long - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - properties.title: html in title - value[0] - Label 1`] = `
+exports[`Mock render - properties.title: html in title - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - properties.title: html in title - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -4276,14 +4324,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
         </mockConstructor>,
       ],
       "className": "ant-form-item {\\"style\\":{\\"marginBottom\\":0}}",
@@ -4294,9 +4342,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - properties.title: html in title - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - properties.title: html in title - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right and long extra for default size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right and long extra for default size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right and long extra for default size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -4439,14 +4489,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -4536,9 +4586,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right and long extra for default size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right and long extra for default size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right and long extra for large size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right and long extra for large size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right and long extra for large size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -4681,14 +4733,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -4778,9 +4830,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right and long extra for large size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right and long extra for large size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right and long extra for small size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right and long extra for small size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right and long extra for small size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -4923,14 +4977,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
@@ -5020,9 +5074,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right and long extra for small size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right and long extra for small size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right, long title and long extra for default size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right, long title and long extra for default size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right, long title and long extra for default size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -5165,14 +5221,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -5262,9 +5318,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right, long title and long extra for default size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right, long title and long extra for default size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right, long title and long extra for large size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right, long title and long extra for large size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right, long title and long extra for large size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -5407,14 +5465,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":0},null]}"
           >
@@ -5504,9 +5562,11 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right, long title and long extra for large size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right, long title and long extra for large size - value[0] - Label 3`] = `Array []`;
 
-exports[`Mock render - span, align right, long title and long extra for small size - value[0] - Label 1`] = `
+exports[`Mock render - span, align right, long title and long extra for small size - value[0] - Label 1`] = `mocked`;
+
+exports[`Mock render - span, align right, long title and long extra for small size - value[0] - Label 2`] = `
 Array [
   Array [
     Object {
@@ -5649,14 +5709,14 @@ Array [
               </div>
             </div>
           </div>
-          <ForwardRef
+          <CSSMotion
             motionAppear={true}
             motionName="show-help"
             removeOnLeave={true}
             visible={false}
           >
             [Function]
-          </ForwardRef>
+          </CSSMotion>
           <div
             className="ant-form-item-explain ant-form-item-extra {\\"style\\":[{\\"marginTop\\":-4},null]}"
           >
@@ -5746,4 +5806,4 @@ Array [
 ]
 `;
 
-exports[`Mock render - span, align right, long title and long extra for small size - value[0] - Label 2`] = `Array []`;
+exports[`Mock render - span, align right, long title and long extra for small size - value[0] - Label 3`] = `Array []`;

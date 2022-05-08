@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -54,20 +54,6 @@
   properties:
     sider:
       theme: light
-  areas:
-    content:
-      blocks: []
-    footer:
-      blocks: []
-    header:
-      blocks: []
-    sider:
-      blocks: []
-- id: 'properties.header.color: #4432a8 '
-  type: PageSHCF
-  properties:
-    header:
-      color: '#4432a8'
   areas:
     content:
       blocks: []

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ const NumberInput = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -50,7 +49,7 @@ const NumberInput = ({
             className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
             controls={properties.controls}
             decimalSeparator={properties.decimalSeparator}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             formatter={properties.formatter}
             keyboard={properties.keyboard}
             max={properties.max}
@@ -78,9 +77,6 @@ NumberInput.defaultProps = blockDefaultProps;
 NumberInput.meta = {
   valueType: 'number',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/NumberInput/style.less'],
 };

@@ -1,17 +1,17 @@
 /*
-   Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 import testContext from '../testContext.js';
@@ -19,7 +19,7 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('set value to block field', async () => {
+test('set value to block field', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -41,7 +41,7 @@ test('set value to block field', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -55,7 +55,7 @@ test('set value to block field', async () => {
   expect(context.state).toEqual({ field: true });
 });
 
-test('array block with init, save to field', async () => {
+test('array block with init, save to field', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -92,7 +92,7 @@ test('array block with init, save to field', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { field: [{ text: 'b' }] },
@@ -100,7 +100,7 @@ test('array block with init, save to field', async () => {
   expect(context.state).toEqual({ field: [{ text: 'b' }] });
 });
 
-test('two blocks with same field should have the same value', async () => {
+test('two blocks with same field should have the same value', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -131,7 +131,7 @@ test('two blocks with same field should have the same value', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
   });
@@ -151,7 +151,7 @@ test('two blocks with same field should have the same value', async () => {
   expect(context.state).toEqual({ field: false });
 });
 
-test('two blocks with same field visibility and state', async () => {
+test('two blocks with same field visibility and state', () => {
   const rootBlock = {
     blockId: 'root',
     meta: {
@@ -200,7 +200,7 @@ test('two blocks with same field visibility and state', async () => {
       },
     },
   };
-  const context = await testContext({
+  const context = testContext({
     lowdefy,
     rootBlock,
     initState: { field: 'field', swtch2: true, swtch1: true },

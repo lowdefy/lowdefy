@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -99,25 +99,6 @@
   properties:
     logo:
       srcSet: '(max-width: 767px) 40px, 768px'
-    menu:
-      links:
-        - id: Introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            icon: AiOutlineRocket
-            title: Introduction
-        - id: alert
-          type: MenuLink
-          pageId: Alert
-          properties:
-            icon: AiOutlineExclamationCircle
-            title: Alert
-- id: 'properties.header.color'
-  type: PageHeaderMenu
-  properties:
-    header:
-      color: '#3f51b5'
     menu:
       links:
         - id: Introduction

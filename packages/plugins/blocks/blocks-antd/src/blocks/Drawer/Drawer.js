@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -79,7 +79,6 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
 DrawerBlock.defaultProps = blockDefaultProps;
 DrawerBlock.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/Drawer/style.less'],
 };

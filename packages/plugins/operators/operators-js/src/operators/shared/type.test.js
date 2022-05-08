@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -103,10 +103,9 @@ test('_type none', () => {
   expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
 });
 
-test('_type date with on packed date pass and calls NodeParser', async () => {
+test('_type date with on packed date pass and calls NodeParser', () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location });
   expect(res.output).toEqual(true);
 });

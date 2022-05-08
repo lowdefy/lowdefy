@@ -346,6 +346,435 @@ exports[`Render properties.title - value[0] 1`] = `
 </div>
 `;
 
+exports[`Render required = true areas.extra: - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="areas.extra:"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+      <div
+        class="ant-card-extra"
+      >
+        <div
+          data-testid="area-extra"
+          style="border: 1px solid red; padding: 10px;"
+        >
+          extra
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true default - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="default"
+>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.bodyStyle: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="properties.bodyStyle: border: 5px solid blue"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+    style="border: 5px solid blue;"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.bordered: false - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card emotion-0"
+  id="properties.bordered: false"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.headerStyle: border: 5px solid blue - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="properties.headerStyle: border: 5px solid blue"
+>
+  <div
+    class="ant-card-head"
+    style="border: 5px solid blue;"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.hoverable: true - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered ant-card-hoverable emotion-0"
+  id="properties.hoverable: true"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.inner: true - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered ant-card-type-inner emotion-0"
+  id="properties.inner: true"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.size: small - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered ant-card-small emotion-0"
+  id="properties.size: small"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block small
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true properties.title - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="properties.title"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true with html in title - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="with html in title"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          <div
+            style="color:green"
+          >
+            Card Title
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render required = true with onClick event - value[0] 1`] = `
+.emotion-0 {
+  outline: none;
+  cursor: pointer;
+}
+
+<div
+  class="ant-card ant-card-bordered emotion-0"
+  id="with onClick event"
+>
+  <div
+    class="ant-card-head"
+  >
+    <div
+      class="ant-card-head-wrapper"
+    >
+      <div
+        class="ant-card-head-title"
+      >
+        <span
+          class="emotion-1"
+        >
+          Card block
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ant-card-body"
+  >
+    <div
+      data-testid="area-content"
+      style="border: 1px solid red; padding: 10px;"
+    >
+      content
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Render with html in title - value[0] 1`] = `
 .emotion-0 {
   outline: none;

@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,7 +44,6 @@ _ref:
 
             - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
             - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
-            - `experimental_initPageId: string`: The pageId of the page that should be loaded when app is initialized. User is then redirected to requeted page. You can use onInit/onInitAsync/onEnter/onEnterAsync events to fetch and prepare global variables for other parts of the app.
 
       - id: alert1
         type: Alert

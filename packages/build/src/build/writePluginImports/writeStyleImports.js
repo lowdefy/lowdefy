@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `@import '@lowdefy/layout/style.less';
+@import '@lowdefy/client/style.less';
 {% for style in styles -%}
 @import '{{ style }}';
 {% endfor -%}

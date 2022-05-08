@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 import request from './request.js';
 
-function waitForRestartedServer(lowdefy) {
+function waitForRestartedServer(basePath) {
   setTimeout(async () => {
     try {
       await request({
-        url: `${lowdefy.basePath}/api/ping`,
+        url: `${basePath}/api/ping`,
       });
-      lowdefy._internal.window.location.reload();
+      window.location.reload();
     } catch (error) {
-      waitForRestartedServer(lowdefy);
+      waitForRestartedServer(basePath);
     }
-  }, 1500);
+  }, 500); // TODO: this ping should be shorter than rerender delay until we can pass a rebuild flag to reload.
 }
 
 export default waitForRestartedServer;

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -29,81 +29,73 @@ const payload = {
 
 console.error = () => {};
 
-test('_nunjucks string template', async () => {
+test('_nunjucks string template', () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with Some String embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks null', async () => {
+test('_nunjucks null', () => {
   const input = { _nunjucks: null };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks { template: , on: }', async () => {
+test('_nunjucks { template: , on: }', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks template not a string', async () => {
+test('_nunjucks template not a string', () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks params on template not a string', async () => {
+test('_nunjucks params on template not a string', () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks on not a object', async () => {
+test('_nunjucks on not a object', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks on null', async () => {
+test('_nunjucks on null', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_nunjucks invalid template', async () => {
+test('_nunjucks invalid template', () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
-  await parser.init();
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

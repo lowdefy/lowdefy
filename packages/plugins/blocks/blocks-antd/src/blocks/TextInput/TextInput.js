@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ const TextInput = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -51,7 +50,7 @@ const TextInput = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               size={properties.size}
@@ -100,9 +99,6 @@ TextInput.defaultProps = blockDefaultProps;
 TextInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/TextInput/style.less'],
 };

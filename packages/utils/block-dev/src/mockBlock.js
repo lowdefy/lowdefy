@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import stubBlockProps from './stubBlockProps.js';
 
-const mockBlock = ({ meta, logger, schema }) => {
+const mockBlock = ({ meta, schema }) => {
   const mockMath = Object.create(global.Math);
   mockMath.random = () => 0.5;
   global.Math = mockMath;
@@ -86,7 +86,7 @@ const mockBlock = ({ meta, logger, schema }) => {
     }
   };
   const getProps = (block) => {
-    return stubBlockProps({ block, meta, logger, schema });
+    return stubBlockProps({ block, meta, schema });
   };
 
   return { before, methods, getProps };

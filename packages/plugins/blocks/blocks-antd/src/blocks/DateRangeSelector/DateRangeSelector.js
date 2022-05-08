@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -50,7 +50,6 @@ const DateRangeSelector = ({
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       validation={validation}
       required={required}
-      loading={loading}
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
@@ -61,7 +60,7 @@ const DateRangeSelector = ({
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format || 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
@@ -105,9 +104,6 @@ DateRangeSelector.defaultProps = blockDefaultProps;
 DateRangeSelector.meta = {
   valueType: 'array',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons, 'AiOutlineCalendar'],
   styles: ['blocks/DateRangeSelector/style.less'],
 };

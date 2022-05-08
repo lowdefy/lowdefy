@@ -329,7 +329,7 @@ Array [
       >
         content
       </div>,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         components={Object {}}
@@ -345,7 +345,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AndroidFilled"
+        properties="AiFillAndroid"
         required={false}
         user={Object {}}
         validation={
@@ -1422,7 +1422,7 @@ Array [
       >
         content
       </div>,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         components={Object {}}
@@ -1438,7 +1438,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AndroidFilled"
+        properties="AiFillAndroid"
         required={false}
         user={Object {}}
         validation={
@@ -2515,7 +2515,7 @@ Array [
       >
         content
       </div>,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         components={Object {}}
@@ -2531,7 +2531,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AndroidFilled"
+        properties="AiFillAndroid"
         required={false}
         user={Object {}}
         validation={
@@ -3616,7 +3616,7 @@ Array [
       >
         content
       </div>,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         components={Object {}}
@@ -3632,7 +3632,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AndroidFilled"
+        properties="AiFillAndroid"
         required={false}
         user={Object {}}
         validation={
@@ -4701,7 +4701,7 @@ Array [
       >
         content
       </div>,
-      "icon": <IconComp1
+      "icon": <AntIcon
         basePath=""
         blockId="properties.icon: AndroidFilled_icon"
         components={Object {}}
@@ -4717,7 +4717,7 @@ Array [
             "triggerEvent": [Function],
           }
         }
-        properties="AndroidFilled"
+        properties="AiFillAndroid"
         required={false}
         user={Object {}}
         validation={

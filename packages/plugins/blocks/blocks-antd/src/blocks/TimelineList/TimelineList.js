@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -81,12 +81,6 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
 TimelineList.defaultProps = blockDefaultProps;
 TimelineList.meta = {
   category: 'list',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
-    },
-  },
   icons: [],
   styles: ['blocks/TimelineList/style.less'],
 };

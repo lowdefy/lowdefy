@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
     id={blockId}
     className={`${methods.makeCssClass([
       { backgroundColor: properties.theme === 'light' && '#fff' },
-      properties.color && {
-        backgroundColor: properties.color,
-      },
       properties.style,
     ])} hide-on-print`}
   >
@@ -38,7 +35,6 @@ const HeaderBlock = ({ blockId, content, methods, properties }) => (
 HeaderBlock.defaultProps = blockDefaultProps;
 HeaderBlock.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/Header/style.less'],
 };

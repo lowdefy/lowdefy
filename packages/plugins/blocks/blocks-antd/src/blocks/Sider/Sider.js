@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -46,10 +46,7 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
   return (
     <Sider
       id={blockId}
-      className={`${methods.makeCssClass([
-        { overflow: 'auto', backgroundColor: properties.color && `${properties.color} !important` },
-        properties.style,
-      ])} hide-on-print`}
+      className={`${methods.makeCssClass([{ overflow: 'auto' }, properties.style])} hide-on-print`}
       breakpoint={properties.breakpoint}
       collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
@@ -67,7 +64,6 @@ const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
 SiderBlock.defaultProps = blockDefaultProps;
 SiderBlock.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/Sider/style.less'],
 };

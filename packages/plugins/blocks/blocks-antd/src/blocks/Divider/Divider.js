@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,12 +34,6 @@ const DividerBlock = ({ blockId, properties, methods }) => (
 DividerBlock.defaultProps = blockDefaultProps;
 DividerBlock.meta = {
   category: 'display',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 5,
-    },
-  },
   icons: [],
   styles: ['blocks/Divider/style.less'],
 };

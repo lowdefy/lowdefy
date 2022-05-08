@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ const ControlledListBlock = ({
                   ...properties.removeItemIcon,
                   style: {
                     paddingLeft:
-                      properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
+                      properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
                     fontSize:
                       properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
                     ...(properties.removeItemIcon && properties.removeItemIcon.style
@@ -146,12 +146,6 @@ ControlledListBlock.defaultProps = blockDefaultProps;
 ControlledListBlock.meta = {
   valueType: 'array',
   category: 'list',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 80,
-    },
-  },
   icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
   styles: ['blocks/ControlledList/style.less'],
 };

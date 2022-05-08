@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -86,9 +86,6 @@ class Requests {
 
   async fetch({ requestId, payload }) {
     this.context.requests[requestId].loading = true;
-    if (this.context._internal.RootBlocks) {
-      this.context._internal.RootBlocks.setBlocksLoadingCache();
-    }
 
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({

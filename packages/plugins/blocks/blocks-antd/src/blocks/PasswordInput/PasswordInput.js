@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ const PasswordInput = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
       validation={validation}
@@ -50,7 +49,7 @@ const PasswordInput = ({
               bordered={properties.bordered}
               className={methods.makeCssClass(properties.inputStyle)}
               autoFocus={properties.autoFocus}
-              disabled={properties.disabled}
+              disabled={properties.disabled || loading}
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange' });
@@ -79,9 +78,6 @@ PasswordInput.defaultProps = blockDefaultProps;
 PasswordInput.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'SkeletonInput',
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/PasswordInput/style.less'],
 };

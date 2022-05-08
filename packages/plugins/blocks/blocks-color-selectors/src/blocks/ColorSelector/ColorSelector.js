@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ const ColorSelector = ({
       blockId={blockId}
       components={components}
       events={events}
-      loading={loading}
       methods={methods}
       properties={{ title: properties.title, size: properties.size, ...properties.label }}
       required={required}
@@ -57,7 +56,7 @@ const ColorSelector = ({
             undefinedColor={properties.undefinedColor}
             value={value}
             hideInput={properties.hideInput}
-            disabled={properties.disabled}
+            disabled={properties.disabled || loading}
             methods={methods}
           />
         ),
@@ -70,12 +69,6 @@ ColorSelector.defaultProps = blockDefaultProps;
 ColorSelector.meta = {
   valueType: 'string',
   category: 'input',
-  loading: {
-    type: 'Skeleton',
-    properties: {
-      height: 216,
-    },
-  },
   icons: [...Label.meta.icons],
   styles: ['blocks/ColorSelector/style.less'],
 };

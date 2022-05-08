@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Lowdefy, Inc
+# Copyright 2020-2022 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ _ref:
     description: |
       The `Reset` actions resets a context to the state it was in just after the `onInit` event was executed. This clears the user's inputs.
 
-      >  The `Reset` action resets the state to the state before the `onEnter` event is executed, and the `onEnter` event is not executed after the reset happens. This might cause unexpected behavior if you used an `onEnter` event to initialize the state.
+      >  The `Reset` action resets the state to the state after the `onInit` event was executed, and the `onMount` events are not executed after the reset happens. This might cause unexpected behavior if you used an `onInitAsync`, `onMount` or `onMountAsync` event to initialize the state.
     params: |
       The `Reset` action does not take any parameters.
     examples: |

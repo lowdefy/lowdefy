@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { type } from '@lowdefy/helpers';
-import { ErrorBoundary } from '@lowdefy/block-utils';
 import { Area, BlockLayout, layoutParamsToArea } from '../../../src/index.js';
 
 import Block from './Block.js';
@@ -95,7 +94,6 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
         <Comp
           blockId={block.id + randomId()}
           content={content}
-          loading={block.loading}
           makeCssClass={makeCssClass}
           properties={block.properties}
         />
@@ -104,7 +102,6 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
       return (
         <Comp
           blockId={block.id + randomId()}
-          loading={block.loading}
           makeCssClass={makeCssClass}
           properties={block.properties}
         />
@@ -114,24 +111,22 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
 
 const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
   return (
-    <ErrorBoundary>
-      <Loading id={`${block.id}-loading`} loading={block.loading} showLoading>
-        <BlockLayout
-          id={`bl-${block.id}` + randomId()}
-          highlightBorders={highlightBorders}
-          layout={block.layout || {}}
-          blockStyle={block.style}
+    <Loading id={`${block.id}-loading`} showLoading>
+      <BlockLayout
+        id={`bl-${block.id}` + randomId()}
+        highlightBorders={highlightBorders}
+        layout={block.layout || {}}
+        blockStyle={block.style}
+        makeCssClass={makeCssClass}
+      >
+        <AutoBlock
+          block={block}
+          state={state}
           makeCssClass={makeCssClass}
-        >
-          <AutoBlock
-            block={block}
-            state={state}
-            makeCssClass={makeCssClass}
-            highlightBorders={highlightBorders}
-          />
-        </BlockLayout>
-      </Loading>
-    </ErrorBoundary>
+          highlightBorders={highlightBorders}
+        />
+      </BlockLayout>
+    </Loading>
   );
 };
 

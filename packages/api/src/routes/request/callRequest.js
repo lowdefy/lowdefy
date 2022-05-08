@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ async function callRequest(context, { pageId, payload, requestId }) {
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
 
-  const { connectionProperties, requestProperties } = await evaluateOperators(context, {
+  const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     payload: serializer.deserialize(payload),
     requestConfig,

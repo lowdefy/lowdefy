@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2021 Lowdefy, Inc
+  Copyright 2020-2022 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -38,8 +38,32 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
         className: methods.makeCssClass(properties.modalStyle),
         closable: properties.closable,
         okText: properties.okText || 'Ok',
-        okButtonProps: properties.okButton,
-        cancelButtonProps: properties.cancelButton,
+        okButtonProps:
+          properties.okButton && properties.okButton.icon
+            ? {
+                ...properties.okButton,
+                icon: properties.okButton.icon && (
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    events={events}
+                    properties={properties.okButton.icon}
+                  />
+                ),
+              }
+            : properties.okButton,
+        cancelButtonProps:
+          properties.cancelButton && properties.cancelButton.icon
+            ? {
+                ...properties.cancelButton,
+                icon: properties.cancelButton.icon && (
+                  <Icon
+                    blockId={`${blockId}_ok_icon`}
+                    events={events}
+                    properties={properties.cancelButton.icon}
+                  />
+                ),
+              }
+            : properties.cancelButton,
         cancelText: properties.cancelText || 'Cancel',
         centered: properties.centered || false,
         mask: properties.mask !== undefined ? properties.mask : true,
@@ -64,7 +88,6 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
 ConfirmModal.defaultProps = blockDefaultProps;
 ConfirmModal.meta = {
   category: 'container',
-  loading: false,
   icons: [],
   styles: ['blocks/ConfirmModal/style.less'],
 };

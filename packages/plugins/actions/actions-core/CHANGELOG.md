@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
+
+**Note:** Version bump only for package @lowdefy/actions-core
+
+
+
+
+
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **actions-core:** Fix tests. ([29ec08d](https://github.com/lowdefy/lowdefy/commit/29ec08d5314b3fdd70ac8b073db6163f98fa3e52))
+* **actions:** textContext is now sync. ([13d6396](https://github.com/lowdefy/lowdefy/commit/13d6396a00067c1319ef1a956e0ed831af738cc1))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 
