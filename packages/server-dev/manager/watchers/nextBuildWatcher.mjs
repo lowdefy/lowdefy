@@ -83,6 +83,7 @@ async function nextBuildWatcher(context) {
 
   return setupWatcher({
     callback,
+    watchDotfiles: true,
     watchPaths: [
       path.join(context.directories.build, 'plugins'),
       path.join(context.directories.build, 'config.json'),
