@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
+
+**Note:** Version bump only for package @lowdefy/blocks-antd
+
+
+
+
+
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Fix button color on focus. ([c56d1e4](https://github.com/lowdefy/lowdefy/commit/c56d1e40433127811b211f3c0736dde52124af1e))
+* **blocks-antd:** Fix confirm modal button icons, closes [#1160](https://github.com/lowdefy/lowdefy/issues/1160) ([bba35be](https://github.com/lowdefy/lowdefy/commit/bba35be1dbb6a8e142f70b2415e865dba59de47b))
+* **blocks-antd:** Fix menu keys. ([c6b8c69](https://github.com/lowdefy/lowdefy/commit/c6b8c69bb05c013d5112b89523424568faf34005))
+* **blocks-antd:** Fix menu width wrapping. ([f71499c](https://github.com/lowdefy/lowdefy/commit/f71499cad248342e9a37584da56c0088aefcb62a))
+* **blocks-antd:** Menu to show current selected page. ([72af09c](https://github.com/lowdefy/lowdefy/commit/72af09cf3dab6417d8ee6c0cdcbeec52ba092876))
+* **blocks-antd:** remove onEnter and onInit events from schema descriptions. ([c0df169](https://github.com/lowdefy/lowdefy/commit/c0df1699276b6a922792a1d971ab6e596a5524e3))
+* **blocks-antd:** Update snapshots. ([c4cc37a](https://github.com/lowdefy/lowdefy/commit/c4cc37acff9ade36a2db84ee395e2dbceb5a13d1))
+* **blocks:** Fix icon names in examples. ([0d28534](https://github.com/lowdefy/lowdefy/commit/0d285347cdccd3a5f5c0531b5ee069d0e735287c))
+* Fix bugs in icon and icon usage in docs. ([03858f4](https://github.com/lowdefy/lowdefy/commit/03858f43502404de39024b38fac1c5f87d5c99ca))
+
+
+### Features
+
+* **blocks-antd:** Remove color settings for menu, etc. ([bacaedb](https://github.com/lowdefy/lowdefy/commit/bacaedbbc8911b9ad4eaf36d2ecb7f60e536e331))
+* **blocks-antd:** Update snapshots. ([5f5ef00](https://github.com/lowdefy/lowdefy/commit/5f5ef001c203b6c85564184683ece5fd968eea37))
+* **blocks:** Add skeletons to blocks meta. ([ba34939](https://github.com/lowdefy/lowdefy/commit/ba349397359d4f54d7850536329ec0682ffcf89c))
+* **blocks:** loading to render inputs but disable. ([1662f36](https://github.com/lowdefy/lowdefy/commit/1662f3668402bdce09a7ec814665525fc204f365))
+* **blocks:** Remove loading prop from blocks. ([fc2def3](https://github.com/lowdefy/lowdefy/commit/fc2def366c7f23d09622a60e3d716f6c995ef4e6))
+* **blocks:** Remove skeleton definition on blocks. ([f938a51](https://github.com/lowdefy/lowdefy/commit/f938a51268a7c0e5fa129c0628662890b635c8c7))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
+
+
+### Bug Fixes
+
+* Fix server npm publish files. ([3f5589e](https://github.com/lowdefy/lowdefy/commit/3f5589e434817e712624e31c955b0b741e94f075))
+
+
+
+
+
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Menu to show current selected page. ([72af09c](https://github.com/lowdefy/lowdefy/commit/72af09cf3dab6417d8ee6c0cdcbeec52ba092876))
+* Fix plugins in build. ([ec8d5ca](https://github.com/lowdefy/lowdefy/commit/ec8d5ca6adc7c482e5a4ab5c2edcc7ae7026f7e8))
+* Replace progressBarDispatcher with process object. ([9aff083](https://github.com/lowdefy/lowdefy/commit/9aff0833104c5fed304b071f5fdbd64593a45aa5))
+* **server:** Add actions-core as default to server. ([eed470f](https://github.com/lowdefy/lowdefy/commit/eed470ff2cda71028b2a152a7cbf2054bc1ef2fa))
+* **server:** Bug fixes on loading inc, and add auto inc. ([dba6f49](https://github.com/lowdefy/lowdefy/commit/dba6f496666dda86428dba5fbc94dceb0a571b9d))
+* **server:** Cleanup from review. ([d4dd1ca](https://github.com/lowdefy/lowdefy/commit/d4dd1cadf30ddc1f9b9700bd8c5699675607c117))
+* **server:** Remount progress controller on page change. ([967ac70](https://github.com/lowdefy/lowdefy/commit/967ac70078be00b3aa2f16ed6419a971debf31dc))
+* **server:** Remove block.loading. ([0995109](https://github.com/lowdefy/lowdefy/commit/09951094e15371ed9be1b36a093d0463ec0b8d70))
+
+
+### Features
+
+* **docs:** Fix loading and skeleton definitions on blocks concept pages. ([b6207a9](https://github.com/lowdefy/lowdefy/commit/b6207a96ecd99b00e7ed0a3a2151f96ab48d509f))
+* **engine:** Add runOnInit method to getContext. ([2339a3a](https://github.com/lowdefy/lowdefy/commit/2339a3a77da875e688115f7111bde1e8d706761d))
+* **server:** Context is now sync, use MountEvents for onInit. ([8f0ed25](https://github.com/lowdefy/lowdefy/commit/8f0ed25401f0f4cb2ee342c6511513f182ab65f5))
+* **server:** Make initLowdefyContext sync. ([ef11ebb](https://github.com/lowdefy/lowdefy/commit/ef11ebb3e3cb633310c533cfecb565018914ca60))
+* **server:** MountEvents, ProgressBarController and loading state. ([931dda7](https://github.com/lowdefy/lowdefy/commit/931dda7a140bd456724b83c0a28e5b6fb7c873c5))
+* **server:** Refine loading in render loop, remove onEnter. ([8c67b98](https://github.com/lowdefy/lowdefy/commit/8c67b986c30535b249eb55677e45a5cf556056be))
+* **server:** Remove block skeleton render. ([8ce8882](https://github.com/lowdefy/lowdefy/commit/8ce888259bc66e00b8e03e1fd2fe57b265166f5b))
+* **server:** Render loop for skeleton and loading. ([3ec944b](https://github.com/lowdefy/lowdefy/commit/3ec944b752aae46270f991f52417a9e9bfd14098))
+* **server:** Throw warning on illegal skeleton type. ([86bbae6](https://github.com/lowdefy/lowdefy/commit/86bbae69e80ff4539502e4faec4c3c4a45231a85))
+* **server:** User Client in server. ([31de543](https://github.com/lowdefy/lowdefy/commit/31de543757f2b82ac38d9a5b0c81278ae9561de1))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 

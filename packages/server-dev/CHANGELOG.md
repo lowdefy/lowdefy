@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
+
+
+### Bug Fixes
+
+* Fix server npm publish files. ([3f5589e](https://github.com/lowdefy/lowdefy/commit/3f5589e434817e712624e31c955b0b741e94f075))
+
+
+
+
+
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **server-dev:** Add actions.js to build watcher. ([f9f295e](https://github.com/lowdefy/lowdefy/commit/f9f295e37cc627e1f7f2d414d9e42c7c67f45f23))
+* **server-dev:** Do not render page before redirect. ([b4431b1](https://github.com/lowdefy/lowdefy/commit/b4431b17b36576cfc8cd30a5d1e2485502fd337e))
+* **server-dev:** Render app rebuild page. ([7895b53](https://github.com/lowdefy/lowdefy/commit/7895b53691f83b81629c2f4dfb174c858571c407))
+* **server:** Cleanup from review. ([d4dd1ca](https://github.com/lowdefy/lowdefy/commit/d4dd1cadf30ddc1f9b9700bd8c5699675607c117))
+* **server:** Remove block.loading. ([0995109](https://github.com/lowdefy/lowdefy/commit/09951094e15371ed9be1b36a093d0463ec0b8d70))
+
+
+### Features
+
+* **server-dev:** Client working 🏄‍♂️ ([cafca66](https://github.com/lowdefy/lowdefy/commit/cafca662ee00379ba1d7d38acf886e718174d624))
+* **server-dev:** Reload to pass resetContext flag. ([f303bc0](https://github.com/lowdefy/lowdefy/commit/f303bc046164c0d0370af66c3f7741eb04d7a93c))
+* **server-dev:** Use Client in dev server. ([4089191](https://github.com/lowdefy/lowdefy/commit/4089191bc84b5e8832e358136c491985872d59fc))
+* **server:** Context is now sync, use MountEvents for onInit. ([8f0ed25](https://github.com/lowdefy/lowdefy/commit/8f0ed25401f0f4cb2ee342c6511513f182ab65f5))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 
