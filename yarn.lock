@@ -2667,6 +2667,7 @@ __metadata:
     "@lowdefy/operators-nunjucks": 4.0.0-alpha.8
     "@lowdefy/operators-uuid": 4.0.0-alpha.8
     "@lowdefy/operators-yaml": 4.0.0-alpha.8
+    "@lowdefy/plugin-next-auth": 4.0.0-alpha.8
     "@next/eslint-plugin-next": 12.0.10
     chokidar: 3.5.3
     dotenv: 15.0.0
@@ -2676,6 +2677,7 @@ __metadata:
     next-auth: 4.1.2
     next-with-less: 2.0.4
     opener: 1.5.2
+    process: 0.11.10
     react: 17.0.2
     react-dom: 17.0.2
     react-icons: 4.3.1
