@@ -2659,7 +2659,7 @@ __metadata:
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.10
-    next-auth: 4.1.2
+    next-auth: 4.3.2
     next-with-less: 2.0.4
     opener: 1.5.2
     react: 17.0.2
@@ -2690,7 +2690,7 @@ __metadata:
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.10
-    next-auth: 4.1.2
+    next-auth: 4.3.2
     next-with-less: 2.0.4
     process: 0.11.10
     react: 17.0.2
@@ -11019,9 +11019,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:4.1.2":
-  version: 4.1.2
-  resolution: "next-auth@npm:4.1.2"
+"next-auth@npm:4.3.2":
+  version: 4.3.2
+  resolution: "next-auth@npm:4.3.2"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -11034,12 +11034,12 @@ __metadata:
     uuid: ^8.3.2
   peerDependencies:
     nodemailer: ^6.6.5
-    react: ^17.0.2
-    react-dom: ^17.0.2
+    react: ^17.0.2 || ^18.0.0-0
+    react-dom: ^17.0.2 || ^18.0.0-0
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 70f63eb5bb8bb709a15ca8696a9c0629343ec7b7694714b246980f848e96278248671d5d48738294dcc012aa220809e5d1761893bd2678fc41c9571dfd01ab07
+  checksum: b8bbcc87f1831efc7ea4fc4868128defaac7b8c1331b00be5d732135dec2d60425aba7302308ea1b90fec4746fad717821bb0cfe3ea030452d252d01c08d3a29
   languageName: node
   linkType: hard
 
