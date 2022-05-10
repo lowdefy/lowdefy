@@ -26,8 +26,8 @@ function envWatcher(context) {
   };
   return setupWatcher({
     callback,
-    watchPaths: [path.join(context.directories.config, '.env')],
     watchDotfiles: true,
+    watchPaths: [path.join(context.directories.config, '.env')],
   });
 }
 
