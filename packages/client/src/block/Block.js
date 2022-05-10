@@ -20,14 +20,7 @@ import CategorySwitch from './CategorySwitch.js';
 import ErrorBoundary from '../ErrorBoundary.js';
 import MountEvents from '../MountEvents.js';
 
-const Block = ({
-  block,
-  Blocks,
-  context,
-  lowdefy,
-  parentLoading,
-  progress = { dispatch: () => {} },
-}) => {
+const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
 
@@ -36,10 +29,14 @@ const Block = ({
       <MountEvents
         context={context}
         triggerEvent={async () => {
+          context._internal.lowdefy._internal.progress.dispatch({
+            type: 'increment-on-mount',
+            id: block.id,
+          });
           await block.triggerEvent({
             name: 'onMount',
             progress: () => {
-              progress.dispatch({
+              lowdefy._internal.progress.dispatch({
                 type: 'increment',
               });
             },
@@ -49,12 +46,12 @@ const Block = ({
           block.triggerEvent({
             name: 'onMountAsync',
             progress: () => {
-              progress.dispatch({
+              lowdefy._internal.progress.dispatch({
                 type: 'increment',
               });
             },
           });
-          progress.dispatch({
+          lowdefy._internal.progress.dispatch({
             type: 'done',
           });
         }}

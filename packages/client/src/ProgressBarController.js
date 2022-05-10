@@ -19,28 +19,54 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 const initialState = {
   progress: 0,
+  onMounts: 0,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case 'increment':
-      return { progress: state.progress + (100 - state.progress) / 3 };
+      return {
+        ...state,
+        progress: state.progress + (100 - state.progress) / 3,
+      };
+    case 'increment-on-mount':
+      return {
+        ...state,
+        onMounts: state.onMounts + 1,
+      };
     case 'auto-increment':
-      return { progress: state.progress + (100 - state.progress) / 200 };
+      return {
+        ...state,
+        progress: state.progress + (100 - state.progress) / 200,
+      };
     case 'done':
-      return { progress: 100 };
+      return {
+        progress: state.onMounts - 1 === 0 ? 100 : state.progress,
+        onMounts: state.onMounts - 1,
+      };
+    case 'reset':
+      return {
+        progress: 0,
+        onMounts: 0,
+      };
     default:
       throw new Error('Invalid action type for ProgressBarController reducer.');
   }
 }
 
-const ProgressBarController = ({ id, ProgressBar, content, lowdefy }) => {
+const ProgressBarController = ({ id, lowdefy, resetContext }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const ProgressBar = lowdefy._internal.blockComponents.ProgressBar;
+  lowdefy._internal.progress.state = state;
+  lowdefy._internal.progress.dispatch = dispatch;
   useEffect(() => {
     const timer =
       state.progress < 95 && setInterval(() => dispatch({ type: 'auto-increment' }), 500);
     return () => clearInterval(timer);
   }, [state]);
+  if (resetContext.reset && state.progress === 100) {
+    dispatch({ type: 'reset' });
+  }
   return (
     <ProgressBar
       basePath={lowdefy.basePath}
@@ -50,9 +76,6 @@ const ProgressBarController = ({ id, ProgressBar, content, lowdefy }) => {
       methods={{ makeCssClass }}
       pageId={lowdefy.pageId}
       properties={state}
-      content={{
-        content: () => content.content({ state, dispatch }),
-      }}
     />
   );
 };

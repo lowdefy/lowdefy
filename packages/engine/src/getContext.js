@@ -55,16 +55,21 @@ const blockData = ({
   visible,
 });
 
-function getContext({ config, lowdefy, development = false }) {
+function getContext({
+  config,
+  lowdefy,
+  resetContext = { reset: false, setReset: () => undefined },
+}) {
   if (!config) {
     throw new Error('A page must be provided to get context.');
   }
   const { id } = config;
-  if (lowdefy.contexts[id] && !development) {
+  if (lowdefy.contexts[id] && !resetContext.reset) {
+    // memoize context if already created, eg between page transitions, unless the reset flag is raised
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
-
+  resetContext.setReset(false); // lower context reset flag.
   if (!lowdefy.inputs[id]) {
     lowdefy.inputs[id] = {};
   }
@@ -100,6 +105,7 @@ function getContext({ config, lowdefy, development = false }) {
         name: 'onInit',
         progress,
       });
+      _internal.update();
       _internal.State.freezeState();
       _internal.onInitDone = true;
     }
@@ -113,6 +119,7 @@ function getContext({ config, lowdefy, development = false }) {
       _internal.onInitAsyncDone = true;
     }
   };
+  ctx._internal.update();
   lowdefy.contexts[id] = ctx;
   return ctx;
 }

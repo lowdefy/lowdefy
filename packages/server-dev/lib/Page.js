@@ -15,13 +15,14 @@
 */
 
 import React from 'react';
-
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 import Client from '@lowdefy/client';
+
+import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
-const Page = ({ Components, config, pageId, router, types }) => {
+const Page = ({ Components, config, pageId, resetContext, router, types }) => {
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
@@ -32,6 +33,9 @@ const Page = ({ Components, config, pageId, router, types }) => {
     router.replace(`/404`);
     return '';
   }
+  if (resetContext.restarting) {
+    return <RestartingPage />;
+  }
   return (
     <Client
       auth={{ signIn, signOut }}
@@ -40,6 +44,7 @@ const Page = ({ Components, config, pageId, router, types }) => {
         ...config,
         pageConfig,
       }}
+      resetContext={resetContext}
       router={router}
       session={session}
       stage="dev"

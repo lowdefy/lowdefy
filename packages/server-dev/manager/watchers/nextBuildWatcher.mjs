@@ -24,6 +24,7 @@ const hashes = {};
 
 const watchedFiles = [
   'build/config.json',
+  'build/plugins/actions.js',
   'build/plugins/blocks.js',
   'build/plugins/connections.js',
   'build/plugins/icons.js',
@@ -82,6 +83,7 @@ async function nextBuildWatcher(context) {
 
   return setupWatcher({
     callback,
+    watchDotfiles: true,
     watchPaths: [
       path.join(context.directories.build, 'plugins'),
       path.join(context.directories.build, 'config.json'),

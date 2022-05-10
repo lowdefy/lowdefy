@@ -18,56 +18,77 @@ import React from 'react';
 
 import Block from './block/Block.js';
 import Context from './Context.js';
+import DisplayMessage from './DisplayMessage.js';
 import Head from './Head.js';
 import ProgressBarController from './ProgressBarController.js';
 
 import initLowdefyContext from './initLowdefyContext.js';
 
-const Client = ({ auth, Components, config, router, session, stage, types, window }) => {
+const Client = ({
+  auth,
+  Components,
+  config,
+  resetContext = { reset: false, setReset: () => undefined },
+  router,
+  session,
+  stage,
+  types,
+  window,
+}) => {
   const lowdefy = initLowdefyContext({
     auth,
     Components,
     config,
     router,
-    types,
     session,
     stage,
+    types,
     window,
   });
-
   return (
-    <ProgressBarController
-      id="page-loader"
-      key={config.pageConfig.id}
-      ProgressBar={lowdefy._internal.blockComponents.ProgressBar}
-      lowdefy={lowdefy}
-      content={{
-        content: (progress) => (
-          <Context config={config.pageConfig} lowdefy={lowdefy} progress={progress}>
-            {(context) => {
-              return (
-                <>
-                  <Head
-                    Component={Components.Head}
-                    properties={
-                      context._internal.RootBlocks.map[config.pageConfig.id].eval.properties
-                    }
-                  />
-                  <Block
-                    block={context._internal.RootBlocks.map[config.pageConfig.id]}
-                    Blocks={context._internal.RootBlocks}
-                    context={context}
-                    lowdefy={lowdefy}
-                    progress={progress}
-                    parentLoading={false}
-                  />
-                </>
-              );
-            }}
-          </Context>
-        ),
-      }}
-    />
+    <>
+      <ProgressBarController
+        id="lowdefy-progress-bar"
+        key={`${config.pageConfig.id}-progress-bar`}
+        lowdefy={lowdefy}
+        resetContext={resetContext}
+      />
+      <DisplayMessage
+        id="lowdefy-display-message"
+        key={`${config.pageConfig.id}-display-message`}
+        Component={lowdefy._internal.blockComponents.Message}
+        methods={{
+          registerMethod: (_, method) => {
+            lowdefy._internal.displayMessage = method;
+          },
+        }}
+      />
+      <Context
+        key={config.pageConfig.id}
+        config={config.pageConfig}
+        lowdefy={lowdefy}
+        resetContext={resetContext}
+      >
+        {(context) => {
+          if (!context._internal.onInitDone) return '';
+          return (
+            <>
+              <Head
+                Component={Components.Head}
+                properties={context._internal.RootBlocks.map[config.pageConfig.id].eval.properties}
+              />
+              <Block
+                block={context._internal.RootBlocks.map[config.pageConfig.id]}
+                Blocks={context._internal.RootBlocks}
+                context={context}
+                lowdefy={lowdefy}
+                parentLoading={false}
+              />
+            </>
+          );
+        }}
+      </Context>
+    </>
   );
 };
 

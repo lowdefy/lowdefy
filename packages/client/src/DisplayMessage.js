@@ -13,22 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
-import path from 'path';
-import setupWatcher from '../utils/setupWatcher.mjs';
+import React from 'react';
+import { makeCssClass } from '@lowdefy/block-utils';
 
-function envWatcher(context) {
-  const callback = async () => {
-    console.warn('.env file changed.');
-    await context.readDotEnv();
-    context.restartServer();
-  };
-  return setupWatcher({
-    callback,
-    watchDotfiles: true,
-    watchPaths: [path.join(context.directories.config, '.env')],
-  });
-}
+const DisplayMessage = ({ Component, id, methods }) => {
+  return (
+    <Component
+      blockId={id}
+      key={id}
+      methods={{
+        makeCssClass,
+        registerMethod: methods.registerMethod,
+        triggerEvent: () => undefined,
+      }}
+      properties={{}}
+    />
+  );
+};
 
-export default envWatcher;
+export default DisplayMessage;

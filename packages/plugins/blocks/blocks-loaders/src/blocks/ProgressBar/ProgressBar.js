@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const ProgressBar = ({ blockId, methods, style, properties, content }) => {
+const ProgressBar = ({ blockId, methods, style, properties }) => {
   const {
     progress = 30,
     height = 4,
@@ -28,31 +28,28 @@ const ProgressBar = ({ blockId, methods, style, properties, content }) => {
   } = properties;
 
   return (
-    <>
-      <div
-        id={blockId}
-        className={methods.makeCssClass(style)}
-        style={{
-          '--height': height + 'px',
-          '--progress': progress + '%',
-          '--transition': 'all ' + transitionTime + 'ms ease',
-          '--opacity': progress < 100 ? 1 : 0,
-        }}
-      >
-        <div className="progress-bar-container">
-          <div className="progress-bar-loader">
-            {shadow ? <div className="progress-bar-shadow" /> : null}
-          </div>
+    <div
+      id={blockId}
+      className={methods.makeCssClass(style)}
+      style={{
+        '--height': height + 'px',
+        '--progress': progress + '%',
+        '--transition': 'all ' + transitionTime + 'ms ease',
+        '--opacity': progress < 100 ? 1 : 0,
+      }}
+    >
+      <div className="progress-bar-container">
+        <div className="progress-bar-loader">
+          {shadow ? <div className="progress-bar-shadow" /> : null}
         </div>
       </div>
-      {content.content && content.content()}
-    </>
+    </div>
   );
 };
 
 ProgressBar.defaultProps = blockDefaultProps;
 ProgressBar.meta = {
-  category: 'container',
+  category: 'display',
   icons: [],
   styles: ['blocks/ProgressBar/style.less'],
 };

@@ -14,22 +14,31 @@
   limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useMutateCache from './utils/useMutateCache.js';
 import waitForRestartedServer from './utils/waitForRestartedServer.js';
 
 const Reload = ({ children, basePath }) => {
+  const [reset, setReset] = useState(false);
+  const [restarting, setRestarting] = useState(false);
   const mutateCache = useMutateCache(basePath);
   useEffect(() => {
     const sse = new EventSource(`${basePath}/api/reload`);
 
     sse.addEventListener('reload', () => {
-      mutateCache();
-      console.log('Reloaded config.');
+      // add a update delay to prevent rerender before server is shut down for rebuild, ideally we don't want to do this.
+      // TODO: We need to pass a flag when a rebuild will happen so that client does not trigger render.
+      setTimeout(async () => {
+        await mutateCache();
+        setReset(true);
+        console.log('Reloaded config.');
+      }, 600);
     });
 
     sse.onerror = () => {
+      setRestarting(true);
+      console.log('Rebuilding Lowdefy App.');
       sse.close();
       waitForRestartedServer(basePath);
     };
@@ -37,7 +46,7 @@ const Reload = ({ children, basePath }) => {
       sse.close();
     };
   }, []);
-  return <>{children}</>;
+  return <>{children({ reset, setReset, restarting })}</>;
 };
 
 export default Reload;

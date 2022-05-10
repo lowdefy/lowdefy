@@ -21,6 +21,7 @@ const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => 
   const [error, setError] = useState(null);
   useEffect(() => {
     let mounted = true;
+    setLoading(true);
     const mount = async () => {
       try {
         await triggerEvent();

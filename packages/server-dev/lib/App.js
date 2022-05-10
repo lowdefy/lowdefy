@@ -20,7 +20,6 @@ import { useRouter } from 'next/router';
 
 import Head from 'next/head';
 import Link from 'next/link';
-import { signIn, signOut } from 'next-auth/react';
 
 import Reload from './Reload.js';
 import Page from './Page.js';
@@ -39,24 +38,27 @@ const App = () => {
   const { redirect, pageId } = setPageId(router, rootConfig);
   if (redirect) {
     router.push(`/${pageId}`);
+    return '';
   }
   return (
     <Reload basePath={router.basePath}>
-      <Page
-        auth={{ signIn, signOut }}
-        Components={{ Head, Link }}
-        config={{
-          rootConfig,
-        }}
-        pageId={pageId}
-        router={router}
-        types={{
-          actions,
-          blocks,
-          icons,
-          operators,
-        }}
-      />
+      {(resetContext) => (
+        <Page
+          Components={{ Head, Link }}
+          config={{
+            rootConfig,
+          }}
+          pageId={pageId}
+          resetContext={resetContext}
+          router={router}
+          types={{
+            actions,
+            blocks,
+            icons,
+            operators,
+          }}
+        />
+      )}
     </Reload>
   );
 };

@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
+
+
+### Bug Fixes
+
+* **build:** Fix tests. ([8e7b16e](https://github.com/lowdefy/lowdefy/commit/8e7b16e3ecb7c7c25fd2d4fb48ea42ccad0bb1a8))
+* **build:** Skeleton on block only a object in schema. ([98d9c57](https://github.com/lowdefy/lowdefy/commit/98d9c57d6cfb9e24ba0be897ce6812e4765b0d7b))
+* Fix bugs in icon and icon usage in docs. ([03858f4](https://github.com/lowdefy/lowdefy/commit/03858f43502404de39024b38fac1c5f87d5c99ca))
+* Fix plugins in build. ([ec8d5ca](https://github.com/lowdefy/lowdefy/commit/ec8d5ca6adc7c482e5a4ab5c2edcc7ae7026f7e8))
+
+
+### Features
+
+* **build:** Add loading and skeleton to blocks schema. ([1398ca3](https://github.com/lowdefy/lowdefy/commit/1398ca3506a5cd4f116b87feb7feb7f06e3de518))
+* **build:** Add mandatory block types. ([2351f10](https://github.com/lowdefy/lowdefy/commit/2351f106304408445edcc91407736c96d7109292))
+* **build:** Build changes for skeleton and loading. ([b1d4212](https://github.com/lowdefy/lowdefy/commit/b1d4212ddd934ec67d6e305e7255ea3aa89fdf96))
+* **client:** Add display message implementation. ([f94ee32](https://github.com/lowdefy/lowdefy/commit/f94ee32a797b61b5f0f2bcc4de429b815f6de864))
+* **client:** Init @lowdefy/client. ([bb7931d](https://github.com/lowdefy/lowdefy/commit/bb7931d0da4ca3614ae4223ca19663a9088d2a45))
+
+
+
+
+
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 
