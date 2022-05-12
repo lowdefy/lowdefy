@@ -72,39 +72,6 @@ export default {
         type: 'App "config.auth" should be an object.',
       },
       properties: {
-        // TODO: fix
-        openId: {
-          type: 'object',
-          additionalProperties: false,
-          errorMessage: {
-            type: 'App "config.auth.openId" should be an object.',
-          },
-          properties: {
-            rolesField: {
-              type: 'string',
-              description: '.',
-              errorMessage: {
-                type: 'App "config.auth.openId.rolesField" should be a string.',
-              },
-            },
-            logoutRedirectUri: {
-              type: 'string',
-              description:
-                'The URI to redirect the user to after logout. Can be a Nunjucks template string with client_id, host, id_token_hint, and openid_domain as template data.',
-              errorMessage: {
-                type: 'App "config.auth.openId.logoutRedirectUri" should be a string.',
-              },
-            },
-            scope: {
-              type: 'string',
-              description: 'The OpenID Connect scope to request.',
-              default: 'openid profile email',
-              errorMessage: {
-                type: 'App "config.auth.openId.scope" should be a string.',
-              },
-            },
-          },
-        },
         pages: {
           type: 'object',
           additionalProperties: false,
@@ -155,33 +122,6 @@ export default {
               },
               errorMessage: {
                 type: 'App "config.auth.pages.roles" should be an object.',
-              },
-            },
-          },
-        },
-        jwt: {
-          type: 'object',
-          additionalProperties: false,
-          errorMessage: {
-            type: 'App "config.auth.jwt" should be an object.',
-          },
-          properties: {
-            expiresIn: {
-              type: ['string', 'number'],
-              default: '4h',
-              description:
-                'The length of time a user token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)',
-              errorMessage: {
-                type: 'App "config.auth.jwt.expiresIn" should be a string or number.',
-              },
-            },
-            loginStateExpiresIn: {
-              type: ['string', 'number'],
-              default: '5min',
-              description:
-                'The length of time an authorization request token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)',
-              errorMessage: {
-                type: 'App "config.auth.jwt.loginStateExpiresIn" should be a string or number.',
               },
             },
           },
