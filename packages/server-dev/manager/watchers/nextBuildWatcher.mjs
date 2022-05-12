@@ -23,6 +23,7 @@ import setupWatcher from '../utils/setupWatcher.mjs';
 const hashes = {};
 
 const watchedFiles = [
+  'build/auth.json',
   'build/config.json',
   'build/plugins/actions.js',
   'build/plugins/blocks.js',
@@ -86,6 +87,7 @@ async function nextBuildWatcher(context) {
     watchDotfiles: true,
     watchPaths: [
       path.join(context.directories.build, 'plugins'),
+      path.join(context.directories.build, 'auth.json'),
       path.join(context.directories.build, 'config.json'),
       path.join(context.directories.server, 'package.json'),
     ],

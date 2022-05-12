@@ -25,20 +25,17 @@ function createRedirectCallback({ authConfig, plugins }) {
 
   if (redirectCallbackPlugins.length === 0) return undefined;
 
+  if (redirectCallbackPlugins.length !== 1) {
+    throw new Error('More than one auth redirect callbacks are configured. Only one is allowed.');
+  }
+  const [plugin] = redirectCallbackPlugins;
+
   async function redirectCallback({ url, baseUrl }) {
-    let callbackUrl;
-
-    // TODO: Is there a point in running all the callbacks if only the last one is used?
-    // Else we can enforce only one.
-    for (const plugin of redirectCallbackPlugins) {
-      callbackUrl = await plugin.fn({
-        properties: plugin.properties ?? {},
-        baseUrl,
-        url,
-      });
-    }
-
-    return callbackUrl;
+    return plugin.fn({
+      properties: plugin.properties ?? {},
+      baseUrl,
+      url,
+    });
   }
   return redirectCallback;
 }
