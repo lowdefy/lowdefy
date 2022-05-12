@@ -26,11 +26,12 @@ let initialized = false;
 
 function getNextAuthConfig({ authJson, plugins }) {
   if (initialized) return nextAuthConfig;
+  const secrets = getSecretsFromEnv();
 
   const operatorsParser = new NodeParser({
     operators: { _secret },
     payload: {},
-    secrets: getSecretsFromEnv(),
+    secrets,
     user: {},
   });
 
@@ -46,12 +47,7 @@ function getNextAuthConfig({ authJson, plugins }) {
   nextAuthConfig.callbacks = createCallbacks({ authConfig, plugins });
   nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
-  // We can either configure this using auth config,
-  // then the user configures this using the _secret operator
-  // -> authConfig.secret = evaluatedAuthConfig.secret;
-  // or we can create a fixed env var/secret name that we read.
-  // -> authConfig.secret = secrets.LOWDEFY_AUTH_SECRET;
-  nextAuthConfig.secret = 'TODO: Configure secret';
+  nextAuthConfig.secret = secrets.AUTH_SECRET;
 
   nextAuthConfig.theme = authConfig.theme;
   initialized = true;
