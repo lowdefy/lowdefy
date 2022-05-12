@@ -54,6 +54,7 @@ function buildTypes({ components, context }) {
   components.types = {
     actions: {},
     auth: {
+      callbacks: {},
       providers: {},
     },
     blocks: {},
@@ -77,6 +78,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.auth.providers,
     store: components.types.auth.providers,
     typeClass: 'Auth provider',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.auth.callbacks,
+    definitions: context.typesMap.auth.callbacks,
+    store: components.types.auth.callbacks,
+    typeClass: 'Auth callback',
   });
 
   buildTypeClass(context, {

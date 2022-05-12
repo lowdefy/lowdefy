@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
-function SessionCallback({ session, user, token, config }) {
-  return session;
+function createCallbackPlugins({ authConfig, plugins, type }) {
+  return authConfig.callbacks
+    .map((callbackConfig) => ({
+      fn: plugins.callbacks[callbackConfig.type],
+      properties: callbackConfig.properties,
+    }))
+    .filter((callback) => callback.fn.meta.type === type);
 }
 
-export default SessionCallback;
+export default createCallbackPlugins;

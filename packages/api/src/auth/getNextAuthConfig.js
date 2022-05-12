@@ -18,39 +18,11 @@ import { NodeParser } from '@lowdefy/operators';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
-import getProviders from './getProviders.js';
+import createCallbacks from './callbacks/createCallbacks.js';
+import createProviders from './createProviders.js';
 
 const nextAuthConfig = {};
 let initialized = false;
-
-const callbacks = {
-  jwt: async ({ token, user, account, profile, isNewUser }) => {
-    console.log('jwt callback');
-    console.log('token', token);
-    console.log('user', user);
-    console.log('account', account);
-    console.log('profile', profile);
-    console.log('isNewUser', isNewUser);
-
-    return token;
-  },
-  session: async ({ session, user, token }) => {
-    console.log('session callback');
-    console.log('session', session);
-    console.log('user', user);
-    console.log('token', token);
-    session.sub = token.sub;
-    return session;
-  },
-  async redirect({ url, baseUrl }) {
-    console.log('redirect callback', url, baseUrl);
-    // Allows relative callback URLs
-    if (url.startsWith('/')) return `${baseUrl}${url}`;
-    // Allows callback URLs on the same origin
-    else if (new URL(url).origin === baseUrl) return url;
-    return baseUrl;
-  },
-};
 
 function getNextAuthConfig({ authJson, plugins }) {
   if (initialized) return nextAuthConfig;
@@ -71,7 +43,8 @@ function getNextAuthConfig({ authJson, plugins }) {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.providers = getProviders({ authConfig, plugins });
+  nextAuthConfig.callbacks = createCallbacks({ authConfig, plugins });
+  nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
   // We can either configure this using auth config,
   // then the user configures this using the _secret operator
@@ -80,10 +53,8 @@ function getNextAuthConfig({ authJson, plugins }) {
   // -> authConfig.secret = secrets.LOWDEFY_AUTH_SECRET;
   nextAuthConfig.secret = 'TODO: Configure secret';
 
-  nextAuthConfig.callbacks = callbacks;
   nextAuthConfig.theme = authConfig.theme;
   initialized = true;
-  console.log(JSON.stringify(nextAuthConfig, null, 2));
   return nextAuthConfig;
 }
 

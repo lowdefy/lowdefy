@@ -72,6 +72,7 @@ export default {
         type: 'App "config.auth" should be an object.',
       },
       properties: {
+        // TODO: fix
         openId: {
           type: 'object',
           additionalProperties: false,
@@ -181,6 +182,37 @@ export default {
                 'The length of time an authorization request token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)',
               errorMessage: {
                 type: 'App "config.auth.jwt.loginStateExpiresIn" should be a string or number.',
+              },
+            },
+          },
+        },
+        callbacks: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth callback "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth callback "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+              },
+            },
+            errorMessage: {
+              type: 'Auth callback should be an object.',
+              required: {
+                id: 'Auth callback should have required property "id".',
+                type: 'Auth callback should have required property "type".',
               },
             },
           },

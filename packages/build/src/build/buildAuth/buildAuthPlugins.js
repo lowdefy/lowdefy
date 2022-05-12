@@ -15,7 +15,30 @@
 */
 import { type } from '@lowdefy/helpers';
 
-function buildAuthPlugins({ components, context }) {
+function buildCallbacks({ components, context }) {
+  if (type.isArray(components.auth.callbacks)) {
+    components.auth.callbacks.forEach((callback) => {
+      if (type.isUndefined(callback.id)) {
+        throw new Error(`Auth callback id missing.`);
+      }
+      if (!type.isString(callback.id)) {
+        throw new Error(
+          `Auth callback id is not a string. Received ${JSON.stringify(callback.id)}.`
+        );
+      }
+      if (!type.isString(callback.type)) {
+        throw new Error(
+          `Auth callback type is not a string at callback "${
+            callback.id
+          }". Received ${JSON.stringify(callback.type)}.`
+        );
+      }
+      context.typeCounters.auth.callbacks.increment(callback.type);
+    });
+  }
+}
+
+function buildProviders({ components, context }) {
   if (type.isArray(components.auth.providers)) {
     components.auth.providers.forEach((provider) => {
       if (type.isUndefined(provider.id)) {
@@ -36,6 +59,11 @@ function buildAuthPlugins({ components, context }) {
       context.typeCounters.auth.providers.increment(provider.type);
     });
   }
+}
+
+function buildAuthPlugins({ components, context }) {
+  buildCallbacks({ components, context });
+  buildProviders({ components, context });
 }
 
 export default buildAuthPlugins;

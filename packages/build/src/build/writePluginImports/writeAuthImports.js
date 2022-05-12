@@ -18,6 +18,13 @@ import generateImportFile from './generateImportFile.js';
 
 async function writeAuthImports({ components, context }) {
   await context.writeBuildArtifact(
+    'plugins/auth/callbacks.js',
+    generateImportFile({
+      types: components.types.auth.callbacks,
+      importPath: 'auth/callbacks',
+    })
+  );
+  await context.writeBuildArtifact(
     'plugins/auth/providers.js',
     generateImportFile({
       types: components.types.auth.providers,

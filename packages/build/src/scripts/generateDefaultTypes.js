@@ -51,8 +51,8 @@ async function generateDefaultTypesMap() {
   const defaultTypesMap = {
     actions: {},
     auth: {
-      providers: {},
       callbacks: {},
+      providers: {},
     },
     blocks: {},
     connections: {},
