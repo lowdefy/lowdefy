@@ -18,14 +18,7 @@ import NextAuth from 'next-auth';
 import { getNextAuthConfig } from '@lowdefy/api';
 
 import authJson from '../../../build/auth.json';
+import callbacks from '../../../build/plugins/auth/callbacks.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
-// If getNextAuthConfig needs to be async:
-// async function auth(req, res) {
-//   const config = await getNextAuthConfig();
-//   return await NextAuth(req, res, config);
-// }
-
-// export default auth;
-
-export default NextAuth(getNextAuthConfig({ authJson, plugins: { providers } }));
+export default NextAuth(getNextAuthConfig({ authJson, plugins: { callbacks, providers } }));
