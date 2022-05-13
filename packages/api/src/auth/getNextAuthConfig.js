@@ -19,6 +19,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
 import createCallbacks from './callbacks/createCallbacks.js';
+import createEvents from './events/createEvents.js';
 import createProviders from './createProviders.js';
 
 const nextAuthConfig = {};
@@ -45,6 +46,7 @@ function getNextAuthConfig({ authJson, plugins }) {
   }
 
   nextAuthConfig.callbacks = createCallbacks({ authConfig, plugins });
+  nextAuthConfig.events = createEvents({ authConfig, plugins });
   nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
   nextAuthConfig.session = authConfig.session;

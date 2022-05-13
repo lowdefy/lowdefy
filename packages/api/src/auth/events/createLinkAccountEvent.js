@@ -14,32 +14,27 @@
   limitations under the License.
 */
 
-import createCallbackPlugins from './createCallbackPlugins.js';
+import createEventPlugins from './createEventPlugins.js';
 
-function createJWTCallback({ authConfig, plugins }) {
-  const jwtCallbackPlugins = createCallbackPlugins({
+function createLinkAccountEvent({ authConfig, plugins }) {
+  const linkAccountPlugins = createEventPlugins({
     authConfig,
     plugins,
-    type: 'jwt',
+    type: 'linkAccount',
   });
 
-  if (jwtCallbackPlugins.length === 0) return undefined;
+  if (linkAccountPlugins.length === 0) return undefined;
 
-  async function jwtCallback({ token, user, account, profile, isNewUser }) {
-    for (const plugin of jwtCallbackPlugins) {
-      token = await plugin.fn({
+  async function linkAccountEvent({ account, user }) {
+    for (const plugin of linkAccountPlugins) {
+      await plugin.fn({
         properties: plugin.properties ?? {},
         account,
-        isNewUser,
-        profile,
-        token,
         user,
       });
     }
-
-    return token;
   }
-  return jwtCallback;
+  return linkAccountEvent;
 }
 
-export default createJWTCallback;
+export default createLinkAccountEvent;

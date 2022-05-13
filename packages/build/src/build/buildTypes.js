@@ -81,17 +81,11 @@ function buildTypes({ components, context }) {
     typeClass: 'Auth callback',
   });
 
-  console.log({
-    counts: typeCounters.auth.events.getCounts(),
-  });
   buildTypeClass(context, {
     counter: typeCounters.auth.events,
     definitions: context.typesMap.auth.events,
     store: components.types.auth.events,
     typeClass: 'Auth event',
-  });
-  console.log({
-    store: components.types.auth.events,
   });
 
   buildTypeClass(context, {
