@@ -49,15 +49,10 @@ async function validateAuthConfig({ components }) {
     components.auth.theme = {};
   }
 
-  const { valid } = validate({
+  validate({
     schema: lowdefySchema.definitions.authConfig,
     data: components.auth,
-    returnErrors: true,
   });
-
-  if (!valid) {
-    throw new Error('lowdefy.auth does not match schema.'); // TODO: Better error message
-  }
 
   if (
     (components.auth.pages.protected === true && components.auth.pages.public === true) ||

@@ -28,7 +28,6 @@ async function createApiContext({
   const readConfigFile = createReadConfigFile({ buildDirectory });
   const config = await readConfigFile('config.json');
   return {
-    authenticated: false,
     authorize: createAuthorize({ session }),
     config,
     connections,

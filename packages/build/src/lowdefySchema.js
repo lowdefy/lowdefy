@@ -69,7 +69,7 @@ export default {
       type: 'object',
       additionalProperties: false,
       errorMessage: {
-        type: 'App "config.auth" should be an object.',
+        type: 'App "auth" should be an object.',
       },
       properties: {
         callbacks: {
@@ -144,28 +144,28 @@ export default {
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
-                type: 'App "config.auth.pages.protected.$" should be an array of strings.',
+                type: 'App "auth.pages.protected.$" should be an array of strings.',
               },
               items: {
                 type: 'string',
                 description:
                   'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
                 errorMessage: {
-                  type: 'App "config.auth.pages.protected.$" should be an array of strings.',
+                  type: 'App "auth.pages.protected.$" should be an array of strings.',
                 },
               },
             },
             public: {
               type: ['array', 'boolean'],
               errorMessage: {
-                type: 'App "config.auth.pages.public.$" should be an array of strings.',
+                type: 'App "auth.pages.public.$" should be an array of strings.',
               },
               items: {
                 type: 'string',
                 description:
                   'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
                 errorMessage: {
-                  type: 'App "config.auth.pages.public.$" should be an array of strings.',
+                  type: 'App "auth.pages.public.$" should be an array of strings.',
                 },
               },
             },
@@ -178,12 +178,12 @@ export default {
                     type: 'string',
                   },
                   errorMessage: {
-                    type: 'App "config.auth.pages.roles.[role]" should be an array of strings.',
+                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
                   },
                 },
               },
               errorMessage: {
-                type: 'App "config.auth.pages.roles" should be an object.',
+                type: 'App "auth.pages.roles" should be an object.',
               },
             },
           },

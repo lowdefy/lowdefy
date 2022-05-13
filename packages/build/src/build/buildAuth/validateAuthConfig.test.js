@@ -24,9 +24,14 @@ test('validateAuthConfig no auth defined', async () => {
   const result = await validateAuthConfig({ components, context });
   expect(result).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
   });
 });
@@ -49,7 +54,7 @@ test('validateAuthConfig invalid auth config', async () => {
     },
   };
   await expect(validateAuthConfig({ components, context })).rejects.toThrow(
-    'App "config.auth.pages.protected.$" should be an array of strings.'
+    'App "auth.pages.protected.$" should be an array of strings.'
   );
   components = {
     auth: {
@@ -59,7 +64,7 @@ test('validateAuthConfig invalid auth config', async () => {
     },
   };
   await expect(validateAuthConfig({ components, context })).rejects.toThrow(
-    'App "config.auth.pages.roles" should be an object.'
+    'App "auth.pages.roles" should be an object.'
   );
 });
 

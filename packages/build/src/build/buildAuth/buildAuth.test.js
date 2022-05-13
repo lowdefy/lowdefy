@@ -30,9 +30,14 @@ test('buildAuth default', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -47,9 +52,14 @@ test('buildAuth no pages', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
   });
 });
@@ -71,10 +81,15 @@ test('buildAuth all protected, some public', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         public: ['a', 'b'],
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -101,10 +116,15 @@ test('buildAuth all public, some protected', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         protected: ['a', 'b'],
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: false } },
@@ -131,10 +151,15 @@ test('buildAuth all public', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         public: true,
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: true } },
@@ -161,10 +186,15 @@ test('buildAuth all protected', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         protected: true,
         roles: {},
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'a', type: 'Context', auth: { public: false } },
@@ -193,12 +223,17 @@ test('buildAuth roles', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {
           role1: ['page1'],
           role2: ['page1', 'page2'],
         },
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [
       { id: 'page1', type: 'Context', auth: { public: false, roles: ['role1', 'role2'] } },
@@ -240,12 +275,17 @@ test('buildAuth roles and protected pages array', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {
           role1: ['page1'],
         },
         protected: ['page1'],
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
   });
@@ -266,12 +306,17 @@ test('buildAuth roles and protected true', async () => {
   const res = await buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      callbacks: [],
+      events: [],
       pages: {
         roles: {
           role1: ['page1'],
         },
         protected: true,
       },
+      providers: [],
+      session: {},
+      theme: {},
     },
     pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
   });

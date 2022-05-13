@@ -98,7 +98,7 @@ const authenticatedContext = testContext({
   readConfigFile: mockReadConfigFile,
   operators,
   secrets,
-  user: { sub: 'sub' },
+  session: { user: { sub: 'sub' } },
 });
 
 const defaultParams = {
