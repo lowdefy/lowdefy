@@ -47,8 +47,7 @@ function getNextAuthConfig({ authJson, plugins }) {
   nextAuthConfig.callbacks = createCallbacks({ authConfig, plugins });
   nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
-  nextAuthConfig.secret = secrets.AUTH_SECRET;
-
+  nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
   initialized = true;
   return nextAuthConfig;

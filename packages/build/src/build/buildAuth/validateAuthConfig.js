@@ -39,6 +39,9 @@ async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth.providers)) {
     components.auth.providers = [];
   }
+  if (type.isNone(components.auth.session)) {
+    components.auth.session = {};
+  }
   if (type.isNone(components.auth.theme)) {
     components.auth.theme = {};
   }

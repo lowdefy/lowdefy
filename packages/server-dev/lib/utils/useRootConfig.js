@@ -12,10 +12,7 @@
 */
 
 import useSWR from 'swr';
-
 import request from './request.js';
-
-// TODO: Handle TokenExpiredError
 
 function fetchRootConfig(url) {
   return request({ url });
