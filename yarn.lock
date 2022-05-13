@@ -2636,7 +2636,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.5.1
-    next-auth: 4.3.3
+    next-auth: 4.3.4
   languageName: unknown
   linkType: soft
 
@@ -2673,7 +2673,7 @@ __metadata:
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.10
-    next-auth: 4.1.2
+    next-auth: 4.3.4
     next-with-less: 2.0.4
     opener: 1.5.2
     process: 0.11.10
@@ -2706,7 +2706,7 @@ __metadata:
     less: 4.1.2
     less-loader: 10.2.0
     next: 12.0.10
-    next-auth: 4.3.3
+    next-auth: 4.3.4
     next-with-less: 2.0.4
     process: 0.11.10
     react: 17.0.2
@@ -11061,9 +11061,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:4.1.2":
-  version: 4.1.2
-  resolution: "next-auth@npm:4.1.2"
+"next-auth@npm:4.3.4":
+  version: 4.3.4
+  resolution: "next-auth@npm:4.3.4"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -11076,36 +11076,12 @@ __metadata:
     uuid: ^8.3.2
   peerDependencies:
     nodemailer: ^6.6.5
-    react: ^17.0.2
-    react-dom: ^17.0.2
+    react: ^17.0.2 || ^18
+    react-dom: ^17.0.2 || ^18
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 70f63eb5bb8bb709a15ca8696a9c0629343ec7b7694714b246980f848e96278248671d5d48738294dcc012aa220809e5d1761893bd2678fc41c9571dfd01ab07
-  languageName: node
-  linkType: hard
-
-"next-auth@npm:4.3.3":
-  version: 4.3.3
-  resolution: "next-auth@npm:4.3.3"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@panva/hkdf": ^1.0.1
-    cookie: ^0.4.1
-    jose: ^4.3.7
-    oauth: ^0.9.15
-    openid-client: ^5.1.0
-    preact: ^10.6.3
-    preact-render-to-string: ^5.1.19
-    uuid: ^8.3.2
-  peerDependencies:
-    nodemailer: ^6.6.5
-    react: ^17.0.2 || ^18.0.0-0
-    react-dom: ^17.0.2 || ^18.0.0-0
-  peerDependenciesMeta:
-    nodemailer:
-      optional: true
-  checksum: 7c90d34fd9af04a582f7dbf20612d39a9930b1a4df4ed0aa8086d0fe4617072c280e11856090d60e8ad1ffbf943ed1bb68ef9f937c6b869b829d7777c93f5f0d
+  checksum: 4b5f6f6d3fa070d168c8dd92a0aae54adaef2a637bad092df34135f3541ec4b9a6616b2eeead49b95b2da18287f485d9e8fe4b9f0116019e4dc08acccedbfff9
   languageName: node
   linkType: hard
 

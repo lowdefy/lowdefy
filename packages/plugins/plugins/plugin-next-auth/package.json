@@ -41,7 +41,7 @@
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files"
   },
   "dependencies": {
-    "next-auth": "4.3.3"
+    "next-auth": "4.3.4"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
