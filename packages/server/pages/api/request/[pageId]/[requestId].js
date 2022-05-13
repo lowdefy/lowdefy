@@ -29,7 +29,8 @@ export default async function handler(req, res) {
     const apiContext = await createApiContext({
       buildDirectory: './build',
       connections,
-      logger: console,
+      // logger: console,
+      logger: { debug: () => {} },
       operators,
       secrets: getSecretsFromEnv(),
       session,

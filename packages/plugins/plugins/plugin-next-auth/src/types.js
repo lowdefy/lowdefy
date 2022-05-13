@@ -16,12 +16,10 @@
 
 /* eslint-disable import/namespace */
 
-import * as callbacks from './auth/callbacks.js';
 import * as providers from './auth/providers.js';
 
 export default {
   auth: {
-    callbacks: Object.keys(callbacks),
     providers: Object.keys(providers),
   },
 };
