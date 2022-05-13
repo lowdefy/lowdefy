@@ -38,6 +38,27 @@ function buildCallbacks({ components, context }) {
   }
 }
 
+function buildEvents({ components, context }) {
+  if (type.isArray(components.auth.events)) {
+    components.auth.events.forEach((event) => {
+      if (type.isUndefined(event.id)) {
+        throw new Error(`Auth event id missing.`);
+      }
+      if (!type.isString(event.id)) {
+        throw new Error(`Auth event id is not a string. Received ${JSON.stringify(event.id)}.`);
+      }
+      if (!type.isString(event.type)) {
+        throw new Error(
+          `Auth event type is not a string at event "${event.id}". Received ${JSON.stringify(
+            event.type
+          )}.`
+        );
+      }
+      context.typeCounters.auth.events.increment(event.type);
+    });
+  }
+}
+
 function buildProviders({ components, context }) {
   if (type.isArray(components.auth.providers)) {
     components.auth.providers.forEach((provider) => {
@@ -63,6 +84,7 @@ function buildProviders({ components, context }) {
 
 function buildAuthPlugins({ components, context }) {
   buildCallbacks({ components, context });
+  buildEvents({ components, context });
   buildProviders({ components, context });
 }
 

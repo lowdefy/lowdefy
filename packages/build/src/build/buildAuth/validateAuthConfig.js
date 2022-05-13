@@ -36,6 +36,9 @@ async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth.callbacks)) {
     components.auth.callbacks = [];
   }
+  if (type.isNone(components.auth.events)) {
+    components.auth.events = [];
+  }
   if (type.isNone(components.auth.providers)) {
     components.auth.providers = [];
   }

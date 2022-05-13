@@ -103,6 +103,37 @@ export default {
             },
           },
         },
+        events: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth event "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth event "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+              },
+            },
+            errorMessage: {
+              type: 'Auth event should be an object.',
+              required: {
+                id: 'Auth event should have required property "id".',
+                type: 'Auth event should have required property "type".',
+              },
+            },
+          },
+        },
         pages: {
           type: 'object',
           additionalProperties: false,

@@ -64,6 +64,7 @@ async function createContext({ customTypesMap, directories, logger, refResolver 
       actions: createCounter(),
       auth: {
         callbacks: createCounter(),
+        events: createCounter(),
         providers: createCounter(),
       },
       blocks: createCounter(),

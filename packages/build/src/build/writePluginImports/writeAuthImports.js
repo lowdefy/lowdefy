@@ -25,6 +25,13 @@ async function writeAuthImports({ components, context }) {
     })
   );
   await context.writeBuildArtifact(
+    'plugins/auth/events.js',
+    generateImportFile({
+      types: components.types.auth.events,
+      importPath: 'auth/events',
+    })
+  );
+  await context.writeBuildArtifact(
     'plugins/auth/providers.js',
     generateImportFile({
       types: components.types.auth.providers,

@@ -46,6 +46,14 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
   });
 
   createTypeDefinitions({
+    typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.events : [],
+    store: typesMap.auth.events,
+    packageName,
+    typePrefix,
+    version,
+  });
+
+  createTypeDefinitions({
     typeNames: type.isObject(packageTypes.auth) ? packageTypes.auth.providers : [],
     store: typesMap.auth.providers,
     packageName,

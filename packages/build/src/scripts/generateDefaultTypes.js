@@ -52,6 +52,7 @@ async function generateDefaultTypesMap() {
     actions: {},
     auth: {
       callbacks: {},
+      events: {},
       providers: {},
     },
     blocks: {},

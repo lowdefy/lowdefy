@@ -55,6 +55,7 @@ function buildTypes({ components, context }) {
     actions: {},
     auth: {
       callbacks: {},
+      events: {},
       providers: {},
     },
     blocks: {},
@@ -74,17 +75,30 @@ function buildTypes({ components, context }) {
   });
 
   buildTypeClass(context, {
-    counter: typeCounters.auth.providers,
-    definitions: context.typesMap.auth.providers,
-    store: components.types.auth.providers,
-    typeClass: 'Auth provider',
-  });
-
-  buildTypeClass(context, {
     counter: typeCounters.auth.callbacks,
     definitions: context.typesMap.auth.callbacks,
     store: components.types.auth.callbacks,
     typeClass: 'Auth callback',
+  });
+
+  console.log({
+    counts: typeCounters.auth.events.getCounts(),
+  });
+  buildTypeClass(context, {
+    counter: typeCounters.auth.events,
+    definitions: context.typesMap.auth.events,
+    store: components.types.auth.events,
+    typeClass: 'Auth event',
+  });
+  console.log({
+    store: components.types.auth.events,
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.auth.providers,
+    definitions: context.typesMap.auth.providers,
+    store: components.types.auth.providers,
+    typeClass: 'Auth provider',
   });
 
   buildTypeClass(context, {
