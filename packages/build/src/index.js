@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+import { fileURLToPath } from 'url';
 import { mergeObjects } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
@@ -56,7 +57,7 @@ import writeTypes from './build/writeTypes.js';
 
 async function createContext({ customTypesMap, directories, logger, refResolver }) {
   const defaultTypesMap = JSON.parse(
-    await readFile(new URL('./defaultTypesMap.json', import.meta.url).pathname)
+    await readFile(fileURLToPath(new URL('./defaultTypesMap.json', import.meta.url)))
   );
 
   const context = {
