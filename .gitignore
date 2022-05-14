@@ -14,6 +14,8 @@
 **/.env
 **/lowdefy.yaml
 
+.turbo
+
 packages/server/build/**
 packages/server-dev/build/**
 !packages/docs/lowdefy.yaml

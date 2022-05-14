@@ -19,7 +19,7 @@ jobs:
         run: yarn build
 
       - name: Test packages
-        run: yarn test-ci
+        run: yarn test:ci
 
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
