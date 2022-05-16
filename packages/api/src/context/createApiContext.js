@@ -14,20 +14,28 @@
   limitations under the License.
 */
 
-import createReadConfigFile from './readConfigFile.js';
+import createAuthorize from './createAuthorize.js';
+import createReadConfigFile from './createReadConfigFile.js';
 
-async function createApiContext({ buildDirectory, connections, logger, operators, secrets }) {
+async function createApiContext({
+  buildDirectory,
+  connections,
+  logger,
+  operators,
+  secrets,
+  session,
+}) {
   const readConfigFile = createReadConfigFile({ buildDirectory });
   const config = await readConfigFile('config.json');
   return {
-    authenticated: false,
-    authorize: () => true,
+    authorize: createAuthorize({ session }),
     config,
     connections,
     logger,
     operators,
     readConfigFile,
     secrets,
+    user: session?.user,
   };
 }
 

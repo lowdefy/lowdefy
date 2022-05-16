@@ -16,41 +16,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import getPageRoles from './getPageRoles.js';
-import getProtectedPages from './getProtectedPages.js';
+import buildAuthPlugins from './buildAuthPlugins.js';
+import buildPageAuth from './buildPageAuth.js';
+import validateAuthConfig from './validateAuthConfig.js';
 
-function buildAuth({ components }) {
-  const protectedPages = getProtectedPages({ components });
-  const pageRoles = getPageRoles({ components });
-  let configPublicPages = [];
-  if (type.isArray(components.config.auth.pages.public)) {
-    configPublicPages = components.config.auth.pages.public;
-  }
-
-  (components.pages || []).forEach((page) => {
-    if (pageRoles[page.id]) {
-      if (configPublicPages.includes(page.id)) {
-        throw new Error(
-          `Page "${page.id}" is both protected by roles ${JSON.stringify(
-            pageRoles[page.id]
-          )} and public.`
-        );
-      }
-      page.auth = {
-        public: false,
-        roles: pageRoles[page.id],
-      };
-    } else if (protectedPages.includes(page.id)) {
-      page.auth = {
-        public: false,
-      };
-    } else {
-      page.auth = {
-        public: true,
-      };
-    }
-  });
+function buildAuth({ components, context }) {
+  validateAuthConfig({ components });
+  buildPageAuth({ components });
+  buildAuthPlugins({ components, context });
 
   return components;
 }

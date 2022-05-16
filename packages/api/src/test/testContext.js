@@ -31,16 +31,13 @@ function testContext({
     _test: () => 'test',
   },
   readConfigFile,
-  roles,
   secrets = {},
   setHeader,
-  user,
+  session,
   protocol = 'https',
 } = {}) {
-  const authenticated = user && !!user.sub;
   return {
-    authenticated,
-    authorize: createAuthorize({ authenticated, roles }),
+    authorize: createAuthorize({ session }),
     config,
     connections,
     headers,
@@ -51,7 +48,7 @@ function testContext({
     readConfigFile,
     secrets,
     setHeader,
-    user,
+    user: session?.user,
   };
 }
 

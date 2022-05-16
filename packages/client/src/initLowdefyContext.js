@@ -18,6 +18,7 @@ import { urlQuery } from '@lowdefy/helpers';
 
 import callRequest from './callRequest.js';
 import createIcon from './createIcon.js';
+import createAuthMethods from './auth/createAuthMethods.js';
 import createLinkComponent from './createLinkComponent.js';
 import setupLink from './setupLink.js';
 
@@ -43,7 +44,7 @@ const lowdefy = {
   lowdefyGlobal: {},
 };
 
-function initLowdefyContext({ Components, config, router, stage, types, window }) {
+function initLowdefyContext({ auth, Components, config, router, session, stage, types, window }) {
   if (stage === 'dev') {
     window.lowdefy = lowdefy;
   }
@@ -53,6 +54,7 @@ function initLowdefyContext({ Components, config, router, stage, types, window }
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
+  lowdefy.user = session?.user ?? null;
 
   lowdefy._internal.window = window;
   lowdefy._internal.document = window.document;
@@ -65,6 +67,9 @@ function initLowdefyContext({ Components, config, router, stage, types, window }
   lowdefy._internal.actions = types.actions;
   lowdefy._internal.blockComponents = types.blocks;
   lowdefy._internal.operators = types.operators;
+
+  // TODO: discuss not using object arguments
+  lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
 
   return lowdefy;
 }

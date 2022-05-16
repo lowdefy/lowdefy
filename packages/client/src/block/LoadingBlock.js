@@ -89,7 +89,6 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
             methods={blockMethods}
             pageId={lowdefy.pageId}
             properties={skeleton.properties}
-            user={lowdefy.user}
           />
         </BlockLayout>
       );

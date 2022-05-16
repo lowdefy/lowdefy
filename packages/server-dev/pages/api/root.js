@@ -15,10 +15,15 @@
 */
 
 import { createApiContext, getRootConfig } from '@lowdefy/api';
+import { getSession } from 'next-auth/react';
 
 export default async function handler(req, res) {
-  // TODO: get the right api context options
-  const apiContext = await createApiContext({ buildDirectory: './build' });
+  const session = await getSession({ req });
+  const apiContext = await createApiContext({
+    buildDirectory: './build',
+    logger: console,
+    session,
+  });
   const rootConfig = await getRootConfig(apiContext);
 
   res.status(200).json(rootConfig);

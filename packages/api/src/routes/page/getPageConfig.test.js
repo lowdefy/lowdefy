@@ -75,7 +75,7 @@ test('getPageConfig, protected, with user', async () => {
   });
 
   const res = await getPageConfig(
-    testContext({ readConfigFile: mockReadConfigFile, user: { sub: 'sub' } }),
+    testContext({ readConfigFile: mockReadConfigFile, session: { user: { sub: 'sub' } } }),
     { pageId: 'pageId' }
   );
   expect(res).toEqual({

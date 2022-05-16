@@ -90,7 +90,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            user={lowdefy.user}
             validation={block.eval.validation}
             value={block.value}
           />
@@ -122,7 +121,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             pageId={lowdefy.pageId}
             properties={block.eval.properties}
             required={block.eval.required}
-            user={lowdefy.user}
             validation={block.eval.validation}
           />
         </BlockLayout>

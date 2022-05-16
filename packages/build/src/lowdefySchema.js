@@ -69,37 +69,67 @@ export default {
       type: 'object',
       additionalProperties: false,
       errorMessage: {
-        type: 'App "config.auth" should be an object.',
+        type: 'App "auth" should be an object.',
       },
       properties: {
-        openId: {
-          type: 'object',
-          additionalProperties: false,
-          errorMessage: {
-            type: 'App "config.auth.openId" should be an object.',
+        callbacks: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth callback "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth callback "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+              },
+            },
+            errorMessage: {
+              type: 'Auth callback should be an object.',
+              required: {
+                id: 'Auth callback should have required property "id".',
+                type: 'Auth callback should have required property "type".',
+              },
+            },
           },
-          properties: {
-            rolesField: {
-              type: 'string',
-              description: '.',
-              errorMessage: {
-                type: 'App "config.auth.openId.rolesField" should be a string.',
+        },
+        events: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth event "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth event "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
               },
             },
-            logoutRedirectUri: {
-              type: 'string',
-              description:
-                'The URI to redirect the user to after logout. Can be a Nunjucks template string with client_id, host, id_token_hint, and openid_domain as template data.',
-              errorMessage: {
-                type: 'App "config.auth.openId.logoutRedirectUri" should be a string.',
-              },
-            },
-            scope: {
-              type: 'string',
-              description: 'The OpenID Connect scope to request.',
-              default: 'openid profile email',
-              errorMessage: {
-                type: 'App "config.auth.openId.scope" should be a string.',
+            errorMessage: {
+              type: 'Auth event should be an object.',
+              required: {
+                id: 'Auth event should have required property "id".',
+                type: 'Auth event should have required property "type".',
               },
             },
           },
@@ -114,28 +144,28 @@ export default {
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
-                type: 'App "config.auth.pages.protected.$" should be an array of strings.',
+                type: 'App "auth.pages.protected.$" should be an array of strings.',
               },
               items: {
                 type: 'string',
                 description:
                   'Page ids for which authentication is required. When specified, all unspecified pages will be public.',
                 errorMessage: {
-                  type: 'App "config.auth.pages.protected.$" should be an array of strings.',
+                  type: 'App "auth.pages.protected.$" should be an array of strings.',
                 },
               },
             },
             public: {
               type: ['array', 'boolean'],
               errorMessage: {
-                type: 'App "config.auth.pages.public.$" should be an array of strings.',
+                type: 'App "auth.pages.public.$" should be an array of strings.',
               },
               items: {
                 type: 'string',
                 description:
                   'Page ids for which authentication is not required. When specified, all unspecified pages will be protected.',
                 errorMessage: {
-                  type: 'App "config.auth.pages.public.$" should be an array of strings.',
+                  type: 'App "auth.pages.public.$" should be an array of strings.',
                 },
               },
             },
@@ -148,42 +178,52 @@ export default {
                     type: 'string',
                   },
                   errorMessage: {
-                    type: 'App "config.auth.pages.roles.[role]" should be an array of strings.',
+                    type: 'App "auth.pages.roles.[role]" should be an array of strings.',
                   },
                 },
               },
               errorMessage: {
-                type: 'App "config.auth.pages.roles" should be an object.',
+                type: 'App "auth.pages.roles" should be an object.',
               },
             },
           },
         },
-        jwt: {
+        providers: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'type'],
+            properties: {
+              id: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "id" should be a string.',
+                },
+              },
+              type: {
+                type: 'string',
+                errorMessage: {
+                  type: 'Auth provider "type" should be a string.',
+                },
+              },
+              properties: {
+                type: 'object',
+              },
+            },
+            errorMessage: {
+              type: 'Auth provider should be an object.',
+              required: {
+                id: 'Auth provider should have required property "id".',
+                type: 'Auth provider should have required property "type".',
+              },
+            },
+          },
+        },
+        session: {
           type: 'object',
-          additionalProperties: false,
-          errorMessage: {
-            type: 'App "config.auth.jwt" should be an object.',
-          },
-          properties: {
-            expiresIn: {
-              type: ['string', 'number'],
-              default: '4h',
-              description:
-                'The length of time a user token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)',
-              errorMessage: {
-                type: 'App "config.auth.jwt.expiresIn" should be a string or number.',
-              },
-            },
-            loginStateExpiresIn: {
-              type: ['string', 'number'],
-              default: '5min',
-              description:
-                'The length of time an authorization request token should be valid. Can be expressed as a number in seconds, or a vercel/ms string (https://github.com/vercel/ms)',
-              errorMessage: {
-                type: 'App "config.auth.jwt.loginStateExpiresIn" should be a string or number.',
-              },
-            },
-          },
+        },
+        theme: {
+          type: 'object',
         },
       },
     },
@@ -615,6 +655,9 @@ export default {
     app: {
       $ref: '#/definitions/app',
     },
+    auth: {
+      $ref: '#/definitions/authConfig',
+    },
     cli: {
       type: 'object',
       errorMessage: {
@@ -628,9 +671,6 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        auth: {
-          $ref: '#/definitions/authConfig',
-        },
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',

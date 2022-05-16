@@ -84,6 +84,7 @@
     "@lowdefy/operators-nunjucks": "4.0.0-alpha.10",
     "@lowdefy/operators-uuid": "4.0.0-alpha.10",
     "@lowdefy/operators-yaml": "4.0.0-alpha.10",
+    "@lowdefy/plugin-next-auth": "4.0.0-alpha.10",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",

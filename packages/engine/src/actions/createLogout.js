@@ -15,8 +15,8 @@
 */
 
 function createLogout({ context }) {
-  return function logout() {
-    return context._internal.lowdefy._internal.auth.logout();
+  return function logout(params) {
+    return context._internal.lowdefy._internal.auth.logout(params);
   };
 }
 

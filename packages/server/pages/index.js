@@ -15,12 +15,17 @@
 */
 
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { getSession } from 'next-auth/react';
 
 import Page from '../lib/Page.js';
 
-export async function getServerSideProps() {
-  // TODO: is this build directory configurable from the cli?
-  const apiContext = await createApiContext({ buildDirectory: './build' });
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  const apiContext = await createApiContext({
+    buildDirectory: './build',
+    logger: console,
+    session,
+  });
   const rootConfig = await getRootConfig(apiContext);
   const { home } = rootConfig;
   if (home.configured === false) {
@@ -44,6 +49,7 @@ export async function getServerSideProps() {
     props: {
       pageConfig,
       rootConfig,
+      session,
     },
   };
 }

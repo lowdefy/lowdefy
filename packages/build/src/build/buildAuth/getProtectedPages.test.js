@@ -18,10 +18,8 @@ import getProtectedPages from './getProtectedPages.js';
 
 test('No config', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {},
-      },
+    auth: {
+      pages: {},
     },
   };
   const res = getProtectedPages({ components });
@@ -30,11 +28,9 @@ test('No config', () => {
 
 test('Public true', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          public: true,
-        },
+    auth: {
+      pages: {
+        public: true,
       },
     },
     pages: [
@@ -49,11 +45,9 @@ test('Public true', () => {
 
 test('Protected empty array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: [],
-        },
+    auth: {
+      pages: {
+        protected: [],
       },
     },
     pages: [
@@ -68,12 +62,10 @@ test('Protected empty array', () => {
 
 test('Protected empty array, public true', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: [],
-          public: true,
-        },
+    auth: {
+      pages: {
+        protected: [],
+        public: true,
       },
     },
     pages: [
@@ -88,11 +80,9 @@ test('Protected empty array, public true', () => {
 
 test('Protected  true', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: true,
-        },
+    auth: {
+      pages: {
+        protected: true,
       },
     },
     pages: [
@@ -107,11 +97,9 @@ test('Protected  true', () => {
 
 test('Public empty array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          public: [],
-        },
+    auth: {
+      pages: {
+        public: [],
       },
     },
     pages: [
@@ -126,12 +114,10 @@ test('Public empty array', () => {
 
 test('Protected true, public empty array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: true,
-          public: [],
-        },
+    auth: {
+      pages: {
+        protected: true,
+        public: [],
       },
     },
     pages: [
@@ -146,12 +132,10 @@ test('Protected true, public empty array', () => {
 
 test('Protected true, public array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: true,
-          public: ['a'],
-        },
+    auth: {
+      pages: {
+        protected: true,
+        public: ['a'],
       },
     },
     pages: [
@@ -166,11 +150,9 @@ test('Protected true, public array', () => {
 
 test('Public array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          public: ['a'],
-        },
+    auth: {
+      pages: {
+        public: ['a'],
       },
     },
     pages: [
@@ -185,11 +167,9 @@ test('Public array', () => {
 
 test('Protected array', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: ['a'],
-        },
+    auth: {
+      pages: {
+        protected: ['a'],
       },
     },
     pages: [
@@ -204,12 +184,10 @@ test('Protected array', () => {
 
 test('Protected array, public true', () => {
   const components = {
-    config: {
-      auth: {
-        pages: {
-          protected: ['a'],
-          public: true,
-        },
+    auth: {
+      pages: {
+        protected: ['a'],
+        public: true,
       },
     },
     pages: [

@@ -77,7 +77,6 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
-        user={lowdefy.user}
         validation={block.eval.validation}
       />
     </BlockLayout>

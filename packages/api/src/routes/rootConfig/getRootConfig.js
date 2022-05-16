@@ -23,7 +23,6 @@ async function getRootConfig(context) {
     getHomeAndMenus(context),
   ]);
   return {
-    authenticated: context.authenticated,
     home,
     lowdefyGlobal,
     menus,

@@ -43,11 +43,11 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.10",
-    "@vscode/sqlite3": "5.0.7",
     "knex": "1.0.1",
     "mssql": "8.0.1",
     "mysql": "2.18.1",
-    "pg": "8.7.1"
+    "pg": "8.7.1",
+    "sqlite3": "5.0.5"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.10",

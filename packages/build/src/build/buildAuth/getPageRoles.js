@@ -15,7 +15,7 @@
 */
 
 function getPageRoles({ components }) {
-  const roles = components.config.auth.pages.roles;
+  const roles = components.auth.pages.roles;
   const pageRoles = {};
   Object.keys(roles).forEach((roleName) => {
     roles[roleName].forEach((pageId) => {

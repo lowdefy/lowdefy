@@ -15,14 +15,11 @@
 */
 
 import NextAuth from 'next-auth';
-import Auth0Provider from 'next-auth/providers/auth0';
+import { getNextAuthConfig } from '@lowdefy/api';
 
-export default NextAuth({
-  providers: [
-    Auth0Provider({
-      clientId: process.env.AUTH0_CLIENT_ID,
-      clientSecret: process.env.AUTH0_CLIENT_SECRET,
-      issuer: process.env.AUTH0_ISSUER,
-    }),
-  ],
-});
+import authJson from '../../../build/auth.json';
+import callbacks from '../../../build/plugins/auth/callbacks.js';
+import events from '../../../build/plugins/auth/events.js';
+import providers from '../../../build/plugins/auth/providers.js';
+
+export default NextAuth(getNextAuthConfig({ authJson, plugins: { callbacks, events, providers } }));

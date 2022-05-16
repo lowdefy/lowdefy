@@ -42,12 +42,10 @@ test('empty components', async () => {
 test('page auth config', async () => {
   const components = {
     lowdefy: '1.0.0',
-    config: {
-      auth: {
-        pages: {
-          protected: true,
-          public: ['page1'],
-        },
+    auth: {
+      pages: {
+        protected: true,
+        public: ['page1'],
       },
     },
   };

@@ -57,7 +57,6 @@ test('getRootConfig', async () => {
   mockGetMenu.mockImplementation(() => menus);
   const res = await getRootConfig(context);
   expect(res).toEqual({
-    authenticated: undefined,
     home: {
       configured: false,
       pageId: 'page',
