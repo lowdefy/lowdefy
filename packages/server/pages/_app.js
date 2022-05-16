@@ -16,12 +16,18 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { SessionProvider } from 'next-auth/react';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+// TODO: SessionProvider requires basebath
+function App({ Component, pageProps: { session, ...pageProps } }) {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
 }
 
 const DynamicApp = dynamic(() => Promise.resolve(App), {

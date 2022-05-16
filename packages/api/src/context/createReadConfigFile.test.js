@@ -24,11 +24,11 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => {
   };
 });
 
-test('readConfigFile', async () => {
+test('createReadConfigFile', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
 
   nodeUtils.readFile.mockImplementation(() => Promise.resolve('config value'));
-  const createReadConfigFile = (await import('./readConfigFile.js')).default;
+  const createReadConfigFile = (await import('./createReadConfigFile.js')).default;
   const readConfigFile = createReadConfigFile({ buildDirectory: '/build' });
   const res = await readConfigFile('file');
   expect(res).toEqual('config value');

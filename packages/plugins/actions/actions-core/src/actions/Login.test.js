@@ -23,6 +23,6 @@ beforeEach(() => {
 });
 
 test('Login action invocation', async () => {
-  Login({ methods: { login: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  Login({ methods: { login: mockActionMethod }, params: 'params' });
+  expect(mockActionMethod.mock.calls).toEqual([['params']]);
 });

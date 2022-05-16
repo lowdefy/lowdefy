@@ -16,14 +16,17 @@
 
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { SessionProvider } from 'next-auth/react';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-function App({ Component, pageProps }) {
+function App({ Component }) {
   return (
     <Suspense fallback="">
-      <Component {...pageProps} />
+      <SessionProvider>
+        <Component />
+      </SessionProvider>
     </Suspense>
   );
 }

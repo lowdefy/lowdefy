@@ -67,7 +67,6 @@ const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skelet
         methods={{ makeCssClass }}
         pageId={lowdefy.pageId}
         properties={skeleton.properties}
-        user={lowdefy.user}
       />
     </BlockLayout>
   );

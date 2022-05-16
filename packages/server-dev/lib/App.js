@@ -29,7 +29,7 @@ import useRootConfig from './utils/useRootConfig.js';
 import actions from '../build/plugins/actions.js';
 import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
-import operators from '../build/plugins/operatorsClient.js';
+import operators from '../build/plugins/operators/client.js';
 
 const App = () => {
   const router = useRouter();

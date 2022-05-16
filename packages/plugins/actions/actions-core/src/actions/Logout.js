@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-function Logout({ methods: { logout } }) {
-  return logout();
+function Logout({ methods: { logout }, params }) {
+  return logout(params);
 }
 
 export default Logout;

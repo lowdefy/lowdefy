@@ -21,7 +21,10 @@ import testContext from '../../../test/testContext.js';
 const mockReadConfigFile = jest.fn();
 
 const context = testContext({ readConfigFile: mockReadConfigFile });
-const contextUser = testContext({ readConfigFile: mockReadConfigFile, user: { sub: 'sub' } });
+const contextUser = testContext({
+  readConfigFile: mockReadConfigFile,
+  session: { user: { sub: 'sub' } },
+});
 
 beforeEach(() => {
   mockReadConfigFile.mockReset();

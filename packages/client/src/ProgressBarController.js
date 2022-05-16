@@ -76,7 +76,6 @@ const ProgressBarController = ({ id, lowdefy, resetContext }) => {
       methods={{ makeCssClass }}
       pageId={lowdefy.pageId}
       properties={state}
-      user={lowdefy.user}
     />
   );
 };
