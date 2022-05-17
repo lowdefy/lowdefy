@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import generateImportFile from './generateImportFile.js';
+import buildImportsDev from './buildImportsDev.js';
+import buildImportsProd from './buildImportsProd.js';
 
-async function writeBlockImports({ components, context }) {
-  await context.writeBuildArtifact(
-    'plugins/blocks.js',
-    generateImportFile({
-      imports: components.imports.blocks,
-      importPath: 'blocks',
-    })
-  );
+function buildImports({ components, context }) {
+  if (context.stage === 'dev') {
+    components.imports = buildImportsDev({ components, context });
+  } else {
+    components.imports = buildImportsProd({ components, context });
+  }
 }
 
-export default writeBlockImports;
+export default buildImports;

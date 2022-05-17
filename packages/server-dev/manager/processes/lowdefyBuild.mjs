@@ -25,6 +25,7 @@ function lowdefyBuild({ directories, options }) {
       directories,
       logger: console,
       refResolver: options.refResolver,
+      stage: 'dev',
     });
   };
 }
