@@ -24,12 +24,8 @@ export default {
   {% endfor -%}
 };`;
 
-function generateImportFile({ types, importPath }) {
+function generateImportFile({ imports, importPath }) {
   const templateFn = nunjucksFunction(template);
-  const imports = Object.keys(types).map((typeName) => ({
-    typeName,
-    ...types[typeName],
-  }));
   return templateFn({ imports, importPath });
 }
 

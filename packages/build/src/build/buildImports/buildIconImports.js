@@ -44,16 +44,16 @@ function getConfigIcons({ components, icons, regex }) {
   [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
 }
 
-function getBlockDefaultIcons({ components, context, icons, regex }) {
-  Object.keys(components.types.blocks).forEach((blockName) => {
-    (context.typesMap.icons[blockName] || []).forEach((icon) => {
+function getBlockDefaultIcons({ blocks, context, icons, regex }) {
+  blocks.forEach((block) => {
+    (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
       [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
     });
   });
 }
 
-function buildIcons({ components, context }) {
-  components.icons = [];
+function buildIconImports({ blocks, components, context }) {
+  const iconImports = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     const icons = new Set();
     // TODO: Can we do better than this?
@@ -63,9 +63,10 @@ function buildIcons({ components, context }) {
       icons.add('AiOutlineExclamationCircle');
     }
     getConfigIcons({ components, icons, regex });
-    getBlockDefaultIcons({ components, context, icons, regex });
-    components.icons.push({ icons: [...icons], package: iconPackage });
+    getBlockDefaultIcons({ blocks, context, icons, regex });
+    iconImports.push({ icons: [...icons], package: iconPackage });
   });
+  return iconImports;
 }
 
-export default buildIcons;
+export default buildIconImports;

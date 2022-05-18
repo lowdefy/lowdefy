@@ -20,7 +20,7 @@ async function writeConnectionImports({ components, context }) {
   await context.writeBuildArtifact(
     'plugins/connections.js',
     generateImportFile({
-      types: components.types.connections,
+      imports: components.imports.connections,
       importPath: 'connections',
     })
   );

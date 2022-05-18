@@ -28,11 +28,10 @@ import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
-import buildIcons from './build/buildIcons.js';
+import buildImports from './build/buildImports/buildImports.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
-import buildStyles from './build/buildStyles.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -51,7 +50,7 @@ import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
-async function createContext({ customTypesMap, directories, logger, refResolver }) {
+async function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const defaultTypesMap = JSON.parse(
     await readFile(fileURLToPath(new URL('./defaultTypesMap.json', import.meta.url)))
   );
@@ -61,6 +60,7 @@ async function createContext({ customTypesMap, directories, logger, refResolver 
     logger,
     readConfigFile: createReadConfigFile({ directories }),
     refResolver,
+    stage,
     typeCounters: {
       actions: createCounter(),
       auth: {
@@ -94,8 +94,7 @@ async function build(options) {
   await buildPages({ components, context });
   await buildMenu({ components, context });
   await buildTypes({ components, context });
-  await buildIcons({ components, context });
-  await buildStyles({ components, context });
+  await buildImports({ components, context });
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
