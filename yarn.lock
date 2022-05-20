@@ -2045,7 +2045,7 @@ __metadata:
     jest: 27.5.1
     jest-serializer-html: 7.1.0
     jest-transform-yaml: 1.0.0
-    moment: 2.29.1
+    moment: 2.29.3
     rc-motion: 2.4.4
     react: 17.0.2
     react-dom: 17.0.2
@@ -2290,7 +2290,7 @@ __metadata:
     google-spreadsheet: 3.2.0
     jest: 27.5.1
     mingo: 6.0.4
-    moment: 2.29.1
+    moment: 2.29.3
   languageName: unknown
   linkType: soft
 
@@ -2405,7 +2405,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.5.1
-    moment: 2.29.1
+    moment: 2.29.3
   languageName: unknown
   linkType: soft
 
@@ -2488,7 +2488,7 @@ __metadata:
     "@swc/core": 1.2.135
     "@swc/jest": 0.2.17
     jest: 27.5.1
-    moment: 2.29.1
+    moment: 2.29.3
     nunjucks: 3.2.3
   languageName: unknown
   linkType: soft
@@ -10804,7 +10804,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:2.29.1, moment@npm:^2.24.0, moment@npm:^2.25.3":
+"moment@npm:2.29.3":
+  version: 2.29.3
+  resolution: "moment@npm:2.29.3"
+  checksum: 2e780e36d9a1823c08a1b6313cbb08bd01ecbb2a9062095820a34f42c878991ccba53abaa6abb103fd5c01e763724f295162a8c50b7e95b4f1c992ef0772d3f0
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.24.0, moment@npm:^2.25.3":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 1e14d5f422a2687996be11dd2d50c8de3bd577c4a4ca79ba5d02c397242a933e5b941655de6c8cb90ac18f01cc4127e55b4a12ae3c527a6c0a274e455979345e

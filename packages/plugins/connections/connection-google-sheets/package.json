@@ -45,7 +45,7 @@
     "@lowdefy/helpers": "4.0.0-alpha.10",
     "google-spreadsheet": "3.2.0",
     "mingo": "6.0.4",
-    "moment": "2.29.1"
+    "moment": "2.29.3"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.10",
