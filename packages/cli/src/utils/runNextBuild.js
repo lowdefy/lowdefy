@@ -21,7 +21,7 @@ async function runNextBuild({ context, directory }) {
   try {
     await spawnProcess({
       logger: context.print,
-      command: context.packageManager, // npm or yarn
+      command: context.packageManagerCmd,
       args: ['run', 'build:next'],
       processOptions: {
         cwd: directory,

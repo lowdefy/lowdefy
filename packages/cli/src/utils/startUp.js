@@ -43,6 +43,8 @@ async function startUp({ context, options = {}, command }) {
   context.options = getOptions(context);
   context.directories = getDirectories(context);
   context.packageManager = getPackageManager(context);
+  context.packageManagerCmd =
+    process.platform === 'win32' ? `${context.packageManager}.cmd` : context.packageManager;
   await checkForUpdatedVersions(context);
 
   context.sendTelemetry = getSendTelemetry(context);

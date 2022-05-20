@@ -21,12 +21,12 @@ const args = {
   yarn: ['install'],
 };
 
-function installPlugins({ packageManager, options }) {
+function installPlugins({ packageManager, packageManagerCmd, options }) {
   return async () => {
     console.log('Installing plugins...');
     await spawnProcess({
       logger: console,
-      command: packageManager, // npm or yarn
+      command: packageManagerCmd,
       args: args[packageManager],
       silent: !options.verbose,
     });
