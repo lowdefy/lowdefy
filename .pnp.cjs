@@ -2878,7 +2878,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
             ["jest-serializer-html", "npm:7.1.0"],
             ["jest-transform-yaml", "npm:1.0.0"],
-            ["moment", "npm:2.29.1"],
+            ["moment", "npm:2.29.2"],
             ["rc-motion", "virtual:f494f6d4e058cb1c8a3b456f6099aff9bd740d65abfc014377b7a3f1e34fcb35eb64a962e127c8bfbedaa0555175b6f2cdc47011e32e2fb5f081d7d32f526c78#npm:2.4.4"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:17.0.2"],
@@ -3141,7 +3141,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["google-spreadsheet", "npm:3.2.0"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
             ["mingo", "npm:6.0.4"],
-            ["moment", "npm:2.29.1"]
+            ["moment", "npm:2.29.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -3272,7 +3272,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
-            ["moment", "npm:2.29.1"]
+            ["moment", "npm:2.29.2"]
           ],
           "linkType": "SOFT",
         }]
@@ -3365,7 +3365,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.135"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.17"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:27.5.1"],
-            ["moment", "npm:2.29.1"],
+            ["moment", "npm:2.29.2"],
             ["nunjucks", "virtual:958baa20af23620d24bd33b620fa5325f0f949e2d5c4a86a14ef21ec86d394dc4e9d9a848b33327dc4582cb50590ceea0e7f4dddc23aee671b6f69e232547245#npm:3.2.3"]
           ],
           "linkType": "SOFT",
@@ -13034,6 +13034,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/moment-npm-2.29.1-787d9fdafd-1e14d5f422.zip/node_modules/moment/",
           "packageDependencies": [
             ["moment", "npm:2.29.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.29.2", {
+          "packageLocation": "./.yarn/cache/moment-npm-2.29.2-7e4b405a08-ee850b5776.zip/node_modules/moment/",
+          "packageDependencies": [
+            ["moment", "npm:2.29.2"]
           ],
           "linkType": "HARD",
         }]

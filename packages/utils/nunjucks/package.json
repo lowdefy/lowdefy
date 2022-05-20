@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.10",
-    "moment": "2.29.1",
+    "moment": "2.29.2",
     "nunjucks": "3.2.3"
   },
   "devDependencies": {
