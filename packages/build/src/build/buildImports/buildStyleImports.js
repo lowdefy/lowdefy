@@ -14,23 +14,22 @@
   limitations under the License.
 */
 
-function buildStyles({ components, context }) {
-  components.styles = [];
+function buildStyleImports({ blocks, context }) {
   const styles = new Set();
 
-  Object.entries(components.types.blocks).forEach(([blockName, block]) => {
+  blocks.forEach((block) => {
     styles.add(
       ...(context.typesMap.styles.packages[block.package] || []).map(
         (style) => `${block.package}/${style}`
       )
     );
     styles.add(
-      ...(context.typesMap.styles.blocks[blockName] || []).map(
+      ...(context.typesMap.styles.blocks[block.typeName] || []).map(
         (style) => `${block.package}/${style}`
       )
     );
   });
-  components.styles = [...styles].filter((style) => !!style);
+  return [...styles].filter((style) => !!style);
 }
 
-export default buildStyles;
+export default buildStyleImports;

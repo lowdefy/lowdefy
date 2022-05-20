@@ -25,8 +25,6 @@ const argv = yargs(hideBin(process.argv)).argv;
 
 async function run() {
   await build({
-    logger: console,
-    refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
     directories: {
       build: path.resolve(
         argv.buildDirectory ||
@@ -40,6 +38,9 @@ async function run() {
         argv.serverDirectory || process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()
       ),
     },
+    logger: console,
+    refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
+    stage: argv.stage || process.env.LOWDEFY_BUILD_STAGE || 'prod',
   });
 }
 

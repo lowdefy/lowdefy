@@ -28,7 +28,10 @@ export default {
 
 async function writeIconImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
-  await context.writeBuildArtifact('plugins/icons.js', templateFn({ packages: components.icons }));
+  await context.writeBuildArtifact(
+    'plugins/icons.js',
+    templateFn({ packages: components.imports.icons })
+  );
 }
 
 export default writeIconImports;
