@@ -64,6 +64,7 @@ test('startUp, options empty', async () => {
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -111,6 +112,7 @@ test('startUp, options undefined', async () => {
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -160,6 +162,7 @@ test('startUp, options configDirectory', async () => {
       configDirectory: './configDirectory',
     },
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -190,6 +193,7 @@ test('startUp, options outputDirectory', async () => {
       outputDirectory: './outputDirectory',
     },
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -231,6 +235,7 @@ test('startUp, options configDirectory and outputDirectory', async () => {
       outputDirectory: './outputDirectory',
     },
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -261,6 +266,7 @@ test('startUp, no lowdefyVersion returned', async () => {
     lowdefyVersion: undefined,
     options: {},
     packageManager: 'yarn',
+    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
     print,
     sendTelemetry: 'sendTelemetry',
   });

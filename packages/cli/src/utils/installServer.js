@@ -26,7 +26,7 @@ async function installServer({ context, directory }) {
   try {
     await spawnProcess({
       logger: context.print,
-      command: context.packageManager, // npm or yarn
+      command: context.packageManagerCmd,
       args: args[context.packageManager],
       processOptions: {
         cwd: directory,

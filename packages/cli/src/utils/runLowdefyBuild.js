@@ -21,7 +21,7 @@ async function runLowdefyBuild({ context, directory }) {
   try {
     await spawnProcess({
       logger: context.print,
-      command: context.packageManager, // npm or yarn
+      command: context.packageManagerCmd,
       args: ['run', 'build:lowdefy'],
       processOptions: {
         cwd: directory,
