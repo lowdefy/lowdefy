@@ -25,17 +25,10 @@ function getNextBin() {
   let nextMainFragment = nextPackageJson.main.substring(1);
   let nextBinFragment = nextPackageJson.bin.next;
 
-  console.log('nextPath', nextPath);
-  console.log('nextMainFragment', nextMainFragment);
-  console.log('nextBinFragment', nextBinFragment);
-
   if (process.platform === 'win32') {
     nextMainFragment = nextMainFragment.replaceAll('/', '\\');
     nextBinFragment = nextBinFragment.replaceAll('/', '\\');
   }
-
-  console.log('nextMainFragment', nextMainFragment);
-  console.log('nextBinFragment', nextBinFragment);
 
   return path.join(nextPath.replace(nextMainFragment, ''), nextBinFragment);
 }
