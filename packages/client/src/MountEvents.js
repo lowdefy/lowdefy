@@ -30,8 +30,7 @@ const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => 
         setError(err);
       }
     };
-    mount(); // TODO: check only run once.
-    return () => {};
+    mount();
   }, [context]);
 
   if (error) throw error;
