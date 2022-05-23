@@ -18,21 +18,20 @@ import { getFromObject } from '@lowdefy/operators';
 
 const validProperties = [
   'basePath',
-  'href',
-  'origin',
-  'protocol',
+  'hash',
   'homePageId',
   'host',
   'hostname',
-  'port',
+  'href',
+  'origin',
   'pageId',
   'pathname',
+  'port',
+  'protocol',
   'search',
-  'hash',
 ];
 
-// TODO: Fix with new router and link
-function _location({ arrayIndices, context, location, params }) {
+function _location({ arrayIndices, basePath, home, location, pageId, params, window }) {
   if (!window || !window.location) {
     throw new Error(
       `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(
@@ -48,18 +47,18 @@ function _location({ arrayIndices, context, location, params }) {
     );
   }
   const windowLocation = {
-    basePath: context.lowdefy.basePath,
-    href: window.location.href,
-    origin: window.location.origin,
-    protocol: window.location.protocol,
-    homePageId: context.lowdefy.homePageId,
+    basePath,
+    hash: window.location.hash,
+    homePageId: home.pageId,
     host: window.location.host,
     hostname: window.location.hostname,
-    port: window.location.port,
-    pageId: context.lowdefy.pageId,
+    href: window.location.href,
+    origin: window.location.origin,
+    pageId,
     pathname: window.location.pathname,
+    port: window.location.port,
+    protocol: window.location.protocol,
     search: window.location.search,
-    hash: window.location.hash,
   };
   return getFromObject({
     arrayIndices,
