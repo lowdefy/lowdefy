@@ -28,11 +28,31 @@ const arrayIndices = [1];
 const context = {
   _internal: {
     lowdefy: {
+      basePath: 'basePath',
       inputs: { id: true },
       lowdefyGlobal: { global: true },
       menus: [{ menus: true }],
       urlQuery: { urlQuery: true },
       user: { user: true },
+      home: {
+        pageId: 'home.pageId',
+        configured: false,
+      },
+      _internal: {
+        window: {
+          location: {
+            hash: 'window.location.hash',
+            host: 'window.location.host',
+            hostname: 'window.location.hostname',
+            href: 'window.location.href',
+            origin: 'window.location.origin',
+            pathname: 'window.location.pathname',
+            port: 'window.location.port',
+            protocol: 'window.location.protocol',
+            search: 'window.location.search',
+          },
+        },
+      },
     },
   },
   eventLog: [{ eventLog: true }],
@@ -108,43 +128,7 @@ test('operator returns value', () => {
           "arrayIndices": Array [
             1,
           ],
-          "context": Object {
-            "_internal": Object {
-              "lowdefy": Object {
-                "inputs": Object {
-                  "id": true,
-                },
-                "lowdefyGlobal": Object {
-                  "global": true,
-                },
-                "menus": Array [
-                  Object {
-                    "menus": true,
-                  },
-                ],
-                "urlQuery": Object {
-                  "urlQuery": true,
-                },
-                "user": Object {
-                  "user": true,
-                },
-              },
-            },
-            "eventLog": Array [
-              Object {
-                "eventLog": true,
-              },
-            ],
-            "id": "id",
-            "requests": Array [
-              Object {
-                "requests": true,
-              },
-            ],
-            "state": Object {
-              "state": true,
-            },
-          },
+          "basePath": "basePath",
           "event": Object {
             "event": true,
           },
@@ -153,6 +137,10 @@ test('operator returns value', () => {
               "eventLog": true,
             },
           ],
+          "home": Object {
+            "configured": false,
+            "pageId": "home.pageId",
+          },
           "input": true,
           "location": "location.1",
           "lowdefyGlobal": Object {
@@ -178,6 +166,7 @@ test('operator returns value', () => {
               ],
             },
           },
+          "pageId": undefined,
           "params": Object {
             "params": true,
           },
@@ -185,6 +174,26 @@ test('operator returns value', () => {
             "context": Object {
               "_internal": Object {
                 "lowdefy": Object {
+                  "_internal": Object {
+                    "window": Object {
+                      "location": Object {
+                        "hash": "window.location.hash",
+                        "host": "window.location.host",
+                        "hostname": "window.location.hostname",
+                        "href": "window.location.href",
+                        "origin": "window.location.origin",
+                        "pathname": "window.location.pathname",
+                        "port": "window.location.port",
+                        "protocol": "window.location.protocol",
+                        "search": "window.location.search",
+                      },
+                    },
+                  },
+                  "basePath": "basePath",
+                  "home": Object {
+                    "configured": false,
+                    "pageId": "home.pageId",
+                  },
                   "inputs": Object {
                     "id": true,
                   },
@@ -248,138 +257,19 @@ test('operator returns value', () => {
           "user": Object {
             "user": true,
           },
-        },
-      ],
-    ]
-  `);
-  expect(res.errors).toEqual([]);
-});
-
-test('context._internal.lowdefy empty object', () => {
-  const context = {
-    _internal: {
-      lowdefy: {},
-    },
-    eventLog: [{ eventLog: true }],
-    id: 'id',
-    requests: [{ requests: true }],
-    state: { state: true },
-  };
-  const input = { a: { _test: { params: true } } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
-  expect(res.output).toEqual({ a: 'test' });
-  expect(operators._test.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "actions": Array [
-            Object {
-              "actions": true,
-            },
-          ],
-          "args": Array [
-            Object {
-              "args": true,
-            },
-          ],
-          "arrayIndices": Array [
-            1,
-          ],
-          "context": Object {
-            "_internal": Object {
-              "lowdefy": Object {},
-            },
-            "eventLog": Array [
-              Object {
-                "eventLog": true,
-              },
-            ],
-            "id": "id",
-            "requests": Array [
-              Object {
-                "requests": true,
-              },
-            ],
-            "state": Object {
-              "state": true,
+          "window": Object {
+            "location": Object {
+              "hash": "window.location.hash",
+              "host": "window.location.host",
+              "hostname": "window.location.hostname",
+              "href": "window.location.href",
+              "origin": "window.location.origin",
+              "pathname": "window.location.pathname",
+              "port": "window.location.port",
+              "protocol": "window.location.protocol",
+              "search": "window.location.search",
             },
           },
-          "event": Object {
-            "event": true,
-          },
-          "eventLog": Array [
-            Object {
-              "eventLog": true,
-            },
-          ],
-          "input": Object {},
-          "location": "location",
-          "lowdefyGlobal": Object {},
-          "menus": Object {},
-          "methodName": undefined,
-          "operatorPrefix": "_",
-          "operators": Object {
-            "_error": [MockFunction],
-            "_init": [MockFunction],
-            "_test": [MockFunction] {
-              "calls": [Circular],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "test",
-                },
-              ],
-            },
-          },
-          "params": Object {
-            "params": true,
-          },
-          "parser": WebParser {
-            "context": Object {
-              "_internal": Object {
-                "lowdefy": Object {},
-              },
-              "eventLog": Array [
-                Object {
-                  "eventLog": true,
-                },
-              ],
-              "id": "id",
-              "requests": Array [
-                Object {
-                  "requests": true,
-                },
-              ],
-              "state": Object {
-                "state": true,
-              },
-            },
-            "operators": Object {
-              "_error": [MockFunction],
-              "_init": [MockFunction],
-              "_test": [MockFunction] {
-                "calls": [Circular],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "test",
-                  },
-                ],
-              },
-            },
-            "parse": [Function],
-          },
-          "requests": Array [
-            Object {
-              "requests": true,
-            },
-          ],
-          "state": Object {
-            "state": true,
-          },
-          "urlQuery": Object {},
-          "user": Object {},
         },
       ],
     ]

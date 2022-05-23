@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-function _function({ arrayIndices, event, location, operatorPrefix, params, parser }) {
+function _function({ actions, arrayIndices, event, location, operatorPrefix, params, parser }) {
   return (...args) => {
     const { output, errors } = parser.parse({
+      actions,
       arrayIndices,
       args,
       event,

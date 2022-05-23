@@ -60,11 +60,31 @@ test('_and evaluated in WebParser', () => {
   const context = {
     _internal: {
       lowdefy: {
+        basePath: 'basePath',
         inputs: { id: true },
         lowdefyGlobal: { global: true },
         menus: [{ menus: true }],
         urlQuery: { urlQuery: true },
         user: { user: true },
+        home: {
+          pageId: 'home.pageId',
+          configured: false,
+        },
+        _internal: {
+          window: {
+            location: {
+              hash: 'window.location.hash',
+              host: 'window.location.host',
+              hostname: 'window.location.hostname',
+              href: 'window.location.href',
+              origin: 'window.location.origin',
+              pathname: 'window.location.pathname',
+              port: 'window.location.port',
+              protocol: 'window.location.protocol',
+              search: 'window.location.search',
+            },
+          },
+        },
       },
     },
     eventLog: [{ eventLog: true }],
