@@ -37,10 +37,10 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "moment": "2.29.1"
+    "moment": "2.29.3"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
+    "@babel/cli": "7.17.10",
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.4",
     "babel-jest": "26.6.3",

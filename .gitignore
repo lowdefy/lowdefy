@@ -16,6 +16,8 @@
 !packages/docs/howto/**/lowdefy.yaml
 
 .DS_Store
+.turbo
+node_modules
 
 packages/server/build/**
 packages/express/config/**
