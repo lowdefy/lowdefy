@@ -52,16 +52,11 @@ function getBlockDefaultIcons({ blocks, context, icons, regex }) {
   });
 }
 
-function buildIconImports({ blocks, components, context }) {
+function buildIconImports({ blocks, components, context, defaults = {} }) {
   const iconImports = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
-    const icons = new Set();
-    // TODO: Can we do better than this?
-    // Add default icons
-    if (iconPackage === 'react-icons/ai') {
-      icons.add('AiOutlineLoading3Quarters');
-      icons.add('AiOutlineExclamationCircle');
-    }
+    defaults;
+    const icons = new Set(defaults[iconPackage]);
     getConfigIcons({ components, icons, regex });
     getBlockDefaultIcons({ blocks, context, icons, regex });
     iconImports.push({ icons: [...icons], package: iconPackage });
