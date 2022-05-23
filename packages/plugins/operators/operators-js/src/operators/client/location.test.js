@@ -20,30 +20,29 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-beforeEach(() => {
-  Object.defineProperty(window, 'location', {
-    writable: true,
-    configurable: true,
-    value: {
-      hash: '#XYZ',
-      host: 'localhost:3000',
-      hostname: 'localhost',
-      href: 'http://localhost:3000/details?_id=%22ABCD%22#XYZ',
-      origin: 'http://localhost:3000',
-      pathname: '/details',
-      port: '3000',
-      protocol: 'http:',
-      search: '?_id=%22ABCD%22',
-    },
-  });
-});
-
 const input = {
   arrayIndices: [0],
-  context: { context: true, lowdefy: { basePath: 'base', homePageId: 'home', pageId: 'page-one' } },
+  basePath: 'base',
+  home: {
+    pageId: 'home-page-id',
+  },
   location: 'location',
-  lowdefyGlobal: { lowdefyGlobal: true },
+  pageId: 'page-id',
   params: 'origin',
+  window: {
+    location: {
+      hash: 'window.location.hash',
+      host: 'window.location.host',
+      hostname: 'window.location.hostname',
+      href: 'window.location.href',
+      origin: 'window.location.origin',
+      pathname: 'window.location.pathname',
+      port: 'window.location.port',
+      protocol: 'window.location.protocol',
+      search: 'window.location.search',
+    },
+  },
+  lowdefyGlobal: { lowdefyGlobal: true },
 };
 
 test('location calls getFromObject', async () => {
@@ -56,17 +55,17 @@ test('location calls getFromObject', async () => {
         location: 'location',
         object: {
           basePath: 'base',
-          hash: '#XYZ',
-          homePageId: 'home',
-          host: 'localhost:3000',
-          hostname: 'localhost',
-          href: 'http://localhost:3000/details?_id=%22ABCD%22#XYZ',
-          origin: 'http://localhost:3000',
-          pathname: '/details',
-          pageId: 'page-one',
-          port: '3000',
-          protocol: 'http:',
-          search: '?_id=%22ABCD%22',
+          homePageId: 'home-page-id',
+          pageId: 'page-id',
+          hash: 'window.location.hash',
+          host: 'window.location.host',
+          hostname: 'window.location.hostname',
+          href: 'window.location.href',
+          origin: 'window.location.origin',
+          pathname: 'window.location.pathname',
+          port: 'window.location.port',
+          protocol: 'window.location.protocol',
+          search: 'window.location.search',
         },
         operator: '_location',
         params: 'origin',
@@ -88,6 +87,6 @@ test('_location throw on no location', () => {
 
 test('_location throw invalid param', () => {
   expect(() => location({ ...input, params: 'none' })).toThrow(
-    'Operator Error: _location only returns values for basePath, href, origin, protocol, homePageId, host, hostname, port, pageId, pathname, search, hash. Received: "none" at location.'
+    'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "none" at location.'
   );
 });
