@@ -43,7 +43,7 @@
     "@lowdefy/helpers": "3.23.3",
     "@lowdefy/node-utils": "3.23.3",
     "apollo-server-express": "2.25.0",
-    "axios": "0.21.4",
+    "axios": "0.27.2",
     "chalk": "4.1.1",
     "chokidar": "3.5.1",
     "commander": "7.2.0",
@@ -59,13 +59,13 @@
     "opener": "1.5.2",
     "ora": "5.4.0",
     "pg": "8.6.0",
-    "reload": "3.1.1",
+    "reload": "3.2.0",
     "saslprep": "1.0.3",
-    "sqlite3": "5.0.2",
+    "sqlite3": "5.0.3",
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
+    "@babel/cli": "7.17.10",
     "@babel/core": "7.14.3",
     "@babel/preset-env": "7.14.4",
     "@babel/preset-react": "7.13.13",
@@ -80,7 +80,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "style-loader": "2.0.0",
-    "webpack": "5.38.1",
+    "webpack": "5.72.1",
     "webpack-cli": "4.7.0"
   },
   "publishConfig": {
