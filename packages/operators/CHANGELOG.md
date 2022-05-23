@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
+
+
+### Bug Fixes
+
+* **operators:** Fix operator tests for passing down window. ([562890f](https://github.com/lowdefy/lowdefy/commit/562890f861d13196af5aa75cef4fd5227e257b61))
+* **operators:** Pass window to operators and not context. ([dd9dfad](https://github.com/lowdefy/lowdefy/commit/dd9dfad9cb38c3cb463b90e9d919f4cacfad05d9))
+
+
+
+
+
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 

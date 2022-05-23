@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
+
+
+### Bug Fixes
+
+* **server-dev:** Fix react hooks used incorrectly. ([0b36cc2](https://github.com/lowdefy/lowdefy/commit/0b36cc20984f48fc53993c51cbaef3bf05133c9d))
+
+
+
+
+
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 
