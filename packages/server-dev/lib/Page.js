@@ -24,11 +24,11 @@ import usePageConfig from './utils/usePageConfig.js';
 
 const Page = ({ Components, config, pageId, resetContext, router, types }) => {
   const { data: session, status } = useSession();
+  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
 
   if (status === 'loading') {
     return '';
   }
-  const { data: pageConfig } = usePageConfig(pageId, router.basePath);
   if (!pageConfig) {
     router.replace(`/404`);
     return '';
