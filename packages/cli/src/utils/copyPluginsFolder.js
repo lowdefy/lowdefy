@@ -16,15 +16,19 @@
 
 import path from 'path';
 import fs from 'fs';
-import { copyDirectory } from '@lowdefy/node-utils';
+import { cleanDirectory, copyDirectory } from '@lowdefy/node-utils';
 
 async function copyPluginsFolder({ context, directory }) {
   if (context.directories.config === directory) return;
-  if (!fs.existsSync(path.resolve(context.directories.config, 'plugins'))) return;
+  if (!fs.existsSync(path.join(context.directories.config, 'plugins'))) return;
 
+  await cleanDirectory(path.join(directory, 'plugins'));
   await copyDirectory(
-    path.resolve(context.directories.config, 'plugins'),
-    path.resolve(directory, 'plugins')
+    path.join(context.directories.config, 'plugins'),
+    path.join(directory, 'plugins'),
+    {
+      filter: (path) => !path.includes('node_modules'),
+    }
   );
 }
 

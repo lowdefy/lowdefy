@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
+
+
+### Bug Fixes
+
+* Adapt createAuthMethods for client package. ([4675297](https://github.com/lowdefy/lowdefy/commit/467529780bc1c90a089f6b157e264e5fbe10ca63))
+* Fix auth callback import in dev server. ([557669e](https://github.com/lowdefy/lowdefy/commit/557669e79838521f719c64d5addee8c7c4d1547a))
+* Remove test auth callback plugins. ([b22e4a1](https://github.com/lowdefy/lowdefy/commit/b22e4a150fb28a962587fa14b2d1e56fb7ffd53d))
+* Update operator plugin import locations. ([b65aa48](https://github.com/lowdefy/lowdefy/commit/b65aa482a3de39a6406b2a0948b6b502c84e0498))
+
+
+### Features
+
+* Add support for auth callback plugins. ([a16e074](https://github.com/lowdefy/lowdefy/commit/a16e074ca801a5e9e05424fc09cb8c1e1da81cee))
+* Create auth plugins types maps. ([6df0010](https://github.com/lowdefy/lowdefy/commit/6df00102032648a3b8d958828a4b5e853cd38da3))
+* Include auth event plugins in build. ([4c6d108](https://github.com/lowdefy/lowdefy/commit/4c6d108dffc98a90b9ec0268fe91fb8102cb15de))
+* Next auth implementation work in progress. ([bf5692a](https://github.com/lowdefy/lowdefy/commit/bf5692aed26a003e9412b029295a45af489728c4))
+* Next auth login and logout working. ([d47f9e5](https://github.com/lowdefy/lowdefy/commit/d47f9e56cd6da7827499ef9cf248dfc64f8bd12b))
+* Pass user session to api context from server. ([55f2438](https://github.com/lowdefy/lowdefy/commit/55f2438258bf8bad4b9f03647a00b8f730cacb79))
+* **server:** Add read user object from next-auth session. ([fbab7f1](https://github.com/lowdefy/lowdefy/commit/fbab7f14e7a23fcc82f4a7e1903c4aafdda8169d))
+
+
+
+
+
 # [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
 
 

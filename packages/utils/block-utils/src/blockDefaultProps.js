@@ -30,7 +30,6 @@ const blockDefaultProps = {
     triggerEvent: () => undefined,
   },
   properties: {},
-  user: {},
   required: false,
   validation: {
     status: null,

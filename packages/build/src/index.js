@@ -16,6 +16,7 @@
   limitations under the License.
 */
 
+import { fileURLToPath } from 'url';
 import { mergeObjects } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
@@ -27,11 +28,10 @@ import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
-import buildIcons from './build/buildIcons.js';
+import buildImports from './build/buildImports/buildImports.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
-import buildStyles from './build/buildStyles.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -40,23 +40,19 @@ import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
-import writeActionImports from './build/writePluginImports/writeActionImports.js';
-import writeBlockImports from './build/writePluginImports/writeBlockImports.js';
+import writeAuth from './build/writeAuth.js';
+import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeConfig from './build/writeConfig.js';
-import writeConnectionImports from './build/writePluginImports/writeConnectionImports.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
-import writeIconImports from './build/writePluginImports/writeIconImports.js';
 import writeMenus from './build/writeMenus.js';
-import writeOperatorImports from './build/writePluginImports/writeOperatorImports.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
-import writeStyleImports from './build/writePluginImports/writeStyleImports.js';
 import writeTypes from './build/writeTypes.js';
 
-async function createContext({ customTypesMap, directories, logger, refResolver }) {
+async function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const defaultTypesMap = JSON.parse(
-    await readFile(new URL('./defaultTypesMap.json', import.meta.url).pathname)
+    await readFile(fileURLToPath(new URL('./defaultTypesMap.json', import.meta.url)))
   );
 
   const context = {
@@ -64,8 +60,14 @@ async function createContext({ customTypesMap, directories, logger, refResolver 
     logger,
     readConfigFile: createReadConfigFile({ directories }),
     refResolver,
+    stage,
     typeCounters: {
       actions: createCounter(),
+      auth: {
+        callbacks: createCounter(),
+        events: createCounter(),
+        providers: createCounter(),
+      },
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
@@ -92,11 +94,10 @@ async function build(options) {
   await buildPages({ components, context });
   await buildMenu({ components, context });
   await buildTypes({ components, context });
-  await buildIcons({ components, context });
-  await buildStyles({ components, context });
+  await buildImports({ components, context });
   await cleanBuildDirectory({ context });
-  await writeActionImports({ components, context });
   await writeApp({ components, context });
+  await writeAuth({ components, context });
   await writeConnections({ components, context });
   await writeRequests({ components, context });
   await writePages({ components, context });
@@ -104,11 +105,7 @@ async function build(options) {
   await writeGlobal({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
-  await writeBlockImports({ components, context });
-  await writeConnectionImports({ components, context });
-  await writeOperatorImports({ components, context });
-  await writeStyleImports({ components, context });
-  await writeIconImports({ components, context });
+  await writePluginImports({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }

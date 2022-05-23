@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
+
+
+### Bug Fixes
+
+* Adapt createAuthMethods for client package. ([4675297](https://github.com/lowdefy/lowdefy/commit/467529780bc1c90a089f6b157e264e5fbe10ca63))
+* Auth bug fixes. ([3fe249c](https://github.com/lowdefy/lowdefy/commit/3fe249c36e86fe943227f6df4f115d9386ab935b))
+* **deps:** Update dependency next to v12.1.6 ([490ea8f](https://github.com/lowdefy/lowdefy/commit/490ea8fda5bc1892eb44ad371b2d95c99ea618fd))
+* Fix auth callback import in dev server. ([557669e](https://github.com/lowdefy/lowdefy/commit/557669e79838521f719c64d5addee8c7c4d1547a))
+* Remove console logs. ([42ab05b](https://github.com/lowdefy/lowdefy/commit/42ab05bb649c4a9fc8d020ea1591fe6b37c8304b))
+* **server-dev:** Fix dev server not running next build. ([27efcdf](https://github.com/lowdefy/lowdefy/commit/27efcdf8c5bc6a0f7c6a0b33ceb8e56ea2114a5a))
+* Update operator plugin import locations. ([b65aa48](https://github.com/lowdefy/lowdefy/commit/b65aa482a3de39a6406b2a0948b6b502c84e0498))
+* Windows compatibility fixes. ([8ecdfc4](https://github.com/lowdefy/lowdefy/commit/8ecdfc4e377648761e9035e355c7ec777fd63888))
+
+
+### Features
+
+* Add support for auth callback plugins. ([a16e074](https://github.com/lowdefy/lowdefy/commit/a16e074ca801a5e9e05424fc09cb8c1e1da81cee))
+* Create auth plugins types maps. ([6df0010](https://github.com/lowdefy/lowdefy/commit/6df00102032648a3b8d958828a4b5e853cd38da3))
+* Import all types exported by plugins in dev server. ([b6e05fb](https://github.com/lowdefy/lowdefy/commit/b6e05fba4479417d9bc8019782b93f8c83515066))
+* Include auth event plugins in build. ([4c6d108](https://github.com/lowdefy/lowdefy/commit/4c6d108dffc98a90b9ec0268fe91fb8102cb15de))
+* Next auth login and logout working. ([d47f9e5](https://github.com/lowdefy/lowdefy/commit/d47f9e56cd6da7827499ef9cf248dfc64f8bd12b))
+* Pass user session to api context from server. ([55f2438](https://github.com/lowdefy/lowdefy/commit/55f2438258bf8bad4b9f03647a00b8f730cacb79))
+* **server-dev:** Next auth working in dev server. ([44fbca9](https://github.com/lowdefy/lowdefy/commit/44fbca96e28e4d72f1a406ea122b101016baa3b9))
+* Updates to auth configuration. ([8f7abf7](https://github.com/lowdefy/lowdefy/commit/8f7abf7fdb1cbe0dbaabe209787a128854680f7b))
+
+
+
+
+
 # [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
 
 

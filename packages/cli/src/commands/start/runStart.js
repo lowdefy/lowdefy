@@ -21,7 +21,7 @@ async function runStart({ context, directory }) {
   await spawnProcess({
     logger: context.print,
     args: ['run', 'start'],
-    command: context.packageManager, // npm or yarn
+    command: context.packageManagerCmd,
     processOptions: {
       cwd: directory,
       env: {

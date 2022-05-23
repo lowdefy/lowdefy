@@ -23,6 +23,6 @@ beforeEach(() => {
 });
 
 test('Logout action invocation', async () => {
-  Logout({ methods: { logout: mockActionMethod } });
-  expect(mockActionMethod.mock.calls).toEqual([[]]);
+  Logout({ methods: { logout: mockActionMethod }, params: 'params' });
+  expect(mockActionMethod.mock.calls).toEqual([['params']]);
 });

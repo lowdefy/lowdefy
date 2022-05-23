@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-axios-http",
-  "version": "4.0.0-alpha.10",
+  "version": "4.0.0-alpha.11",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,11 +42,11 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.10",
+    "@lowdefy/helpers": "4.0.0-alpha.11",
     "axios": "0.25.0"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.10",
+    "@lowdefy/ajv": "4.0.0-alpha.11",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.135",
     "@swc/jest": "0.2.17",

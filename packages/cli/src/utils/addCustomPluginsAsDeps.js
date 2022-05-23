@@ -21,18 +21,18 @@ async function addCustomPluginsAsDeps({ context, directory }) {
   const packageJsonPath = path.join(directory, 'package.json');
   const packageJson = JSON.parse(await readFile(packageJsonPath));
 
-  const devDependencies = packageJson.devDependencies;
+  const dependencies = packageJson.dependencies;
 
   Object.values(context.plugins).forEach((plugin) => {
-    devDependencies[plugin.name] = plugin.version;
+    dependencies[plugin.name] = plugin.version;
   });
 
   // Sort dependencies
-  packageJson.devDependencies = {};
-  Object.keys(devDependencies)
+  packageJson.dependencies = {};
+  Object.keys(dependencies)
     .sort()
     .forEach((name) => {
-      packageJson.devDependencies[name] = devDependencies[name];
+      packageJson.dependencies[name] = dependencies[name];
     });
 
   const newPackageJsonContent = JSON.stringify(packageJson, null, 2).concat('\n');

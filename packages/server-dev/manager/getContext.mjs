@@ -16,7 +16,7 @@
 /* eslint-disable no-console */
 
 import path from 'path';
-import { createRequire } from 'module';
+
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -30,19 +30,16 @@ import restartServer from './processes/restartServer.mjs';
 import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 
+import getNextBin from './utils/getNextBin.mjs';
+
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
-const require = createRequire(import.meta.url);
 
 async function getContext() {
   const env = process.env;
 
-  const nextPageJson = require('next/package.json');
   const context = {
     bin: {
-      next: path.join(
-        require.resolve('next').replace(nextPageJson.main.substring(1), ''),
-        nextPageJson.bin.next
-      ),
+      next: getNextBin(),
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
@@ -65,6 +62,8 @@ async function getContext() {
     version: env.npm_package_version,
   };
 
+  context.packageManagerCmd =
+    process.platform === 'win32' ? `${context.packageManager}.cmd` : context.packageManager;
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);

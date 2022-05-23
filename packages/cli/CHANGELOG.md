@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
+
+
+### Bug Fixes
+
+* **cli:** Do not copy node_modules in plugin folders. ([a5a131d](https://github.com/lowdefy/lowdefy/commit/a5a131de06d6a8d28926aa709a57af0a7e7adb5f))
+* **cli:** Plugins should be added as dependencies, not devDependencies. ([e11e11f](https://github.com/lowdefy/lowdefy/commit/e11e11f7ab62b3272bb02cfa723f61b61c836fde))
+* Fix tests. ([eb85c58](https://github.com/lowdefy/lowdefy/commit/eb85c58f7a9a0531b703804810f0b61a228a592e))
+* Use fileURLToPath when loading json files. ([4885462](https://github.com/lowdefy/lowdefy/commit/488546237b8e5964acc453f05d919f5eb952d8c4))
+* Windows compatibility fixes. ([8ecdfc4](https://github.com/lowdefy/lowdefy/commit/8ecdfc4e377648761e9035e355c7ec777fd63888))
+
+
+
+
+
 # [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
 
 **Note:** Version bump only for package lowdefy

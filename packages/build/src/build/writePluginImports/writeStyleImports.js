@@ -27,7 +27,7 @@ async function writeStyleImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
   await context.writeBuildArtifact(
     'plugins/styles.less',
-    templateFn({ styles: components.styles })
+    templateFn({ styles: components.imports.styles })
   );
 }
 

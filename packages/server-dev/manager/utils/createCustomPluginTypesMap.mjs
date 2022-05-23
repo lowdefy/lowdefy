@@ -33,6 +33,11 @@ async function getPluginDefinitions({ directories }) {
 async function createCustomPluginTypesMap({ directories }) {
   const customTypesMap = {
     actions: {},
+    auth: {
+      callbacks: {},
+      events: {},
+      providers: {},
+    },
     blocks: {},
     connections: {},
     icons: {},

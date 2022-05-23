@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "4.0.0-alpha.10",
+  "version": "4.0.0-alpha.11",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -40,8 +40,8 @@
     "test": "FORCE_COLOR=3 yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.10",
-    "@lowdefy/node-utils": "4.0.0-alpha.10",
+    "@lowdefy/helpers": "4.0.0-alpha.11",
+    "@lowdefy/node-utils": "4.0.0-alpha.11",
     "axios": "0.25.0",
     "chalk": "4.1.2",
     "commander": "9.0.0",

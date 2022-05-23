@@ -18,16 +18,16 @@ import generateImportFile from './generateImportFile.js';
 
 async function writeOperatorImports({ components, context }) {
   await context.writeBuildArtifact(
-    'plugins/operatorsClient.js',
+    'plugins/operators/client.js',
     generateImportFile({
-      types: components.types.operators.client,
+      imports: components.imports.operators.client,
       importPath: 'operators/client',
     })
   );
   await context.writeBuildArtifact(
-    'plugins/operatorsServer.js',
+    'plugins/operators/server.js',
     generateImportFile({
-      types: components.types.operators.server,
+      imports: components.imports.operators.server,
       importPath: 'operators/server',
     })
   );

@@ -15,8 +15,6 @@ import useSWR from 'swr';
 
 import request from './request.js';
 
-// TODO: Handle TokenExpiredError
-
 function fetchPageConfig(url) {
   return request({ url });
 }

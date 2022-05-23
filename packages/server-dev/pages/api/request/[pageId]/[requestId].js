@@ -16,27 +16,27 @@
 
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { getSession } from 'next-auth/react';
 import connections from '../../../../build/plugins/connections.js';
-import operators from '../../../../build/plugins/operatorsServer.js';
+import operators from '../../../../build/plugins/operators/server.js';
 
 export default async function handler(req, res) {
   try {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
-    // TODO: configure API context
-    // TODO: configure build directory?
+    const session = await getSession({ req });
     const apiContext = await createApiContext({
       buildDirectory: './build',
       connections,
-      // TODO: use a logger like pino
       logger: console,
       operators,
       secrets: getSecretsFromEnv(),
+      session,
     });
+
     const { pageId, requestId } = req.query;
     const { payload } = req.body;
-
     const response = await callRequest(apiContext, { pageId, payload, requestId });
     res.status(200).json(response);
   } catch (error) {

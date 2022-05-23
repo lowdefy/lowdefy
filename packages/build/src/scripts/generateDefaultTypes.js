@@ -43,12 +43,18 @@ const defaultPackages = [
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
+  '@lowdefy/plugin-next-auth',
 ];
 
 async function generateDefaultTypesMap() {
   const packageFile = JSON.parse(await readFile(path.resolve(process.cwd(), './package.json')));
   const defaultTypesMap = {
     actions: {},
+    auth: {
+      callbacks: {},
+      events: {},
+      providers: {},
+    },
     blocks: {},
     connections: {},
     icons: {},

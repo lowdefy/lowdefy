@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/format",
-  "version": "4.0.0-alpha.10",
+  "version": "4.0.0-alpha.11",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "moment": "2.29.1"
+    "moment": "2.29.3"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",

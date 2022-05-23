@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "4.0.0-alpha.10",
+  "version": "4.0.0-alpha.11",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -34,15 +34,15 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn clean && yarn swc",
+    "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc",
+    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test": "jest --coverage --testTimeout=10000",
     "test:watch": "jest --coverage --watch"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.10"
+    "@lowdefy/helpers": "4.0.0-alpha.11"
   },
   "devDependencies": {
     "@swc/cli": "0.1.55",
