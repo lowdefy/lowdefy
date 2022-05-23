@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
+
+
+### Bug Fixes
+
+* Auth bug fixes. ([3fe249c](https://github.com/lowdefy/lowdefy/commit/3fe249c36e86fe943227f6df4f115d9386ab935b))
+* **build:** Remove unused configuration from auth schema. ([4922373](https://github.com/lowdefy/lowdefy/commit/4922373d4e8258d6d08fb5adc5af576a83260ea9))
+* Fix auth tests. ([c2a8fc7](https://github.com/lowdefy/lowdefy/commit/c2a8fc7206f6a0432a95f1c99749f861a1bf45f5))
+* Update lowdefy auth schema. ([60a048e](https://github.com/lowdefy/lowdefy/commit/60a048e98b89b8e6464a5c92553f56774a2c5908))
+* Use fileURLToPath when loading json files. ([4885462](https://github.com/lowdefy/lowdefy/commit/488546237b8e5964acc453f05d919f5eb952d8c4))
+
+
+### Features
+
+* Add support for auth callback plugins. ([a16e074](https://github.com/lowdefy/lowdefy/commit/a16e074ca801a5e9e05424fc09cb8c1e1da81cee))
+* Add support for auth event plugins. ([35f28b8](https://github.com/lowdefy/lowdefy/commit/35f28b849d945d14616fc5269bdb980cceb9dee4))
+* **build:** Build auth providers and write plugin import file. ([9eb34c8](https://github.com/lowdefy/lowdefy/commit/9eb34c870074c15f7d39202b9eb3c2e21a1ff646))
+* **build:** Update build for v4 auth config. ([0120462](https://github.com/lowdefy/lowdefy/commit/01204627d2159b56d7e314d8b8089f4aeccb71d1))
+* Create auth plugins types maps. ([6df0010](https://github.com/lowdefy/lowdefy/commit/6df00102032648a3b8d958828a4b5e853cd38da3))
+* Import all types exported by plugins in dev server. ([b6e05fb](https://github.com/lowdefy/lowdefy/commit/b6e05fba4479417d9bc8019782b93f8c83515066))
+* Include auth event plugins in build. ([4c6d108](https://github.com/lowdefy/lowdefy/commit/4c6d108dffc98a90b9ec0268fe91fb8102cb15de))
+* Next auth implementation work in progress. ([bf5692a](https://github.com/lowdefy/lowdefy/commit/bf5692aed26a003e9412b029295a45af489728c4))
+* **server:** Add read user object from next-auth session. ([fbab7f1](https://github.com/lowdefy/lowdefy/commit/fbab7f14e7a23fcc82f4a7e1903c4aafdda8169d))
+* Updates to auth configuration. ([8f7abf7](https://github.com/lowdefy/lowdefy/commit/8f7abf7fdb1cbe0dbaabe209787a128854680f7b))
+
+
+### BREAKING CHANGES
+
+* **build:** The “config.auth” object has been moved to the “auth” object at the root of the Lowdefy config.
+
+
+
+
+
 # [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
 
 **Note:** Version bump only for package @lowdefy/build

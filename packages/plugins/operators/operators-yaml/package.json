@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-yaml",
-  "version": "4.0.0-alpha.10",
+  "version": "4.0.0-alpha.11",
   "licence": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,8 +43,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.10",
-    "@lowdefy/operators": "4.0.0-alpha.10",
+    "@lowdefy/helpers": "4.0.0-alpha.11",
+    "@lowdefy/operators": "4.0.0-alpha.11",
     "yaml": "2.0.0-10"
   },
   "devDependencies": {
