@@ -16,12 +16,10 @@
 
 import path from 'path';
 import dotenv from 'dotenv';
-import { readFile } from '@lowdefy/node-utils';
 
 function readDotEnv(context) {
-  return async () => {
-    const dotEnv = await readFile(path.join(context.directories.config, '.env'));
-    context.serverEnv = dotenv.parse(dotEnv || '');
+  return () => {
+    dotenv.config({ path: path.join(context.directories.config, '.env'), silent: true });
   };
 }
 
