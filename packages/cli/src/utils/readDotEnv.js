@@ -14,16 +14,11 @@
   limitations under the License.
 */
 
-import runStart from './runStart.js';
-import readDotEnv from '../../utils/readDotEnv.js';
+import path from 'path';
+import dotenv from 'dotenv';
 
-// TODO: Handle "spawn yarn ENOENT" error if no built server exists.
-
-async function build({ context }) {
-  context.print.info('Starting server.');
-  context.sendTelemetry({ sendTypes: true });
-  readDotEnv(context);
-  await runStart({ context, directory: context.directories.server });
+function readDotEnv(context) {
+  dotenv.config({ path: path.join(context.directories.config, '.env'), silent: true });
 }
 
-export default build;
+export default readDotEnv;
