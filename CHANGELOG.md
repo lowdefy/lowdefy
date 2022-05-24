@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
+
+
+### Bug Fixes
+
+* **client:** Clean up use effect hook. ([413c697](https://github.com/lowdefy/lowdefy/commit/413c697a08c429c39100f9a23298e591bc194ed4))
+* **client:** On mount async method should always be called. ([912e405](https://github.com/lowdefy/lowdefy/commit/912e40522999e8e8b7eb65ec2855f43fab9c759b))
+* **operators:** Fix operator tests for passing down window. ([562890f](https://github.com/lowdefy/lowdefy/commit/562890f861d13196af5aa75cef4fd5227e257b61))
+* **operators:** Pass window to operators and not context. ([dd9dfad](https://github.com/lowdefy/lowdefy/commit/dd9dfad9cb38c3cb463b90e9d919f4cacfad05d9))
+* **operators:** Use window from lowdefy object. ([8e31d2a](https://github.com/lowdefy/lowdefy/commit/8e31d2a7a5d982e6e747d828cd7fd68488f7ea7f))
+* **server-dev:** Fix react hooks used incorrectly. ([0b36cc2](https://github.com/lowdefy/lowdefy/commit/0b36cc20984f48fc53993c51cbaef3bf05133c9d))
+
+
+### Features
+
+* Install most fill and outline antd icons for dev server. ([07ef677](https://github.com/lowdefy/lowdefy/commit/07ef6775c78482923f2c93391bfec2cd0e819749))
+
+
+
+
+
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 

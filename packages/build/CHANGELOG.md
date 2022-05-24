@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
+
+
+### Features
+
+* Install most fill and outline antd icons for dev server. ([07ef677](https://github.com/lowdefy/lowdefy/commit/07ef6775c78482923f2c93391bfec2cd0e819749))
+
+
+
+
+
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 
