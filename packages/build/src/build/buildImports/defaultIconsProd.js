@@ -14,22 +14,8 @@
   limitations under the License.
 */
 
-function _function({ actions, arrayIndices, event, location, operatorPrefix, params, parser }) {
-  return (...args) => {
-    const { output, errors } = parser.parse({
-      actions,
-      arrayIndices,
-      args,
-      event,
-      input: params,
-      location,
-      operatorPrefix: `_${operatorPrefix}`,
-    });
-    if (errors.length > 0) {
-      throw new Error(errors[0]);
-    }
-    return output;
-  };
-}
+const defaultIconsProd = {
+  'react-icons/ai': ['AiOutlineExclamationCircle', 'AiOutlineLoading3Quarters'],
+};
 
-export default _function;
+export default defaultIconsProd;

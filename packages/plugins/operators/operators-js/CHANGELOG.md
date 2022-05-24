@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
+
+
+### Bug Fixes
+
+* **operators:** Fix operator tests for passing down window. ([562890f](https://github.com/lowdefy/lowdefy/commit/562890f861d13196af5aa75cef4fd5227e257b61))
+* **operators:** Use window from lowdefy object. ([8e31d2a](https://github.com/lowdefy/lowdefy/commit/8e31d2a7a5d982e6e747d828cd7fd68488f7ea7f))
+
+
+
+
+
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 **Note:** Version bump only for package @lowdefy/operators-js

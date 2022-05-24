@@ -16,6 +16,7 @@
 
 import buildIconImports from './buildIconImports.js';
 import buildStyleImports from './buildStyleImports.js';
+import defaultIconsProd from './defaultIconsProd.js';
 
 function buildImportClassProd(types) {
   return Object.entries(types).map(([typeName, type]) => ({
@@ -36,7 +37,7 @@ function buildImportsProd({ components, context }) {
     },
     blocks,
     connections: buildImportClassProd(components.types.connections),
-    icons: buildIconImports({ blocks, components, context }),
+    icons: buildIconImports({ blocks, components, context, defaults: defaultIconsProd }),
     requests: buildImportClassProd(components.types.requests),
     operators: {
       client: buildImportClassProd(components.types.operators.client),

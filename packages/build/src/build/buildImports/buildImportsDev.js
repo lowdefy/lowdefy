@@ -16,6 +16,7 @@
 
 import buildIconImports from './buildIconImports.js';
 import buildStyleImports from './buildStyleImports.js';
+import defaultIconsDev from './defaultIconsDev.js';
 
 function getPluginPackages({ components }) {
   const pluginPackages = new Set();
@@ -59,7 +60,7 @@ function buildImportsDev({ components, context }) {
     },
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
-    icons: buildIconImports({ blocks, components, context }),
+    icons: buildIconImports({ blocks, components, context, defaults: defaultIconsDev }),
     requests: buildImportClassDev({ pluginPackages, map: context.typesMap.requests }),
     operators: {
       client: buildImportClassDev({ pluginPackages, map: context.typesMap.operators.client }),

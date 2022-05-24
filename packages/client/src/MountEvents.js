@@ -20,23 +20,17 @@ const MountEvents = ({ children, context, triggerEvent, triggerEventAsync }) => 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    let mounted = true;
     setLoading(true);
     const mount = async () => {
       try {
         await triggerEvent();
-        if (mounted) {
-          triggerEventAsync();
-          setLoading(false);
-        }
+        triggerEventAsync();
+        setLoading(false);
       } catch (err) {
         setError(err);
       }
     };
-    mount(); // TODO: check only run once.
-    return () => {
-      mounted = false;
-    };
+    mount();
   }, [context]);
 
   if (error) throw error;

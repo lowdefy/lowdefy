@@ -40,7 +40,8 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { inputs, lowdefyGlobal, menus, urlQuery, user } = context._internal.lowdefy;
+    const { basePath, home, inputs, lowdefyGlobal, menus, pageId, urlQuery, user, _internal } =
+      context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
 
@@ -52,25 +53,28 @@ class WebParser {
 
       try {
         const res = operators[op]({
-          eventLog: context.eventLog,
           actions,
           args,
           arrayIndices,
-          context,
+          basePath,
           event,
+          eventLog: context.eventLog,
+          home,
           input: inputs ? inputs[context.id] : {},
           location: applyArrayIndices(arrayIndices, location),
           lowdefyGlobal: lowdefyGlobal || {},
           menus: menus || {},
           methodName,
-          operators,
           operatorPrefix,
+          operators,
+          pageId,
           params: value[key],
+          parser: this,
           requests: context.requests,
           state: context.state,
           urlQuery: urlQuery || {},
           user: user || {},
-          parser: this,
+          window: _internal.window,
         });
         return res;
       } catch (e) {
