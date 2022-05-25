@@ -14,24 +14,14 @@
   limitations under the License.
 */
 
-import NextAuth from 'next-auth';
-import { getNextAuthConfig } from '@lowdefy/api';
+import { getSession } from 'next-auth/react';
+import authJson from '../../build/auth.json';
 
-import authJson from '../../../build/auth.json';
-import callbacks from '../../../build/plugins/auth/callbacks.js';
-import events from '../../../build/plugins/auth/events.js';
-import providers from '../../../build/plugins/auth/providers.js';
-
-export default async function auth(req, res) {
+async function getServerSession(context) {
   if (authJson.configured === true) {
-    return await NextAuth(
-      req,
-      res,
-      getNextAuthConfig({ authJson, plugins: { callbacks, events, providers } })
-    );
+    return await getSession(context);
   }
-
-  return res.status(404).json({
-    message: 'Auth not configured',
-  });
+  return undefined;
 }
+
+export default getServerSession;

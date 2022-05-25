@@ -16,7 +16,9 @@
 
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
-import { getSession } from 'next-auth/react';
+
+import getServerSession from '../../../../lib/auth/getServerSession.js';
+
 import connections from '../../../../build/plugins/connections.js';
 import operators from '../../../../build/plugins/operators/server.js';
 
@@ -25,7 +27,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
-    const session = await getSession({ req });
+    const session = await getServerSession({ req });
     const apiContext = await createApiContext({
       buildDirectory: './build',
       connections,
