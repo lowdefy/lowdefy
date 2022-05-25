@@ -38,7 +38,7 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('requests not an array', async () => {
+test('requests not an array', () => {
   const components = {
     pages: [
       {
@@ -49,12 +49,12 @@ test('requests not an array', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Requests is not an array at "page_1" on page "page_1". Received "requests"'
   );
 });
 
-test('request id missing', async () => {
+test('request id missing', () => {
   const components = {
     pages: [
       {
@@ -65,12 +65,10 @@ test('request id missing', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Request id missing at page "page_1".'
-  );
+  expect(() => buildPages({ components, context })).toThrow('Request id missing at page "page_1".');
 });
 
-test('request id not a string', async () => {
+test('request id not a string', () => {
   const components = {
     pages: [
       {
@@ -81,12 +79,12 @@ test('request id not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Request id is not a string at page "page_1". Received true.'
   );
 });
 
-test('Throw on duplicate request ids', async () => {
+test('Throw on duplicate request ids', () => {
   const components = {
     pages: [
       {
@@ -100,12 +98,12 @@ test('Throw on duplicate request ids', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Duplicate requestId "request_1" on page "page_1".'
   );
 });
 
-test('Throw on duplicate request ids', async () => {
+test('Throw on duplicate request ids', () => {
   const components = {
     pages: [
       {
@@ -129,12 +127,12 @@ test('Throw on duplicate request ids', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Duplicate requestId "request_1" on page "page_1".'
   );
 });
 
-test('request id contains a "."', async () => {
+test('request id contains a "."', () => {
   const components = {
     pages: [
       {
@@ -145,12 +143,12 @@ test('request id contains a "."', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Request id "my.request" at page "page_1" should not include a period (".").'
   );
 });
 
-test('request type is not a string', async () => {
+test('request type is not a string', () => {
   const components = {
     pages: [
       {
@@ -161,12 +159,12 @@ test('request type is not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Request type is not a string at at request at "request" at page "page_1". Received undefined.'
   );
 });
 
-test('request payload not an object', async () => {
+test('request payload not an object', () => {
   const components = {
     pages: [
       {
@@ -177,12 +175,12 @@ test('request payload not an object', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Request "my_request" at page "page_1" payload should be an object.'
   );
 });
 
-test('give request an id', async () => {
+test('give request an id', () => {
   const components = {
     pages: [
       {
@@ -198,7 +196,7 @@ test('give request an id', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -223,7 +221,7 @@ test('give request an id', async () => {
   });
 });
 
-test('request on a sub-block', async () => {
+test('request on a sub-block', () => {
   const components = {
     pages: [
       {
@@ -245,7 +243,7 @@ test('request on a sub-block', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -281,7 +279,7 @@ test('request on a sub-block', async () => {
   });
 });
 
-test('multiple requests', async () => {
+test('multiple requests', () => {
   const components = {
     pages: [
       {
@@ -301,7 +299,7 @@ test('multiple requests', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -334,7 +332,7 @@ test('multiple requests', async () => {
   });
 });
 
-test('set auth to request', async () => {
+test('set auth to request', () => {
   const components = {
     pages: [
       {
@@ -361,7 +359,7 @@ test('set auth to request', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {

@@ -19,23 +19,23 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('buildConnections no connections', async () => {
+test('buildConnections no connections', () => {
   const components = {};
-  const res = await buildConnections({ components, context });
+  const res = buildConnections({ components, context });
   expect(res.connections).toBe(undefined);
 });
 
-test('buildConnections connections not an array', async () => {
+test('buildConnections connections not an array', () => {
   const components = {
     connections: 'connections',
   };
-  const res = await buildConnections({ components, context });
+  const res = buildConnections({ components, context });
   expect(res).toEqual({
     connections: 'connections',
   });
 });
 
-test('buildConnections', async () => {
+test('buildConnections', () => {
   const components = {
     connections: [
       {
@@ -48,7 +48,7 @@ test('buildConnections', async () => {
       },
     ],
   };
-  const res = await buildConnections({ components, context });
+  const res = buildConnections({ components, context });
   expect(res.connections).toEqual([
     {
       id: 'connection:connection1',
@@ -63,32 +63,32 @@ test('buildConnections', async () => {
   ]);
 });
 
-test('throw on missing id', async () => {
+test('throw on missing id', () => {
   const components = {
     connections: [{ type: 'ConnectionType' }],
   };
-  await expect(buildConnections({ components, context })).rejects.toThrow('Connection id missing.');
+  expect(() => buildConnections({ components, context })).toThrow('Connection id missing.');
 });
 
-test('connection id is not a string', async () => {
+test('connection id is not a string', () => {
   const components = {
     connections: [{ id: 1 }],
   };
-  await expect(buildConnections({ components, context })).rejects.toThrow(
+  expect(() => buildConnections({ components, context })).toThrow(
     'Connection id is not a string. Received 1.'
   );
 });
 
-test('throw on missing type', async () => {
+test('throw on missing type', () => {
   const components = {
     connections: [{ id: 'connection1' }],
   };
-  await expect(buildConnections({ components, context })).rejects.toThrow(
+  expect(() => buildConnections({ components, context })).toThrow(
     'Connection type is not a string at connection "connection1". Received undefined.'
   );
 });
 
-test('throw on Duplicate ids', async () => {
+test('throw on Duplicate ids', () => {
   const components = {
     connections: [
       {
@@ -101,7 +101,7 @@ test('throw on Duplicate ids', async () => {
       },
     ],
   };
-  await expect(buildConnections({ components, context })).rejects.toThrow(
+  expect(() => buildConnections({ components, context })).toThrow(
     'Duplicate connectionId "connection1".'
   );
 });

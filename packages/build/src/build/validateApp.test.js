@@ -19,9 +19,9 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('validateApp no app defined', async () => {
+test('validateApp no app defined', () => {
   const components = {};
-  const result = await validateApp({ components, context });
+  const result = validateApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
@@ -32,9 +32,9 @@ test('validateApp no app defined', async () => {
   });
 });
 
-test('validateApp empty app object', async () => {
+test('validateApp empty app object', () => {
   const components = { app: {} };
-  const result = await validateApp({ components, context });
+  const result = validateApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
@@ -45,9 +45,9 @@ test('validateApp empty app object', async () => {
   });
 });
 
-test('validateApp empty html', async () => {
+test('validateApp empty html', () => {
   const components = { app: { html: {} } };
-  const result = await validateApp({ components, context });
+  const result = validateApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
@@ -58,7 +58,7 @@ test('validateApp empty html', async () => {
   });
 });
 
-test('validateApp appendHead and appendHead', async () => {
+test('validateApp appendHead and appendHead', () => {
   const components = {
     app: {
       html: {
@@ -67,7 +67,7 @@ test('validateApp appendHead and appendHead', async () => {
       },
     },
   };
-  const result = await validateApp({ components, context });
+  const result = validateApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
@@ -78,11 +78,9 @@ test('validateApp appendHead and appendHead', async () => {
   });
 });
 
-test('validateApp app not an object', async () => {
+test('validateApp app not an object', () => {
   const components = {
     app: 'app',
   };
-  await expect(validateApp({ components, context })).rejects.toThrow(
-    'lowdefy.app is not an object.'
-  );
+  expect(() => validateApp({ components, context })).toThrow('lowdefy.app is not an object.');
 });
