@@ -24,8 +24,53 @@ function createSessionCallback({ authConfig, plugins }) {
   });
 
   async function sessionCallback({ session, token, user }) {
+    // console.log({ session, token, user });
     if (token) {
-      session.user.sub = token.sub;
+      const {
+        sub,
+        name,
+        given_name,
+        family_name,
+        middle_name,
+        nickname,
+        preferred_username,
+        profile,
+        picture,
+        website,
+        email,
+        email_verified,
+        gender,
+        birthdate,
+        zoneinfo,
+        locale,
+        phone_number,
+        phone_number_verified,
+        address,
+        updated_at,
+      } = token;
+      session.user = {
+        sub,
+        name,
+        given_name,
+        family_name,
+        middle_name,
+        nickname,
+        preferred_username,
+        profile,
+        picture,
+        website,
+        email,
+        email_verified,
+        gender,
+        birthdate,
+        zoneinfo,
+        locale,
+        phone_number,
+        phone_number_verified,
+        address,
+        updated_at,
+        ...session.user,
+      };
     }
 
     for (const plugin of sessionCallbackPlugins) {

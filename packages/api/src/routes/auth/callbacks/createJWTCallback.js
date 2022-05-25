@@ -23,9 +23,55 @@ function createJWTCallback({ authConfig, plugins }) {
     type: 'jwt',
   });
 
-  if (jwtCallbackPlugins.length === 0) return undefined;
-
   async function jwtCallback({ token, user, account, profile, isNewUser }) {
+    if (profile) {
+      const {
+        sub,
+        name,
+        given_name,
+        family_name,
+        middle_name,
+        nickname,
+        preferred_username,
+        profile: profile_claim,
+        picture,
+        website,
+        email,
+        email_verified,
+        gender,
+        birthdate,
+        zoneinfo,
+        locale,
+        phone_number,
+        phone_number_verified,
+        address,
+        updated_at,
+      } = profile;
+      token = {
+        sub,
+        name,
+        given_name,
+        family_name,
+        middle_name,
+        nickname,
+        preferred_username,
+        profile: profile_claim,
+        picture,
+        website,
+        email,
+        email_verified,
+        gender,
+        birthdate,
+        zoneinfo,
+        locale,
+        phone_number,
+        phone_number_verified,
+        address,
+        updated_at,
+        ...token,
+      };
+    }
+
     for (const plugin of jwtCallbackPlugins) {
       token = await plugin.fn({
         properties: plugin.properties ?? {},
