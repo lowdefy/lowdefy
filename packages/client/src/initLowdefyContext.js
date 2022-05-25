@@ -69,7 +69,7 @@ function initLowdefyContext({ auth, Components, config, router, stage, types, wi
   lowdefy._internal.operators = types.operators;
 
   // TODO: discuss not using object arguments
-  lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
+  lowdefy._internal.auth = createAuthMethods({ lowdefy, auth });
 
   return lowdefy;
 }

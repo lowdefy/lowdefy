@@ -34,12 +34,14 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   return undefined;
 }
 
-function createAuthMethods(lowdefy, auth) {
+function createAuthMethods({ lowdefy, auth }) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
   function login({ providerId, callbackUrl, authUrl = {} } = {}) {
-    // TODO: if only one provider exists, pass provider here
-    // to link directly to provider
+    if (type.isNone(providerId) && auth.authConfig.providers.length === 1) {
+      providerId = auth.authConfig.providers[0].id;
+    }
+
     auth.signIn(
       providerId,
       { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
