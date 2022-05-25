@@ -20,7 +20,7 @@ import { type } from '@lowdefy/helpers';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
-async function buildConnections({ components, context }) {
+function buildConnections({ components, context }) {
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
   });

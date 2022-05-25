@@ -85,16 +85,16 @@ async function createContext({ customTypesMap, directories, logger, refResolver,
 async function build(options) {
   const context = await createContext(options);
   const components = await buildRefs({ context });
-  await testSchema({ components, context });
-  await validateApp({ components, context });
-  await validateConfig({ components, context });
-  await addDefaultPages({ components, context });
-  await buildAuth({ components, context });
-  await buildConnections({ components, context });
-  await buildPages({ components, context });
-  await buildMenu({ components, context });
-  await buildTypes({ components, context });
-  await buildImports({ components, context });
+  testSchema({ components, context });
+  validateApp({ components, context });
+  validateConfig({ components, context });
+  addDefaultPages({ components, context });
+  buildAuth({ components, context });
+  buildConnections({ components, context });
+  buildPages({ components, context });
+  buildMenu({ components, context });
+  buildTypes({ components, context });
+  buildImports({ components, context });
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
