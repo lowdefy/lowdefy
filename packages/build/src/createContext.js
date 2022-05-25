@@ -24,10 +24,9 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
 const require = createRequire(import.meta.url);
+const defaultTypesMap = require('./defaultTypesMap.json');
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
-  const defaultTypesMap = require('./defaultTypesMap.json');
-
   const context = {
     directories,
     logger,
