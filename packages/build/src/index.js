@@ -16,14 +16,8 @@
   limitations under the License.
 */
 
-import { fileURLToPath } from 'url';
-import { mergeObjects } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
-
-import createCounter from './utils/createCounter.js';
+import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
-import createReadConfigFile from './utils/readConfigFile.js';
-import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
@@ -50,40 +44,8 @@ import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
-async function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
-  const defaultTypesMap = JSON.parse(
-    await readFile(fileURLToPath(new URL('./defaultTypesMap.json', import.meta.url)))
-  );
-
-  const context = {
-    directories,
-    logger,
-    readConfigFile: createReadConfigFile({ directories }),
-    refResolver,
-    stage,
-    typeCounters: {
-      actions: createCounter(),
-      auth: {
-        callbacks: createCounter(),
-        events: createCounter(),
-        providers: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      requests: createCounter(),
-      operators: {
-        client: createCounter(),
-        server: createCounter(),
-      },
-    },
-    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
-    writeBuildArtifact: createWriteBuildArtifact({ directories }),
-  };
-  return context;
-}
-
 async function build(options) {
-  const context = await createContext(options);
+  const context = createContext(options);
   const components = await buildRefs({ context });
   testSchema({ components, context });
   validateApp({ components, context });
@@ -110,6 +72,6 @@ async function build(options) {
   await copyPublicFolder({ components, context });
 }
 
-export { createContext, createPluginTypesMap };
+export { createPluginTypesMap };
 
 export default build;
