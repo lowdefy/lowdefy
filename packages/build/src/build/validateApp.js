@@ -18,7 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-async function validateApp({ components }) {
+function validateApp({ components }) {
   if (type.isNone(components.app)) {
     components.app = {};
   }

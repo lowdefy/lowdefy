@@ -16,14 +16,8 @@
   limitations under the License.
 */
 
-import { fileURLToPath } from 'url';
-import { mergeObjects } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
-
-import createCounter from './utils/createCounter.js';
+import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
-import createReadConfigFile from './utils/readConfigFile.js';
-import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
@@ -32,6 +26,7 @@ import buildImports from './build/buildImports/buildImports.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildTestPage from './build/buildPages/buildTestPage.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -50,51 +45,19 @@ import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
-async function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
-  const defaultTypesMap = JSON.parse(
-    await readFile(fileURLToPath(new URL('./defaultTypesMap.json', import.meta.url)))
-  );
-
-  const context = {
-    directories,
-    logger,
-    readConfigFile: createReadConfigFile({ directories }),
-    refResolver,
-    stage,
-    typeCounters: {
-      actions: createCounter(),
-      auth: {
-        callbacks: createCounter(),
-        events: createCounter(),
-        providers: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      requests: createCounter(),
-      operators: {
-        client: createCounter(),
-        server: createCounter(),
-      },
-    },
-    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
-    writeBuildArtifact: createWriteBuildArtifact({ directories }),
-  };
-  return context;
-}
-
 async function build(options) {
-  const context = await createContext(options);
+  const context = createContext(options);
   const components = await buildRefs({ context });
-  await testSchema({ components, context });
-  await validateApp({ components, context });
-  await validateConfig({ components, context });
-  await addDefaultPages({ components, context });
-  await buildAuth({ components, context });
-  await buildConnections({ components, context });
-  await buildPages({ components, context });
-  await buildMenu({ components, context });
-  await buildTypes({ components, context });
-  await buildImports({ components, context });
+  testSchema({ components, context });
+  validateApp({ components, context });
+  validateConfig({ components, context });
+  addDefaultPages({ components, context });
+  buildAuth({ components, context });
+  buildConnections({ components, context });
+  buildPages({ components, context });
+  buildMenu({ components, context });
+  buildTypes({ components, context });
+  buildImports({ components, context });
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
@@ -110,6 +73,6 @@ async function build(options) {
   await copyPublicFolder({ components, context });
 }
 
-export { createContext, createPluginTypesMap };
+export { buildTestPage, createPluginTypesMap };
 
 export default build;

@@ -19,7 +19,7 @@
 import { type } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
-async function buildDefaultMenu({ components, context }) {
+function buildDefaultMenu({ components, context }) {
   context.logger.warn('No menus found. Building default menu.');
   const pages = type.isArray(components.pages) ? components.pages : [];
   const menus = [
@@ -72,10 +72,10 @@ function loopItems({ parent, menuId, pages, missingPageWarnings, checkDuplicateM
   }
 }
 
-async function buildMenu({ components, context }) {
+function buildMenu({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   if (type.isUndefined(components.menus) || components.menus.length === 0) {
-    components.menus = await buildDefaultMenu({ components, context });
+    components.menus = buildDefaultMenu({ components, context });
   }
   const missingPageWarnings = [];
   const checkDuplicateMenuId = createCheckDuplicateId({ message: 'Duplicate menuId "{{ id }}".' });
@@ -100,13 +100,11 @@ async function buildMenu({ components, context }) {
       checkDuplicateMenuItemId,
     });
   });
-  await Promise.all(
-    missingPageWarnings.map(async (warning) => {
-      await context.logger.warn(
-        `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`
-      );
-    })
-  );
+  missingPageWarnings.map(async (warning) => {
+    context.logger.warn(
+      `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`
+    );
+  });
   return components;
 }
 

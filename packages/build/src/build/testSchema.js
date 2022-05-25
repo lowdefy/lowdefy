@@ -18,7 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import lowdefySchema from '../lowdefySchema.js';
 import formatErrorMessage from '../utils/formatErrorMessage.js';
 
-async function testSchema({ components, context }) {
+function testSchema({ components, context }) {
   const { valid, errors } = validate({
     schema: lowdefySchema,
     data: components,
@@ -26,10 +26,8 @@ async function testSchema({ components, context }) {
   });
 
   if (!valid) {
-    await context.logger.warn('Schema not valid.');
-    await Promise.all(
-      errors.map((error) => context.logger.warn(formatErrorMessage({ error, components })))
-    );
+    context.logger.warn('Schema not valid.');
+    errors.map((error) => context.logger.warn(formatErrorMessage({ error, components })));
   }
 }
 
