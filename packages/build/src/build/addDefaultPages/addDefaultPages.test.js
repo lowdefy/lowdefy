@@ -31,9 +31,9 @@ beforeEach(() => {
   mockLogWarn.mockReset();
 });
 
-test('addDefaultPages, no pages array', async () => {
+test('addDefaultPages, no pages array', () => {
   const components = {};
-  const res = await addDefaultPages({ components, context });
+  const res = addDefaultPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -77,9 +77,9 @@ test('addDefaultPages, no pages array', async () => {
   });
 });
 
-test('addDefaultPages, empty pages array', async () => {
+test('addDefaultPages, empty pages array', () => {
   const components = { pages: [] };
-  const res = await addDefaultPages({ components, context });
+  const res = addDefaultPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -123,9 +123,9 @@ test('addDefaultPages, empty pages array', async () => {
   });
 });
 
-test('addDefaultPages, pages without 404 page', async () => {
+test('addDefaultPages, pages without 404 page', () => {
   const components = { pages: [{ id: 'page1', type: 'PageHeaderMenu' }] };
-  const res = await addDefaultPages({ components, context });
+  const res = addDefaultPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -173,14 +173,14 @@ test('addDefaultPages, pages without 404 page', async () => {
   });
 });
 
-test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
+test('addDefaultPages, pages with 404 page, should not overwrite', () => {
   const components = {
     pages: [
       { id: 'page1', type: 'PageHeaderMenu' },
       { id: '404', type: 'PageHeaderMenu' },
     ],
   };
-  const res = await addDefaultPages({ components, context });
+  const res = addDefaultPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -195,30 +195,28 @@ test('addDefaultPages, pages with 404 page, should not overwrite', async () => {
   });
 });
 
-test('addDefaultPages, pages not an array', async () => {
+test('addDefaultPages, pages not an array', () => {
   const components = {
     pages: { id: 'page1', type: 'PageHeaderMenu' },
   };
-  await expect(addDefaultPages({ components, context })).rejects.toThrow(
-    'lowdefy.pages is not an array.'
-  );
+  expect(() => addDefaultPages({ components, context })).toThrow('lowdefy.pages is not an array.');
 });
 
-test('addDefaultPages, with a page not an object', async () => {
+test('addDefaultPages, with a page not an object', () => {
   const components = {
     pages: [null],
   };
-  await expect(addDefaultPages({ components, context })).rejects.toThrow(
+  expect(() => addDefaultPages({ components, context })).toThrow(
     'pages[0] is not an object. Received null'
   );
 });
 
-test('addDefaultPages, pages are copied', async () => {
+test('addDefaultPages, pages are copied', () => {
   const components1 = {};
-  const res1 = await addDefaultPages({ components: components1, context });
+  const res1 = addDefaultPages({ components: components1, context });
   const page1 = res1.pages[0];
   page1.id = 'page:404';
   const components2 = {};
-  const res2 = await addDefaultPages({ components: components2, context });
+  const res2 = addDefaultPages({ components: components2, context });
   expect(res2.pages[0].id).toEqual('404');
 });

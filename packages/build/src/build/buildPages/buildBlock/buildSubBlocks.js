@@ -31,7 +31,7 @@ function buildSubBlocks(block, pageContext) {
           }. Received ${JSON.stringify(block.areas[key].blocks)}`
         );
       }
-      block.areas[key].blocks.map(async (blk) => buildBlock(blk, pageContext));
+      block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
     });
   }
 }

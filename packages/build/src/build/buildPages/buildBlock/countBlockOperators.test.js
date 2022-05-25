@@ -36,7 +36,7 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('set empty operators array if no operators on page', async () => {
+test('set empty operators array if no operators on page', () => {
   const context = testContext({ logger });
   const components = {
     pages: [
@@ -72,12 +72,12 @@ test('set empty operators array if no operators on page', async () => {
       },
     ],
   };
-  await buildPages({ components, context });
+  buildPages({ components, context });
   expect(context.typeCounters.operators.client.getCounts()).toEqual({});
   expect(context.typeCounters.operators.server.getCounts()).toEqual({});
 });
 
-test('count all operators for the page', async () => {
+test('count all operators for the page', () => {
   const context = testContext({ logger });
   const components = {
     pages: [
@@ -105,7 +105,7 @@ test('count all operators for the page', async () => {
       },
     ],
   };
-  await buildPages({ components, context });
+  buildPages({ components, context });
   expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _op_1: 3,
     _op_2: 1,
@@ -116,7 +116,7 @@ test('count all operators for the page', async () => {
   expect(context.typeCounters.operators.server.getCounts()).toEqual({});
 });
 
-test('count requests operators as server operators', async () => {
+test('count requests operators as server operators', () => {
   const context = testContext({ logger });
   const components = {
     pages: [
@@ -151,7 +151,7 @@ test('count requests operators as server operators', async () => {
       },
     ],
   };
-  await buildPages({ components, context });
+  buildPages({ components, context });
   expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _op_1: 1,
     _op_2: 1,
@@ -162,7 +162,7 @@ test('count requests operators as server operators', async () => {
   });
 });
 
-test('count request payload operators as client operators', async () => {
+test('count request payload operators as client operators', () => {
   const context = testContext({ logger });
   const components = {
     pages: [
@@ -188,7 +188,7 @@ test('count request payload operators as client operators', async () => {
       },
     ],
   };
-  await buildPages({ components, context });
+  buildPages({ components, context });
   expect(context.typeCounters.operators.client.getCounts()).toEqual({
     _r_op_1: 1,
     _op_1: 1,

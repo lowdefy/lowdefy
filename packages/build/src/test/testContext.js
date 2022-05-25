@@ -26,12 +26,17 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
   };
 
   const context = {
-    id: 'test',
+    stage: 'test',
     directories: {
       config: configDirectory || '',
     },
     typeCounters: {
       actions: createCounter(),
+      auth: {
+        callbacks: createCounter(),
+        events: createCounter(),
+        providers: createCounter(),
+      },
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
