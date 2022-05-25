@@ -26,6 +26,7 @@ import buildImports from './build/buildImports/buildImports.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
+import buildTestPage from './build/buildPages/buildTestPage.js';
 import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
@@ -72,6 +73,6 @@ async function build(options) {
   await copyPublicFolder({ components, context });
 }
 
-export { createPluginTypesMap };
+export { buildTestPage, createPluginTypesMap };
 
 export default build;
