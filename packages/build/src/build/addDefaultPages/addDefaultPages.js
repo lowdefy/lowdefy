@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import page404 from './404.js';
 
-async function addDefaultPages({ components }) {
+function addDefaultPages({ components }) {
   // If not copied, the same object is mutated by build every time
   // build runs for dev server. See #647
   const defaultPages = [JSON.parse(JSON.stringify(page404))];

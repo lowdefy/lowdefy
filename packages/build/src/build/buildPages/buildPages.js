@@ -20,15 +20,12 @@ import { type } from '@lowdefy/helpers';
 import buildPage from './buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
-async function buildPages({ components, context }) {
+function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
   });
-  const pageBuildPromises = pages.map((page, index) =>
-    buildPage({ page, index, context, checkDuplicatePageId })
-  );
-  await Promise.all(pageBuildPromises);
+  pages.map((page, index) => buildPage({ page, index, context, checkDuplicatePageId }));
   return components;
 }
 

@@ -19,9 +19,9 @@ import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('validateConfig no config defined', async () => {
+test('validateConfig no config defined', () => {
   const components = {};
-  const result = await validateConfig({ components, context });
+  const result = validateConfig({ components, context });
   expect(result).toEqual({
     config: {
       theme: {},
@@ -29,7 +29,7 @@ test('validateConfig no config defined', async () => {
   });
 });
 
-test('validate config theme', async () => {
+test('validate config theme', () => {
   const components = {
     config: {
       theme: {
@@ -39,7 +39,7 @@ test('validate config theme', async () => {
       },
     },
   };
-  const result = await validateConfig({ components, context });
+  const result = validateConfig({ components, context });
   expect(result).toEqual({
     config: {
       theme: {
@@ -51,22 +51,20 @@ test('validate config theme', async () => {
   });
 });
 
-test('validateConfig config not an object', async () => {
+test('validateConfig config not an object', () => {
   const components = {
     config: 'config',
   };
-  await expect(validateConfig({ components, context })).rejects.toThrow(
-    'lowdefy.config is not an object.'
-  );
+  expect(() => validateConfig({ components, context })).toThrow('lowdefy.config is not an object.');
 });
 
-test('validateConfig config error when basePath does not start with "/".', async () => {
+test('validateConfig config error when basePath does not start with "/".', () => {
   let components = {
     config: {
       basePath: '/base',
     },
   };
-  const result = await validateConfig({ components, context });
+  const result = validateConfig({ components, context });
   expect(result).toEqual({
     config: {
       basePath: '/base',
@@ -78,7 +76,5 @@ test('validateConfig config error when basePath does not start with "/".', async
       basePath: 'base',
     },
   };
-  await expect(validateConfig({ components, context })).rejects.toThrow(
-    'Base path must start with "/".'
-  );
+  expect(() => validateConfig({ components, context })).toThrow('Base path must start with "/".');
 });

@@ -15,7 +15,7 @@
   limitations under the License.
 */
 
-import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import { readFile } from '@lowdefy/node-utils';
 
 import { Command } from 'commander';
@@ -26,9 +26,9 @@ import init from './commands/init/init.js';
 import start from './commands/start/start.js';
 import runCommand from './utils/runCommand.js';
 
-const packageJson = JSON.parse(
-  await readFile(fileURLToPath(new URL('../package.json', import.meta.url)))
-);
+const require = createRequire(import.meta.url);
+
+const packageJson = require('../package.json');
 const { description, version: cliVersion } = packageJson;
 
 const program = new Command();

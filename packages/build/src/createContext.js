@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /*
   Copyright 2020-2022 Lowdefy, Inc
 
@@ -14,22 +16,23 @@
   limitations under the License.
 */
 
-import createCounter from '../utils/createCounter.js';
+import { createRequire } from 'module';
+import { mergeObjects } from '@lowdefy/helpers';
 
-function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
-  const defaultLogger = {
-    info: () => {},
-    log: () => {},
-    warn: () => {},
-    error: () => {},
-    succeed: () => {},
-  };
+import createCounter from './utils/createCounter.js';
+import createReadConfigFile from './utils/readConfigFile.js';
+import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 
+const require = createRequire(import.meta.url);
+const defaultTypesMap = require('./defaultTypesMap.json');
+
+function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const context = {
-    stage: 'test',
-    directories: {
-      config: configDirectory || '',
-    },
+    directories,
+    logger,
+    readConfigFile: createReadConfigFile({ directories }),
+    refResolver,
+    stage,
     typeCounters: {
       actions: createCounter(),
       auth: {
@@ -45,15 +48,10 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
         server: createCounter(),
       },
     },
-    writeBuildArtifact: writeBuildArtifact || (() => {}),
-    readConfigFile: readConfigFile || (() => {}),
-  };
-
-  context.logger = {
-    ...defaultLogger,
-    ...logger,
+    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
   return context;
 }
 
-export default testContext;
+export default createContext;
