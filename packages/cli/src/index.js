@@ -16,8 +16,6 @@
 */
 
 import { createRequire } from 'module';
-import { readFile } from '@lowdefy/node-utils';
-
 import { Command } from 'commander';
 
 import build from './commands/build/build.js';
