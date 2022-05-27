@@ -31,7 +31,7 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 
-const App = () => {
+const App = ({ auth }) => {
   const router = useRouter();
   const { data: rootConfig } = useRootConfig(router.basePath);
 
@@ -44,6 +44,7 @@ const App = () => {
     <Reload basePath={router.basePath}>
       {(resetContext) => (
         <Page
+          auth={auth}
           Components={{ Head, Link }}
           config={{
             rootConfig,

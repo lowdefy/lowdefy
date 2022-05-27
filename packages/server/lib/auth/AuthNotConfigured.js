@@ -15,24 +15,18 @@
 */
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
-import dynamic from 'next/dynamic';
-
-import Auth from '../lib/auth/Auth.js';
-
-// Must be in _app due to next specifications.
-import '../build/plugins/styles.less';
-
-function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
-  return (
-    <Auth session={session}>
-      {(auth) => <Component auth={auth} rootConfig={rootConfig} pageConfig={pageConfig} />}
-    </Auth>
-  );
+function authNotConfigured() {
+  throw new Error('Auth not configured.');
 }
 
-const DynamicApp = dynamic(() => Promise.resolve(App), {
-  ssr: false,
-});
+function AuthNotConfigured({ authConfig, children }) {
+  const auth = {
+    authConfig,
+    signIn: authNotConfigured,
+    signOut: authNotConfigured,
+  };
 
-export default DynamicApp;
+  return children(auth);
+}
+
+export default AuthNotConfigured;

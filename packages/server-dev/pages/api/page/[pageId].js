@@ -15,10 +15,10 @@
 */
 
 import { createApiContext, getPageConfig } from '@lowdefy/api';
-import { getSession } from 'next-auth/react';
+import getServerSession from '../../../lib/auth/getServerSession.js';
 
 export default async function handler(req, res) {
-  const session = await getSession({ req });
+  const session = await getServerSession({ req });
   const apiContext = await createApiContext({
     buildDirectory: './build',
     logger: console,
