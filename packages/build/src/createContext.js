@@ -16,15 +16,12 @@
   limitations under the License.
 */
 
-import { createRequire } from 'module';
 import { mergeObjects } from '@lowdefy/helpers';
 
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
-
-const require = createRequire(import.meta.url);
-const defaultTypesMap = require('./defaultTypesMap.json');
+import defaultTypesMap from './defaultTypesMap.js';
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const context = {
