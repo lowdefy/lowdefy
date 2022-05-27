@@ -14,56 +14,82 @@
   limitations under the License.
 */
 
-import { WebParser } from '@lowdefy/operators';
+import buildTestPage from '@lowdefy/build/buildTestPage';
 
-import Actions from '../src/Actions.js';
-import Blocks from '../src/Blocks.js';
-import Requests from '../src/Requests.js';
-import State from '../src/State.js';
+import getContext from '../src/getContext.js';
+import testOperators from './testOperators.js';
+import testActions from './testActions.js';
 
-const testContext = ({ lowdefy, operators, rootBlock, initState = {} }) => {
+const testContext = async ({ lowdefy, pageConfig, blocks = {} }) => {
   const testLowdefy = {
+    contexts: {},
     inputs: { test: {} },
     urlQuery: {},
     ...lowdefy,
     _internal: {
-      displayMessage: () => () => undefined,
+      displayMessage: () => () => {},
       updateBlock: () => {},
       ...lowdefy._internal,
+      operators: testOperators,
+      actions: testActions,
+      blockComponents: {
+        TextInput: {
+          meta: {
+            category: 'input',
+            valueType: 'string',
+          },
+        },
+        Box: {
+          meta: {
+            category: 'container',
+          },
+        },
+        Button: {
+          meta: {
+            category: 'display',
+          },
+        },
+        List: {
+          meta: {
+            category: 'list',
+            valueType: 'array',
+          },
+        },
+        Paragraph: {
+          meta: {
+            category: 'display',
+          },
+        },
+        Switch: {
+          meta: {
+            category: 'input',
+            valueType: 'boolean',
+          },
+        },
+        MultipleSelector: {
+          meta: {
+            category: 'input',
+            valueType: 'array',
+          },
+        },
+        NumberInput: {
+          meta: {
+            category: 'input',
+            valueType: 'number',
+          },
+        },
+        ...blocks,
+      },
     },
   };
-  const ctx = {
-    id: 'test',
-    pageId: rootBlock.blockId,
-    eventLog: [],
-    requests: {},
-    state: {},
-    _internal: {
-      lowdefy: testLowdefy,
-      rootBlock,
-    },
-  };
-  const _internal = ctx._internal;
-  _internal.parser = new WebParser({ context: ctx, contexts: {}, operators: operators || {} });
-  _internal.State = new State(ctx);
-  _internal.Actions = new Actions(ctx);
-  _internal.Requests = new Requests(ctx);
-  _internal.RootBlocks = new Blocks({
-    areas: _internal.rootBlock.areas,
-    context: ctx,
+  const buildConfig = buildTestPage({ pageConfig });
+  const ctx = getContext({
+    lowdefy: testLowdefy,
+    config: buildConfig,
+    resetContext: { reset: true, setReset: () => {} },
   });
-  _internal.RootBlocks.init();
-  _internal.update = () => {
-    _internal.RootBlocks.update();
-  };
-  if (initState) {
-    Object.keys(initState).forEach((key) => {
-      _internal.State.set(key, initState[key]);
-    });
-    _internal.RootBlocks.reset();
-  }
-  _internal.update();
-  _internal.State.freezeState();
+  await ctx._internal.runOnInit(() => {});
+  await ctx._internal.runOnInitAsync(() => {});
   return ctx;
 };
 
