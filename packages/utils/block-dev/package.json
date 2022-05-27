@@ -37,23 +37,23 @@
     "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start"
   },
   "dependencies": {
-    "@emotion/jest": "11.7.1",
+    "@emotion/jest": "11.9.1",
     "@lowdefy/block-utils": "4.0.0-alpha.12",
     "@lowdefy/helpers": "4.0.0-alpha.12",
-    "@testing-library/dom": "8.11.3",
-    "@testing-library/react": "13.0.0-alpha.4",
-    "@testing-library/user-event": "14.0.0-alpha.14",
+    "@testing-library/dom": "8.13.0",
+    "@testing-library/react": "13.2.0",
+    "@testing-library/user-event": "14.2.0",
     "ajv": "8.9.0",
     "ajv-errors": "3.0.0",
-    "jest": "27.5.1",
+    "jest": "28.1.0",
     "jest-serializer-html": "7.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "yaml-loader": "0.6.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.135"
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.192"
   },
   "publishConfig": {
     "access": "public"

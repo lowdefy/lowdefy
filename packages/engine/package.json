@@ -34,19 +34,22 @@
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test:watch": "jest --coverage --watch",
-    "test": "jest --coverage"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.12",
     "@lowdefy/operators": "4.0.0-alpha.12"
   },
   "devDependencies": {
+    "@jest/globals": "28.1.0",
+    "@lowdefy/actions-core": "4.0.0-alpha.12",
+    "@lowdefy/build": "4.0.0-alpha.12",
     "@lowdefy/operators-js": "4.0.0-alpha.12",
-    "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.135",
-    "@swc/jest": "0.2.17",
-    "jest": "27.5.1"
+    "@lowdefy/operators-mql": "4.0.0-alpha.12",
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.192",
+    "@swc/jest": "0.2.21",
+    "jest": "28.1.0"
   },
   "publishConfig": {
     "access": "public"

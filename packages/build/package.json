@@ -36,7 +36,10 @@
   "bin": {
     "lowdefy-build": "./dist/scripts/run.js"
   },
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./buildTestPage": "./dist/build/buildPages/buildTestPage.js"
+  },
   "files": [
     "dist/*"
   ],
@@ -64,7 +67,7 @@
     "yargs": "17.3.1"
   },
   "devDependencies": {
-    "@jest/globals": "27.5.1",
+    "@jest/globals": "28.1.0",
     "@lowdefy/actions-core": "4.0.0-alpha.12",
     "@lowdefy/blocks-antd": "4.0.0-alpha.12",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.12",
@@ -85,10 +88,10 @@
     "@lowdefy/operators-uuid": "4.0.0-alpha.12",
     "@lowdefy/operators-yaml": "4.0.0-alpha.12",
     "@lowdefy/plugin-next-auth": "4.0.0-alpha.12",
-    "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.135",
-    "@swc/jest": "0.2.17",
-    "jest": "27.5.1"
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.192",
+    "@swc/jest": "0.2.21",
+    "jest": "28.1.0"
   },
   "publishConfig": {
     "access": "public"
