@@ -75,7 +75,7 @@ test('create context', () => {
   const context = getContext({ page, lowdefy });
   expect(context.Actions).toBeDefined();
   expect(context.Requests).toBeDefined();
-  expect(context.RootBlocks).toBeDefined();
+  expect(context._internal.RootBlocks).toBeDefined();
   expect(context.State).toBeDefined();
   expect(context.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);

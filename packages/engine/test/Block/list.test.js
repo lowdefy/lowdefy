@@ -19,229 +19,167 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('list block no init', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
+test('list block no init', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
+        areas: {
+          content: {
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'list.$.text',
               },
-            },
+            ],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
 });
 
-test('list block with init', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ text: 'hello' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ text: 'hello' }] },
+    pageConfig,
   });
-  const text0 = context.RootBlocks.map['list.0.text'];
+  const text0 = context._internal.RootBlocks.map['list.0.text'];
   expect(text0.value).toEqual('hello');
   expect(context.state).toEqual({ list: [{ text: 'hello' }] });
 });
 
-test('list block init with non array', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block init with non array', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: 'hello' },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: 'hello' },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [] });
 });
 
-test('list block no init push item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('list block no init push item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
 
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
   list.pushItem();
-  const text0 = context.RootBlocks.map['list.0.text'];
+  const text0 = context._internal.RootBlocks.map['list.0.text'];
 
   expect(text0.value).toBe(null);
   expect(context.state).toEqual({ list: [{ text: null }] });
 });
 
-test('list block with init move item up', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init move item up', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [0, 1, 2, 3, 4, 5] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [0, 1, 2, 3, 4, 5] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
   list.moveItemUp(0);
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
@@ -249,47 +187,37 @@ test('list block with init move item up', () => {
   expect(context.state).toEqual({ list: [1, 0, 2, 3, 4, 5] });
 });
 
-test('list block with init move item down', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init move item down', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [0, 1, 2, 3, 4, 5] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [0, 1, 2, 3, 4, 5] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
   list.moveItemDown(5);
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
@@ -297,53 +225,35 @@ test('list block with init move item down', () => {
   expect(context.state).toEqual({ list: [0, 2, 1, 3, 4, 5] });
 });
 
-test('list block no init unshift item to start', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('list block no init unshift item to start', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { list, root } = context.RootBlocks.map;
-  const BlocksContainingList = context.RootBlocks.subBlocks[root.id][0];
+  const { list, root } = context._internal.RootBlocks.map;
+  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
 
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ list: [{ text: null }] });
-  const text0 = context.RootBlocks.map['list.0.text'];
+  const text0 = context._internal.RootBlocks.map['list.0.text'];
   const ListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
 
   text0.setValue('first');
@@ -365,55 +275,37 @@ test('list block no init unshift item to start', () => {
 
   // original text0
   expect(text0.value).toEqual('first');
-  const newText0 = context.RootBlocks.map['list.0.text'];
+  const newText0 = context._internal.RootBlocks.map['list.0.text'];
   expect(newText0.value).toEqual(null);
 });
 
-test('list block no init unshift item to start, block id not in array', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('list block no init unshift item to start, block id not in array', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'other.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'other.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { list, root } = context.RootBlocks.map;
-  const BlocksContainingList = context.RootBlocks.subBlocks[root.id][0];
+  const { list, root } = context._internal.RootBlocks.map;
+  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ other: [null] });
-  const text0 = context.RootBlocks.map['other.0'];
+  const text0 = context._internal.RootBlocks.map['other.0'];
   text0.setValue('first');
   expect(context.state).toEqual({ other: ['first'] });
   list.unshiftItem();
@@ -424,86 +316,64 @@ test('list block no init unshift item to start, block id not in array', () => {
   expect(NewListSubblocks0.arrayIndices).toEqual([0]);
   expect(NewListSubblocks1.arrayIndices).toEqual([1]);
   expect(text0.value).toEqual('first');
-  const newText0 = context.RootBlocks.map['other.0'];
+  const newText0 = context._internal.RootBlocks.map['other.0'];
   expect(newText0.value).toEqual(null);
 
   expect(context.state).toEqual({ other: [null, 'first'] });
 });
 
-test('list block unshift item clear all previous values', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                  {
-                    type: 'List',
-                    blockId: 'list.$.innerList',
-                    meta: {
-                      category: 'list',
-                      valueType: 'array',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'NumberInput',
-                            blockId: 'list.$.innerList.$',
-                            meta: {
-                              category: 'input',
-                              valueType: 'string',
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
-                ],
+test('list block unshift item clear all previous values', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            list: [
+              {
+                text: 'A',
+                innerList: [0],
               },
-            },
+              {
+                text: 'C',
+                innerList: [1, 2],
+              },
+            ],
           },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-    initState: {
-      list: [
-        {
-          text: 'A',
-          innerList: [0],
-        },
-        {
-          text: 'C',
-          innerList: [1, 2],
         },
       ],
     },
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'list.$.text',
+          },
+          {
+            type: 'List',
+            id: 'list.$.innerList',
+            blocks: [
+              {
+                type: 'NumberInput',
+                id: 'list.$.innerList.$',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({
     list: [
       {
@@ -535,262 +405,192 @@ test('list block unshift item clear all previous values', () => {
   });
 });
 
-test('list block with init push item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init push item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ text: 'a' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ text: 'a' }] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ list: [{ text: 'a' }] });
   list.pushItem();
   expect(context.state).toEqual({ list: [{ text: 'a' }, { text: null }] });
 });
 
-test('list block with init including extra data and push item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init including extra data and push item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ b: 'b', c: 'c' }], d: 'd' },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.b',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.b',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ b: 'b', c: 'c' }], d: 'd' },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }], d: 'd' });
   list.pushItem();
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }, { b: null }], d: 'd' });
 });
 
-test('list block no init push item, with enforced input type', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('list block no init push item, with enforced input type', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [{ text: null }] });
 });
 
-test('list block with rec visible in parent blocks', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with rec visible in parent blocks', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ b: 'b', a: 'a' }], c: 'c' },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.a',
-                    visible: true,
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.b',
-                    visible: {
-                      '_mql.test': { on: { _state: true }, test: { 'list.0.a': 'show b' } },
-                    },
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.a',
+            visible: true,
           },
           {
             type: 'TextInput',
-            blockId: 'c',
+            id: 'list.$.b',
             visible: {
-              '_mql.test': { on: { _state: true }, test: { 'list.0.b': { $exists: true } } },
-            },
-            meta: {
-              category: 'input',
-              valueType: 'string',
+              '_mql.test': { on: { _state: true }, test: { 'list.0.a': 'show b' } },
             },
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'c',
+        visible: {
+          '_mql.test': { on: { _state: true }, test: { 'list.0.b': { $exists: true } } },
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ b: 'b', a: 'a' }], c: 'c' },
+    pageConfig,
   });
-  const a0 = context.RootBlocks.map['list.0.a'];
+  const a0 = context._internal.RootBlocks.map['list.0.a'];
   expect(context.state).toEqual({ list: [{ a: 'a' }] });
   a0.setValue('show b');
   expect(context.state).toEqual({ list: [{ b: 'b', a: 'show b' }], c: 'c' });
 });
 
-test('list block with visible', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with visible', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ a: 'a' }], swtch: true },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
+        visible: { _state: 'swtch' },
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            visible: { _state: 'swtch' },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.a',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            type: 'Switch',
-            blockId: 'swtch',
-            meta: {
-              category: 'input',
-              valueType: 'boolean',
-            },
+            type: 'TextInput',
+            id: 'list.$.a',
           },
         ],
       },
-    },
+      {
+        type: 'Switch',
+        id: 'swtch',
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ a: 'a' }], swtch: true },
+    pageConfig,
   });
-  const { swtch } = context.RootBlocks.map;
+  const { swtch } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ list: [{ a: 'a' }], swtch: true });
   swtch.setValue(false);
@@ -799,61 +599,47 @@ test('list block with visible', () => {
   expect(context.state).toEqual({ list: [{ a: 'a' }], swtch: true });
 });
 
-test('toggle list object field visibility with index', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('toggle list object field visibility with index', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            list: [
+              { text: 'a1', swtch: true },
+              { text: 'a2', swtch: false },
+            ],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    visible: { _state: 'list.$.swtch' },
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                  {
-                    type: 'Switch',
-                    blockId: 'list.$.swtch',
-                    meta: {
-                      category: 'input',
-                      valueType: 'boolean',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
+            visible: { _state: 'list.$.swtch' },
+          },
+          {
+            type: 'Switch',
+            id: 'list.$.swtch',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [
-        { text: 'a1', swtch: true },
-        { text: 'a2', swtch: false },
-      ],
-    },
+    pageConfig,
   });
-  const swtch1 = context.RootBlocks.map['list.1.swtch'];
+  const swtch1 = context._internal.RootBlocks.map['list.1.swtch'];
 
   expect(context.state).toEqual({ list: [{ text: 'a1', swtch: true }, { swtch: false }] });
   swtch1.setValue(true);
@@ -867,315 +653,227 @@ test('toggle list object field visibility with index', () => {
   expect(context.state).toEqual({ list: [{ text: 'a1', swtch: true }, { swtch: false }] });
 });
 
-test('primitive list block no init', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('primitive list block no init', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
             type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'List',
-                    blockId: 'list',
-                    meta: {
-                      category: 'list',
-                      valueType: 'array',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'NumberInput',
-                            blockId: 'list.$',
-                            meta: {
-                              category: 'input',
-                              valueType: 'number',
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
-                ],
+            id: 'list',
+            blocks: [
+              {
+                type: 'NumberInput',
+                id: 'list.$',
               },
-            },
+            ],
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [] });
 });
 
-test('primitive list block with init', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('primitive list block with init', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [1, 2, 3] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [1, 2, 3] },
+    pageConfig,
   });
-  const number0 = context.RootBlocks.map['list.0'];
+  const number0 = context._internal.RootBlocks.map['list.0'];
   expect(number0.value).toBe(1);
   expect(context.state).toEqual({ list: [1, 2, 3] });
 });
 
-test('primitive list block with init, push item and setValue', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('primitive list block with init, push item and setValue', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [1, 2, 3] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [1, 2, 3] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [1, 2, 3, null] });
-  const a3 = context.RootBlocks.map['list.3'];
+  const a3 = context._internal.RootBlocks.map['list.3'];
   a3.setValue(-1);
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
 
-test('primitive list block with init, push item and setValue', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('primitive list block with init, push item and setValue', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [1, 2, 3] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [1, 2, 3] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [1, 2, 3, null] });
-  const a3 = context.RootBlocks.map['list.3'];
+  const a3 = context._internal.RootBlocks.map['list.3'];
   a3.setValue(-1);
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
 
-test('primitive list block with init and push item with enforced input type', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('primitive list block with init and push item with enforced input type', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [true, true, true] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'Switch',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'boolean',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'Switch',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [true, true, true] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [true, true, true] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [true, true, true, false] });
 });
 
-test('list block with nested primitive array with init, push item enforced type on inputs and setValue', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with nested primitive array with init, push item enforced type on inputs and setValue', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ innerList: [true, true, true], text: 'text' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
             type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'List',
-                    blockId: 'list.$.innerList',
-                    meta: {
-                      category: 'list',
-                      valueType: 'array',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'Switch',
-                            blockId: 'list.$.innerList.$',
-                            meta: {
-                              category: 'input',
-                              valueType: 'boolean',
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
+            id: 'list.$.innerList',
+            blocks: [
+              {
+                type: 'Switch',
+                id: 'list.$.innerList.$',
               },
-            },
+            ],
+          },
+          {
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ innerList: [true, true, true], text: 'text' }] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [{ innerList: [true, true, true], text: 'text' }] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -1183,7 +881,7 @@ test('list block with nested primitive array with init, push item enforced type 
       { innerList: [], text: null },
     ],
   });
-  const innerList1 = context.RootBlocks.map['list.1.innerList'];
+  const innerList1 = context._internal.RootBlocks.map['list.1.innerList'];
   innerList1.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -1191,7 +889,7 @@ test('list block with nested primitive array with init, push item enforced type 
       { innerList: [false], text: null },
     ],
   });
-  const switch_1_0 = context.RootBlocks.map['list.1.innerList.0'];
+  const switch_1_0 = context._internal.RootBlocks.map['list.1.innerList.0'];
   switch_1_0.setValue(true);
   expect(context.state).toEqual({
     list: [
@@ -1201,70 +899,48 @@ test('list block with nested primitive array with init, push item enforced type 
   });
 });
 
-test('list block with nested primitive array with init, push item and setValue', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with nested primitive array with init, push item and setValue', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ innerList: [1, 2, 3], text: 'text' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
             type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'List',
-                    blockId: 'list.$.innerList',
-                    meta: {
-                      category: 'list',
-                      valueType: 'array',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'NumberInput',
-                            blockId: 'list.$.innerList.$',
-                            meta: {
-                              category: 'input',
-                              valueType: 'number',
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
+            id: 'list.$.innerList',
+            blocks: [
+              {
+                type: 'NumberInput',
+                id: 'list.$.innerList.$',
               },
-            },
+            ],
+          },
+          {
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ innerList: [1, 2, 3], text: 'text' }] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [{ innerList: [1, 2, 3], text: 'text' }] });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   list.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -1272,7 +948,7 @@ test('list block with nested primitive array with init, push item and setValue',
       { innerList: [], text: null },
     ],
   });
-  const innerList1 = context.RootBlocks.map['list.1.innerList'];
+  const innerList1 = context._internal.RootBlocks.map['list.1.innerList'];
   innerList1.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -1280,7 +956,7 @@ test('list block with nested primitive array with init, push item and setValue',
       { innerList: [null], text: null },
     ],
   });
-  const number_1_0 = context.RootBlocks.map['list.1.innerList.0'];
+  const number_1_0 = context._internal.RootBlocks.map['list.1.innerList.0'];
   number_1_0.setValue(-1);
   expect(context.state).toEqual({
     list: [
@@ -1290,99 +966,81 @@ test('list block with nested primitive array with init, push item and setValue',
   });
 });
 
-test('list block with init remove item of first item and more than two values', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init remove item of first item and more than two values', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ list: [{ text: '0' }, { text: '1' }, { text: '2' }] });
   list.removeItem(0);
   expect(context.state).toEqual({ list: [{ text: '1' }, { text: '2' }] });
-  const blocksContainingList = context.RootBlocks.subBlocks[context.RootBlocks.map.root.id][0];
+  const blocksContainingList =
+    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
   const listSubblocksList = blocksContainingList.subBlocks[list.id];
   expect(listSubblocksList[0].arrayIndices).toEqual([0]);
   expect(listSubblocksList[1].arrayIndices).toEqual([1]);
   expect(listSubblocksList.length).toEqual(2);
 });
 
-test('list block remove item, add item does not have previous item value ', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block remove item, add item does not have previous item value ', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ text: '0' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ text: '0' }] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
-  const blocksContainingList = context.RootBlocks.subBlocks[context.RootBlocks.map.root.id][0];
+  const { list } = context._internal.RootBlocks.map;
+  const blocksContainingList =
+    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
   const listSubblocksList = blocksContainingList.subBlocks[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }] });
@@ -1394,50 +1052,41 @@ test('list block remove item, add item does not have previous item value ', () =
   expect(listSubblocksList.length).toEqual(1);
 });
 
-test('list block with init remove item and set existing item values', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('list block with init remove item and set existing item values', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ text: '0' }, { text: '1' }, { text: '2' }] },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
-  const text0 = context.RootBlocks.map['list.0.text'];
-  const text2 = context.RootBlocks.map['list.2.text'];
-  const blocksContainingList = context.RootBlocks.subBlocks[context.RootBlocks.map.root.id][0];
+  const { list } = context._internal.RootBlocks.map;
+  const text0 = context._internal.RootBlocks.map['list.0.text'];
+  const text2 = context._internal.RootBlocks.map['list.2.text'];
+  const blocksContainingList =
+    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
   const listSubblocksList = blocksContainingList.subBlocks[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }, { text: '1' }, { text: '2' }] });
@@ -1460,52 +1109,43 @@ test('list block with init remove item and set existing item values', () => {
   expect(listSubblocksList.length).toEqual(3);
 });
 
-test('primitive list block with init remove item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('primitive list block with init remove item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [0, 1, 2, 3, 4, 5, 6, 7] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [0, 1, 2, 3, 4, 5, 6, 7] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5, 6, 7] });
 
-  const { list } = context.RootBlocks.map;
-  const num3 = context.RootBlocks.map['list.3'];
-  const num5 = context.RootBlocks.map['list.5'];
-  const blocksContainingList = context.RootBlocks.subBlocks[context.RootBlocks.map.root.id][0];
+  const { list } = context._internal.RootBlocks.map;
+  const num3 = context._internal.RootBlocks.map['list.3'];
+  const num5 = context._internal.RootBlocks.map['list.5'];
+  const blocksContainingList =
+    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
   const listSubblocksList = blocksContainingList.subBlocks[list.id];
 
   const B3 = listSubblocksList[3];
@@ -1530,125 +1170,78 @@ test('primitive list block with init remove item', () => {
   expect(context.state).toEqual({ list: [0, 1, 2, 30, 50, 6, 7, null] });
 });
 
-test('nested list', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('nested list', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: {
+            list: [
+              { text: 'b0' },
+              { text: 'b1', swtch: true },
+              { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }], swtch: true },
+              { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }] },
+              { text: 'b4', swtch: false },
+            ],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'Paragraph',
+        id: 'par',
+      },
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'Paragraph',
-            blockId: 'par',
-            meta: {
-              category: 'display',
-            },
+            type: 'TextInput',
+            id: 'list.$.text',
           },
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
+            type: 'Switch',
+            id: 'list.$.swtch',
+          },
+          {
+            type: 'Box',
+            id: 'list.$.container',
+            visible: { _state: 'list.$.swtch' },
+            blocks: [
+              {
+                type: 'Paragraph',
+                id: 'list.$.par',
+              },
+              {
+                type: 'List',
+                id: 'list.$.innerList',
                 blocks: [
                   {
-                    type: 'TextInput',
-                    blockId: 'list.$.text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                  {
-                    type: 'Switch',
-                    blockId: 'list.$.swtch',
-                    meta: {
-                      category: 'input',
-                      valueType: 'boolean',
-                    },
-                  },
-                  {
-                    type: 'Box',
-                    blockId: 'list.$.container',
-                    meta: {
-                      category: 'container',
-                    },
-                    visible: { _state: 'list.$.swtch' },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'Paragraph',
-                            blockId: 'list.$.par',
-                            meta: {
-                              category: 'display',
-                            },
-                          },
-                          {
-                            type: 'List',
-                            blockId: 'list.$.innerList',
-                            meta: {
-                              category: 'list',
-                              valueType: 'array',
-                            },
-                            areas: {
-                              content: {
-                                blocks: [
-                                  {
-                                    type: 'List',
-                                    blockId: 'list.$.innerList.$.innerInnerList',
-                                    meta: {
-                                      category: 'list',
-                                      valueType: 'array',
-                                    },
-                                    areas: {
-                                      content: {
-                                        blocks: [
-                                          {
-                                            type: 'NumberInput',
-                                            blockId: 'list.$.innerList.$.innerInnerList.$',
-                                            meta: {
-                                              category: 'input',
-                                              valueType: 'number',
-                                            },
-                                          },
-                                        ],
-                                      },
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          },
-                        ],
+                    type: 'List',
+                    id: 'list.$.innerList.$.innerInnerList',
+                    blocks: [
+                      {
+                        type: 'NumberInput',
+                        id: 'list.$.innerList.$.innerInnerList.$',
                       },
-                    },
+                    ],
                   },
                 ],
               },
-            },
+            ],
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [
-        { text: 'b0' },
-        { text: 'b1', swtch: true },
-        { text: 'b2', innerList: [{ innerInnerList: [1, 2, 3, 4, 5, 6, 7] }], swtch: true },
-        { text: 'b3', innerList: [{ innerInnerList: [1, 2, 3] }] },
-        { text: 'b4', swtch: false },
-      ],
-    },
+    pageConfig,
   });
   expect(context.state).toEqual({
     list: [
@@ -1660,10 +1253,10 @@ test('nested list', () => {
     ],
   });
 
-  const { list } = context.RootBlocks.map;
-  const container2 = context.RootBlocks.map['list.2.container'];
-  const swtch2 = context.RootBlocks.map['list.2.swtch'];
-  const swtch3 = context.RootBlocks.map['list.3.swtch'];
+  const { list } = context._internal.RootBlocks.map;
+  const container2 = context._internal.RootBlocks.map['list.2.container'];
+  const swtch2 = context._internal.RootBlocks.map['list.2.swtch'];
+  const swtch3 = context._internal.RootBlocks.map['list.3.swtch'];
 
   swtch2.setValue(false);
   expect(container2.visibleEval.output).toEqual(false);

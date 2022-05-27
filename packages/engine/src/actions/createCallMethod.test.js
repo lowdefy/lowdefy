@@ -49,57 +49,48 @@ afterAll(() => {
 
 test('CallMethod with no args, synchronous method', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:textInput:0',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: { blockId: 'textInput', method: 'blockMethod' },
-                },
-              ],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: { blockId: 'textInput', method: 'blockMethod' },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
+  const button = context._internal.RootBlocks.map['button'];
+  const textInput = context._internal.RootBlocks.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    blockId: 'button',
+    id: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -129,61 +120,52 @@ test('CallMethod method return a promise', async () => {
     await timeout(300);
     return { args };
   };
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:textInput:0',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: {
-                    blockId: 'textInput',
-                    method: 'blockMethod',
-                    args: ['arg'],
-                  },
-                },
-              ],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: {
+                blockId: 'textInput',
+                method: 'blockMethod',
+                args: ['arg'],
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
+  const button = context._internal.RootBlocks.map['button'];
+  const textInput = context._internal.RootBlocks.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    blockId: 'button',
+    id: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -205,57 +187,48 @@ test('CallMethod method return a promise', async () => {
 
 test('CallMethod with args not an array', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:textInput:0',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: { blockId: 'textInput', method: 'blockMethod', args: 'arg' },
-                },
-              ],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: { blockId: 'textInput', method: 'blockMethod', args: 'arg' },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
+  const button = context._internal.RootBlocks.map['button'];
+  const textInput = context._internal.RootBlocks.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    blockId: 'button',
+    id: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -295,57 +268,48 @@ test('CallMethod with args not an array', async () => {
 
 test('CallMethod with multiple positional args, synchronous method', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:textInput:0',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: {
-                    blockId: 'textInput',
-                    method: 'blockMethod',
-                    args: ['arg1', 'arg2'],
-                  },
-                },
-              ],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: {
+                blockId: 'textInput',
+                method: 'blockMethod',
+                args: ['arg1', 'arg2'],
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const textInput = context._internal.RootBlocks.map['block:root:textInput:0'];
+  const button = context._internal.RootBlocks.map['button'];
+  const textInput = context._internal.RootBlocks.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
@@ -372,74 +336,55 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
 test('CallMethod of block in array by explicit id', async () => {
   const blockMethod0 = jest.fn((...args) => ({ args }));
   const blockMethod1 = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ textInput: '0' }, { textInput: '1' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
         blocks: [
           {
-            id: 'block:root:list:0',
-            blockId: 'list',
-            type: 'List',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    id: 'block:root:list.$.textInput:0',
-                    blockId: 'list.$.textInput',
-                    type: 'TextInput',
-                    defaultValue: '123',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: {
-                    blockId: 'list.0.textInput',
-                    method: 'blockMethod',
-                    args: ['arg'],
-                  },
-                },
-              ],
-            },
+            id: 'list.$.textInput',
+            type: 'TextInput',
           },
         ],
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: {
+                blockId: 'list.0.textInput',
+                method: 'blockMethod',
+                args: ['arg'],
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ textInput: '0' }, { textInput: '1' }] },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const textInput0 = context._internal.RootBlocks.map['block:root:list.0.textInput:0'];
-  const textInput1 = context._internal.RootBlocks.map['block:root:list.1.textInput:0'];
+  const button = context._internal.RootBlocks.map['button'];
+  const textInput0 = context._internal.RootBlocks.map['list.0.textInput'];
+  const textInput1 = context._internal.RootBlocks.map['list.1.textInput'];
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
   await button.triggerEvent({ name: 'onClick' });
@@ -450,75 +395,56 @@ test('CallMethod of block in array by explicit id', async () => {
 test('CallMethod of block in array by block with same indices and id pattern', async () => {
   const blockMethod0 = jest.fn((...args) => ({ args }));
   const blockMethod1 = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ textInput: '0' }, { textInput: '1' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
         blocks: [
           {
-            id: 'block:root:list:0',
-            blockId: 'list',
-            type: 'List',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    id: 'block:root:list.$.textInput:0',
+            id: 'list.$.textInput',
+            type: 'TextInput',
+          },
+          {
+            id: 'list.$.button',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'a',
+                  type: 'CallMethod',
+                  params: {
                     blockId: 'list.$.textInput',
-                    type: 'TextInput',
-                    defaultValue: '123',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
+                    method: 'blockMethod',
+                    args: ['arg'],
                   },
-                  {
-                    id: 'block:root:list.$.button:0',
-                    blockId: 'list.$.button',
-                    type: 'Button',
-                    meta: {
-                      category: 'display',
-                      valueType: 'string',
-                    },
-                    events: {
-                      onClick: [
-                        {
-                          id: 'a',
-                          type: 'CallMethod',
-                          params: {
-                            blockId: 'list.$.textInput',
-                            method: 'blockMethod',
-                            args: ['arg'],
-                          },
-                        },
-                      ],
-                    },
-                  },
-                ],
-              },
+                },
+              ],
             },
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ textInput: '0' }, { textInput: '1' }] },
+    pageConfig,
   });
-  const textInput0 = context._internal.RootBlocks.map['block:root:list.0.textInput:0'];
-  const textInput1 = context._internal.RootBlocks.map['block:root:list.1.textInput:0'];
-  const button0 = context._internal.RootBlocks.map['block:root:list.0.button:0'];
-  const button1 = context._internal.RootBlocks.map['block:root:list.1.button:0'];
+  const textInput0 = context._internal.RootBlocks.map['list.0.textInput'];
+  const textInput1 = context._internal.RootBlocks.map['list.1.textInput'];
+  const button0 = context._internal.RootBlocks.map['list.0.button'];
+  const button1 = context._internal.RootBlocks.map['list.1.button'];
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
   await button1.triggerEvent({ name: 'onClick' });
@@ -531,52 +457,43 @@ test('CallMethod of block in array by block with same indices and id pattern', a
 
 test('CallMethod with method does not exist', async () => {
   const blockMethod = jest.fn((...args) => ({ args }));
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:textInput:0',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'CallMethod',
-                  params: { blockId: 'textInput', method: 'no-method' },
-                },
-              ],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'CallMethod',
+              params: { blockId: 'textInput', method: 'no-method' },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',

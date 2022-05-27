@@ -30,43 +30,31 @@ test('SetGlobal data to global', async () => {
       lowdefyGlobal: { x: 'old', init: 'init' },
     },
   };
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'SetGlobal',
+              params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetGlobal',
-                  params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
   expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({
     init: 'init',

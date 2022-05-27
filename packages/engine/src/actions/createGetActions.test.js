@@ -47,44 +47,33 @@ afterAll(() => {
 });
 
 test('getActions params is true', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Custom',
+              params: true,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Custom',
-                  params: true,
-                },
-                {
-                  id: 'b',
-                  type: 'Action',
-                  params: true,
-                },
-              ],
+            {
+              id: 'b',
+              type: 'Action',
+              params: true,
             },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -118,44 +107,33 @@ test('getActions params is true', async () => {
 });
 
 test('getActions params is a', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Custom',
+              params: true,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Custom',
-                  params: true,
-                },
-                {
-                  id: 'b',
-                  type: 'Action',
-                  params: 'a',
-                },
-              ],
+            {
+              id: 'b',
+              type: 'Action',
+              params: 'a',
             },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -187,38 +165,27 @@ test('getActions params is a', async () => {
 });
 
 test('getActions params is none', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Action',
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Action',
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -253,47 +220,36 @@ test('getActions params is none', async () => {
 });
 
 test('getActions params.key is null', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Custom',
+              params: true,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Custom',
-                  params: true,
-                },
-                {
-                  id: 'b',
-                  type: 'Action',
-                  params: {
-                    key: null,
-                    default: 'defaulto',
-                  },
-                },
-              ],
+            {
+              id: 'b',
+              type: 'Action',
+              params: {
+                key: null,
+                default: 'defaulto',
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -321,46 +277,35 @@ test('getActions params.key is null', async () => {
 });
 
 test('getActions params.all is true', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Custom',
+              params: true,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Custom',
-                  params: true,
-                },
-                {
-                  id: 'b',
-                  type: 'Action',
-                  params: {
-                    all: true,
-                  },
-                },
-              ],
+            {
+              id: 'b',
+              type: 'Action',
+              params: {
+                all: true,
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -394,41 +339,30 @@ test('getActions params.all is true', async () => {
 });
 
 test('getActions params.key is not string or int', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Action',
+              params: {
+                key: {},
+              },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Action',
-                  params: {
-                    key: {},
-                  },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
@@ -469,46 +403,35 @@ test('getActions params.key is not string or int', async () => {
 });
 
 test('getActions params.key is a', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Custom',
+              params: true,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Custom',
-                  params: true,
-                },
-                {
-                  id: 'b',
-                  type: 'Action',
-                  params: {
-                    key: 'a',
-                  },
-                },
-              ],
+            {
+              id: 'b',
+              type: 'Action',
+              params: {
+                key: 'a',
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });

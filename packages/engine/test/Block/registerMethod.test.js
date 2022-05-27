@@ -20,32 +20,22 @@ const pageId = 'one';
 
 const lowdefy = { pageId };
 
-test('registerMethod adds a method to RootBlocks.methods', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+test('registerMethod adds a method to RootBlocks.methods', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
   expect(text.registerMethod).toBeDefined();
   expect(text.methods).toEqual({});
@@ -55,40 +45,26 @@ test('registerMethod adds a method to RootBlocks.methods', () => {
   expect(text.methods.fn()).toEqual('fn response');
 });
 
-test('registerMethod add multiple methods to RootBlocks.methods', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textA',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            type: 'TextInput',
-            blockId: 'textB',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+test('registerMethod add multiple methods to RootBlocks.methods', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textA',
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'textB',
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { textA, textB } = context.RootBlocks.map;
+  const { textA, textB } = context._internal.RootBlocks.map;
 
   const methodA = () => 'fn A response';
   const methodB1 = () => 'fn B1 response';

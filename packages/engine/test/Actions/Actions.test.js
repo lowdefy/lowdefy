@@ -72,15 +72,13 @@ afterAll(() => {
 });
 
 test('call a synchronous action', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -111,15 +109,13 @@ test('call a synchronous action', async () => {
 });
 
 test('call a asynchronous action', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -150,15 +146,13 @@ test('call a asynchronous action', async () => {
 });
 
 test('call 2 actions', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -196,15 +190,13 @@ test('call 2 actions', async () => {
 });
 
 test('operators are evaluated in params, skip and messages', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -272,15 +264,13 @@ test('operators are evaluated in params, skip and messages', async () => {
 });
 
 test('operators are evaluated in error messages after error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -320,15 +310,13 @@ test('operators are evaluated in error messages after error', async () => {
 });
 
 test('action error in error messages from same action id', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -376,15 +364,13 @@ test('action error in error messages from same action id', async () => {
 });
 
 test('action error in error parser', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -429,15 +415,13 @@ test('action error in error parser', async () => {
 });
 
 test('error with messages undefined', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -465,15 +449,13 @@ test('error with messages undefined', async () => {
 });
 
 test('skip a action', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -504,15 +486,13 @@ test('skip a action', async () => {
 });
 
 test('action throws a error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -555,15 +535,13 @@ test('action throws a error', async () => {
 });
 
 test('actions after a error are not called throws a error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -610,15 +588,13 @@ test('actions after a error are not called throws a error', async () => {
 });
 
 test('Invalid action type', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -660,15 +636,13 @@ test('Invalid action type', async () => {
 });
 
 test('Parser error in action', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -716,15 +690,13 @@ test('Parser error in action', async () => {
 });
 
 test('Display default loading and success messages when value == true ', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -761,15 +733,13 @@ test('Display default loading and success messages when value == true ', async (
 });
 
 test('Display custom loading and success messages when value is a string ', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -806,15 +776,13 @@ test('Display custom loading and success messages when value is a string ', asyn
 });
 
 test('Do not display loading and success messages by default', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -835,15 +803,13 @@ test('Do not display loading and success messages by default', async () => {
 });
 
 test('Display error message by default', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -871,15 +837,13 @@ test('Display error message by default', async () => {
 });
 
 test('Display custom error message', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -910,15 +874,13 @@ test('Display custom error message', async () => {
 });
 
 test('Do not display an error message if message === false', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   await Actions.callActions({
@@ -941,15 +903,13 @@ test('Do not display an error message if message === false', async () => {
 });
 
 test('Call catchActions when actions throws error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -1017,15 +977,13 @@ test('Call catchActions when actions throws error', async () => {
 });
 
 test('Call catchActions when actions throws error and catchActions throws error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -1120,15 +1078,13 @@ test('Call catchActions when actions throws error and catchActions throws error'
 });
 
 test('call 2 actions, first with async: true', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -1183,15 +1139,13 @@ test('call 2 actions, first with async: true', async () => {
 });
 
 test('call async: true with error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -1246,15 +1200,13 @@ test('call async: true with error', async () => {
 });
 
 test('call 2 actions, first with async: false', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
@@ -1292,15 +1244,13 @@ test('call 2 actions, first with async: false', async () => {
 });
 
 test('call 2 actions, first with async: null', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const Actions = context.Actions;
   const res = await Actions.callActions({
