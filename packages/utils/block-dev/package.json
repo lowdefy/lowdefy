@@ -41,7 +41,7 @@
     "@lowdefy/block-utils": "4.0.0-alpha.12",
     "@lowdefy/helpers": "4.0.0-alpha.12",
     "@testing-library/dom": "8.13.0",
-    "@testing-library/react": "13.2.0",
+    "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.2.0",
     "ajv": "8.9.0",
     "ajv-errors": "3.0.0",
