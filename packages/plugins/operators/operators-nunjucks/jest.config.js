@@ -14,7 +14,7 @@ export default {
   ],
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
