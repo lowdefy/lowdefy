@@ -24,9 +24,6 @@ const lowdefy = {
         return getUrlQuery(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
   urlQuery: {
     some: 'data',

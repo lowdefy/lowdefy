@@ -43,12 +43,6 @@ const lowdefy = {
       Action: ({ methods: { getRequestDetails }, params }) => {
         return getRequestDetails(params);
       },
-      Request: ({ methods: { request }, params }) => {
-        return request(params);
-      },
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
     },
     callRequest: mockCallRequest,
   },
@@ -81,7 +75,8 @@ test('getRequestDetails params is true', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -142,7 +137,8 @@ test('getRequestDetails params is req_one', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -201,7 +197,8 @@ test('getRequestDetails params is none', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -267,7 +264,8 @@ test('getRequestDetails params.key is null', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -325,7 +323,8 @@ test('getRequestDetails params.all is true', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -388,7 +387,8 @@ test('getRequestDetails params.key is not string or int', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -463,7 +463,8 @@ test('getRequestDetails params.key is req_one', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [

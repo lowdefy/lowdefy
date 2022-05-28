@@ -24,9 +24,6 @@ const lowdefy = {
         return logout();
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     auth: {
       logout: jest.fn(),
     },

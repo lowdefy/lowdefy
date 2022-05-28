@@ -17,20 +17,7 @@ import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
-const lowdefy = {
-  _internal: {
-    actions: {
-      CallMethod: ({ methods: { callMethod }, params }) => {
-        return callMethod(params);
-      },
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list' } },
-      TextInput: { meta: { category: 'input' } },
-    },
-  },
-};
+const lowdefy = {};
 
 const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
@@ -91,7 +78,7 @@ test('CallMethod with no args, synchronous method', async () => {
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    id: 'button',
+    blockId: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -166,7 +153,7 @@ test('CallMethod method return a promise', async () => {
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    id: 'button',
+    blockId: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -229,7 +216,7 @@ test('CallMethod with args not an array', async () => {
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
-    id: 'button',
+    blockId: 'button',
     bounced: false,
     event: undefined,
     eventName: 'onClick',
@@ -238,7 +225,7 @@ test('CallMethod with args not an array', async () => {
         id: 'a',
         params: {
           args: 'arg',
-          blockId: 'block:root:textInput:0',
+          blockId: 'textInput',
           method: 'blockMethod',
         },
         type: 'CallMethod',
@@ -505,7 +492,7 @@ test('CallMethod with method does not exist', async () => {
       action: {
         id: 'a',
         params: {
-          blockId: 'block:root:textInput:0',
+          blockId: 'textInput',
           method: 'no-method',
         },
         type: 'CallMethod',

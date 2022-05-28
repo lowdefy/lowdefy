@@ -50,9 +50,6 @@ const lowdefy = {
         return request(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     callRequest: mockCallRequest,
   },
 };
@@ -84,7 +81,8 @@ test('Request call one request', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -133,10 +131,12 @@ test('Request call all requests', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -204,10 +204,12 @@ test('Request call array of requests', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -275,10 +277,12 @@ test('Request pass if params are none', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
     blocks: [
@@ -306,7 +310,8 @@ test('Request call request error', async () => {
     type: 'Box',
     requests: [
       {
-        requestId: 'req_error',
+        id: 'req_error',
+        type: 'Fetch',
       },
     ],
     blocks: [

@@ -16,26 +16,9 @@
   limitations under the License.
 */
 
-import testContext from '../testContext.js';
-import actions from '../../src/actions/index.js';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/actions/index.js', () => ({
-  ActionSync: jest.fn(({ params }) => params),
-  ActionAsync: jest.fn(async ({ params }) => {
-    await timeout(params.ms || 1);
-    return params;
-  }),
-  ActionError: jest.fn(() => {
-    throw new Error('Test error');
-  }),
-  CatchActionError: jest.fn(() => {
-    throw new Error('Test catch error');
-  }),
-  ActionAsyncError: jest.fn(async ({ params }) => {
-    await timeout(params.ms || 1);
-    throw new Error('Test error');
-  }),
-}));
+import testContext from './testContext.js';
 
 const timeout = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -47,10 +30,32 @@ const RealDate = Date;
 const mockDate = jest.fn(() => ({ date: 0 }));
 mockDate.now = jest.fn(() => 0);
 
+const getActions = () => {
+  return {
+    ActionSync: jest.fn(({ params }) => params),
+    ActionAsync: jest.fn(async ({ params }) => {
+      await timeout(params.ms || 1);
+      return params;
+    }),
+    ActionError: jest.fn(() => {
+      throw new Error('Test error');
+    }),
+    CatchActionError: jest.fn(() => {
+      throw new Error('Test catch error');
+    }),
+    ActionAsyncError: jest.fn(async ({ params }) => {
+      await timeout(params.ms || 1);
+      throw new Error('Test error');
+    }),
+  };
+};
+
 const closeLoader = jest.fn();
 const displayMessage = jest.fn();
 const lowdefy = {
-  displayMessage,
+  _internal: {
+    displayMessage,
+  },
   pageId,
 };
 const arrayIndices = [];
@@ -76,11 +81,13 @@ test('call a synchronous action', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'ActionSync', params: 'params' }],
     arrayIndices,
@@ -113,11 +120,13 @@ test('call a asynchronous action', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'ActionAsync', params: 'params' }],
     arrayIndices,
@@ -150,11 +159,13 @@ test('call 2 actions', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test1', type: 'ActionSync', params: 'params1' },
@@ -194,11 +205,13 @@ test('operators are evaluated in params, skip and messages', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -268,11 +281,13 @@ test('operators are evaluated in error messages after error', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -314,11 +329,13 @@ test('action error in error messages from same action id', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -368,11 +385,13 @@ test('action error in error parser', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       {
@@ -419,11 +438,13 @@ test('error with messages undefined', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -453,11 +474,13 @@ test('skip a action', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'ActionSync', skip: true }],
     arrayIndices,
@@ -490,11 +513,13 @@ test('action throws a error', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'ActionError', params: 'params' }],
     arrayIndices,
@@ -539,11 +564,13 @@ test('actions after a error are not called throws a error', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test', type: 'ActionError', params: 'params' },
@@ -592,11 +619,13 @@ test('Invalid action type', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'Invalid', params: 'params' }],
     arrayIndices,
@@ -640,11 +669,13 @@ test('Parser error in action', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [{ id: 'test', type: 'ActionSync', params: { _state: [] } }],
     arrayIndices,
@@ -694,11 +725,13 @@ test('Display default loading and success messages when value == true ', async (
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -737,11 +770,13 @@ test('Display custom loading and success messages when value is a string ', asyn
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -780,11 +815,13 @@ test('Do not display loading and success messages by default', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -807,11 +844,13 @@ test('Display error message by default', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -841,11 +880,13 @@ test('Display custom error message', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -878,11 +919,13 @@ test('Do not display an error message if message === false', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   await Actions.callActions({
     actions: [
       {
@@ -907,11 +950,13 @@ test('Call catchActions when actions throws error', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       {
@@ -981,11 +1026,13 @@ test('Call catchActions when actions throws error and catchActions throws error'
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       {
@@ -1082,11 +1129,13 @@ test('call 2 actions, first with async: true', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test1', type: 'ActionAsync', async: true, params: { ms: 100 } },
@@ -1143,11 +1192,13 @@ test('call async: true with error', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
@@ -1204,11 +1255,13 @@ test('call 2 actions, first with async: false', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test1', type: 'ActionAsync', async: false, params: { ms: 100 } },
@@ -1248,11 +1301,13 @@ test('call 2 actions, first with async: null', async () => {
     id: 'root',
     type: 'Box',
   };
+  const actions = getActions();
+  lowdefy._internal.actions = actions;
   const context = await testContext({
     lowdefy,
     pageConfig,
   });
-  const Actions = context.Actions;
+  const Actions = context._internal.Actions;
   const res = await Actions.callActions({
     actions: [
       { id: 'test1', type: 'ActionAsync', async: null, params: { ms: 100 } },

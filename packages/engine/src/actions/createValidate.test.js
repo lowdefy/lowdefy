@@ -15,8 +15,6 @@
 */
 import { jest } from '@jest/globals';
 
-import { get, type } from '@lowdefy/helpers';
-
 import testContext from '../../test/testContext.js';
 
 const closeLoader = jest.fn();
@@ -28,101 +26,7 @@ const lowdefy = {
         return validate(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
-    },
     displayMessage,
-    operators: {
-      _not: ({ params }) => {
-        return !params;
-      },
-      _type: ({ location, params, state }) => {
-        const typeName = type.isObject(params) ? params.type : params;
-        if (!type.isString(typeName)) {
-          throw new Error(
-            `Operator Error: _type.type must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        const on = Object.prototype.hasOwnProperty.call(params, 'on')
-          ? params.on
-          : get(state, get(params, 'key', { default: location }));
-        switch (typeName) {
-          case 'string':
-            return type.isString(on);
-          case 'array':
-            return type.isArray(on);
-          case 'date':
-            return type.isDate(on); // Testing for date is problematic due to stringify
-          case 'object':
-            return type.isObject(on);
-          case 'boolean':
-            return type.isBoolean(on);
-          case 'number':
-            return type.isNumber(on);
-          case 'integer':
-            return type.isInt(on);
-          case 'null':
-            return type.isNull(on);
-          case 'undefined':
-            return type.isUndefined(on);
-          case 'none':
-            return type.isNone(on);
-          case 'primitive':
-            return type.isPrimitive(on);
-          default:
-            throw new Error(
-              `Operator Error: "${typeName}" is not a valid _type test. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-        }
-      },
-      _regex: ({ location, params, state }) => {
-        const pattern = type.isObject(params) ? params.pattern : params;
-        if (!type.isString(pattern)) {
-          throw new Error(
-            `Operator Error: _regex.pattern must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        let on = !type.isUndefined(params.on) ? params.on : get(state, location);
-        if (!type.isUndefined(params.key)) {
-          if (!type.isString(params.key)) {
-            throw new Error(
-              `Operator Error: _regex.key must be a string. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-          }
-          on = get(state, params.key);
-        }
-        if (type.isNone(on)) {
-          return false;
-        }
-        if (!type.isString(on)) {
-          throw new Error(
-            `Operator Error: _regex.on must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        try {
-          const re = new RegExp(pattern, params.flags || 'gm');
-          return re.test(on);
-        } catch (e) {
-          // log e to LowdefyError
-          throw new Error(
-            `Operator Error: _regex failed to execute RegExp.test. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-      },
-    },
   },
 };
 

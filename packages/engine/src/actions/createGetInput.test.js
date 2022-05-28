@@ -24,12 +24,9 @@ const lowdefy = {
         return getInput(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
   inputs: {
-    test: { some: 'data' },
+    'page:root': { some: 'data' },
   },
 };
 

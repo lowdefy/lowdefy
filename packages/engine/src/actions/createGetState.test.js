@@ -24,9 +24,6 @@ const lowdefy = {
         return getState(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
 };
 
@@ -55,7 +52,7 @@ test('getState params is true', async () => {
         {
           id: 'initState',
           type: 'SetState',
-          params: { textInput: 'init' },
+          params: { some: 'data' },
         },
       ],
     },

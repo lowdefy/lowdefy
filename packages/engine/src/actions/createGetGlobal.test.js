@@ -24,9 +24,6 @@ const lowdefy = {
         return getGlobal(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
   lowdefyGlobal: {
     some: 'data',
@@ -52,7 +49,7 @@ afterAll(() => {
 test('getGlobal params is true', async () => {
   const pageConfig = {
     id: 'root',
-    tyoe: 'Box',
+    type: 'Box',
     blocks: [
       {
         id: 'button',

@@ -24,9 +24,6 @@ const lowdefy = {
         return getUser(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
   user: {
     some: 'data',

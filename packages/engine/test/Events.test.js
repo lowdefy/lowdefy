@@ -64,8 +64,8 @@ const timeout = (ms) => {
 };
 
 // Comment out to use console
-// console.log = () => {};
-// console.error = () => {};
+console.log = () => {};
+console.error = () => {};
 
 beforeEach(() => {
   global.Date = mockDate;

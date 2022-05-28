@@ -24,9 +24,6 @@ const lowdefy = {
         return getPageId(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
 };
 

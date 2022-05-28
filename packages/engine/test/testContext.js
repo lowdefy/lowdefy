@@ -20,18 +20,19 @@ import getContext from '../src/getContext.js';
 import testOperators from './testOperators.js';
 import testActions from './testActions.js';
 
-const testContext = async ({ lowdefy, pageConfig, blocks = {} }) => {
+const testContext = async ({ lowdefy, pageConfig }) => {
   const testLowdefy = {
     contexts: {},
-    inputs: { test: {} },
+    inputs: {},
     urlQuery: {},
     ...lowdefy,
     _internal: {
+      callRequest: () => {},
       displayMessage: () => () => {},
       updateBlock: () => {},
-      ...lowdefy._internal,
+      ...lowdefy?._internal,
       operators: testOperators,
-      actions: testActions,
+      actions: { ...testActions, ...lowdefy?._internal?.actions },
       blockComponents: {
         TextInput: {
           meta: {
@@ -78,7 +79,7 @@ const testContext = async ({ lowdefy, pageConfig, blocks = {} }) => {
             valueType: 'number',
           },
         },
-        ...blocks,
+        ...lowdefy?._internal?.blocks,
       },
     },
   };

@@ -34,11 +34,6 @@ const lowdefy = {
         }
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list' } },
-      TextInput: { meta: { category: 'input' } },
-    },
     link: jest.fn(),
   },
 };

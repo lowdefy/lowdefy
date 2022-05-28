@@ -23,15 +23,10 @@ const lowdefy = {
         return setState(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list', valueType: 'array' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
-    },
   },
 };
 
-test('SetState data to state', () => {
+test('SetState data to state', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -69,7 +64,7 @@ test('SetState data to state', () => {
   expect(context.state).toEqual({ textInput: 'init', x: [1, 2, 3] });
 });
 
-test('SetState field to state and update block value', () => {
+test('SetState field to state and update block value', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -105,12 +100,12 @@ test('SetState field to state and update block value', () => {
   const textInput = context._internal.RootBlocks.map['textInput'];
 
   expect(context.state).toEqual({ textInput: 'init' });
-  button.triggerEvent({ name: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'new' });
   expect(textInput.value).toEqual('new');
 });
 
-test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SAFE', () => {
+test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SAFE', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -146,12 +141,12 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
   const textInput = context._internal.RootBlocks.map['textInput'];
 
   expect(context.state).toEqual({ textInput: 'init' });
-  button.triggerEvent({ name: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 1 });
   expect(textInput.value).toEqual(1);
 });
 
-test('SetState value on array and create new Blocks for array items', () => {
+test('SetState value on array and create new Blocks for array items', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -172,7 +167,6 @@ test('SetState value on array and create new Blocks for array items', () => {
           {
             id: 'list.$.textInput',
             type: 'TextInput',
-            defaultValue: '123',
           },
         ],
       },
@@ -199,7 +193,7 @@ test('SetState value on array and create new Blocks for array items', () => {
 
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
 
-  button.triggerEvent({ name: 'onClick' });
+  await button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({
     list: [{ textInput: '0' }, { textInput: '1' }, { textInput: '2' }],
   });

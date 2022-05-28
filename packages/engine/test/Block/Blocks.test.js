@@ -22,7 +22,7 @@ import { serializer } from '@lowdefy/helpers';
 import testContext from '../testContext.js';
 
 const pageId = 'one';
-const lowdefy = { pageId };
+const lowdefy = { pageId, _internal: {} };
 
 test('init blocks and SetState to set value to block', async () => {
   const pageConfig = {
@@ -97,20 +97,20 @@ test('set block value to initValue in meta', async () => {
       },
     ],
   };
-  const context = await testContext({
-    lowdefy,
-    pageConfig,
-    blocks: {
-      ObjectBlock: {
-        meta: {
-          category: 'input',
-          valueType: 'object',
-          initValue: {
-            a: 1,
-          },
+  lowdefy._internal.blocks = {
+    ObjectBlock: {
+      meta: {
+        category: 'input',
+        valueType: 'object',
+        initValue: {
+          a: 1,
         },
       },
     },
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
   });
   const { object_one } = context._internal.RootBlocks.map;
   expect(object_one.value).toEqual({ a: 1 });

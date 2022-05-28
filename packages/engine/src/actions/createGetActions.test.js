@@ -25,9 +25,6 @@ const lowdefy = {
       },
       Custom: () => 'response',
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
   },
 };
 

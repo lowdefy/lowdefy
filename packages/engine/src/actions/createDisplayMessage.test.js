@@ -30,9 +30,6 @@ const lowdefy = {
         });
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     displayMessage: mockMessage,
   },
 };

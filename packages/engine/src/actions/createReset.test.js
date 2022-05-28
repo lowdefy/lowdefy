@@ -24,11 +24,6 @@ const lowdefy = {
         return reset();
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list', valueType: 'array' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
-    },
   },
 };
 

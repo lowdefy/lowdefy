@@ -24,9 +24,6 @@ const lowdefy = {
         return login(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     auth: {
       login: jest.fn(),
     },

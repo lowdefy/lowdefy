@@ -14,22 +14,22 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import testContext from '../../test/testContext.js';
 
-test('SetGlobal data to global', async () => {
-  const lowdefy = {
-    _internal: {
-      actions: {
-        SetGlobal: ({ methods: { setGlobal }, params }) => {
-          return setGlobal(params);
-        },
+const lowdefy = {
+  _internal: {
+    actions: {
+      SetGlobal: ({ methods: { setGlobal }, params }) => {
+        return setGlobal(params);
       },
-      blockComponents: {
-        Button: { meta: { category: 'display' } },
-      },
-      lowdefyGlobal: { x: 'old', init: 'init' },
     },
-  };
+    lowdefyGlobal: { x: 'old', init: 'init' },
+  },
+};
+
+test('SetGlobal data to global', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -65,4 +65,35 @@ test('SetGlobal data to global', async () => {
   });
 });
 
-test.todo('SetGlobal calls context update');
+// ?? CHECK: we call update before actions, when a action is completed, and again when all actions is completed?? So 3 calls.
+test('SetGlobal calls context update', async () => {
+  const updateFunction = jest.fn();
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'SetGlobal',
+              params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  context._internal.update = updateFunction;
+  expect(updateFunction).toHaveBeenCalledTimes(0);
+  const button = context._internal.RootBlocks.map['button'];
+  await button.triggerEvent({ name: 'onClick' });
+  expect(updateFunction).toHaveBeenCalledTimes(3);
+});

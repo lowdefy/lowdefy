@@ -75,7 +75,7 @@ test(`parse nunjucks value 500 blocks`, async () => {
 
   const fn = (i) => {
     b0.setValue(i);
-    context.update();
+    context._internal.update();
   };
   const results = runTests({ times: NUM_TIMES, fn });
   const totalTime = results.reduce((sum, r) => sum + r, 0);
@@ -118,7 +118,7 @@ test(`parse nunjucks value 100 blocks`, async () => {
 
   const fn = (i) => {
     b0.setValue(i);
-    context.update();
+    context._internal.update();
   };
   const results = runTests({ times: NUM_TIMES, fn });
   const totalTime = results.reduce((sum, r) => sum + r, 0);
@@ -206,7 +206,7 @@ test(`parse state value 1000 blocks`, async () => {
 //     console.log('-----------------------');
 //     console.log(`fn: ${i}`);
 //     b0.setValue(i);
-//     context.update();
+//     context._internal.update();
 //   };
 //   const results = runTests({ times: 3, fn });
 //   // const totalTime = results.reduce((sum, r) => sum + r, 0);
