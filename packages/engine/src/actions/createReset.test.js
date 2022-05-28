@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -31,7 +32,7 @@ const lowdefy = {
   },
 };
 
-test('Reset one field', () => {
+test('Reset one field', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -71,7 +72,7 @@ test('Reset one field', () => {
   expect(context.state).toEqual({ textInput: 'init' });
 });
 
-test('Reset on primitive array after adding item', () => {
+test('Reset on primitive array after adding item', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -117,7 +118,7 @@ test('Reset on primitive array after adding item', () => {
   expect(context.state).toEqual({ list: ['init'] });
 });
 
-test('Reset on object array after removing item', () => {
+test('Reset on object array after removing item', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',

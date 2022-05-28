@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -36,7 +37,7 @@ const lowdefy = {
   },
 };
 
-test('DisplayMessage with content', () => {
+test('DisplayMessage with content', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -71,7 +72,7 @@ test('DisplayMessage with content', () => {
   ]);
 });
 
-test('DisplayMessage with all params', () => {
+test('DisplayMessage with all params', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -114,7 +115,7 @@ test('DisplayMessage with all params', () => {
   ]);
 });
 
-test('DisplayMessage with no params', () => {
+test('DisplayMessage with no params', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',

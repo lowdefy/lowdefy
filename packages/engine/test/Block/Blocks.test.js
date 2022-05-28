@@ -649,12 +649,13 @@ test('rec parse visible operator with setValue', async () => {
       {
         type: 'TextInput',
         id: 'textB',
-        visible: { '_mql.test': { on: { _state: true }, test: { textA: 'show b' } } },
+        visible: { _eq: [{ _state: 'textA' }, 'show b'] },
       },
       {
         type: 'TextInput',
         id: 'textC',
-        visible: { '_mql.test': { on: { _state: true }, test: { textB: { $exists: true } } } },
+        visible: { _eq: [{ _state: 'textB' }, 'b'] },
+        // visible: { '_mql.test': { on: { _state: true }, test: { textB: { $exists: true } } } },s
       },
     ],
   };
@@ -662,11 +663,17 @@ test('rec parse visible operator with setValue', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textA } = context._internal.RootBlocks.map;
+  const { textA, textB, textC } = context._internal.RootBlocks.map;
   expect(textA.value).toBe('a');
+  expect(textB.eval.visible).toBe(false);
+  expect(textC.eval.visible).toBe(false);
   expect(context.state).toEqual({ textA: 'a' });
   textA.setValue('show b');
   expect(textA.value).toBe('show b');
+  expect(textB.value).toBe('b');
+  expect(textC.value).toBe('c');
+  expect(textB.eval.visible).toBe(true);
+  expect(textC.eval.visible).toBe(true);
   expect(context.state).toEqual({ textA: 'show b', textB: 'b', textC: 'c' });
 });
 
@@ -807,7 +814,6 @@ test('no need to evaluate invisible blocks', async () => {
   expect(button.propertiesEval.output.field).toEqual(true);
 });
 
-// TODO: Check again
 test('max recuse limit', async () => {
   const pageConfig = {
     id: 'root',
@@ -825,7 +831,7 @@ test('max recuse limit', async () => {
       {
         type: 'TextInput',
         id: 'a',
-        visible: { '_mql.test': { on: { _state: true }, test: { a: { $ne: 'a' } } } },
+        visible: { _ne: [{ _state: 'a' }, 'a'] },
       },
       {
         type: 'TextInput',
@@ -835,7 +841,7 @@ test('max recuse limit', async () => {
       {
         type: 'TextInput',
         id: 'd',
-        visible: { '_mql.test': { on: { _state: true }, test: { c: 'show d' } } },
+        visible: { _eq: [{ _state: 'c' }, 'show d'] },
       },
       {
         type: 'TextInput',
@@ -848,11 +854,17 @@ test('max recuse limit', async () => {
     lowdefy,
     pageConfig,
   });
-  const { a, c } = context._internal.RootBlocks.map;
+  const { c } = context._internal.RootBlocks.map;
 
-  expect(context.state).toEqual({ c: null });
-  expect(a.visibleEval.output).toEqual(false);
+  let count = 0;
+
+  const updateStateFromRoot = context._internal.RootBlocks.updateStateFromRoot;
+
+  context._internal.RootBlocks.updateStateFromRoot = () => {
+    count += 1;
+    updateStateFromRoot();
+  };
 
   c.setValue('show d');
-  expect(context.state).toEqual({ a: 'a', c: 'show d', d: 'd', e: 'e' });
+  expect(count).toEqual(21);
 });
