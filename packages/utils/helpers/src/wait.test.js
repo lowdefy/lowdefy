@@ -16,7 +16,7 @@
 
 import wait from './wait.js';
 
-test('setNestedValue - set a nested value in array object', async () => {
+test('wait set ms before continuing', async () => {
   let flag = false;
 
   const waitAndSetFlag = async () => {

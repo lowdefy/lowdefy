@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import SetGlobal from './SetGlobal.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockSetGlobal = jest.fn();
+const methods = { setGlobal: mockSetGlobal };
 
 test('SetGlobal action invocation', async () => {
-  SetGlobal({ methods: { setGlobal: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  SetGlobal({ methods, params: { key: 'value' } });
+  expect(mockSetGlobal.mock.calls).toEqual([[{ key: 'value' }]]);
 });

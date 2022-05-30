@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import Validate from './Validate.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockValidate = jest.fn();
+const methods = { validate: mockValidate };
 
 test('Validate action invocation', async () => {
-  Validate({ methods: { validate: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  Validate({ methods, params: 'blockId' });
+  expect(mockValidate.mock.calls).toEqual([['blockId']]);
 });

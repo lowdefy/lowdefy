@@ -2186,8 +2186,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/actions-core@workspace:packages/plugins/actions/actions-core"
   dependencies:
+    "@jest/globals": 28.1.0
     "@lowdefy/helpers": 4.0.0-alpha.12
-    "@lowdefy/operators": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.192
     "@swc/jest": 0.2.21

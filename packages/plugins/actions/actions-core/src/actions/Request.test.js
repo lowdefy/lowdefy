@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import Request from './Request.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockRequest = jest.fn();
+const methods = { request: mockRequest };
 
 test('Request action invocation', async () => {
-  Request({ methods: { request: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  Request({ methods, params: 'requestId' });
+  expect(mockRequest.mock.calls).toEqual([['requestId']]);
 });
