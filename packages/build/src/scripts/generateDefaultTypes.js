@@ -84,8 +84,11 @@ async function generateDefaultTypesMap() {
   );
 
   await writeFile(
-    path.resolve(process.cwd(), './dist/defaultTypesMap.json'),
-    JSON.stringify(defaultTypesMap, null, 2)
+    path.resolve(process.cwd(), './dist/defaultTypesMap.js'),
+    `const defaultTypesMap = ${JSON.stringify(defaultTypesMap, null, 2)};
+
+export default defaultTypesMap;
+`
   );
 }
 
