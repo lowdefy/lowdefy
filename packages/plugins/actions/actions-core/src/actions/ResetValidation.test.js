@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import ResetValidation from './ResetValidation.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockResetValidation = jest.fn();
+const methods = { resetValidation: mockResetValidation };
 
 test('ResetValidation action invocation', async () => {
-  ResetValidation({ methods: { resetValidation: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  ResetValidation({ methods, params: 'blockId' });
+  expect(mockResetValidation.mock.calls).toEqual([['blockId']]);
 });

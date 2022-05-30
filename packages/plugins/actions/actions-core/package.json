@@ -43,13 +43,13 @@
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
-    "test": "jest --coverage"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.12"
   },
   "devDependencies": {
-    "@lowdefy/operators": "4.0.0-alpha.12",
+    "@jest/globals": "28.1.0",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.192",
     "@swc/jest": "0.2.21",
