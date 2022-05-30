@@ -42,12 +42,12 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.12",
     "@lowdefy/node-utils": "4.0.0-alpha.12",
-    "axios": "0.25.0",
+    "axios": "0.27.2",
     "chalk": "4.1.2",
     "commander": "9.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
-    "dotenv": "15.0.0",
+    "dotenv": "16.0.1",
     "ora": "5.4.1",
     "uuid": "8.3.2",
     "yaml": "2.1.1"

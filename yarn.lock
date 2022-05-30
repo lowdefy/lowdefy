@@ -2544,7 +2544,7 @@ __metadata:
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
-    axios: 0.25.0
+    axios: 0.27.2
     jest: 28.1.0
   languageName: unknown
   linkType: soft
@@ -2572,7 +2572,7 @@ __metadata:
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
-    google-spreadsheet: 3.2.0
+    google-spreadsheet: 3.3.0
     jest: 28.1.0
     mingo: 6.0.6
     moment: 2.29.3
@@ -2589,11 +2589,11 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    knex: 1.0.1
-    mssql: 8.0.1
+    knex: 1.0.7
+    mssql: 8.1.2
     mysql: 2.18.1
-    pg: 8.7.1
-    sqlite3: 5.0.5
+    pg: 8.7.3
+    sqlite3: 5.0.8
   languageName: unknown
   linkType: soft
 
@@ -2608,7 +2608,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    mongodb: 4.4.0
+    mongodb: 4.6.0
     saslprep: 1.0.3
   languageName: unknown
   linkType: soft
@@ -2623,7 +2623,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    redis: 4.0.3
+    redis: 4.1.0
   languageName: unknown
   linkType: soft
 
@@ -2633,7 +2633,7 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
-    "@sendgrid/mail": 7.6.0
+    "@sendgrid/mail": 7.7.0
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2651,7 +2651,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    stripe: 8.201.0
+    stripe: 8.222.0
   languageName: unknown
   linkType: soft
 
@@ -2763,7 +2763,7 @@ __metadata:
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
-    fs-extra: 10.0.0
+    fs-extra: 10.1.0
     jest: 28.1.0
   languageName: unknown
   linkType: soft
@@ -2908,7 +2908,7 @@ __metadata:
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.0
     antd: 4.20.7
-    aws-sdk: 2.1066.0
+    aws-sdk: 2.1145.0
     copyfiles: 2.4.1
     jest: 28.1.0
     jest-serializer-html: 7.1.0
@@ -2959,7 +2959,7 @@ __metadata:
     "@lowdefy/plugin-next-auth": 4.0.0-alpha.12
     "@next/eslint-plugin-next": 12.1.6
     chokidar: 3.5.3
-    dotenv: 15.0.0
+    dotenv: 16.0.1
     less: 4.1.2
     less-loader: 11.0.0
     next: 12.1.6
@@ -2970,7 +2970,7 @@ __metadata:
     react: 18.1.0
     react-dom: 18.1.0
     react-icons: 4.3.1
-    swr: 1.1.2
+    swr: 1.3.0
     yaml: 2.1.1
     yargs: 17.5.1
   languageName: unknown
@@ -3123,63 +3123,6 @@ __metadata:
   version: 12.1.6
   resolution: "@next/swc-win32-x64-msvc@npm:12.1.6"
   conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@node-redis/bloom@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@node-redis/bloom@npm:1.0.1"
-  peerDependencies:
-    "@node-redis/client": ^1.0.0
-  checksum: b80cd54ae81f6165456c21645d339d37c4fdc46a0adc00f132f73f94e510f9d241614254add443e817b7a661dbafe844c3e610246c2504454f079520cdbe721b
-  languageName: node
-  linkType: hard
-
-"@node-redis/client@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@node-redis/client@npm:1.0.3"
-  dependencies:
-    cluster-key-slot: 1.1.0
-    generic-pool: 3.8.2
-    redis-parser: 3.0.0
-    yallist: 4.0.0
-  checksum: b3d7ff4ec8b39a25865dcbd38cb9c1db93fa0b7c483cb04e2764fee8958fbf144e64401c458ca6a1fd99daeaa8feacf117726defefccaf00da0b8790bd8b79f2
-  languageName: node
-  linkType: hard
-
-"@node-redis/graph@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@node-redis/graph@npm:1.0.0"
-  peerDependencies:
-    "@node-redis/client": ^1.0.0
-  checksum: 967ea4a61cfcc2e22f354268ee58351d0d15df40036331444ef1ec79a9408849ee9333684eb4f898e164fa148c00e1b9caebdcac2a7bcb5c29dd188e2d57f4b2
-  languageName: node
-  linkType: hard
-
-"@node-redis/json@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@node-redis/json@npm:1.0.2"
-  peerDependencies:
-    "@node-redis/client": ^1.0.0
-  checksum: ef89735d8117b52ff580bc022932cb358e92e5e7d4e01b459654b8dd8caee5105e64e531fd83943889c04807c18970b32b56a786a0fb3a9f55d6306fdeefc935
-  languageName: node
-  linkType: hard
-
-"@node-redis/search@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@node-redis/search@npm:1.0.2"
-  peerDependencies:
-    "@node-redis/client": ^1.0.0
-  checksum: fee626f62b90abcb6b8376ab1a94d3ed6c0aa9cd181aa30107ed32528d0bbf011302ad8c46b3fff7723887c18686b06ec1d1c1c76b49ad526900b5f695914eea
-  languageName: node
-  linkType: hard
-
-"@node-redis/time-series@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@node-redis/time-series@npm:1.0.1"
-  peerDependencies:
-    "@node-redis/client": ^1.0.0
-  checksum: 52e06437c6573b9c1c5c09ea51c6b1095d40e75938dd705b5fa2eacc2839104c8a2eb381e79f0ecb7c75899214e6da89926b29da219dd0202aa0d9f7475972c2
   languageName: node
   linkType: hard
 
@@ -3550,32 +3493,88 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sendgrid/client@npm:^7.6.0":
-  version: 7.6.0
-  resolution: "@sendgrid/client@npm:7.6.0"
-  dependencies:
-    "@sendgrid/helpers": ^7.6.0
-    axios: ^0.21.4
-  checksum: 657ab7297a7e74193be4b8b46ba63d8d41121f3ccf091a2a587d0daf6d58b1987829212a6a4f11ea4ed6d22064a8d5d27e54c84e33c49cdbb29ab61a0a4855c9
+"@redis/bloom@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@redis/bloom@npm:1.0.2"
+  peerDependencies:
+    "@redis/client": ^1.0.0
+  checksum: 4872e7e5e4ff03d63349ca88d3164d487f62805651ada91924de2592995993401c98a01cb93bff8d71e9a2e54985b2485b6cb0e084a7e8b1283e2ebb8bc4b833
   languageName: node
   linkType: hard
 
-"@sendgrid/helpers@npm:^7.6.0":
-  version: 7.6.0
-  resolution: "@sendgrid/helpers@npm:7.6.0"
+"@redis/client@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@redis/client@npm:1.1.0"
+  dependencies:
+    cluster-key-slot: 1.1.0
+    generic-pool: 3.8.2
+    yallist: 4.0.0
+  checksum: 4f1f4a079eeb49e29e381f00be7da6ca606e8b744878e9b2e90a5800b902cdba6a631b10a7be4ed6a740d6fa4282f055c0d6d89e44eea5cbcaa8e2da10b397fc
+  languageName: node
+  linkType: hard
+
+"@redis/graph@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@redis/graph@npm:1.0.1"
+  peerDependencies:
+    "@redis/client": ^1.0.0
+  checksum: 72e485efa416bdff10420f6e13c9cb4e1e5c70752e5172717adf62fc1d4d9ba12e708229fd87876f3a93270ff74c4bcd4d916987438dc36a94f7f12c9785fa44
+  languageName: node
+  linkType: hard
+
+"@redis/json@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@redis/json@npm:1.0.3"
+  peerDependencies:
+    "@redis/client": ^1.0.0
+  checksum: 26a7003c2fbacfa5998671e3a301cb2285432bf90f237adedcf76c0be0d379528e6710d469a8ea93c04bbd22951f9c2f41d460dbd79e85856f199248c4a250d5
+  languageName: node
+  linkType: hard
+
+"@redis/search@npm:1.0.6":
+  version: 1.0.6
+  resolution: "@redis/search@npm:1.0.6"
+  peerDependencies:
+    "@redis/client": ^1.0.0
+  checksum: 5c776143520b11ae2e49a05e7fe3df514a01460f2be90759b15e4f097bf4a985784c48c2184ac2c275ced3ec5a0c77b208a4d46a50161d1ad6025e3ab2990aa7
+  languageName: node
+  linkType: hard
+
+"@redis/time-series@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@redis/time-series@npm:1.0.3"
+  peerDependencies:
+    "@redis/client": ^1.0.0
+  checksum: 4d11518185dd15f31c5b4a433902e53a3ebc24614a0221080ab12abf4f6fc60b3db00a71a83de7b4b10f11077de611dc1c273274573646d63481d40ca246f82d
+  languageName: node
+  linkType: hard
+
+"@sendgrid/client@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@sendgrid/client@npm:7.7.0"
+  dependencies:
+    "@sendgrid/helpers": ^7.7.0
+    axios: ^0.26.0
+  checksum: 81299ff65b67de3df8c20f545aa7c3416519865079a2d21ce1ee80c76da568799679eb680fca51ef0df0ad34628e695e1991ea9cd8809baa9173ce5cda17fa50
+  languageName: node
+  linkType: hard
+
+"@sendgrid/helpers@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@sendgrid/helpers@npm:7.7.0"
   dependencies:
     deepmerge: ^4.2.2
-  checksum: 8a5166a3072d518e0b805ebf25bddaf3a605526ba2d16d9b65679271593e901f4d398857bf7c3e31f258403e430055114f5ed7b0e4f15459dfff7ae1cfe5a9d7
+  checksum: 20387aae1bff06b9febc39f82cd184dd6e59d0e1ae2e74565d88802a6c6a5e4e571924335bfc8b1493f5f09e832f526f71d81e813295b2060379cb6e53786429
   languageName: node
   linkType: hard
 
-"@sendgrid/mail@npm:7.6.0":
-  version: 7.6.0
-  resolution: "@sendgrid/mail@npm:7.6.0"
+"@sendgrid/mail@npm:7.7.0":
+  version: 7.7.0
+  resolution: "@sendgrid/mail@npm:7.7.0"
   dependencies:
-    "@sendgrid/client": ^7.6.0
-    "@sendgrid/helpers": ^7.6.0
-  checksum: ac531fc8b8dfad66b3598e549a0fa3aedeff60e4dfd16d2f06bf5103741639bb87c20b25510d369d5701f7446c9d3144037171a8af75dcad014c816739fba0d1
+    "@sendgrid/client": ^7.7.0
+    "@sendgrid/helpers": ^7.7.0
+  checksum: 8bd446c367983e70b5d1f7a9a5796b2db3dd9304a3d6adf36fb3ee87ff0021e69223222e9ddfa62a40749ed9b136d0e6e4567e9dc4ad66b4ae38a404b07f24e1
   languageName: node
   linkType: hard
 
@@ -4943,9 +4942,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1066.0":
-  version: 2.1066.0
-  resolution: "aws-sdk@npm:2.1066.0"
+"aws-sdk@npm:2.1145.0":
+  version: 2.1145.0
+  resolution: "aws-sdk@npm:2.1145.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -4956,7 +4955,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 5ed48ddd14fa01478222d989be06d75a9a3d7521a5bb9324547f745fbde8ee760836c80c6ee9678449b591c67e1d447671ed16ab36583a3a6266c4fc6ba6eb7c
+  checksum: 698ace0e4c67ecc0ff02f06517911e78f928f4279a97b22f2657f4c9d34d2f55676d630c0cb66ec10fe39fdd59810b8518ff6203568136e4deb062377f11a9c5
   languageName: node
   linkType: hard
 
@@ -4967,12 +4966,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.25.0":
-  version: 0.25.0
-  resolution: "axios@npm:0.25.0"
+"axios@npm:0.27.2":
+  version: 0.27.2
+  resolution: "axios@npm:0.27.2"
   dependencies:
-    follow-redirects: ^1.14.7
-  checksum: 2a8a3787c05f2a0c9c3878f49782357e2a9f38945b93018fb0c4fd788171c43dceefbb577988628e09fea53952744d1ecebde234b561f1e703aa43e0a598a3ad
+    follow-redirects: ^1.14.9
+    form-data: ^4.0.0
+  checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
   languageName: node
   linkType: hard
 
@@ -4982,6 +4982,15 @@ __metadata:
   dependencies:
     follow-redirects: ^1.14.0
   checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.26.0":
+  version: 0.26.1
+  resolution: "axios@npm:0.26.1"
+  dependencies:
+    follow-redirects: ^1.14.8
+  checksum: d9eb58ff4bc0b36a04783fc9ff760e9245c829a5a1052ee7ca6013410d427036b1d10d04e7380c02f3508c5eaf3485b1ae67bd2adbfec3683704745c8d7a6e1a
   languageName: node
   linkType: hard
 
@@ -5272,12 +5281,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^4.6.1":
-  version: 4.6.1
-  resolution: "bson@npm:4.6.1"
+"bson@npm:^4.6.3":
+  version: 4.6.4
+  resolution: "bson@npm:4.6.4"
   dependencies:
     buffer: ^5.6.0
-  checksum: 32c38400b0c5f85cf22c28b9f9bbc63b3c090c23a749a8c159db975f225161a7fe776f8a18ed1da3f58a9e7496ce2b7935753e9471f17c614bf02ebab145e052
+  checksum: f56375865c8fc048179075296019a0d2e058edbbb6692e54e2751da738840968de678a48a2276faf2ec8f8b36c5c26f14670ab4d414fe68f0169215efe15d570
   languageName: node
   linkType: hard
 
@@ -5944,10 +5953,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^8.3.0":
-  version: 8.3.0
-  resolution: "commander@npm:8.3.0"
-  checksum: 0f82321821fc27b83bd409510bb9deeebcfa799ff0bf5d102128b500b7af22872c0c92cb6a0ebc5a4cf19c6b550fba9cedfa7329d18c6442a625f851377bacf0
+"commander@npm:^9.1.0":
+  version: 9.3.0
+  resolution: "commander@npm:9.3.0"
+  checksum: d421ce66fee25792a1470c69aa8d1b86434bf873a96483aa92c8267f81a6f20c6f7c426f5e82f88ac50a8ec4855d3f2787aebcdef8aa559e1080a2337a95a217
   languageName: node
   linkType: hard
 
@@ -6317,7 +6326,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:4.3.3, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.2.0, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3":
   version: 4.3.3
   resolution: "debug@npm:4.3.3"
   dependencies:
@@ -6338,6 +6347,18 @@ __metadata:
     supports-color:
       optional: true
   checksum: 820ea160e267e23c953c9ed87e7ad93494d8cda2f7349af5e7e3bb236d23707ee3022f477d5a7d2ee86ef2bf7d60aa9ab22d1f58080d7deb9dccd073585e1e43
+  languageName: node
+  linkType: hard
+
+"debug@npm:4.3.4":
+  version: 4.3.4
+  resolution: "debug@npm:4.3.4"
+  dependencies:
+    ms: 2.1.2
+  peerDependenciesMeta:
+    supports-color:
+      optional: true
+  checksum: 3dbad3f94ea64f34431a9cbf0bafb61853eda57bff2880036153438f50fb5a84f27683ba0d8e5426bf41a8c6ff03879488120cf5b3a761e77953169c0600a708
   languageName: node
   linkType: hard
 
@@ -6793,10 +6814,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:15.0.0":
-  version: 15.0.0
-  resolution: "dotenv@npm:15.0.0"
-  checksum: be5d852b2ad1708780e7038481c0687ce4bb9edf354d439872511e966a5f28c083f296e1d1c182256d695bfdd67e320382eb3b0f2e9d83efa3615cd1757257ab
+"dotenv@npm:16.0.1":
+  version: 16.0.1
+  resolution: "dotenv@npm:16.0.1"
+  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
   languageName: node
   linkType: hard
 
@@ -7645,13 +7666,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.7":
+"follow-redirects@npm:^1.14.0":
   version: 1.14.7
   resolution: "follow-redirects@npm:1.14.7"
   peerDependenciesMeta:
     debug:
       optional: true
   checksum: f6d03e5e30877431065bca0d1b2e3db93949eb799d368a5c07ea8a4b71205f0349a3f8f0191bf13a07c93885522834dca1dc8e527dc99a772c6911fba24edc5f
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.14.9":
+  version: 1.15.1
+  resolution: "follow-redirects@npm:1.15.1"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 6aa4e3e3cdfa3b9314801a1cd192ba756a53479d9d8cca65bf4db3a3e8834e62139245cd2f9566147c8dfe2efff1700d3e6aefd103de4004a7b99985e71dd533
   languageName: node
   linkType: hard
 
@@ -7691,14 +7722,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:10.0.0":
-  version: 10.0.0
-  resolution: "fs-extra@npm:10.0.0"
+"fs-extra@npm:10.1.0":
+  version: 10.1.0
+  resolution: "fs-extra@npm:10.1.0"
   dependencies:
     graceful-fs: ^4.2.0
     jsonfile: ^6.0.1
     universalify: ^2.0.0
-  checksum: 5285a3d8f34b917cf2b66af8c231a40c1623626e9d701a20051d3337be16c6d7cac94441c8b3732d47a92a2a027886ca93c69b6a4ae6aee3c89650d2a8880c0a
+  checksum: dc94ab37096f813cc3ca12f0f1b5ad6744dfed9ed21e953d72530d103cea193c2f81584a39e9dee1bea36de5ee66805678c0dddc048e8af1427ac19c00fffc50
   languageName: node
   linkType: hard
 
@@ -8163,14 +8194,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-spreadsheet@npm:3.2.0":
-  version: 3.2.0
-  resolution: "google-spreadsheet@npm:3.2.0"
+"google-spreadsheet@npm:3.3.0":
+  version: 3.3.0
+  resolution: "google-spreadsheet@npm:3.3.0"
   dependencies:
     axios: ^0.21.4
     google-auth-library: ^6.1.3
     lodash: ^4.17.21
-  checksum: 1d351b11e48f08a78472a177144fb1c1d26d07852182d3be62ef3fe1859b06fc90429114ed2b41f196a9bd2eaf565365723b7c8fdd0e0722d3a8d393734f9736
+  checksum: 6830f8ae0ed24ee93388fa14f734a21928bd17e06f02d709bebe7632fd1a849930aef62be4f06680028d81709f133921a6f3f837d3725210a3d1594296afbd12
   languageName: node
   linkType: hard
 
@@ -10097,15 +10128,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"knex@npm:1.0.1":
-  version: 1.0.1
-  resolution: "knex@npm:1.0.1"
+"knex@npm:1.0.7":
+  version: 1.0.7
+  resolution: "knex@npm:1.0.7"
   dependencies:
     colorette: 2.0.16
-    commander: ^8.3.0
-    debug: 4.3.3
+    commander: ^9.1.0
+    debug: 4.3.4
     escalade: ^3.1.1
     esm: ^3.2.25
+    get-package-type: ^0.1.0
     getopts: 2.3.0
     interpret: ^2.2.0
     lodash: ^4.17.21
@@ -10127,13 +10159,11 @@ __metadata:
       optional: true
     pg-native:
       optional: true
-    sqlite3:
-      optional: true
     tedious:
       optional: true
   bin:
     knex: bin/cli.js
-  checksum: e89a1f8266757891e7e8bf10ee1655879237299182a68a806579f3e5f31148b88958762608fafbecb6fbc6aee2acb84924fc4d53e4fd59bf0ca622076e420b6f
+  checksum: 57608a3a6813cb66da6f5a078016338166c53ab2cbaab66e81492352023db88fc158e4ad6bbd2156cd9d7c9cac14a4b1e581dd8232b4f9bab2285ea6f1efc5cf
   languageName: node
   linkType: hard
 
@@ -10475,12 +10505,12 @@ __metadata:
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
-    axios: 0.25.0
+    axios: 0.27.2
     chalk: 4.1.2
     commander: 9.0.0
     decompress: 4.2.1
     decompress-targz: 4.1.1
-    dotenv: 15.0.0
+    dotenv: 16.0.1
     jest: 28.1.0
     ora: 5.4.1
     uuid: 8.3.2
@@ -11487,13 +11517,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-connection-string-url@npm:^2.4.1":
-  version: 2.4.2
-  resolution: "mongodb-connection-string-url@npm:2.4.2"
+"mongodb-connection-string-url@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "mongodb-connection-string-url@npm:2.5.2"
   dependencies:
     "@types/whatwg-url": ^8.2.1
     whatwg-url: ^11.0.0
-  checksum: aed2718840c79f8d6be35309e308bf4466a009256da6b02e6212abeef39ae27bf6101273580696e246e51ee4f7471e2d938c44e8f8a5194982092f692b37c571
+  checksum: bd13af7d62d33e2d6e5217692961e34b2dafbbba5f41d361417257592754df3e925efc00fa8a5e038624e284245dab39e913d5f06ff962feede86d5f58fc5827
   languageName: node
   linkType: hard
 
@@ -11533,19 +11563,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:4.4.0":
-  version: 4.4.0
-  resolution: "mongodb@npm:4.4.0"
+"mongodb@npm:4.6.0":
+  version: 4.6.0
+  resolution: "mongodb@npm:4.6.0"
   dependencies:
-    bson: ^4.6.1
+    bson: ^4.6.3
     denque: ^2.0.1
-    mongodb-connection-string-url: ^2.4.1
+    mongodb-connection-string-url: ^2.5.2
     saslprep: ^1.0.3
-    socks: ^2.6.1
+    socks: ^2.6.2
   dependenciesMeta:
     saslprep:
       optional: true
-  checksum: e485927d1def94f28564bdcb98d82144914bf23854e8bd15437fcef0d9a36f36997f7e97e0aad730ebf299c6a919430669198e02b5e2f4410f74a4002409b182
+  checksum: aa2a584fdb4e7f73b73b5f4019916e4f9cdba6e0aa81448eade44a5ff4e5d771ad62cd252f012b7a211eb80f6f88fba446c6ad8f0eb898ba56cf447719161540
   languageName: node
   linkType: hard
 
@@ -11625,18 +11655,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mssql@npm:8.0.1":
-  version: 8.0.1
-  resolution: "mssql@npm:8.0.1"
+"mssql@npm:8.1.2":
+  version: 8.1.2
+  resolution: "mssql@npm:8.1.2"
   dependencies:
     "@tediousjs/connection-string": ^0.3.0
+    commander: ^9.1.0
     debug: ^4.3.3
     rfdc: ^1.3.0
     tarn: ^3.0.2
     tedious: ^14.0.0
   bin:
     mssql: bin/mssql
-  checksum: 5871928d32b9f936edba7634aea26971e2866ce19625eee5d9eec9ddfe0cbc7228f6310e059f03b71b1274c66b3c087cdbbcf04245ad65a6aeac37db806fd0ae
+  checksum: ec9db56cea60de074de0946acb12197256a1344ceaf5601b6914a49463252fd6248c21c377f4d384ebbee9e737e2ddb91d9cdaace46dd38d5e3285168aa57f29
   languageName: node
   linkType: hard
 
@@ -12818,12 +12849,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "pg-pool@npm:3.4.1"
+"pg-pool@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "pg-pool@npm:3.5.1"
   peerDependencies:
     pg: ">=8.0"
-  checksum: 50d68bd99a5c7ca32ad93ba97462528d6a8df87c5cf5a0743a3f0946bc57be82a45025e67eb8a6e522ed25316747864e5ce043339577a71f8f430e1364da2727
+  checksum: 42833c25f18fee41a1b2d955978f1403e93164762a7e57d3a870429103d302f1899b393ab021bb8144272037eb3f13bdb9f16a4c4afaa3efd3d2c3689738038f
   languageName: node
   linkType: hard
 
@@ -12847,14 +12878,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg@npm:8.7.1":
-  version: 8.7.1
-  resolution: "pg@npm:8.7.1"
+"pg@npm:8.7.3":
+  version: 8.7.3
+  resolution: "pg@npm:8.7.3"
   dependencies:
     buffer-writer: 2.0.0
     packet-reader: 1.0.0
     pg-connection-string: ^2.5.0
-    pg-pool: ^3.4.1
+    pg-pool: ^3.5.1
     pg-protocol: ^1.5.0
     pg-types: ^2.1.0
     pgpass: 1.x
@@ -12863,7 +12894,7 @@ __metadata:
   peerDependenciesMeta:
     pg-native:
       optional: true
-  checksum: 3a17d9a73df9c9f5f99400751144f9d5e8dbe1948ca44f5b5eecb2166ad78cab36d070c2a97438cd3a5d1d083e70af1d3e0aad4554a45fe74b77d98ed4487242
+  checksum: d0e7040967779b9ccea16897f099510bcaf6bc86f77a6d8fa7e293c24d8bd2fd2ec46d99d6d1adc9be4cc8f254aa909361346b693088c1ba4501414f7afb2fe3
   languageName: node
   linkType: hard
 
@@ -13300,7 +13331,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.6.0, qs@npm:^6.7.0, qs@npm:^6.9.4":
+"qs@npm:^6.10.3, qs@npm:^6.7.0, qs@npm:^6.9.4":
   version: 6.10.3
   resolution: "qs@npm:6.10.3"
   dependencies:
@@ -14280,33 +14311,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis-errors@npm:^1.0.0":
-  version: 1.2.0
-  resolution: "redis-errors@npm:1.2.0"
-  checksum: f28ac2692113f6f9c222670735aa58aeae413464fd58ccf3fce3f700cae7262606300840c802c64f2b53f19f65993da24dc918afc277e9e33ac1ff09edb394f4
-  languageName: node
-  linkType: hard
-
-"redis-parser@npm:3.0.0":
-  version: 3.0.0
-  resolution: "redis-parser@npm:3.0.0"
+"redis@npm:4.1.0":
+  version: 4.1.0
+  resolution: "redis@npm:4.1.0"
   dependencies:
-    redis-errors: ^1.0.0
-  checksum: 89290ae530332f2ae37577647fa18208d10308a1a6ba750b9d9a093e7398f5e5253f19855b64c98757f7129cccce958e4af2573fdc33bad41405f87f1943459a
-  languageName: node
-  linkType: hard
-
-"redis@npm:4.0.3":
-  version: 4.0.3
-  resolution: "redis@npm:4.0.3"
-  dependencies:
-    "@node-redis/bloom": 1.0.1
-    "@node-redis/client": 1.0.3
-    "@node-redis/graph": 1.0.0
-    "@node-redis/json": 1.0.2
-    "@node-redis/search": 1.0.2
-    "@node-redis/time-series": 1.0.1
-  checksum: d5aa500d387f454feb6e70d8591eb6f8acfaec4814c7167865903069b640c253054592ab38eddfaf78f6df28f594412f8af67efaaf7c8d7fd2dd2222b3cfbc6a
+    "@redis/bloom": 1.0.2
+    "@redis/client": 1.1.0
+    "@redis/graph": 1.0.1
+    "@redis/json": 1.0.3
+    "@redis/search": 1.0.6
+    "@redis/time-series": 1.0.3
+  checksum: e3cc90a05a3ea9ada3d771145a0865cd85340a9b54cbeda768f127d86df13beb56ec505b978c464a092ad33ff39b1850101c102842d51b84a1ff6b1f9790901b
   languageName: node
   linkType: hard
 
@@ -15087,9 +15102,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sqlite3@npm:5.0.5":
-  version: 5.0.5
-  resolution: "sqlite3@npm:5.0.5"
+"sqlite3@npm:5.0.8":
+  version: 5.0.8
+  resolution: "sqlite3@npm:5.0.8"
   dependencies:
     "@mapbox/node-pre-gyp": ^1.0.0
     node-addon-api: ^4.2.0
@@ -15103,7 +15118,7 @@ __metadata:
   peerDependenciesMeta:
     node-gyp:
       optional: true
-  checksum: d45bb33dd5b62a17907a61163942d278ccf1497bad598a4c888da9f76423bc7de5cc9b074944d7d79332b3b07475d0ee5dc54b3cd0aeca936040ee2ef513d2f3
+  checksum: 6b19d4cad0f53e3df9745aa4b743b0f9388b9ca857e69e851a24336b8fe174381b84d7867bdbf4bc0b572c7e84ef1bb962d8bdc10b0aa18810bf9078536f3d49
   languageName: node
   linkType: hard
 
@@ -15375,13 +15390,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stripe@npm:8.201.0":
-  version: 8.201.0
-  resolution: "stripe@npm:8.201.0"
+"stripe@npm:8.222.0":
+  version: 8.222.0
+  resolution: "stripe@npm:8.222.0"
   dependencies:
     "@types/node": ">=8.1.0"
-    qs: ^6.6.0
-  checksum: b283fadc1f58734178753e3eb5a1ee044f7729015d4b9faf4f5b51d5e49cff7a1eab41b7eeedef26987fd220678a08fd013a1cac9f424a34ec4687052369a53c
+    qs: ^6.10.3
+  checksum: ac9a5b569abf274a9f10cf5bad09d6cf47d457dad21191e8fc896c356608e75337b2e39b6e39526579d39f5b29c74a34e61c55e706def2498a079f7b4dbaea17
   languageName: node
   linkType: hard
 
@@ -15472,12 +15487,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:1.1.2":
-  version: 1.1.2
-  resolution: "swr@npm:1.1.2"
+"swr@npm:1.3.0":
+  version: 1.3.0
+  resolution: "swr@npm:1.3.0"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0
-  checksum: 84bf222c667bf4f94bf9bcaf51f11443d69eb6feb82649c06ef8e576c51f52269872dbda4b926f267fd79cfeaf7bd84c6a62d519db25fe2af1fb811e75163e94
+  checksum: e7a184f0d560e9c8be85c023cc8e65e56a88a6ed46f9394b301b07f838edca23d2e303685319a4fcd620b81d447a7bcb489c7fa0a752c259f91764903c690cdb
   languageName: node
   linkType: hard
 
