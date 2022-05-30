@@ -16,7 +16,7 @@ export default {
   testPathIgnorePatterns: ['<rootDir>/dist/'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
-    '\\.yaml$': 'jest-transform-yaml',
+    '\\.yaml$': '@lowdefy/jest-yaml-transform',
   },
   snapshotSerializers: ['@emotion/jest/serializer', 'jest-serializer-html'],
 };

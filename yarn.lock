@@ -2144,6 +2144,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@lowdefy/node-utils": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2155,8 +2156,8 @@ __metadata:
     classnames: 2.3.1
     copyfiles: 2.4.1
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     moment: 2.29.3
     rc-motion: 2.6.0
     react: 18.1.0
@@ -2173,6 +2174,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2182,8 +2184,8 @@ __metadata:
     copyfiles: 2.4.1
     dompurify: 2.3.8
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -2197,6 +2199,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/blocks-antd": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2207,8 +2210,8 @@ __metadata:
     copyfiles: 2.4.1
     jest: 28.1.0
     jest-canvas-mock: 2.4.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-colorful: 5.5.1
     react-dom: 18.1.0
@@ -2222,6 +2225,7 @@ __metadata:
     "@emotion/jest": 11.9.1
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2232,8 +2236,8 @@ __metadata:
     echarts: 5.3.2
     echarts-for-react: 3.0.2
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -2247,6 +2251,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2255,8 +2260,8 @@ __metadata:
     "@testing-library/user-event": 14.2.0
     copyfiles: 2.4.1
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -2269,6 +2274,7 @@ __metadata:
     "@emotion/jest": 11.9.1
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2278,8 +2284,8 @@ __metadata:
     copyfiles: 2.4.1
     dompurify: 2.3.8
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
     react-markdown: 8.0.3
@@ -2345,6 +2351,7 @@ __metadata:
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/engine": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@lowdefy/layout": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2356,7 +2363,6 @@ __metadata:
     copyfiles: 2.4.1
     jest: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -2539,6 +2545,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/jest-yaml-transform@4.0.0-alpha.12, @lowdefy/jest-yaml-transform@workspace:packages/utils/jest-yaml-transform":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/jest-yaml-transform@workspace:packages/utils/jest-yaml-transform"
+  dependencies:
+    "@swc/cli": 0.1.57
+    "@swc/core": 1.2.194
+    "@swc/jest": 0.2.21
+    jest: 28.1.0
+    yaml: 2.1.1
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/layout@4.0.0-alpha.12, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
@@ -2547,6 +2565,7 @@ __metadata:
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2556,8 +2575,8 @@ __metadata:
     antd: 4.20.7
     copyfiles: 2.4.1
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -2728,6 +2747,7 @@ __metadata:
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/blocks-antd": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2738,8 +2758,8 @@ __metadata:
     aws-sdk: 2.1145.0
     copyfiles: 2.4.1
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
-    jest-transform-yaml: 1.0.0
     react: 18.1.0
     react-dom: 18.1.0
   languageName: unknown
@@ -9338,15 +9358,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-transform-yaml@npm:1.0.0":
-  version: 1.0.0
-  resolution: "jest-transform-yaml@npm:1.0.0"
-  dependencies:
-    js-yaml: 4.1.0
-  checksum: 3bb1646c9fd08beb7d9f28a340bc28cebbc1aedb657c5f7809247423bfd39d99eccb8792a689876079133031281e95c56f2fadb93cdf1a142b74e9b9b7584595
-  languageName: node
-  linkType: hard
-
 "jest-util@npm:^28.1.0":
   version: 28.1.0
   resolution: "jest-util@npm:28.1.0"
@@ -9441,17 +9452,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:4.1.0, js-yaml@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: ^2.0.1
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
-  languageName: node
-  linkType: hard
-
 "js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.1":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -9461,6 +9461,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: bef146085f472d44dee30ec34e5cf36bf89164f5d585435a3d3da89e52622dff0b188a580e4ad091c3341889e14cb88cac6e4deb16dc5b1e9623bb0601fc255c
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: ^2.0.1
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
   languageName: node
   linkType: hard
 

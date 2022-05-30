@@ -37,7 +37,7 @@ exports[`align 1`] = `
           style="align-self: flex-start; border: 1px dashed #8eccf5;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="One23456"
             type="button"
           >
@@ -52,7 +52,7 @@ exports[`align 1`] = `
           style="align-self: center; border: 1px dashed #8eccf5;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="Two23456"
             type="button"
           >
@@ -67,7 +67,7 @@ exports[`align 1`] = `
           style="align-self: flex-end; border: 1px dashed #8eccf5;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="Three23456"
             type="button"
           >
@@ -117,7 +117,7 @@ exports[`align 2`] = `
           style="align-self: flex-start;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="One23456"
             type="button"
           >
@@ -132,7 +132,7 @@ exports[`align 2`] = `
           style="align-self: center;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="Two23456"
             type="button"
           >
@@ -147,7 +147,7 @@ exports[`align 2`] = `
           style="align-self: flex-end;"
         >
           <button
-            class="ant-btn"
+            class="ant-btn ant-btn-default"
             id="Three23456"
             type="button"
           >

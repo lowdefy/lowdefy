@@ -179,6 +179,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/utils/helpers"
       },
       {
+        "name": "@lowdefy/jest-yaml-transform",
+        "reference": "workspace:packages/utils/jest-yaml-transform"
+      },
+      {
         "name": "@lowdefy/node-utils",
         "reference": "workspace:packages/utils/node-utils"
       },
@@ -215,6 +219,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/engine", ["workspace:packages/engine"]],
       ["@lowdefy/format", ["workspace:packages/format"]],
       ["@lowdefy/helpers", ["workspace:packages/utils/helpers"]],
+      ["@lowdefy/jest-yaml-transform", ["workspace:packages/utils/jest-yaml-transform"]],
       ["@lowdefy/layout", ["workspace:packages/layout"]],
       ["@lowdefy/lowdefy", ["workspace:."]],
       ["@lowdefy/node-utils", ["workspace:packages/utils/node-utils"]],
@@ -2994,6 +2999,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
@@ -3005,8 +3011,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["classnames", "npm:2.3.1"],
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["moment", "npm:2.29.3"],
             ["rc-motion", "virtual:f494f6d4e058cb1c8a3b456f6099aff9bd740d65abfc014377b7a3f1e34fcb35eb64a962e127c8bfbedaa0555175b6f2cdc47011e32e2fb5f081d7d32f526c78#npm:2.6.0"],
             ["react", "npm:18.1.0"],
@@ -3025,6 +3031,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3034,8 +3041,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copyfiles", "npm:2.4.1"],
             ["dompurify", "npm:2.3.8"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -3051,6 +3058,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3061,8 +3069,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
             ["jest-canvas-mock", "npm:2.4.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-colorful", "virtual:0a20b9e617aa1128697d85dfc1773d0700f9410e369eeafa43bd745df98493fae6fb5b64e239c92296cab367dcf36c9f5f6d5f5c4ddec8933a9e30fac84ddeed#npm:5.5.1"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
@@ -3078,6 +3086,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3088,8 +3097,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["echarts", "npm:5.3.2"],
             ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.2"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -3105,6 +3114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3113,8 +3123,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -3129,6 +3139,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3138,8 +3149,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copyfiles", "npm:2.4.1"],
             ["dompurify", "npm:2.3.8"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"],
             ["react-markdown", "virtual:5f524c741247cab5c10daa0e8e15ac36ad181d1b577a348511587c8a60cfabb8ae502afcaa3d6382784b87fb0c47cdaa2ab4a0769887b98e8e70603a2469c5de#npm:8.0.3"],
@@ -3207,6 +3218,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/engine", "workspace:packages/engine"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@lowdefy/layout", "workspace:packages/layout"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
@@ -3218,7 +3230,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -3426,6 +3437,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@lowdefy/jest-yaml-transform", [
+        ["workspace:packages/utils/jest-yaml-transform", {
+          "packageLocation": "./packages/utils/jest-yaml-transform/",
+          "packageDependencies": [
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
+            ["@swc/core", "npm:1.2.194"],
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["yaml", "npm:2.1.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@lowdefy/layout", [
         ["workspace:packages/layout", {
           "packageLocation": "./packages/layout/",
@@ -3435,6 +3460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3444,8 +3470,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["antd", "virtual:f494f6d4e058cb1c8a3b456f6099aff9bd740d65abfc014377b7a3f1e34fcb35eb64a962e127c8bfbedaa0555175b6f2cdc47011e32e2fb5f081d7d32f526c78#npm:4.20.7"],
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -3640,6 +3666,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],
             ["@swc/core", "npm:1.2.194"],
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],
@@ -3650,8 +3677,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-sdk", "npm:2.1145.0"],
             ["copyfiles", "npm:2.4.1"],
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],
+            ["jest-environment-jsdom", "npm:28.1.0"],
             ["jest-serializer-html", "npm:7.1.0"],
-            ["jest-transform-yaml", "npm:1.0.0"],
             ["react", "npm:18.1.0"],
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]
           ],
@@ -11436,16 +11463,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["natural-compare", "npm:1.4.0"],
             ["pretty-format", "npm:28.1.0"],
             ["semver", "npm:7.3.7"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["jest-transform-yaml", [
-        ["npm:1.0.0", {
-          "packageLocation": "./.yarn/cache/jest-transform-yaml-npm-1.0.0-e51c3ec282-3bb1646c9f.zip/node_modules/jest-transform-yaml/",
-          "packageDependencies": [
-            ["jest-transform-yaml", "npm:1.0.0"],
-            ["js-yaml", "npm:4.1.0"]
           ],
           "linkType": "HARD",
         }]
