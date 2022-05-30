@@ -31,6 +31,7 @@ test('buildAuth default', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: false,
       events: [],
       pages: {
         roles: {},
@@ -53,6 +54,7 @@ test('buildAuth no pages', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: false,
       events: [],
       pages: {
         roles: {},
@@ -82,6 +84,7 @@ test('buildAuth all protected, some public', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         public: ['a', 'b'],
@@ -117,6 +120,7 @@ test('buildAuth all public, some protected', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         protected: ['a', 'b'],
@@ -152,6 +156,7 @@ test('buildAuth all public', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         public: true,
@@ -188,6 +193,7 @@ test('buildAuth all protected', async () => {
     auth: {
       callbacks: [],
       events: [],
+      configured: true,
       pages: {
         protected: true,
         roles: {},
@@ -224,6 +230,7 @@ test('buildAuth roles', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         roles: {
@@ -276,6 +283,7 @@ test('buildAuth roles and protected pages array', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         roles: {
@@ -307,6 +315,7 @@ test('buildAuth roles and protected true', async () => {
   expect(res).toEqual({
     auth: {
       callbacks: [],
+      configured: true,
       events: [],
       pages: {
         roles: {
