@@ -16,13 +16,6 @@
 
 /* eslint-disable max-classes-per-file */
 
-class AuthenticationError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'AuthenticationError';
-  }
-}
-
 class ConfigurationError extends Error {
   constructor(message) {
     super(message);
@@ -44,11 +37,4 @@ class ServerError extends Error {
   }
 }
 
-class TokenExpiredError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'TokenExpiredError';
-  }
-}
-
-export { AuthenticationError, ConfigurationError, RequestError, ServerError, TokenExpiredError };
+export { ConfigurationError, RequestError, ServerError };

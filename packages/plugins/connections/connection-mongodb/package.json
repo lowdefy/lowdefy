@@ -43,14 +43,14 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.12",
-    "mongodb": "4.4.0",
+    "mongodb": "4.6.0",
     "saslprep": "1.0.3"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.12",
     "@shelf/jest-mongodb": "2.2.2",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.192",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "jest": "28.1.0"
   },

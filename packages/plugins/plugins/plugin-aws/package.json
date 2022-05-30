@@ -45,17 +45,17 @@
     "@lowdefy/block-utils": "4.0.0-alpha.12",
     "@lowdefy/blocks-antd": "4.0.0-alpha.12",
     "@lowdefy/helpers": "4.0.0-alpha.12",
-    "antd": "4.18.2",
-    "aws-sdk": "2.1066.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "antd": "4.20.7",
+    "aws-sdk": "2.1145.0",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
     "@lowdefy/ajv": "4.0.0-alpha.12",
     "@lowdefy/block-dev": "4.0.0-alpha.12",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.192",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",

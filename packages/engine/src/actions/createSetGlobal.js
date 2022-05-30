@@ -20,7 +20,7 @@ const createSetGlobal = ({ arrayIndices, context }) => {
   return function setGlobal(params) {
     Object.keys(params).forEach((key) => {
       set(
-        context._internal.lowdefy._internal.lowdefyGlobal,
+        context._internal.lowdefy.lowdefyGlobal,
         applyArrayIndices(arrayIndices, key),
         params[key]
       );

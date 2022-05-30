@@ -18,18 +18,21 @@ import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
-const lowdefy = {
-  _internal: {
-    actions: {
-      SetGlobal: ({ methods: { setGlobal }, params }) => {
-        return setGlobal(params);
+const getLowdefy = (lowdefyGlobal) => {
+  return {
+    _internal: {
+      actions: {
+        SetGlobal: ({ methods: { setGlobal }, params }) => {
+          return setGlobal(params);
+        },
       },
     },
-    lowdefyGlobal: { x: 'old', init: 'init' },
-  },
+    lowdefyGlobal,
+  };
 };
 
 test('SetGlobal data to global', async () => {
+  const lowdefy = getLowdefy({ x: 'old', init: 'init' });
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -53,10 +56,10 @@ test('SetGlobal data to global', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
   const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
-  expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',
     number: 13,
@@ -65,8 +68,8 @@ test('SetGlobal data to global', async () => {
   });
 });
 
-// ?? CHECK: we call update before actions, when a action is completed, and again when all actions is completed?? So 3 calls.
 test('SetGlobal calls context update', async () => {
+  const lowdefy = getLowdefy({ x: 'old', init: 'init' });
   const updateFunction = jest.fn();
   const pageConfig = {
     id: 'root',
@@ -95,5 +98,48 @@ test('SetGlobal calls context update', async () => {
   expect(updateFunction).toHaveBeenCalledTimes(0);
   const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
-  expect(updateFunction).toHaveBeenCalledTimes(3);
+  expect(updateFunction).toHaveBeenCalledTimes(3); // TODO: Should this not be 1? Investigate.
+});
+
+test('SetGlobal changed block properties', async () => {
+  const lowdefy = getLowdefy({});
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'old',
+          type: 'SetGlobal',
+          params: { x: 'old' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        properties: {
+          a: { _global: 'x' },
+        },
+        events: {
+          onClick: [
+            {
+              id: 'new',
+              type: 'SetGlobal',
+              params: { x: 'new' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const button = context._internal.RootBlocks.map['button'];
+  expect(button.eval.properties).toEqual({ a: 'old' });
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.eval.properties).toEqual({ a: 'new' });
 });

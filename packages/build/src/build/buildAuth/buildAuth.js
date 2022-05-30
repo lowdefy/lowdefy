@@ -16,12 +16,16 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
 import buildAuthPlugins from './buildAuthPlugins.js';
 import buildPageAuth from './buildPageAuth.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
+  const configured = !type.isNone(components.auth);
+
   validateAuthConfig({ components });
+  components.auth.configured = configured;
   buildPageAuth({ components });
   buildAuthPlugins({ components, context });
 

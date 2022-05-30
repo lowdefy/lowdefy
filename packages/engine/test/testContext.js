@@ -25,6 +25,10 @@ const testContext = async ({ lowdefy, pageConfig }) => {
     contexts: {},
     inputs: {},
     urlQuery: {},
+    lowdefyGlobal: {},
+    home: {},
+    menus: [],
+    user: {},
     ...lowdefy,
     _internal: {
       callRequest: () => {},

@@ -20,34 +20,23 @@ import { useRouter } from 'next/router';
 import Client from '@lowdefy/client';
 import Head from 'next/head';
 import Link from 'next/link';
-import { signIn, signOut, useSession } from 'next-auth/react';
 
 import actions from '../build/plugins/actions.js';
 import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 
-const Page = ({ pageConfig, rootConfig }) => {
+const Page = ({ auth, pageConfig, rootConfig }) => {
   const router = useRouter();
-  const { data: session, status } = useSession();
-
-  // If session is passed to SessionProvider from getServerSideProps
-  // we won't have a loading state here.
-  // But 404 uses getStaticProps so we have this for 404.
-  if (status === 'loading') {
-    return '';
-  }
-
   return (
     <Client
-      auth={{ signIn, signOut }}
+      auth={auth}
       Components={{ Head, Link }}
       config={{
         pageConfig,
         rootConfig,
       }}
       router={router}
-      session={session}
       types={{
         actions,
         blocks,

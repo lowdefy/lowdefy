@@ -41,12 +41,12 @@
   },
   "dependencies": {
     "@lowdefy/nunjucks": "4.0.0-alpha.12",
-    "ajv": "8.9.0",
+    "ajv": "8.11.0",
     "ajv-errors": "3.0.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.192",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "jest": "28.1.0"
   },

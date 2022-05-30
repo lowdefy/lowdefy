@@ -45,11 +45,11 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.12",
     "@lowdefy/operators": "4.0.0-alpha.12",
-    "mingo": "6.0.4"
+    "mingo": "6.0.6"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.192",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "jest": "28.1.0"
   },
