@@ -59,8 +59,8 @@ class WebParser {
           home,
           input: inputs ? inputs[this.context.id] : {},
           location: applyArrayIndices(arrayIndices, location),
-          lowdefyGlobal: lowdefyGlobal || {},
-          menus: menus || {},
+          lowdefyGlobal: lowdefyGlobal ?? {},
+          menus: menus ?? [],
           methodName,
           operatorPrefix,
           operators: this.operators,
@@ -69,8 +69,8 @@ class WebParser {
           parser: this,
           requests: this.context.requests,
           state: this.context.state,
-          urlQuery: urlQuery || {},
-          user: user || {},
+          urlQuery: urlQuery ?? {},
+          user: user ?? {},
           window: _internal.window,
         });
         return res;
