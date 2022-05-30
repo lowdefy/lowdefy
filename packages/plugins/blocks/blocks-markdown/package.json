@@ -48,10 +48,10 @@
   },
   "dependencies": {
     "@lowdefy/block-utils": "4.0.0-alpha.12",
-    "dompurify": "2.3.5",
+    "dompurify": "2.3.8",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-markdown": "8.0.0",
+    "react-markdown": "8.0.3",
     "react-syntax-highlighter": "15.5.0",
     "rehype-raw": "6.1.1",
     "remark-gfm": "3.0.1"
@@ -60,7 +60,7 @@
     "@emotion/jest": "11.9.1",
     "@lowdefy/block-dev": "4.0.0-alpha.12",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.192",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",
