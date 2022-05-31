@@ -18,7 +18,11 @@ export default {
       coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
       errorOnDeprecated: true,
       testEnvironment: 'node',
-      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test', '<rootDir>/src/client'],
+      testPathIgnorePatterns: [
+        '<rootDir>/dist/',
+        '<rootDir>/src/test',
+        '<rootDir>/src/operators/client',
+      ],
       transform: {
         '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
       },
@@ -48,8 +52,8 @@ export default {
     //   testPathIgnorePatterns: [
     //     '<rootDir>/dist/',
     //     '<rootDir>/src/test',
-    //     '<rootDir>/src/server',
-    //     '<rootDir>/src/build',
+    //     '<rootDir>/src/operators/server',
+    //     '<rootDir>/src/operators/build',
     //   ],
     //   transformIgnorePatterns: ['/node_modules/(?!(yaml)/)'],
     //   transform: {
