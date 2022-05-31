@@ -2055,6 +2055,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
@@ -2640,6 +2641,7 @@ __metadata:
     "@swc/jest": 0.2.21
     change-case: 4.1.2
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
@@ -2654,6 +2656,7 @@ __metadata:
     "@swc/jest": 0.2.21
     deep-diff: 1.0.2
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
@@ -2667,6 +2670,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
@@ -2680,6 +2684,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     mingo: 6.0.6
   languageName: unknown
   linkType: soft
@@ -2695,6 +2700,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
@@ -2708,6 +2714,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     uuid: 8.3.2
   languageName: unknown
   linkType: soft
@@ -2722,6 +2729,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
     yaml: 2.1.1
   languageName: unknown
   linkType: soft
@@ -2735,6 +2743,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
   languageName: unknown
   linkType: soft
 
