@@ -41,7 +41,7 @@ const runTests = ({ times, results = [], fn }) => {
       fn,
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
     process.exit(1);
   }
 };
