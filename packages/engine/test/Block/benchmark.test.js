@@ -27,12 +27,11 @@ const runTests = ({ times, results = [], fn }) => {
   if (times <= 0) {
     return results;
   }
-  // try {
   // eslint-disable-next-line no-undef
-  const start = performance.now();
+  const start = Date.now();
   fn(times);
   // eslint-disable-next-line no-undef
-  const end = performance.now();
+  const end = Date.now();
   const duration = end - start;
 
   return runTests({
@@ -40,10 +39,6 @@ const runTests = ({ times, results = [], fn }) => {
     results: results.concat([duration]),
     fn,
   });
-  // } catch (e) {
-  //   console.error(e);
-  //   process.exit(1);
-  // }
 };
 
 test(`parse nunjucks value 500 blocks`, async () => {
