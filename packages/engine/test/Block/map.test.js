@@ -21,114 +21,70 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('all nested blocks present in map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('all nested blocks present in map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            y: 'y',
+            a: [{ b: 'b0' }, { b: 'b1', c: [{ d: [1, 2, 3] }] }],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'y',
+      },
+      {
+        type: 'List',
+        id: 'a',
         blocks: [
           {
             type: 'TextInput',
-            blockId: 'y',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
+            id: 'a.$.b',
           },
           {
-            type: 'List',
-            blockId: 'a',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
+            type: 'Box',
+            id: 'a.$.col',
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'a.$.t',
+              },
+              {
+                type: 'List',
+                id: 'a.$.c',
                 blocks: [
                   {
-                    type: 'TextInput',
-                    blockId: 'a.$.b',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                  {
-                    type: 'Box',
-                    blockId: 'a.$.col',
-                    meta: {
-                      category: 'container',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'TextInput',
-                            blockId: 'a.$.t',
-                            meta: {
-                              category: 'display',
-                            },
-                          },
-                          {
-                            type: 'List',
-                            blockId: 'a.$.c',
-                            meta: {
-                              category: 'list',
-                              valueType: 'array',
-                            },
-                            areas: {
-                              content: {
-                                blocks: [
-                                  {
-                                    type: 'List',
-                                    blockId: 'a.$.c.$.d',
-                                    meta: {
-                                      category: 'list',
-                                      valueType: 'array',
-                                    },
-                                    areas: {
-                                      content: {
-                                        blocks: [
-                                          {
-                                            type: 'NumberInput',
-                                            blockId: 'a.$.c.$.d.$',
-                                            meta: {
-                                              category: 'input',
-                                              valueType: 'number',
-                                            },
-                                          },
-                                        ],
-                                      },
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          },
-                        ],
+                    type: 'List',
+                    id: 'a.$.c.$.d',
+                    blocks: [
+                      {
+                        type: 'NumberInput',
+                        id: 'a.$.c.$.d.$',
                       },
-                    },
+                    ],
                   },
                 ],
               },
-            },
+            ],
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      y: 'y',
-      a: [{ b: 'b0' }, { b: 'b1', c: [{ d: [1, 2, 3] }] }],
-    },
+    pageConfig,
   });
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'y',
     'a',
@@ -145,172 +101,152 @@ test('all nested blocks present in map', () => {
     'a.1.c.0.d.1',
     'a.1.c.0.d.2',
   ]);
-  Object.keys(context.RootBlocks.map).forEach((key) => {
-    expect(context.RootBlocks.map[key].blockId).toEqual(key);
+  Object.keys(context._internal.RootBlocks.map).forEach((key) => {
+    expect(context._internal.RootBlocks.map[key].blockId).toEqual(key);
   });
 });
 
-test('unshiftItem item in list updates map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('unshiftItem item in list updates map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [0, 1],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [0, 1],
-    },
+    pageConfig,
   });
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list', 'list.0', 'list.1']);
-  const { list } = context.RootBlocks.map;
-  const originalL0 = context.RootBlocks.map['list.0'];
-  const originalL1 = context.RootBlocks.map['list.1'];
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+    'root',
+    'list',
+    'list.0',
+    'list.1',
+  ]);
+  const { list } = context._internal.RootBlocks.map;
+  const originalL0 = context._internal.RootBlocks.map['list.0'];
+  const originalL1 = context._internal.RootBlocks.map['list.1'];
 
   list.unshiftItem();
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
     'list.2',
   ]);
-  const newL1 = context.RootBlocks.map['list.1'];
-  const newL2 = context.RootBlocks.map['list.2'];
+  const newL1 = context._internal.RootBlocks.map['list.1'];
+  const newL2 = context._internal.RootBlocks.map['list.2'];
 
   expect(originalL0).toBe(newL1);
   expect(originalL1).toBe(newL2);
 });
 
-test('pushItem item in list updates map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('pushItem item in list updates map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [0],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [0],
-    },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
-  const originalL0 = context.RootBlocks.map['list.0'];
+  const { list } = context._internal.RootBlocks.map;
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
+  const originalL0 = context._internal.RootBlocks.map['list.0'];
 
   list.pushItem();
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list', 'list.0', 'list.1']);
-  const newL0 = context.RootBlocks.map['list.0'];
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+    'root',
+    'list',
+    'list.0',
+    'list.1',
+  ]);
+  const newL0 = context._internal.RootBlocks.map['list.0'];
   expect(originalL0).toBe(newL0);
-  expect(context.RootBlocks.map['list.1'].blockId).toEqual('list.1');
+  expect(context._internal.RootBlocks.map['list.1'].blockId).toEqual('list.1');
 });
 
-test('removeItem in list updates map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('removeItem in list updates map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [0, 1, 2, 3],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [0, 1, 2, 3],
-    },
+    pageConfig,
   });
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -318,89 +254,84 @@ test('removeItem in list updates map', () => {
     'list.2',
     'list.3',
   ]);
-  const { list } = context.RootBlocks.map;
-  const L0 = context.RootBlocks.map['list.0'];
-  const L2 = context.RootBlocks.map['list.2'];
-  const L3 = context.RootBlocks.map['list.3'];
+  const { list } = context._internal.RootBlocks.map;
+  const L0 = context._internal.RootBlocks.map['list.0'];
+  const L2 = context._internal.RootBlocks.map['list.2'];
+  const L3 = context._internal.RootBlocks.map['list.3'];
 
   list.removeItem(1);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
     'list.2',
   ]);
-  expect(context.RootBlocks.map['list.0']).toBe(L0);
-  expect(context.RootBlocks.map['list.1']).toBe(L2);
-  expect(context.RootBlocks.map['list.2']).toBe(L3);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.2']).toBe(L3);
 
   list.removeItem(0);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list', 'list.0', 'list.1']);
-  expect(context.RootBlocks.map['list.0']).toBe(L2);
-  expect(context.RootBlocks.map['list.1']).toBe(L3);
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+    'root',
+    'list',
+    'list.0',
+    'list.1',
+  ]);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L3);
 
   list.removeItem(1);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
-  expect(context.RootBlocks.map['list.0']).toBe(L2);
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L2);
 
   list.removeItem(0);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual(['root', 'list']);
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list']);
 });
 
-test('moveItemUp in list updates map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('moveItemUp in list updates map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [0, 1, 2, 3],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [0, 1, 2, 3],
-    },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
 
-  const L0 = context.RootBlocks.map['list.0'];
-  const L1 = context.RootBlocks.map['list.1'];
-  const L2 = context.RootBlocks.map['list.2'];
-  const L3 = context.RootBlocks.map['list.3'];
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  const L0 = context._internal.RootBlocks.map['list.0'];
+  const L1 = context._internal.RootBlocks.map['list.1'];
+  const L2 = context._internal.RootBlocks.map['list.2'];
+  const L3 = context._internal.RootBlocks.map['list.3'];
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -411,7 +342,7 @@ test('moveItemUp in list updates map', () => {
 
   list.moveItemUp(1);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -419,14 +350,14 @@ test('moveItemUp in list updates map', () => {
     'list.2',
     'list.3',
   ]);
-  expect(context.RootBlocks.map['list.0']).toBe(L1);
-  expect(context.RootBlocks.map['list.1']).toBe(L0);
-  expect(context.RootBlocks.map['list.2']).toBe(L2);
-  expect(context.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L1);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L0);
+  expect(context._internal.RootBlocks.map['list.2']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
 
   list.moveItemUp(0);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -434,62 +365,52 @@ test('moveItemUp in list updates map', () => {
     'list.2',
     'list.3',
   ]);
-  expect(context.RootBlocks.map['list.0']).toBe(L1);
-  expect(context.RootBlocks.map['list.1']).toBe(L0);
-  expect(context.RootBlocks.map['list.2']).toBe(L2);
-  expect(context.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L1);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L0);
+  expect(context._internal.RootBlocks.map['list.2']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
 });
 
-test('moveItemDown in list updates map', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('moveItemDown in list updates map', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [0, 1, 2, 3],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'NumberInput',
-                    blockId: 'list.$',
-                    meta: {
-                      category: 'input',
-                      valueType: 'number',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'NumberInput',
+            id: 'list.$',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [0, 1, 2, 3],
-    },
+    pageConfig,
   });
-  const { list } = context.RootBlocks.map;
+  const { list } = context._internal.RootBlocks.map;
 
-  const L0 = context.RootBlocks.map['list.0'];
-  const L1 = context.RootBlocks.map['list.1'];
-  const L2 = context.RootBlocks.map['list.2'];
-  const L3 = context.RootBlocks.map['list.3'];
+  const L0 = context._internal.RootBlocks.map['list.0'];
+  const L1 = context._internal.RootBlocks.map['list.1'];
+  const L2 = context._internal.RootBlocks.map['list.2'];
+  const L3 = context._internal.RootBlocks.map['list.3'];
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -499,7 +420,7 @@ test('moveItemDown in list updates map', () => {
   ]);
   list.moveItemDown(1);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -507,14 +428,14 @@ test('moveItemDown in list updates map', () => {
     'list.2',
     'list.3',
   ]);
-  expect(context.RootBlocks.map['list.0']).toBe(L0);
-  expect(context.RootBlocks.map['list.1']).toBe(L2);
-  expect(context.RootBlocks.map['list.2']).toBe(L1);
-  expect(context.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.2']).toBe(L1);
+  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
 
   list.moveItemDown(3);
 
-  expect(Object.keys(context.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -522,8 +443,8 @@ test('moveItemDown in list updates map', () => {
     'list.2',
     'list.3',
   ]);
-  expect(context.RootBlocks.map['list.0']).toBe(L0);
-  expect(context.RootBlocks.map['list.1']).toBe(L2);
-  expect(context.RootBlocks.map['list.2']).toBe(L1);
-  expect(context.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
+  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
+  expect(context._internal.RootBlocks.map['list.2']).toBe(L1);
+  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
 });

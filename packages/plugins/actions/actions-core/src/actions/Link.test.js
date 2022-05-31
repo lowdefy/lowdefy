@@ -14,150 +14,47 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
+import { jest } from '@jest/globals';
 import Link from './Link.js';
 
-const mockActionMethod = jest.fn();
+const mockLink = jest.fn();
+const methods = { link: mockLink };
 
-const lowdefy = {
-  _internal: {
-    actions: {
-      Link,
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-    link: (params) => {
-      if (params.pageId === 'error') {
-        throw new Error('Param error');
-      } else mockActionMethod(params);
-    },
-  },
-};
-
-// Comment out to use console
 console.log = () => {};
-console.error = () => {};
 
-const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
-
-beforeAll(() => {
-  global.Date = mockDate;
-});
-
-afterAll(() => {
-  global.Date = RealDate;
-});
-
-test('action invocation', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'action',
-                  type: 'Link',
-                  params: 'call',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
+test('Link with params', () => {
+  Link({
+    methods,
+    params: { pageId: 'page-id' },
   });
-  const button = context._internal.RootBlocks.map['button'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(mockActionMethod.mock.calls).toEqual([[{ pageId: 'call' }]]);
+  expect(mockLink.mock.calls).toEqual([[{ pageId: 'page-id' }]]);
 });
 
-test('error params action invocation', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'action',
-                  type: 'Link',
-                  params: 'error',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
+test('Link with string pageId as params', () => {
+  Link({
+    methods,
+    params: 'page-id',
   });
-  const button = context._internal.RootBlocks.map['button'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    event: undefined,
-    eventName: 'onClick',
-    error: {
-      action: {
-        id: 'action',
-        type: 'Link',
-        params: 'error',
-      },
-      error: {
-        error: new Error('Invalid Link, check action params. Received ""error"".'),
-        index: 0,
-        type: 'Link',
-      },
-    },
-    responses: {
-      action: {
-        error: new Error('Invalid Link, check action params. Received ""error"".'),
-        type: 'Link',
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
+  expect(mockLink.mock.calls).toEqual([[{ pageId: 'page-id' }]]);
+});
+
+test('Link with string pageId as params', () => {
+  Link({
+    methods,
+    params: 'page-id',
   });
+  expect(mockLink.mock.calls).toEqual([[{ pageId: 'page-id' }]]);
+});
+
+test('link method throws', () => {
+  mockLink.mockImplementationOnce(() => {
+    throw new Error('Test error');
+  });
+
+  expect(() =>
+    Link({
+      methods,
+      params: 'page-id',
+    })
+  ).toThrow('Invalid Link, check action params. Received ""page-id"".');
 });

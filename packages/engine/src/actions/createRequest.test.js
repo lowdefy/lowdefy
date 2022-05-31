@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -49,9 +50,6 @@ const lowdefy = {
         return request(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     callRequest: mockCallRequest,
   },
 };
@@ -78,38 +76,28 @@ beforeEach(() => {
 });
 
 test('Request call one request', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
     ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Request', params: 'req_one' }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -138,41 +126,32 @@ test('Request call one request', async () => {
 });
 
 test('Request call all requests', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Request', params: { all: true } }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -220,41 +199,32 @@ test('Request call all requests', async () => {
 });
 
 test('Request call array of requests', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Request', params: ['req_one', 'req_two'] }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
@@ -302,41 +272,32 @@ test('Request call array of requests', async () => {
 });
 
 test('Request pass if params are none', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
     requests: [
       {
-        requestId: 'req_one',
+        id: 'req_one',
+        type: 'Fetch',
       },
       {
-        requestId: 'req_two',
+        id: 'req_two',
+        type: 'Fetch',
       },
     ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request' }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Request' }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
@@ -344,38 +305,28 @@ test('Request pass if params are none', async () => {
 });
 
 test('Request call request error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
     requests: [
       {
-        requestId: 'req_error',
+        id: 'req_error',
+        type: 'Fetch',
       },
     ],
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Request', params: 'req_error' }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Request', params: 'req_error' }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });

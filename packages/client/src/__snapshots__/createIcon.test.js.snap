@@ -26,42 +26,6 @@ exports[`Icon default and id 1`] = `
 </span>
 `;
 
-exports[`Icon onClick.loading false 1`] = `
-.emotion-0 {
-  cursor: pointer;
-}
-
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0"
-    data-testid="AiIcon"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
-`;
-
-exports[`Icon onClick.loading true 1`] = `
-.emotion-0 {
-  cursor: pointer;
-}
-
-<span
-  class="anticon"
-  role="img"
->
-  <svg
-    class="emotion-0 icon-spin"
-    data-testid="AiOutlineLoading3Quarters"
-    id="test-id"
-    title="AiIcon"
-  />
-</span>
-`;
-
 exports[`Icon properties string 1`] = `
 <span
   class="anticon"

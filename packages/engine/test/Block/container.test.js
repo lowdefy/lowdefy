@@ -19,67 +19,47 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('container and set value from block', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('container and set value from block', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textB: 'b' },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container1',
         blocks: [
           {
-            type: 'Box',
-            blockId: 'container1',
-            meta: {
-              category: 'container',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'textA',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            type: 'Box',
-            blockId: 'container2',
-            meta: {
-              category: 'container',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'textB',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'textA',
           },
         ],
       },
-    },
+      {
+        type: 'Box',
+        id: 'container2',
+        blocks: [
+          {
+            type: 'TextInput',
+            id: 'textB',
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textB: 'b' },
+    pageConfig,
   });
-  const { textA, textB } = context.RootBlocks.map;
+  const { textA, textB } = context._internal.RootBlocks.map;
   expect(textA.value).toBe(null);
   expect(textA.setValue).toBeDefined();
   expect(textB.value).toBe('b');
@@ -90,64 +70,47 @@ test('container and set value from block', () => {
   expect(context.state).toEqual({ textA: 'Hello', textB: 'b' });
 });
 
-test('container blocks visibility toggle fields in state and propagate visibility to children', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('container blocks visibility toggle fields in state and propagate visibility to children', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { text: 'a', swtch1: true, swtch2: true },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container',
+        visible: { _state: 'swtch2' },
         blocks: [
           {
-            type: 'Box',
-            blockId: 'container',
-            meta: {
-              category: 'container',
-            },
-            visible: { _state: 'swtch2' },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'text',
-                    visible: { _state: 'swtch1' },
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            type: 'Switch',
-            blockId: 'swtch1',
-            meta: {
-              category: 'input',
-              valueType: 'boolean',
-            },
-          },
-          {
-            type: 'Switch',
-            blockId: 'swtch2',
-            meta: {
-              category: 'input',
-              valueType: 'boolean',
-            },
+            type: 'TextInput',
+            id: 'text',
+            visible: { _state: 'swtch1' },
           },
         ],
       },
-    },
+      {
+        type: 'Switch',
+        id: 'swtch1',
+      },
+      {
+        type: 'Switch',
+        id: 'swtch2',
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text: 'a', swtch1: true, swtch2: true },
+    pageConfig,
   });
-  const { container, text, swtch1, swtch2 } = context.RootBlocks.map;
+  const { container, text, swtch1, swtch2 } = context._internal.RootBlocks.map;
   expect(container.visibleEval.output).toEqual(true);
   expect(text.visibleEval.output).toEqual(true);
   swtch1.setValue(false);
@@ -168,77 +131,53 @@ test('container blocks visibility toggle fields in state and propagate visibilit
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
-test('container blocks visibility toggle fields in state with nested containers and propagate visibility to children', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('container blocks visibility toggle fields in state with nested containers and propagate visibility to children', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { text: 'a', swtch1: true, swtch2: true },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'Box',
+        id: 'container1',
+        visible: { _state: 'swtch2' },
         blocks: [
           {
             type: 'Box',
-            blockId: 'container1',
-            meta: {
-              category: 'container',
-            },
-            visible: { _state: 'swtch2' },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'Box',
-                    blockId: 'container2',
-                    meta: {
-                      category: 'container',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'TextInput',
-                            blockId: 'text',
-                            visible: { _state: 'swtch1' },
-                            meta: {
-                              category: 'input',
-                              valueType: 'string',
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
-                ],
+            id: 'container2',
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'text',
+                visible: { _state: 'swtch1' },
               },
-            },
-          },
-          {
-            type: 'Switch',
-            blockId: 'swtch1',
-            meta: {
-              category: 'input',
-              valueType: 'boolean',
-            },
-          },
-          {
-            type: 'Switch',
-            blockId: 'swtch2',
-            meta: {
-              category: 'input',
-              valueType: 'boolean',
-            },
+            ],
           },
         ],
       },
-    },
+      {
+        type: 'Switch',
+        id: 'swtch1',
+      },
+      {
+        type: 'Switch',
+        id: 'swtch2',
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text: 'a', swtch1: true, swtch2: true },
+    pageConfig,
   });
-  const { container1, text, swtch1, swtch2 } = context.RootBlocks.map;
+  const { container1, text, swtch1, swtch2 } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 
   expect(container1.visibleEval.output).toEqual(true);
@@ -261,48 +200,30 @@ test('container blocks visibility toggle fields in state with nested containers 
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 });
 
-test('visibleParent. If container visible is null, child blocks should still be evaluated', () => {
-  const rootBlock = {
-    blockId: 'root',
-    type: 'Context',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('visibleParent. If container visible is null, child blocks should still be evaluated', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'container',
+        type: 'Box',
+        visible: {
+          _state: 'notThere', // will evaluate to null
+        },
         blocks: [
           {
-            blockId: 'container',
-            type: 'Box',
-            meta: {
-              category: 'container',
-            },
-            visible: {
-              _state: 'notThere', // will evaluate to null
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'text',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
+            type: 'TextInput',
+            id: 'text',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  expect(context.RootBlocks.map.container.eval.visible).toBe(null);
-  expect(context.RootBlocks.map.text.eval.visible).toBe(true);
+  expect(context._internal.RootBlocks.map.container.eval.visible).toBe(null);
+  expect(context._internal.RootBlocks.map.text.eval.visible).toBe(true);
 });

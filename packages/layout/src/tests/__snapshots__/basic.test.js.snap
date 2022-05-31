@@ -8,7 +8,7 @@ exports[`Button 1`] = `
     style="border: 1px dashed #8eccf5;"
   >
     <button
-      class="ant-btn"
+      class="ant-btn ant-btn-default"
       id="Button23456"
       type="button"
     >

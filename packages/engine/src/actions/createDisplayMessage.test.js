@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -29,50 +30,35 @@ const lowdefy = {
         });
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
     displayMessage: mockMessage,
   },
 };
 
-test('DisplayMessage with content', () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+test('DisplayMessage with content', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'DisplayMessage',
+              params: { content: 'test' },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'DisplayMessage',
-                  params: { content: 'test' },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -83,48 +69,36 @@ test('DisplayMessage with content', () => {
   ]);
 });
 
-test('DisplayMessage with all params', () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+test('DisplayMessage with all params', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'DisplayMessage',
+              params: {
+                content: 'content',
+                duration: 6,
+                icon: 'AiOutlineFire',
+                status: 'error',
+              },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'DisplayMessage',
-                  params: {
-                    content: 'content',
-                    duration: 6,
-                    icon: 'AiOutlineFire',
-                    status: 'error',
-                  },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -138,42 +112,30 @@ test('DisplayMessage with all params', () => {
   ]);
 });
 
-test('DisplayMessage with no params', () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+test('DisplayMessage with no params', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'DisplayMessage',
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'DisplayMessage',
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [

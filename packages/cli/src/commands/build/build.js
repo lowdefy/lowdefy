@@ -18,11 +18,13 @@ import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import copyPluginsFolder from '../../utils/copyPluginsFolder.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
+import readDotEnv from '../../utils/readDotEnv.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
+  readDotEnv(context);
   const directory = context.directories.server;
   await getServer({ context, packageName: '@lowdefy/server', directory });
   await copyPluginsFolder({ context, directory });

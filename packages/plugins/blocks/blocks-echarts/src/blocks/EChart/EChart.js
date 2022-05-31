@@ -79,20 +79,30 @@ class EChart extends React.Component {
     return (
       <div
         style={{
-          height: this.props.properties.height || 300,
-          width: this.props.properties.width || '100%',
+          height: this.props.properties.height ?? 300,
+          width: this.props.properties.width ?? '100%',
         }}
       >
         <ReactECharts
           lazyUpdate={true}
           notMerge={true}
-          onEvents={this.onEvents || {}}
-          option={this.props.properties.option || {}}
-          opts={{
-            height: this.props.properties.height || 300,
-            ...(this.props.properties.init || {}),
+          onEvents={this.onEvents ?? {}}
+          option={{
+            ...(this.props.properties.option ?? {}),
+            dataset:
+              this.props.properties.option?.dataset &&
+              this.props.properties.option?.dataset?.source === null
+                ? {
+                    ...this.props.properties.option.dataset,
+                    source: [],
+                  }
+                : this.props.properties.option?.dataset,
           }}
-          style={this.props.properties.style || {}}
+          opts={{
+            height: this.props.properties.height ?? 300,
+            ...(this.props.properties.init ?? {}),
+          }}
+          style={this.props.properties.style ?? {}}
           theme={this.props.properties.theme && `custom_theme_${this.props.blockId}`}
         />
       </div>

@@ -24,48 +24,46 @@ const lowdefy = { pageId };
 console.log = () => {};
 console.error = () => {};
 
-test('parse validate on fields', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse validate on fields', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text: 'a' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'a', key: 'text' } },
-                message: "Not 'a'",
-              },
-              {
-                pass: { _regex: { pattern: 'c', key: 'text' } },
-                message: "Not 'c'",
-              },
-            ],
+            pass: { _regex: { pattern: 'a', key: 'text' } },
+            message: "Not 'a'",
+          },
+          {
+            pass: { _regex: { pattern: 'c', key: 'text' } },
+            message: "Not 'c'",
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text: 'a' },
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
@@ -87,40 +85,30 @@ test('parse validate on fields', () => {
   });
 });
 
-test('validate should fail if parser has errors', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+test('validate should fail if parser has errors', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _state: null },
-                message: 'Parser failed',
-              },
-            ],
+            pass: { _state: null },
+            message: 'Parser failed',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
@@ -129,44 +117,34 @@ test('validate should fail if parser has errors', () => {
   expect(text.validationEval.errors.length > 0).toBe(true);
 });
 
-test('validate, only test where parser failed should fail', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+test('validate, only test where parser failed should fail', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _state: null },
-                message: 'Parser failed',
-              },
-              {
-                pass: true,
-                message: 'Pass',
-              },
-            ],
+            pass: { _state: null },
+            message: 'Parser failed',
+          },
+          {
+            pass: true,
+            message: 'Pass',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
@@ -174,43 +152,41 @@ test('validate, only test where parser failed should fail', () => {
   });
 });
 
-test('parse validate, validate an object not an array', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse validate, validate an object not an array', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text: 'a' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'c', key: 'text' } },
-                message: "Not 'c'",
-              },
-            ],
+            pass: { _regex: { pattern: 'c', key: 'text' } },
+            message: "Not 'c'",
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text: 'a' },
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
@@ -220,74 +196,52 @@ test('parse validate, validate an object not an array', () => {
   expect(text.eval.validation).toEqual({ errors: [], status: 'success', warnings: [] });
 });
 
-test('RootBlock.validate(match) to ignore errors where field not visible', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
+test('RootBlock.validate(match) to ignore errors where field not visible', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+      },
+      {
+        type: 'List',
+        id: 'list',
+        visible: { _regex: { pattern: '1', key: 'text' } },
+        validate: [
+          {
+            pass: { _regex: { pattern: '123', key: 'text' } },
+            message: 'Error 123',
+            status: 'error',
+          },
+        ],
         blocks: [
           {
             type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            type: 'List',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            visible: { _regex: { pattern: '1', key: 'text' } },
+            id: 'list.$.innerText',
+            visible: { _regex: { pattern: '12', key: 'text' } },
             validate: [
               {
-                pass: { _regex: { pattern: '123', key: 'text' } },
-                message: 'Error 123',
+                pass: { _regex: { pattern: '1234', key: 'text' } },
+                message: 'Error 1234',
                 status: 'error',
               },
             ],
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'list.$.innerText',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                    visible: { _regex: { pattern: '12', key: 'text' } },
-                    validate: [
-                      {
-                        pass: { _regex: { pattern: '1234', key: 'text' } },
-                        message: 'Error 1234',
-                        status: 'error',
-                      },
-                    ],
-                  },
-                ],
-              },
-            },
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text, list } = context.RootBlocks.map;
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  const { text, list } = context._internal.RootBlocks.map;
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
 
   text.setValue('1');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -295,7 +249,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', () =>
   ]);
 
   text.setValue('12');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -303,11 +257,11 @@ test('RootBlock.validate(match) to ignore errors where field not visible', () =>
   ]);
 
   text.setValue('123');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
 
   text.setValue('12');
   list.pushItem();
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -317,7 +271,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', () =>
 
   text.setValue('123');
   list.pushItem();
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list.0.innerText',
       validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
@@ -329,13 +283,13 @@ test('RootBlock.validate(match) to ignore errors where field not visible', () =>
   ]);
 
   text.setValue('1234');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
 
   text.setValue('0');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
 
   text.setValue('12');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -348,46 +302,36 @@ test('RootBlock.validate(match) to ignore errors where field not visible', () =>
   ]);
 });
 
-test('required on input to return validation error on RootBlock.validate(match)', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'text',
-            required: true,
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+test('required on input to return validation error on RootBlock.validate(match)', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        required: true,
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
@@ -395,44 +339,34 @@ test('required on input to return validation error on RootBlock.validate(match)'
   ]);
 });
 
-test('required on input to return validation error with priority over validation errors on RootBlock.validate(match)', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+test('required on input to return validation error with priority over validation errors on RootBlock.validate(match)', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        required: true,
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            required: true,
-            validate: [
-              {
-                pass: { _regex: { pattern: '1234', key: 'text' } },
-                message: 'Error 1234',
-                status: 'error',
-              },
-            ],
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
+            pass: { _regex: { pattern: '1234', key: 'text' } },
+            message: 'Error 1234',
+            status: 'error',
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -443,7 +377,7 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('a');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -454,9 +388,9 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('1234');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -468,112 +402,79 @@ test('required on input to return validation error with priority over validation
   ]);
 });
 
-test('nested arrays with validate, and RootBlock.validate(match) returns all validation errors', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('nested arrays with validate, and RootBlock.validate(match) returns all validation errors', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: {
+            list: [
+              { swtch: true },
+              { swtch: false },
+              { innerList: [{ number: 1 }] },
+              { innerList: [{ number: 2 }] },
+              { swtch: true },
+            ],
+          },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+      },
+      {
+        type: 'List',
+        id: 'list',
         blocks: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
+            type: 'Switch',
+            id: 'list.$.swtch',
+            validate: [
+              {
+                pass: { _regex: { pattern: '12', key: 'text' } },
+                message: 'Error 12',
+                status: 'error',
+              },
+            ],
           },
           {
-            type: 'array_input',
-            blockId: 'list',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
+            type: 'Box',
+            id: 'container',
+            blocks: [
+              {
+                type: 'List',
+                id: 'list.$.innerList',
                 blocks: [
                   {
-                    type: 'Switch',
-                    blockId: 'list.$.swtch',
-                    meta: {
-                      category: 'input',
-                      valueType: 'boolean',
-                    },
+                    type: 'NumberInput',
+                    id: 'list.$.innerList.$.number',
                     validate: [
                       {
-                        pass: { _regex: { pattern: '12', key: 'text' } },
-                        message: 'Error 12',
+                        pass: { _regex: { pattern: '1', key: 'text' } },
+                        message: 'Error 1',
                         status: 'error',
                       },
                     ],
                   },
-                  {
-                    type: 'Box',
-                    blockId: 'container',
-                    meta: {
-                      category: 'container',
-                    },
-                    areas: {
-                      content: {
-                        blocks: [
-                          {
-                            type: 'List',
-                            blockId: 'list.$.innerList',
-                            meta: {
-                              category: 'list',
-                              valueType: 'array',
-                            },
-                            areas: {
-                              content: {
-                                blocks: [
-                                  {
-                                    type: 'NumberInput',
-                                    blockId: 'list.$.innerList.$.number',
-                                    meta: {
-                                      category: 'input',
-                                      valueType: 'number',
-                                    },
-                                    validate: [
-                                      {
-                                        pass: { _regex: { pattern: '1', key: 'text' } },
-                                        message: 'Error 1',
-                                        status: 'error',
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  },
                 ],
               },
-            },
+            ],
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: {
-      list: [
-        { swtch: true },
-        { swtch: false },
-        { innerList: [{ number: 1 }] },
-        { innerList: [{ number: 2 }] },
-        { swtch: true },
-      ],
-    },
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({
     text: null,
@@ -597,7 +498,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
       { innerList: [], swtch: true },
     ],
   });
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -656,7 +557,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
     },
   ]);
   text.setValue('1');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -699,9 +600,9 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
     },
   ]);
   text.setValue('12');
-  expect(context.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
   text.setValue('0');
-  expect(context.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -761,45 +662,43 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
   ]);
 });
 
-test('validation warnings', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('validation warnings', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text: 'a' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'a', key: 'text' } },
-                status: 'warning',
-                message: "Not 'a'",
-              },
-              {
-                pass: { _regex: { pattern: 'c', key: 'text' } },
-                status: 'warning',
-                message: "Not 'c'",
-              },
-            ],
+            pass: { _regex: { pattern: 'a', key: 'text' } },
+            status: 'warning',
+            message: "Not 'a'",
+          },
+          {
+            pass: { _regex: { pattern: 'c', key: 'text' } },
+            status: 'warning',
+            message: "Not 'c'",
           },
         ],
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text: 'a' },
+    pageConfig,
   });
-  const { text } = context.RootBlocks.map;
+  const { text } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({
@@ -808,7 +707,7 @@ test('validation warnings', () => {
     warnings: ["Not 'c'"],
   });
 
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text.eval.validation).toEqual({
     errors: [],
     status: 'warning',
@@ -830,60 +729,54 @@ test('validation warnings', () => {
   });
 });
 
-test('showValidation only on fields that matches for error', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('showValidation only on fields that matches for error', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text1: '3' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text1',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text1',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '1', key: 'text1' } },
-                message: "Not '1'",
-              },
-            ],
-          },
-          {
-            type: 'TextInput',
-            blockId: 'text2',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '2', key: 'text2' } },
-                message: "Not '2'",
-              },
-            ],
+            pass: { _regex: { pattern: '1', key: 'text1' } },
+            message: "Not '1'",
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'text2',
+        validate: [
+          {
+            pass: { _regex: { pattern: '2', key: 'text2' } },
+            message: "Not '2'",
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text1: '3' },
+    pageConfig,
   });
-  const { text1, text2 } = context.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text1: '3', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ errors: ["Not '1'"], status: null, warnings: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
-  context.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootBlocks.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: ["Not '1'"],
@@ -894,62 +787,56 @@ test('showValidation only on fields that matches for error', () => {
   expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
 });
 
-test('showValidation only on fields that matches for warning', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('showValidation only on fields that matches for warning', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text1: '3' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text1',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text1',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '1', key: 'text1' } },
-                status: 'warning',
-                message: "Not '1'",
-              },
-            ],
-          },
-          {
-            type: 'TextInput',
-            blockId: 'text2',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '2', key: 'text2' } },
-                status: 'warning',
-                message: "Not '2'",
-              },
-            ],
+            pass: { _regex: { pattern: '1', key: 'text1' } },
+            status: 'warning',
+            message: "Not '1'",
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'text2',
+        validate: [
+          {
+            pass: { _regex: { pattern: '2', key: 'text2' } },
+            status: 'warning',
+            message: "Not '2'",
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text1: '3' },
+    pageConfig,
   });
-  const { text1, text2 } = context.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text1: '3', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ warnings: ["Not '1'"], status: null, errors: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
-  context.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootBlocks.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: [],
@@ -960,62 +847,56 @@ test('showValidation only on fields that matches for warning', () => {
   expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
 });
 
-test('showValidation only on fields that matches for success', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('showValidation only on fields that matches for success', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text1: '1' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text1',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text1',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '1', key: 'text1' } },
-                status: 'error',
-                message: "Not '1'",
-              },
-            ],
-          },
-          {
-            type: 'TextInput',
-            blockId: 'text2',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '2', key: 'text2' } },
-                status: 'error',
-                message: "Not '2'",
-              },
-            ],
+            pass: { _regex: { pattern: '1', key: 'text1' } },
+            status: 'error',
+            message: "Not '1'",
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'text2',
+        validate: [
+          {
+            pass: { _regex: { pattern: '2', key: 'text2' } },
+            status: 'error',
+            message: "Not '2'",
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text1: '1' },
+    pageConfig,
   });
-  const { text1, text2 } = context.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ warnings: [], status: null, errors: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
-  context.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootBlocks.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: [],
@@ -1026,127 +907,115 @@ test('showValidation only on fields that matches for success', () => {
   expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
 });
 
-test('drop showValidation on RootBlocks.reset()', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('drop showValidation on RootBlocks.reset()', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text1: '1' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text1',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text1',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '1', key: 'text1' } },
-                status: 'error',
-                message: "Not '1'",
-              },
-            ],
-          },
-          {
-            type: 'TextInput',
-            blockId: 'text2',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '2', key: 'text2' } },
-                status: 'error',
-                message: "Not '2'",
-              },
-            ],
+            pass: { _regex: { pattern: '1', key: 'text1' } },
+            status: 'error',
+            message: "Not '1'",
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'text2',
+        validate: [
+          {
+            pass: { _regex: { pattern: '2', key: 'text2' } },
+            status: 'error',
+            message: "Not '2'",
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text1: '1' },
+    pageConfig,
   });
-  const { text1, text2 } = context.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
-  context.RootBlocks.validate(match);
+  context._internal.RootBlocks.validate(match);
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(true);
-  context.RootBlocks.reset();
+  context._internal.RootBlocks.reset();
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
 });
 
-test('drop showValidation on RootBlocks.resetValidation()', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('drop showValidation on RootBlocks.resetValidation()', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { text1: '1' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text1',
+        validate: [
           {
-            type: 'TextInput',
-            blockId: 'text1',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '1', key: 'text1' } },
-                status: 'error',
-                message: "Not '1'",
-              },
-            ],
-          },
-          {
-            type: 'TextInput',
-            blockId: 'text2',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: '2', key: 'text2' } },
-                status: 'error',
-                message: "Not '2'",
-              },
-            ],
+            pass: { _regex: { pattern: '1', key: 'text1' } },
+            status: 'error',
+            message: "Not '1'",
           },
         ],
       },
-    },
+      {
+        type: 'TextInput',
+        id: 'text2',
+        validate: [
+          {
+            pass: { _regex: { pattern: '2', key: 'text2' } },
+            status: 'error',
+            message: "Not '2'",
+          },
+        ],
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { text1: '1' },
+    pageConfig,
   });
-  const { text1, text2 } = context.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootBlocks.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
-  context.RootBlocks.validate((blockId) => blockId === 'text1');
+  context._internal.RootBlocks.validate((blockId) => blockId === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(false);
-  context.RootBlocks.resetValidation(() => false);
+  context._internal.RootBlocks.resetValidation(() => false);
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(false);
-  context.RootBlocks.resetValidation((blockId) => blockId === 'text1');
+  context._internal.RootBlocks.resetValidation((blockId) => blockId === 'text1');
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
 });

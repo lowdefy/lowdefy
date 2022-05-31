@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -23,52 +24,39 @@ const lowdefy = {
         return reset();
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list', valueType: 'array' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
-    },
   },
 };
 
-test('Reset one field', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('Reset one field', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'textInput',
-            blockId: 'textInput',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Reset' }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'textInput',
+        type: 'TextInput',
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Reset' }],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
   expect(context.state).toEqual({ textInput: 'init' });
   const button = context._internal.RootBlocks.map['button'];
@@ -79,59 +67,42 @@ test('Reset one field', () => {
   expect(context.state).toEqual({ textInput: 'init' });
 });
 
-test('Reset on primitive array after adding item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('Reset on primitive array after adding item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: ['init'] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
         blocks: [
           {
-            id: 'list',
-            blockId: 'list',
-            type: 'List',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    id: 'list.$',
-                    blockId: 'list.$',
-                    type: 'TextInput',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Reset' }],
-            },
+            id: 'list.$',
+            type: 'TextInput',
           },
         ],
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Reset' }],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: ['init'] },
+    pageConfig,
   });
   expect(context.state).toEqual({ list: ['init'] });
   const button = context._internal.RootBlocks.map['button'];
@@ -142,60 +113,43 @@ test('Reset on primitive array after adding item', () => {
   expect(context.state).toEqual({ list: ['init'] });
 });
 
-test('Reset on object array after removing item', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('Reset on object array after removing item', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'initState',
+          type: 'SetState',
+          params: { list: [{ textInput: 'init' }] },
+        },
+      ],
     },
-    areas: {
-      content: {
+    blocks: [
+      {
+        id: 'list',
+        type: 'List',
         blocks: [
           {
-            id: 'list',
-            blockId: 'list',
-            type: 'List',
-            meta: {
-              category: 'list',
-              valueType: 'array',
-            },
-            areas: {
-              content: {
-                blocks: [
-                  {
-                    id: 'list.$.textInput',
-                    blockId: 'list.$.textInput',
-                    type: 'TextInput',
-                    defaultValue: '123',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Reset' }],
-            },
+            id: 'list.$.textInput',
+            type: 'TextInput',
+            defaultValue: '123',
           },
         ],
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Reset' }],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { list: [{ textInput: 'init' }] },
+    pageConfig,
   });
 
   const button = context._internal.RootBlocks.map['button'];

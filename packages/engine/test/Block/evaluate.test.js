@@ -21,353 +21,331 @@ import testContext from '../testContext.js';
 const pageId = 'one';
 const lowdefy = { pageId };
 
-test('parse block visible', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block visible', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            visible: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        visible: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.visible).toEqual({ _state: 'key' });
   expect(textInput.eval.visible).toEqual('value');
 });
 
-test('default value for visible', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for visible', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.visible).toEqual(true);
   expect(textInput.eval.visible).toEqual(true);
 });
 
-test('parse block required', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block required', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            required: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        required: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.required).toEqual({ _state: 'key' });
   expect(textInput.eval.required).toEqual('value');
 });
 
-test('default value for required', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for required', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.required).toEqual(false);
   expect(textInput.eval.required).toEqual(false);
 });
 
-test('parse block properties', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block properties', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            properties: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        properties: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.properties).toEqual({ _state: 'key' });
   expect(textInput.eval.properties).toEqual('value');
 });
 
-test('default value for properties', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for properties', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.properties).toEqual({});
   expect(textInput.eval.properties).toEqual({});
 });
 
-test('parse block style', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block style', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            style: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        style: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.style).toEqual({ _state: 'key' });
   expect(textInput.eval.style).toEqual('value');
 });
 
-test('default value for style', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for style', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.style).toEqual({});
   expect(textInput.eval.style).toEqual({});
 });
 
-test('parse block layout', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block layout', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            layout: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        layout: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.layout).toEqual({ _state: 'key' });
   expect(textInput.eval.layout).toEqual('value');
 });
 
-test('default value for layout', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for layout', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.layout).toEqual({});
   expect(textInput.eval.layout).toEqual({});
 });
 
-test('parse block areas', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block areas', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            areas: {
-              area1: {
-                property1: { _state: 'key' },
-              },
-            },
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        areas: {
+          area1: {
+            property1: { _state: 'key' },
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.eval.areas).toEqual({
     area1: {
       property1: 'value',
@@ -375,48 +353,42 @@ test('parse block areas', () => {
   });
 });
 
-test('parse block areas, remove blocks array', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block areas, remove blocks array', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            areas: {
-              area1: {
-                property1: { _state: 'key' },
-                blocks: [
-                  {
-                    type: 'TextInput',
-                    blockId: 'textInput2',
-                    meta: {
-                      category: 'input',
-                      valueType: 'string',
-                    },
-                  },
-                ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        areas: {
+          area1: {
+            property1: { _state: 'key' },
+            blocks: [
+              {
+                type: 'TextInput',
+                id: 'textInput2',
               },
-            },
+            ],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.eval.areas).toEqual({
     area1: {
       property1: 'value',
@@ -424,158 +396,148 @@ test('parse block areas, remove blocks array', () => {
   });
 });
 
-test('default value for areas', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for areas', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.eval.areas).toEqual({});
 });
 
-test('parse block loading', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block loading', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: true },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            loading: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        loading: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: false },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.loading).toEqual({ _state: 'key' });
   expect(textInput.eval.loading).toEqual(true);
 });
 
-test('default value for loading', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for loading', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
-  expect(textInput.loading).toEqual({});
+  const { textInput } = context._internal.RootBlocks.map;
+  expect(textInput.loading).toEqual(false);
   expect(textInput.eval.loading).toEqual(false);
 });
 
-test('parse block skeleton', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('parse block skeleton', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { key: false },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            skeleton: { _state: 'key' },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
+        skeleton: { _state: 'key' },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: false },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
+  const { textInput } = context._internal.RootBlocks.map;
   expect(textInput.skeleton).toEqual({ _state: 'key' });
   expect(textInput.eval.skeleton).toEqual(false);
 });
 
-test('default value for skeleton', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+test('default value for skeleton', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'ini',
+          type: 'SetState',
+          params: { key: 'value' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            type: 'TextInput',
-            blockId: 'textInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-          },
-        ],
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'textInput',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { key: 'value' },
+    pageConfig,
   });
-  const { textInput } = context.RootBlocks.map;
-  expect(textInput.skeleton).toEqual({});
+  const { textInput } = context._internal.RootBlocks.map;
+  expect(textInput.skeleton).toEqual(null);
   expect(textInput.eval.skeleton).toEqual(null);
 });

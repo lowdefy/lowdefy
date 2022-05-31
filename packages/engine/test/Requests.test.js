@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import testContext from './testContext.js';
 
 const mockReqResponses = {
@@ -42,49 +44,55 @@ const mockCallRequestImp = ({ requestId }) => {
   });
 };
 
-const rootBlock = {
-  blockId: 'page1',
-  meta: {
-    category: 'container',
-  },
-  requests: [
-    {
-      requestId: 'req_one',
-      payload: {
-        event: {
-          _event: true,
+const getPageConfig = () => {
+  return {
+    id: 'page1',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { state: true },
         },
-        action: {
-          _actions: 'action1',
-        },
-        sum: {
-          _sum: [1, 1],
-        },
-        arrayIndices: {
-          _global: 'array.$',
+      ],
+    },
+    requests: [
+      {
+        id: 'req_one',
+        type: 'Fetch',
+        payload: {
+          event: {
+            _event: true,
+          },
+          action: {
+            _actions: 'action1',
+          },
+          sum: {
+            _sum: [1, 1],
+          },
+          arrayIndices: {
+            _global: 'array.$',
+          },
         },
       },
-    },
-    {
-      requestId: 'req_error',
-    },
-    {
-      requestId: 'req_two',
-    },
-  ],
+      {
+        id: 'req_error',
+        type: 'Fetch',
+      },
+      {
+        id: 'req_two',
+        type: 'Fetch',
+      },
+    ],
+  };
 };
 
-const pageId = 'page1';
-const initState = { state: true };
-
 const actions = {};
-const arrayIndices = [];
 const event = {};
-
+const arrayIndices = [];
 const lowdefy = {
-  callRequest: mockCallRequest,
   lowdefyGlobal: { array: ['a', 'b', 'c'] },
-  pageId,
 };
 
 // Comment out to use console
@@ -97,11 +105,13 @@ beforeEach(() => {
 });
 
 test('callRequest', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  await context.Requests.callRequest({ requestId: 'req_one' });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  await context._internal.Requests.callRequest({ requestId: 'req_one' });
   expect(context.requests).toEqual({
     req_one: {
       error: [],
@@ -112,12 +122,14 @@ test('callRequest', async () => {
 });
 
 test('callRequest, payload operators are evaluated', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState,
+    pageConfig,
   });
-  await context.Requests.callRequest({
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  await context._internal.Requests.callRequest({
     requestId: 'req_one',
     event: { event: true },
     actions: { action1: 'action1' },
@@ -136,11 +148,13 @@ test('callRequest, payload operators are evaluated', async () => {
 });
 
 test('callRequests all requests', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const promise = context.Requests.callRequests({
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  const promise = context._internal.Requests.callRequests({
     actions,
     arrayIndices,
     event,
@@ -189,11 +203,13 @@ test('callRequests all requests', async () => {
 });
 
 test('callRequests', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const promise = context.Requests.callRequests({
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  const promise = context._internal.Requests.callRequests({
     actions,
     arrayIndices,
     event,
@@ -218,11 +234,15 @@ test('callRequests', async () => {
 });
 
 test('callRequest error', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  await expect(context.Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  await expect(
+    context._internal.Requests.callRequest({ requestId: 'req_error' })
+  ).rejects.toThrow();
   expect(context.requests).toEqual({
     req_error: {
       error: [new Error('mock error')],
@@ -230,7 +250,9 @@ test('callRequest error', async () => {
       response: null,
     },
   });
-  await expect(context.Requests.callRequest({ requestId: 'req_error' })).rejects.toThrow();
+  await expect(
+    context._internal.Requests.callRequest({ requestId: 'req_error' })
+  ).rejects.toThrow();
   expect(context.requests).toEqual({
     req_error: {
       error: [new Error('mock error'), new Error('mock error')],
@@ -241,13 +263,15 @@ test('callRequest error', async () => {
 });
 
 test('callRequest request does not exist', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  await expect(context.Requests.callRequest({ requestId: 'req_does_not_exist' })).rejects.toThrow(
-    'Configuration Error: Request req_does_not_exist not defined on page.'
-  );
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  await expect(
+    context._internal.Requests.callRequest({ requestId: 'req_does_not_exist' })
+  ).rejects.toThrow('Configuration Error: Request req_does_not_exist not defined on page.');
   expect(context.requests).toEqual({
     req_does_not_exist: {
       error: [new Error('Configuration Error: Request req_does_not_exist not defined on page.')],
@@ -258,25 +282,29 @@ test('callRequest request does not exist', async () => {
 });
 
 test('update function should be called', async () => {
+  const pageConfig = getPageConfig();
   const updateFunction = jest.fn();
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  context.update = updateFunction;
-  await context.Requests.callRequest({ requestId: 'req_one' });
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  context._internal.update = updateFunction;
+  await context._internal.Requests.callRequest({ requestId: 'req_one' });
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
 test('update function should be called if error', async () => {
+  const pageConfig = getPageConfig();
   const updateFunction = jest.fn();
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  context.update = updateFunction;
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  context._internal.update = updateFunction;
   try {
-    await context.Requests.callRequest({ requestId: 'req_error' });
+    await context._internal.Requests.callRequest({ requestId: 'req_error' });
   } catch (e) {
     // catch thrown errors
     console.log(e);
@@ -285,15 +313,17 @@ test('update function should be called if error', async () => {
 });
 
 test('fetch should set call query every time it is called', async () => {
-  const context = testContext({
+  const pageConfig = getPageConfig();
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  context.RootBlocks = {
+  context._internal.lowdefy._internal.callRequest = mockCallRequest;
+  context._internal.RootBlocks = {
     update: jest.fn(),
   };
-  await context.Requests.callRequest({ requestId: 'req_one', onlyNew: true });
+  await context._internal.Requests.callRequest({ requestId: 'req_one', onlyNew: true });
   expect(mockCallRequest).toHaveBeenCalledTimes(1);
-  context.Requests.fetch({ requestId: 'req_one' });
+  await context._internal.Requests.fetch({ requestId: 'req_one' });
   expect(mockCallRequest).toHaveBeenCalledTimes(2);
 });

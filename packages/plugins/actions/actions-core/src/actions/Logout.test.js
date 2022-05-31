@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import Logout from './Logout.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockLogout = jest.fn();
+const methods = { logout: mockLogout };
 
 test('Logout action invocation', async () => {
-  Logout({ methods: { logout: mockActionMethod }, params: 'params' });
-  expect(mockActionMethod.mock.calls).toEqual([['params']]);
+  Logout({ methods, params: 'params' });
+  expect(mockLogout.mock.calls).toEqual([['params']]);
 });

@@ -20,6 +20,20 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
+const window = {
+  location: {
+    hash: 'window.location.hash',
+    host: 'window.location.host',
+    hostname: 'window.location.hostname',
+    href: 'window.location.href',
+    origin: 'window.location.origin',
+    pathname: 'window.location.pathname',
+    port: 'window.location.port',
+    protocol: 'window.location.protocol',
+    search: 'window.location.search',
+  },
+};
+
 const input = {
   arrayIndices: [0],
   basePath: 'base',
@@ -29,25 +43,12 @@ const input = {
   location: 'location',
   pageId: 'page-id',
   params: 'origin',
-  window: {
-    location: {
-      hash: 'window.location.hash',
-      host: 'window.location.host',
-      hostname: 'window.location.hostname',
-      href: 'window.location.href',
-      origin: 'window.location.origin',
-      pathname: 'window.location.pathname',
-      port: 'window.location.port',
-      protocol: 'window.location.protocol',
-      search: 'window.location.search',
-    },
-  },
   lowdefyGlobal: { lowdefyGlobal: true },
 };
 
 test('location calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
-  location(input);
+  location({ ...input, window });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
@@ -74,19 +75,20 @@ test('location calls getFromObject', async () => {
   ]);
 });
 
+test('_location throw on no window', () => {
+  expect(() => location(input)).toThrow(
+    'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
+  );
+});
+
 test('_location throw on no location', () => {
-  Object.defineProperty(window, 'location', {
-    writable: true,
-    configurable: true,
-    value: undefined,
-  });
-  expect(() => location({ params: 'origin', location: 'locationId' })).toThrow(
-    'Operator Error: Browser window.location not available for _location. Received: "origin" at locationId.'
+  expect(() => location({ ...input, window: {} })).toThrow(
+    'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
   );
 });
 
 test('_location throw invalid param', () => {
-  expect(() => location({ ...input, params: 'none' })).toThrow(
-    'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "none" at location.'
+  expect(() => location({ ...input, window, params: 'invalid' })).toThrow(
+    'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "invalid" at location.'
   );
 });

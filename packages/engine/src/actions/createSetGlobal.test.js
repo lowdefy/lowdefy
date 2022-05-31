@@ -14,61 +14,52 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import testContext from '../../test/testContext.js';
 
-test('SetGlobal data to global', async () => {
-  const lowdefy = {
+const getLowdefy = (lowdefyGlobal) => {
+  return {
     _internal: {
       actions: {
         SetGlobal: ({ methods: { setGlobal }, params }) => {
           return setGlobal(params);
         },
       },
-      blockComponents: {
-        Button: { meta: { category: 'display' } },
-      },
-      lowdefyGlobal: { x: 'old', init: 'init' },
     },
+    lowdefyGlobal,
   };
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+};
+
+test('SetGlobal data to global', async () => {
+  const lowdefy = getLowdefy({ x: 'old', init: 'init' });
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'SetGlobal',
+              params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'SetGlobal',
-                  params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({ x: 'old', init: 'init' });
+  const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
-  expect(context._internal.lowdefy._internal.lowdefyGlobal).toEqual({
+  expect(context._internal.lowdefy.lowdefyGlobal).toEqual({
     init: 'init',
     str: 'hello',
     number: 13,
@@ -77,4 +68,78 @@ test('SetGlobal data to global', async () => {
   });
 });
 
-test.todo('SetGlobal calls context update');
+test('SetGlobal calls context update', async () => {
+  const lowdefy = getLowdefy({ x: 'old', init: 'init' });
+  const updateFunction = jest.fn();
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'SetGlobal',
+              params: { str: 'hello', number: 13, arr: [1, 2, 3], x: 'new' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  context._internal.update = updateFunction;
+  expect(updateFunction).toHaveBeenCalledTimes(0);
+  const button = context._internal.RootBlocks.map['button'];
+  await button.triggerEvent({ name: 'onClick' });
+  expect(updateFunction).toHaveBeenCalledTimes(3); // TODO: Should this not be 1? Investigate.
+});
+
+test('SetGlobal changed block properties', async () => {
+  const lowdefy = getLowdefy({});
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'old',
+          type: 'SetGlobal',
+          params: { x: 'old' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        properties: {
+          a: { _global: 'x' },
+        },
+        events: {
+          onClick: [
+            {
+              id: 'new',
+              type: 'SetGlobal',
+              params: { x: 'new' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const button = context._internal.RootBlocks.map['button'];
+  expect(button.eval.properties).toEqual({ a: 'old' });
+  await button.triggerEvent({ name: 'onClick' });
+  expect(button.eval.properties).toEqual({ a: 'new' });
+});

@@ -21,7 +21,8 @@ import setupWatcher from '../utils/setupWatcher.mjs';
 function envWatcher(context) {
   const callback = async () => {
     console.warn('.env file changed.');
-    await context.readDotEnv();
+    context.readDotEnv();
+    await context.lowdefyBuild();
     context.restartServer();
   };
   return setupWatcher({

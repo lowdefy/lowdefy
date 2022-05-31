@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import { get, type } from '@lowdefy/helpers';
 
@@ -112,63 +113,44 @@ afterAll(() => {
 });
 
 test('RestValidation after required field', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            required: true,
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                },
-              ],
-            },
-          },
-          {
-            id: 'reset',
-            blockId: 'reset',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'reset',
-                  type: 'ResetValidation',
-                },
-              ],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        required: true,
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+            },
+          ],
+        },
+      },
+      {
+        id: 'reset',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'reset',
+              type: 'ResetValidation',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];

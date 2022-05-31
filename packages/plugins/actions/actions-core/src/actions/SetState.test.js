@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import SetState from './SetState.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockSetState = jest.fn();
+const methods = { setState: mockSetState };
 
 test('SetState action invocation', async () => {
-  SetState({ methods: { setState: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+  SetState({ methods, params: { key: 'value' } });
+  expect(mockSetState.mock.calls).toEqual([[{ key: 'value' }]]);
 });

@@ -21,13 +21,13 @@ import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers
 import Events from './Events.js';
 
 class Blocks {
-  constructor({ arrayIndices, areas, context }) {
+  constructor({ arrayIndices = [], areas, context }) {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substr(0, 5);
     this.areas = serializer.copy(areas || []);
-    this.arrayIndices = type.isArray(arrayIndices) ? arrayIndices : [];
+    this.arrayIndices = arrayIndices;
     this.context = context;
     this.map = {};
     this.recCount = 0;
@@ -65,13 +65,13 @@ class Blocks {
     this.loopBlocks((block) => {
       block.idPattern = block.id;
       block.blockIdPattern = block.blockId;
-      block.fieldPattern = block.field;
       block.id = applyArrayIndices(this.arrayIndices, block.idPattern);
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
-      block.field = !type.isNone(block.fieldPattern)
-        ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
-        : block.blockId;
-      this.context._internal.RootBlocks.map[block.id] = block;
+      // CAUTION:
+      // map is not a direct reference to all blocks, blocks with duplicate ids will be overwritten in map
+      // which can cause issues with ambiguous config during call method since it will call only the method
+      // of the last initialized block for the referenced id.
+      this.context._internal.RootBlocks.map[block.blockId] = block;
       block.events = type.isNone(block.events) ? {} : block.events;
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.loading = type.isNone(block.loading) ? false : block.loading;
@@ -98,6 +98,16 @@ class Blocks {
           `Block type ${block.type} not found at ${block.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
         );
       }
+      if (
+        block.meta?.category !== 'container' &&
+        block.meta?.category !== 'display' &&
+        block.meta?.category !== 'input' &&
+        block.meta?.category !== 'list'
+      ) {
+        throw new Error(
+          `Block type ${block.type}.meta.category must be either "container", "display", "input" or "list".`
+        );
+      }
 
       if (!type.isNone(block.areas)) {
         block.areasLayout = {};
@@ -114,9 +124,7 @@ class Blocks {
       block.registerMethod = (methodName, method) => {
         block.methods[methodName] = method;
       };
-      // TODO: add callMethod on block to be used by actions and accessible in blocks
-
-      if (get(block, 'meta.category') === 'list') {
+      if (block.meta.category === 'list') {
         // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
         block.unshiftItem = () => {
           this.subBlocks[block.id].forEach((bl, i) => {
@@ -128,7 +136,7 @@ class Blocks {
           this.subBlocks[block.id].unshift(
             this.newBlocks({ arrayIndices: this.arrayIndices.concat([0]), block, initState: {} })
           );
-          this.context._internal.State.set(block.field, undefined);
+          this.context._internal.State.set(block.blockId, undefined);
           // set block and subBlock values undefined, so as not to pass values to new blocks
           this.subBlocks[block.id][0].recSetUndefined();
           block.update = true;
@@ -196,11 +204,11 @@ class Blocks {
           this.context._internal.update();
         };
       }
-      if (get(block, 'meta.category') === 'input') {
+      if (block.meta.category === 'input') {
         block.setValue = (value) => {
           block.value = type.enforceType(block.meta.valueType, value);
 
-          this.context._internal.State.set(block.field, block.value);
+          this.context._internal.State.set(block.blockId, block.value);
           block.update = true;
           this.context._internal.update();
         };
@@ -222,16 +230,16 @@ class Blocks {
     this.loopBlocks((block) => {
       block.update = true;
       block.showValidation = false;
-      if (get(block, 'meta.category') === 'input' || get(block, 'meta.category') === 'list') {
-        let blockValue = get(initState, block.field);
+      if (block.meta.category === 'input' || block.meta.category === 'list') {
+        let blockValue = get(initState, block.blockId);
         if (type.isUndefined(blockValue)) {
           // default null value for block type
           blockValue = type.isUndefined(block.meta.initValue)
             ? type.enforceType(block.meta.valueType, null)
             : block.meta.initValue;
-          this.context._internal.State.set(block.field, block.value);
+          this.context._internal.State.set(block.blockId, block.value);
         }
-        if (get(block, 'meta.category') === 'list') {
+        if (block.meta.category === 'list') {
           // load list value into list blocks
           if (!type.isArray(this.subBlocks[block.id])) {
             this.subBlocks[block.id] = [];
@@ -251,7 +259,7 @@ class Blocks {
         } else {
           block.value = blockValue;
         }
-      } else if (get(block, 'meta.category') === 'container') {
+      } else if (block.meta.category === 'container') {
         if (!type.isArray(this.subBlocks[block.id])) {
           this.subBlocks[block.id] = [];
         }
@@ -296,7 +304,7 @@ class Blocks {
     let repeat = false;
     this.loopBlocks((block) => {
       if (block.meta.category === 'input') {
-        const stateValue = get(this.context.state, block.field);
+        const stateValue = get(this.context.state, block.blockId);
         // TODO: related to #345
         // enforce type here? should we reassign value here??
         block.value = type.isUndefined(stateValue) ? block.value : stateValue;
@@ -407,7 +415,7 @@ class Blocks {
           arrayIndices: this.arrayIndices,
         });
       }
-      if (get(block, 'meta.category') === 'container' || get(block, 'meta.category') === 'list') {
+      if (block.meta.category === 'container' || block.meta.category === 'list') {
         if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
           this.subBlocks[block.id].forEach((blockClass) => {
             repeat = blockClass.recEval(block.visibleEval.output) || repeat;
@@ -428,28 +436,28 @@ class Blocks {
     const toDelete = new Set();
     this.loopBlocks((block) => {
       if (block.visibleEval.output !== false) {
-        if (get(block, 'meta.category') === 'container' || get(block, 'meta.category') === 'list') {
+        if (block.meta.category === 'container' || block.meta.category === 'list') {
           if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
             this.subBlocks[block.id].forEach((blockClass) => {
               blockClass.updateState();
             });
           } else {
-            toSet.add(block.field);
+            toSet.add(block.blockId);
             this.context._internal.State.set(
-              block.field,
+              block.blockId,
               type.enforceType(block.meta.valueType, null)
             );
           }
-        } else if (get(block, 'meta.category') === 'input') {
-          toSet.add(block.field);
-          this.context._internal.State.set(block.field, block.value);
+        } else if (block.meta.category === 'input') {
+          toSet.add(block.blockId);
+          this.context._internal.State.set(block.blockId, block.value);
         }
-      } else if (get(block, 'meta.category') === 'container') {
+      } else if (block.meta.category === 'container') {
         this.subBlocks[block.id].forEach((blockClass) => {
           blockClass.recContainerDelState(toDelete);
         });
       } else {
-        toDelete.add(block.field);
+        toDelete.add(block.blockId);
       }
     });
     toDelete.forEach((field) => {
@@ -461,12 +469,12 @@ class Blocks {
 
   recContainerDelState(toDelete) {
     this.loopBlocks((block) => {
-      if (get(block, 'meta.category') === 'container') {
+      if (block.meta.category === 'container') {
         this.subBlocks[block.id].forEach((blockClass) => {
           blockClass.recContainerDelState(toDelete);
         });
       } else {
-        toDelete.add(block.field);
+        toDelete.add(block.blockId);
       }
     });
   }
@@ -488,9 +496,6 @@ class Blocks {
     this.loopBlocks((block) => {
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
       this.context._internal.RootBlocks.map[block.blockId] = block;
-      block.field = !type.isNone(block.fieldPattern)
-        ? applyArrayIndices(this.arrayIndices, block.fieldPattern)
-        : block.blockId;
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
@@ -526,7 +531,7 @@ class Blocks {
 
   recSetUndefined() {
     this.loopBlocks((block) => {
-      this.context._internal.State.set(block.field, undefined);
+      this.context._internal.State.set(block.blockId, undefined);
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {

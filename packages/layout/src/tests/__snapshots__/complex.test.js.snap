@@ -98,7 +98,7 @@ exports[`Complex Example 1`] = `
                 style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Assign23456"
                   type="button"
                 >
@@ -113,7 +113,7 @@ exports[`Complex Example 1`] = `
                 style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Reporter23456"
                   type="button"
                 >
@@ -128,7 +128,7 @@ exports[`Complex Example 1`] = `
                 style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Status23456"
                   type="button"
                 >
@@ -143,7 +143,7 @@ exports[`Complex Example 1`] = `
                 style="flex: 1 0 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Type23456"
                   type="button"
                 >
@@ -212,7 +212,7 @@ exports[`Complex Example 1`] = `
                             style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Created23456"
                               type="button"
                             >
@@ -227,7 +227,7 @@ exports[`Complex Example 1`] = `
                             style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Fil23456"
                               type="button"
                             >
@@ -242,7 +242,7 @@ exports[`Complex Example 1`] = `
                             style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Ref23456"
                               type="button"
                             >
@@ -562,7 +562,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Assign23456"
                   type="button"
                 >
@@ -577,7 +577,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Reporter23456"
                   type="button"
                 >
@@ -592,7 +592,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Status23456"
                   type="button"
                 >
@@ -607,7 +607,7 @@ exports[`Complex No Flex Field Example 1`] = `
                 style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
               >
                 <button
-                  class="ant-btn"
+                  class="ant-btn ant-btn-default"
                   id="Type23456"
                   type="button"
                 >
@@ -676,7 +676,7 @@ exports[`Complex No Flex Field Example 1`] = `
                             style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Created23456"
                               type="button"
                             >
@@ -691,7 +691,7 @@ exports[`Complex No Flex Field Example 1`] = `
                             style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Fil23456"
                               type="button"
                             >
@@ -706,7 +706,7 @@ exports[`Complex No Flex Field Example 1`] = `
                             style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
                           >
                             <button
-                              class="ant-btn"
+                              class="ant-btn ant-btn-default"
                               id="Ref23456"
                               type="button"
                             >
