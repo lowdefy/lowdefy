@@ -27,23 +27,23 @@ const runTests = ({ times, results = [], fn }) => {
   if (times <= 0) {
     return results;
   }
-  try {
-    // eslint-disable-next-line no-undef
-    const start = performance.now();
-    fn(times);
-    // eslint-disable-next-line no-undef
-    const end = performance.now();
-    const duration = end - start;
+  // try {
+  // eslint-disable-next-line no-undef
+  const start = performance.now();
+  fn(times);
+  // eslint-disable-next-line no-undef
+  const end = performance.now();
+  const duration = end - start;
 
-    return runTests({
-      times: times - 1,
-      results: results.concat([duration]),
-      fn,
-    });
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
+  return runTests({
+    times: times - 1,
+    results: results.concat([duration]),
+    fn,
+  });
+  // } catch (e) {
+  //   console.error(e);
+  //   process.exit(1);
+  // }
 };
 
 test(`parse nunjucks value 500 blocks`, async () => {
