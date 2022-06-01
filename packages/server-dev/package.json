@@ -50,7 +50,6 @@
     "@lowdefy/build": "4.0.0-alpha.12",
     "@lowdefy/client": "4.0.0-alpha.12",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.12",
-    "@lowdefy/connection-mongodb": "4.0.0-alpha.12",
     "@lowdefy/engine": "4.0.0-alpha.12",
     "@lowdefy/helpers": "4.0.0-alpha.12",
     "@lowdefy/layout": "4.0.0-alpha.12",
