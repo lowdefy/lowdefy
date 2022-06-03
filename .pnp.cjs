@@ -3960,7 +3960,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@npmcli/package-json", "npm:2.0.0"],\
             ["@npmcli/run-script", "npm:3.0.3"],\
             ["bin-links", "npm:3.0.1"],\
-            ["cacache", "npm:16.1.0"],\
+            ["cacache", "npm:16.1.1"],\
             ["common-ancestor-path", "npm:1.0.1"],\
             ["json-parse-even-better-errors", "npm:2.3.1"],\
             ["json-stringify-nice", "npm:1.1.4"],\
@@ -4064,7 +4064,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@npmcli-metavuln-calculator-npm-3.1.0-05252bde1f-39fb474e23.zip/node_modules/@npmcli/metavuln-calculator/",\
           "packageDependencies": [\
             ["@npmcli/metavuln-calculator", "npm:3.1.0"],\
-            ["cacache", "npm:16.1.0"],\
+            ["cacache", "npm:16.1.1"],\
             ["json-parse-even-better-errors", "npm:2.3.1"],\
             ["pacote", "npm:13.6.0"],\
             ["semver", "npm:7.3.7"]\
@@ -6565,10 +6565,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:16.1.0", {\
-          "packageLocation": "./.yarn/cache/cacache-npm-16.1.0-e24d9a7d5b-ddfcf92f07.zip/node_modules/cacache/",\
+        ["npm:16.1.1", {\
+          "packageLocation": "./.yarn/cache/cacache-npm-16.1.1-84a00badf3-4885246170.zip/node_modules/cacache/",\
           "packageDependencies": [\
-            ["cacache", "npm:16.1.0"],\
+            ["cacache", "npm:16.1.1"],\
             ["@npmcli/fs", "npm:2.1.0"],\
             ["@npmcli/move-file", "npm:2.0.0"],\
             ["chownr", "npm:2.0.0"],\
@@ -12374,12 +12374,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["make-fetch-happen", [\
-        ["npm:10.1.6", {\
-          "packageLocation": "./.yarn/cache/make-fetch-happen-npm-10.1.6-401b7cbf4a-e75fb12092.zip/node_modules/make-fetch-happen/",\
+        ["npm:10.1.7", {\
+          "packageLocation": "./.yarn/cache/make-fetch-happen-npm-10.1.7-a248104317-2b7301256e.zip/node_modules/make-fetch-happen/",\
           "packageDependencies": [\
-            ["make-fetch-happen", "npm:10.1.6"],\
+            ["make-fetch-happen", "npm:10.1.7"],\
             ["agentkeepalive", "npm:4.2.1"],\
-            ["cacache", "npm:16.1.0"],\
+            ["cacache", "npm:16.1.1"],\
             ["http-cache-semantics", "npm:4.1.0"],\
             ["http-proxy-agent", "npm:5.0.0"],\
             ["https-proxy-agent", "npm:5.0.1"],\
@@ -12392,7 +12392,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minipass-pipeline", "npm:1.2.4"],\
             ["negotiator", "npm:0.6.3"],\
             ["promise-retry", "npm:2.0.1"],\
-            ["socks-proxy-agent", "npm:6.2.1"],\
+            ["socks-proxy-agent", "npm:7.0.0"],\
             ["ssri", "npm:9.0.1"]\
           ],\
           "linkType": "HARD"\
@@ -13846,7 +13846,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["env-paths", "npm:2.2.1"],\
             ["glob", "npm:7.2.3"],\
             ["graceful-fs", "npm:4.2.10"],\
-            ["make-fetch-happen", "npm:10.1.6"],\
+            ["make-fetch-happen", "npm:10.1.7"],\
             ["nopt", "npm:5.0.0"],\
             ["npmlog", "npm:6.0.2"],\
             ["rimraf", "npm:3.0.2"],\
@@ -14055,7 +14055,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/npm-registry-fetch-npm-13.1.1-d484645123-e085faf5cd.zip/node_modules/npm-registry-fetch/",\
           "packageDependencies": [\
             ["npm-registry-fetch", "npm:13.1.1"],\
-            ["make-fetch-happen", "npm:10.1.6"],\
+            ["make-fetch-happen", "npm:10.1.7"],\
             ["minipass", "npm:3.1.6"],\
             ["minipass-fetch", "npm:2.1.0"],\
             ["minipass-json-stream", "npm:1.0.1"],\
@@ -14558,7 +14558,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@npmcli/installed-package-contents", "npm:1.0.7"],\
             ["@npmcli/promise-spawn", "npm:3.0.0"],\
             ["@npmcli/run-script", "npm:3.0.3"],\
-            ["cacache", "npm:16.1.0"],\
+            ["cacache", "npm:16.1.1"],\
             ["chownr", "npm:2.0.0"],\
             ["fs-minipass", "npm:2.1.0"],\
             ["infer-owner", "npm:1.0.4"],\
@@ -17437,6 +17437,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/socks-proxy-agent-npm-6.2.1-42b7f43b1d-9ca089d489.zip/node_modules/socks-proxy-agent/",\
           "packageDependencies": [\
             ["socks-proxy-agent", "npm:6.2.1"],\
+            ["agent-base", "npm:6.0.2"],\
+            ["debug", "virtual:1f3c51be25fef20e854261431be23d317093b3b463e81e911f4f45a636ff582620db066c9d2a5922a428e07e10fe4788eee8196c796ce2c9bd49d22743fec207#npm:4.3.4"],\
+            ["socks", "npm:2.6.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.0.0", {\
+          "packageLocation": "./.yarn/cache/socks-proxy-agent-npm-7.0.0-7aacf32ea0-7205543701.zip/node_modules/socks-proxy-agent/",\
+          "packageDependencies": [\
+            ["socks-proxy-agent", "npm:7.0.0"],\
             ["agent-base", "npm:6.0.2"],\
             ["debug", "virtual:1f3c51be25fef20e854261431be23d317093b3b463e81e911f4f45a636ff582620db066c9d2a5922a428e07e10fe4788eee8196c796ce2c9bd49d22743fec207#npm:4.3.4"],\
             ["socks", "npm:2.6.2"]\
