@@ -15,11 +15,6 @@
 */
 import { jest } from '@jest/globals';
 
-import { get, type } from '@lowdefy/helpers';
-
-// TODO: issue importing plugin packages with jest due to jest es module resolution #https://github.com/facebook/jest/issues/9771
-// import { _not, _type } from '@lowdefy/operators-js/operators/client';
-
 import testContext from '../../test/testContext.js';
 
 const closeLoader = jest.fn();
@@ -39,54 +34,6 @@ const lowdefy = {
       TextInput: { meta: { category: 'input', valueType: 'string' } },
     },
     displayMessage,
-    operators: {
-      _not: ({ params }) => {
-        return !params;
-      },
-      _type: ({ location, params, state }) => {
-        const typeName = type.isObject(params) ? params.type : params;
-        if (!type.isString(typeName)) {
-          throw new Error(
-            `Operator Error: _type.type must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        const on = Object.prototype.hasOwnProperty.call(params, 'on')
-          ? params.on
-          : get(state, get(params, 'key', { default: location }));
-        switch (typeName) {
-          case 'string':
-            return type.isString(on);
-          case 'array':
-            return type.isArray(on);
-          case 'date':
-            return type.isDate(on); // Testing for date is problematic due to stringify
-          case 'object':
-            return type.isObject(on);
-          case 'boolean':
-            return type.isBoolean(on);
-          case 'number':
-            return type.isNumber(on);
-          case 'integer':
-            return type.isInt(on);
-          case 'null':
-            return type.isNull(on);
-          case 'undefined':
-            return type.isUndefined(on);
-          case 'none':
-            return type.isNone(on);
-          case 'primitive':
-            return type.isPrimitive(on);
-          default:
-            throw new Error(
-              `Operator Error: "${typeName}" is not a valid _type test. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-        }
-      },
-    },
   },
 };
 
