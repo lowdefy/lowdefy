@@ -25,7 +25,7 @@ async function evaluateBuildOperators({ context, input, refDef }) {
 
   const { output, errors } = operatorsParser.parse({
     input,
-    location: refDef.path,
+    location: refDef.path ?? refDef.resolver,
     operatorPrefix: '_build.',
   });
   if (errors.length > 0) {
