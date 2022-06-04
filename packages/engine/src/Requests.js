@@ -43,9 +43,11 @@ class Requests {
     if (type.isString(params)) requestIds = [params];
     if (type.isArray(params)) requestIds = params;
 
-    return Promise.all(
-      requestIds.map((requestId) => this.callRequest({ actions, requestId, event, arrayIndices }))
+    const requests = requestIds.map((requestId) =>
+      this.callRequest({ actions, requestId, event, arrayIndices })
     );
+    this.context._internal.update(); // update to render request reset
+    return Promise.all(requests);
   }
 
   callRequest({ actions, arrayIndices, event, requestId }) {
@@ -60,13 +62,12 @@ class Requests {
       return Promise.reject(error);
     }
 
-    if (!this.context.requests[requestId]) {
-      this.context.requests[requestId] = {
-        loading: true,
-        response: null,
-        error: [],
-      };
-    }
+    // reset request to init loading state
+    this.context.requests[requestId] = {
+      loading: true,
+      response: null,
+      error: this.context.requests[requestId] ? this.context.requests[requestId].error : [],
+    };
 
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
       actions,

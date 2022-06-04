@@ -294,6 +294,23 @@ test('update function should be called', async () => {
   expect(updateFunction).toHaveBeenCalledTimes(1);
 });
 
+test('update function should be called before all requests are fired and once for every request return', async () => {
+  const pageConfig = getPageConfig();
+  const updateFunction = jest.fn();
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  context._internal.update = updateFunction;
+  await context._internal.Requests.callRequests({
+    actions: { params: ['req_one', 'req_two'] },
+    arrayIndices,
+    event,
+    params: { all: true },
+  });
+  expect(updateFunction).toHaveBeenCalledTimes(3);
+});
+
 test('update function should be called if error', async () => {
   const pageConfig = getPageConfig();
   const updateFunction = jest.fn();
