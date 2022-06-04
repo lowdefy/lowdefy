@@ -50,7 +50,7 @@
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.12",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.196",
+    "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "jest": "28.1.0"
   },
