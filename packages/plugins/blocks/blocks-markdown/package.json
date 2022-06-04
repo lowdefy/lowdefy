@@ -61,7 +61,7 @@
     "@lowdefy/block-dev": "4.0.0-alpha.12",
     "@lowdefy/jest-yaml-transform": "4.0.0-alpha.12",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.194",
+    "@swc/core": "1.2.196",
     "@swc/jest": "0.2.21",
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",
