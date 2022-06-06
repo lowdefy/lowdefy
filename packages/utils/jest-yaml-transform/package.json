@@ -1,7 +1,7 @@
 {
   "name": "@lowdefy/jest-yaml-transform",
   "version": "4.0.0-alpha.12",
-  "licence": "Apache-2.0",
+  "license": "Apache-2.0",
   "description": "A Jest Transform for YAML.",
   "main": "./dist/index.js",
   "homepage": "https://lowdefy.com",
