@@ -652,6 +652,12 @@ export default {
         type: 'App "license" should be a string.',
       },
     },
+    version: {
+      type: 'string',
+      errorMessage: {
+        type: 'App "version" should be a string.',
+      },
+    },
     app: {
       $ref: '#/definitions/app',
     },
