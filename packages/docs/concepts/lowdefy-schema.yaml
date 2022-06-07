@@ -29,7 +29,7 @@ _ref:
             The root schema for a Lowdefy app is:
             - `lowdefy: string`: __Required__ - The Lowdefy version number the app uses. This is required and cannot be a reference to another file.
             - `name: string`: A name for the application.
-            - `licence: string`: A [SPDX licence ID](https://spdx.org/licenses/). You can use this to indicate the project's  licence if you are licencing your project under a specific software licence. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
+            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's  license if you are licencing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
             - `cli: object`: An object with configuration for the CLI.
             - `config: object`: An object with app configuration like the home page pageId.
             - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.

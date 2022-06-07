@@ -14,7 +14,7 @@
 
 name: '@lowdefy/docs'
 lowdefy: 4.0.0-alpha.12
-licence: Apache-2.0
+license: Apache-2.0
 
 cli:
   disableTelemetry: true
