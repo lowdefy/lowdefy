@@ -116,11 +116,15 @@ test('getRequestDetails params is true', async () => {
       },
       b: {
         response: {
-          req_one: {
-            error: [],
-            loading: false,
-            response: 1,
-          },
+          req_one: [
+            {
+              blockId: 'button',
+              loading: false,
+              payload: {},
+              requestId: 'req_one',
+              response: 1,
+            },
+          ],
         },
         index: 1,
         type: 'Action',
@@ -177,11 +181,15 @@ test('getRequestDetails params is req_one', async () => {
         type: 'Request',
       },
       b: {
-        response: {
-          error: [],
-          loading: false,
-          response: 1,
-        },
+        response: [
+          {
+            blockId: 'button',
+            loading: false,
+            payload: {},
+            requestId: 'req_one',
+            response: 1,
+          },
+        ],
         index: 1,
         type: 'Action',
       },
@@ -366,11 +374,15 @@ test('getRequestDetails params.all is true', async () => {
       },
       b: {
         response: {
-          req_one: {
-            error: [],
-            loading: false,
-            response: 1,
-          },
+          req_one: [
+            {
+              blockId: 'button',
+              loading: false,
+              payload: {},
+              requestId: 'req_one',
+              response: 1,
+            },
+          ],
         },
         index: 1,
         type: 'Action',
@@ -505,11 +517,15 @@ test('getRequestDetails params.key is req_one', async () => {
         type: 'Request',
       },
       b: {
-        response: {
-          error: [],
-          loading: false,
-          response: 1,
-        },
+        response: [
+          {
+            blockId: 'button',
+            loading: false,
+            payload: {},
+            requestId: 'req_one',
+            response: 1,
+          },
+        ],
         index: 1,
         type: 'Action',
       },

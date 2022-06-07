@@ -101,11 +101,15 @@ test('Request call one request', async () => {
   });
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
-  expect(context.requests.req_one).toEqual({
-    error: [],
-    loading: true,
-    response: null,
-  });
+  expect(context.requests.req_one).toEqual([
+    {
+      blockId: 'button',
+      loading: true,
+      payload: {},
+      requestId: 'req_one',
+      response: null,
+    },
+  ]);
   const res = await promise;
   expect(res).toEqual({
     blockId: 'button',
@@ -137,6 +141,9 @@ test('Request call all requests', async () => {
       {
         id: 'req_two',
         type: 'Fetch',
+        payload: {
+          x: 1,
+        },
       },
     ],
     blocks: [
@@ -156,29 +163,49 @@ test('Request call all requests', async () => {
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
-    req_one: {
-      error: [],
-      loading: true,
-      response: null,
-    },
-    req_two: {
-      error: [],
-      loading: true,
-      response: null,
-    },
+    req_one: [
+      {
+        blockId: 'button',
+        loading: true,
+        payload: {},
+        requestId: 'req_one',
+        response: null,
+      },
+    ],
+    req_two: [
+      {
+        blockId: 'button',
+        loading: true,
+        payload: {
+          x: 1,
+        },
+        requestId: 'req_two',
+        response: null,
+      },
+    ],
   });
   const res = await promise;
   expect(context.requests).toEqual({
-    req_one: {
-      error: [],
-      loading: false,
-      response: 1,
-    },
-    req_two: {
-      error: [],
-      loading: false,
-      response: 2,
-    },
+    req_one: [
+      {
+        blockId: 'button',
+        loading: false,
+        payload: {},
+        requestId: 'req_one',
+        response: 1,
+      },
+    ],
+    req_two: [
+      {
+        blockId: 'button',
+        loading: false,
+        payload: {
+          x: 1,
+        },
+        requestId: 'req_two',
+        response: 2,
+      },
+    ],
   });
   expect(res).toEqual({
     blockId: 'button',
@@ -210,6 +237,7 @@ test('Request call array of requests', async () => {
       {
         id: 'req_two',
         type: 'Fetch',
+        payload: { x: 1 },
       },
     ],
     blocks: [
@@ -229,29 +257,49 @@ test('Request call array of requests', async () => {
   const button = context._internal.RootBlocks.map['button'];
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
-    req_one: {
-      error: [],
-      loading: true,
-      response: null,
-    },
-    req_two: {
-      error: [],
-      loading: true,
-      response: null,
-    },
+    req_one: [
+      {
+        blockId: 'button',
+        loading: true,
+        payload: {},
+        requestId: 'req_one',
+        response: null,
+      },
+    ],
+    req_two: [
+      {
+        blockId: 'button',
+        loading: true,
+        payload: {
+          x: 1,
+        },
+        requestId: 'req_two',
+        response: null,
+      },
+    ],
   });
   const res = await promise;
   expect(context.requests).toEqual({
-    req_one: {
-      error: [],
-      loading: false,
-      response: 1,
-    },
-    req_two: {
-      error: [],
-      loading: false,
-      response: 2,
-    },
+    req_one: [
+      {
+        blockId: 'button',
+        loading: false,
+        payload: {},
+        requestId: 'req_one',
+        response: 1,
+      },
+    ],
+    req_two: [
+      {
+        blockId: 'button',
+        loading: false,
+        payload: {
+          x: 1,
+        },
+        requestId: 'req_two',
+        response: 2,
+      },
+    ],
   });
   expect(res).toEqual({
     blockId: 'button',
@@ -283,6 +331,7 @@ test('Request pass if params are none', async () => {
       {
         id: 'req_two',
         type: 'Fetch',
+        payload: { x: 1 },
       },
     ],
     blocks: [
@@ -330,11 +379,16 @@ test('Request call request error', async () => {
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
-  expect(context.requests.req_error).toEqual({
-    error: [new Error('Request error')],
-    loading: false,
-    response: null,
-  });
+  expect(context.requests.req_error).toEqual([
+    {
+      blockId: 'button',
+      error: new Error('Request error'),
+      loading: false,
+      payload: {},
+      requestId: 'req_error',
+      response: null,
+    },
+  ]);
   expect(res).toEqual({
     blockId: 'button',
     bounced: false,

@@ -14,9 +14,15 @@
   limitations under the License.
 */
 
-function createRequest({ actions, arrayIndices, context, event }) {
+function createRequest({ actions, arrayIndices, blockId, context, event }) {
   return async function request(params) {
-    return await context._internal.Requests.callRequests({ actions, arrayIndices, event, params });
+    return await context._internal.Requests.callRequests({
+      actions,
+      arrayIndices,
+      blockId,
+      event,
+      params,
+    });
   };
 }
 
