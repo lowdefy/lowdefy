@@ -28,6 +28,7 @@ async function runDevServer({ context, directory }) {
         LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         LOWDEFY_PACKAGE_MANAGER: context.packageManager,
+        LOWDEFY_SERVER_DEV_OPEN_BROWSER: !!context.options.open,
         LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
         LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
         PORT: context.options.port,
