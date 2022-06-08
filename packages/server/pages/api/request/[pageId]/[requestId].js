@@ -38,9 +38,9 @@ export default async function handler(req, res) {
       session,
     });
 
-    const { pageId, requestId } = req.query;
+    const { blockId, pageId, requestId } = req.query;
     const { payload } = req.body;
-    const response = await callRequest(apiContext, { pageId, payload, requestId });
+    const response = await callRequest(apiContext, { blockId, pageId, payload, requestId });
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ name: error.name, message: error.message });

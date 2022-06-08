@@ -91,7 +91,6 @@ test('page is required input', async () => {
 });
 
 test('memoize context and reset', async () => {
-  const resetContext = { reset: true, setReset: () => {} };
   const lowdefy = getLowdefy();
   const page = {
     id: 'pageId',

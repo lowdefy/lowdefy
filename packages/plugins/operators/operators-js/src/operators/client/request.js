@@ -26,12 +26,12 @@ function _request({ arrayIndices, params, requests, location }) {
   }
   const splitKey = params.split('.');
   const [requestId, ...keyParts] = splitKey;
-  if (requestId in requests && !requests[requestId].loading) {
+  if (requestId in requests && !requests[requestId][0].loading) {
     if (splitKey.length === 1) {
-      return serializer.copy(requests[requestId].response);
+      return serializer.copy(requests[requestId][0].response);
     }
     const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
-    return get(requests[requestId].response, applyArrayIndices(arrayIndices, key), {
+    return get(requests[requestId][0].response, applyArrayIndices(arrayIndices, key), {
       copy: true,
       default: null,
     });

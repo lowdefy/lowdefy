@@ -30,11 +30,11 @@ class Requests {
     });
   }
 
-  callRequests({ actions, arrayIndices, event, params } = {}) {
+  callRequests({ actions, arrayIndices, blockId, event, params } = {}) {
     if (type.isObject(params) && params.all === true) {
       return Promise.all(
         Object.keys(this.requestConfig).map((requestId) =>
-          this.callRequest({ requestId, event, arrayIndices })
+          this.callRequest({ arrayIndices, blockId, event, requestId })
         )
       );
     }
@@ -43,68 +43,71 @@ class Requests {
     if (type.isString(params)) requestIds = [params];
     if (type.isArray(params)) requestIds = params;
 
-    return Promise.all(
-      requestIds.map((requestId) => this.callRequest({ actions, requestId, event, arrayIndices }))
+    const requests = requestIds.map((requestId) =>
+      this.callRequest({ actions, requestId, blockId, event, arrayIndices })
     );
+    this.context._internal.update(); // update to render request reset
+    return Promise.all(requests);
   }
 
-  callRequest({ actions, arrayIndices, event, requestId }) {
-    const request = this.requestConfig[requestId];
-    if (!request) {
-      const error = new Error(`Configuration Error: Request ${requestId} not defined on page.`);
-      this.context.requests[requestId] = {
-        loading: false,
-        response: null,
-        error: [error],
-      };
-      return Promise.reject(error);
-    }
-
+  async callRequest({ actions, arrayIndices, blockId, event, requestId }) {
+    const requestConfig = this.requestConfig[requestId];
     if (!this.context.requests[requestId]) {
-      this.context.requests[requestId] = {
-        loading: true,
-        response: null,
-        error: [],
-      };
+      this.context.requests[requestId] = [];
     }
-
+    if (!requestConfig) {
+      const error = new Error(`Configuration Error: Request ${requestId} not defined on page.`);
+      this.context.requests[requestId].unshift({
+        blockId: 'block_id',
+        error,
+        loading: false,
+        requestId,
+        response: null,
+      });
+      throw error;
+    }
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
       actions,
       event,
       arrayIndices,
-      input: request.payload,
+      input: requestConfig.payload,
       location: requestId,
     });
-
-    // TODO: We are throwing this error differently to the request does not exist error
     if (parserErrors.length > 0) {
       throw parserErrors[0];
     }
-
-    return this.fetch({ requestId, payload });
+    const request = {
+      blockId,
+      loading: true,
+      payload,
+      requestId,
+      response: null,
+    };
+    this.context.requests[requestId].unshift(request);
+    return this.fetch(request);
   }
 
-  async fetch({ requestId, payload }) {
-    this.context.requests[requestId].loading = true;
-
+  async fetch(request) {
+    request.loading = true;
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({
+        blockId: request.blockId,
         pageId: this.context.pageId,
-        payload: serializer.serialize(payload),
-        requestId,
+        payload: serializer.serialize(request.payload),
+        requestId: request.requestId,
       });
       const deserializedResponse = serializer.deserialize(
         get(response, 'response', {
           default: null,
         })
       );
-      this.context.requests[requestId].response = deserializedResponse;
-      this.context.requests[requestId].loading = false;
+      request.response = deserializedResponse;
+      request.loading = false;
       this.context._internal.update();
       return deserializedResponse;
     } catch (error) {
-      this.context.requests[requestId].error.unshift(error);
-      this.context.requests[requestId].loading = false;
+      request.error = error;
+      request.loading = false;
       this.context._internal.update();
       throw error;
     }
