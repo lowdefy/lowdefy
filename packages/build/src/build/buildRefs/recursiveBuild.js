@@ -25,7 +25,12 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
-  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
+  const parsedFileContent = await evaluateBuildOperators({
+    context,
+    input: fileContent,
+    refDef: { path: 'lowdefy.yaml' },
+  });
+  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(parsedFileContent);
 
   const parsedFiles = {};
 
