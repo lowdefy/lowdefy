@@ -1,0 +1,111 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "bootstrapURLKeys": {
+        "type": "object",
+        "description": "{ key: '', language: 'en', region: 'en', libraries: ['places'], ...otherUrlParams, } If you want to include additional libraries to load with the maps api, indicate them in the libraries property of the bootstrapURLKeys object."
+      },
+      "center": {
+        "type": "object",
+        "description": "Can be set to [lat, lng] or { lat: lat, lng: lng}. A position object for the center."
+      },
+      "debounced": {
+        "type": "boolean",
+        "description": "Defaults to true. Whether map events are debounced."
+      },
+      "defaultCenter": {
+        "type": "object",
+        "description": "Can be set to [lat, lng] or { lat: lat, lng: lng}. A position object for the center."
+      },
+      "defaultZoom": {
+        "type": "number",
+        "description": "Map zoom level."
+      },
+      "heatmap": {
+        "type": "object",
+        "description": "To use the heatmap layer, add visualization to the libraries property array on bootstrapURLKeys and provide the data & configuration for the heatmap in heatmap as props. If you have multiple maps in your project and require a heatmap layer in at least one of them, provide libraries:['visualization'] to all of them."
+      },
+      "height": {
+        "type": "object",
+        "description": "The height of the map block."
+      },
+      "hoverDistance": {
+        "type": "number",
+        "description": "Defaults to 30. Map hover distance."
+      },
+      "layerTypes": {
+        "type": "array",
+        "description": "Examples ['TrafficLayer', 'TransitLayer']. The layer types to be included in the map."
+      },
+      "mapOptions": {
+        "type": "object",
+        "description": "Custom map options."
+      },
+      "margin": {
+        "type": "array",
+        "description": "Map margin."
+      },
+      "markers": {
+        "type": "array",
+        "description": "A list of Markers with defined properties."
+      },
+      "resetBoundsOnResize": {
+        "type": "boolean",
+        "description": "Default: false, When true this will reset the map bounds if the parent resizes."
+      },
+      "style": {
+        "type": "object",
+        "description": "Custom map css properties to apply to map block."
+      },
+      "zoom": {
+        "type": "number",
+        "description": "Map zoom level."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger onClick actions when the map is clicked."
+      },
+      "onClickMarker": {
+        "type": "array",
+        "description": "Trigger onClick actions when a marker is clicked."
+      },
+      "onDrag": {
+        "type": "array",
+        "description": "Trigger onDrag actions when a map is dragged."
+      },
+      "onDragEnd": {
+        "type": "array",
+        "description": "Trigger onDragEnd actions when a map is finished being dragged."
+      },
+      "onGoogleApiLoaded": {
+        "type": "array",
+        "description": "Trigger onGoogleApiLoaded actions when the map api is loaded."
+      },
+      "onMapTypeIdChange": {
+        "type": "array",
+        "description": "Trigger onMapTypeIdChange actions when the map type is changed."
+      },
+      "onTilesLoaded": {
+        "type": "array",
+        "description": "Trigger onTilesLoaded actions when the map tiles are loaded."
+      },
+      "onZoomAnimationStart": {
+        "type": "array",
+        "description": "Trigger onZoomAnimationStart actions when the map is zoomed."
+      },
+      "onZoomAnimationEnd": {
+        "type": "array",
+        "description": "Trigger onZoomAnimationEnd actions after the map is zoomed."
+      }
+    }
+  }
+}
