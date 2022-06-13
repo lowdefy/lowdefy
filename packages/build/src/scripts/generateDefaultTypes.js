@@ -22,10 +22,12 @@ import createPluginTypesMap from '../utils/createPluginTypesMap.js';
 
 const defaultPackages = [
   '@lowdefy/actions-core',
+  '@lowdefy/blocks-aggrid',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-color-selectors',
   '@lowdefy/blocks-echarts',
+  '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/connection-axios-http',
