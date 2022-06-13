@@ -3349,10 +3349,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:28.1.0"],\
             ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],\
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
+            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],\
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],\
             ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],\
             ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],\
+            ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
             ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],\
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],\
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],\
