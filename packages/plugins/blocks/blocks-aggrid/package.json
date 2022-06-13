@@ -1,0 +1,79 @@
+{
+  "name": "@lowdefy/blocks-aggrid",
+  "version": "4.0.0-alpha.12",
+  "license": "Apache-2.0",
+  "description": "AgGrid Blocks for Lowdefy.",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy blocks",
+    "aggrid",
+    "table",
+    "lowdefy plugin"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Johann Möller",
+      "url": "https://github.com/JohannMoller"
+    },
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@ag-grid-community/all-modules": "27.3.0",
+    "@ag-grid-community/core": "27.3.0",
+    "@ag-grid-community/react": "27.3.0",
+    "@lowdefy/block-utils": "4.0.0-alpha.12",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
+  },
+  "devDependencies": {
+    "@emotion/jest": "11.9.1",
+    "@lowdefy/block-dev": "4.0.0-alpha.12",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.12",
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.194",
+    "@swc/jest": "0.2.21",
+    "@testing-library/dom": "8.13.0",
+    "@testing-library/react": "13.3.0",
+    "@testing-library/user-event": "14.2.0",
+    "copyfiles": "2.4.1",
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0",
+    "jest-serializer-html": "7.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
