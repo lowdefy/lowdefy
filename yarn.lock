@@ -5,6 +5,65 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@ag-grid-community/all-modules@npm:27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/all-modules@npm:27.3.0"
+  dependencies:
+    "@ag-grid-community/client-side-row-model": ~27.3.0
+    "@ag-grid-community/core": ~27.3.0
+    "@ag-grid-community/csv-export": ~27.3.0
+    "@ag-grid-community/infinite-row-model": ~27.3.0
+  checksum: 7a68e7ae2b0c523f27b10055d9ab9c8e8acf36b7199531032751d3892f26f59b36b0295069608622067e7e82a2d5ec93ce11f6077e4370163fed0cc8f0e4d451
+  languageName: node
+  linkType: hard
+
+"@ag-grid-community/client-side-row-model@npm:~27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/client-side-row-model@npm:27.3.0"
+  dependencies:
+    "@ag-grid-community/core": ~27.3.0
+  checksum: 11a3f29a721f3a39d130cc1bcd79e6280ff2c39ea680e8dc59edae30dbc14966337898da856c9b271903d79a0fd049807872a8d8ca4a42007239dedac804433e
+  languageName: node
+  linkType: hard
+
+"@ag-grid-community/core@npm:27.3.0, @ag-grid-community/core@npm:~27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/core@npm:27.3.0"
+  checksum: 915a3eb560c06baffa18ba98462ffb4562c2c898752e87c1f303de75fd77e2356cdceda11bf5b80687ea9fe4c856ea2a9907235dc19b637b109f52340ae2e1fc
+  languageName: node
+  linkType: hard
+
+"@ag-grid-community/csv-export@npm:~27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/csv-export@npm:27.3.0"
+  dependencies:
+    "@ag-grid-community/core": ~27.3.0
+  checksum: b5ae75065511a330ab25be89ec0629ce7c1c8c267d66013e8b1f70ff1192d3661e7e7797a5baae91076b466dfeaa4b93aa9a07affa095dae4eb5919334426c4f
+  languageName: node
+  linkType: hard
+
+"@ag-grid-community/infinite-row-model@npm:~27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/infinite-row-model@npm:27.3.0"
+  dependencies:
+    "@ag-grid-community/core": ~27.3.0
+  checksum: f94b118f3b6e19ae60b2bf58c3a27203425a26779597678d5f2932724978772e5cb08b2c1fee37dfeeb222a0198851f3b9c3494b14c2ddf60dc8f9f1a59a558c
+  languageName: node
+  linkType: hard
+
+"@ag-grid-community/react@npm:27.3.0":
+  version: 27.3.0
+  resolution: "@ag-grid-community/react@npm:27.3.0"
+  dependencies:
+    prop-types: ^15.8.1
+  peerDependencies:
+    "@ag-grid-community/core": ~27.3.0
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+  checksum: a7215edead31eb7c1d2fea8e1f6a3e3b8173639a240435e08186db833dc1ef507824db212be16c64655adceb84a12172fa721c4eb5db8643151bca04d2267ac9
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.1.0":
   version: 2.2.0
   resolution: "@ampproject/remapping@npm:2.2.0"
@@ -877,6 +936,26 @@ __metadata:
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
   checksum: 4059f790e2d07bf3c3ff3e0fec0daa8144fe35c1f6e0111c9921bd32106adaa97a4ab096ad7dab1e28ee6a9060083c4d1a4ada42a7f5f3f7a96b8812e2b757c1
+  languageName: node
+  linkType: hard
+
+"@googlemaps/js-api-loader@npm:^1.13.2":
+  version: 1.14.3
+  resolution: "@googlemaps/js-api-loader@npm:1.14.3"
+  dependencies:
+    fast-deep-equal: ^3.1.3
+  checksum: 55ec4519c3bd99a489fc55715bfe5c12a617eff75101c16f237d2c8d56852f607bb74d50ca2204fe371d6b793741db57e4c487658f0d284a5d3bd2ecbcc2a15d
+  languageName: node
+  linkType: hard
+
+"@googlemaps/react-wrapper@npm:1.1.34":
+  version: 1.1.34
+  resolution: "@googlemaps/react-wrapper@npm:1.1.34"
+  dependencies:
+    "@googlemaps/js-api-loader": ^1.13.2
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 4ae752c36842afdb1770325d76bffc263de9e54005a694acca0f08f8f8ec04bf6a7787c71631da1e7b00a1528a96388aa36fe8e196e05ed5d679e83420eababf
   languageName: node
   linkType: hard
 
@@ -2136,6 +2215,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/blocks-aggrid@4.0.0-alpha.12, @lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid"
+  dependencies:
+    "@ag-grid-community/all-modules": 27.3.0
+    "@ag-grid-community/core": 27.3.0
+    "@ag-grid-community/react": 27.3.0
+    "@emotion/jest": 11.9.1
+    "@lowdefy/block-dev": 4.0.0-alpha.12
+    "@lowdefy/block-utils": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
+    "@swc/cli": 0.1.57
+    "@swc/core": 1.2.194
+    "@swc/jest": 0.2.21
+    "@testing-library/dom": 8.13.0
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 14.2.0
+    copyfiles: 2.4.1
+    jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
+    jest-serializer-html: 7.1.0
+    react: 18.1.0
+    react-dom: 18.1.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/blocks-antd@4.0.0-alpha.12, @lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd"
@@ -2236,6 +2341,31 @@ __metadata:
     copyfiles: 2.4.1
     echarts: 5.3.2
     echarts-for-react: 3.0.2
+    jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
+    jest-serializer-html: 7.1.0
+    react: 18.1.0
+    react-dom: 18.1.0
+  languageName: unknown
+  linkType: soft
+
+"@lowdefy/blocks-google-maps@4.0.0-alpha.12, @lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps"
+  dependencies:
+    "@emotion/jest": 11.9.1
+    "@googlemaps/react-wrapper": 1.1.34
+    "@lowdefy/block-dev": 4.0.0-alpha.12
+    "@lowdefy/block-utils": 4.0.0-alpha.12
+    "@lowdefy/helpers": 4.0.0-alpha.12
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
+    "@swc/cli": 0.1.57
+    "@swc/core": 1.2.194
+    "@swc/jest": 0.2.21
+    "@testing-library/dom": 8.13.0
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 14.2.0
+    copyfiles: 2.4.1
     jest: 28.1.0
     jest-environment-jsdom: 28.1.0
     jest-serializer-html: 7.1.0
@@ -2793,10 +2923,12 @@ __metadata:
   dependencies:
     "@lowdefy/actions-core": 4.0.0-alpha.12
     "@lowdefy/api": 4.0.0-alpha.12
+    "@lowdefy/blocks-aggrid": 4.0.0-alpha.12
     "@lowdefy/blocks-antd": 4.0.0-alpha.12
     "@lowdefy/blocks-basic": 4.0.0-alpha.12
     "@lowdefy/blocks-color-selectors": 4.0.0-alpha.12
     "@lowdefy/blocks-echarts": 4.0.0-alpha.12
+    "@lowdefy/blocks-google-maps": 4.0.0-alpha.12
     "@lowdefy/blocks-loaders": 4.0.0-alpha.12
     "@lowdefy/blocks-markdown": 4.0.0-alpha.12
     "@lowdefy/build": 4.0.0-alpha.12

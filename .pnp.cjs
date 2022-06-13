@@ -61,6 +61,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/actions/actions-core"\
       },\
       {\
+        "name": "@lowdefy/blocks-aggrid",\
+        "reference": "workspace:packages/plugins/blocks/blocks-aggrid"\
+      },\
+      {\
         "name": "@lowdefy/blocks-antd",\
         "reference": "workspace:packages/plugins/blocks/blocks-antd"\
       },\
@@ -75,6 +79,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@lowdefy/blocks-echarts",\
         "reference": "workspace:packages/plugins/blocks/blocks-echarts"\
+      },\
+      {\
+        "name": "@lowdefy/blocks-google-maps",\
+        "reference": "workspace:packages/plugins/blocks/blocks-google-maps"\
       },\
       {\
         "name": "@lowdefy/blocks-loaders",\
@@ -197,10 +205,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/api", ["workspace:packages/api"]],\
       ["@lowdefy/block-dev", ["workspace:packages/utils/block-dev"]],\
       ["@lowdefy/block-utils", ["workspace:packages/utils/block-utils"]],\
+      ["@lowdefy/blocks-aggrid", ["workspace:packages/plugins/blocks/blocks-aggrid"]],\
       ["@lowdefy/blocks-antd", ["workspace:packages/plugins/blocks/blocks-antd"]],\
       ["@lowdefy/blocks-basic", ["workspace:packages/plugins/blocks/blocks-basic"]],\
       ["@lowdefy/blocks-color-selectors", ["workspace:packages/plugins/blocks/blocks-color-selectors"]],\
       ["@lowdefy/blocks-echarts", ["workspace:packages/plugins/blocks/blocks-echarts"]],\
+      ["@lowdefy/blocks-google-maps", ["workspace:packages/plugins/blocks/blocks-google-maps"]],\
       ["@lowdefy/blocks-loaders", ["workspace:packages/plugins/blocks/blocks-loaders"]],\
       ["@lowdefy/blocks-markdown", ["workspace:packages/plugins/blocks/blocks-markdown"]],\
       ["@lowdefy/build", ["workspace:packages/build"]],\
@@ -257,6 +267,89 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["turbo", "npm:1.2.14"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@ag-grid-community/all-modules", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-all-modules-npm-27.3.0-bcf77b9b81-7a68e7ae2b.zip/node_modules/@ag-grid-community/all-modules/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/all-modules", "npm:27.3.0"],\
+            ["@ag-grid-community/client-side-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@ag-grid-community/csv-export", "npm:27.3.0"],\
+            ["@ag-grid-community/infinite-row-model", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/client-side-row-model", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-client-side-row-model-npm-27.3.0-380bcabcd1-11a3f29a72.zip/node_modules/@ag-grid-community/client-side-row-model/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/client-side-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/core", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-core-npm-27.3.0-220ac68f70-915a3eb560.zip/node_modules/@ag-grid-community/core/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/csv-export", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-csv-export-npm-27.3.0-83ff0471bd-b5ae750655.zip/node_modules/@ag-grid-community/csv-export/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/csv-export", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/infinite-row-model", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-infinite-row-model-npm-27.3.0-3d93c7a591-f94b118f3b.zip/node_modules/@ag-grid-community/infinite-row-model/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/infinite-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/react", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-react-npm-27.3.0-f47fcb4eb8-a7215edead.zip/node_modules/@ag-grid-community/react/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/react", "npm:27.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@ag-grid-community-react-virtual-81e0fa20ce/0/cache/@ag-grid-community-react-npm-27.3.0-f47fcb4eb8-a7215edead.zip/node_modules/@ag-grid-community/react/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/react", "virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@types/ag-grid-community__core", null],\
+            ["@types/react", null],\
+            ["@types/react-dom", null],\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@ag-grid-community/core",\
+            "@types/ag-grid-community__core",\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ampproject/remapping", [\
@@ -1607,6 +1700,39 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@gar-promisify-npm-1.1.3-ac1a325862-4059f790e2.zip/node_modules/@gar/promisify/",\
           "packageDependencies": [\
             ["@gar/promisify", "npm:1.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@googlemaps/js-api-loader", [\
+        ["npm:1.14.3", {\
+          "packageLocation": "./.yarn/cache/@googlemaps-js-api-loader-npm-1.14.3-0b6d7f8b05-55ec4519c3.zip/node_modules/@googlemaps/js-api-loader/",\
+          "packageDependencies": [\
+            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
+            ["fast-deep-equal", "npm:3.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@googlemaps/react-wrapper", [\
+        ["npm:1.1.34", {\
+          "packageLocation": "./.yarn/cache/@googlemaps-react-wrapper-npm-1.1.34-719dbfd7b5-4ae752c368.zip/node_modules/@googlemaps/react-wrapper/",\
+          "packageDependencies": [\
+            ["@googlemaps/react-wrapper", "npm:1.1.34"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34", {\
+          "packageLocation": "./.yarn/__virtual__/@googlemaps-react-wrapper-virtual-52be79e71a/0/cache/@googlemaps-react-wrapper-npm-1.1.34-719dbfd7b5-4ae752c368.zip/node_modules/@googlemaps/react-wrapper/",\
+          "packageDependencies": [\
+            ["@googlemaps/react-wrapper", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34"],\
+            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
+            ["@types/react", null],\
+            ["react", "npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2988,6 +3114,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@lowdefy/blocks-aggrid", [\
+        ["workspace:packages/plugins/blocks/blocks-aggrid", {\
+          "packageLocation": "./packages/plugins/blocks/blocks-aggrid/",\
+          "packageDependencies": [\
+            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
+            ["@ag-grid-community/all-modules", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@ag-grid-community/react", "virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0"],\
+            ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
+            ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["@testing-library/dom", "npm:8.13.0"],\
+            ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
+            ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
+            ["copyfiles", "npm:2.4.1"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["jest-serializer-html", "npm:7.1.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@lowdefy/blocks-antd", [\
         ["workspace:packages/plugins/blocks/blocks-antd", {\
           "packageLocation": "./packages/plugins/blocks/blocks-antd/",\
@@ -3095,6 +3249,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["copyfiles", "npm:2.4.1"],\
             ["echarts", "npm:5.3.2"],\
             ["echarts-for-react", "virtual:80340452f7a2143773390e8962fe504495bdbbbb548d3de37d9f561a9ed93a2a0ad90f0809f4b149dbc7dd5cef711ad15df3fd8610904528bbf246d0242a066f#npm:3.0.2"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["jest-serializer-html", "npm:7.1.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@lowdefy/blocks-google-maps", [\
+        ["workspace:packages/plugins/blocks/blocks-google-maps", {\
+          "packageLocation": "./packages/plugins/blocks/blocks-google-maps/",\
+          "packageDependencies": [\
+            ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
+            ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
+            ["@googlemaps/react-wrapper", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34"],\
+            ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
+            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["@testing-library/dom", "npm:8.13.0"],\
+            ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
+            ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
+            ["copyfiles", "npm:2.4.1"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"],\
             ["jest-serializer-html", "npm:7.1.0"],\
@@ -3747,10 +3928,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server-dev", "workspace:packages/server-dev"],\
             ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],\
             ["@lowdefy/api", "workspace:packages/api"],\
+            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],\
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],\
             ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],\
             ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],\
+            ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
             ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],\
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],\
             ["@lowdefy/build", "workspace:packages/build"],\

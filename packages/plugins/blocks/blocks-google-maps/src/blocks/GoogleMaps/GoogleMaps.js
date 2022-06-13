@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Wrapper, Status } from '@googlemaps/react-wrapper';
+import { Wrapper } from '@googlemaps/react-wrapper';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 // see which libraries to load at https://developers.google.com/maps/documentation/javascript/libraries
@@ -31,8 +31,8 @@ const MAP_DEFAULTS = {
   },
 };
 
+// TODO: not sure how to implement status for now.
 const render = (status) => {
-  // TODO: not sure how to implement status for now.
   //   switch (status) {
   // case Status.LOADING:
   //   return <Spinner />;
@@ -129,7 +129,7 @@ const Map = ({ blockId, properties, methods }) => {
   );
 };
 
-const GoogleMaps = ({ blockId, events, methods, properties, loading }) => {
+const GoogleMaps = ({ blockId, methods, properties }) => {
   const libraries = new Set(properties.libraries || []);
   if (properties.heatmap) {
     libraries.add('visualization');
