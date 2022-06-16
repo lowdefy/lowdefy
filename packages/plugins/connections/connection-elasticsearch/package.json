@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-elasticsearch",
-  "version": "4.0.0-alpha.12",
+  "version": "4.0.0-alpha.13",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -43,10 +43,10 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "7.16.0",
-    "@lowdefy/helpers": "4.0.0-alpha.12"
+    "@lowdefy/helpers": "4.0.0-alpha.13"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.12",
+    "@lowdefy/ajv": "4.0.0-alpha.13",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
