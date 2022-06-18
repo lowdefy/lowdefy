@@ -23,6 +23,7 @@ test('default directories', () => {
   });
 
   expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     server: '/test/config/.lowdefy/server',
@@ -38,6 +39,7 @@ test('specify serverDirectory in options', () => {
   });
 
   expect(directories).toEqual({
+    build: '/test/server/build',
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     server: '/test/server',
@@ -53,6 +55,7 @@ test('specify devDirectory in options', () => {
   });
 
   expect(directories).toEqual({
+    build: '/test/config/.lowdefy/server/build',
     config: '/test/config',
     dev: '/test/dev',
     server: '/test/config/.lowdefy/server',

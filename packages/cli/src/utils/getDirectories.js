@@ -18,12 +18,13 @@ import path from 'path';
 
 function getDirectories({ configDirectory, options }) {
   const dotLowdefy = path.resolve(configDirectory, '.lowdefy');
-
+  const server = options.serverDirectory
+    ? path.resolve(options.serverDirectory)
+    : path.join(dotLowdefy, 'server');
   return {
     config: configDirectory,
-    server: options.serverDirectory
-      ? path.resolve(options.serverDirectory)
-      : path.join(dotLowdefy, 'server'),
+    build: path.join(server, 'build'),
+    server,
     dev: options.devDirectory ? path.resolve(options.devDirectory) : path.join(dotLowdefy, 'dev'),
   };
 }

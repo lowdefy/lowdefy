@@ -58,7 +58,6 @@ test('startUp, options empty', async () => {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
     lowdefyVersion: 'lowdefyVersion',
@@ -106,7 +105,6 @@ test('startUp, options undefined', async () => {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
     lowdefyVersion: 'lowdefyVersion',
@@ -153,86 +151,12 @@ test('startUp, options configDirectory', async () => {
       build: path.resolve(process.cwd(), './configDirectory/.lowdefy/server/build'),
       config: path.resolve(process.cwd(), './configDirectory'),
       dev: path.resolve(process.cwd(), './configDirectory/.lowdefy/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './configDirectory/.lowdefy'),
       server: path.resolve(process.cwd(), './configDirectory/.lowdefy/server'),
     },
     lowdefyVersion: 'lowdefyVersion',
     options: {
       cliConfig: true,
       configDirectory: './configDirectory',
-    },
-    packageManager: 'yarn',
-    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
-    print,
-    sendTelemetry: 'sendTelemetry',
-  });
-});
-
-test('startUp, options outputDirectory', async () => {
-  const startUp = (await import('./startUp.js')).default;
-  const context = { cliVersion: 'cliVersion' };
-  await startUp({ context, options: { outputDirectory: './outputDirectory' }, command });
-  const print = context.print;
-  expect(context).toEqual({
-    appId: 'appId',
-    configDirectory: path.resolve(process.cwd()),
-    cliConfig: { cliConfig: true },
-    cliVersion: 'cliVersion',
-    command: 'test',
-    commandLineOptions: { outputDirectory: './outputDirectory' },
-    directories: {
-      build: path.resolve(process.cwd(), './outputDirectory/server/build'),
-      config: path.resolve(process.cwd()),
-      dev: path.resolve(process.cwd(), './outputDirectory/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './outputDirectory'),
-      server: path.resolve(process.cwd(), './outputDirectory/server'),
-    },
-    lowdefyVersion: 'lowdefyVersion',
-    options: {
-      cliConfig: true,
-      outputDirectory: './outputDirectory',
-    },
-    packageManager: 'yarn',
-    packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
-    print,
-    sendTelemetry: 'sendTelemetry',
-  });
-});
-
-test('startUp, options configDirectory and outputDirectory', async () => {
-  const startUp = (await import('./startUp.js')).default;
-  const context = { cliVersion: 'cliVersion' };
-  await startUp({
-    context,
-    options: {
-      configDirectory: './configDirectory',
-      outputDirectory: './outputDirectory',
-    },
-    command,
-  });
-  const print = context.print;
-  expect(context).toEqual({
-    appId: 'appId',
-    configDirectory: path.resolve(process.cwd(), 'configDirectory'),
-    cliConfig: { cliConfig: true },
-    cliVersion: 'cliVersion',
-    command: 'test',
-    commandLineOptions: {
-      configDirectory: './configDirectory',
-      outputDirectory: './outputDirectory',
-    },
-    directories: {
-      build: path.resolve(process.cwd(), './outputDirectory/server/build'),
-      config: path.resolve(process.cwd(), './configDirectory'),
-      dev: path.resolve(process.cwd(), './outputDirectory/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './outputDirectory'),
-      server: path.resolve(process.cwd(), './outputDirectory/server'),
-    },
-    lowdefyVersion: 'lowdefyVersion',
-    options: {
-      configDirectory: './configDirectory',
-      cliConfig: true,
-      outputDirectory: './outputDirectory',
     },
     packageManager: 'yarn',
     packageManagerCmd: process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
@@ -260,7 +184,6 @@ test('startUp, no lowdefyVersion returned', async () => {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
-      dotLowdefy: path.resolve(process.cwd(), './.lowdefy'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
     lowdefyVersion: undefined,
