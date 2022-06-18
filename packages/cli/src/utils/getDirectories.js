@@ -17,7 +17,6 @@
 import path from 'path';
 
 function getDirectories({ configDirectory, options }) {
-  // TODO: Should the ".lowdefy" directory be configurable
   const dotLowdefy = path.resolve(configDirectory, '.lowdefy');
 
   return {
