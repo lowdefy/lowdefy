@@ -17,16 +17,11 @@
 import path from 'path';
 
 function getDirectories({ configDirectory, options }) {
-  let dotLowdefy;
-  if (options.outputDirectory) {
-    dotLowdefy = path.resolve(options.outputDirectory);
-  } else {
-    dotLowdefy = path.resolve(configDirectory, '.lowdefy');
-  }
+  // TODO: Should the ".lowdefy" directory be configurable
+  const dotLowdefy = path.resolve(configDirectory, '.lowdefy');
+
   return {
     config: configDirectory,
-    build: path.join(dotLowdefy, 'server', 'build'),
-    dotLowdefy,
     server: options.serverDirectory
       ? path.resolve(options.serverDirectory)
       : path.join(dotLowdefy, 'server'),
