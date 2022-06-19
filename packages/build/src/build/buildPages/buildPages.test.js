@@ -38,23 +38,23 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('buildPages no pages', async () => {
+test('buildPages no pages', () => {
   const components = {};
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res.pages).toBe(undefined);
 });
 
-test('buildPages pages not an array', async () => {
+test('buildPages pages not an array', () => {
   const components = {
     pages: 'pages',
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: 'pages',
   });
 });
 
-test('page does not have an id', async () => {
+test('page does not have an id', () => {
   const components = {
     pages: [
       {
@@ -63,10 +63,10 @@ test('page does not have an id', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow('Page id missing at page 0.');
+  expect(() => buildPages({ components, context })).toThrow('Page id missing at page 0.');
 });
 
-test('page id is not a string', async () => {
+test('page id is not a string', () => {
   const components = {
     pages: [
       {
@@ -76,12 +76,12 @@ test('page id is not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Page id is not a string at page 0. Received true.'
   );
 });
 
-test('Throw on duplicate page ids', async () => {
+test('Throw on duplicate page ids', () => {
   const components = {
     pages: [
       {
@@ -96,10 +96,10 @@ test('Throw on duplicate page ids', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow('Duplicate pageId "page_1".');
+  expect(() => buildPages({ components, context })).toThrow('Duplicate pageId "page_1".');
 });
 
-test('block does not have an id', async () => {
+test('block does not have an id', () => {
   const components = {
     pages: [
       {
@@ -114,12 +114,10 @@ test('block does not have an id', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Block id missing at page "page1".'
-  );
+  expect(() => buildPages({ components, context })).toThrow('Block id missing at page "page1".');
 });
 
-test('block id is not a string', async () => {
+test('block id is not a string', () => {
   const components = {
     pages: [
       {
@@ -135,12 +133,12 @@ test('block id is not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Block id is not a string at page "page1". Received true.'
   );
 });
 
-test('page type missing', async () => {
+test('page type missing', () => {
   const components = {
     pages: [
       {
@@ -149,12 +147,12 @@ test('page type missing', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Block type is not defined at "page1" on page "page1".'
   );
 });
 
-test('block type missing', async () => {
+test('block type missing', () => {
   const components = {
     pages: [
       {
@@ -169,12 +167,12 @@ test('block type missing', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Block type is not defined at "blockId" on page "page1".'
   );
 });
 
-test('page type not a string', async () => {
+test('page type not a string', () => {
   const components = {
     pages: [
       {
@@ -184,12 +182,12 @@ test('page type not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Block type is not a string at "page1" on page "page1". Received 1.'
   );
 });
 
-test('block type not a string', async () => {
+test('block type not a string', () => {
   const components = {
     pages: [
       {
@@ -205,12 +203,12 @@ test('block type not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Block type is not a string at "blockId" on page "page1". Received 1.'
   );
 });
 
-test('no blocks on page', async () => {
+test('no blocks on page', () => {
   const components = {
     pages: [
       {
@@ -220,7 +218,7 @@ test('no blocks on page', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -236,7 +234,7 @@ test('no blocks on page', async () => {
   });
 });
 
-test('blocks not an array', async () => {
+test('blocks not an array', () => {
   const components = {
     pages: [
       {
@@ -246,12 +244,12 @@ test('blocks not an array', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Blocks at page1 on page page1 is not an array. Received "block_1"'
   );
 });
 
-test('block not an object', async () => {
+test('block not an object', () => {
   const components = {
     pages: [
       {
@@ -261,12 +259,12 @@ test('block not an object', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Expected block to be an object on page "page1". Received "block_1".'
   );
 });
 
-test('nested blocks', async () => {
+test('nested blocks', () => {
   const components = {
     pages: [
       {
@@ -288,7 +286,7 @@ test('nested blocks', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -327,7 +325,7 @@ test('nested blocks', async () => {
 });
 
 describe('block areas', () => {
-  test('content area blocks is not an array', async () => {
+  test('content area blocks is not an array', () => {
     const components = {
       pages: [
         {
@@ -342,12 +340,12 @@ describe('block areas', () => {
         },
       ],
     };
-    await expect(buildPages({ components, context })).rejects.toThrow(
+    expect(() => buildPages({ components, context })).toThrow(
       'Expected blocks to be an array at page1 in area content on page page1. Received "string"'
     );
   });
 
-  test('Add array if area blocks is undefined', async () => {
+  test('Add array if area blocks is undefined', () => {
     const components = {
       pages: [
         {
@@ -360,7 +358,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -381,7 +379,7 @@ describe('block areas', () => {
     });
   });
 
-  test('content area on page ', async () => {
+  test('content area on page ', () => {
     const components = {
       pages: [
         {
@@ -401,7 +399,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -428,7 +426,7 @@ describe('block areas', () => {
     });
   });
 
-  test('does not overwrite area layout', async () => {
+  test('does not overwrite area layout', () => {
     const components = {
       pages: [
         {
@@ -449,7 +447,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -477,7 +475,7 @@ describe('block areas', () => {
     });
   });
 
-  test('multiple content areas on page ', async () => {
+  test('multiple content areas on page ', () => {
     const components = {
       pages: [
         {
@@ -505,7 +503,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -541,7 +539,7 @@ describe('block areas', () => {
     });
   });
 
-  test('blocks array does not affect other content areas', async () => {
+  test('blocks array does not affect other content areas', () => {
     const components = {
       pages: [
         {
@@ -567,7 +565,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -603,7 +601,7 @@ describe('block areas', () => {
     });
   });
 
-  test('blocks array overwrites areas.content', async () => {
+  test('blocks array overwrites areas.content', () => {
     const components = {
       pages: [
         {
@@ -637,7 +635,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -673,7 +671,7 @@ describe('block areas', () => {
     });
   });
 
-  test('nested content areas ', async () => {
+  test('nested content areas ', () => {
     const components = {
       pages: [
         {
@@ -723,7 +721,7 @@ describe('block areas', () => {
         },
       ],
     };
-    const res = await buildPages({ components, context });
+    const res = buildPages({ components, context });
     expect(res).toEqual({
       pages: [
         {
@@ -791,7 +789,7 @@ describe('block areas', () => {
   });
 });
 
-test('user defined skeleton', async () => {
+test('user defined skeleton', () => {
   const components = {
     pages: [
       {
@@ -817,7 +815,7 @@ test('user defined skeleton', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -854,7 +852,7 @@ test('user defined skeleton', async () => {
   });
 });
 
-test('create unique block ids', async () => {
+test('create unique block ids', () => {
   const components = {
     pages: [
       {
@@ -878,7 +876,7 @@ test('create unique block ids', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {
@@ -915,7 +913,7 @@ test('create unique block ids', async () => {
   });
 });
 
-test('different blockId counter for each page', async () => {
+test('different blockId counter for each page', () => {
   const components = {
     pages: [
       {
@@ -950,7 +948,7 @@ test('different blockId counter for each page', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(res).toEqual({
     pages: [
       {

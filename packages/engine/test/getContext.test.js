@@ -14,124 +14,146 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import getContext from '../src/getContext.js';
+import buildTestPage from '@lowdefy/build/buildTestPage';
 
-const updateBlock = () => jest.fn();
-const pageId = 'pageId';
-const client = {};
-
-test('page is required input', async () => {
-  const lowdefy = {
-    client,
+const getLowdefy = () => {
+  const updateBlock = () => jest.fn();
+  const testLowdefy = {
     contexts: {},
-    inputs: {},
-    pageId,
-    updateBlock,
-  };
-  await expect(getContext({ lowdefy })).rejects.toThrow('A page must be provided to get context.');
-});
-
-test('memoize context', async () => {
-  const lowdefy = {
-    client,
-    contexts: {},
-    inputs: {},
-    pageId,
-    updateBlock,
-  };
-  const page = {
-    pageId: 'pageId',
-    blockId: 'pageId',
-    meta: {
-      type: 'container',
+    inputs: { test: {} },
+    urlQuery: {},
+    _internal: {
+      displayMessage: () => () => {},
+      updateBlock,
+      operators: {},
+      actions: {},
+      blockComponents: {
+        TextInput: {
+          meta: {
+            category: 'input',
+            valueType: 'string',
+          },
+        },
+        Box: {
+          meta: {
+            category: 'container',
+          },
+        },
+        Button: {
+          meta: {
+            category: 'display',
+          },
+        },
+        List: {
+          meta: {
+            category: 'list',
+            valueType: 'array',
+          },
+        },
+        Paragraph: {
+          meta: {
+            category: 'display',
+          },
+        },
+        Switch: {
+          meta: {
+            category: 'input',
+            valueType: 'boolean',
+          },
+        },
+        MultipleSelector: {
+          meta: {
+            category: 'input',
+            valueType: 'array',
+          },
+        },
+        NumberInput: {
+          meta: {
+            category: 'input',
+            valueType: 'number',
+          },
+        },
+      },
     },
   };
-  const c1 = await getContext({ page, lowdefy });
-  const c2 = await getContext({ page, lowdefy });
+  return testLowdefy;
+};
+
+test('page is required input', async () => {
+  const resetContext = { reset: true, setReset: () => {} };
+  const lowdefy = getLowdefy();
+  expect(() => getContext({ lowdefy, resetContext })).toThrow(
+    'A page must be provided to get context.'
+  );
+});
+
+test('memoize context and reset', async () => {
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+  };
+  const config = buildTestPage({ pageConfig: page });
+  const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  const c2 = getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(c1).toBe(c2);
+  expect(c1._internal.RootBlocks.id).toEqual(c2._internal.RootBlocks.id);
+  const c3 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  expect(c1._internal.RootBlocks.id).not.toEqual(c3._internal.RootBlocks.id);
 });
 
 test('create context', () => {
-  const lowdefy = {
-    client: { client: true },
-    contexts: {},
-    document: { document: true },
-    inputs: { pageId: { input: true } },
-    lowdefyGlobal: { lowdefyGlobal: true },
-    menus: [{ id: 'default' }],
-    pageId,
-    routeHistory: ['routeHistory'],
-    updateBlock,
-    urlQuery: { urlQuery: true },
-    window: { window: true },
-  };
+  const resetContext = { reset: true, setReset: () => {} };
+  const lowdefy = getLowdefy();
   const page = {
-    pageId: 'pageId',
-    blockId: 'pageId',
-    meta: {
-      type: 'container',
-    },
+    id: 'pageId',
+    type: 'Box',
   };
-  const context = getContext({ page, lowdefy });
-  expect(context.Actions).toBeDefined();
-  expect(context.Requests).toBeDefined();
-  expect(context.RootBlocks).toBeDefined();
-  expect(context.State).toBeDefined();
-  expect(context.lowdefy).toEqual(lowdefy);
+  const config = buildTestPage({ pageConfig: page });
+  const context = getContext({ config, lowdefy, resetContext });
+  expect(context._internal.Actions).toBeDefined();
+  expect(context._internal.Requests).toBeDefined();
+  expect(context._internal.RootBlocks).toBeDefined();
+  expect(context._internal.State).toBeDefined();
+  expect(context._internal.runOnInit).toBeDefined();
+  expect(context._internal.runOnInitAsync).toBeDefined();
+  expect(context._internal.lowdefy).toEqual(lowdefy);
   expect(context.eventLog).toEqual([]);
-  expect(context.id).toEqual('pageId');
-  expect(context.lowdefy.pageId).toEqual('pageId');
-  expect(context.parser).toBeDefined();
+  expect(context.id).toEqual('page:pageId');
+  expect(context.pageId).toEqual('pageId');
+  expect(context._internal.parser).toBeDefined();
   expect(context.requests).toEqual({});
   expect(context.pageId).toEqual('pageId');
-  expect(context.rootBlock).toBeDefined();
+  expect(context._internal.rootBlock).toBeDefined();
   expect(context.state).toEqual({});
-  expect(context.update).toBeDefined();
+  expect(context._internal.update).toBeDefined();
 });
 
-test('create context, initialize input', () => {
-  const lowdefy = {
-    client: { client: true },
-    contexts: {},
-    document: { document: true },
-    inputs: {},
-    lowdefyGlobal: { lowdefyGlobal: true },
-    menus: [{ id: 'default' }],
-    pageId,
-    routeHistory: ['routeHistory'],
-    updateBlock,
-    urlQuery: { urlQuery: true },
-    window: { window: true },
-  };
+test('create context, initialize input', async () => {
+  const resetContext = { reset: true, setReset: () => {} };
+  const lowdefy = getLowdefy();
   const page = {
-    pageId: 'pageId',
-    blockId: 'pageId',
-    meta: {
-      type: 'container',
-    },
+    id: 'pageId',
+    type: 'Box',
   };
-  const context = getContext({ page, lowdefy });
-  expect(context.lowdefy.inputs.pageId).toEqual({});
+  const config = buildTestPage({ pageConfig: page });
+  const context = getContext({ config, lowdefy, resetContext });
+  expect(context._internal.lowdefy.inputs['page:pageId']).toEqual({});
 });
 
-test('update memoized context', () => {
-  const lowdefy = {
-    client,
-    contexts: {},
-    inputs: {},
-    pageId,
-    updateBlock,
-  };
+test('update memoized context', async () => {
+  const lowdefy = getLowdefy();
   const page = {
-    pageId: 'pageId',
-    blockId: 'pageId',
-    meta: {
-      type: 'container',
-    },
+    id: 'pageId',
+    type: 'Box',
   };
+  const config = buildTestPage({ pageConfig: page });
   const mockUpdate = jest.fn();
-  const c1 = getContext({ page, lowdefy });
-  c1.update = mockUpdate;
-  getContext({ page, lowdefy });
+  const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
+  c1._internal.update = mockUpdate;
+  getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(mockUpdate.mock.calls.length).toBe(1);
 });

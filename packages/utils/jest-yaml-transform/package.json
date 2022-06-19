@@ -1,0 +1,44 @@
+{
+  "name": "@lowdefy/jest-yaml-transform",
+  "version": "4.0.0-alpha.13",
+  "license": "Apache-2.0",
+  "description": "A Jest Transform for YAML.",
+  "main": "./dist/index.js",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "yaml",
+    "jest",
+    "jest-transform",
+    "jest-yaml-transform"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ./.swcrc --delete-dir-on-start"
+  },
+  "dependencies": {
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.194",
+    "@swc/jest": "0.2.21",
+    "jest": "28.1.0",
+    "yaml": "2.1.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

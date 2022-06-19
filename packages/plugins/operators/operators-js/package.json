@@ -1,7 +1,7 @@
 {
   "name": "@lowdefy/operators-js",
-  "version": "4.0.0-alpha.12",
-  "licence": "Apache-2.0",
+  "version": "4.0.0-alpha.13",
+  "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
@@ -49,14 +49,15 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.12",
-    "@lowdefy/operators": "4.0.0-alpha.12"
+    "@lowdefy/helpers": "4.0.0-alpha.13",
+    "@lowdefy/operators": "4.0.0-alpha.13"
   },
   "devDependencies": {
-    "@swc/cli": "0.1.55",
-    "@swc/core": "1.2.135",
-    "@swc/jest": "0.2.17",
-    "jest": "27.5.1"
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.194",
+    "@swc/jest": "0.2.21",
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0"
   },
   "publishConfig": {
     "access": "public"

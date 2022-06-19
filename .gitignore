@@ -36,3 +36,5 @@ packages/utils/node-utils/test/copyDirectory/**
 app/**
 packages/server-dev/plugins/**
 packages/server/plugins/**
+
+lerna-debug.log

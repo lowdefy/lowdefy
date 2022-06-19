@@ -22,4 +22,16 @@ import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
-export default NextAuth(getNextAuthConfig({ authJson, plugins: { callbacks, events, providers } }));
+export default async function auth(req, res) {
+  if (authJson.configured === true) {
+    return await NextAuth(
+      req,
+      res,
+      getNextAuthConfig({ authJson, plugins: { callbacks, events, providers } })
+    );
+  }
+
+  return res.status(404).json({
+    message: 'Auth not configured',
+  });
+}

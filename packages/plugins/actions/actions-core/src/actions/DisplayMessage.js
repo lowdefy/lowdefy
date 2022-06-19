@@ -17,22 +17,14 @@
 import { type } from '@lowdefy/helpers';
 
 function DisplayMessage({ methods: { displayMessage }, params }) {
-  if (!type.isObject(params) && !type.isNone(params)) {
+  if (!type.isObject(params)) {
     throw new Error(
       `Invalid DisplayMessage, check action params. Params must be an object, received "${JSON.stringify(
         params
       )}".`
     );
   }
-  if (type.isNone(params)) {
-    displayMessage({ content: 'Success' });
-  }
-  if (type.isObject(params)) {
-    displayMessage({
-      ...params,
-      content: type.isNone(params.content) ? 'Success' : params.content,
-    });
-  }
+  displayMessage(params);
 }
 
 export default DisplayMessage;

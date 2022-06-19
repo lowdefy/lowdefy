@@ -31,15 +31,15 @@ beforeEach(() => {
   mockLogWarn.mockReset();
 });
 
-test('empty components', async () => {
+test('empty components', () => {
   const components = {
     lowdefy: '1.0.0',
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
-test('page auth config', async () => {
+test('page auth config', () => {
   const components = {
     lowdefy: '1.0.0',
     auth: {
@@ -49,11 +49,11 @@ test('page auth config', async () => {
       },
     },
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
-test('app schema', async () => {
+test('app schema', () => {
   const components = {
     lowdefy: '1.0.0',
     connections: [
@@ -89,12 +89,12 @@ test('app schema', async () => {
   expect(mockLogWarn.mock.calls).toEqual([]);
 });
 
-test('invalid schema', async () => {
+test('invalid schema', () => {
   const components = {
     lowdefy: '1.0.0',
     global: 'global',
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -105,7 +105,7 @@ App "global" should be an object.
   ]);
 });
 
-test('multiple schema errors', async () => {
+test('multiple schema errors', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -122,7 +122,7 @@ test('multiple schema errors', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -152,7 +152,7 @@ Block should have required property "type".
   ]);
 });
 
-test('nested schema error', async () => {
+test('nested schema error', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -185,7 +185,7 @@ test('nested schema error', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -216,7 +216,7 @@ must match a schema in anyOf
   ]);
 });
 
-test('nested schema error 2', async () => {
+test('nested schema error 2', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -243,7 +243,7 @@ test('nested schema error 2', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -257,7 +257,7 @@ Block "blocks" should be an array.
   ]);
 });
 
-test('connections schema error', async () => {
+test('connections schema error', () => {
   const components = {
     lowdefy: '1.0.0',
     connections: [
@@ -279,7 +279,7 @@ test('connections schema error', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -297,7 +297,7 @@ Connection should have required property "id".
   ]);
 });
 
-test('requests schema error', async () => {
+test('requests schema error', () => {
   const components = {
     lowdefy: '1.0.0',
     pages: [
@@ -346,7 +346,7 @@ test('requests schema error', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -373,7 +373,7 @@ Request "properties" should be an object.
   ]);
 });
 
-test('menus schema error', async () => {
+test('menus schema error', () => {
   const components = {
     lowdefy: '1.0.0',
     menus: [
@@ -397,7 +397,7 @@ test('menus schema error', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [
@@ -452,7 +452,7 @@ must match a schema in anyOf
   ]);
 });
 
-test('missing lowdefy version schema error', async () => {
+test('missing lowdefy version schema error', () => {
   const components = {
     pages: [
       {
@@ -478,7 +478,7 @@ test('missing lowdefy version schema error', async () => {
       },
     ],
   };
-  await testSchema({ components, context });
+  testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
     ['Schema not valid.'],
     [

@@ -22,7 +22,6 @@ function createReset({ context }) {
     context._internal.RootBlocks.reset(
       serializer.deserializeFromString(context._internal.State.frozenState)
     );
-    context._internal.update();
   };
 }
 

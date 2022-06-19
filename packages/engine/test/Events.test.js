@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import testContext from './testContext.js';
 
 const pageId = 'one';
@@ -79,39 +81,29 @@ beforeEach(() => {
 });
 
 test('init Events', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
       catchActions: [],
-      debounce: null,
+      debounce: undefined,
       history: [],
       loading: false,
     },
@@ -119,31 +111,21 @@ test('init Events', async () => {
 });
 
 test('triggerEvent no event defined', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events).toEqual({});
   const res = await promise;
@@ -160,40 +142,30 @@ test('triggerEvent no event defined', async () => {
 });
 
 test('triggerEvent x1', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   const promise = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
       catchActions: [],
-      debounce: null,
+      debounce: undefined,
       history: [],
       loading: true,
     },
@@ -222,38 +194,28 @@ test('triggerEvent x1', async () => {
 });
 
 test('triggerEvent, 2 actions', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    requests: [{ requestId: 'request1' }],
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                { id: 'a', type: 'SetState', params: { a: 'a' } },
-                { id: 'b', type: 'Request', params: 'request1' },
-              ],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    requests: [{ id: 'request1', type: 'Fetch' }],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            { id: 'a', type: 'SetState', params: { a: 'a' } },
+            { id: 'b', type: 'Request', params: 'request1' },
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0].event).toEqual({ x: 1 });
   expect(Object.keys(button.Events.events.onClick.history[0].responses).length).toEqual(2);
@@ -261,40 +223,30 @@ test('triggerEvent, 2 actions', async () => {
 });
 
 test('triggerEvent error', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'e',
+              type: 'Error',
+              params: { a: 'a' },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'e',
-                  type: 'Error',
-                  params: { a: 'a' },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -331,31 +283,21 @@ test('triggerEvent error', async () => {
 });
 
 test('registerEvent then triggerEvent x1', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   button.Events.registerEvent({
     name: 'onClick',
     actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -391,35 +333,33 @@ test('registerEvent then triggerEvent x1', async () => {
 });
 
 test('triggerEvent skip', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: true }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: true }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
@@ -435,7 +375,7 @@ test('triggerEvent skip', async () => {
           },
         ],
         "catchActions": Array [],
-        "debounce": null,
+        "debounce": undefined,
         "history": Array [
           Object {
             "blockId": "button",
@@ -488,40 +428,58 @@ test('triggerEvent skip', async () => {
         },
         "success": true,
       },
+      Object {
+        "blockId": "root",
+        "bounced": false,
+        "endTimestamp": Object {
+          "date": 0,
+        },
+        "event": undefined,
+        "eventName": "onInit",
+        "responses": Object {
+          "init": Object {
+            "index": 0,
+            "response": undefined,
+            "type": "SetState",
+          },
+        },
+        "startTimestamp": Object {
+          "date": 0,
+        },
+        "success": true,
+      },
     ]
   `);
 });
 
 test('triggerEvent skip tests === true', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { textInput: 'init' },
+        },
+      ],
     },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: 'Truthy' }],
-            },
-          },
-        ],
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' }, skip: 'Truthy' }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
-    initState: { textInput: 'init' },
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
   expect(button.Events.events).toMatchInlineSnapshot(`
     Object {
@@ -537,7 +495,7 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "catchActions": Array [],
-        "debounce": null,
+        "debounce": undefined,
         "history": Array [
           Object {
             "blockId": "button",
@@ -590,118 +548,110 @@ test('triggerEvent skip tests === true', async () => {
         },
         "success": true,
       },
+      Object {
+        "blockId": "root",
+        "bounced": false,
+        "endTimestamp": Object {
+          "date": 0,
+        },
+        "event": undefined,
+        "eventName": "onInit",
+        "responses": Object {
+          "init": Object {
+            "index": 0,
+            "response": undefined,
+            "type": "SetState",
+          },
+        },
+        "startTimestamp": Object {
+          "date": 0,
+        },
+        "success": true,
+      },
     ]
   `);
 });
 
-test('Actions array defaults', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: null,
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const { button } = context.RootBlocks.map;
-  button.Events.registerEvent({
-    name: 'registered',
-    actions: null,
-  });
-  expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
-    registered: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
-  });
-});
+// Covered in build
+// test('Actions array defaults', async () => {
+//   const pageConfig = {
+//     id: 'root',
+//     type: 'Box',
+//     blocks: [
+//       {
+//         id: 'button',
+//         type: 'Button',
+//         events: {
+//           onClick: null,
+//         },
+//       },
+//     ],
+//   };
+//   const context = await testContext({
+//     lowdefy,
+//     pageConfig,
+//   });
+//   const { button } = context._internal.RootBlocks.map;
+//   button.Events.registerEvent({
+//     name: 'registered',
+//     actions: null,
+//   });
+//   expect(button.Events.events).toEqual({
+//     onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
+//     registered: { actions: [], history: [], loading: false, catchActions: [], debounce: null },
+//   });
+// });
 
-test('Actions try catch array defaults', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: {
-                try: null,
-                catch: null,
-              },
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const { button } = context.RootBlocks.map;
-  expect(button.Events.events).toEqual({
-    onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: undefined },
-  });
-});
+// Covered in build
+// test('Actions try catch array defaults', async () => {
+//   const pageConfig = {
+//     id: 'root',
+//     type: 'Box',
+//     blocks: [
+//       {
+//         id: 'button',
+//         type: 'Button',
+//         events: {
+//           onClick: {
+//             try: null,
+//             catch: null,
+//           },
+//         },
+//       },
+//     ],
+//   };
+//   const context = await testContext({
+//     lowdefy,
+//     pageConfig,
+//   });
+//   const { button } = context._internal.RootBlocks.map;
+//   expect(button.Events.events).toEqual({
+//     onClick: { actions: [], history: [], loading: false, catchActions: [], debounce: undefined },
+//   });
+// });
 
-test('Actions try catch arrays', () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: {
-                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-                catch: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
-              },
-            },
+test('Actions try catch arrays', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: {
+            try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+            catch: [{ id: 'b', type: 'SetState', params: { b: 'b' } }],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -713,40 +663,31 @@ test('Actions try catch arrays', () => {
 });
 
 test('Actions try catch arrays and debounce.immediate == true (leading edge)', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: {
+            debounce: {
+              ms: 100,
+              immediate: true,
             },
-            events: {
-              onClick: {
-                debounce: {
-                  ms: 100,
-                  immediate: true,
-                },
-                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-              },
-            },
+            try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+            catch: [],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -836,39 +777,30 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
 });
 
 test('Actions try catch arrays and debounce.immediate == undefined (trailing edge)', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: {
+            debounce: {
+              ms: 100,
             },
-            events: {
-              onClick: {
-                debounce: {
-                  ms: 100,
-                },
-                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-              },
-            },
+            try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+            catch: [],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
@@ -954,39 +886,30 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
 });
 
 test('Actions try catch arrays and debounce.immediate == false default ms (trailing edge)', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: {
+            debounce: {
+              immediate: false,
             },
-            events: {
-              onClick: {
-                debounce: {
-                  immediate: false,
-                },
-                try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
-              },
-            },
+            try: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+            catch: [],
           },
-        ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const { button } = context.RootBlocks.map;
+  const { button } = context._internal.RootBlocks.map;
   expect(button.Events.events).toEqual({
     onClick: {
       actions: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],

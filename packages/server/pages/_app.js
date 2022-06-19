@@ -13,20 +13,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable react/jsx-props-no-spreading */
 
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { SessionProvider } from 'next-auth/react';
+
+import Auth from '../lib/auth/Auth.js';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-// TODO: SessionProvider requires basebath
-function App({ Component, pageProps: { session, ...pageProps } }) {
+function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <Auth session={session}>
+      {(auth) => <Component auth={auth} rootConfig={rootConfig} pageConfig={pageConfig} />}
+    </Auth>
   );
 }
 

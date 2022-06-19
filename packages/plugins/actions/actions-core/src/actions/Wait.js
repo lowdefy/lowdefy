@@ -17,7 +17,7 @@
 import { type, wait } from '@lowdefy/helpers';
 
 function Wait({ params }) {
-  if (!type.isInt(params.ms)) {
+  if (type.isNone(params) || !type.isInt(params.ms)) {
     throw new Error(`Wait action "ms" param should be an integer.`);
   }
   return wait(params.ms);

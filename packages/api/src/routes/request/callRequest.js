@@ -27,9 +27,12 @@ import getRequestConfig from './getRequestConfig.js';
 import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
-async function callRequest(context, { pageId, payload, requestId }) {
+async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
-  logger.debug({ route: 'request', params: { pageId, payload, requestId } }, 'Started request');
+  logger.debug(
+    { route: 'request', params: { blockId, pageId, payload, requestId } },
+    'Started request'
+  );
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
   authorizeRequest(context, { requestConfig });

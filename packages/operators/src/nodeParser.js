@@ -27,12 +27,6 @@ class NodeParser {
   }
 
   parse({ args, input, location, operatorPrefix = '_' }) {
-    const env = this.env;
-    const operators = this.operators;
-    const secrets = this.secrets;
-    const payload = this.payload;
-    const user = this.user;
-
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -50,21 +44,21 @@ class NodeParser {
       if (!key.startsWith(operatorPrefix)) return value;
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
-      if (type.isUndefined(operators[op])) return value;
+      if (type.isUndefined(this.operators[op])) return value;
       try {
-        const res = operators[op]({
+        const res = this.operators[op]({
           args,
           arrayIndices: [],
-          env,
+          env: this.env,
           location,
           methodName,
-          operators: operators,
+          operators: this.operators,
           params: value[key],
           operatorPrefix,
           parser: this,
-          payload,
-          secrets,
-          user,
+          payload: this.payload,
+          secrets: this.secrets,
+          user: this.user,
         });
         return res;
       } catch (e) {

@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
-
+import { jest } from '@jest/globals';
 import ScrollTo from './ScrollTo.js';
 
 // Mock document
@@ -23,9 +22,6 @@ const mockDocGetElementById = jest.fn();
 const mockElemScrollIntoView = jest.fn();
 const document = {
   getElementById: mockDocGetElementById,
-};
-const mockDocGetElementByIdImp = (id) => {
-  if (id === 'root') return { id, scrollIntoView: mockElemScrollIntoView };
 };
 
 // Mock window
@@ -38,137 +34,14 @@ const window = {
   scrollTo: mockWindowScrollTo,
 };
 
-const lowdefy = {
-  _internal: {
-    actions: {
-      ScrollTo,
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-    document,
-    window,
-  },
-};
-
-// Comment out to use console
-console.log = () => {};
-console.error = () => {};
-
-beforeEach(() => {
-  mockWindowOpen.mockReset();
-  mockWindowFocus.mockReset();
-  mockWindowScrollTo.mockReset();
-  mockDocGetElementById.mockReset();
-  mockDocGetElementById.mockImplementation(mockDocGetElementByIdImp);
-  mockElemScrollIntoView.mockReset();
-});
-
-const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
-
-beforeAll(() => {
-  global.Date = mockDate;
-});
-
-afterAll(() => {
-  global.Date = RealDate;
-});
-
 test('ScrollTo with no params', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'ScrollTo' }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual({
-    blockId: 'button',
-    bounced: false,
-    endTimestamp: { date: 0 },
-    error: {
-      action: {
-        id: 'a',
-        type: 'ScrollTo',
-      },
-      error: {
-        error: new Error('Invalid ScrollTo, check action params. Received "undefined".'),
-        index: 0,
-        type: 'ScrollTo',
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      a: {
-        error: new Error('Invalid ScrollTo, check action params. Received "undefined".'),
-        index: 0,
-        type: 'ScrollTo',
-      },
-    },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
+  expect(() => ScrollTo({ document, window })).toThrow(
+    'Invalid ScrollTo, check action params. Received "undefined".'
+  );
 });
 
 test('ScrollTo with no blockId', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'ScrollTo', params: { behavior: 'smooth', top: 0 } }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  button.triggerEvent({ name: 'onClick' });
+  ScrollTo({ document, window, params: { behavior: 'smooth', top: 0 } });
   expect(mockWindowScrollTo.mock.calls).toEqual([
     [
       {
@@ -180,122 +53,28 @@ test('ScrollTo with no blockId', async () => {
 });
 
 test('ScrollTo with blockId', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'ScrollTo', params: { blockId: 'root' } }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
+  mockDocGetElementById.mockImplementation((id) => {
+    if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  button.triggerEvent({ name: 'onClick' });
-  expect(mockDocGetElementById.mock.calls).toEqual([['root']]);
+  ScrollTo({ document, window, params: { blockId: 'blockId' } });
+  expect(mockDocGetElementById.mock.calls).toEqual([['blockId']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([[undefined]]);
 });
 
 test('ScrollTo with blockId and options', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'ScrollTo',
-                  params: { blockId: 'root', options: { behavior: 'smooth' } },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
+  mockDocGetElementById.mockImplementation((id) => {
+    if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  button.triggerEvent({ name: 'onClick' });
-
-  expect(mockDocGetElementById.mock.calls).toEqual([['root']]);
-  expect(mockElemScrollIntoView.mock.calls).toEqual([
-    [
-      {
-        behavior: 'smooth',
-      },
-    ],
-  ]);
+  ScrollTo({ document, window, params: { blockId: 'blockId', options: { behavior: 'smooth' } } });
+  expect(mockDocGetElementById.mock.calls).toEqual([['blockId']]);
+  expect(mockElemScrollIntoView.mock.calls).toEqual([[{ behavior: 'smooth' }]]);
 });
 
 test('ScrollTo with blockId, block not found', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'ScrollTo', params: { blockId: 'not_there' } }],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
+  mockDocGetElementById.mockImplementation((id) => {
+    if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  button.triggerEvent({ name: 'onClick' });
+  ScrollTo({ document, window, params: { blockId: 'not_there' } });
   expect(mockDocGetElementById.mock.calls).toEqual([['not_there']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([]);
   expect(mockWindowScrollTo.mock.calls).toEqual([]);

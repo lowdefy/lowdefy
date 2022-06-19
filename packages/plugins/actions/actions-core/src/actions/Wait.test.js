@@ -14,153 +14,31 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
-
+import { wait } from '@lowdefy/helpers';
 import Wait from './Wait.js';
 
-const lowdefy = {
-  _internal: {
-    actions: {
-      Wait,
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-    auth: {
-      login: jest.fn(),
-    },
-  },
-};
+test('wait set ms before continuing', async () => {
+  let flag = false;
 
-const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
-
-// Comment out to use console
-console.log = () => {};
-console.error = () => {};
-
-beforeEach(() => {
-  global.Date = mockDate;
-  lowdefy._internal.auth.login.mockReset();
-});
-
-afterAll(() => {
-  global.Date = RealDate;
-});
-
-const timeout = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
-test('Wait', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Wait',
-                  params: { ms: 500 },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
+  const waitAndSetFlag = async () => {
+    await Wait({ params: { ms: 10 } });
+    flag = true;
   };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['button'];
-  let resolved = false;
-  button.triggerEvent({ name: 'onClick' }).then(() => {
-    resolved = true;
-  });
-  expect(resolved).toBe(false);
-  await timeout(100);
-  expect(resolved).toBe(false);
-  await timeout(300);
-  expect(resolved).toBe(false);
-  await timeout(150);
-  expect(resolved).toBe(true);
+  expect(flag).toBe(false);
+  waitAndSetFlag();
+  expect(flag).toBe(false);
+  await wait(5);
+  expect(flag).toBe(false);
+  await wait(6);
+  expect(flag).toBe(true);
 });
 
-test('Wait ms not a integer', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Wait',
-                  params: { ms: 1.1 },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['button'];
-  const res = await button.triggerEvent({ name: 'onClick' });
-  expect(res).toEqual({
-    blockId: 'button',
-    bounced: false,
-    endTimestamp: { date: 0 },
-    error: {
-      action: { id: 'a', params: { ms: 1.1 }, type: 'Wait' },
-      error: {
-        error: new Error('Wait action "ms" param should be an integer.'),
-        index: 0,
-        type: 'Wait',
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      a: {
-        error: new Error('Wait action "ms" param should be an integer.'),
-        index: 0,
-        type: 'Wait',
-      },
-    },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
+test('Wait params undefined', async () => {
+  expect(() => Wait({})).toThrow('Wait action "ms" param should be an integer.');
+});
+
+test('Wait params.ms not an integer', async () => {
+  expect(() => Wait({ params: { key: 'value' } })).toThrow(
+    'Wait action "ms" param should be an integer.'
+  );
 });

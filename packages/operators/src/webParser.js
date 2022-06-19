@@ -19,14 +19,11 @@ import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 class WebParser {
   constructor({ context, operators }) {
     this.context = context;
-    this.parse = this.parse.bind(this);
     this.operators = operators;
+    this.parse = this.parse.bind(this);
   }
 
   parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
-    const operators = this.operators;
-    const context = this.context;
-
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -41,7 +38,7 @@ class WebParser {
     }
     const errors = [];
     const { basePath, home, inputs, lowdefyGlobal, menus, pageId, urlQuery, user, _internal } =
-      context._internal.lowdefy;
+      this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
 
@@ -49,31 +46,31 @@ class WebParser {
       if (!key.startsWith(operatorPrefix)) return value;
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
-      if (type.isUndefined(operators[op])) return value;
+      if (type.isUndefined(this.operators[op])) return value;
 
       try {
-        const res = operators[op]({
+        const res = this.operators[op]({
           actions,
           args,
           arrayIndices,
           basePath,
           event,
-          eventLog: context.eventLog,
+          eventLog: this.context.eventLog,
           home,
-          input: inputs ? inputs[context.id] : {},
+          input: inputs ? inputs[this.context.id] : {},
           location: applyArrayIndices(arrayIndices, location),
-          lowdefyGlobal: lowdefyGlobal || {},
-          menus: menus || {},
+          lowdefyGlobal: lowdefyGlobal ?? {},
+          menus: menus ?? [],
           methodName,
           operatorPrefix,
-          operators,
+          operators: this.operators,
           pageId,
           params: value[key],
           parser: this,
-          requests: context.requests,
-          state: context.state,
-          urlQuery: urlQuery || {},
-          user: user || {},
+          requests: this.context.requests,
+          state: this.context.state,
+          urlQuery: urlQuery ?? {},
+          user: user ?? {},
           window: _internal.window,
         });
         return res;

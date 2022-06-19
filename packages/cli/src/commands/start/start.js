@@ -15,12 +15,14 @@
 */
 
 import runStart from './runStart.js';
+import readDotEnv from '../../utils/readDotEnv.js';
 
 // TODO: Handle "spawn yarn ENOENT" error if no built server exists.
 
 async function build({ context }) {
   context.print.info('Starting server.');
   context.sendTelemetry({ sendTypes: true });
+  readDotEnv(context);
   await runStart({ context, directory: context.directories.server });
 }
 

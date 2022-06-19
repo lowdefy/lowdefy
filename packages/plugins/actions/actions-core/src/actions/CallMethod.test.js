@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import CallMethod from './CallMethod.js';
 
-const mockActionMethod = jest.fn();
+const mockCallMethod = jest.fn();
+const methods = { callMethod: mockCallMethod };
 
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
-
-test('CallMethod action invocation', async () => {
-  CallMethod({ methods: { callMethod: mockActionMethod }, params: 'call' });
-  expect(mockActionMethod.mock.calls).toEqual([['call']]);
+test('CallMethod mock test', async () => {
+  CallMethod({
+    methods,
+    params: { blockId: 'blockId', method: 'method', args: ['arg1', 'arg2'] },
+  });
+  expect(mockCallMethod.mock.calls).toEqual([
+    [{ blockId: 'blockId', method: 'method', args: ['arg1', 'arg2'] }],
+  ]);
 });

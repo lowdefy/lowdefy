@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { type } from '@lowdefy/helpers';
 
 import testContext from '../../test/testContext.js';
@@ -32,11 +33,6 @@ const lowdefy = {
           );
         }
       },
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      List: { meta: { category: 'list' } },
-      TextInput: { meta: { category: 'input' } },
     },
     link: jest.fn(),
   },
@@ -60,72 +56,48 @@ afterAll(() => {
 });
 
 test('Link with string pageId params', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Link', params: 'pageId' }],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Link', params: 'pageId' }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([[{ pageId: 'pageId' }]]);
   expect(res.success).toBe(true);
 });
 
 test('Link with object params', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Link', params: { pageId: 'pageId', newTab: true } }],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Link', params: { pageId: 'pageId', newTab: true } }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([
     [
@@ -139,39 +111,27 @@ test('Link with object params', async () => {
 });
 
 test('Link error', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
-            },
-            events: {
-              onClick: [{ id: 'a', type: 'Link', params: { invalid: true } }],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [{ id: 'a', type: 'Link', params: { invalid: true } }],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   lowdefy._internal.link.mockImplementationOnce(() => {
     throw new Error('Link test error');
   });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
+  const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([
     [

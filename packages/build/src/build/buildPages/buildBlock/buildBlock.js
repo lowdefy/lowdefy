@@ -24,7 +24,7 @@ import moveSkeletonBlocksToArea from './moveSkeletonBlocksToArea.js';
 import setBlockId from './setBlockId.js';
 import validateBlock from './validateBlock.js';
 
-async function buildBlock(block, pageContext) {
+function buildBlock(block, pageContext) {
   validateBlock(block, pageContext);
   setBlockId(block, pageContext);
   countBlockOperators(block, pageContext);
@@ -33,7 +33,7 @@ async function buildBlock(block, pageContext) {
   moveSubBlocksToArea(block, pageContext);
   moveSkeletonBlocksToArea(block, pageContext);
   countBlockTypes(block, pageContext);
-  await buildSubBlocks(block, pageContext);
+  buildSubBlocks(block, pageContext);
 }
 
 export default buildBlock;

@@ -39,7 +39,7 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('block events actions array should map to try catch', async () => {
+test('block events actions array should map to try catch', () => {
   const components = {
     pages: [
       {
@@ -63,7 +63,7 @@ test('block events actions array should map to try catch', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
     {
       id: 'action_1',
@@ -73,7 +73,7 @@ test('block events actions array should map to try catch', async () => {
   expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
 });
 
-test('block events actions as try catch arrays', async () => {
+test('block events actions as try catch arrays', () => {
   const components = {
     pages: [
       {
@@ -105,7 +105,7 @@ test('block events actions as try catch arrays', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
     {
       id: 'action_1',
@@ -120,7 +120,7 @@ test('block events actions as try catch arrays', async () => {
   ]);
 });
 
-test('block events actions as try array and catch not defined.', async () => {
+test('block events actions as try array and catch not defined.', () => {
   const components = {
     pages: [
       {
@@ -146,17 +146,17 @@ test('block events actions as try array and catch not defined.', async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
-    {
-      id: 'action_1',
-      type: 'Reset',
-    },
-  ]);
-  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
+  expect(() =>
+    buildPages({
+      components,
+      context,
+    })
+  ).toThrow(
+    'Catch actions must be an array at "block_1" in event "onClick.catch" on page "page_1". Received undefined'
+  );
 });
 
-test('block events actions try not an array', async () => {
+test('block events actions try not an array', () => {
   const components = {
     pages: [
       {
@@ -180,12 +180,17 @@ test('block events actions try not an array', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Events must be an array of actions at "block_1" in event "onClick" on page "page_1". Received {"id":"action_1","type":"Reset"}'
+  expect(() =>
+    buildPages({
+      components,
+      context,
+    })
+  ).toThrow(
+    'Try actions must be an array at "block_1" in event "onClick.try" on page "page_1". Received {"id":"action_1","type":"Reset"}'
   );
 });
 
-test('block events actions not an array', async () => {
+test('block events actions not an array', () => {
   const components = {
     pages: [
       {
@@ -204,12 +209,12 @@ test('block events actions not an array', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Events must be an array of actions at "block_1" in event "onClick" on page "page_1". Received undefined'
+  expect(() => buildPages({ components, context })).toThrow(
+    'Actions must be an array at "block_1" in event "onClick" on page "page_1". Received undefined'
   );
 });
 
-test('block events actions catch not an array', async () => {
+test('block events actions catch not an array', () => {
   const components = {
     pages: [
       {
@@ -234,12 +239,12 @@ test('block events actions catch not an array', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
-    'Catch events must be an array of actions at "block_1" in event "onClick" on page "page_1". Received {"id":"action_1","type":"Reset"}'
+  expect(() => buildPages({ components, context })).toThrow(
+    'Catch actions must be an array at "block_1" in event "onClick.catch" on page "page_1". Received {"id":"action_1","type":"Reset"}'
   );
 });
 
-test('block events action id is not defined', async () => {
+test('block events action id is not defined', () => {
   const components = {
     pages: [
       {
@@ -270,12 +275,12 @@ test('block events action id is not defined', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Action id missing on event "onClick" on block "block_1" on page "page_1".'
   );
 });
 
-test('action type is not a string', async () => {
+test('action type is not a string', () => {
   const components = {
     pages: [
       {
@@ -306,12 +311,12 @@ test('action type is not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Action type is not a string on action "reset" on event "onClick" on block "block_1" on page "page_1". Received undefined.'
   );
 });
 
-test('block events action id is not a string', async () => {
+test('block events action id is not a string', () => {
   const components = {
     pages: [
       {
@@ -343,12 +348,12 @@ test('block events action id is not a string', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Action id is not a string on event "onClick" on block "block_1" on page "page_1". Received true.'
   );
 });
 
-test('throw on Duplicate block events action ids', async () => {
+test('throw on Duplicate block events action ids', () => {
   const components = {
     pages: [
       {
@@ -384,12 +389,12 @@ test('throw on Duplicate block events action ids', async () => {
       },
     ],
   };
-  await expect(buildPages({ components, context })).rejects.toThrow(
+  expect(() => buildPages({ components, context })).toThrow(
     'Duplicate actionId "action_1" on event "onClick" on block "block_1" on page "page_1".'
   );
 });
 
-test("don't throw on Duplicate separate block events action ids", async () => {
+test("don't throw on Duplicate separate block events action ids", () => {
   const components = {
     pages: [
       {
@@ -435,7 +440,7 @@ test("don't throw on Duplicate separate block events action ids", async () => {
       },
     ],
   };
-  const res = await buildPages({ components, context });
+  const res = buildPages({ components, context });
   expect(get(res, 'pages.0.areas.content.blocks.0')).toEqual({
     blockId: 'block_1',
     events: {

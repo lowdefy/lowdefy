@@ -13,11 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import { get, type } from '@lowdefy/helpers';
-
-// TODO: issue importing plugin packages with jest due to jest es module resolution #https://github.com/facebook/jest/issues/9771
-// import { _not, _type } from '@lowdefy/operators-js/operators/client';
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -38,54 +34,6 @@ const lowdefy = {
       TextInput: { meta: { category: 'input', valueType: 'string' } },
     },
     displayMessage,
-    operators: {
-      _not: ({ params }) => {
-        return !params;
-      },
-      _type: ({ location, params, state }) => {
-        const typeName = type.isObject(params) ? params.type : params;
-        if (!type.isString(typeName)) {
-          throw new Error(
-            `Operator Error: _type.type must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        const on = Object.prototype.hasOwnProperty.call(params, 'on')
-          ? params.on
-          : get(state, get(params, 'key', { default: location }));
-        switch (typeName) {
-          case 'string':
-            return type.isString(on);
-          case 'array':
-            return type.isArray(on);
-          case 'date':
-            return type.isDate(on); // Testing for date is problematic due to stringify
-          case 'object':
-            return type.isObject(on);
-          case 'boolean':
-            return type.isBoolean(on);
-          case 'number':
-            return type.isNumber(on);
-          case 'integer':
-            return type.isInt(on);
-          case 'null':
-            return type.isNull(on);
-          case 'undefined':
-            return type.isUndefined(on);
-          case 'none':
-            return type.isNone(on);
-          case 'primitive':
-            return type.isPrimitive(on);
-          default:
-            throw new Error(
-              `Operator Error: "${typeName}" is not a valid _type test. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-        }
-      },
-    },
   },
 };
 
@@ -112,63 +60,44 @@ afterAll(() => {
 });
 
 test('RestValidation after required field', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            required: true,
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                },
-              ],
-            },
-          },
-          {
-            id: 'reset',
-            blockId: 'reset',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'reset',
-                  type: 'ResetValidation',
-                },
-              ],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        required: true,
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+            },
+          ],
+        },
+      },
+      {
+        id: 'reset',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'reset',
+              type: 'ResetValidation',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];

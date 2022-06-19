@@ -80,7 +80,9 @@ async function run() {
   try {
     const serverPromise = startServer(context);
     await wait(800);
-    opener(`http://localhost:${context.options.port}`);
+    if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+      opener(`http://localhost:${context.options.port}`);
+    }
     await serverPromise;
   } catch (error) {
     console.log(error);

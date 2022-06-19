@@ -14,635 +14,86 @@
   limitations under the License.
 */
 
-import testContext from './testContext.js';
 import { Throw, ThrowActionError } from './Throw.js';
 
-const closeLoader = jest.fn();
-const displayMessage = jest.fn();
-const lowdefy = {
-  _internal: {
-    actions: {
-      Throw,
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-    },
-    displayMessage,
-  },
-};
+const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
 
-const RealDate = Date;
-const mockDate = jest.fn(() => ({ date: 0 }));
-mockDate.now = jest.fn(() => 0);
-
-// Comment out to use console
-console.log = () => {};
-console.error = () => {};
-
-beforeEach(() => {
-  displayMessage.mockReset();
-  closeLoader.mockReset();
-  displayMessage.mockImplementation(() => closeLoader);
+test('Throw no params', () => {
+  expect(() => Throw({ methods })).toThrow(
+    'Throw action params should be an object. Received "undefined".'
+  );
 });
 
-beforeAll(() => {
-  global.Date = mockDate;
+test('Throw params.throw should be a boolean.', () => {
+  expect(() => Throw({ methods, params: { throw: 'invalid' } })).toThrow(
+    'Throw action "throw" param should be an boolean. Received ""invalid"".'
+  );
 });
 
-afterAll(() => {
-  global.Date = RealDate;
+test('Throw params.throw null', () => {
+  expect(() => Throw({ methods, params: { throw: null } })).not.toThrow();
 });
 
-test('Throw no params', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    event: undefined,
-    eventName: 'onClick',
-    error: {
-      action: {
-        id: 'throw',
-        type: 'Throw',
-      },
-      error: {
-        error: new TypeError('Throw action params should be an object. Received "undefined".'),
-        index: 0,
-        type: 'Throw',
-      },
-    },
-    responses: {
-      throw: {
-        error: new TypeError('Throw action params should be an object. Received "undefined".'),
-        type: 'Throw',
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "Throw action params should be an object. Received \\"undefined\\".",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
+test('Throw params.throw false', () => {
+  expect(() => Throw({ methods, params: { throw: false } })).not.toThrow();
 });
 
-test('Throw params.throw true, no message or metaData', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: true },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    error: {
-      error: {
-        type: 'Throw',
-        error: new ThrowActionError(undefined, { blockId: 'button', context: context }),
-        index: 0,
-      },
-      action: {
-        id: 'throw',
-        type: 'Throw',
-        params: { throw: true },
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        error: new ThrowActionError(undefined, { blockId: 'button', context: context }),
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
+test('Throw params.throw true, no message or metaData', () => {
+  const params = { throw: true };
+  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  let error;
+  try {
+    Throw({ methods, params });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toEqual('');
+  expect(error.blockId).toEqual('blockId');
+  expect(error.metaData).toEqual(undefined);
+  expect(error.pageId).toEqual('pageId');
 });
 
-test('Throw params.throw true, message and  no metaData', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: true, message: 'My error message' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    error: {
-      error: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', { blockId: 'button', context: context }),
-        index: 0,
-      },
-      action: {
-        id: 'throw',
-        type: 'Throw',
-        params: { throw: true, message: 'My error message' },
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', { blockId: 'button', context: context }),
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "My error message",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
+test('Throw params.throw true, message and  no metaData', () => {
+  const params = { throw: true, message: 'My error message' };
+  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  let error;
+  try {
+    Throw({ methods, params });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toEqual('My error message');
+  expect(error.blockId).toEqual('blockId');
+  expect(error.metaData).toEqual(undefined);
+  expect(error.pageId).toEqual('pageId');
 });
 
-test('Throw params.throw true, message and  metaData string', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: true, message: 'My error message', metaData: 'Meta string' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    error: {
-      error: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', {
-          blockId: 'button',
-          context: context,
-          metaData: 'Meta string',
-        }),
-        index: 0,
-      },
-      action: {
-        id: 'throw',
-        type: 'Throw',
-        params: { throw: true, message: 'My error message', metaData: 'Meta string' },
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', {
-          blockId: 'button',
-          context: context,
-          metaData: 'Meta string',
-        }),
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "My error message",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
+test('Throw params.throw true, message and  metaData string', () => {
+  const params = { throw: true, message: 'My error message', metaData: 'Meta string' };
+  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  let error;
+  try {
+    Throw({ methods, params });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toEqual('My error message');
+  expect(error.blockId).toEqual('blockId');
+  expect(error.metaData).toEqual('Meta string');
+  expect(error.pageId).toEqual('pageId');
 });
 
-test('Throw params.throw true, message and metaData object', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: true, message: 'My error message', metaData: { key: 'value' } },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    error: {
-      error: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', {
-          blockId: 'button',
-          context: context,
-          metaData: { key: 'value' },
-        }),
-        index: 0,
-      },
-      action: {
-        id: 'throw',
-        type: 'Throw',
-        params: { throw: true, message: 'My error message', metaData: { key: 'value' } },
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        error: new ThrowActionError('My error message', {
-          blockId: 'button',
-          context: context,
-          metaData: 'Meta string',
-        }),
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "My error message",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
-});
-
-test('Throw params.throw false', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: false },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        response: undefined,
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: true,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
-});
-
-test('Throw params.throw null', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: null },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        response: undefined,
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: true,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`Array []`);
-});
-
-test('Throw params.throw should be a boolean.', async () => {
-  const rootBlock = {
-    id: 'block:root:root:0',
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'block:root:button:0',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'throw',
-                  type: 'Throw',
-                  params: { throw: 'invalid' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  };
-  const context = testContext({
-    lowdefy,
-    rootBlock,
-  });
-  const button = context._internal.RootBlocks.map['block:root:button:0'];
-  await button.triggerEvent({ name: 'onClick' });
-  expect(button.Events.events.onClick.history[0]).toEqual({
-    blockId: 'button',
-    bounced: false,
-    error: {
-      error: {
-        type: 'Throw',
-        error: new Error('Throw action "throw" param should be an boolean. Received ""invalid"".'),
-        index: 0,
-      },
-      action: {
-        id: 'throw',
-        type: 'Throw',
-        params: { throw: 'invalid' },
-      },
-    },
-    event: undefined,
-    eventName: 'onClick',
-    responses: {
-      throw: {
-        type: 'Throw',
-        error: new Error('Throw action "throw" param should be an boolean. Received ""invalid"".'),
-        index: 0,
-      },
-    },
-    endTimestamp: { date: 0 },
-    startTimestamp: { date: 0 },
-    success: false,
-  });
-  expect(displayMessage.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "content": "Throw action \\"throw\\" param should be an boolean. Received \\"\\"invalid\\"\\".",
-          "duration": 6,
-          "status": "error",
-        },
-      ],
-    ]
-  `);
+test('Throw params.throw true, message and metaData object', () => {
+  const params = { throw: true, message: 'My error message', metaData: { key: 'value' } };
+  expect(() => Throw({ methods, params })).toThrow(ThrowActionError);
+  let error;
+  try {
+    Throw({ methods, params });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toEqual('My error message');
+  expect(error.blockId).toEqual('blockId');
+  expect(error.metaData).toEqual({ key: 'value' });
+  expect(error.pageId).toEqual('pageId');
 });

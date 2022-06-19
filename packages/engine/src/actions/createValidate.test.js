@@ -13,8 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import { get, type } from '@lowdefy/helpers';
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -27,101 +26,7 @@ const lowdefy = {
         return validate(params);
       },
     },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
-      TextInput: { meta: { category: 'input', valueType: 'string' } },
-    },
     displayMessage,
-    operators: {
-      _not: ({ params }) => {
-        return !params;
-      },
-      _type: ({ location, params, state }) => {
-        const typeName = type.isObject(params) ? params.type : params;
-        if (!type.isString(typeName)) {
-          throw new Error(
-            `Operator Error: _type.type must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        const on = Object.prototype.hasOwnProperty.call(params, 'on')
-          ? params.on
-          : get(state, get(params, 'key', { default: location }));
-        switch (typeName) {
-          case 'string':
-            return type.isString(on);
-          case 'array':
-            return type.isArray(on);
-          case 'date':
-            return type.isDate(on); // Testing for date is problematic due to stringify
-          case 'object':
-            return type.isObject(on);
-          case 'boolean':
-            return type.isBoolean(on);
-          case 'number':
-            return type.isNumber(on);
-          case 'integer':
-            return type.isInt(on);
-          case 'null':
-            return type.isNull(on);
-          case 'undefined':
-            return type.isUndefined(on);
-          case 'none':
-            return type.isNone(on);
-          case 'primitive':
-            return type.isPrimitive(on);
-          default:
-            throw new Error(
-              `Operator Error: "${typeName}" is not a valid _type test. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-        }
-      },
-      _regex: ({ location, params, state }) => {
-        const pattern = type.isObject(params) ? params.pattern : params;
-        if (!type.isString(pattern)) {
-          throw new Error(
-            `Operator Error: _regex.pattern must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        let on = !type.isUndefined(params.on) ? params.on : get(state, location);
-        if (!type.isUndefined(params.key)) {
-          if (!type.isString(params.key)) {
-            throw new Error(
-              `Operator Error: _regex.key must be a string. Received: ${JSON.stringify(
-                params
-              )} at ${location}.`
-            );
-          }
-          on = get(state, params.key);
-        }
-        if (type.isNone(on)) {
-          return false;
-        }
-        if (!type.isString(on)) {
-          throw new Error(
-            `Operator Error: _regex.on must be a string. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-        try {
-          const re = new RegExp(pattern, params.flags || 'gm');
-          return re.test(on);
-        } catch (e) {
-          // log e to LowdefyError
-          throw new Error(
-            `Operator Error: _regex failed to execute RegExp.test. Received: ${JSON.stringify(
-              params
-            )} at ${location}.`
-          );
-        }
-      },
-    },
   },
 };
 
@@ -148,47 +53,32 @@ afterAll(() => {
 });
 
 test('Validate required field', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            required: true,
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                },
-              ],
-            },
-          },
-        ],
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        required: true,
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -273,67 +163,47 @@ test('Validate required field', async () => {
 });
 
 test('Validate all fields', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -479,68 +349,48 @@ test('Validate all fields', async () => {
 });
 
 test('Validate only one field', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: 'text1',
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: 'text1',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -635,83 +485,58 @@ test('Validate only one field', async () => {
 });
 
 test('Validate list of fields', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'text3',
-            blockId: 'text3',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text3', key: 'text3' } },
-                message: 'text3 does not match pattern "text3"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: ['text1', 'text2'],
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'text3',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text3', key: 'text3' } },
+            message: 'text3 does not match pattern "text3"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: ['text1', 'text2'],
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -818,38 +643,28 @@ test('Validate list of fields', async () => {
 });
 
 test('Invalid Validate params', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: 1,
             },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: 1,
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   await button.triggerEvent({ name: 'onClick' });
@@ -895,53 +710,38 @@ test('Invalid Validate params', async () => {
 });
 
 test('Validate does not fail on warnings', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'text1',
-            blockId: 'text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                status: 'warning',
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            status: 'warning',
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -975,70 +775,50 @@ test('Validate does not fail on warnings', async () => {
 });
 
 test('Validate on nested objects using params.regex string', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'obj.text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'obj.text1',
-            blockId: 'obj.text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: {
-                    regex: '^obj.*1$',
-                  },
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: {
+                regex: '^obj.*1$',
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -1076,85 +856,60 @@ test('Validate on nested objects using params.regex string', async () => {
 });
 
 test('Validate on nested objects using params.regex array', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'obj.text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'obj.text1',
-            blockId: 'obj.text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'obj.abc1',
-            blockId: 'obj.abc1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'abc1', key: 'abc1' } },
-                message: 'abc1 does not match pattern "abc1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: {
-                    regex: ['^obj.*1$'],
-                  },
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'obj.abc1',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'abc1', key: 'abc1' } },
+            message: 'abc1 does not match pattern "abc1"',
+          },
+        ],
+      },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: {
+                regex: ['^obj.*1$'],
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];
@@ -1208,86 +963,61 @@ test('Validate on nested objects using params.regex array', async () => {
 });
 
 test('Validate on nested objects using params.regex array and blockIds', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'obj.text1',
+        type: 'TextInput',
+        validate: [
           {
-            id: 'obj.text1',
-            blockId: 'obj.text1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text1', key: 'text1' } },
-                message: 'text1 does not match pattern "text1"',
-              },
-            ],
-          },
-          {
-            id: 'obj.abc1',
-            blockId: 'obj.abc1',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'abc1', key: 'abc1' } },
-                message: 'abc1 does not match pattern "abc1"',
-              },
-            ],
-          },
-          {
-            id: 'text2',
-            blockId: 'text2',
-            type: 'TextInput',
-            meta: {
-              category: 'input',
-              valueType: 'string',
-            },
-            validate: [
-              {
-                pass: { _regex: { pattern: 'text2', key: 'text2' } },
-                message: 'text2 does not match pattern "text2"',
-              },
-            ],
-          },
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-            },
-            events: {
-              onClick: [
-                {
-                  id: 'validate',
-                  type: 'Validate',
-                  params: {
-                    regex: ['^obj.*t1$'],
-                    blockIds: ['text2'],
-                  },
-                },
-              ],
-            },
+            pass: { _regex: { pattern: 'text1', key: 'text1' } },
+            message: 'text1 does not match pattern "text1"',
           },
         ],
       },
-    },
+      {
+        id: 'obj.abc1',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'abc1', key: 'abc1' } },
+            message: 'abc1 does not match pattern "abc1"',
+          },
+        ],
+      },
+      {
+        id: 'text2',
+        type: 'TextInput',
+        validate: [
+          {
+            pass: { _regex: { pattern: 'text2', key: 'text2' } },
+            message: 'text2 does not match pattern "text2"',
+          },
+        ],
+      },
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'validate',
+              type: 'Validate',
+              params: {
+                regex: ['^obj.*t1$'],
+                blockIds: ['text2'],
+              },
+            },
+          ],
+        },
+      },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
     operators: lowdefy._internal.operators,
   });
   const button = context._internal.RootBlocks.map['button'];

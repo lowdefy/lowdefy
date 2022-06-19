@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { jest } from '@jest/globals';
 
 import testContext from '../../test/testContext.js';
 
@@ -22,9 +23,6 @@ const lowdefy = {
       Login: ({ methods: { login }, params }) => {
         return login(params);
       },
-    },
-    blockComponents: {
-      Button: { meta: { category: 'display' } },
     },
     auth: {
       login: jest.fn(),
@@ -46,39 +44,28 @@ afterAll(() => {
 });
 
 test('Login', async () => {
-  const rootBlock = {
-    blockId: 'root',
-    meta: {
-      category: 'container',
-    },
-    areas: {
-      content: {
-        blocks: [
-          {
-            id: 'button',
-            blockId: 'button',
-            type: 'Button',
-            meta: {
-              category: 'display',
-              valueType: 'string',
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: [
+            {
+              id: 'a',
+              type: 'Login',
+              params: { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } },
             },
-            events: {
-              onClick: [
-                {
-                  id: 'a',
-                  type: 'Login',
-                  params: { input: { i: true }, pageId: 'pageId', urlQuery: { u: true } },
-                },
-              ],
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
+    ],
   };
-  const context = testContext({
+  const context = await testContext({
     lowdefy,
-    rootBlock,
+    pageConfig,
   });
   const button = context._internal.RootBlocks.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });

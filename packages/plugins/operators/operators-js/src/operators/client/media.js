@@ -24,8 +24,8 @@ const breakpoints = {
   xl: 1600,
 };
 
-function _media({ arrayIndices, location, params }) {
-  if (!window || !window.innerWidth) {
+function _media({ arrayIndices, location, params, window }) {
+  if (!window?.innerWidth) {
     throw new Error(
       `Operator Error: device window width not available for _media. Received: ${JSON.stringify(
         params

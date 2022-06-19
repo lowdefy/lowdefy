@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import Reset from './Reset.js';
 
-const mockActionMethod = jest.fn();
-
-beforeEach(() => {
-  mockActionMethod.mockReset();
-});
+const mockReset = jest.fn();
+const methods = { reset: mockReset };
 
 test('Reset action invocation', async () => {
-  Reset({ methods: { reset: mockActionMethod } });
-  expect(mockActionMethod.mock.calls).toEqual([[]]);
+  Reset({ methods: methods });
+  expect(mockReset.mock.calls).toEqual([[]]);
 });

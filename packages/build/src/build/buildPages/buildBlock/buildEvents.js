@@ -51,6 +51,16 @@ function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId,
 function buildEvents(block, pageContext) {
   if (block.events) {
     Object.keys(block.events).map((key) => {
+      if (
+        (!type.isArray(block.events[key]) && !type.isObject(block.events[key])) ||
+        (type.isObject(block.events[key]) && type.isNone(block.events[key].try))
+      ) {
+        throw new Error(
+          `Actions must be an array at "${block.blockId}" in event "${key}" on page "${
+            pageContext.pageId
+          }". Received ${JSON.stringify(block.events[key].try)}`
+        );
+      }
       if (type.isArray(block.events[key])) {
         block.events[key] = {
           try: block.events[key],
@@ -59,21 +69,16 @@ function buildEvents(block, pageContext) {
       }
       if (!type.isArray(block.events[key].try)) {
         throw new Error(
-          `Events must be an array of actions at "${block.blockId}" in event "${key}" on page "${
+          `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${
             pageContext.pageId
           }". Received ${JSON.stringify(block.events[key].try)}`
         );
       }
-      if (type.isNone(block.events[key].catch)) {
-        block.events[key].catch = [];
-      }
       if (!type.isArray(block.events[key].catch)) {
         throw new Error(
-          `Catch events must be an array of actions at "${
-            block.blockId
-          }" in event "${key}" on page "${pageContext.pageId}". Received ${JSON.stringify(
-            block.events[key].catch
-          )}`
+          `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${
+            pageContext.pageId
+          }". Received ${JSON.stringify(block.events[key].catch)}`
         );
       }
       const checkDuplicateActionId = createCheckDuplicateId({

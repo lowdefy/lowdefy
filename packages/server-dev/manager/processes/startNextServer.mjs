@@ -27,7 +27,6 @@ function startServerProcess(context) {
     processOptions: {
       env: {
         ...process.env,
-        ...context.serverEnv,
         PORT: context.options.port,
       },
     },

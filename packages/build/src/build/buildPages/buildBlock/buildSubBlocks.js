@@ -18,9 +18,8 @@ import { type } from '@lowdefy/helpers';
 
 import buildBlock from './buildBlock.js';
 
-async function buildSubBlocks(block, pageContext) {
+function buildSubBlocks(block, pageContext) {
   if (type.isObject(block.areas)) {
-    let promises = [];
     Object.keys(block.areas).forEach((key) => {
       if (type.isNone(block.areas[key].blocks)) {
         block.areas[key].blocks = [];
@@ -32,12 +31,8 @@ async function buildSubBlocks(block, pageContext) {
           }. Received ${JSON.stringify(block.areas[key].blocks)}`
         );
       }
-      const blockPromises = block.areas[key].blocks.map(async (blk) => {
-        await buildBlock(blk, pageContext);
-      });
-      promises = promises.concat(blockPromises);
+      block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
     });
-    await Promise.all(promises);
   }
 }
 

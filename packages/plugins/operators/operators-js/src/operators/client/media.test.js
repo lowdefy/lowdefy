@@ -19,13 +19,10 @@ import media from './media.js';
 
 console.error = () => {};
 
-beforeEach(() => {
-  Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 300 });
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
-});
+const window = { innerHeight: 300, innerWidth: 500 };
 
 test('_media full media object', () => {
-  expect(media({ params: true, location: 'locationId' })).toEqual({
+  expect(media({ params: true, location: 'locationId', window })).toEqual({
     height: 300,
     size: 'xs',
     width: 500,
@@ -33,34 +30,48 @@ test('_media full media object', () => {
 });
 
 test('_media size', () => {
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('xs');
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 700 });
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('sm');
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 900 });
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('md');
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1100 });
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('lg');
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1400 });
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('xl');
-  Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1900 });
-  expect(media({ params: 'size', location: 'locationId' })).toEqual('xxl');
+  expect(
+    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 500 } })
+  ).toEqual('xs');
+  expect(
+    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 700 } })
+  ).toEqual('sm');
+  expect(
+    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 900 } })
+  ).toEqual('md');
+  expect(
+    media({
+      params: 'size',
+      location: 'locationId',
+      window: { innerHeight: 300, innerWidth: 1100 },
+    })
+  ).toEqual('lg');
+  expect(
+    media({
+      params: 'size',
+      location: 'locationId',
+      window: { innerHeight: 300, innerWidth: 1400 },
+    })
+  ).toEqual('xl');
+  expect(
+    media({
+      params: 'size',
+      location: 'locationId',
+      window: { innerHeight: 300, innerWidth: 1900 },
+    })
+  ).toEqual('xxl');
 });
 
 test('_media width', () => {
-  expect(media({ params: 'width', location: 'locationId' })).toEqual(500);
+  expect(media({ params: 'width', location: 'locationId', window })).toEqual(500);
 });
 
 test('_media height', () => {
-  expect(media({ params: 'height', location: 'locationId' })).toEqual(300);
+  expect(media({ params: 'height', location: 'locationId', window })).toEqual(300);
 });
 
 test('_media throw on no innerWidth', () => {
-  Object.defineProperty(window, 'innerWidth', {
-    writable: true,
-    configurable: true,
-    value: undefined,
-  });
-  expect(() => media({ params: true, location: 'locationId' })).toThrow(
+  expect(() => media({ params: true, location: 'locationId', window: {} })).toThrow(
     'Operator Error: device window width not available for _media. Received: true at locationId.'
   );
 });

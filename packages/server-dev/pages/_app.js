@@ -16,7 +16,8 @@
 
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { SessionProvider } from 'next-auth/react';
+
+import Auth from '../lib/auth/Auth.js';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
@@ -24,9 +25,7 @@ import '../build/plugins/styles.less';
 function App({ Component }) {
   return (
     <Suspense fallback="">
-      <SessionProvider>
-        <Component />
-      </SessionProvider>
+      <Auth>{(auth) => <Component auth={auth} />}</Auth>
     </Suspense>
   );
 }

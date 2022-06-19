@@ -56,21 +56,27 @@ const context = {
   eventLog: [{ eventLog: true }],
   id: 'id',
   requests: {
-    arr: {
-      response: [{ a: 'request a1' }, { a: 'request a2' }],
-      loading: false,
-      error: [],
-    },
-    number: {
-      response: 500,
-      loading: false,
-      error: [],
-    },
-    string: {
-      response: 'request String',
-      loading: false,
-      error: [],
-    },
+    arr: [
+      {
+        response: [{ a: 'request a1' }, { a: 'request a2' }],
+        loading: false,
+        error: [],
+      },
+    ],
+    number: [
+      {
+        response: 500,
+        loading: false,
+        error: [],
+      },
+    ],
+    string: [
+      {
+        response: 'request String',
+        loading: false,
+        error: [],
+      },
+    ],
   },
   state: { state: true },
 };

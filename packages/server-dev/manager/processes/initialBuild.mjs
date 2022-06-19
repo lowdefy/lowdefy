@@ -17,10 +17,10 @@
 
 function initialBuild(context) {
   return async () => {
+    context.readDotEnv();
     await context.lowdefyBuild();
     await context.installPlugins();
     await context.nextBuild();
-    await context.readDotEnv();
   };
 }
 

@@ -32,7 +32,7 @@ const validProperties = [
 ];
 
 function _location({ arrayIndices, basePath, home, location, pageId, params, window }) {
-  if (!window || !window.location) {
+  if (!window?.location) {
     throw new Error(
       `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(
         params

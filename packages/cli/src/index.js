@@ -15,9 +15,7 @@
   limitations under the License.
 */
 
-import { fileURLToPath } from 'url';
-import { readFile } from '@lowdefy/node-utils';
-
+import { createRequire } from 'module';
 import { Command } from 'commander';
 
 import build from './commands/build/build.js';
@@ -26,9 +24,9 @@ import init from './commands/init/init.js';
 import start from './commands/start/start.js';
 import runCommand from './utils/runCommand.js';
 
-const packageJson = JSON.parse(
-  await readFile(fileURLToPath(new URL('../package.json', import.meta.url)))
-);
+const require = createRequire(import.meta.url);
+
+const packageJson = require('../package.json');
 const { description, version: cliVersion } = packageJson;
 
 const program = new Command();
@@ -71,6 +69,7 @@ program
     'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
+  .option('--no-open', 'Do not open a new tab in the default browser.')
   .option(
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
