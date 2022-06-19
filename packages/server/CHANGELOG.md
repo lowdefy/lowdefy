@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+
+### Bug Fixes
+
+* **server:** Fix for next.js output file tracing. ([34c3f2d](https://github.com/lowdefy/lowdefy/commit/34c3f2d91a03d7e062cb493557d791e12782cec2))
+
+
+
+
+
 # [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
 
 
