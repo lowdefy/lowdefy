@@ -22,16 +22,17 @@ async function runLowdefyBuild({ context, directory }) {
     await spawnProcess({
       logger: context.print,
       command: context.packageManagerCmd,
-      args: ['run', 'build:lowdefy'],
+      args: [
+        'run',
+        'build:lowdefy',
+        '--ref-resolver',
+        context.options.refResolver,
+        '--config-directory',
+        context.directories.config,
+      ],
       processOptions: {
         cwd: directory,
-        env: {
-          ...process.env,
-          LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
-          LOWDEFY_DIRECTORY_BUILD: context.directories.build,
-          LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-          LOWDEFY_DIRECTORY_SERVER: context.directories.server,
-        },
+        env: process.env,
       },
       silent: false,
     });
