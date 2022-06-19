@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* **engine:** Fix createSetGlobal. ([542ed98](https://github.com/lowdefy/lowdefy/commit/542ed983dc869e82a2e06c106377035ad7fbf57e))
+* **engine:** Fix engine tests. ([92182a2](https://github.com/lowdefy/lowdefy/commit/92182a2bb53b7b54179f67792bd10e6b53ad2400))
+* **engine:** RootBlocks.map to use blockId. ([d31064f](https://github.com/lowdefy/lowdefy/commit/d31064ff9c685d1ae959ce9142ac11aca55fb6c0))
+* **engine:** Set request to null and update before calling request. ([bb2b57b](https://github.com/lowdefy/lowdefy/commit/bb2b57b4435d232be50d3971bcdc54354ea3b711))
+* **engine:** testContext to build config and use getContext. ([4539d6f](https://github.com/lowdefy/lowdefy/commit/4539d6f939c722a8e804038a9ca04b6cddc18691))
+* **engine:** Update benchmark test to pass. ([529f65e](https://github.com/lowdefy/lowdefy/commit/529f65e64738e1b8b211a7c161196dd0ff667756))
+* **engine:** Update createResetValidation test ([177b66f](https://github.com/lowdefy/lowdefy/commit/177b66f59ad6c6b90b9532b1d1e6744594c3aa05))
+* **engine:** Update test to use built config. ([f4c0f76](https://github.com/lowdefy/lowdefy/commit/f4c0f7676e96c31b7455e6aafb815826ba51d959))
+* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
+
+
+### Features
+
+* **engine:** 🏄‍♂️Engine tests are passing. ([d737e1c](https://github.com/lowdefy/lowdefy/commit/d737e1cf12ab8bef0a44aee9d3f7765aade4b2e2))
+* **engine:** Add payload and blockId to context.requests[requestId]. ([e29d88b](https://github.com/lowdefy/lowdefy/commit/e29d88b326338fdec22db325dcda31ee4f73cf51))
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 **Note:** Version bump only for package @lowdefy/engine
