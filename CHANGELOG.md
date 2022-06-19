@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* **actions-core:** Fix actions core tests. ([8647f91](https://github.com/lowdefy/lowdefy/commit/8647f915be3aa625a9f1f96f582e16b2bbb78ea5))
+* **actions:** Convert tests to use new testContext. ([1a6f8df](https://github.com/lowdefy/lowdefy/commit/1a6f8df2a18f21d9fe538aa9670b5fe51c412449))
+* Add lerna-debug.log to gitignore. ([e521be2](https://github.com/lowdefy/lowdefy/commit/e521be29af82a43a0c5532a4713a6cf019032347))
+* **blocks-echarts:** Do not break if dataset.source is null. ([30d3d7e](https://github.com/lowdefy/lowdefy/commit/30d3d7ea0ec6fffef258efb7688761130f289ffb))
+* Build createContext should not be async, create separate file. ([67c03ec](https://github.com/lowdefy/lowdefy/commit/67c03ec345f0ef17cdb4197afe0cc87a532a636b))
+* **build:** defaultTypesMap to write a js file to dist. ([331284e](https://github.com/lowdefy/lowdefy/commit/331284e3dfc2e8e12f13991881688c7d1b4d2121))
+* **build:** Fix build tests. ([9ea612b](https://github.com/lowdefy/lowdefy/commit/9ea612b4e0ceb9785196cdf1451fb57512e059e4))
+* **build:** Fix buildAuth tests. ([0882416](https://github.com/lowdefy/lowdefy/commit/0882416d6fa9a9637ec8870180a022a2bb6dbd21))
+* **build:** Fix buildEvents tests. ([0dcb927](https://github.com/lowdefy/lowdefy/commit/0dcb927c0b09de8e376c54a356a6db60660ba0d5))
+* **build:** remove unneccesary async await in build. ([6b974e6](https://github.com/lowdefy/lowdefy/commit/6b974e63fc79a3d1b87a478d83269ec8e8121ea0))
+* **build:** Restore buildRefs tests after jest update fixes es modules. ([a684273](https://github.com/lowdefy/lowdefy/commit/a6842739f87b6e427a038d41ac5ec87016063e1e))
+* **build:** Throw during build if events are not arrays. ([c0c3971](https://github.com/lowdefy/lowdefy/commit/c0c39712687ca7c4c207d46a27c746e1298b2367))
+* **cli:** Check env for configDirectory. ([f8964ca](https://github.com/lowdefy/lowdefy/commit/f8964cac1ae2c55cb95fa13c06be3dc8be032538))
+* **engine:** Fix createSetGlobal. ([542ed98](https://github.com/lowdefy/lowdefy/commit/542ed983dc869e82a2e06c106377035ad7fbf57e))
+* **engine:** Fix engine tests. ([92182a2](https://github.com/lowdefy/lowdefy/commit/92182a2bb53b7b54179f67792bd10e6b53ad2400))
+* **engine:** RootBlocks.map to use blockId. ([d31064f](https://github.com/lowdefy/lowdefy/commit/d31064ff9c685d1ae959ce9142ac11aca55fb6c0))
+* **engine:** Set request to null and update before calling request. ([bb2b57b](https://github.com/lowdefy/lowdefy/commit/bb2b57b4435d232be50d3971bcdc54354ea3b711))
+* **engine:** testContext to build config and use getContext. ([4539d6f](https://github.com/lowdefy/lowdefy/commit/4539d6f939c722a8e804038a9ca04b6cddc18691))
+* **engine:** Update benchmark test to pass. ([529f65e](https://github.com/lowdefy/lowdefy/commit/529f65e64738e1b8b211a7c161196dd0ff667756))
+* **engine:** Update createResetValidation test ([177b66f](https://github.com/lowdefy/lowdefy/commit/177b66f59ad6c6b90b9532b1d1e6744594c3aa05))
+* **engine:** Update test to use built config. ([f4c0f76](https://github.com/lowdefy/lowdefy/commit/f4c0f7676e96c31b7455e6aafb815826ba51d959))
+* Fix auth errors if auth is not configured. ([8a386a8](https://github.com/lowdefy/lowdefy/commit/8a386a867ca92f313b74f785477a48cd7c9a1679))
+* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
+* **operators-js:** Fix _location and _media tests. ([f47bede](https://github.com/lowdefy/lowdefy/commit/f47bede2f8b6417aebfc02a3fd41f519ca377cb0))
+* **server-dev:** Load .env using dotenv. ([85d7827](https://github.com/lowdefy/lowdefy/commit/85d78277b29e12986a5886e986bd46070c7b28ac))
+* Update all packages to use @lowdefy/jest-yaml-transform. ([7bdf0a4](https://github.com/lowdefy/lowdefy/commit/7bdf0a4bb8ea972de7e4d4b82097a6fdaebfea56))
+* Update tests to run on node and jsdom. ([be2180a](https://github.com/lowdefy/lowdefy/commit/be2180aea8f7e2ae0bc8d6ba0a716d31c0d76bc7))
+* Use createRequire to import json files. ([a9c7ec4](https://github.com/lowdefy/lowdefy/commit/a9c7ec4eae0cf65dd42403fb405e65e13b9eca62))
+
+
+### Features
+
+* Add openid connect standard claims to user object. ([7f099e1](https://github.com/lowdefy/lowdefy/commit/7f099e1d55cab7ba79214870f1bc23235b8fd09a))
+* Add version property to Lowdefy schema. ([04ff15f](https://github.com/lowdefy/lowdefy/commit/04ff15f89e404c88e204085a7a2552e5cb93b2a5))
+* **cli:** Add —no-open option to cli dev command. ([bc5b12f](https://github.com/lowdefy/lowdefy/commit/bc5b12fce379352e6cbf73503154e88b980918e6))
+* **cli:** Cli to load .env for build and start commands. ([ac34fe8](https://github.com/lowdefy/lowdefy/commit/ac34fe80190585b3db3f18e5fa3c4fba48563368))
+* **docs:** Init v4 migration notes. ([674dc03](https://github.com/lowdefy/lowdefy/commit/674dc03f41175781e0b32a218b86addb2417079a))
+* **engine:** 🏄‍♂️Engine tests are passing. ([d737e1c](https://github.com/lowdefy/lowdefy/commit/d737e1cf12ab8bef0a44aee9d3f7765aade4b2e2))
+* **engine:** Add payload and blockId to context.requests[requestId]. ([e29d88b](https://github.com/lowdefy/lowdefy/commit/e29d88b326338fdec22db325dcda31ee4f73cf51))
+* Export buildTestPage, add tests. ([bc9f16c](https://github.com/lowdefy/lowdefy/commit/bc9f16c2efdfc12d047b592a7bbed341d4bd6551))
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+* Package Updates. ([0f9d8cd](https://github.com/lowdefy/lowdefy/commit/0f9d8cd89186e12c66e5f833c13c12472f52eaee))
+* React 18 update. ([55268e7](https://github.com/lowdefy/lowdefy/commit/55268e74ea08544ce816e85e205cd2093e0f2319))
+* Set login providerId if only one provider is configured. ([8bc34a1](https://github.com/lowdefy/lowdefy/commit/8bc34a1b0533e6231bfdc2655ba48e1df701a772))
+* **utils:** Add jest-yaml-transform package. ([dd9dbe4](https://github.com/lowdefy/lowdefy/commit/dd9dbe49895830b49b6602841ded0c5c285020c3))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 
