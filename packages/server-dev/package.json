@@ -65,7 +65,7 @@
     "chokidar": "3.5.3",
     "dotenv": "16.0.1",
     "next": "12.1.6",
-    "next-auth": "4.3.4",
+    "next-auth": "4.5.0",
     "opener": "1.5.2",
     "process": "0.11.10",
     "react": "18.1.0",
