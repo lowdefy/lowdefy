@@ -17,14 +17,14 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
   - `data: { lat: number, lng: number } | { location: { lat: number, lng: number }, weight: number }[]`: A list of heatmap data points.
 - `style: cssObject`: A style object applied to the map element.
 - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
-  - `tooltip: htmlString`: Will create a infoWindow to display additional marker information when clicked.
 
 ### Events
 
 - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
   - `event`: event object
-  - `lat`: latitudinal coordinate
-  - `lng`: longitudinal coordinate
+  - `latLng`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
   - `map`: has functions removed
   - `x`: position on map block
   - `y`: position on map block
@@ -49,235 +49,240 @@ TODO:
 
 ## Examples
 
-1. Add a list of markers, one with a tooltip:
+1. Add a list of markers:
 
   ```yaml
-  - id: google_maps
-    type: GoogleMaps
+  - id: google_maps_script_1
+    type: GoogleMapsScript
     properties:
-      apiKey: 'YOUR_API_KEY'
-      map:
-        panControl: true
-        zoomControl: true
-        fullscreenControl: true
-        zoom: 14
-        center:
-          lat: -25.344
-          lng: 131.036
-      markers:
-        - position:
-            lat: -25.344
-            lng: 131.036
-          label: One
-          tooltip: '<div style="color:blue">Hello World!</div>'
-        - position:
-            lat: -25.348
-            lng: 131.038
-          label: Two
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps_1
+        type: GoogleMaps
+        properties:
+          map:
+            options:
+              panControl: true
+              zoomControl: true
+              fullscreenControl: true
+            zoom: 14
+            center:
+              lat: -25.344
+              lng: 131.036
+          markers:
+            - position:
+                lat: -25.344
+                lng: 131.036
+              label: One
+            - position:
+                lat: -25.348
+                lng: 131.038
+              label: Two
   ```
 
-<!--  TODO:
-2. Add a marker:
+2. Automatically fit bounds by leaving out zoom and center map properties:
 
-   ```yaml
-   - id: google_maps
-     type: GoogleMaps
-     properties:
-       bootstrapURLKeys:
-         key: ''
-         libraries: ['visualization']
-       mapOptions:
-         panControl: true
-         zoomControl: true
-         fullscreenControl: true
-       zoom: 14
-       center:
-         lat: -25.344
-         lng: 131.036
-     events:
-       onClick:
-         - id: add_marker
-           type: CallMethod
-           params:
-             blockId: google_maps
-             method: addMarker
-             args:
-               - position:
-                   lat:
-                     _event: lat
-                   lng:
-                     _event: lng
-                 label: Hi
-   ```
+  ```yaml
+  - id: google_maps_script_2
+    type: GoogleMapsScript
+    properties:
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps_2
+        type: GoogleMaps
+        properties:
+          map:
+            options:
+              panControl: true
+              zoomControl: true
+              fullscreenControl: true
+          markers:
+            - position:
+                lat: -25.344
+                lng: 131.036
+              label: One
+            - position:
+                lat: -25.348
+                lng: 131.038
+              label: Two
+  ```
 
-3. Remove a marker:
+3. Add tooltips by making use of infoWindow:
 
-   ```yaml
-   - id: google_maps
-     type: GoogleMaps
-     properties:
-       bootstrapURLKeys:
-         key: ''
-         libraries: ['visualization']
-       mapOptions:
-         panControl: true
-         zoomControl: true
-         fullscreenControl: true
-       zoom: 14
-       center:
-         lat: -25.344
-         lng: 131.036
-     events:
-       onClickMarker:
-         - id: set_click
-           type: SetState
-           params:
-             latLng:
-               _event: latLng
-         - id: remove_marker
-           type: CallMethod
-           params:
-             blockId: google_maps
-             method: removeMarker
-             args:
-               - position:
-                   lat:
-                     _state: latLng.lat
-                   lng:
-                     _state: latLng.lng
-   ```
+  ```yaml
+  - id: google_maps_script_3
+    type: GoogleMapsScript
+    properties:
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps_3
+        type: GoogleMaps
+        properties:
+          map:
+            options:
+              panControl: true
+              zoomControl: true
+              fullscreenControl: true
+            zoom: 14
+            center:
+              lat: -25.344
+              lng: 131.036
+          markers:
+            - position:
+                lat: -25.344
+                lng: 131.036
+              label: One
+            - position:
+                lat: -25.348
+                lng: 131.038
+              label: Two
+          infoWindow:
+            position:
+              _state: position
+            visible:
+              _state: show_info
+        events:
+          onMarkerClick:
+            - id: set
+              type: SetState
+              params:
+                show_info:
+                  _not:
+                    _state: show_info
+                position:
+                  _event: latLng
+        areas:
+          infoWindow:
+            blocks:
+              - id: content
+                type: Html
+                properties:
+                  _nunjucks:
+                      template: |
+                        <h1>Lat: {{ position.lat }} Lng: {{ position.lng }} </h1>
+                      on:
+                        _state: true
+  ```
 
-4. Fit bounds:
+4. Add markers with onClick event:
 
-   ```yaml
-   - id: google_maps
-     type: GoogleMaps
-     properties:
-       bootstrapURLKeys:
-         key: ''
-         libraries: ['visualization']
-       mapOptions:
-         panControl: true
-         zoomControl: true
-         fullscreenControl: true
-       zoom: 14
-       center:
-         lat: -25.344
-         lng: 131.036
-     events:
-       onClick:
-         - id: fit_bounds
-           type: CallMethod
-           params:
-             blockId: google_maps
-             method: fitBounds
-             args:
-               - ne:
-                   lat: 50.01038826014866
-                   lng: -118.6525866875
-                 sw:
-                   lat: 32.698335045970396
-                   lng: -92.0217273125
-               - width: 640 # Map width in pixels
-                 height: 380 # Map height in pixels
-   ```
--->
-
+  ```yaml
+  - id: google_maps_script_4
+      type: GoogleMapsScript
+      properties:
+        apiKey:
+          _build.env: GOOGLE_MAPS_API_KEY
+      blocks:
+      - id: google_maps_4
+          type: GoogleMaps
+          properties:
+            map:
+              options:
+                panControl: true
+                zoomControl: true
+                fullscreenControl: true
+              center:
+                lat: -25.344
+                lng: 131.036
+              zoom: 5
+            markers:
+              _state: markers_list
+          events:
+            onClick:
+              - id: markers_list
+                type: SetState
+                params:
+                  markers_list:
+                    _array.concat:
+                      - - position:
+                            _event: latLng
+                          label: Hi
+                      - _if_none:
+                          - _state: markers_list
+                          - []
+  ```
 5. Add a heatmap:
 
   ```yaml
-  - id: google_maps
-    type: GoogleMaps
+  - id: google_maps_script_5
+    type: GoogleMapsScript
     properties:
-      apiKey: 'YOUR_API_KEY'
-      map:
-        disableDefaultUI: true
-        zoom: 14
-        center:
-          lat: -25.344
-          lng: 131.036
-      heatmap:
-        positions:
-          - location:
-              lat: 34.091158
-              lng: -118.2795188
-            weight: 1
-          - location:
-              lat: 34.0771192
-              lng: -118.2587199
-            weight: 2
-          - location:
-              lat: 34.083527
-              lng: -118.370157
-            weight: 1
-          - location:
-              lat: 34.0951843
-              lng: -118.283107
-            weight: 2
-          - location:
-              lat: 34.1033401
-              lng: -118.2875469
-            weight: 4
-          - location:
-              lat: 34.035798
-              lng: -118.251288
-            weight: 2
-          - location:
-              lat: 34.0776068
-              lng: -118.2646526
-            weight: 3
-          - location:
-              lat: 34.0919263
-              lng: -118.2820544
-            weight: 3
-          - location:
-              lat: 34.0568525
-              lng: -118.3646369
-            weight: 3
-          - location:
-              lat: 34.0285781
-              lng: -118.4115541
-            weight: 0
-          - lat: 34.017339
-            lng: -118.278469
-            weight: 0
-          - location:
-              lat: 34.0764288
-              lng: -118.3661624
-            weight: 4
-          - location:
-              lat: 33.9925942
-              lng: -118.4232475
-            weight: 4
-          - location:
-              lat: 34.0764345
-              lng: -118.3730332
-            weight: 3
-          - location:
-              lat: 34.093981
-              lng: -118.327638
-            weight: 0
-          - location:
-              lat: 34.056385
-              lng: -118.2508724
-            weight: 1
-          - location:
-              lat: 34.107701
-              lng: -118.2667943
-            weight: 4
-          - location:
-              lat: 34.0450139
-              lng: -118.2388682
-            weight: 4
-          - location:
-              lat: 34.1031997
-              lng: -118.2586152
-            weight: 1
-          - location:
-              lat: 34.0828183
-              lng: -118.3241586
-            weight: 1
-        options:
-          radius: 20
-          opacity: 1
+      libraries:
+        - visualization
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps_5
+        type: GoogleMapsHeatmap
+        properties:
+          map:
+            disableDefaultUI: true
+          heatmap:
+            data:
+              - lat: 34.091158
+                lng: -118.2795188
+                weight: 1
+              - lat: 34.0771192
+                lng: -118.2587199
+                weight: 2
+              - lat: 34.083527
+                lng: -118.370157
+                weight: 1
+              - lat: 34.0951843
+                lng: -118.283107
+                weight: 2
+              - lat: 34.1033401
+                lng: -118.2875469
+                weight: 4
+              - lat: 34.035798
+                lng: -118.251288
+                weight: 2
+              - lat: 34.0776068
+                lng: -118.2646526
+                weight: 3
+              - lat: 34.0919263
+                lng: -118.2820544
+                weight: 3
+              - lat: 34.0568525
+                lng: -118.3646369
+                weight: 3
+              - lat: 34.0285781
+                lng: -118.4115541
+                weight: 0
+              - lat: 34.017339
+                lng: -118.278469
+                weight: 0
+              - lat: 34.0764288
+                lng: -118.3661624
+                weight: 4
+              - lat: 33.9925942
+                lng: -118.4232475
+                weight: 4
+              - lat: 34.0764345
+                lng: -118.3730332
+                weight: 3
+              - lat: 34.093981
+                lng: -118.327638
+                weight: 0
+              - lat: 34.056385
+                lng: -118.2508724
+                weight: 1
+              - lat: 34.107701
+                lng: -118.2667943
+                weight: 4
+              - lat: 34.0450139
+                lng: -118.2388682
+                weight: 4
+              - lat: 34.1031997
+                lng: -118.2586152
+                weight: 1
+              - lat: 34.0828183
+                lng: -118.3241586
+                weight: 1
+            options:
+              radius: 20
+              opacity: 1
   ```

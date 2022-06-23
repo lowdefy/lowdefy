@@ -18,8 +18,6 @@ import React from 'react';
 import { LoadScriptNext } from '@react-google-maps/api';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const LIBRARIES = [];
-
 class GoogleMapsScript extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +31,7 @@ class GoogleMapsScript extends React.Component {
         channel={properties.channel}
         googleMapsApiKey={properties.apiKey}
         language={properties.language}
-        libraries={LIBRARIES}
+        libraries={this.libraries}
         region={properties.region}
         version={properties.version}
       >

@@ -15,8 +15,9 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { type } from '@lowdefy/helpers';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -36,15 +37,31 @@ const Map = ({ blockId, children, content, methods, properties }) => {
   const [map, setMap] = useState();
   const [bounds, setBounds] = useState();
 
+  useEffect(() => {
+    methods.registerMethod('fitBounds', (args) => {
+      if (type.isArray(args)) {
+        args.map((arg) => {
+          bounds.extend(arg);
+        });
+      }
+      if (type.isObject(args)) {
+        bounds.extend(args);
+      }
+      map.fitBounds(bounds);
+    });
+  }, [bounds, map]);
+
   // by default, fit infoWindow and markers to bounds
   if (properties.autoBounds !== false && bounds && map) {
     if (properties.infoWindow) {
-      bounds.extend(properties.infoWindow.position);
+      bounds.extend(properties.infoWindow.position ?? MAP_DEFAULTS.center);
     }
-    (properties.markers || []).map((marker) => {
+    (properties.markers ?? []).map((marker) => {
       bounds.extend(marker.position);
     });
-    map.fitBounds(bounds);
+    if (!properties.map?.center && !properties.map?.zoom) {
+      map.fitBounds(bounds);
+    }
   }
 
   return (
@@ -52,8 +69,8 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
       id={blockId}
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
-      center={properties.map?.center || MAP_DEFAULTS.center}
-      zoom={properties.map?.zoom || MAP_DEFAULTS.zoom}
+      center={properties.map?.center ?? MAP_DEFAULTS.center}
+      zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
       onLoad={(map) => {
         setMap(map);
         setBounds(new window.google.maps.LatLngBounds());
@@ -66,12 +83,12 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       }}
       onZoomChanged={(event) => {
         methods.triggerEvent({
-          name: 'onClick',
+          name: 'onZoomChanged',
           event,
         });
       }}
     >
-      {(properties.markers || []).map((marker, i) => (
+      {(properties.markers ?? []).map((marker, i) => (
         <Marker
           {...marker} // https://react-google-maps-api-docs.netlify.app/#marker
           key={i}
@@ -83,7 +100,7 @@ const Map = ({ blockId, children, content, methods, properties }) => {
           }}
         />
       ))}
-      {properties.infoWindow && content.infoWindow && (
+      {properties.infoWindow?.visible === true && (
         <InfoWindow
           {...properties.infoWindow} // https://react-google-maps-api-docs.netlify.app/#infowindow
           onCloseClick={() => {
@@ -97,10 +114,10 @@ const Map = ({ blockId, children, content, methods, properties }) => {
             });
           }}
         >
-          {content.infoWindow()}
+          {content.infoWindow && content.infoWindow()}
         </InfoWindow>
       )}
-      {children(map, bounds)}
+      {children && children(map, bounds)}
     </GoogleMap>
   );
 };
