@@ -23,7 +23,7 @@ const LIBRARIES = [];
 class GoogleMapsScript extends React.Component {
   constructor(props) {
     super(props);
-    this.libraries = [...new Set(props.libraries || [])];
+    this.libraries = [...new Set(props.properties?.libraries || [])];
   }
   render() {
     const { blockId, properties, content } = this.props;

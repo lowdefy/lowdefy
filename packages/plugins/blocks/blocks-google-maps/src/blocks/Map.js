@@ -97,7 +97,7 @@ const Map = ({ blockId, children, content, methods, properties }) => {
             });
           }}
         >
-          {content.content()}
+          {content.infoWindow()}
         </InfoWindow>
       )}
       {children(map, bounds)}

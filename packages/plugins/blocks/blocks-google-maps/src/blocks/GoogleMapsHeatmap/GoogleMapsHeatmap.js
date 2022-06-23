@@ -30,13 +30,7 @@ function updateHeatmap(data) {
 }
 
 const GoogleMapsHeatmap = ({ blockId, content, methods, properties }) => (
-  <Map
-    blockId={blockId}
-    content={content}
-    methods={methods}
-    properties={properties}
-    libraries={['visualization']}
-  >
+  <Map blockId={blockId} content={content} methods={methods} properties={properties}>
     {(map, bounds) =>
       map &&
       bounds &&
@@ -49,7 +43,7 @@ const GoogleMapsHeatmap = ({ blockId, content, methods, properties }) => (
             (properties.heatmap?.data || []).map((item) => updateHeatmap(item))
           }
           onLoad={() => {
-            if (properties.autoBounds !== false && bounds) {
+            if (properties.autoBounds !== false && bounds && map) {
               (properties.heatmap?.data || []).forEach((item) => {
                 bounds.extend(item);
               });

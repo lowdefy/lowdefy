@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "description": "Your Goolge Maps API key."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the map is clicked."
+      },
+      "onMarkerClick": {
+        "type": "array",
+        "description": "Trigger actions when marker is clicked."
+      }
+    }
+  }
+}
