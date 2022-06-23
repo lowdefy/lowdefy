@@ -13,28 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { get } from '@lowdefy/helpers';
 
-import createEventPlugins from './createEventPlugins.js';
-
-function createSessionEvent(context, { authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
+function addUserFieldsToToken(context, { account, authConfig, profile, token }) {
+  const objects = { account, profile };
+  context.logger.debug('Adding userFields to user. Provider data is:');
+  context.logger.debug(objects);
+  Object.values(authConfig.userFields).forEach(([lowdefyFieldName, providerFieldName]) => {
+    token[lowdefyFieldName] = get(objects, providerFieldName);
   });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
-  }
-  return sessionEvent;
 }
 
-export default createSessionEvent;
+export default addUserFieldsToToken;
