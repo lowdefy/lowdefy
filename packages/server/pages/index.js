@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import getServerSession from '../lib/auth/getServerSession.js';
@@ -22,8 +23,9 @@ import Page from '../lib/Page.js';
 export async function getServerSideProps(context) {
   const session = await getServerSession(context);
 
+  // Important to give absolute path so Next can trace build files
   const apiContext = await createApiContext({
-    buildDirectory: './build',
+    buildDirectory: path.join(process.cwd(), 'build'),
     logger: console,
     session,
   });

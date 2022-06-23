@@ -42,10 +42,7 @@ program
     'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
-  .option(
-    '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
-  )
+  .option('--no-next-build', 'Do not build the Next.js server.')
   .option(
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'
@@ -108,10 +105,6 @@ program
     'Change config directory. Default is the current working directory.'
   )
   .option('--disable-telemetry', 'Disable telemetry.')
-  .option(
-    '--output-directory <output-directory>',
-    'Change the directory to which build artifacts are saved. Default is "<config-directory>/.lowdefy".'
-  )
   .option(
     '--package-manager <package-manager>',
     'The package manager to use. Options are "npm" or "yarn".'

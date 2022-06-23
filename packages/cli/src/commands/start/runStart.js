@@ -26,7 +26,6 @@ async function runStart({ context, directory }) {
       cwd: directory,
       env: {
         ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         PORT: context.options.port,
       },
     },

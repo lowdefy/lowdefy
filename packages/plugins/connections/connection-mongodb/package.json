@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-mongodb",
-  "version": "4.0.0-alpha.12",
+  "version": "4.0.0-alpha.16",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,12 +42,12 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.12",
+    "@lowdefy/helpers": "4.0.0-alpha.16",
     "mongodb": "4.6.0",
     "saslprep": "1.0.3"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.12",
+    "@lowdefy/ajv": "4.0.0-alpha.16",
     "@shelf/jest-mongodb": "2.2.2",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
@@ -28,8 +29,9 @@ export default async function handler(req, res) {
       throw new Error('Only POST requests are supported.');
     }
     const session = await getServerSession({ req });
+    // Important to give absolute path so Next can trace build files
     const apiContext = await createApiContext({
-      buildDirectory: './build',
+      buildDirectory: path.join(process.cwd(), 'build'),
       connections,
       // logger: console,
       logger: { debug: () => {} },

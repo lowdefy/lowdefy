@@ -66,6 +66,7 @@ import trakt from 'next-auth/providers/trakt';
 import twitch from 'next-auth/providers/twitch';
 import twitter from 'next-auth/providers/twitter';
 import vk from 'next-auth/providers/vk';
+import united_effects from 'next-auth/providers/united-effects';
 import wordpress from 'next-auth/providers/wordpress';
 import workos from 'next-auth/providers/workos';
 import yandex from 'next-auth/providers/yandex';
@@ -120,6 +121,7 @@ const StravaProvider = strava.default;
 const TraktProvider = trakt.default;
 const TwitchProvider = twitch.default;
 const TwitterProvider = twitter.default;
+const UnitedEffects = united_effects.default;
 const VkProvider = vk.default;
 const WordpressProvider = wordpress.default;
 const WorkOSProvider = workos.default;
@@ -176,6 +178,7 @@ export {
   TraktProvider,
   TwitchProvider,
   TwitterProvider,
+  UnitedEffects,
   VkProvider,
   WordpressProvider,
   WorkOSProvider,
