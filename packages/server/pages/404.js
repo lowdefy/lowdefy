@@ -13,13 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
-  const apiContext = await createApiContext({ buildDirectory: './build' });
+  // Important to give absolute path so Next can trace build files
+  const apiContext = await createApiContext({ buildDirectory: path.join(process.cwd(), 'build') });
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(apiContext),

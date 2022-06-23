@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+
+### Bug Fixes
+
+* **cli:** Define build directory on context. ([51bc05f](https://github.com/lowdefy/lowdefy/commit/51bc05f835cade977f7d2c0476b76fa38d762655))
+* Remove output directory cli option ([ba281a6](https://github.com/lowdefy/lowdefy/commit/ba281a6a2c7a75bc05b4e5495e46063d62e555d8))
+
+
+
+
+
 # [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
 
 
