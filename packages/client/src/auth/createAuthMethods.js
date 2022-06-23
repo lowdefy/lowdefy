@@ -37,7 +37,7 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
 function createAuthMethods({ lowdefy, auth }) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
-  function login({ providerId, callbackUrl, authUrl = {} } = {}) {
+  function login({ authUrl, callbackUrl, providerId } = {}) {
     if (type.isNone(providerId) && auth.authConfig.providers.length === 1) {
       providerId = auth.authConfig.providers[0].id;
     }
@@ -45,12 +45,11 @@ function createAuthMethods({ lowdefy, auth }) {
     auth.signIn(
       providerId,
       { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
-      authUrl.urlQuery
+      authUrl?.urlQuery
     );
   }
-  // TODO: fix callbackUrl
-  function logout() {
-    auth.signOut();
+  function logout({ callbackUrl, redirect } = {}) {
+    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
   }
   return {
     login,
