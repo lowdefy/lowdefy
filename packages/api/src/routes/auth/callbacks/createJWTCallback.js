@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import addUserFieldsToToken from './addUserFieldsToToken.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createJWTCallback({ authConfig, plugins }) {
+function createJWTCallback(context, { authConfig, plugins }) {
   const jwtCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,
@@ -70,6 +71,9 @@ function createJWTCallback({ authConfig, plugins }) {
         updated_at,
         ...token,
       };
+      if (authConfig.userFields) {
+        addUserFieldsToToken(context, { authConfig, account, profile, token });
+      }
     }
 
     for (const plugin of jwtCallbackPlugins) {

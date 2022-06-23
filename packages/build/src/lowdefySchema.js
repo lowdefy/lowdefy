@@ -225,6 +225,9 @@ export default {
         theme: {
           type: 'object',
         },
+        userFields: {
+          type: 'object',
+        },
       },
     },
     block: {
