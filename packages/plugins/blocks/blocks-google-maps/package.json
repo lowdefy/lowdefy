@@ -43,8 +43,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@googlemaps/react-wrapper": "1.1.34",
     "@lowdefy/block-utils": "4.0.0-alpha.12",
+    "@react-google-maps/api": "2.12.0",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },

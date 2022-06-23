@@ -939,7 +939,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@googlemaps/js-api-loader@npm:^1.13.2":
+"@googlemaps/js-api-loader@npm:1.14.3":
   version: 1.14.3
   resolution: "@googlemaps/js-api-loader@npm:1.14.3"
   dependencies:
@@ -948,14 +948,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@googlemaps/react-wrapper@npm:1.1.34":
-  version: 1.1.34
-  resolution: "@googlemaps/react-wrapper@npm:1.1.34"
+"@googlemaps/markerclusterer@npm:2.0.7":
+  version: 2.0.7
+  resolution: "@googlemaps/markerclusterer@npm:2.0.7"
   dependencies:
-    "@googlemaps/js-api-loader": ^1.13.2
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 4ae752c36842afdb1770325d76bffc263de9e54005a694acca0f08f8f8ec04bf6a7787c71631da1e7b00a1528a96388aa36fe8e196e05ed5d679e83420eababf
+    fast-deep-equal: ^3.1.3
+    supercluster: ^7.1.3
+  checksum: 2a15f84e30d3a2af14d591e54200b2f96e86afbd15680df6ed0714a06c7149c31f2c79aed7cbba83b4af613cae6d91d4f98c9ad4c23194a0cd3ed1433055f87d
   languageName: node
   linkType: hard
 
@@ -2354,11 +2353,11 @@ __metadata:
   resolution: "@lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@googlemaps/react-wrapper": 1.1.34
     "@lowdefy/block-dev": 4.0.0-alpha.12
     "@lowdefy/block-utils": 4.0.0-alpha.12
     "@lowdefy/helpers": 4.0.0-alpha.12
     "@lowdefy/jest-yaml-transform": 4.0.0-alpha.12
+    "@react-google-maps/api": 2.12.0
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -3484,6 +3483,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-google-maps/api@npm:2.12.0":
+  version: 2.12.0
+  resolution: "@react-google-maps/api@npm:2.12.0"
+  dependencies:
+    "@googlemaps/js-api-loader": 1.14.3
+    "@googlemaps/markerclusterer": 2.0.7
+    "@react-google-maps/infobox": 2.11.8
+    "@react-google-maps/marker-clusterer": 2.11.8
+    "@types/google.maps": 3.49.1
+    invariant: 2.2.4
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18
+    react-dom: ^16.8 || ^17 || ^18
+  checksum: 86a8157e0198d11795bce271a681a837fd20eff0d2e6981290557f813c88f3be797e4e6d3acfe708dbc8aa0658ba1689c33556b86c58266ec1f67c09a2aecad7
+  languageName: node
+  linkType: hard
+
+"@react-google-maps/infobox@npm:2.11.8":
+  version: 2.11.8
+  resolution: "@react-google-maps/infobox@npm:2.11.8"
+  checksum: 3567c0d19be01d1b3bc4f8d417b06eb74125cb094ae6b68cff47ba54c104114f0b4b86e06c20954ad30e979506457c2778b6bff4bb4068750fd7a1ea653767f4
+  languageName: node
+  linkType: hard
+
+"@react-google-maps/marker-clusterer@npm:2.11.8":
+  version: 2.11.8
+  resolution: "@react-google-maps/marker-clusterer@npm:2.11.8"
+  checksum: 09307e55a905ec3425820dc664cfb3c9f43b59d55a3dc567bb36d09227079dc331f7446cc6f4de6a2b13d3411d21f365e93a829586bad2b637afbe6e32d261e0
+  languageName: node
+  linkType: hard
+
 "@redis/bloom@npm:1.0.2":
   version: 1.0.2
   resolution: "@redis/bloom@npm:1.0.2"
@@ -3948,6 +3978,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 076fd59b595f33c8c7e7eb68ec55bd43cf8b2cf7bbc6778e25d7ae1a5fa0538a0a56f149015f403d7bbcefe59f1d8182351685b59c1fe719fd46d0dd8a9737fa
+  languageName: node
+  linkType: hard
+
+"@types/google.maps@npm:3.49.1":
+  version: 3.49.1
+  resolution: "@types/google.maps@npm:3.49.1"
+  checksum: c504398f96a407066fb25825ac9486f5f5bd4a44faab78a0cc792541edc7f2eeef62dd6608a4a9cf856fe2cd3815b29e0ec1183293419d19230055fa247e9dd2
   languageName: node
   linkType: hard
 
@@ -8641,6 +8678,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"invariant@npm:2.2.4":
+  version: 2.2.4
+  resolution: "invariant@npm:2.2.4"
+  dependencies:
+    loose-envify: ^1.0.0
+  checksum: cc3182d793aad82a8d1f0af697b462939cb46066ec48bbf1707c150ad5fad6406137e91a262022c269702e01621f35ef60269f6c0d7fd178487959809acdfb14
+  languageName: node
+  linkType: hard
+
 "ip@npm:^1.1.5":
   version: 1.1.8
   resolution: "ip@npm:1.1.8"
@@ -9886,6 +9932,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kdbush@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "kdbush@npm:3.0.0"
+  checksum: bc5fa433958e42664a8a92457e4f0d1db55b3b8e36956aac0102964adb2eab043bdbff156570dc8d867144ceff588fb7a1c6e099ba9be068cd1767a73e1ace92
+  languageName: node
+  linkType: hard
+
 "keyv@npm:^4.0.0":
   version: 4.3.0
   resolution: "keyv@npm:4.3.0"
@@ -10280,7 +10333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -14991,6 +15044,15 @@ __metadata:
   version: 4.0.13
   resolution: "stylis@npm:4.0.13"
   checksum: 8ea7a87028b6383c6a982231c4b5b6150031ce028e0fdaf7b2ace82253d28a8af50cc5a9da8a421d3c7c4441592f393086e332795add672aa4a825f0fe3713a3
+  languageName: node
+  linkType: hard
+
+"supercluster@npm:^7.1.3":
+  version: 7.1.5
+  resolution: "supercluster@npm:7.1.5"
+  dependencies:
+    kdbush: ^3.0.0
+  checksum: 69863238870093b96617135884721b6343746e14f396b2d67d6b55c52c362ec0516c5e386aa21815e75a9cef2054e831ac34023d0d8b600091d28cea0794f027
   languageName: node
   linkType: hard
 

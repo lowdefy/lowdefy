@@ -16,8 +16,8 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
 - `heatmap: heatmapOptions`: Add a heatmap layer, see more [heatmap options](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions). This will automatically load the `visualization` library.
   - `data: { lat: number, lng: number } | { location: { lat: number, lng: number }, weight: number }[]`: A list of heatmap data points.
 - `style: cssObject`: A style object applied to the map element.
-- `markers: markerOptions[]`: A list of Markers with properties, `map` is provided by the default by the block, see [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers) for configuration details.
-- `resetBoundsOnResize`: Default: false, When true this will reset the map bounds if the parent resizes.
+- `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+  - `tooltip: htmlString`: Will create a infoWindow to display additional marker information when clicked.
 
 ### Events
 
@@ -25,12 +25,9 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
   - `event`: event object
   - `lat`: latitudinal coordinate
   - `lng`: longitudinal coordinate
-  - `maps`: has functions removed
+  - `map`: has functions removed
   - `x`: position on map block
   - `y`: position on map block
-
-<!-- TODO:
-
 - `onClickMarker`: Trigger onClick actions when a marker is clicked, returns `_event` object:
   - `domEvent`: event object
   - `latLng`:
@@ -41,6 +38,8 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
     - `x`
     - `y`
 
+<!--
+TODO:
 ### Methods
 
 - `addMarker`: Accepts a single parameter object `marker` with marker properties.

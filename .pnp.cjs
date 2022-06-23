@@ -1714,25 +1714,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@googlemaps/react-wrapper", [\
-        ["npm:1.1.34", {\
-          "packageLocation": "./.yarn/cache/@googlemaps-react-wrapper-npm-1.1.34-719dbfd7b5-4ae752c368.zip/node_modules/@googlemaps/react-wrapper/",\
+      ["@googlemaps/markerclusterer", [\
+        ["npm:2.0.7", {\
+          "packageLocation": "./.yarn/cache/@googlemaps-markerclusterer-npm-2.0.7-3b9c8cc9bc-2a15f84e30.zip/node_modules/@googlemaps/markerclusterer/",\
           "packageDependencies": [\
-            ["@googlemaps/react-wrapper", "npm:1.1.34"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34", {\
-          "packageLocation": "./.yarn/__virtual__/@googlemaps-react-wrapper-virtual-52be79e71a/0/cache/@googlemaps-react-wrapper-npm-1.1.34-719dbfd7b5-4ae752c368.zip/node_modules/@googlemaps/react-wrapper/",\
-          "packageDependencies": [\
-            ["@googlemaps/react-wrapper", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34"],\
-            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
-            ["@types/react", null],\
-            ["react", "npm:18.1.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
+            ["@googlemaps/markerclusterer", "npm:2.0.7"],\
+            ["fast-deep-equal", "npm:3.1.3"],\
+            ["supercluster", "npm:7.1.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3264,11 +3252,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
-            ["@googlemaps/react-wrapper", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:1.1.34"],\
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@react-google-maps/api", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
             ["@swc/core", "npm:1.2.194"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
@@ -4552,6 +4540,56 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@react-google-maps/api", [\
+        ["npm:2.12.0", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-api-npm-2.12.0-1de5ecb9ed-86a8157e01.zip/node_modules/@react-google-maps/api/",\
+          "packageDependencies": [\
+            ["@react-google-maps/api", "npm:2.12.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0", {\
+          "packageLocation": "./.yarn/__virtual__/@react-google-maps-api-virtual-abb7ac8826/0/cache/@react-google-maps-api-npm-2.12.0-1de5ecb9ed-86a8157e01.zip/node_modules/@react-google-maps/api/",\
+          "packageDependencies": [\
+            ["@react-google-maps/api", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0"],\
+            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
+            ["@googlemaps/markerclusterer", "npm:2.0.7"],\
+            ["@react-google-maps/infobox", "npm:2.11.8"],\
+            ["@react-google-maps/marker-clusterer", "npm:2.11.8"],\
+            ["@types/google.maps", "npm:3.49.1"],\
+            ["@types/react", null],\
+            ["@types/react-dom", null],\
+            ["invariant", "npm:2.2.4"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@react-google-maps/infobox", [\
+        ["npm:2.11.8", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-infobox-npm-2.11.8-f7cbc7b163-3567c0d19b.zip/node_modules/@react-google-maps/infobox/",\
+          "packageDependencies": [\
+            ["@react-google-maps/infobox", "npm:2.11.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@react-google-maps/marker-clusterer", [\
+        ["npm:2.11.8", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-marker-clusterer-npm-2.11.8-3846d9cf04-09307e55a9.zip/node_modules/@react-google-maps/marker-clusterer/",\
+          "packageDependencies": [\
+            ["@react-google-maps/marker-clusterer", "npm:2.11.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@redis/bloom", [\
         ["npm:1.0.2", {\
           "packageLocation": "./.yarn/cache/@redis-bloom-npm-1.0.2-b61e6711e8-4872e7e5e4.zip/node_modules/@redis/bloom/",\
@@ -5168,6 +5206,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/es-aggregate-error", "npm:1.0.2"],\
             ["@types/node", "npm:17.0.36"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/google.maps", [\
+        ["npm:3.49.1", {\
+          "packageLocation": "./.yarn/cache/@types-google.maps-npm-3.49.1-748234d8a8-c504398f96.zip/node_modules/@types/google.maps/",\
+          "packageDependencies": [\
+            ["@types/google.maps", "npm:3.49.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10646,6 +10693,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["invariant", [\
+        ["npm:2.2.4", {\
+          "packageLocation": "./.yarn/cache/invariant-npm-2.2.4-717fbdb119-cc3182d793.zip/node_modules/invariant/",\
+          "packageDependencies": [\
+            ["invariant", "npm:2.2.4"],\
+            ["loose-envify", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["ip", [\
         ["npm:1.1.8", {\
           "packageLocation": "./.yarn/cache/ip-npm-1.1.8-abea558b72-a2ade53eb3.zip/node_modules/ip/",\
@@ -12088,6 +12145,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jws", "npm:4.0.0"],\
             ["jwa", "npm:2.0.0"],\
             ["safe-buffer", "npm:5.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["kdbush", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/kdbush-npm-3.0.0-3f45162b37-bc5fa43395.zip/node_modules/kdbush/",\
+          "packageDependencies": [\
+            ["kdbush", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -18369,6 +18435,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/stylis-npm-4.0.13-3f245d840f-8ea7a87028.zip/node_modules/stylis/",\
           "packageDependencies": [\
             ["stylis", "npm:4.0.13"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["supercluster", [\
+        ["npm:7.1.5", {\
+          "packageLocation": "./.yarn/cache/supercluster-npm-7.1.5-369b0b6fb2-6986323887.zip/node_modules/supercluster/",\
+          "packageDependencies": [\
+            ["supercluster", "npm:7.1.5"],\
+            ["kdbush", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

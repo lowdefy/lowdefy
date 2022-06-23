@@ -15,3 +15,5 @@
 */
 
 export { default as GoogleMaps } from './blocks/GoogleMaps/GoogleMaps.js';
+export { default as GoogleMapsHeatmap } from './blocks/GoogleMapsHeatmap/GoogleMapsHeatmap.js';
+export { default as GoogleMapsScript } from './blocks/GoogleMapsScript/GoogleMapsScript.js';
