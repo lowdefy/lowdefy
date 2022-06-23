@@ -24,7 +24,6 @@ function createSessionCallback({ authConfig, plugins }) {
   });
 
   async function sessionCallback({ session, token, user }) {
-    // console.log({ session, token, user });
     if (token) {
       const {
         sub,
@@ -74,6 +73,7 @@ function createSessionCallback({ authConfig, plugins }) {
     }
 
     for (const plugin of sessionCallbackPlugins) {
+      // eslint-disable-next-line no-param-reassign
       session = await plugin.fn({
         properties: plugin.properties ?? {},
         session,

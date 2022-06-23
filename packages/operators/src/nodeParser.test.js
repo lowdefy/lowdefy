@@ -17,8 +17,6 @@
 /* eslint-disable max-classes-per-file */
 import NodeParser from './nodeParser.js';
 
-console.error = () => {};
-
 const args = [{ args: true }];
 
 const operators = {
