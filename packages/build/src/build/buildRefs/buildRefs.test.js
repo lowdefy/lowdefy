@@ -19,6 +19,12 @@ import { jest } from '@jest/globals';
 import buildRefs from './buildRefs.js';
 import testContext from '../../test/testContext.js';
 
+const mockLogWarn = jest.fn();
+
+const logger = {
+  warn: mockLogWarn,
+};
+
 const readConfigFileMockImplementation = (files) => {
   const mockImp = (filePath) => {
     const file = files.find((file) => file.path === filePath);
@@ -33,6 +39,7 @@ const readConfigFileMockImplementation = (files) => {
 const mockReadConfigFile = jest.fn();
 
 const context = testContext({
+  logger,
   readConfigFile: mockReadConfigFile,
 });
 
@@ -1045,5 +1052,93 @@ _ref: target`,
       vars: {},
       stage: 'test',
     });
+  });
+});
+
+describe('Evaluate build time operators', () => {
+  test('Evaluate build time operators in lowdefy.yaml', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+answer:
+  _build.sum:
+    - 1
+    - 1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      answer: 2,
+    });
+  });
+
+  test('Evaluate build time operators in referenced file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+answer:
+  _ref: file.yaml`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+_build.sum:
+  - 1
+  - 1`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      answer: 2,
+    });
+  });
+
+  test('Build time operator error in lowdefy.yaml', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+answer:
+  _build.sum: A`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      answer: null,
+    });
+    expect(mockLogWarn.mock.calls).toEqual([
+      ['Build operator errors.'],
+      ['Operator Error: _sum takes an array type as input. Received: "A" at lowdefy.yaml.'],
+    ]);
+  });
+
+  test('Build time operator error in referenced file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+answer:
+  _ref: file.yaml`,
+      },
+      {
+        path: 'file.yaml',
+        content: `
+_build.sum: A`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      answer: null,
+    });
+    expect(mockLogWarn.mock.calls).toEqual([
+      ['Build operator errors.'],
+      ['Operator Error: _sum takes an array type as input. Received: "A" at file.yaml.'],
+    ]);
   });
 });
