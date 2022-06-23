@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/api",
-  "version": "4.0.0-alpha.13",
+  "version": "4.0.0-alpha.16",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,15 +41,16 @@
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.13",
-    "@lowdefy/helpers": "4.0.0-alpha.13",
-    "@lowdefy/node-utils": "4.0.0-alpha.13",
-    "@lowdefy/nunjucks": "4.0.0-alpha.13",
-    "@lowdefy/operators": "4.0.0-alpha.13"
+    "@lowdefy/ajv": "4.0.0-alpha.16",
+    "@lowdefy/helpers": "4.0.0-alpha.16",
+    "@lowdefy/node-utils": "4.0.0-alpha.16",
+    "@lowdefy/nunjucks": "4.0.0-alpha.16",
+    "@lowdefy/operators": "4.0.0-alpha.16",
+    "@lowdefy/operators-js": "4.0.0-alpha.16"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
-    "@lowdefy/operators-js": "4.0.0-alpha.13",
+    "@lowdefy/operators-js": "4.0.0-alpha.16",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

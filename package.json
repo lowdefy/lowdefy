@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-alpha.13",
+  "version": "4.0.0-alpha.16",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -24,8 +24,6 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/blocks/*",
-    "packages/connections/*",
     "packages/plugins/**",
     "packages/utils/*"
   ],

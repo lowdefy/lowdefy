@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+**Note:** Version bump only for package @lowdefy/server
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+
+### Bug Fixes
+
+* Configure server lowdefy build with commandline args instead of env from CLI ([648f050](https://github.com/lowdefy/lowdefy/commit/648f050377077ddd0e677250e7f9e7d422fdea36))
+* **server:** Fix for next.js output file tracing. ([34c3f2d](https://github.com/lowdefy/lowdefy/commit/34c3f2d91a03d7e062cb493557d791e12782cec2))
+
+
+
+
+
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+
+### Bug Fixes
+
+* **server:** Fix for next.js output file tracing. ([34c3f2d](https://github.com/lowdefy/lowdefy/commit/34c3f2d91a03d7e062cb493557d791e12782cec2))
+
+
+
+
+
 # [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
 
 

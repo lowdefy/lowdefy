@@ -32,7 +32,9 @@ async function build({ context }) {
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });
-  await runNextBuild({ context, directory });
+  if (context.options.nextBuild !== false) {
+    await runNextBuild({ context, directory });
+  }
   await context.sendTelemetry({ sendTypes: true });
   context.print.succeed(`Build successful.`);
 }

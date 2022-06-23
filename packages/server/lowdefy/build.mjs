@@ -25,18 +25,15 @@ import createCustomPluginTypesMap from './createCustomPluginTypesMap.mjs';
 const argv = yargs(hideBin(process.argv)).argv;
 
 async function run() {
+  const serverDirectory = path.resolve(
+    argv.serverDirectory || process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()
+  );
   const directories = {
-    build: path.resolve(
-      argv.buildDirectory ||
-        process.env.LOWDEFY_DIRECTORY_BUILD ||
-        path.join(process.cwd(), 'build')
-    ),
+    build: path.join(serverDirectory, 'build'),
     config: path.resolve(
       argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
     ),
-    server: path.resolve(
-      argv.serverDirectory || process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()
-    ),
+    server: serverDirectory,
   };
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
