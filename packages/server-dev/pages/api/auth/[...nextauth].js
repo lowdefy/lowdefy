@@ -23,6 +23,19 @@ import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
 // TODO: make createApiContext synchronous
-export default NextAuth(
-  getNextAuthConfig({ logger: console }, { authJson, plugins: { callbacks, events, providers } })
-);
+export default async function auth(req, res) {
+  if (authJson.configured === true) {
+    return await NextAuth(
+      req,
+      res,
+      getNextAuthConfig(
+        { logger: console },
+        { authJson, plugins: { callbacks, events, providers } }
+      )
+    );
+  }
+
+  return res.status(404).json({
+    message: 'Auth not configured',
+  });
+}

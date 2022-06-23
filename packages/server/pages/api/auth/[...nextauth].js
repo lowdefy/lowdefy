@@ -27,7 +27,10 @@ export default async function auth(req, res) {
     return await NextAuth(
       req,
       res,
-      getNextAuthConfig({ authJson, plugins: { callbacks, events, providers } })
+      getNextAuthConfig(
+        { logger: console },
+        { authJson, plugins: { callbacks, events, providers } }
+      )
     );
   }
 
