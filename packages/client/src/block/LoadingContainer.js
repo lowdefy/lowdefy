@@ -38,7 +38,7 @@ const LoadingContainer = ({
         area={layoutParamsToArea({
           area: skeleton.areas[areaKey] || {},
           areaKey,
-          layout: blockLayout ?? {},
+          layout: skeleton.layout ?? blockLayout,
         })}
         areaStyle={[areaStyle, skeleton.areas[areaKey] && skeleton.areas[areaKey].style]}
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
@@ -63,7 +63,7 @@ const LoadingContainer = ({
       blockStyle={skeleton.style ?? blockStyle}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       id={`s-bl-${blockId}-${skeleton.id}`}
-      layout={blockLayout ?? {}}
+      layout={skeleton.layout ?? blockLayout}
       makeCssClass={makeCssClass}
     >
       <Component
