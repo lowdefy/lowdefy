@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency next-auth to v4.5.0. ([49dd43a](https://github.com/lowdefy/lowdefy/commit/49dd43ae4249129d029fbd8d1135d00fb26a5b7a))
+* Fix userFields in production server. ([614d7c9](https://github.com/lowdefy/lowdefy/commit/614d7c915d20c12ad285336a8d6fd0c942c11c48))
+* **server-dev:** Add max count in waitForRestartedServer ping. ([d7d8a0b](https://github.com/lowdefy/lowdefy/commit/d7d8a0b221322171096929954376b87d7c8ce838))
+
+
+### Features
+
+* Add userFields feature to map auth provider data to usernobject. ([0ab688b](https://github.com/lowdefy/lowdefy/commit/0ab688b7f2c153cd904160a28c91c0581b6e1e07))
+
+
+
+
+
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/server-dev
+
+
+
+
+
 # [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
 
 **Note:** Version bump only for package @lowdefy/server-dev

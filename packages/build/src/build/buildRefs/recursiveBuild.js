@@ -25,6 +25,7 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
+
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
 
   const parsedFiles = {};
@@ -34,7 +35,6 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   // To do this, since foundRefs is an array of ref definitions that are in order of the
   // deepest nodes first we for loop over over foundRefs one by one, awaiting each result.
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const newRefDef of foundRefs.values()) {
     // Parse vars and path before passing down to parse new file
     const parsedRefDef = populateRefs({
@@ -50,19 +50,20 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       referencedFrom: refDef.path,
     });
 
-    const evaluatedOperators = await evaluateBuildOperators({
+    const transformedFile = await runTransformer({
       context,
       input: parsedFile,
       refDef: parsedRefDef,
     });
 
-    const transformedFile = await runTransformer({
+    // Evaluated in recursive loop for better error messages
+    const evaluatedOperators = await evaluateBuildOperators({
       context,
-      input: evaluatedOperators,
+      input: transformedFile,
       refDef: parsedRefDef,
     });
 
-    parsedFiles[newRefDef.id] = transformedFile;
+    parsedFiles[newRefDef.id] = evaluatedOperators;
   }
   return populateRefs({
     toPopulate: fileContentBuiltRefs,

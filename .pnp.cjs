@@ -61,6 +61,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/actions/actions-core"\
       },\
       {\
+        "name": "@lowdefy/blocks-aggrid",\
+        "reference": "workspace:packages/plugins/blocks/blocks-aggrid"\
+      },\
+      {\
         "name": "@lowdefy/blocks-antd",\
         "reference": "workspace:packages/plugins/blocks/blocks-antd"\
       },\
@@ -75,6 +79,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@lowdefy/blocks-echarts",\
         "reference": "workspace:packages/plugins/blocks/blocks-echarts"\
+      },\
+      {\
+        "name": "@lowdefy/blocks-google-maps",\
+        "reference": "workspace:packages/plugins/blocks/blocks-google-maps"\
       },\
       {\
         "name": "@lowdefy/blocks-loaders",\
@@ -197,10 +205,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/api", ["workspace:packages/api"]],\
       ["@lowdefy/block-dev", ["workspace:packages/utils/block-dev"]],\
       ["@lowdefy/block-utils", ["workspace:packages/utils/block-utils"]],\
+      ["@lowdefy/blocks-aggrid", ["workspace:packages/plugins/blocks/blocks-aggrid"]],\
       ["@lowdefy/blocks-antd", ["workspace:packages/plugins/blocks/blocks-antd"]],\
       ["@lowdefy/blocks-basic", ["workspace:packages/plugins/blocks/blocks-basic"]],\
       ["@lowdefy/blocks-color-selectors", ["workspace:packages/plugins/blocks/blocks-color-selectors"]],\
       ["@lowdefy/blocks-echarts", ["workspace:packages/plugins/blocks/blocks-echarts"]],\
+      ["@lowdefy/blocks-google-maps", ["workspace:packages/plugins/blocks/blocks-google-maps"]],\
       ["@lowdefy/blocks-loaders", ["workspace:packages/plugins/blocks/blocks-loaders"]],\
       ["@lowdefy/blocks-markdown", ["workspace:packages/plugins/blocks/blocks-markdown"]],\
       ["@lowdefy/build", ["workspace:packages/build"]],\
@@ -257,6 +267,89 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["turbo", "npm:1.2.14"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@ag-grid-community/all-modules", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-all-modules-npm-27.3.0-bcf77b9b81-7a68e7ae2b.zip/node_modules/@ag-grid-community/all-modules/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/all-modules", "npm:27.3.0"],\
+            ["@ag-grid-community/client-side-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@ag-grid-community/csv-export", "npm:27.3.0"],\
+            ["@ag-grid-community/infinite-row-model", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/client-side-row-model", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-client-side-row-model-npm-27.3.0-380bcabcd1-11a3f29a72.zip/node_modules/@ag-grid-community/client-side-row-model/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/client-side-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/core", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-core-npm-27.3.0-220ac68f70-915a3eb560.zip/node_modules/@ag-grid-community/core/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/csv-export", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-csv-export-npm-27.3.0-83ff0471bd-b5ae750655.zip/node_modules/@ag-grid-community/csv-export/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/csv-export", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/infinite-row-model", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-infinite-row-model-npm-27.3.0-3d93c7a591-f94b118f3b.zip/node_modules/@ag-grid-community/infinite-row-model/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/infinite-row-model", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@ag-grid-community/react", [\
+        ["npm:27.3.0", {\
+          "packageLocation": "./.yarn/cache/@ag-grid-community-react-npm-27.3.0-f47fcb4eb8-a7215edead.zip/node_modules/@ag-grid-community/react/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/react", "npm:27.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@ag-grid-community-react-virtual-81e0fa20ce/0/cache/@ag-grid-community-react-npm-27.3.0-f47fcb4eb8-a7215edead.zip/node_modules/@ag-grid-community/react/",\
+          "packageDependencies": [\
+            ["@ag-grid-community/react", "virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@types/ag-grid-community__core", null],\
+            ["@types/react", null],\
+            ["@types/react-dom", null],\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@ag-grid-community/core",\
+            "@types/ag-grid-community__core",\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ampproject/remapping", [\
@@ -1607,6 +1700,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@gar-promisify-npm-1.1.3-ac1a325862-4059f790e2.zip/node_modules/@gar/promisify/",\
           "packageDependencies": [\
             ["@gar/promisify", "npm:1.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@googlemaps/js-api-loader", [\
+        ["npm:1.14.3", {\
+          "packageLocation": "./.yarn/cache/@googlemaps-js-api-loader-npm-1.14.3-0b6d7f8b05-55ec4519c3.zip/node_modules/@googlemaps/js-api-loader/",\
+          "packageDependencies": [\
+            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
+            ["fast-deep-equal", "npm:3.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@googlemaps/markerclusterer", [\
+        ["npm:2.0.7", {\
+          "packageLocation": "./.yarn/cache/@googlemaps-markerclusterer-npm-2.0.7-3b9c8cc9bc-2a15f84e30.zip/node_modules/@googlemaps/markerclusterer/",\
+          "packageDependencies": [\
+            ["@googlemaps/markerclusterer", "npm:2.0.7"],\
+            ["fast-deep-equal", "npm:3.1.3"],\
+            ["supercluster", "npm:7.1.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2988,6 +3102,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@lowdefy/blocks-aggrid", [\
+        ["workspace:packages/plugins/blocks/blocks-aggrid", {\
+          "packageLocation": "./packages/plugins/blocks/blocks-aggrid/",\
+          "packageDependencies": [\
+            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
+            ["@ag-grid-community/all-modules", "npm:27.3.0"],\
+            ["@ag-grid-community/core", "npm:27.3.0"],\
+            ["@ag-grid-community/react", "virtual:11bce50eff5a7c5d53f62ed68ab6f789e2fc52696b3b4dc8fe7b68cf9ff03e2192b7dd5328ee55d6614e01bba244a809486267facb3b0bb459998e2fc5694c92#npm:27.3.0"],\
+            ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
+            ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["@testing-library/dom", "npm:8.13.0"],\
+            ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
+            ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
+            ["copyfiles", "npm:2.4.1"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["jest-serializer-html", "npm:7.1.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@lowdefy/blocks-antd", [\
         ["workspace:packages/plugins/blocks/blocks-antd", {\
           "packageLocation": "./packages/plugins/blocks/blocks-antd/",\
@@ -3104,6 +3246,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@lowdefy/blocks-google-maps", [\
+        ["workspace:packages/plugins/blocks/blocks-google-maps", {\
+          "packageLocation": "./packages/plugins/blocks/blocks-google-maps/",\
+          "packageDependencies": [\
+            ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
+            ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
+            ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@react-google-maps/api", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["@testing-library/dom", "npm:8.13.0"],\
+            ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
+            ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
+            ["copyfiles", "npm:2.4.1"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["jest-serializer-html", "npm:7.1.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@lowdefy/blocks-loaders", [\
         ["workspace:packages/plugins/blocks/blocks-loaders", {\
           "packageLocation": "./packages/plugins/blocks/blocks-loaders/",\
@@ -3168,10 +3336,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:28.1.0"],\
             ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],\
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
+            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],\
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],\
             ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],\
             ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],\
+            ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
             ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],\
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],\
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],\
@@ -3702,7 +3872,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.194"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
-            ["next-auth", "virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.3.4"]\
+            ["next-auth", "virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.5.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -3728,7 +3898,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["less", "npm:4.1.2"],\
             ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:11.0.0"],\
             ["next", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:12.1.6"],\
-            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.4"],\
+            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.5.0"],\
             ["next-with-less", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:2.0.5"],\
             ["process", "npm:0.11.10"],\
             ["react", "npm:18.1.0"],\
@@ -3774,7 +3944,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["less", "npm:4.1.2"],\
             ["less-loader", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:11.0.0"],\
             ["next", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:12.1.6"],\
-            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.4"],\
+            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.5.0"],\
             ["next-with-less", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:2.0.5"],\
             ["opener", "npm:1.5.2"],\
             ["process", "npm:0.11.10"],\
@@ -4363,6 +4533,56 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@panva-hkdf-npm-1.0.2-ea4c380608-75183b4d5e.zip/node_modules/@panva/hkdf/",\
           "packageDependencies": [\
             ["@panva/hkdf", "npm:1.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@react-google-maps/api", [\
+        ["npm:2.12.0", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-api-npm-2.12.0-1de5ecb9ed-86a8157e01.zip/node_modules/@react-google-maps/api/",\
+          "packageDependencies": [\
+            ["@react-google-maps/api", "npm:2.12.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0", {\
+          "packageLocation": "./.yarn/__virtual__/@react-google-maps-api-virtual-abb7ac8826/0/cache/@react-google-maps-api-npm-2.12.0-1de5ecb9ed-86a8157e01.zip/node_modules/@react-google-maps/api/",\
+          "packageDependencies": [\
+            ["@react-google-maps/api", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0"],\
+            ["@googlemaps/js-api-loader", "npm:1.14.3"],\
+            ["@googlemaps/markerclusterer", "npm:2.0.7"],\
+            ["@react-google-maps/infobox", "npm:2.11.8"],\
+            ["@react-google-maps/marker-clusterer", "npm:2.11.8"],\
+            ["@types/google.maps", "npm:3.49.1"],\
+            ["@types/react", null],\
+            ["@types/react-dom", null],\
+            ["invariant", "npm:2.2.4"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@react-google-maps/infobox", [\
+        ["npm:2.11.8", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-infobox-npm-2.11.8-f7cbc7b163-3567c0d19b.zip/node_modules/@react-google-maps/infobox/",\
+          "packageDependencies": [\
+            ["@react-google-maps/infobox", "npm:2.11.8"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@react-google-maps/marker-clusterer", [\
+        ["npm:2.11.8", {\
+          "packageLocation": "./.yarn/cache/@react-google-maps-marker-clusterer-npm-2.11.8-3846d9cf04-09307e55a9.zip/node_modules/@react-google-maps/marker-clusterer/",\
+          "packageDependencies": [\
+            ["@react-google-maps/marker-clusterer", "npm:2.11.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4983,6 +5203,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/es-aggregate-error", "npm:1.0.2"],\
             ["@types/node", "npm:17.0.36"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/google.maps", [\
+        ["npm:3.49.1", {\
+          "packageLocation": "./.yarn/cache/@types-google.maps-npm-3.49.1-748234d8a8-c504398f96.zip/node_modules/@types/google.maps/",\
+          "packageDependencies": [\
+            ["@types/google.maps", "npm:3.49.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -10461,6 +10690,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["invariant", [\
+        ["npm:2.2.4", {\
+          "packageLocation": "./.yarn/cache/invariant-npm-2.2.4-717fbdb119-cc3182d793.zip/node_modules/invariant/",\
+          "packageDependencies": [\
+            ["invariant", "npm:2.2.4"],\
+            ["loose-envify", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["ip", [\
         ["npm:1.1.8", {\
           "packageLocation": "./.yarn/cache/ip-npm-1.1.8-abea558b72-a2ade53eb3.zip/node_modules/ip/",\
@@ -11903,6 +12142,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jws", "npm:4.0.0"],\
             ["jwa", "npm:2.0.0"],\
             ["safe-buffer", "npm:5.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["kdbush", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/kdbush-npm-3.0.0-3f45162b37-bc5fa43395.zip/node_modules/kdbush/",\
+          "packageDependencies": [\
+            ["kdbush", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -13777,17 +14025,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["next-auth", [\
-        ["npm:4.3.4", {\
-          "packageLocation": "./.yarn/cache/next-auth-npm-4.3.4-318b350447-4b5f6f6d3f.zip/node_modules/next-auth/",\
+        ["npm:4.5.0", {\
+          "packageLocation": "./.yarn/cache/next-auth-npm-4.5.0-931aa166f3-b27a3337d0.zip/node_modules/next-auth/",\
           "packageDependencies": [\
-            ["next-auth", "npm:4.3.4"]\
+            ["next-auth", "npm:4.5.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.4", {\
-          "packageLocation": "./.yarn/__virtual__/next-auth-virtual-b06685e42c/0/cache/next-auth-npm-4.3.4-318b350447-4b5f6f6d3f.zip/node_modules/next-auth/",\
+        ["virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.5.0", {\
+          "packageLocation": "./.yarn/__virtual__/next-auth-virtual-585c32c50e/0/cache/next-auth-npm-4.5.0-931aa166f3-b27a3337d0.zip/node_modules/next-auth/",\
           "packageDependencies": [\
-            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.4"],\
+            ["next-auth", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.5.0"],\
             ["@babel/runtime", "npm:7.18.3"],\
             ["@panva/hkdf", "npm:1.0.2"],\
             ["@types/nodemailer", null],\
@@ -13799,7 +14047,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["oauth", "npm:0.9.15"],\
             ["openid-client", "npm:5.1.6"],\
             ["preact", "npm:10.7.2"],\
-            ["preact-render-to-string", "virtual:6a920fe7f7e4378e7d7e7550649da9a400cdeac605b14b13769df2cb595185e4ed9e3780cbcfb1f1da70cdf395f8fdf250f04dffb788fa5eab954c239a0c84fb#npm:5.2.0"],\
+            ["preact-render-to-string", "virtual:4e9e53f37e186732d9013cdc95bae28cea5175c232e0e8912a149a78b9c6835902b8cb979f290d65d629c3dd6af0bc12fccff14299bf25487b87ec2d95f2ebc2#npm:5.2.0"],\
             ["react", "npm:18.1.0"],\
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"],\
             ["uuid", "npm:8.3.2"]\
@@ -13814,10 +14062,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.3.4", {\
-          "packageLocation": "./.yarn/__virtual__/next-auth-virtual-6a920fe7f7/0/cache/next-auth-npm-4.3.4-318b350447-4b5f6f6d3f.zip/node_modules/next-auth/",\
+        ["virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.5.0", {\
+          "packageLocation": "./.yarn/__virtual__/next-auth-virtual-4e9e53f37e/0/cache/next-auth-npm-4.5.0-931aa166f3-b27a3337d0.zip/node_modules/next-auth/",\
           "packageDependencies": [\
-            ["next-auth", "virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.3.4"],\
+            ["next-auth", "virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.5.0"],\
             ["@babel/runtime", "npm:7.18.3"],\
             ["@panva/hkdf", "npm:1.0.2"],\
             ["@types/nodemailer", null],\
@@ -13829,7 +14077,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["oauth", "npm:0.9.15"],\
             ["openid-client", "npm:5.1.6"],\
             ["preact", "npm:10.7.2"],\
-            ["preact-render-to-string", "virtual:6a920fe7f7e4378e7d7e7550649da9a400cdeac605b14b13769df2cb595185e4ed9e3780cbcfb1f1da70cdf395f8fdf250f04dffb788fa5eab954c239a0c84fb#npm:5.2.0"],\
+            ["preact-render-to-string", "virtual:4e9e53f37e186732d9013cdc95bae28cea5175c232e0e8912a149a78b9c6835902b8cb979f290d65d629c3dd6af0bc12fccff14299bf25487b87ec2d95f2ebc2#npm:5.2.0"],\
             ["react", null],\
             ["react-dom", null],\
             ["uuid", "npm:8.3.2"]\
@@ -15183,10 +15431,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:6a920fe7f7e4378e7d7e7550649da9a400cdeac605b14b13769df2cb595185e4ed9e3780cbcfb1f1da70cdf395f8fdf250f04dffb788fa5eab954c239a0c84fb#npm:5.2.0", {\
-          "packageLocation": "./.yarn/__virtual__/preact-render-to-string-virtual-f84e419bdf/0/cache/preact-render-to-string-npm-5.2.0-796c41ab90-aae92b67da.zip/node_modules/preact-render-to-string/",\
+        ["virtual:4e9e53f37e186732d9013cdc95bae28cea5175c232e0e8912a149a78b9c6835902b8cb979f290d65d629c3dd6af0bc12fccff14299bf25487b87ec2d95f2ebc2#npm:5.2.0", {\
+          "packageLocation": "./.yarn/__virtual__/preact-render-to-string-virtual-e13ec21d1d/0/cache/preact-render-to-string-npm-5.2.0-796c41ab90-aae92b67da.zip/node_modules/preact-render-to-string/",\
           "packageDependencies": [\
-            ["preact-render-to-string", "virtual:6a920fe7f7e4378e7d7e7550649da9a400cdeac605b14b13769df2cb595185e4ed9e3780cbcfb1f1da70cdf395f8fdf250f04dffb788fa5eab954c239a0c84fb#npm:5.2.0"],\
+            ["preact-render-to-string", "virtual:4e9e53f37e186732d9013cdc95bae28cea5175c232e0e8912a149a78b9c6835902b8cb979f290d65d629c3dd6af0bc12fccff14299bf25487b87ec2d95f2ebc2#npm:5.2.0"],\
             ["@types/preact", null],\
             ["preact", "npm:10.7.2"],\
             ["pretty-format", "npm:3.8.0"]\
@@ -18184,6 +18432,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/stylis-npm-4.0.13-3f245d840f-8ea7a87028.zip/node_modules/stylis/",\
           "packageDependencies": [\
             ["stylis", "npm:4.0.13"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["supercluster", [\
+        ["npm:7.1.5", {\
+          "packageLocation": "./.yarn/cache/supercluster-npm-7.1.5-369b0b6fb2-6986323887.zip/node_modules/supercluster/",\
+          "packageDependencies": [\
+            ["supercluster", "npm:7.1.5"],\
+            ["kdbush", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

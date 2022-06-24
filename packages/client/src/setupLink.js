@@ -17,7 +17,8 @@
 import { createLink } from '@lowdefy/engine';
 
 function setupLink(lowdefy) {
-  const { router, window } = lowdefy._internal;
+  const { router } = lowdefy._internal;
+  const { window } = lowdefy._internal.globals;
   const backLink = () => router.back();
   const disabledLink = () => {};
   const newOriginLink = ({ url, query, newTab }) => {

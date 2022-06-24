@@ -3,6 +3,80 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
+
+
+### Bug Fixes
+
+* **blocks-google-maps:** Fix fitBounds. ([a4748ba](https://github.com/lowdefy/lowdefy/commit/a4748baf4c1b17472df235e681a660dc8871c222))
+* **blocks-google-maps:** Fix load script libraries. ([c9376f0](https://github.com/lowdefy/lowdefy/commit/c9376f03cbe57927c57491fa21847350f585bf96))
+* **blocks-google-maps:** Fix onLoad event. ([2c1de9a](https://github.com/lowdefy/lowdefy/commit/2c1de9a6f7052981b44e34c7442fe8e1e6496cf8))
+* **blocks-google-maps:** Fixes to onLoad. ([1dd08e4](https://github.com/lowdefy/lowdefy/commit/1dd08e4c2c34b2406351cb2e0a11908cf4e6f6ac))
+* **build:** Add default dependancies. ([7d0e03a](https://github.com/lowdefy/lowdefy/commit/7d0e03a87b83991d6bc4d52ae8b524344db07635))
+* **build:** Add new plugins as dev dependencies. ([145e598](https://github.com/lowdefy/lowdefy/commit/145e5989139c95acae4029e0a95b1de552457d46))
+* **build:** Evaluate build operators in lowdefy.yaml ([49ed3e1](https://github.com/lowdefy/lowdefy/commit/49ed3e14fd7453cd246324d1b791e902dc5a3c8f))
+* **build:** Evaluate build operators in lowdefy.yaml root. ([c340b52](https://github.com/lowdefy/lowdefy/commit/c340b5237f15b7673425f086944211238a16904b))
+* **client:** Fix layout on skeleton containers. ([fb38d00](https://github.com/lowdefy/lowdefy/commit/fb38d00536befeb5aebcf26c12132c8e8f0fcc92))
+* **client:** Skeleton to get parent blocks properties and styles. ([0022fc0](https://github.com/lowdefy/lowdefy/commit/0022fc0b37695c523e99b6b653b0fc54f846d4ed))
+* **deps:** Update dependency next-auth to v4.5.0. ([49dd43a](https://github.com/lowdefy/lowdefy/commit/49dd43ae4249129d029fbd8d1135d00fb26a5b7a))
+* **dev-server:** Add google maps and aggrid as default types. ([b3fa3a2](https://github.com/lowdefy/lowdefy/commit/b3fa3a24c325cfecd7ae48dc2019523ccab102d4))
+* Fix nunjucks operator shorthand en operators runtime definition. ([e2c3291](https://github.com/lowdefy/lowdefy/commit/e2c329199295baba108796f19a9d13a8b39008b5))
+* Fix package.json fixes. ([17f54ac](https://github.com/lowdefy/lowdefy/commit/17f54aceafc749be7e513fdcad829cd3ad4673ac))
+* Fix userFields implementation. ([c566541](https://github.com/lowdefy/lowdefy/commit/c566541538749c27cdda32381c7255e3e37ae32e))
+* Fix userFields in production server. ([614d7c9](https://github.com/lowdefy/lowdefy/commit/614d7c915d20c12ad285336a8d6fd0c942c11c48))
+* Remove userFields debug logs. ([8fad19f](https://github.com/lowdefy/lowdefy/commit/8fad19f28c4e4f39dc3135e0a3f1e2e2c8e4689c))
+* **server-dev:** Add max count in waitForRestartedServer ping. ([d7d8a0b](https://github.com/lowdefy/lowdefy/commit/d7d8a0b221322171096929954376b87d7c8ce838))
+
+
+### Features
+
+* **actions-core:** Add Fetch action. ([4c47ba6](https://github.com/lowdefy/lowdefy/commit/4c47ba65a18422ea5e849110c51be9e62e20c597))
+* Add callbackUrl and redirect as logout action params. ([9c13bd6](https://github.com/lowdefy/lowdefy/commit/9c13bd65df26e8e9bcb0b0c72b68adad45134fc2))
+* Add url as a login and logout callbackUrl parameter. ([78d099a](https://github.com/lowdefy/lowdefy/commit/78d099a02833aee5df157f8ac64ed3c9fff396f0))
+* Add userFields feature to map auth provider data to usernobject. ([0ab688b](https://github.com/lowdefy/lowdefy/commit/0ab688b7f2c153cd904160a28c91c0581b6e1e07))
+* **blocks-aggrid:** Add aggrid as a default block. ([3133fee](https://github.com/lowdefy/lowdefy/commit/3133feeefe27b52fecfd352060d7cd25013c5d51))
+* **blocks-googl-maps:** Update docs. ([fb950b6](https://github.com/lowdefy/lowdefy/commit/fb950b662135bf2163429d813204a7d65da1df33))
+* **blocks-google-maps:** Add google maps as a default block. ([b0daaec](https://github.com/lowdefy/lowdefy/commit/b0daaec9fa06972da82a39d9c2ca94da90680b4b))
+* **blocks-google-maps:** Add onLoad to maps. ([e9a75df](https://github.com/lowdefy/lowdefy/commit/e9a75df9cb1aaa95838f21ef6485e0ee9a9ce73f))
+* **blocks-google-maps:** Switch to @react-google-maps/api. ([3edbd9a](https://github.com/lowdefy/lowdefy/commit/3edbd9aeaff5013f23ed1c173de17828b8be5d5f))
+* **blocks-google-maps:** Update Google Maps block docs. ([2657a3c](https://github.com/lowdefy/lowdefy/commit/2657a3c6c390807ba987980407a1fd75fac5dede))
+* **build:** Add aggrid and maps as default block types. ([fbc3818](https://github.com/lowdefy/lowdefy/commit/fbc38185ea385fcfde1f35cfe2d4cfb3d2732388))
+* Move browser globals to lowdefy._internal.globals. ([94c4016](https://github.com/lowdefy/lowdefy/commit/94c401660832956c9c2da0df2119ba89fe7fb08e))
+
+
+
+
+
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+
+### Bug Fixes
+
+* Configure server Lowdefy build with env variables, not args. ([590588c](https://github.com/lowdefy/lowdefy/commit/590588c125886655b9487c6dc4184a571533fe26))
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+
+### Bug Fixes
+
+* **cli:** Define build directory on context. ([51bc05f](https://github.com/lowdefy/lowdefy/commit/51bc05f835cade977f7d2c0476b76fa38d762655))
+* Configure server lowdefy build with commandline args instead of env from CLI ([648f050](https://github.com/lowdefy/lowdefy/commit/648f050377077ddd0e677250e7f9e7d422fdea36))
+* Remove output directory cli option ([ba281a6](https://github.com/lowdefy/lowdefy/commit/ba281a6a2c7a75bc05b4e5495e46063d62e555d8))
+* **server:** Fix for next.js output file tracing. ([34c3f2d](https://github.com/lowdefy/lowdefy/commit/34c3f2d91a03d7e062cb493557d791e12782cec2))
+
+
+### Features
+
+* Add —no-next-build option to CLI build command. ([9b565f4](https://github.com/lowdefy/lowdefy/commit/9b565f4950f3087d54e9be3c0f768cba1d0651d1))
+
+
+
+
+
 # [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
 
 

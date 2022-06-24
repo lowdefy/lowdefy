@@ -165,6 +165,7 @@ class Actions {
     });
     try {
       response = await this.actions[action.type]({
+        globals: this.context._internal.lowdefy._internal.globals,
         methods: getActionMethods({
           actions: responses,
           arrayIndices,
@@ -172,9 +173,7 @@ class Actions {
           context: this.context,
           event,
         }),
-        document: this.context._internal.lowdefy._internal.document,
         params: parsedAction.params,
-        window: this.context._internal.lowdefy._internal.window,
       });
       if (progress) {
         progress();

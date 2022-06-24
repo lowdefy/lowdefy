@@ -1,0 +1,135 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "map": {
+        "type": "object",
+        "description": "Map settings object.",
+        "properties": {
+          "center": {
+            "type": "object",
+            "description": "A coordinate position object by which to center the map.",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          },
+          "zoom": {
+            "type": "number",
+            "description": "Map zoom level."
+          },
+          "options": {
+            "type": "object",
+            "description": "Map options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions'>more</a>."
+          }
+        }
+      },
+      "heatmap": {
+        "type": "object",
+        "description": "Add a heatmap layer, see more <a href='https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions'>heatmap options</a>. This will automatically load the 'visualization' library.",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "A list of heatmap data points.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                },
+                "weight": {
+                  "type": "number",
+                  "description": "Item weight on heatmap."
+                }
+              }
+            }
+          }
+        }
+      },
+      "markers": {
+        "type": "array",
+        "description": "A list of Markers with marker options.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                }
+              }
+            },
+            "label": {
+              "type": "string",
+              "description": "Label displayed on marker."
+            }
+          }
+        }
+      },
+      "infoWindow": {
+        "type": "object",
+        "description": "infoWindow options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions'>more</a>.",
+        "properties": {
+          "visible": {
+            "type": "boolean",
+            "description": "When visible is true, blocks inside infoWindow content area will be rendered."
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          }
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Custom map css properties to apply to map block."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the map is clicked."
+      },
+      "onMarkerClick": {
+        "type": "array",
+        "description": "Trigger actions when marker is clicked."
+      },
+      "onZoomChanged": {
+        "type": "array",
+        "description": "Trigger actions when the zoom on the map is changed."
+      }
+    }
+  }
+}

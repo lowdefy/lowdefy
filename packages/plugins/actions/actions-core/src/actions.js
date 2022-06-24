@@ -19,6 +19,7 @@ export { default as Link } from './actions/Link.js';
 export { default as Login } from './actions/Login.js';
 export { default as Logout } from './actions/Logout.js';
 export { default as DisplayMessage } from './actions/DisplayMessage.js';
+export { default as Fetch } from './actions/Fetch.js';
 export { default as Request } from './actions/Request.js';
 export { default as Reset } from './actions/Reset.js';
 export { default as ResetValidation } from './actions/ResetValidation.js';

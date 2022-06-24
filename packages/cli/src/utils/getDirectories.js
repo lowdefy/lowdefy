@@ -21,6 +21,8 @@ function getDirectories({ configDirectory, options }) {
   const server = options.serverDirectory
     ? path.resolve(options.serverDirectory)
     : path.join(dotLowdefy, 'server');
+  // TODO: Read server directory from env var
+  // Priority should be CLI arguments, env var, CLI options in Lowdefy config
   return {
     config: configDirectory,
     build: path.join(server, 'build'),
