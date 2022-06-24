@@ -33,7 +33,15 @@ const blockMethods = {
   unshiftItem: () => {},
 };
 
-const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
+const LoadingBlock = ({
+  blockId,
+  blockLayout,
+  blockProperties,
+  blockStyle,
+  context,
+  lowdefy,
+  skeleton,
+}) => {
   let Component = lowdefy._internal.blockComponents[skeleton.type];
   useEffect(() => {
     if (!lowdefy._internal.blockComponents[skeleton.type]) {
@@ -47,7 +55,7 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
     // default to box when a skeleton block is not found - should be a basic or loader block.
     Component = lowdefy._internal.blockComponents.Box;
   }
-  const layout = skeleton.layout || blockLayout || {};
+
   switch (Component.meta.category) {
     case 'list':
       return (
@@ -55,7 +63,6 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
           blockId={blockId}
           Component={Component}
           context={context}
-          layout={layout}
           lowdefy={lowdefy}
           skeleton={skeleton}
         />
@@ -64,9 +71,11 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
       return (
         <LoadingContainer
           blockId={blockId}
+          blockLayout={blockLayout}
+          blockProperties={blockProperties}
+          blockStyle={blockStyle}
           Component={Component}
           context={context}
-          layout={layout}
           lowdefy={lowdefy}
           skeleton={skeleton}
         />
@@ -74,10 +83,10 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
     default:
       return (
         <BlockLayout
-          blockStyle={skeleton.style}
+          blockStyle={skeleton.style ?? blockStyle}
           highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           id={`s-bl-${blockId}-${skeleton.id}`}
-          layout={layout}
+          layout={skeleton.layout ?? blockLayout}
           makeCssClass={makeCssClass}
         >
           <Component
@@ -88,7 +97,7 @@ const LoadingBlock = ({ blockLayout, blockId, context, lowdefy, skeleton }) => {
             menus={lowdefy.menus}
             methods={blockMethods}
             pageId={lowdefy.pageId}
-            properties={skeleton.properties}
+            properties={skeleton.properties ?? blockProperties}
           />
         </BlockLayout>
       );
