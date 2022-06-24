@@ -33,6 +33,8 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     return (
       <LoadingBlock
         blockLayout={block.eval.layout}
+        blockProperties={block.eval.properties}
+        blockStyle={block.eval.style}
         context={context}
         lowdefy={lowdefy}
         skeleton={block.eval.skeleton}

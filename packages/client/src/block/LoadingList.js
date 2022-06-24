@@ -20,7 +20,16 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingBlock from './LoadingBlock.js';
 
-const LoadingList = ({ blockId, Component, context, layout, lowdefy, skeleton }) => {
+const LoadingList = ({
+  blockId,
+  blockLayout,
+  blockProperties,
+  blockStyle,
+  Component,
+  context,
+  lowdefy,
+  skeleton,
+}) => {
   const content = {};
   const contentList = [];
   new Array(3).forEach(() => {
@@ -28,9 +37,9 @@ const LoadingList = ({ blockId, Component, context, layout, lowdefy, skeleton })
       content[areaKey] = (areaStyle) => (
         <Area
           area={layoutParamsToArea({
-            area: skeleton.areas[areaKey] || {},
+            area: skeleton.areas[areaKey] ?? {},
             areaKey,
-            layout,
+            layout: skeleton.layout ?? blockLayout,
           })}
           areaStyle={[areaStyle, skeleton.areas[areaKey] && skeleton.areas[areaKey].style]}
           highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
@@ -54,10 +63,10 @@ const LoadingList = ({ blockId, Component, context, layout, lowdefy, skeleton })
   });
   return (
     <BlockLayout
-      blockStyle={skeleton.style}
+      blockStyle={skeleton.style ?? blockStyle}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       id={`s-bl-${blockId}-${skeleton.id}`}
-      layout={layout}
+      layout={skeleton.layout ?? blockLayout}
       makeCssClass={makeCssClass}
     >
       <Component
@@ -68,7 +77,7 @@ const LoadingList = ({ blockId, Component, context, layout, lowdefy, skeleton })
         menus={lowdefy.menus}
         methods={{ makeCssClass }}
         pageId={lowdefy.pageId}
-        properties={skeleton.properties}
+        properties={skeleton.properties ?? blockProperties}
       />
     </BlockLayout>
   );
