@@ -31,7 +31,7 @@ function updateHeatmap(data) {
 
 const GoogleMapsHeatmap = ({ blockId, content, methods, properties }) => (
   <Map blockId={blockId} content={content} methods={methods} properties={properties}>
-    {(map, bounds) =>
+    {({ map, bounds }) =>
       map &&
       bounds &&
       properties.heatmap && (
