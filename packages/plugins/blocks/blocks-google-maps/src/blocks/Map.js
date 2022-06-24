@@ -17,7 +17,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
-import { type } from '@lowdefy/helpers';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -32,26 +31,24 @@ const MAP_DEFAULTS = {
   },
 };
 
-const getFitBounds = (bounds, map) => (args) => {
-  if (!bounds || !map) {
-    throw new Error('fitBounds can only be called once google maps has been mounted.');
-  }
-  (args?.bounds ?? []).map((position) => {
-    bounds.extend(position);
-  });
-  map.fitBounds(bounds);
-  if (args.zoom) {
-    map.setZoom(args.zoom);
-  }
-};
-
 // Implements https://react-google-maps-api-docs.netlify.app/#googlemap
 const Map = ({ blockId, children, content, methods, properties }) => {
   const [map, setMap] = useState();
   const [bounds, setBounds] = useState();
 
   useEffect(() => {
-    methods.registerMethod('fitBounds', getFitBounds(bounds, map));
+    methods.registerMethod('fitBounds', (args) => {
+      if (!bounds || !map) {
+        throw new Error('fitBounds can only be called once google maps has been mounted.');
+      }
+      (args?.bounds ?? []).map((position) => {
+        bounds.extend(position);
+      });
+      map.fitBounds(bounds);
+      if (args.zoom) {
+        map.setZoom(args.zoom);
+      }
+    });
   }, [bounds, map]);
 
   // by default, fit infoWindow and markers to bounds
@@ -74,11 +71,9 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
       center={properties.map?.center ?? MAP_DEFAULTS.center}
       zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
-      onLoad={(map, event) => {
-        const bounds = new window.google.maps.LatLngBounds();
-        setMap(map);
-        setBounds(bounds);
-        methods.registerMethod('fitBounds', getFitBounds(bounds, map));
+      onLoad={(newMap, event) => {
+        setMap(newMap);
+        setBounds(new window.google.maps.LatLngBounds());
         methods.triggerEvent({
           name: 'onLoad',
           event,
@@ -90,10 +85,9 @@ const Map = ({ blockId, children, content, methods, properties }) => {
           event,
         });
       }}
-      onZoomChanged={(event) => {
+      onZoomChanged={() => {
         methods.triggerEvent({
           name: 'onZoomChanged',
-          event,
         });
       }}
     >

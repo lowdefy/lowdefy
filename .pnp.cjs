@@ -3254,7 +3254,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
             ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
-            ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@react-google-maps/api", "virtual:cf9d4a30902225398260a9280741ea448264ff48eb7ce15b91d793e7cb0bc44c4e6ebc83708c628343ed5c99482f005ce5bc95f7b1d2fbe35caaf5ed60bd12ad#npm:2.12.0"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
