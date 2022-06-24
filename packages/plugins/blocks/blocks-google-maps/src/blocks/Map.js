@@ -39,15 +39,16 @@ const Map = ({ blockId, children, content, methods, properties }) => {
 
   useEffect(() => {
     methods.registerMethod('fitBounds', (args) => {
-      if (type.isArray(args)) {
-        args.map((arg) => {
-          bounds.extend(arg);
-        });
+      if (!bounds || !map) {
+        throw new Error('fitBounds can only be called once google maps has been mounted.');
       }
-      if (type.isObject(args)) {
-        bounds.extend(args);
-      }
+      (args?.bounds ?? []).map((position) => {
+        bounds.extend(position);
+      });
       map.fitBounds(bounds);
+      if (args.zoom) {
+        map.setZoom(args.zoom);
+      }
     });
   }, [bounds, map]);
 
@@ -71,9 +72,13 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
       center={properties.map?.center ?? MAP_DEFAULTS.center}
       zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
-      onLoad={(map) => {
+      onLoad={(map, event) => {
         setMap(map);
         setBounds(new window.google.maps.LatLngBounds());
+        methods.triggerEvent({
+          name: 'onLoad',
+          event,
+        });
       }}
       onClick={(event) => {
         methods.triggerEvent({
