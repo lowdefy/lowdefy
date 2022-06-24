@@ -4,13 +4,9 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "apiKey": {
-        "type": "string",
-        "description": "Your Goolge Maps API key."
-      },
       "map": {
         "type": "object",
-        "description": "Map options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions'>more</a>.",
+        "description": "Map settings object.",
         "properties": {
           "center": {
             "type": "object",
@@ -29,6 +25,10 @@
           "zoom": {
             "type": "number",
             "description": "Map zoom level."
+          },
+          "options": {
+            "type": "object",
+            "description": "Map options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions'>more</a>."
           }
         }
       },
@@ -42,19 +42,6 @@
             "items": {
               "type": "object",
               "properties": {
-                "location": {
-                  "type": "object",
-                  "properties": {
-                    "lat": {
-                      "type": "number",
-                      "description": "Lateral coordinate."
-                    },
-                    "lng": {
-                      "type": "number",
-                      "description": "Longitudinal coordinate."
-                    }
-                  }
-                },
                 "lat": {
                   "type": "number",
                   "description": "Lateral coordinate."
@@ -91,9 +78,32 @@
                 }
               }
             },
-            "tooltip": {
+            "label": {
               "type": "string",
-              "description": "Will create a infoWindow to display additional marker information when clicked. Html string is supported."
+              "description": "Label displayed on marker."
+            }
+          }
+        }
+      },
+      "infoWindow": {
+        "type": "object",
+        "description": "infoWindow options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions'>more</a>.",
+        "properties": {
+          "visible": {
+            "type": "boolean",
+            "description": "When visible is true, blocks inside infoWindow content area will be rendered."
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
             }
           }
         }
@@ -115,6 +125,10 @@
       "onMarkerClick": {
         "type": "array",
         "description": "Trigger actions when marker is clicked."
+      },
+      "onZoomChanged": {
+        "type": "array",
+        "description": "Trigger actions when the zoom on the map is changed."
       }
     }
   }

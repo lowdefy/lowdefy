@@ -6,7 +6,22 @@
     "properties": {
       "apiKey": {
         "type": "string",
-        "description": "Your Goolge Maps API key."
+        "description": "Your Google Maps API key."
+      },
+      "libraries": {
+        "type": "array",
+        "description": "A list of Google libraries, see <a href='https://developers.google.com/maps/documentation/javascript/libraries'>more</a>.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "drawing",
+            "geometry",
+            "journeySharing",
+            "localContext",
+            "places",
+            "visualization"
+          ]
+        }
       }
     }
   },
@@ -21,6 +36,10 @@
       "onMarkerClick": {
         "type": "array",
         "description": "Trigger actions when marker is clicked."
+      },
+      "onZoomChanged": {
+        "type": "array",
+        "description": "Trigger actions when the zoom on the map is changed."
       }
     }
   }
