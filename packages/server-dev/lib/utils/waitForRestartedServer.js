@@ -16,7 +16,10 @@
 
 import request from './request.js';
 
+const MAX_COUNT = 1200; // 10 mins
+
 function waitForRestartedServer(basePath) {
+  let count = 0;
   setTimeout(async () => {
     try {
       await request({
@@ -24,7 +27,10 @@ function waitForRestartedServer(basePath) {
       });
       window.location.reload();
     } catch (error) {
-      waitForRestartedServer(basePath);
+      count += 1;
+      if (count <= MAX_COUNT) {
+        waitForRestartedServer(basePath);
+      }
     }
   }, 500); // TODO: this ping should be shorter than rerender delay until we can pass a rebuild flag to reload.
 }
