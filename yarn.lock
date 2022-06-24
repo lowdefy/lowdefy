@@ -2214,7 +2214,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid":
+"@lowdefy/blocks-aggrid@4.0.0-alpha.16, @lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid"
   dependencies:
@@ -2348,7 +2348,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps":
+"@lowdefy/blocks-google-maps@4.0.0-alpha.16, @lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps"
   dependencies:
@@ -2431,10 +2431,12 @@ __metadata:
     "@jest/globals": 28.1.0
     "@lowdefy/actions-core": 4.0.0-alpha.16
     "@lowdefy/ajv": 4.0.0-alpha.16
+    "@lowdefy/blocks-aggrid": 4.0.0-alpha.16
     "@lowdefy/blocks-antd": 4.0.0-alpha.16
     "@lowdefy/blocks-basic": 4.0.0-alpha.16
     "@lowdefy/blocks-color-selectors": 4.0.0-alpha.16
     "@lowdefy/blocks-echarts": 4.0.0-alpha.16
+    "@lowdefy/blocks-google-maps": 4.0.0-alpha.16
     "@lowdefy/blocks-loaders": 4.0.0-alpha.16
     "@lowdefy/blocks-markdown": 4.0.0-alpha.16
     "@lowdefy/connection-axios-http": 4.0.0-alpha.16
