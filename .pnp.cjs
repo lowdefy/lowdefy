@@ -2895,7 +2895,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:28.1.0"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"]\
@@ -2910,7 +2910,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["ajv", "npm:8.11.0"],\
             ["ajv-errors", "virtual:b64ac2dbc2a9f5c175cc641b97e27fb975e3f1af79e3ddd71814e0b45174855a002256bcb844ac8fb335b51bc1f2e6004bd5279ce374957265f665a50b3a3755#npm:3.0.0"],\
@@ -2932,7 +2932,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
           ],\
@@ -2948,7 +2948,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
             ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
@@ -2972,7 +2972,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3001,7 +3001,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3032,7 +3032,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3059,7 +3059,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3087,7 +3087,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3115,7 +3115,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3140,7 +3140,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3195,7 +3195,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators-yaml", "workspace:packages/plugins/operators/operators-yaml"],\
             ["@lowdefy/plugin-next-auth", "workspace:packages/plugins/plugins/plugin-next-auth"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["ajv", "npm:8.11.0"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
@@ -3220,7 +3220,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@lowdefy/layout", "workspace:packages/layout"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3244,7 +3244,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["axios", "npm:0.27.2"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
@@ -3261,7 +3261,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
           ],\
@@ -3276,7 +3276,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["google-spreadsheet", "npm:3.3.0"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
@@ -3294,7 +3294,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["knex", "virtual:d71d6ceb7acaf0344eb3c809fbafec1c0f2a945a526449ed4c3af2b6cfdd3665ab27f950a42ec1e1d490093a7a1bfb8d28c9ba4754ab9892568d530efd8b3a20#npm:1.0.7"],\
@@ -3315,7 +3315,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.2.2"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["mongodb", "npm:4.6.0"],\
@@ -3332,7 +3332,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["redis", "npm:4.1.0"]\
@@ -3349,7 +3349,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@sendgrid/mail", "npm:7.7.0"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
           ],\
@@ -3364,7 +3364,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["stripe", "npm:8.222.0"]\
@@ -3380,7 +3380,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/globals", "npm:28.1.0"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
           ],\
@@ -3400,7 +3400,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators-js", "workspace:packages/plugins/operators/operators-js"],\
             ["@lowdefy/operators-mql", "workspace:packages/plugins/operators/operators-mql"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
           ],\
@@ -3413,7 +3413,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lowdefy/format", "workspace:packages/format"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["moment", "npm:2.29.3"]\
@@ -3427,7 +3427,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-diff", "npm:28.1.0"],\
@@ -3443,7 +3443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["yaml", "npm:2.1.1"]\
@@ -3462,7 +3462,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3506,7 +3506,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["fs-extra", "npm:10.1.0"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
@@ -3521,7 +3521,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["moment", "npm:2.29.3"],\
@@ -3537,7 +3537,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"]\
@@ -3553,7 +3553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["change-case", "npm:4.1.2"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
@@ -3570,7 +3570,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["deep-diff", "npm:1.0.2"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
@@ -3587,7 +3587,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"]\
@@ -3603,7 +3603,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"],\
@@ -3621,7 +3621,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/nunjucks", "workspace:packages/utils/nunjucks"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"]\
@@ -3637,7 +3637,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"],\
@@ -3654,7 +3654,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/operators", "workspace:packages/operators"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"],\
@@ -3676,7 +3676,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
@@ -3699,7 +3699,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@lowdefy/plugin-next-auth", "workspace:packages/plugins/plugins/plugin-next-auth"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["next-auth", "virtual:3828db34ebd29f8d79b511e3dda5577d908743c95df6a5617131f10c5e8d5f4e186c617c1b33cc53cb90d5062cc3ecfe666338a3f54f9227de91ca5e440bfb5f#npm:4.5.0"]\
@@ -3733,7 +3733,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["process", "npm:0.11.10"],\
             ["react", "npm:18.1.0"],\
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"],\
-            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],\
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.4.0"],\
             ["yaml", "npm:2.1.1"],\
             ["yargs", "npm:17.5.1"]\
           ],\
@@ -3780,7 +3780,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["process", "npm:0.11.10"],\
             ["react", "npm:18.1.0"],\
             ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"],\
-            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],\
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.4.0"],\
             ["swr", "virtual:b951ea20ab6cada5f665e8389a50d828047e6b6f10e6ebaddde1e74a94868ec6ec703ff140742f295ef663cf92da1bc80fe9bbeaab30196cba0e992f38cd19ea#npm:1.3.0"],\
             ["yaml", "npm:2.1.1"],\
             ["yargs", "npm:17.5.1"]\
@@ -4600,7 +4600,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@swc-cli-virtual-3584cc027f/0/cache/@swc-cli-npm-0.1.57-161586148e-d19f02233f.zip/node_modules/@swc/cli/",\
           "packageDependencies": [\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@types/chokidar", null],\
             ["@types/swc__core", null],\
             ["chokidar", null],\
@@ -4619,140 +4619,140 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@swc/core", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/cache/@swc-core-npm-1.2.194-200d2d857c-52f6e2aa73.zip/node_modules/@swc/core/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/cache/@swc-core-npm-1.2.196-63f0f9f9a7-d9d1ad3c68.zip/node_modules/@swc/core/",\
           "packageDependencies": [\
-            ["@swc/core", "npm:1.2.194"],\
-            ["@swc/core-android-arm-eabi", "npm:1.2.194"],\
-            ["@swc/core-android-arm64", "npm:1.2.194"],\
-            ["@swc/core-darwin-arm64", "npm:1.2.194"],\
-            ["@swc/core-darwin-x64", "npm:1.2.194"],\
-            ["@swc/core-freebsd-x64", "npm:1.2.194"],\
-            ["@swc/core-linux-arm-gnueabihf", "npm:1.2.194"],\
-            ["@swc/core-linux-arm64-gnu", "npm:1.2.194"],\
-            ["@swc/core-linux-arm64-musl", "npm:1.2.194"],\
-            ["@swc/core-linux-x64-gnu", "npm:1.2.194"],\
-            ["@swc/core-linux-x64-musl", "npm:1.2.194"],\
-            ["@swc/core-win32-arm64-msvc", "npm:1.2.194"],\
-            ["@swc/core-win32-ia32-msvc", "npm:1.2.194"],\
-            ["@swc/core-win32-x64-msvc", "npm:1.2.194"]\
+            ["@swc/core", "npm:1.2.196"],\
+            ["@swc/core-android-arm-eabi", "npm:1.2.196"],\
+            ["@swc/core-android-arm64", "npm:1.2.196"],\
+            ["@swc/core-darwin-arm64", "npm:1.2.196"],\
+            ["@swc/core-darwin-x64", "npm:1.2.196"],\
+            ["@swc/core-freebsd-x64", "npm:1.2.196"],\
+            ["@swc/core-linux-arm-gnueabihf", "npm:1.2.196"],\
+            ["@swc/core-linux-arm64-gnu", "npm:1.2.196"],\
+            ["@swc/core-linux-arm64-musl", "npm:1.2.196"],\
+            ["@swc/core-linux-x64-gnu", "npm:1.2.196"],\
+            ["@swc/core-linux-x64-musl", "npm:1.2.196"],\
+            ["@swc/core-win32-arm64-msvc", "npm:1.2.196"],\
+            ["@swc/core-win32-ia32-msvc", "npm:1.2.196"],\
+            ["@swc/core-win32-x64-msvc", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-android-arm-eabi", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-android-arm-eabi-npm-1.2.194-5debefb9e2/node_modules/@swc/core-android-arm-eabi/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-android-arm-eabi-npm-1.2.196-5e93dc6287/node_modules/@swc/core-android-arm-eabi/",\
           "packageDependencies": [\
-            ["@swc/core-android-arm-eabi", "npm:1.2.194"]\
+            ["@swc/core-android-arm-eabi", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-android-arm64", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-android-arm64-npm-1.2.194-5d25b5e566/node_modules/@swc/core-android-arm64/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-android-arm64-npm-1.2.196-af8a1bebb4/node_modules/@swc/core-android-arm64/",\
           "packageDependencies": [\
-            ["@swc/core-android-arm64", "npm:1.2.194"]\
+            ["@swc/core-android-arm64", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-darwin-arm64", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-darwin-arm64-npm-1.2.194-7f8d2f98ad/node_modules/@swc/core-darwin-arm64/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-darwin-arm64-npm-1.2.196-2d26671a25/node_modules/@swc/core-darwin-arm64/",\
           "packageDependencies": [\
-            ["@swc/core-darwin-arm64", "npm:1.2.194"]\
+            ["@swc/core-darwin-arm64", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-darwin-x64", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-darwin-x64-npm-1.2.194-fe35eea01b/node_modules/@swc/core-darwin-x64/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-darwin-x64-npm-1.2.196-b4404b35bd/node_modules/@swc/core-darwin-x64/",\
           "packageDependencies": [\
-            ["@swc/core-darwin-x64", "npm:1.2.194"]\
+            ["@swc/core-darwin-x64", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-freebsd-x64", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-freebsd-x64-npm-1.2.194-bde510cb25/node_modules/@swc/core-freebsd-x64/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-freebsd-x64-npm-1.2.196-3242f9dda7/node_modules/@swc/core-freebsd-x64/",\
           "packageDependencies": [\
-            ["@swc/core-freebsd-x64", "npm:1.2.194"]\
+            ["@swc/core-freebsd-x64", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-linux-arm-gnueabihf", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm-gnueabihf-npm-1.2.194-40930c47df/node_modules/@swc/core-linux-arm-gnueabihf/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm-gnueabihf-npm-1.2.196-b19738c9eb/node_modules/@swc/core-linux-arm-gnueabihf/",\
           "packageDependencies": [\
-            ["@swc/core-linux-arm-gnueabihf", "npm:1.2.194"]\
+            ["@swc/core-linux-arm-gnueabihf", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-linux-arm64-gnu", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm64-gnu-npm-1.2.194-c1fa69e6a4/node_modules/@swc/core-linux-arm64-gnu/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm64-gnu-npm-1.2.196-262e56ec13/node_modules/@swc/core-linux-arm64-gnu/",\
           "packageDependencies": [\
-            ["@swc/core-linux-arm64-gnu", "npm:1.2.194"]\
+            ["@swc/core-linux-arm64-gnu", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-linux-arm64-musl", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm64-musl-npm-1.2.194-1d4f751bd6/node_modules/@swc/core-linux-arm64-musl/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-linux-arm64-musl-npm-1.2.196-fd4d9f4116/node_modules/@swc/core-linux-arm64-musl/",\
           "packageDependencies": [\
-            ["@swc/core-linux-arm64-musl", "npm:1.2.194"]\
+            ["@swc/core-linux-arm64-musl", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-linux-x64-gnu", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-linux-x64-gnu-npm-1.2.194-e914b8b4f4/node_modules/@swc/core-linux-x64-gnu/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-linux-x64-gnu-npm-1.2.196-1da0150122/node_modules/@swc/core-linux-x64-gnu/",\
           "packageDependencies": [\
-            ["@swc/core-linux-x64-gnu", "npm:1.2.194"]\
+            ["@swc/core-linux-x64-gnu", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-linux-x64-musl", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-linux-x64-musl-npm-1.2.194-f55083e53d/node_modules/@swc/core-linux-x64-musl/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-linux-x64-musl-npm-1.2.196-1b09e1419f/node_modules/@swc/core-linux-x64-musl/",\
           "packageDependencies": [\
-            ["@swc/core-linux-x64-musl", "npm:1.2.194"]\
+            ["@swc/core-linux-x64-musl", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-win32-arm64-msvc", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-win32-arm64-msvc-npm-1.2.194-6fc390c489/node_modules/@swc/core-win32-arm64-msvc/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-win32-arm64-msvc-npm-1.2.196-2459407a6c/node_modules/@swc/core-win32-arm64-msvc/",\
           "packageDependencies": [\
-            ["@swc/core-win32-arm64-msvc", "npm:1.2.194"]\
+            ["@swc/core-win32-arm64-msvc", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-win32-ia32-msvc", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-win32-ia32-msvc-npm-1.2.194-bc4760bed1/node_modules/@swc/core-win32-ia32-msvc/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-win32-ia32-msvc-npm-1.2.196-ccba56827c/node_modules/@swc/core-win32-ia32-msvc/",\
           "packageDependencies": [\
-            ["@swc/core-win32-ia32-msvc", "npm:1.2.194"]\
+            ["@swc/core-win32-ia32-msvc", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
       ]],\
       ["@swc/core-win32-x64-msvc", [\
-        ["npm:1.2.194", {\
-          "packageLocation": "./.yarn/unplugged/@swc-core-win32-x64-msvc-npm-1.2.194-44019bb487/node_modules/@swc/core-win32-x64-msvc/",\
+        ["npm:1.2.196", {\
+          "packageLocation": "./.yarn/unplugged/@swc-core-win32-x64-msvc-npm-1.2.196-979e134742/node_modules/@swc/core-win32-x64-msvc/",\
           "packageDependencies": [\
-            ["@swc/core-win32-x64-msvc", "npm:1.2.194"]\
+            ["@swc/core-win32-x64-msvc", "npm:1.2.196"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4770,7 +4770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["@jest/create-cache-key-function", "npm:27.5.1"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@types/swc__core", null]\
           ],\
           "packagePeers": [\
@@ -12383,7 +12383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
             ["@lowdefy/node-utils", "workspace:packages/utils/node-utils"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/core", "npm:1.2.196"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["axios", "npm:0.27.2"],\
             ["chalk", "npm:4.1.2"],\
@@ -16735,17 +16735,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["react-icons", [\
-        ["npm:4.3.1", {\
-          "packageLocation": "./.yarn/cache/react-icons-npm-4.3.1-46cb955834-2cc608acdd.zip/node_modules/react-icons/",\
+        ["npm:4.4.0", {\
+          "packageLocation": "./.yarn/cache/react-icons-npm-4.4.0-a6c91164a4-dd93a1dcc8.zip/node_modules/react-icons/",\
           "packageDependencies": [\
-            ["react-icons", "npm:4.3.1"]\
+            ["react-icons", "npm:4.4.0"]\
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1", {\
-          "packageLocation": "./.yarn/__virtual__/react-icons-virtual-0dd268c70d/0/cache/react-icons-npm-4.3.1-46cb955834-2cc608acdd.zip/node_modules/react-icons/",\
+        ["virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.4.0", {\
+          "packageLocation": "./.yarn/__virtual__/react-icons-virtual-48c8465f1a/0/cache/react-icons-npm-4.4.0-a6c91164a4-dd93a1dcc8.zip/node_modules/react-icons/",\
           "packageDependencies": [\
-            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.3.1"],\
+            ["react-icons", "virtual:003bebd8b7a948d12b44e2c11a621884feb1891eea3645171e827971487f79396db9f7422bc411ccf3f90877e94ec86f5c3da70b96efb5daddb2ee3b35eae5c6#npm:4.4.0"],\
             ["@types/react", null],\
             ["react", "npm:18.1.0"]\
           ],\

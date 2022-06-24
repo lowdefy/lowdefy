@@ -133,7 +133,7 @@ test('https Agent options in request', async () => {
   };
   const connection = {};
   const res = await AxiosHttp({ request, connection });
-  expect(res.headers.connection).toEqual('keep-alive');
+  expect(res.headers.connection.toLowerCase()).toEqual('keep-alive');
 });
 
 test('https Agent options in connection', async () => {
@@ -142,7 +142,7 @@ test('https Agent options in connection', async () => {
   };
   const connection = { httpsAgentOptions: { keepAlive: true } };
   const res = await AxiosHttp({ request, connection });
-  expect(res.headers.connection).toEqual('keep-alive');
+  expect(res.headers.connection.toLowerCase()).toEqual('keep-alive');
 });
 
 test('http Agent options in request', async () => {
@@ -152,7 +152,7 @@ test('http Agent options in request', async () => {
   };
   const connection = {};
   const res = await AxiosHttp({ request, connection });
-  expect(res.headers.connection).toEqual('keep-alive');
+  expect(res.headers.connection.toLowerCase()).toEqual('keep-alive');
 });
 
 test('http Agent options in connection', async () => {
@@ -161,7 +161,7 @@ test('http Agent options in connection', async () => {
   };
   const connection = { httpAgentOptions: { keepAlive: true } };
   const res = await AxiosHttp({ request, connection });
-  expect(res.headers.connection).toEqual('keep-alive');
+  expect(res.headers.connection.toLowerCase()).toEqual('keep-alive');
 });
 
 test('checkRead should be false', async () => {
