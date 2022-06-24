@@ -69,9 +69,11 @@
   "devDependencies": {
     "@jest/globals": "28.1.0",
     "@lowdefy/actions-core": "4.0.0-alpha.16",
+    "@lowdefy/blocks-aggrid": "4.0.0-alpha.16",
     "@lowdefy/blocks-antd": "4.0.0-alpha.16",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.16",
     "@lowdefy/blocks-echarts": "4.0.0-alpha.16",
+    "@lowdefy/blocks-google-maps": "4.0.0-alpha.16",
     "@lowdefy/blocks-markdown": "4.0.0-alpha.16",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.16",
     "@lowdefy/connection-elasticsearch": "4.0.0-alpha.16",
