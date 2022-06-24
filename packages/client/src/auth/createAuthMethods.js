@@ -17,10 +17,12 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
-  const { home, pageId, urlQuery } = callbackUrl;
+  const { home, pageId, urlQuery, url } = callbackUrl;
 
-  if ([!home, !pageId].filter((v) => !v).length > 1) {
-    throw Error(`Invalid Link: To avoid ambiguity, only one of 'home' or 'pageId' can be defined.`);
+  if ([!home, !pageId, !url].filter((v) => !v).length > 1) {
+    throw Error(
+      `Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
+    );
   }
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
 
@@ -29,6 +31,9 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   }
   if (type.isString(pageId)) {
     return `/${pageId}${query ? `?${query}` : ''}`;
+  }
+  if (type.isString(url)) {
+    return `${url}${query ? `?${query}` : ''}`;
   }
 
   return undefined;

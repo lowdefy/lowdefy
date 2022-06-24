@@ -56,8 +56,11 @@ function initLowdefyContext({ auth, Components, config, router, stage, types, wi
   lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
   lowdefy.user = auth?.session?.user ?? null;
 
-  lowdefy._internal.window = window;
-  lowdefy._internal.document = window.document;
+  lowdefy._internal.globals = {
+    document: window.document,
+    fetch: window.fetch,
+    window,
+  };
   lowdefy._internal.router = router;
   lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.updateBlock = (blockId) =>

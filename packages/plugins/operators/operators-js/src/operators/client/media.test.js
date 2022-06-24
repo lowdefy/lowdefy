@@ -20,9 +20,10 @@ import media from './media.js';
 console.error = () => {};
 
 const window = { innerHeight: 300, innerWidth: 500 };
+const globals = { window };
 
 test('_media full media object', () => {
-  expect(media({ params: true, location: 'locationId', window })).toEqual({
+  expect(media({ params: true, location: 'locationId', globals })).toEqual({
     height: 300,
     size: 'xs',
     width: 500,
@@ -31,47 +32,59 @@ test('_media full media object', () => {
 
 test('_media size', () => {
   expect(
-    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 500 } })
+    media({
+      params: 'size',
+      location: 'locationId',
+      globals: { window: { innerHeight: 300, innerWidth: 500 } },
+    })
   ).toEqual('xs');
   expect(
-    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 700 } })
+    media({
+      params: 'size',
+      location: 'locationId',
+      globals: { window: { innerHeight: 300, innerWidth: 700 } },
+    })
   ).toEqual('sm');
   expect(
-    media({ params: 'size', location: 'locationId', window: { innerHeight: 300, innerWidth: 900 } })
+    media({
+      params: 'size',
+      location: 'locationId',
+      globals: { window: { innerHeight: 300, innerWidth: 900 } },
+    })
   ).toEqual('md');
   expect(
     media({
       params: 'size',
       location: 'locationId',
-      window: { innerHeight: 300, innerWidth: 1100 },
+      globals: { window: { innerHeight: 300, innerWidth: 1100 } },
     })
   ).toEqual('lg');
   expect(
     media({
       params: 'size',
       location: 'locationId',
-      window: { innerHeight: 300, innerWidth: 1400 },
+      globals: { window: { innerHeight: 300, innerWidth: 1400 } },
     })
   ).toEqual('xl');
   expect(
     media({
       params: 'size',
       location: 'locationId',
-      window: { innerHeight: 300, innerWidth: 1900 },
+      globals: { window: { innerHeight: 300, innerWidth: 1900 } },
     })
   ).toEqual('xxl');
 });
 
 test('_media width', () => {
-  expect(media({ params: 'width', location: 'locationId', window })).toEqual(500);
+  expect(media({ params: 'width', location: 'locationId', globals })).toEqual(500);
 });
 
 test('_media height', () => {
-  expect(media({ params: 'height', location: 'locationId', window })).toEqual(300);
+  expect(media({ params: 'height', location: 'locationId', globals })).toEqual(300);
 });
 
 test('_media throw on no innerWidth', () => {
-  expect(() => media({ params: true, location: 'locationId', window: {} })).toThrow(
+  expect(() => media({ params: true, location: 'locationId', globals: { window: {} } })).toThrow(
     'Operator Error: device window width not available for _media. Received: true at locationId.'
   );
 });
