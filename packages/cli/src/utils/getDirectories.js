@@ -17,19 +17,16 @@
 import path from 'path';
 
 function getDirectories({ configDirectory, options }) {
-  let dotLowdefy;
-  if (options.outputDirectory) {
-    dotLowdefy = path.resolve(options.outputDirectory);
-  } else {
-    dotLowdefy = path.resolve(configDirectory, '.lowdefy');
-  }
+  const dotLowdefy = path.resolve(configDirectory, '.lowdefy');
+  const server = options.serverDirectory
+    ? path.resolve(options.serverDirectory)
+    : path.join(dotLowdefy, 'server');
+  // TODO: Read server directory from env var
+  // Priority should be CLI arguments, env var, CLI options in Lowdefy config
   return {
     config: configDirectory,
-    build: path.join(dotLowdefy, 'server', 'build'),
-    dotLowdefy,
-    server: options.serverDirectory
-      ? path.resolve(options.serverDirectory)
-      : path.join(dotLowdefy, 'server'),
+    build: path.join(server, 'build'),
+    server,
     dev: options.devDirectory ? path.resolve(options.devDirectory) : path.join(dotLowdefy, 'dev'),
   };
 }

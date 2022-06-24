@@ -3,6 +3,7 @@ import { createLink } from '@lowdefy/engine';
 import { type } from '@lowdefy/helpers';
 
 const createLinkComponent = (lowdefy, Link) => {
+  const { window } = lowdefy._internal.globals;
   const backLink = ({ ariaLabel, children, className, id, rel }) => (
     <a
       id={id}

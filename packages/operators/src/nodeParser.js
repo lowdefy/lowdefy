@@ -17,15 +17,18 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class NodeParser {
-  constructor({ env, payload, secrets, user, operators }) {
+  constructor({ env, payload, secrets, user, operators, verbose }) {
     this.env = env;
     this.operators = operators;
     this.payload = payload;
     this.secrets = secrets;
     this.user = user;
     this.parse = this.parse.bind(this);
+    this.verbose;
   }
 
+  // TODO: Look at logging here
+  // TODO: Remove console.error = () => {}; from tests
   parse({ args, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
@@ -57,13 +60,16 @@ class NodeParser {
           operatorPrefix,
           parser: this,
           payload: this.payload,
+          runtime: 'node',
           secrets: this.secrets,
           user: this.user,
         });
         return res;
       } catch (e) {
         errors.push(e);
-        console.error(e);
+        if (this.verbose) {
+          console.error(e);
+        }
         return null;
       }
     };

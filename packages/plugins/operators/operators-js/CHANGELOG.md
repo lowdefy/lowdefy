@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+**Note:** Version bump only for package @lowdefy/operators-js
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/operators-js
+
+
+
+
+
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/operators-js
+
+
+
+
+
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
+* **operators-js:** Fix _location and _media tests. ([f47bede](https://github.com/lowdefy/lowdefy/commit/f47bede2f8b6417aebfc02a3fd41f519ca377cb0))
+* Update tests to run on node and jsdom. ([be2180a](https://github.com/lowdefy/lowdefy/commit/be2180aea8f7e2ae0bc8d6ba0a716d31c0d76bc7))
+
+
+### Features
+
+* **engine:** Add payload and blockId to context.requests[requestId]. ([e29d88b](https://github.com/lowdefy/lowdefy/commit/e29d88b326338fdec22db325dcda31ee4f73cf51))
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 

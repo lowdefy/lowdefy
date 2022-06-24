@@ -56,6 +56,7 @@ class WebParser {
           basePath,
           event,
           eventLog: this.context.eventLog,
+          globals: _internal.globals,
           home,
           input: inputs ? inputs[this.context.id] : {},
           location: applyArrayIndices(arrayIndices, location),
@@ -68,10 +69,10 @@ class WebParser {
           params: value[key],
           parser: this,
           requests: this.context.requests,
+          runtime: 'browser',
           state: this.context.state,
           urlQuery: urlQuery ?? {},
           user: user ?? {},
-          window: _internal.window,
         });
         return res;
       } catch (e) {

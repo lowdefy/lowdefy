@@ -17,10 +17,12 @@
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
-  const { home, pageId, urlQuery } = callbackUrl;
+  const { home, pageId, urlQuery, url } = callbackUrl;
 
-  if ([!home, !pageId].filter((v) => !v).length > 1) {
-    throw Error(`Invalid Link: To avoid ambiguity, only one of 'home' or 'pageId' can be defined.`);
+  if ([!home, !pageId, !url].filter((v) => !v).length > 1) {
+    throw Error(
+      `Invalid Link: To avoid ambiguity, only one of 'home', 'pageId' or 'url' can be defined.`
+    );
   }
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
 
@@ -30,6 +32,9 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   if (type.isString(pageId)) {
     return `/${pageId}${query ? `?${query}` : ''}`;
   }
+  if (type.isString(url)) {
+    return `${url}${query ? `?${query}` : ''}`;
+  }
 
   return undefined;
 }
@@ -37,7 +42,7 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
 function createAuthMethods({ lowdefy, auth }) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
-  function login({ providerId, callbackUrl, authUrl = {} } = {}) {
+  function login({ authUrl, callbackUrl, providerId } = {}) {
     if (type.isNone(providerId) && auth.authConfig.providers.length === 1) {
       providerId = auth.authConfig.providers[0].id;
     }
@@ -45,12 +50,11 @@ function createAuthMethods({ lowdefy, auth }) {
     auth.signIn(
       providerId,
       { callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
-      authUrl.urlQuery
+      authUrl?.urlQuery
     );
   }
-  // TODO: fix callbackUrl
-  function logout() {
-    auth.signOut();
+  function logout({ callbackUrl, redirect } = {}) {
+    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
   }
   return {
     login,

@@ -31,7 +31,8 @@ const validProperties = [
   'search',
 ];
 
-function _location({ arrayIndices, basePath, home, location, pageId, params, window }) {
+function _location({ arrayIndices, basePath, home, location, pageId, params, globals }) {
+  const { window } = globals;
   if (!window?.location) {
     throw new Error(
       `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(

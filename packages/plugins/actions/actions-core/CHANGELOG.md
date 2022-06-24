@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+**Note:** Version bump only for package @lowdefy/actions-core
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/actions-core
+
+
+
+
+
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/actions-core
+
+
+
+
+
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* **actions-core:** Fix actions core tests. ([8647f91](https://github.com/lowdefy/lowdefy/commit/8647f915be3aa625a9f1f96f582e16b2bbb78ea5))
+* **actions:** Convert tests to use new testContext. ([1a6f8df](https://github.com/lowdefy/lowdefy/commit/1a6f8df2a18f21d9fe538aa9670b5fe51c412449))
+* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
+* Update tests to run on node and jsdom. ([be2180a](https://github.com/lowdefy/lowdefy/commit/be2180aea8f7e2ae0bc8d6ba0a716d31c0d76bc7))
+
+
+### Features
+
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 **Note:** Version bump only for package @lowdefy/actions-core

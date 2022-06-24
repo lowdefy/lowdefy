@@ -17,8 +17,6 @@
 /* eslint-disable max-classes-per-file */
 import NodeParser from './nodeParser.js';
 
-console.error = () => {};
-
 const args = [{ args: true }];
 
 const operators = {
@@ -132,6 +130,7 @@ test('operator returns value', () => {
           "payload": Object {
             "payload": true,
           },
+          "runtime": "node",
           "secrets": Object {
             "secrets": true,
           },

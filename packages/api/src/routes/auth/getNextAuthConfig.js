@@ -25,10 +25,11 @@ import createProviders from './createProviders.js';
 const nextAuthConfig = {};
 let initialized = false;
 
-function getNextAuthConfig({ authJson, plugins }) {
+function getNextAuthConfig(context, { authJson, plugins }) {
   if (initialized) return nextAuthConfig;
   const secrets = getSecretsFromEnv();
 
+  // TODO: Add logger
   const operatorsParser = new NodeParser({
     operators: { _secret },
     payload: {},
@@ -45,9 +46,9 @@ function getNextAuthConfig({ authJson, plugins }) {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.callbacks = createCallbacks({ authConfig, plugins });
-  nextAuthConfig.events = createEvents({ authConfig, plugins });
-  nextAuthConfig.providers = createProviders({ authConfig, plugins });
+  nextAuthConfig.callbacks = createCallbacks(context, { authConfig, plugins });
+  nextAuthConfig.events = createEvents(context, { authConfig, plugins });
+  nextAuthConfig.providers = createProviders(context, { authConfig, plugins });
 
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;

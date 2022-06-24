@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+
+### Bug Fixes
+
+* Configure server Lowdefy build with env variables, not args. ([590588c](https://github.com/lowdefy/lowdefy/commit/590588c125886655b9487c6dc4184a571533fe26))
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+
+### Bug Fixes
+
+* **cli:** Define build directory on context. ([51bc05f](https://github.com/lowdefy/lowdefy/commit/51bc05f835cade977f7d2c0476b76fa38d762655))
+* Configure server lowdefy build with commandline args instead of env from CLI ([648f050](https://github.com/lowdefy/lowdefy/commit/648f050377077ddd0e677250e7f9e7d422fdea36))
+* Remove output directory cli option ([ba281a6](https://github.com/lowdefy/lowdefy/commit/ba281a6a2c7a75bc05b4e5495e46063d62e555d8))
+
+
+### Features
+
+* Add —no-next-build option to CLI build command. ([9b565f4](https://github.com/lowdefy/lowdefy/commit/9b565f4950f3087d54e9be3c0f768cba1d0651d1))
+
+
+
+
+
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+
+### Bug Fixes
+
+* **cli:** Define build directory on context. ([51bc05f](https://github.com/lowdefy/lowdefy/commit/51bc05f835cade977f7d2c0476b76fa38d762655))
+* Remove output directory cli option ([ba281a6](https://github.com/lowdefy/lowdefy/commit/ba281a6a2c7a75bc05b4e5495e46063d62e555d8))
+
+
+
+
+
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* **cli:** Check env for configDirectory. ([f8964ca](https://github.com/lowdefy/lowdefy/commit/f8964cac1ae2c55cb95fa13c06be3dc8be032538))
+* Use createRequire to import json files. ([a9c7ec4](https://github.com/lowdefy/lowdefy/commit/a9c7ec4eae0cf65dd42403fb405e65e13b9eca62))
+
+
+### Features
+
+* **cli:** Add —no-open option to cli dev command. ([bc5b12f](https://github.com/lowdefy/lowdefy/commit/bc5b12fce379352e6cbf73503154e88b980918e6))
+* **cli:** Cli to load .env for build and start commands. ([ac34fe8](https://github.com/lowdefy/lowdefy/commit/ac34fe80190585b3db3f18e5fa3c4fba48563368))
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+* Package Updates. ([0f9d8cd](https://github.com/lowdefy/lowdefy/commit/0f9d8cd89186e12c66e5f833c13c12472f52eaee))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 **Note:** Version bump only for package lowdefy

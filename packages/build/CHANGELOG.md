@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
+
+
+### Bug Fixes
+
+* Build createContext should not be async, create separate file. ([67c03ec](https://github.com/lowdefy/lowdefy/commit/67c03ec345f0ef17cdb4197afe0cc87a532a636b))
+* **build:** defaultTypesMap to write a js file to dist. ([331284e](https://github.com/lowdefy/lowdefy/commit/331284e3dfc2e8e12f13991881688c7d1b4d2121))
+* **build:** Fix build tests. ([9ea612b](https://github.com/lowdefy/lowdefy/commit/9ea612b4e0ceb9785196cdf1451fb57512e059e4))
+* **build:** Fix buildAuth tests. ([0882416](https://github.com/lowdefy/lowdefy/commit/0882416d6fa9a9637ec8870180a022a2bb6dbd21))
+* **build:** Fix buildEvents tests. ([0dcb927](https://github.com/lowdefy/lowdefy/commit/0dcb927c0b09de8e376c54a356a6db60660ba0d5))
+* **build:** remove unneccesary async await in build. ([6b974e6](https://github.com/lowdefy/lowdefy/commit/6b974e63fc79a3d1b87a478d83269ec8e8121ea0))
+* **build:** Restore buildRefs tests after jest update fixes es modules. ([a684273](https://github.com/lowdefy/lowdefy/commit/a6842739f87b6e427a038d41ac5ec87016063e1e))
+* **build:** Throw during build if events are not arrays. ([c0c3971](https://github.com/lowdefy/lowdefy/commit/c0c39712687ca7c4c207d46a27c746e1298b2367))
+* Fix auth errors if auth is not configured. ([8a386a8](https://github.com/lowdefy/lowdefy/commit/8a386a867ca92f313b74f785477a48cd7c9a1679))
+* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
+* Use createRequire to import json files. ([a9c7ec4](https://github.com/lowdefy/lowdefy/commit/a9c7ec4eae0cf65dd42403fb405e65e13b9eca62))
+
+
+### Features
+
+* Add version property to Lowdefy schema. ([04ff15f](https://github.com/lowdefy/lowdefy/commit/04ff15f89e404c88e204085a7a2552e5cb93b2a5))
+* Export buildTestPage, add tests. ([bc9f16c](https://github.com/lowdefy/lowdefy/commit/bc9f16c2efdfc12d047b592a7bbed341d4bd6551))
+* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+
+
+
+
+
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 

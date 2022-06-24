@@ -30,6 +30,7 @@ module.exports = withLess({
   // experimental: {
   //   concurrentFeatures: true,
   // },
+  outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,
   },

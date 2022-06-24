@@ -39,17 +39,19 @@ const context = {
         configured: false,
       },
       _internal: {
-        window: {
-          location: {
-            hash: 'window.location.hash',
-            host: 'window.location.host',
-            hostname: 'window.location.hostname',
-            href: 'window.location.href',
-            origin: 'window.location.origin',
-            pathname: 'window.location.pathname',
-            port: 'window.location.port',
-            protocol: 'window.location.protocol',
-            search: 'window.location.search',
+        globals: {
+          window: {
+            location: {
+              hash: 'window.location.hash',
+              host: 'window.location.host',
+              hostname: 'window.location.hostname',
+              href: 'window.location.href',
+              origin: 'window.location.origin',
+              pathname: 'window.location.pathname',
+              port: 'window.location.port',
+              protocol: 'window.location.protocol',
+              search: 'window.location.search',
+            },
           },
         },
       },
@@ -137,6 +139,21 @@ test('operator returns value', () => {
               "eventLog": true,
             },
           ],
+          "globals": Object {
+            "window": Object {
+              "location": Object {
+                "hash": "window.location.hash",
+                "host": "window.location.host",
+                "hostname": "window.location.hostname",
+                "href": "window.location.href",
+                "origin": "window.location.origin",
+                "pathname": "window.location.pathname",
+                "port": "window.location.port",
+                "protocol": "window.location.protocol",
+                "search": "window.location.search",
+              },
+            },
+          },
           "home": Object {
             "configured": false,
             "pageId": "home.pageId",
@@ -175,17 +192,19 @@ test('operator returns value', () => {
               "_internal": Object {
                 "lowdefy": Object {
                   "_internal": Object {
-                    "window": Object {
-                      "location": Object {
-                        "hash": "window.location.hash",
-                        "host": "window.location.host",
-                        "hostname": "window.location.hostname",
-                        "href": "window.location.href",
-                        "origin": "window.location.origin",
-                        "pathname": "window.location.pathname",
-                        "port": "window.location.port",
-                        "protocol": "window.location.protocol",
-                        "search": "window.location.search",
+                    "globals": Object {
+                      "window": Object {
+                        "location": Object {
+                          "hash": "window.location.hash",
+                          "host": "window.location.host",
+                          "hostname": "window.location.hostname",
+                          "href": "window.location.href",
+                          "origin": "window.location.origin",
+                          "pathname": "window.location.pathname",
+                          "port": "window.location.port",
+                          "protocol": "window.location.protocol",
+                          "search": "window.location.search",
+                        },
                       },
                     },
                   },
@@ -248,6 +267,7 @@ test('operator returns value', () => {
               "requests": true,
             },
           ],
+          "runtime": "browser",
           "state": Object {
             "state": true,
           },
@@ -256,19 +276,6 @@ test('operator returns value', () => {
           },
           "user": Object {
             "user": true,
-          },
-          "window": Object {
-            "location": Object {
-              "hash": "window.location.hash",
-              "host": "window.location.host",
-              "hostname": "window.location.hostname",
-              "href": "window.location.href",
-              "origin": "window.location.origin",
-              "pathname": "window.location.pathname",
-              "port": "window.location.port",
-              "protocol": "window.location.protocol",
-              "search": "window.location.search",
-            },
           },
         },
       ],

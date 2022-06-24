@@ -14,27 +14,14 @@
   limitations under the License.
 */
 
-import createEventPlugins from './createEventPlugins.js';
-
-function createSessionEvent(context, { authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
-  });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
+async function Fetch({ globals, params }) {
+  const { fetch } = globals;
+  const { url, options, responseFunction } = params;
+  const res = await fetch(url, options);
+  if (responseFunction) {
+    return res[responseFunction]();
   }
-  return sessionEvent;
+  return res;
 }
 
-export default createSessionEvent;
+export default Fetch;

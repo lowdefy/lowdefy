@@ -14,27 +14,10 @@
   limitations under the License.
 */
 
-import createEventPlugins from './createEventPlugins.js';
-
-function createSessionEvent(context, { authConfig, plugins }) {
-  const sessionPlugins = createEventPlugins({
-    authConfig,
-    plugins,
-    type: 'session',
+function addUserFieldsToSession(context, { session, token, authConfig }) {
+  Object.keys(authConfig.userFields).forEach((fieldName) => {
+    session.user[fieldName] = token[fieldName];
   });
-
-  if (sessionPlugins.length === 0) return undefined;
-
-  async function sessionEvent({ session, token }) {
-    for (const plugin of sessionPlugins) {
-      await plugin.fn({
-        properties: plugin.properties ?? {},
-        session,
-        token,
-      });
-    }
-  }
-  return sessionEvent;
 }
 
-export default createSessionEvent;
+export default addUserFieldsToSession;

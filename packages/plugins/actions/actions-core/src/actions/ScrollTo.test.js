@@ -34,14 +34,16 @@ const window = {
   scrollTo: mockWindowScrollTo,
 };
 
+const globals = { document, window };
+
 test('ScrollTo with no params', async () => {
-  expect(() => ScrollTo({ document, window })).toThrow(
+  expect(() => ScrollTo({ globals })).toThrow(
     'Invalid ScrollTo, check action params. Received "undefined".'
   );
 });
 
 test('ScrollTo with no blockId', async () => {
-  ScrollTo({ document, window, params: { behavior: 'smooth', top: 0 } });
+  ScrollTo({ globals, params: { behavior: 'smooth', top: 0 } });
   expect(mockWindowScrollTo.mock.calls).toEqual([
     [
       {
@@ -56,7 +58,7 @@ test('ScrollTo with blockId', async () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  ScrollTo({ document, window, params: { blockId: 'blockId' } });
+  ScrollTo({ globals, params: { blockId: 'blockId' } });
   expect(mockDocGetElementById.mock.calls).toEqual([['blockId']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([[undefined]]);
 });
@@ -65,7 +67,7 @@ test('ScrollTo with blockId and options', async () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  ScrollTo({ document, window, params: { blockId: 'blockId', options: { behavior: 'smooth' } } });
+  ScrollTo({ globals, params: { blockId: 'blockId', options: { behavior: 'smooth' } } });
   expect(mockDocGetElementById.mock.calls).toEqual([['blockId']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([[{ behavior: 'smooth' }]]);
 });
@@ -74,7 +76,7 @@ test('ScrollTo with blockId, block not found', async () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
-  ScrollTo({ document, window, params: { blockId: 'not_there' } });
+  ScrollTo({ globals, params: { blockId: 'not_there' } });
   expect(mockDocGetElementById.mock.calls).toEqual([['not_there']]);
   expect(mockElemScrollIntoView.mock.calls).toEqual([]);
   expect(mockWindowScrollTo.mock.calls).toEqual([]);
