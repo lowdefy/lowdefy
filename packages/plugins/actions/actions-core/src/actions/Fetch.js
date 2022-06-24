@@ -14,25 +14,14 @@
   limitations under the License.
 */
 
-import request from './request.js';
-
-const MAX_COUNT = 1200; // 10 mins
-
-function waitForRestartedServer(basePath) {
-  let count = 0;
-  setTimeout(async () => {
-    try {
-      await request({
-        url: `${basePath}/api/ping`,
-      });
-      window.location.reload();
-    } catch (error) {
-      count += 1;
-      if (count <= MAX_COUNT) {
-        waitForRestartedServer(basePath);
-      }
-    }
-  }, 500); // TODO: this ping should be shorter than rerender delay until we can pass a rebuild flag to reload.
+async function Fetch({ globals, params }) {
+  const { fetch } = globals;
+  const { url, options, responseFunction } = params;
+  const res = await fetch(url, options);
+  if (responseFunction) {
+    return res[responseFunction]();
+  }
+  return res;
 }
 
-export default waitForRestartedServer;
+export default Fetch;

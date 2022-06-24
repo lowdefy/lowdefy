@@ -130,6 +130,7 @@ test('operator returns value', () => {
           "payload": Object {
             "payload": true,
           },
+          "runtime": "node",
           "secrets": Object {
             "secrets": true,
           },

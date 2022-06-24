@@ -60,6 +60,7 @@ class NodeParser {
           operatorPrefix,
           parser: this,
           payload: this.payload,
+          runtime: 'node',
           secrets: this.secrets,
           user: this.user,
         });

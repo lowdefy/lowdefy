@@ -34,6 +34,8 @@ const window = {
   },
 };
 
+const globals = { window };
+
 const input = {
   arrayIndices: [0],
   basePath: 'base',
@@ -48,7 +50,7 @@ const input = {
 
 test('location calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
-  location({ ...input, window });
+  location({ ...input, globals });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
@@ -76,19 +78,19 @@ test('location calls getFromObject', async () => {
 });
 
 test('_location throw on no window', () => {
-  expect(() => location(input)).toThrow(
+  expect(() => location({ ...input, globals: {} })).toThrow(
     'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
   );
 });
 
 test('_location throw on no location', () => {
-  expect(() => location({ ...input, window: {} })).toThrow(
+  expect(() => location({ ...input, globals: { window: {} } })).toThrow(
     'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
   );
 });
 
 test('_location throw invalid param', () => {
-  expect(() => location({ ...input, window, params: 'invalid' })).toThrow(
+  expect(() => location({ ...input, globals, params: 'invalid' })).toThrow(
     'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "invalid" at location.'
   );
 });

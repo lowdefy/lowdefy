@@ -81,6 +81,7 @@ async function run() {
     const serverPromise = startServer(context);
     await wait(800);
     if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+      // TODO: Wait 1 sec for a ping and don't open if a ping is seen
       opener(`http://localhost:${context.options.port}`);
     }
     await serverPromise;
