@@ -17,6 +17,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { type } from '@lowdefy/helpers';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -31,31 +32,30 @@ const MAP_DEFAULTS = {
   },
 };
 
-const artifacts = {};
+const getFitBounds = (bounds, map) => (args) => {
+  if (!bounds || !map) {
+    throw new Error('fitBounds can only be called once google maps has been mounted.');
+  }
+  (args?.bounds ?? []).map((position) => {
+    bounds.extend(position);
+  });
+  map.fitBounds(bounds);
+  if (args.zoom) {
+    map.setZoom(args.zoom);
+  }
+};
 
 // Implements https://react-google-maps-api-docs.netlify.app/#googlemap
 const Map = ({ blockId, children, content, methods, properties }) => {
-  const [loaded, setLoaded] = useState(false);
+  const [map, setMap] = useState();
+  const [bounds, setBounds] = useState();
 
   useEffect(() => {
-    methods.registerMethod('fitBounds', (args) => {
-      const { bounds, map } = artifacts;
-      if (!bounds || !map) {
-        throw new Error('fitBounds can only be called once google maps has been mounted.');
-      }
-      (args?.bounds ?? []).map((position) => {
-        bounds.extend(position);
-      });
-      map.fitBounds(bounds);
-      if (args.zoom) {
-        map.setZoom(args.zoom);
-      }
-    });
-  }, []);
+    methods.registerMethod('fitBounds', getFitBounds(bounds, map));
+  }, [bounds, map]);
 
   // by default, fit infoWindow and markers to bounds
-  if (properties.autoBounds !== false && loaded) {
-    const { bounds, map } = artifacts;
+  if (properties.autoBounds !== false && bounds && map) {
     if (properties.infoWindow) {
       bounds.extend(properties.infoWindow.position ?? MAP_DEFAULTS.center);
     }
@@ -75,13 +75,14 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       center={properties.map?.center ?? MAP_DEFAULTS.center}
       zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
       onLoad={(map, event) => {
-        artifacts.map = map;
-        artifacts.bounds = new window.google.maps.LatLngBounds();
+        const bounds = new window.google.maps.LatLngBounds();
+        setMap(map);
+        setBounds(bounds);
+        methods.registerMethod('fitBounds', getFitBounds(bounds, map));
         methods.triggerEvent({
           name: 'onLoad',
           event,
         });
-        setLoaded(true);
       }}
       onClick={(event) => {
         methods.triggerEvent({
@@ -125,7 +126,7 @@ const Map = ({ blockId, children, content, methods, properties }) => {
           {content.infoWindow && content.infoWindow()}
         </InfoWindow>
       )}
-      {children && children(artifacts)}
+      {children && children(map, bounds)}
     </GoogleMap>
   );
 };
