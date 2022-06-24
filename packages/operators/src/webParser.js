@@ -68,6 +68,7 @@ class WebParser {
           params: value[key],
           parser: this,
           requests: this.context.requests,
+          runtime: 'browser',
           state: this.context.state,
           urlQuery: urlQuery ?? {},
           user: user ?? {},
