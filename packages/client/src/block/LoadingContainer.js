@@ -20,7 +20,16 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingBlock from './LoadingBlock.js';
 
-const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skeleton }) => {
+const LoadingContainer = ({
+  blockId,
+  blockLayout,
+  blockProperties,
+  blockStyle,
+  Component,
+  context,
+  lowdefy,
+  skeleton,
+}) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
   Object.keys(skeleton.areas).forEach((areaKey, i) => {
@@ -29,7 +38,7 @@ const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skelet
         area={layoutParamsToArea({
           area: skeleton.areas[areaKey] || {},
           areaKey,
-          layout,
+          layout: skeleton.layout ?? blockLayout,
         })}
         areaStyle={[areaStyle, skeleton.areas[areaKey] && skeleton.areas[areaKey].style]}
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
@@ -51,10 +60,10 @@ const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skelet
   });
   return (
     <BlockLayout
-      blockStyle={skeleton.style}
+      blockStyle={skeleton.style ?? blockStyle}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       id={`s-bl-${blockId}-${skeleton.id}`}
-      layout={layout}
+      layout={skeleton.layout ?? blockLayout}
       makeCssClass={makeCssClass}
     >
       <Component
@@ -66,7 +75,7 @@ const LoadingContainer = ({ blockId, Component, context, layout, lowdefy, skelet
         menus={lowdefy.menus}
         methods={{ makeCssClass }}
         pageId={lowdefy.pageId}
-        properties={skeleton.properties}
+        properties={skeleton.properties ?? blockProperties}
       />
     </BlockLayout>
   );
