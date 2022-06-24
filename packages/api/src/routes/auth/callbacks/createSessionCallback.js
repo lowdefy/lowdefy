@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import addUserFieldsToSession from './addUserFieldsToSession.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createSessionCallback({ authConfig, plugins }) {
+function createSessionCallback(context, { authConfig, plugins }) {
   const sessionCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,
@@ -70,6 +71,9 @@ function createSessionCallback({ authConfig, plugins }) {
         updated_at,
         ...session.user,
       };
+      if (authConfig.userFields) {
+        addUserFieldsToSession(context, { authConfig, session, token });
+      }
     }
 
     for (const plugin of sessionCallbackPlugins) {
