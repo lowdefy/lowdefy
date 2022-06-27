@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
+
+
+### Bug Fixes
+
+* **build:** Add default dependancies. ([7d0e03a](https://github.com/lowdefy/lowdefy/commit/7d0e03a87b83991d6bc4d52ae8b524344db07635))
+* **build:** Add new plugins as dev dependencies. ([145e598](https://github.com/lowdefy/lowdefy/commit/145e5989139c95acae4029e0a95b1de552457d46))
+* **build:** Evaluate build operators in lowdefy.yaml ([49ed3e1](https://github.com/lowdefy/lowdefy/commit/49ed3e14fd7453cd246324d1b791e902dc5a3c8f))
+* **build:** Evaluate build operators in lowdefy.yaml root. ([c340b52](https://github.com/lowdefy/lowdefy/commit/c340b5237f15b7673425f086944211238a16904b))
+
+
+### Features
+
+* Add userFields feature to map auth provider data to usernobject. ([0ab688b](https://github.com/lowdefy/lowdefy/commit/0ab688b7f2c153cd904160a28c91c0581b6e1e07))
+* **build:** Add aggrid and maps as default block types. ([fbc3818](https://github.com/lowdefy/lowdefy/commit/fbc38185ea385fcfde1f35cfe2d4cfb3d2732388))
+
+
+
+
+
 # [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
 
 **Note:** Version bump only for package @lowdefy/build

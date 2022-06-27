@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
+
+
+### Bug Fixes
+
+* Fix nunjucks operator shorthand en operators runtime definition. ([e2c3291](https://github.com/lowdefy/lowdefy/commit/e2c329199295baba108796f19a9d13a8b39008b5))
+
+
+
+
+
 # [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
 
 **Note:** Version bump only for package @lowdefy/operators-nunjucks
