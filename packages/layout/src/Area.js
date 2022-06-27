@@ -20,7 +20,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import gutterSetup from './gutterSetup.js';
 
-const Area = ({ area, areaStyle, children, highlightBorders, id, makeCssClass }) => (
+const Area = ({ area = {}, areaStyle, children, highlightBorders, id, makeCssClass }) => (
   <Row
     id={id}
     align={area.align}
