@@ -30,11 +30,11 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
           id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           area={layoutParamsToArea({
-            area: block.eval.areas[areaKey] || {},
+            area: block.eval.areas[areaKey],
             areaKey,
-            layout: block.eval.layout || {},
+            layout: block.eval.layout,
           })}
-          areaStyle={[areaStyle, block.eval.areas[areaKey] && block.eval.areas[areaKey].style]}
+          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
           highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           makeCssClass={makeCssClass}
         >
@@ -58,7 +58,7 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
-      layout={block.eval.layout || {}}
+      layout={block.eval.layout}
       makeCssClass={makeCssClass}
     >
       <Component
