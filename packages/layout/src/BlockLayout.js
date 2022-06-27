@@ -32,8 +32,8 @@ const alignSelf = (align) => {
   return align;
 };
 
-const BlockLayout = ({ id, blockStyle, children, highlightBorders, layout, makeCssClass }) => {
-  if (layout && layout.disabled) {
+const BlockLayout = ({ id, blockStyle, children, highlightBorders, layout = {}, makeCssClass }) => {
+  if (layout.disabled) {
     return (
       <div id={id} className={makeCssClass(blockStyle)}>
         {children}
