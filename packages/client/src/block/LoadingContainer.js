@@ -36,7 +36,7 @@ const LoadingContainer = ({
     content[areaKey] = (areaStyle) => (
       <Area
         area={layoutParamsToArea({
-          area: skeleton.areas[areaKey] || {},
+          area: skeleton.areas[areaKey],
           areaKey,
           layout: skeleton.layout ?? blockLayout,
         })}

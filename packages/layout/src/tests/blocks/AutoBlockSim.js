@@ -15,7 +15,6 @@
 */
 
 import React from 'react';
-import { type } from '@lowdefy/helpers';
 import { Area, BlockLayout, layoutParamsToArea } from '../../../src/index.js';
 
 import Block from './Block.js';
@@ -69,11 +68,11 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
         content[areaKey] = (areaStyle) => (
           <Area
             area={layoutParamsToArea({
-              area: areas[areaKey] || {},
+              area: areas[areaKey],
               areaKey,
-              layout: block.layout || {},
+              layout: block.layout,
             })}
-            areaStyle={[areaStyle, type.isObject(areas[areaKey]) ? areas[areaKey].style : {}]}
+            areaStyle={[areaStyle, areas[areaKey]?.style]}
             highlightBorders={highlightBorders}
             id={`${block.id}-${areaKey}` + randomId()}
             key={`${block.id}-${areaKey}`}
@@ -115,7 +114,7 @@ const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
       <BlockLayout
         id={`bl-${block.id}` + randomId()}
         highlightBorders={highlightBorders}
-        layout={block.layout || {}}
+        layout={block.layout}
         blockStyle={block.style}
         makeCssClass={makeCssClass}
       >

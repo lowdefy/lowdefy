@@ -24,7 +24,7 @@ module.exports = withLess({
     }
     return config;
   },
-  swcMinify: true,
+  swcMinify: false,
   compress: false,
   outputFileTracing: false,
   poweredByHeader: false,

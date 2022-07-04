@@ -30,11 +30,11 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         id={`ar-${block.blockId}-${areaKey}`}
         key={`ar-${block.blockId}-${areaKey}-${i}`}
         area={layoutParamsToArea({
-          area: block.eval.areas[areaKey] || {},
+          area: block.eval.areas[areaKey],
           areaKey,
-          layout: block.eval.layout || {},
+          layout: block.eval.layout,
         })}
-        areaStyle={[areaStyle, block.eval.areas[areaKey] && block.eval.areas[areaKey].style]}
+        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         makeCssClass={makeCssClass}
       >
@@ -56,7 +56,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
       highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
-      layout={block.eval.layout || {}}
+      layout={block.eval.layout}
       makeCssClass={makeCssClass}
     >
       <Component

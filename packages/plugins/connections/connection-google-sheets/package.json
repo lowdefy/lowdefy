@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-google-sheets",
-  "version": "4.0.0-alpha.17",
+  "version": "4.0.0-alpha.18",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,13 +42,13 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.17",
+    "@lowdefy/helpers": "4.0.0-alpha.18",
     "google-spreadsheet": "3.3.0",
     "mingo": "6.0.6",
     "moment": "2.29.3"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.17",
+    "@lowdefy/ajv": "4.0.0-alpha.18",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-const layoutParamsToArea = ({ areaKey, area, layout }) => {
+const layoutParamsToArea = ({ areaKey, area = {}, layout = {} }) => {
   if (areaKey !== 'content') {
     return area;
   }
