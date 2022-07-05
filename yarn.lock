@@ -2224,6 +2224,7 @@ __metadata:
     "@emotion/jest": 11.9.1
     "@lowdefy/block-dev": 4.0.0-alpha.17
     "@lowdefy/block-utils": 4.0.0-alpha.17
+    "@lowdefy/helpers": 4.0.0-alpha.17
     "@lowdefy/jest-yaml-transform": 4.0.0-alpha.17
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2923,6 +2924,7 @@ __metadata:
   dependencies:
     "@lowdefy/actions-core": 4.0.0-alpha.17
     "@lowdefy/api": 4.0.0-alpha.17
+    "@lowdefy/blocks-aggrid": 4.0.0-alpha.17
     "@lowdefy/blocks-antd": 4.0.0-alpha.17
     "@lowdefy/blocks-basic": 4.0.0-alpha.17
     "@lowdefy/blocks-color-selectors": 4.0.0-alpha.17

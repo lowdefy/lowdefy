@@ -41,6 +41,7 @@
   "dependencies": {
     "@lowdefy/actions-core": "4.0.0-alpha.17",
     "@lowdefy/api": "4.0.0-alpha.17",
+    "@lowdefy/blocks-aggrid": "4.0.0-alpha.17",
     "@lowdefy/blocks-antd": "4.0.0-alpha.17",
     "@lowdefy/blocks-basic": "4.0.0-alpha.17",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.17",

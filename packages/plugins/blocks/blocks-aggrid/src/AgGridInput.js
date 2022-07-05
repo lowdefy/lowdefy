@@ -18,6 +18,8 @@ import React from 'react';
 
 import { AgGridReact } from '@ag-grid-community/react';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
+import { renderHtml } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
 class AgGridInput extends React.Component {
   constructor(props) {
@@ -170,10 +172,24 @@ class AgGridInput extends React.Component {
   }
 
   render() {
-    const { quickFilterValue, ...someProperties } = this.props.properties;
+    const { quickFilterValue, columnDefs, ...someProperties } = this.props.properties;
     if (quickFilterValue && quickFilterValue === '') {
       this.gridApi.setQuickFilter(quickFilterValue); // check if empty string matches all
     }
+    const newColDefs = (columnDefs || []).map((col) => {
+      if (type.isFunction(col.cellRenderer)) {
+        return {
+          ...col,
+          cellRenderer: (params) => {
+            return renderHtml({
+              html: col.cellRenderer(params),
+              methods: this.props.methods,
+            });
+          },
+        };
+      }
+      return col;
+    });
     return (
       <AgGridReact
         onSelectionChanged={this.onSelectionChanged}
@@ -185,6 +201,7 @@ class AgGridInput extends React.Component {
         onCellValueChanged={this.onCellValueChanged}
         postSort={this.postSort}
         modules={AllCommunityModules}
+        columnDefs={newColDefs}
         {...someProperties}
         rowData={this.props.value}
       />
