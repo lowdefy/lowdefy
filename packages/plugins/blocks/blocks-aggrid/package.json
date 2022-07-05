@@ -55,6 +55,7 @@
     "@ag-grid-community/core": "27.3.0",
     "@ag-grid-community/react": "27.3.0",
     "@lowdefy/block-utils": "4.0.0-alpha.18",
+    "@lowdefy/helpers": "4.0.0-alpha.18",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
