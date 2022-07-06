@@ -71,8 +71,11 @@ function createJWTCallback(context, { authConfig, plugins }) {
         updated_at,
         ...token,
       };
+    }
+
+    if (profile || user) {
       if (authConfig.userFields) {
-        addUserFieldsToToken(context, { authConfig, account, profile, token });
+        addUserFieldsToToken(context, { authConfig, account, profile, token, user });
       }
     }
 

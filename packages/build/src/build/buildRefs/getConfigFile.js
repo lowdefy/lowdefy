@@ -25,7 +25,7 @@ async function getConfigFile({ context, refDef, referencedFrom }) {
     );
   }
 
-  const content = context.readConfigFile(refDef.path);
+  const content = await context.readConfigFile(refDef.path);
 
   if (content === null) {
     throw new Error(
