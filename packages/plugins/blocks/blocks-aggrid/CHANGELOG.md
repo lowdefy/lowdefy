@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
+
+
+### Bug Fixes
+
+* Allow cellRenderer in Aggrid to render html. ([811ef4f](https://github.com/lowdefy/lowdefy/commit/811ef4f28092155172a4e7f8485fb93847453ac4))
+
+
+
+
+
 # [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
 
 

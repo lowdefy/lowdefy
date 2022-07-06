@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
+
+
+### Bug Fixes
+
+* Allow cellRenderer in Aggrid to render html. ([811ef4f](https://github.com/lowdefy/lowdefy/commit/811ef4f28092155172a4e7f8485fb93847453ac4))
+* Await content on buildRef to fix ref error message. ([10379b1](https://github.com/lowdefy/lowdefy/commit/10379b15194e8f2f890b1507bb5bdf55beb04aaf))
+* **build:** Add test for file not found to buildRefs. ([d45c28e](https://github.com/lowdefy/lowdefy/commit/d45c28e3e44f026073be64ff80335c116aa1488d))
+* Fix axios failing tests. ([ca64872](https://github.com/lowdefy/lowdefy/commit/ca64872a130c2b8f5d0798f7489b39c99143d329))
+* Menu selected item issue. ([ac266ec](https://github.com/lowdefy/lowdefy/commit/ac266ece5d7658a3e5e9c212f49b897a30dd278e))
+
+
+### Features
+
+* Add extra next-auth configuration properties. ([9781ba4](https://github.com/lowdefy/lowdefy/commit/9781ba46620eb0ddaa11d7d41eb0d8f518999784))
+
+
+
+
+
 # [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
 
 

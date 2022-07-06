@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
+
+
+### Bug Fixes
+
+* Fix axios failing tests. ([ca64872](https://github.com/lowdefy/lowdefy/commit/ca64872a130c2b8f5d0798f7489b39c99143d329))
+
+
+
+
+
 # [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
 
 

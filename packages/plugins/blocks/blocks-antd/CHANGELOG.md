@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
+
+
+### Bug Fixes
+
+* Menu selected item issue. ([ac266ec](https://github.com/lowdefy/lowdefy/commit/ac266ece5d7658a3e5e9c212f49b897a30dd278e))
+
+
+
+
+
 # [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
 
 
