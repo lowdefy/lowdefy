@@ -3918,7 +3918,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/server-dev", "workspace:packages/server-dev"],\
             ["@lowdefy/actions-core", "workspace:packages/plugins/actions/actions-core"],\
             ["@lowdefy/api", "workspace:packages/api"],\
-            ["@lowdefy/blocks-aggrid", "workspace:packages/plugins/blocks/blocks-aggrid"],\
             ["@lowdefy/blocks-antd", "workspace:packages/plugins/blocks/blocks-antd"],\
             ["@lowdefy/blocks-basic", "workspace:packages/plugins/blocks/blocks-basic"],\
             ["@lowdefy/blocks-color-selectors", "workspace:packages/plugins/blocks/blocks-color-selectors"],\
