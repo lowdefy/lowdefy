@@ -72,6 +72,14 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
+        advanced: {
+          type: 'object',
+          properties: {
+            cookies: {
+              type: 'object',
+            },
+          },
+        },
         callbacks: {
           type: 'array',
           items: {
