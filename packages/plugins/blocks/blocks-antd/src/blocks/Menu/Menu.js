@@ -22,12 +22,12 @@ import { type, get } from '@lowdefy/helpers';
 const getDefaultMenu = (menus, menuId = 'default', links) => {
   if (type.isArray(links)) return links;
   if (!type.isArray(menus)) return [];
-  const menu = menus.find((item) => item.menuId === menuId) || menus[0] || {};
-  return menu.links || [];
+  const menu = menus.find((item) => item.menuId === menuId) ?? menus[0] ?? {};
+  return menu.links ?? [];
 };
 
 const getTitle = ({ id, properties, pageId, url }) =>
-  (properties && properties.title) || pageId || url || id;
+  (properties && properties.title) ?? pageId ?? url ?? id;
 
 const MenuComp = ({
   blockId,
@@ -50,8 +50,7 @@ const MenuComp = ({
     exProps.inlineIndent = properties.inlineIndent;
   }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);
-  const theme = properties.theme || 'dark';
-
+  const theme = properties.theme ?? 'dark';
   return (
     <Menu
       id={blockId}
@@ -70,7 +69,7 @@ const MenuComp = ({
       theme={theme}
       className={methods.makeCssClass([styles, properties.style])}
       defaultOpenKeys={
-        properties.defaultOpenKeys ||
+        properties.defaultOpenKeys ??
         (properties.mode === 'inline' &&
           properties.collapsed !== true && [
             (
@@ -82,13 +81,13 @@ const MenuComp = ({
                       : [subLink.pageId]
                   )
                   .flat()
-                  .some((link) => (properties.selectedKeys || [pageId]).indexOf(link) !== -1)
-              ) || {}
+                  .some((link) => (properties.selectedKeys ?? [pageId]).indexOf(link) !== -1)
+              ) ?? {}
             ).id,
-          ]) ||
+          ]) ??
         []
       }
-      selectedKeys={properties.selectedKeys || [pageId]}
+      selectedKeys={properties.selectedKeys ?? [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
       onSelect={(item) =>
@@ -116,7 +115,7 @@ const MenuComp = ({
           case 'MenuDivider':
             return (
               <Menu.Divider
-                key={`${link.id}_${i}`}
+                key={link.id}
                 className={methods.makeCssClass([link.style])}
                 dashed={link.properties && link.properties.dashed}
               />
@@ -124,10 +123,10 @@ const MenuComp = ({
           case 'MenuGroup':
             return (
               <Menu.SubMenu
-                key={`${link.pageId || link.id}_${i}`}
+                key={link.pageId ?? link.id}
                 title={
                   <Link
-                    id={link.pageId || link.id || i}
+                    id={link.pageId ?? link.id ?? i}
                     className={methods.makeCssClass(link.style, true)}
                     {...link}
                   >
@@ -150,7 +149,7 @@ const MenuComp = ({
                     case 'MenuDivider':
                       return (
                         <Menu.Divider
-                          key={`${subLink.id || i}_${j}`}
+                          key={subLink.id ?? j}
                           className={methods.makeCssClass([subLink.style])}
                           dashed={subLink.properties && subLink.properties.dashed}
                         />
@@ -158,10 +157,10 @@ const MenuComp = ({
                     case 'MenuGroup':
                       return (
                         <Menu.ItemGroup
-                          key={`${subLink.pageId || subLink.id}_${j}`}
+                          key={subLink.pageId ?? subLink.id}
                           title={
                             <Link
-                              id={subLink.pageId || subLink.id || j}
+                              id={subLink.pageId ?? subLink.id ?? j}
                               className={methods.makeCssClass(subLink.style, true)}
                               {...subLink}
                             >
@@ -181,7 +180,7 @@ const MenuComp = ({
                             }
                             return (
                               <Menu.Item
-                                key={`${subLinkGroup.pageId || subLinkGroup.id}_${k}`}
+                                key={subLinkGroup.pageId ?? subLinkGroup.id}
                                 danger={get(subLinkGroup, 'properties.danger')}
                                 icon={
                                   subLinkGroup.properties &&
@@ -195,7 +194,7 @@ const MenuComp = ({
                                 }
                               >
                                 <Link
-                                  id={subLinkGroup.pageId || subLinkGroup.id || k}
+                                  id={subLinkGroup.pageId ?? subLinkGroup.id ?? k}
                                   className={methods.makeCssClass(subLinkGroup.style, true)}
                                   {...subLinkGroup}
                                 >
@@ -210,7 +209,7 @@ const MenuComp = ({
                     default:
                       return (
                         <Menu.Item
-                          key={`${subLink.pageId || subLink.id}_${j}`}
+                          key={subLink.pageId ?? subLink.id}
                           danger={get(subLink, 'properties.danger')}
                           icon={
                             subLink.properties &&
@@ -224,7 +223,7 @@ const MenuComp = ({
                           }
                         >
                           <Link
-                            id={subLink.pageId || subLink.id || j}
+                            id={subLink.pageId ?? subLink.id ?? j}
                             className={methods.makeCssClass(subLink.style, true)}
                             {...subLink}
                           >
@@ -240,7 +239,7 @@ const MenuComp = ({
           default:
             return (
               <Menu.Item
-                key={`${link.pageId || link.id}_${i}`}
+                key={link.pageId ?? link.id}
                 danger={get(link, 'properties.danger')}
                 icon={
                   link.properties &&
@@ -254,7 +253,7 @@ const MenuComp = ({
                 }
               >
                 <Link
-                  id={link.pageId || link.id || i}
+                  id={link.pageId ?? link.id ?? i}
                   className={methods.makeCssClass(link.style, true)}
                   {...link}
                 >
