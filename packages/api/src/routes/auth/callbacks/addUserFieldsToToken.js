@@ -15,9 +15,9 @@
 */
 import { get } from '@lowdefy/helpers';
 
-function addUserFieldsToToken(context, { account, authConfig, profile, token }) {
+function addUserFieldsToToken(context, { account, authConfig, profile, token, user }) {
   // const { debug } = context.logger;
-  const objects = { account, profile };
+  const objects = { account, profile, user };
   // TODO: Add when debug is fixed.
   // debug('Adding userFields to user. Available provider data is:');
   // debug(objects);
