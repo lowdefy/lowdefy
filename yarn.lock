@@ -2914,7 +2914,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    next-auth: 4.5.0
+    next-auth: 4.9.0
   languageName: unknown
   linkType: soft
 
@@ -2951,7 +2951,7 @@ __metadata:
     less: 4.1.2
     less-loader: 11.0.0
     next: 12.1.6
-    next-auth: 4.5.0
+    next-auth: 4.9.0
     next-with-less: 2.0.5
     opener: 1.5.2
     process: 0.11.10
@@ -2984,7 +2984,7 @@ __metadata:
     less: 4.1.2
     less-loader: 11.0.0
     next: 12.1.6
-    next-auth: 4.5.0
+    next-auth: 4.9.0
     next-with-less: 2.0.5
     process: 0.11.10
     react: 18.1.0
@@ -11575,9 +11575,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:4.5.0":
-  version: 4.5.0
-  resolution: "next-auth@npm:4.5.0"
+"next-auth@npm:4.9.0":
+  version: 4.9.0
+  resolution: "next-auth@npm:4.9.0"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -11595,7 +11595,7 @@ __metadata:
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: b27a3337d0e89571d27c782661ef3abcfab1344885290c92e253efd22af4acad4a6a676db74466ea5fe57cfc012407a4cb4a660069a208c1ca6bc47cf172a1c8
+  checksum: 7f776f0a8db26bb19c4fd2b916e38fc27b1e046cc173541d7c398605b3f538c898907ff09b3010a3610b9ddb31e25009056377e3ed33dee68930346ed6dd4eb9
   languageName: node
   linkType: hard
 
