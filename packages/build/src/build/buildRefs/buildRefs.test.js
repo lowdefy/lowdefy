@@ -230,6 +230,21 @@ invalid:
   );
 });
 
+test('buildRefs for file not found', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+invalid:
+  _ref: no_file.yaml`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow(
+    'Tried to reference file "no_file.yaml" from "lowdefy.yaml", but file does not exist.'
+  );
+});
+
 describe('Parse ref content', () => {
   test('buildRefs nunjucks text file', async () => {
     const files = [
