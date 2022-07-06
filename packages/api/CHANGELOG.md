@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
+
+
+### Bug Fixes
+
+* **build:** Evaluate build operators in lowdefy.yaml ([49ed3e1](https://github.com/lowdefy/lowdefy/commit/49ed3e14fd7453cd246324d1b791e902dc5a3c8f))
+* Fix package.json fixes. ([17f54ac](https://github.com/lowdefy/lowdefy/commit/17f54aceafc749be7e513fdcad829cd3ad4673ac))
+* Fix userFields implementation. ([c566541](https://github.com/lowdefy/lowdefy/commit/c566541538749c27cdda32381c7255e3e37ae32e))
+* Remove userFields debug logs. ([8fad19f](https://github.com/lowdefy/lowdefy/commit/8fad19f28c4e4f39dc3135e0a3f1e2e2c8e4689c))
+
+
+### Features
+
+* Add userFields feature to map auth provider data to usernobject. ([0ab688b](https://github.com/lowdefy/lowdefy/commit/0ab688b7f2c153cd904160a28c91c0581b6e1e07))
+
+
+
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2022-06-19)
+
+
+
+
+
 # [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
 
 

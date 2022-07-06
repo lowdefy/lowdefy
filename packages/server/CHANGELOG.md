@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency next-auth to v4.5.0. ([49dd43a](https://github.com/lowdefy/lowdefy/commit/49dd43ae4249129d029fbd8d1135d00fb26a5b7a))
+* Fix userFields in production server. ([614d7c9](https://github.com/lowdefy/lowdefy/commit/614d7c915d20c12ad285336a8d6fd0c942c11c48))
+
+
+
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2022-06-19)
+
+
+### Bug Fixes
+
+* Configure server lowdefy build with commandline args instead of env from CLI ([648f050](https://github.com/lowdefy/lowdefy/commit/648f050377077ddd0e677250e7f9e7d422fdea36))
+
+
+
+
+
 # [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
 
 

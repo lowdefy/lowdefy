@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
+
+
+
+# [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
+
+
+### Bug Fixes
+
+* Configure server Lowdefy build with env variables, not args. ([590588c](https://github.com/lowdefy/lowdefy/commit/590588c125886655b9487c6dc4184a571533fe26))
+
+
+
+# [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2022-06-19)
+
+
+### Bug Fixes
+
+* Configure server lowdefy build with commandline args instead of env from CLI ([648f050](https://github.com/lowdefy/lowdefy/commit/648f050377077ddd0e677250e7f9e7d422fdea36))
+
+
+### Features
+
+* Add —no-next-build option to CLI build command. ([9b565f4](https://github.com/lowdefy/lowdefy/commit/9b565f4950f3087d54e9be3c0f768cba1d0651d1))
+
+
+
+
+
 # [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
 
 **Note:** Version bump only for package lowdefy
