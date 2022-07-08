@@ -45,6 +45,7 @@ const defaultPackages = [
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
+  '@lowdefy/plugin-aws',
   '@lowdefy/plugin-next-auth',
 ];
 

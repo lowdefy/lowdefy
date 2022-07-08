@@ -2459,6 +2459,7 @@ __metadata:
     "@lowdefy/operators-nunjucks": 4.0.0-alpha.19
     "@lowdefy/operators-uuid": 4.0.0-alpha.19
     "@lowdefy/operators-yaml": 4.0.0-alpha.19
+    "@lowdefy/plugin-aws": 4.0.0-alpha.19
     "@lowdefy/plugin-next-auth": 4.0.0-alpha.19
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2878,7 +2879,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws":
+"@lowdefy/plugin-aws@4.0.0-alpha.19, @lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws":
   version: 0.0.0-use.local
   resolution: "@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws"
   dependencies:

@@ -1,4 +1,3 @@
-/* eslint-disable import/namespace */
 /*
   Copyright 2020-2022 Lowdefy, Inc
 
@@ -15,21 +14,4 @@
   limitations under the License.
 */
 
-import * as blocks from './blocks.js';
-
-const icons = {};
-const styles = {};
-Object.keys(blocks).forEach((block) => {
-  icons[block] = blocks[block].meta.icons ?? [];
-  styles[block] = blocks[block].meta.styles ?? [];
-});
-export default {
-  blocks: Object.keys(blocks),
-  icons,
-  styles: { default: [], ...styles },
-};
-
-// export default {
-//   blocks: ['Anchor', 'Box', 'DangerousHtml', 'Html', 'Icon', 'Img', 'List', 'Span'],
-//   styles: { default: ['style.less'], Anchor: ['blocks/Anchor/style.less']  },
-// };
+export { default as S3UploadButton } from './blocks/S3UploadButton/S3UploadButton.js';
