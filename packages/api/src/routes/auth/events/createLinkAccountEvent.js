@@ -25,11 +25,12 @@ function createLinkAccountEvent(context, { authConfig, plugins }) {
 
   if (linkAccountPlugins.length === 0) return undefined;
 
-  async function linkAccountEvent({ account, user }) {
+  async function linkAccountEvent({ account, profile, user }) {
     for (const plugin of linkAccountPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},
         account,
+        profile,
         user,
       });
     }

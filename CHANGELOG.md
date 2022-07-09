@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2022-07-09)
+
+
+### Bug Fixes
+
+* **api:** Should be passing profile, not provider. ([02f9fe0](https://github.com/lowdefy/lowdefy/commit/02f9fe0d5e284fc7ce802a7bd9617ca7cb58f5ba))
+* **blocks-aggrid:** Rec fix cellRenderer. ([4bb03b1](https://github.com/lowdefy/lowdefy/commit/4bb03b133ad37cab4404c890caa3b30e2a7cb347))
+* **deps:** update dependency next-auth to v4.9.0 [security] ([7d07007](https://github.com/lowdefy/lowdefy/commit/7d070078ef171f308359f7cfd534d8a207f76956))
+
+
+### Features
+
+* **api:** Add provider to linkAccountEvent. ([a90f10b](https://github.com/lowdefy/lowdefy/commit/a90f10b68d2a291dcb98883fdf54c53ecbbd3a71))
+
+
+
+
+
 # [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
 
 

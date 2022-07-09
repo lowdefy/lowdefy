@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2022-07-09)
+
+
+### Bug Fixes
+
+* **blocks-aggrid:** Rec fix cellRenderer. ([4bb03b1](https://github.com/lowdefy/lowdefy/commit/4bb03b133ad37cab4404c890caa3b30e2a7cb347))
+
+
+
+
+
 # [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
 
 
