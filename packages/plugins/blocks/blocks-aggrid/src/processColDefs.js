@@ -17,17 +17,17 @@
 import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-function recProcessColDefs(columnDefs) {
+function recProcessColDefs(columnDefs, methods) {
   return columnDefs.map((col) => {
     const newColDef = {};
     if (type.isArray(col.children)) {
-      newColDef.children = recProcessColDefs(col.children);
+      newColDef.children = recProcessColDefs(col.children, methods);
     }
     if (type.isFunction(col.cellRenderer)) {
       newColDef.cellRenderer = (params) => {
         return renderHtml({
           html: col.cellRenderer(params),
-          methods: this.props.methods,
+          methods,
         });
       };
     }

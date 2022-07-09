@@ -186,7 +186,7 @@ class AgGridInput extends React.Component {
         onCellValueChanged={this.onCellValueChanged}
         postSort={this.postSort}
         modules={AllCommunityModules}
-        columnDefs={processColDefs(columnDefs)}
+        columnDefs={processColDefs(columnDefs, this.props.methods)}
         {...someProperties}
         rowData={this.props.value}
       />
