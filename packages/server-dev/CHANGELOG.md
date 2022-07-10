@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.20](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2022-07-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency next-auth to v4.9.0 [security] ([7d07007](https://github.com/lowdefy/lowdefy/commit/7d070078ef171f308359f7cfd534d8a207f76956))
+
+
+
+
+
 # [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
 
 **Note:** Version bump only for package @lowdefy/server-dev
