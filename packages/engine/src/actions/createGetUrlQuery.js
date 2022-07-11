@@ -15,13 +15,22 @@
 */
 
 import getFromObject from './getFromObject.js';
+import { urlQuery } from '@lowdefy/helpers';
 
 function createGetUrlQuery({ arrayIndices, blockId, context }) {
   return function getUrlQuery(params) {
+    const { window } = context._internal.lowdefy._internal.globals;
+    if (!window?.location) {
+      throw new Error(
+        `Browser window.location not available for getUrlQuery. Received: ${JSON.stringify(
+          params
+        )} on blockId: ${blockId}.`
+      );
+    }
     return getFromObject({
       arrayIndices,
       location: blockId,
-      object: context._internal.lowdefy.urlQuery,
+      object: urlQuery.parse(window.location.search.slice(1)),
       method: 'getUrlQuery',
       params,
     });

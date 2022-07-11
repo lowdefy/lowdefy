@@ -24,9 +24,9 @@ const lowdefy = {
         return getUrlQuery(params);
       },
     },
-  },
-  urlQuery: {
-    some: 'data',
+    globals: {
+      window: { location: { search: '?some=data' } },
+    },
   },
 };
 

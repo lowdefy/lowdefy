@@ -15,6 +15,8 @@
 */
 /* eslint-disable no-console */
 
+import { type } from '@lowdefy/helpers';
+
 class BatchChanges {
   constructor({ fn, minDelay }) {
     this._call = this._call.bind(this);
@@ -27,7 +29,7 @@ class BatchChanges {
   }
 
   newChange(...args) {
-    this.args.push(args);
+    this.args.push(args.filter((arg) => type.isString(arg))); // filter for string paths since chokidar also returns an stats object on windows.
     this.delay = this.minDelay;
     this._startTimer();
   }

@@ -32,7 +32,6 @@ const context = {
       inputs: { id: true },
       lowdefyGlobal: { global: true },
       menus: [{ menus: true }],
-      urlQuery: { urlQuery: true },
       user: { user: true },
       home: {
         pageId: 'home.pageId',
@@ -224,9 +223,6 @@ test('operator returns value', () => {
                       "menus": true,
                     },
                   ],
-                  "urlQuery": Object {
-                    "urlQuery": true,
-                  },
                   "user": Object {
                     "user": true,
                   },
@@ -270,9 +266,6 @@ test('operator returns value', () => {
           "runtime": "browser",
           "state": Object {
             "state": true,
-          },
-          "urlQuery": Object {
-            "urlQuery": true,
           },
           "user": Object {
             "user": true,
