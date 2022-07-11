@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.21](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.20...v4.0.0-alpha.21) (2022-07-11)
+
+
+### Bug Fixes
+
+* **blocks-aggrid:** Fix typo in processColDefs. ([3073510](https://github.com/lowdefy/lowdefy/commit/307351054100033545606fe1a57d5d03269f28b5))
+* **engine:** Fix createGetUrlQuery tests. ([1c9a500](https://github.com/lowdefy/lowdefy/commit/1c9a500c3bb112e6e06abbb3a642918be0784991))
+* Read urlQuery from location where used, not on lowdefy. ([11541e4](https://github.com/lowdefy/lowdefy/commit/11541e4722359bb57bace8298fc475caf58dbf6e))
+* **server-dev:** BatchChanges.newChange to only revolve for strings. ([30a78fb](https://github.com/lowdefy/lowdefy/commit/30a78fbf77b483cb3b039f4ead11004b604346bc))
+
+
+
+
+
 # [4.0.0-alpha.20](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2022-07-09)
 
 

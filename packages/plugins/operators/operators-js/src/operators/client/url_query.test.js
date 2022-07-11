@@ -20,24 +20,22 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-const input = {};
+const globals = { window: { location: { search: '?some=value' } } };
 
 test('url_query calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   url_query({
     arrayIndices: [0],
+    globals,
     location: 'location',
     params: 'params',
-    urlQuery: { urlQuery: true },
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
         location: 'location',
-        object: {
-          urlQuery: true,
-        },
+        object: { some: 'value' },
         operator: '_url_query',
         params: 'params',
       },

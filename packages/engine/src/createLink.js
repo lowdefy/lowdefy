@@ -38,7 +38,7 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
         pathname,
         query,
         setInput: () => {
-          lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input || {};
+          lowdefy.inputs[`page:${lowdefy.home.pageId}`] = props.input ?? {};
         },
       });
     }
@@ -48,7 +48,7 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
         pathname: `/${props.pageId}`,
         query,
         setInput: () => {
-          lowdefy.inputs[`page:${props.pageId}`] = props.input || {};
+          lowdefy.inputs[`page:${props.pageId}`] = props.input ?? {};
         },
       });
     }

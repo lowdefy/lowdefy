@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { urlQuery } from '@lowdefy/helpers';
-
 import callRequest from './callRequest.js';
 import createIcon from './createIcon.js';
 import createAuthMethods from './auth/createAuthMethods.js';
@@ -53,9 +51,7 @@ function initLowdefyContext({ auth, Components, config, router, stage, types, wi
   lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
   lowdefy.menus = config.rootConfig.menus;
   lowdefy.pageId = config.pageConfig.pageId;
-  lowdefy.urlQuery = urlQuery.parse(window.location.search.slice(1));
   lowdefy.user = auth?.session?.user ?? null;
-
   lowdefy._internal.globals = {
     document: window.document,
     fetch: window.fetch,

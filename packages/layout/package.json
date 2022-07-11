@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/layout",
-  "version": "4.0.0-alpha.20",
+  "version": "4.0.0-alpha.21",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,16 +42,16 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.20",
-    "@lowdefy/helpers": "4.0.0-alpha.20",
+    "@lowdefy/block-utils": "4.0.0-alpha.21",
+    "@lowdefy/helpers": "4.0.0-alpha.21",
     "antd": "4.20.7",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/block-dev": "4.0.0-alpha.20",
-    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.20",
+    "@lowdefy/block-dev": "4.0.0-alpha.21",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.21",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

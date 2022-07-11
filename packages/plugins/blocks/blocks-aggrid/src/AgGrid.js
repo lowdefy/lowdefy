@@ -136,7 +136,7 @@ class AgGrid extends React.Component {
         onCellClicked={this.onCellClicked}
         onGridReady={this.onGridReady}
         modules={AllCommunityModules}
-        columnDefs={processColDefs(columnDefs)}
+        columnDefs={processColDefs(columnDefs, this.props.methods)}
         {...someProperties}
       />
     );
