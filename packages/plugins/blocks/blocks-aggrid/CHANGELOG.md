@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
+
+
+### Bug Fixes
+
+* **blocks-aggrid:** Fix typo 😱 ([21eef06](https://github.com/lowdefy/lowdefy/commit/21eef065d00eb1f7e7e9c2d0b180c49848dbec2e))
+
+
+
+
+
 # [4.0.0-alpha.21](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.20...v4.0.0-alpha.21) (2022-07-11)
 
 
