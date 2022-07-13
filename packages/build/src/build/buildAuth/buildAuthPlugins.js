@@ -15,77 +15,52 @@
 */
 import { type } from '@lowdefy/helpers';
 
-function buildCallbacks({ components, context }) {
-  if (type.isArray(components.auth.callbacks)) {
-    components.auth.callbacks.forEach((callback) => {
-      if (type.isUndefined(callback.id)) {
-        throw new Error(`Auth callback id missing.`);
+function buildAuthPlugin({ counter, pluginConfig, typeClass }) {
+  if (type.isArray(pluginConfig)) {
+    pluginConfig.forEach((plugin) => {
+      if (type.isUndefined(plugin.id)) {
+        throw new Error(`Auth ${typeClass} id missing.`);
       }
-      if (!type.isString(callback.id)) {
+      if (!type.isString(plugin.id)) {
         throw new Error(
-          `Auth callback id is not a string. Received ${JSON.stringify(callback.id)}.`
+          `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`
         );
       }
-      if (!type.isString(callback.type)) {
+      if (!type.isString(plugin.type)) {
         throw new Error(
-          `Auth callback type is not a string at callback "${
-            callback.id
-          }". Received ${JSON.stringify(callback.type)}.`
+          `Auth ${typeClass} type is not a string at ${typeClass} "${
+            plugin.id
+          }". Received ${JSON.stringify(plugin.type)}.`
         );
       }
-      context.typeCounters.auth.callbacks.increment(callback.type);
-    });
-  }
-}
-
-function buildEvents({ components, context }) {
-  if (type.isArray(components.auth.events)) {
-    components.auth.events.forEach((event) => {
-      if (type.isUndefined(event.id)) {
-        throw new Error(`Auth event id missing.`);
-      }
-      if (!type.isString(event.id)) {
-        throw new Error(`Auth event id is not a string. Received ${JSON.stringify(event.id)}.`);
-      }
-      if (!type.isString(event.type)) {
-        throw new Error(
-          `Auth event type is not a string at event "${event.id}". Received ${JSON.stringify(
-            event.type
-          )}.`
-        );
-      }
-      context.typeCounters.auth.events.increment(event.type);
-    });
-  }
-}
-
-function buildProviders({ components, context }) {
-  if (type.isArray(components.auth.providers)) {
-    components.auth.providers.forEach((provider) => {
-      if (type.isUndefined(provider.id)) {
-        throw new Error(`Auth provider id missing.`);
-      }
-      if (!type.isString(provider.id)) {
-        throw new Error(
-          `Auth provider id is not a string. Received ${JSON.stringify(provider.id)}.`
-        );
-      }
-      if (!type.isString(provider.type)) {
-        throw new Error(
-          `Auth provider type is not a string at provider "${
-            provider.id
-          }". Received ${JSON.stringify(provider.type)}.`
-        );
-      }
-      context.typeCounters.auth.providers.increment(provider.type);
+      counter.increment(plugin.type);
     });
   }
 }
 
 function buildAuthPlugins({ components, context }) {
-  buildCallbacks({ components, context });
-  buildEvents({ components, context });
-  buildProviders({ components, context });
+  const counters = context.typeCounters.auth;
+  const authConfig = components.auth;
+  buildAuthPlugin({
+    counter: counters.adapters,
+    pluginConfig: authConfig.adapters,
+    typeClass: 'adapter',
+  });
+  buildAuthPlugin({
+    counter: counters.callbacks,
+    pluginConfig: authConfig.callbacks,
+    typeClass: 'callback',
+  });
+  buildAuthPlugin({
+    counter: counters.events,
+    pluginConfig: authConfig.events,
+    typeClass: 'event',
+  });
+  buildAuthPlugin({
+    counter: counters.providers,
+    pluginConfig: authConfig.providers,
+    typeClass: 'provider',
+  });
 }
 
 export default buildAuthPlugins;

@@ -1,6 +1,7 @@
 const defaultTypesMap = {
   actions: {},
   auth: {
+    adapters: {},
     callbacks: {},
     events: {},
     providers: {},
