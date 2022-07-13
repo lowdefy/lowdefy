@@ -31,7 +31,7 @@ export default async function auth(req, res) {
       res,
       getNextAuthConfig(
         { logger: console },
-        { authJson, plugins: { callbacks, events, providers } }
+        { authJson, plugins: { adapters, callbacks, events, providers } }
       )
     );
   }

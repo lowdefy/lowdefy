@@ -33,9 +33,6 @@ async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth.pages.roles)) {
     components.auth.pages.roles = {};
   }
-  if (type.isNone(components.auth.adapters)) {
-    components.auth.adapters = [];
-  }
   if (type.isNone(components.auth.callbacks)) {
     components.auth.callbacks = [];
   }

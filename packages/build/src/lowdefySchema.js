@@ -80,34 +80,31 @@ export default {
             },
           },
         },
-        adapters: {
-          type: 'array',
-          items: {
-            type: 'object',
-            required: ['id', 'type'],
-            properties: {
-              id: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth adapter "id" should be a string.',
-                },
-              },
-              type: {
-                type: 'string',
-                errorMessage: {
-                  type: 'Auth adapter "type" should be a string.',
-                },
-              },
-              properties: {
-                type: 'object',
+        adapter: {
+          type: 'object',
+          required: ['id', 'type'],
+          properties: {
+            id: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth adapter "id" should be a string.',
               },
             },
-            errorMessage: {
-              type: 'Auth adapter should be an object.',
-              required: {
-                id: 'Auth adapter should have required property "id".',
-                type: 'Auth adapter should have required property "type".',
+            type: {
+              type: 'string',
+              errorMessage: {
+                type: 'Auth adapter "type" should be a string.',
               },
+            },
+            properties: {
+              type: 'object',
+            },
+          },
+          errorMessage: {
+            type: 'Auth adapter should be an object.',
+            required: {
+              id: 'Auth adapter should have required property "id".',
+              type: 'Auth adapter should have required property "type".',
             },
           },
         },

@@ -38,14 +38,31 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass }) {
   }
 }
 
+function buildAdapter({ components, context }) {
+  const { adapter } = components.auth;
+  if (type.isNone(adapter)) {
+    return;
+  }
+  if (type.isUndefined(adapter.id)) {
+    throw new Error(`Auth adapter id missing.`);
+  }
+  if (!type.isString(adapter.id)) {
+    throw new Error(`Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`);
+  }
+  if (!type.isString(adapter.type)) {
+    throw new Error(
+      `Auth adapter type is not a string at adapter "${adapter.id}". Received ${JSON.stringify(
+        adapter.type
+      )}.`
+    );
+  }
+  context.typeCounters.auth.adapters.increment(adapter.type);
+}
+
 function buildAuthPlugins({ components, context }) {
   const counters = context.typeCounters.auth;
   const authConfig = components.auth;
-  buildAuthPlugin({
-    counter: counters.adapters,
-    pluginConfig: authConfig.adapters,
-    typeClass: 'adapter',
-  });
+  buildAdapter({ components, context });
   buildAuthPlugin({
     counter: counters.callbacks,
     pluginConfig: authConfig.callbacks,

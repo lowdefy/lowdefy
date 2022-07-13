@@ -55,6 +55,7 @@ function buildImportsDev({ components, context }) {
   return {
     actions: buildImportClassDev({ pluginPackages, map: context.typesMap.actions }),
     auth: {
+      adapters: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.adapters }),
       callbacks: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.callbacks }),
       events: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.events }),
       providers: buildImportClassDev({ pluginPackages, map: context.typesMap.auth.providers }),
