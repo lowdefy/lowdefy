@@ -2806,6 +2806,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/operators-moment@workspace:packages/plugins/operators/operators-moment":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/operators-moment@workspace:packages/plugins/operators/operators-moment"
+  dependencies:
+    "@lowdefy/operators": 4.0.0-alpha.21
+    "@swc/cli": 0.1.57
+    "@swc/core": 1.2.194
+    "@swc/jest": 0.2.21
+    jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
+    moment: 2.29.4
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/operators-mql@4.0.0-alpha.21, @lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql"

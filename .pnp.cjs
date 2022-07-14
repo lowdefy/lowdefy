@@ -137,6 +137,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/operators/operators-js"\
       },\
       {\
+        "name": "@lowdefy/operators-moment",\
+        "reference": "workspace:packages/plugins/operators/operators-moment"\
+      },\
+      {\
         "name": "@lowdefy/operators-mql",\
         "reference": "workspace:packages/plugins/operators/operators-mql"\
       },\
@@ -236,6 +240,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/operators-change-case", ["workspace:packages/plugins/operators/operators-change-case"]],\
       ["@lowdefy/operators-diff", ["workspace:packages/plugins/operators/operators-diff"]],\
       ["@lowdefy/operators-js", ["workspace:packages/plugins/operators/operators-js"]],\
+      ["@lowdefy/operators-moment", ["workspace:packages/plugins/operators/operators-moment"]],\
       ["@lowdefy/operators-mql", ["workspace:packages/plugins/operators/operators-mql"]],\
       ["@lowdefy/operators-nunjucks", ["workspace:packages/plugins/operators/operators-nunjucks"]],\
       ["@lowdefy/operators-uuid", ["workspace:packages/plugins/operators/operators-uuid"]],\
@@ -3763,6 +3768,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
             ["jest-environment-jsdom", "npm:28.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@lowdefy/operators-moment", [\
+        ["workspace:packages/plugins/operators/operators-moment", {\
+          "packageLocation": "./packages/plugins/operators/operators-moment/",\
+          "packageDependencies": [\
+            ["@lowdefy/operators-moment", "workspace:packages/plugins/operators/operators-moment"],\
+            ["@lowdefy/operators", "workspace:packages/operators"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["moment", "npm:2.29.4"]\
           ],\
           "linkType": "SOFT"\
         }]\
