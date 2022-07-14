@@ -2569,6 +2569,7 @@ __metadata:
   dependencies:
     "@lowdefy/ajv": 4.0.0-alpha.21
     "@lowdefy/helpers": 4.0.0-alpha.21
+    "@next-auth/mongodb-adapter": 1.0.3
     "@shelf/jest-mongodb": 2.2.2
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -3011,6 +3012,16 @@ __metadata:
   bin:
     node-pre-gyp: bin/node-pre-gyp
   checksum: 1b9c4c87a68d200daa13151d0fe033aa7aa8f7b26f3585255424dd8dfee2ec672c3e9bea4071c624469bc0aebbbcde08f8a300c8a958db52c50abadd5fb56920
+  languageName: node
+  linkType: hard
+
+"@next-auth/mongodb-adapter@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@next-auth/mongodb-adapter@npm:1.0.3"
+  peerDependencies:
+    mongodb: ^4.1.1
+    next-auth: ^4.0.1
+  checksum: 0eff801b3108ff022aad51e1a5886efdf59a52f54aaa8d66a008666bce14c664bc36e2979c96e33bbcb95beefd565135029ec64a62284d13e619f65bdbc5adad
   languageName: node
   linkType: hard
 

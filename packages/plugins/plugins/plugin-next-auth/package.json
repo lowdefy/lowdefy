@@ -28,7 +28,7 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./auth/*": "./dist/auth/*",
+    "./auth/providers": "./dist/auth/providers.js",
     "./types": "./dist/types.js"
   },
   "files": [

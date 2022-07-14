@@ -26,6 +26,7 @@ const watchedFiles = [
   'build/auth.json',
   'build/config.json',
   'build/plugins/actions.js',
+  'build/plugins/auth/adapters.js',
   'build/plugins/auth/callbacks.js',
   'build/plugins/auth/events.js',
   'build/plugins/auth/providers.js',

@@ -54,6 +54,7 @@ function buildTypes({ components, context }) {
   components.types = {
     actions: {},
     auth: {
+      adapters: {},
       callbacks: {},
       events: {},
       providers: {},
@@ -72,6 +73,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.actions,
     store: components.types.actions,
     typeClass: 'Action',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.auth.adapters,
+    definitions: context.typesMap.auth.adapters,
+    store: components.types.auth.adapters,
+    typeClass: 'Auth adapter',
   });
 
   buildTypeClass(context, {

@@ -38,8 +38,8 @@ function recProcessColDefs(columnDefs, methods) {
   });
 }
 
-function processColDefs(columnDefs = []) {
-  return recProcessColDefs(columnDefs);
+function processColDefs(columnDefs = [], methods) {
+  return recProcessColDefs(columnDefs, methods);
 }
 
 export default processColDefs;

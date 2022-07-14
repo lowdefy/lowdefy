@@ -27,7 +27,7 @@ test('buildAuth default', async () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -50,7 +50,7 @@ test('buildAuth default', async () => {
 
 test('buildAuth no pages', async () => {
   const components = {};
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -80,7 +80,7 @@ test('buildAuth all protected, some public', async () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -116,7 +116,7 @@ test('buildAuth all public, some protected', async () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -152,7 +152,7 @@ test('buildAuth all public', async () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -188,7 +188,7 @@ test('buildAuth all protected', async () => {
       { id: 'c', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -226,7 +226,7 @@ test('buildAuth roles', async () => {
       { id: 'page3', type: 'Context' },
     ],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -279,7 +279,7 @@ test('buildAuth roles and protected pages array', async () => {
     },
     pages: [{ id: 'page1', type: 'Context' }],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -311,7 +311,7 @@ test('buildAuth roles and protected true', async () => {
     },
     pages: [{ id: 'page1', type: 'Context' }],
   };
-  const res = await buildAuth({ components, context });
+  const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
       callbacks: [],
@@ -329,4 +329,94 @@ test('buildAuth roles and protected true', async () => {
     },
     pages: [{ id: 'page1', type: 'Context', auth: { public: false, roles: ['role1'] } }],
   });
+});
+
+test('Auth plugins are counted', () => {
+  const components = {
+    auth: {
+      adapter: {
+        id: 'adapter',
+        type: 'Adapter',
+        properties: {
+          x: 1,
+        },
+      },
+      providers: [
+        {
+          id: 'provider',
+          type: 'Provider',
+          properties: {
+            x: 1,
+          },
+        },
+      ],
+      callbacks: [
+        {
+          id: 'callback',
+          type: 'Callback',
+          properties: {
+            x: 1,
+          },
+        },
+      ],
+      events: [
+        {
+          id: 'event',
+          type: 'Event',
+          properties: {
+            x: 1,
+          },
+        },
+      ],
+    },
+  };
+  const res = buildAuth({ components, context });
+  expect(res).toEqual({
+    auth: {
+      adapter: {
+        id: 'adapter',
+        properties: {
+          x: 1,
+        },
+        type: 'Adapter',
+      },
+      callbacks: [
+        {
+          id: 'callback',
+          properties: {
+            x: 1,
+          },
+          type: 'Callback',
+        },
+      ],
+      configured: true,
+      events: [
+        {
+          id: 'event',
+          properties: {
+            x: 1,
+          },
+          type: 'Event',
+        },
+      ],
+      pages: {
+        roles: {},
+      },
+      providers: [
+        {
+          id: 'provider',
+          properties: {
+            x: 1,
+          },
+          type: 'Provider',
+        },
+      ],
+      session: {},
+      theme: {},
+    },
+  });
+  expect(context.typeCounters.auth.adapters.getCounts()).toEqual({ Adapter: 1 });
+  expect(context.typeCounters.auth.providers.getCounts()).toEqual({ Provider: 1 });
+  expect(context.typeCounters.auth.callbacks.getCounts()).toEqual({ Callback: 1 });
+  expect(context.typeCounters.auth.events.getCounts()).toEqual({ Event: 1 });
 });
