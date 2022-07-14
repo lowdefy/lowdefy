@@ -27,4 +27,4 @@ _ref:
     description_content: |
       The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
 
-      >If you need the user to select only from a list of options, use a block like the `Selector` block instead.
+      >If you need the user to select only from a list of options (and be able to select the top match for the given input by simply hitting Enter), use a block like the `Selector` block instead.
