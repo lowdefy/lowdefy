@@ -3484,6 +3484,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/connection-mongodb", "workspace:packages/plugins/connections/connection-mongodb"],\
             ["@lowdefy/ajv", "workspace:packages/utils/ajv"],\
             ["@lowdefy/helpers", "workspace:packages/utils/helpers"],\
+            ["@next-auth/mongodb-adapter", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:1.0.3"],\
             ["@shelf/jest-mongodb", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:2.2.2"],\
             ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
             ["@swc/core", "npm:1.2.194"],\
@@ -3973,6 +3974,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],\
             ["semver", "npm:7.3.7"],\
             ["tar", "npm:6.1.11"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@next-auth/mongodb-adapter", [\
+        ["npm:1.0.3", {\
+          "packageLocation": "./.yarn/cache/@next-auth-mongodb-adapter-npm-1.0.3-425936289b-0eff801b31.zip/node_modules/@next-auth/mongodb-adapter/",\
+          "packageDependencies": [\
+            ["@next-auth/mongodb-adapter", "npm:1.0.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:1.0.3", {\
+          "packageLocation": "./.yarn/__virtual__/@next-auth-mongodb-adapter-virtual-faffca10ac/0/cache/@next-auth-mongodb-adapter-npm-1.0.3-425936289b-0eff801b31.zip/node_modules/@next-auth/mongodb-adapter/",\
+          "packageDependencies": [\
+            ["@next-auth/mongodb-adapter", "virtual:8892fd55020404ef7b68cfff5e095a43035d4129ed154e1c28837e4f2c038ceb7761f36556ed437d5a606142082cb5505d80f52744c412cdeaaaf5d9c72e693c#npm:1.0.3"],\
+            ["@types/mongodb", null],\
+            ["@types/next-auth", null],\
+            ["mongodb", "npm:4.6.0"],\
+            ["next-auth", null]\
+          ],\
+          "packagePeers": [\
+            "@types/mongodb",\
+            "@types/next-auth",\
+            "mongodb",\
+            "next-auth"\
           ],\
           "linkType": "HARD"\
         }]\
