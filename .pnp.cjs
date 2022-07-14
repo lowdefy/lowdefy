@@ -45,10 +45,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/engine"\
       },\
       {\
-        "name": "@lowdefy/format",\
-        "reference": "workspace:packages/format"\
-      },\
-      {\
         "name": "@lowdefy/layout",\
         "reference": "workspace:packages/layout"\
       },\
@@ -225,7 +221,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/connection-stripe", ["workspace:packages/plugins/connections/connection-stripe"]],\
       ["@lowdefy/docs", ["workspace:packages/docs"]],\
       ["@lowdefy/engine", ["workspace:packages/engine"]],\
-      ["@lowdefy/format", ["workspace:packages/format"]],\
       ["@lowdefy/helpers", ["workspace:packages/utils/helpers"]],\
       ["@lowdefy/jest-yaml-transform", ["workspace:packages/utils/jest-yaml-transform"]],\
       ["@lowdefy/layout", ["workspace:packages/layout"]],\
@@ -3575,20 +3570,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@swc/core", "npm:1.2.194"],\
             ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
             ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@lowdefy/format", [\
-        ["workspace:packages/format", {\
-          "packageLocation": "./packages/format/",\
-          "packageDependencies": [\
-            ["@lowdefy/format", "workspace:packages/format"],\
-            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
-            ["@swc/core", "npm:1.2.194"],\
-            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
-            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
-            ["moment", "npm:2.29.4"]\
           ],\
           "linkType": "SOFT"\
         }]\

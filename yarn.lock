@@ -2653,18 +2653,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/format@workspace:packages/format":
-  version: 0.0.0-use.local
-  resolution: "@lowdefy/format@workspace:packages/format"
-  dependencies:
-    "@swc/cli": 0.1.57
-    "@swc/core": 1.2.194
-    "@swc/jest": 0.2.21
-    jest: 28.1.0
-    moment: 2.29.4
-  languageName: unknown
-  linkType: soft
-
 "@lowdefy/helpers@4.0.0-alpha.21, @lowdefy/helpers@workspace:packages/utils/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/utils/helpers"
