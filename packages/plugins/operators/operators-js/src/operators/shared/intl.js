@@ -42,14 +42,21 @@ const meta = {
   dateTimeFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
   listFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
   numberFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
-  relativeTimeFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
+  relativeTimeFormat: {
+    namedArgs: ['on', 'unit', 'options', 'locale'],
+    validTypes: ['array', 'object'],
+  },
 };
+
+function relativeTimeFormat(on, unit, options, locale) {
+  return new Intl.RelativeTimeFormat(locale, options).format(on, unit);
+}
 
 const functions = {
   dateTimeFormat: createFormatter({ IntlClass: Intl.DateTimeFormat }),
   listFormat: createFormatter({ IntlClass: Intl.ListFormat }),
   numberFormat: createFormatter({ IntlClass: Intl.NumberFormat }),
-  relativeTimeFormat: createFormatter({ IntlClass: Intl.RelativeTimeFormat }),
+  relativeTimeFormat,
 };
 
 function intl({ params, location, methodName }) {
