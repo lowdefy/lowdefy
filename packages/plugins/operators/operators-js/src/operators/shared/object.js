@@ -43,14 +43,14 @@ const metaInstance = {
 };
 
 const metaClass = {
-  keys: { singleArg: true, validTypes: ['object'], prep },
-  values: { singleArg: true, validTypes: ['object'], prep },
   assign: { spreadArgs: true, validTypes: ['array'], prep },
   defineProperty: {
     namedArgs: ['on', 'key', 'descriptor'],
     validTypes: ['array', 'object'],
     prep: prepDescriptor,
   },
+  keys: { singleArg: true, validTypes: ['object', 'null'], prep },
+  values: { singleArg: true, validTypes: ['object', 'null'], prep },
 };
 
 function _object({ params, location, methodName }) {
