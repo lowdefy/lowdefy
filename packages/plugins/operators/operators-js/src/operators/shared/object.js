@@ -23,6 +23,13 @@ const prep = (args) => {
   return args;
 };
 
+const prepArray = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = [];
+  }
+  return args;
+};
+
 const prepDescriptor = (args) => {
   const descriptor = args[2] || {};
   if (type.isNone(descriptor.enumerable)) {
@@ -49,6 +56,8 @@ const metaClass = {
     validTypes: ['array', 'object'],
     prep: prepDescriptor,
   },
+  entries: { singleArg: true, validTypes: ['object', 'null'], prep },
+  fromEntries: { singleArg: true, validTypes: ['array', 'null'], prep: prepArray },
   keys: { singleArg: true, validTypes: ['object', 'null'], prep },
   values: { singleArg: true, validTypes: ['object', 'null'], prep },
 };

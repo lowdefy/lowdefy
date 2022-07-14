@@ -91,6 +91,100 @@ describe('_object.hasOwnProperty', () => {
   });
 });
 
+describe('_object.entries', () => {
+  const methodName = 'entries';
+  test('valid', () => {
+    expect(
+      object({
+        params: { a: 1, b: 2 },
+        methodName,
+        location,
+      })
+    ).toEqual([
+      ['a', 1],
+      ['b', 2],
+    ]);
+  });
+  test('handle null', () => {
+    expect(
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: [],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.entries accepts one of the following types: object, null.
+            Received: {\\"_object.entries\\":[]} at locationId."
+    `);
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.entries accepts one of the following types: object, null.
+            Received: {\\"_object.entries\\":\\"x\\"} at locationId."
+    `);
+  });
+});
+
+describe('_object.fromEntries', () => {
+  const methodName = 'fromEntries';
+  test('valid', () => {
+    expect(
+      object({
+        params: [
+          ['a', 1],
+          ['b', 2],
+        ],
+        methodName,
+        location,
+      })
+    ).toEqual({ a: 1, b: 2 });
+  });
+  test('handle null', () => {
+    expect(
+      object({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual({});
+  });
+  test('throw', () => {
+    expect(() =>
+      object({
+        params: {},
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.fromEntries accepts one of the following types: array, null.
+            Received: {\\"_object.fromEntries\\":{}} at locationId."
+    `);
+    expect(() =>
+      object({
+        params: 'x',
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(`
+      "Operator Error: _object.fromEntries accepts one of the following types: array, null.
+            Received: {\\"_object.fromEntries\\":\\"x\\"} at locationId."
+    `);
+  });
+});
+
 describe('_object.keys', () => {
   const methodName = 'keys';
   test('valid', () => {
