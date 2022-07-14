@@ -178,7 +178,7 @@ describe('_intl.relativeTimeFormat', () => {
       intl({
         params: {
           on: 4,
-          unit: 'quarter',
+          unit: 'day',
         },
         location: 'locationId',
         methodName,
