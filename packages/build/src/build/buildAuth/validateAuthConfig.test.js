@@ -24,7 +24,6 @@ test('validateAuthConfig no auth defined', async () => {
   const result = await validateAuthConfig({ components, context });
   expect(result).toEqual({
     auth: {
-      adapters: [],
       callbacks: [],
       events: [],
       pages: {
