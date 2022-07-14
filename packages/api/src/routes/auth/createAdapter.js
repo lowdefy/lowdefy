@@ -14,23 +14,14 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
+function createAdapter(context, { authConfig, plugins }) {
+  const adapterConfig = authConfig.adapter;
 
-async function getCollection({ connection }) {
-  let client;
-  const { collection, databaseUri, databaseName, options } = connection;
-  client = new MongoClient(databaseUri, options);
-  await client.connect();
-  try {
-    const db = client.db(databaseName);
-    return {
-      client,
-      collection: db.collection(collection),
-    };
-  } catch (error) {
-    await client.close();
-    throw error;
+  if (!adapterConfig) {
+    return undefined;
   }
+
+  return plugins.adapters[adapterConfig.type]({ properties: adapterConfig.properties });
 }
 
-export default getCollection;
+export default createAdapter;

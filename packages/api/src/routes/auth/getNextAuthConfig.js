@@ -18,6 +18,7 @@ import { NodeParser } from '@lowdefy/operators';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
+import createAdapter from './createAdapter.js';
 import createCallbacks from './callbacks/createCallbacks.js';
 import createEvents from './events/createEvents.js';
 import createProviders from './createProviders.js';
@@ -46,6 +47,7 @@ function getNextAuthConfig(context, { authJson, plugins }) {
     throw new Error(operatorErrors[0]);
   }
 
+  nextAuthConfig.adapter = createAdapter(context, { authConfig, plugins });
   nextAuthConfig.callbacks = createCallbacks(context, { authConfig, plugins });
   nextAuthConfig.events = createEvents(context, { authConfig, plugins });
   nextAuthConfig.providers = createProviders(context, { authConfig, plugins });

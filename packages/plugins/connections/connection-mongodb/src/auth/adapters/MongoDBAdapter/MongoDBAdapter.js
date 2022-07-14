@@ -15,22 +15,24 @@
 */
 
 import { MongoClient } from 'mongodb';
+import { MongoDBAdapter as NextAuthMongoDBAdapter } from '@next-auth/mongodb-adapter';
 
-async function getCollection({ connection }) {
-  let client;
-  const { collection, databaseUri, databaseName, options } = connection;
-  client = new MongoClient(databaseUri, options);
-  await client.connect();
-  try {
-    const db = client.db(databaseName);
-    return {
-      client,
-      collection: db.collection(collection),
-    };
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
+/*
+Default collections are:
+{
+  Users: "users",
+  Accounts: "accounts",
+  Sessions: "sessions",
+  VerificationTokens: "verification_tokens",
+}
+*/
+
+// TODO: Docs: MongoDB database name should be in databaseUri
+
+function MongoDBAdapter({ properties }) {
+  const { databaseUri, mongoDBClientOptions, collections } = properties;
+  const clientPromise = new MongoClient(databaseUri, mongoDBClientOptions).connect();
+  return NextAuthMongoDBAdapter(clientPromise, collections);
 }
 
-export default getCollection;
+export default MongoDBAdapter;

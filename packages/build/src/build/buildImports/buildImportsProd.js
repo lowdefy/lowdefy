@@ -31,6 +31,7 @@ function buildImportsProd({ components, context }) {
   return {
     actions: buildImportClassProd(components.types.actions),
     auth: {
+      adapters: buildImportClassProd(components.types.auth.adapters),
       callbacks: buildImportClassProd(components.types.auth.callbacks),
       events: buildImportClassProd(components.types.auth.events),
       providers: buildImportClassProd(components.types.auth.providers),
