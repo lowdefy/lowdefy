@@ -5895,10 +5895,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.0.0":
-  version: 9.0.0
-  resolution: "commander@npm:9.0.0"
-  checksum: 15066e433d528315ded8261d16bc600d1f3c5671c75021e685ae67e4d62f7551243ff28411b28dc0a6f8b23c2a0f033550ec6f3e66bdf9d11a4fdc2d33dd9802
+"commander@npm:9.4.0":
+  version: 9.4.0
+  resolution: "commander@npm:9.4.0"
+  checksum: a322de584a6ccd1ea83c24f6a660e52d16ffbe2613fcfbb8d2cc68bc9dec637492456d754fe8bb5b039ad843ed8e04fb0b107e581a75f62cde9e1a0ab1546e09
   languageName: node
   linkType: hard
 
@@ -10378,7 +10378,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     axios: 0.27.2
-    commander: 9.0.0
+    commander: 9.4.0
     decompress: 4.2.1
     decompress-targz: 4.1.1
     dotenv: 16.0.1
