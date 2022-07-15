@@ -28,6 +28,7 @@ async function build({ context }) {
   const directory = context.directories.server;
   await getServer({ context, packageName: '@lowdefy/server', directory });
   await copyPluginsFolder({ context, directory });
+  // TODO: Could this be moved out of CLI into servers?
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });

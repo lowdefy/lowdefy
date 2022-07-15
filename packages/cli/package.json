@@ -43,7 +43,6 @@
     "@lowdefy/helpers": "4.0.0-alpha.21",
     "@lowdefy/node-utils": "4.0.0-alpha.21",
     "axios": "0.27.2",
-    "chalk": "4.1.2",
     "commander": "9.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",

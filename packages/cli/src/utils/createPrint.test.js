@@ -133,7 +133,7 @@ describe('ora print', () => {
     createOraPrint();
     const prefixTextFn = ora.mock.calls[0][0].prefixText;
     const res = prefixTextFn();
-    expect(res).toEqual('[2m01:02:03[22m');
+    expect(res).toEqual('\x1b[2m01:02:03\x1b[0m');
   });
 
   test('timestamp, digits more than 10', async () => {
@@ -145,21 +145,21 @@ describe('ora print', () => {
     createOraPrint();
     const prefixTextFn = ora.mock.calls[0][0].prefixText;
     const res = prefixTextFn();
-    expect(res).toEqual('[2m11:22:33[22m');
+    expect(res).toEqual('\x1b[2m11:22:33\x1b[0m');
   });
 
   test('print error', async () => {
     const { createOraPrint } = await import('./createPrint.js');
     const print = createOraPrint();
     print.error('Test error');
-    expect(mockOraFail.mock.calls).toEqual([['[31mTest error[39m']]);
+    expect(mockOraFail.mock.calls).toEqual([['\x1b[31mTest error\x1b[0m']]);
   });
 
   test('print info', async () => {
     const { createOraPrint } = await import('./createPrint.js');
     const print = createOraPrint();
     print.info('Test info');
-    expect(mockOraInfo.mock.calls).toEqual([['[34mTest info[39m']]);
+    expect(mockOraInfo.mock.calls).toEqual([['\x1b[34mTest info\x1b[0m']]);
   });
 
   test('print log', async () => {
@@ -181,14 +181,14 @@ describe('ora print', () => {
     const { createOraPrint } = await import('./createPrint.js');
     const print = createOraPrint();
     print.succeed('Test succeed');
-    expect(mockOraSucceed.mock.calls).toEqual([['[32mTest succeed[39m']]);
+    expect(mockOraSucceed.mock.calls).toEqual([['\x1b[32mTest succeed\x1b[0m']]);
   });
 
   test('print warn', async () => {
     const { createOraPrint } = await import('./createPrint.js');
     const print = createOraPrint();
     print.warn('Test warn');
-    expect(mockOraWarn.mock.calls).toEqual([['[33mTest warn[39m']]);
+    expect(mockOraWarn.mock.calls).toEqual([['\x1b[33mTest warn\x1b[0m']]);
   });
 });
 

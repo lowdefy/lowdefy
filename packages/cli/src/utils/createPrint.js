@@ -15,7 +15,14 @@
 */
 
 import ora from 'ora';
-import chalk from 'chalk';
+
+// TODO: Maybe we could look at 256 bit colors
+const red = '\x1b[31m';
+const green = '\x1b[32m';
+const yellow = '\x1b[33m';
+const blue = '\x1b[34m';
+const dim = '\x1b[2m';
+const reset_color = '\x1b[0m';
 
 function getTime() {
   const time = new Date(Date.now());
@@ -28,17 +35,17 @@ function getTime() {
 function createOraPrint() {
   const spinner = ora({
     spinner: 'random',
-    prefixText: () => chalk.dim(getTime()),
+    prefixText: () => `${dim}${getTime()}${reset_color}`,
     color: 'blue',
   });
   return {
     type: 'ora',
-    error: (text) => spinner.fail(chalk.red(text)),
-    info: (text) => spinner.info(chalk.blue(text)),
+    error: (text) => spinner.fail(`${red}${text}${reset_color}`),
+    info: (text) => spinner.info(`${blue}${text}${reset_color}`),
     log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
     spin: (text) => spinner.start(text),
-    succeed: (text) => spinner.succeed(chalk.green(text)),
-    warn: (text) => spinner.warn(chalk.yellow(text)),
+    succeed: (text) => spinner.succeed(`${green}${text}${reset_color}`),
+    warn: (text) => spinner.warn(`${yellow}${text}${reset_color}`),
   };
 }
 
