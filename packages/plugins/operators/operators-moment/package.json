@@ -44,7 +44,7 @@
     "clean": "rm -rf dist",
     "prepare": "yarn build",
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
-    "test": "jest --coverage"
+    "test": "TZ=UTC jest --coverage"
   },
   "dependencies": {
     "@lowdefy/operators": "4.0.0-alpha.21",

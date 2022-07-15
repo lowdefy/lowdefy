@@ -28,7 +28,7 @@ describe('_moment.format', () => {
         location: 'locationId',
         methodName,
       })
-    ).toEqual('2019-06-13T10:20:23+02:00');
+    ).toEqual('2019-06-13T08:20:23+00:00');
   });
 
   test('locales', () => {
@@ -41,7 +41,7 @@ describe('_moment.format', () => {
         location: 'locationId',
         methodName,
       })
-    ).toEqual('٢٠١٩-٠٦-١٣T١٠:٢٠:٢٣+٠٢:٠٠');
+    ).toEqual('٢٠١٩-٠٦-١٣T٠٨:٢٠:٢٣+٠٠:٠٠');
   });
 
   test('specify format', () => {
