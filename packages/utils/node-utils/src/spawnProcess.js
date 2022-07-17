@@ -16,35 +16,35 @@
 
 import { spawn } from 'child_process';
 
-async function spawnProcess({ logger, command, args, processOptions, silent }) {
+function createStdOutHandler({ stdOutLineHandler, silent }) {
+  function handler(data) {
+    if (!silent) {
+      data
+        .toString('utf8')
+        .split('\n')
+        .forEach((line) => {
+          // TODO: Do we handle empty lines here?
+          if (line) {
+            stdOutLineHandler(line);
+          }
+        });
+    }
+  }
+  return handler;
+}
+
+async function spawnProcess({
+  stdOutLineHandler = () => {},
+  command,
+  args,
+  processOptions,
+  silent,
+}) {
   return new Promise((resolve, reject) => {
     const process = spawn(command, args, processOptions);
 
-    process.stdout.on('data', (data) => {
-      if (!silent) {
-        data
-          .toString('utf8')
-          .split('\n')
-          .forEach((line) => {
-            if (line) {
-              logger.log(line);
-            }
-          });
-      }
-    });
-
-    process.stderr.on('data', (data) => {
-      if (!silent) {
-        data
-          .toString('utf8')
-          .split('\n')
-          .forEach((line) => {
-            if (line) {
-              logger.warn(line);
-            }
-          });
-      }
-    });
+    process.stdout.on('data', createStdOutHandler({ stdOutLineHandler, silent }));
+    process.stderr.on('data', createStdOutHandler({ stdOutLineHandler, silent }));
 
     process.on('error', (error) => {
       reject(error);

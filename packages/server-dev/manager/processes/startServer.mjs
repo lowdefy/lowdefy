@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
 import startNextServer from './startNextServer.mjs';
 
@@ -22,7 +21,7 @@ async function startServer(context) {
     try {
       startNextServer(context);
     } catch (error) {
-      console.log(error);
+      context.logger.error(error);
       reject(error);
     }
   });

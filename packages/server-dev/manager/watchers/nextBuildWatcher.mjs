@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
 import crypto from 'crypto';
 import path from 'path';
@@ -88,6 +87,7 @@ async function nextBuildWatcher(context) {
 
   return setupWatcher({
     callback,
+    context,
     watchDotfiles: true,
     watchPaths: [
       path.join(context.directories.build, 'plugins'),

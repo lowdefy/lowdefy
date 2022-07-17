@@ -15,10 +15,11 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
+import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 
 async function runDevServer({ context, directory }) {
   await spawnProcess({
-    logger: context.print,
+    stdOutLineHandler: createStdOutLineHandler({ context }),
     args: ['run', 'start'],
     command: context.packageManagerCmd,
     processOptions: {

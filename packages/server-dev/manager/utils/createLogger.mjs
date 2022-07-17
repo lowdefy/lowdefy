@@ -13,24 +13,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import pino from 'pino';
 
-import { spawnProcess } from '@lowdefy/node-utils';
-
-const args = {
-  npm: ['install', '--legacy-peer-deps'],
-  yarn: ['install'],
-};
-
-function installPlugins({ logger, options, packageManager, packageManagerCmd }) {
-  return async () => {
-    logger.info({ print: 'spin' }, 'Installing plugins...');
-    await spawnProcess({
-      logger,
-      command: packageManagerCmd,
-      args: args[packageManager],
-      silent: !options.verbose,
-    });
-  };
+function createLogger({ level }) {
+  const logger = pino({
+    name: 'lowdefy build',
+    level,
+    base: { pid: undefined, hostname: undefined },
+    mixin: (context, level) => {
+      return {
+        ...context,
+        print: context.print ?? logger.levels.labels[level],
+      };
+    },
+  });
+  return logger;
 }
 
-export default installPlugins;
+export default createLogger;

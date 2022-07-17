@@ -23,11 +23,11 @@ import getServer from '../../utils/getServer.js';
 async function dev({ context }) {
   const directory = context.directories.dev;
   context.print.info('Starting development server.');
-  await getServer({ context, packageName: '@lowdefy/server-dev', directory });
-  await copyPluginsFolder({ context, directory });
-  await addCustomPluginsAsDeps({ context, directory });
-  await installServer({ context, directory });
-  context.sendTelemetry();
+  // await getServer({ context, packageName: '@lowdefy/server-dev', directory });
+  // await copyPluginsFolder({ context, directory });
+  // await addCustomPluginsAsDeps({ context, directory });
+  // await installServer({ context, directory });
+  // context.sendTelemetry();
   await runDevServer({ context, directory });
 }
 

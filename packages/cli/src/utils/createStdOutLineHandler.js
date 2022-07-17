@@ -14,23 +14,16 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
-
-const args = {
-  npm: ['install', '--legacy-peer-deps'],
-  yarn: ['install'],
-};
-
-function installPlugins({ logger, options, packageManager, packageManagerCmd }) {
-  return async () => {
-    logger.info({ print: 'spin' }, 'Installing plugins...');
-    await spawnProcess({
-      logger,
-      command: packageManagerCmd,
-      args: args[packageManager],
-      silent: !options.verbose,
-    });
-  };
+function createStdOutLineHandler({ context }) {
+  function stdOutLineHandler(line) {
+    try {
+      const { print, msg } = JSON.parse(line);
+      context.print[print](msg);
+    } catch (error) {
+      context.print.log(line);
+    }
+  }
+  return stdOutLineHandler;
 }
 
-export default installPlugins;
+export default createStdOutLineHandler;

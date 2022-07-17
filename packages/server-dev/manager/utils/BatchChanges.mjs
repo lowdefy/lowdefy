@@ -13,12 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
 import { type } from '@lowdefy/helpers';
 
 class BatchChanges {
-  constructor({ fn, minDelay }) {
+  constructor({ context, fn, minDelay }) {
+    this.context = context;
     this._call = this._call.bind(this);
     this.args = [];
     this.delay = minDelay || 500;
@@ -58,9 +58,9 @@ class BatchChanges {
       }
     } catch (error) {
       this.running = false;
-      console.error(error);
+      this.context.logger.error(error?.message ?? error);
       this.delay *= 2;
-      console.warn(`Retrying in ${this.delay / 1000}s.`);
+      this.context.logger.warn(`Retrying in ${this.delay / 1000}s.`);
       this._startTimer();
     }
   }

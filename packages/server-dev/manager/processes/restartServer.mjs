@@ -19,7 +19,7 @@ import startNextServer from './startNextServer.mjs';
 function restartServer(context) {
   return () => {
     context.shutdownServer(); // Is this needed here?
-    console.log('Restarting server...');
+    context.logger.info({ print: 'spin' }, 'Restarting server...');
     startNextServer(context);
   };
 }

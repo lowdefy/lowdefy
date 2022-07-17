@@ -13,13 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
 import path from 'path';
 
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import createLogger from './utils/createLogger.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -46,6 +46,7 @@ async function getContext() {
       config: path.resolve(argv.configDirectory || env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
       server: process.cwd(),
     },
+    logger: createLogger({ level: 'debug' }),
     options: {
       port: argv.port || env.PORT || 3000,
       refResolver: argv.refResolver || env.LOWDEFY_BUILD_REF_RESOLVER,

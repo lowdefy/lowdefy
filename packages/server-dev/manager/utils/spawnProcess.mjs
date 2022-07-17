@@ -26,7 +26,7 @@ function spawnProcess({ logger, command, args, processOptions, silent }) {
         .split('\n')
         .forEach((line) => {
           if (line) {
-            logger.log(line);
+            logger.info(line);
           }
         });
     }

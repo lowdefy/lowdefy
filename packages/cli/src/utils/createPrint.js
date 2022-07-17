@@ -22,7 +22,7 @@ const green = '\x1b[32m';
 const yellow = '\x1b[33m';
 const blue = '\x1b[34m';
 const dim = '\x1b[2m';
-const reset_color = '\x1b[0m';
+const reset = '\x1b[0m';
 
 function getTime() {
   const time = new Date(Date.now());
@@ -35,22 +35,24 @@ function getTime() {
 function createOraPrint() {
   const spinner = ora({
     spinner: 'random',
-    prefixText: () => `${dim}${getTime()}${reset_color}`,
+    prefixText: () => `${dim}${getTime()}${reset}`,
     color: 'blue',
   });
   return {
     type: 'ora',
-    error: (text) => spinner.fail(`${red}${text}${reset_color}`),
-    info: (text) => spinner.info(`${blue}${text}${reset_color}`),
+    error: (text) => spinner.fail(`${red}${text}${reset}`),
+    info: (text) => spinner.info(`${blue}${text}${reset}`),
     log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
     spin: (text) => spinner.start(text),
-    succeed: (text) => spinner.succeed(`${green}${text}${reset_color}`),
-    warn: (text) => spinner.warn(`${yellow}${text}${reset_color}`),
+    succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
+    warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
+    debug: (text) =>
+      spinner.start(`${dim}${text}${reset}`).stopAndPersist({ symbol: `${dim}+${reset}` }),
   };
 }
 
 function createBasicPrint() {
-  const { error, info, log, warn } = console;
+  const { error, info, log, warn, debug } = console;
   return {
     type: 'basic',
     error,
@@ -59,6 +61,7 @@ function createBasicPrint() {
     spin: log,
     succeed: log,
     warn,
+    debug,
   };
 }
 

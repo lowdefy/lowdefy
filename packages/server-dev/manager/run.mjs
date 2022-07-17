@@ -73,11 +73,23 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
+/* TODO: Not killing server on errors properly
+- initial build fail?
+*/
+
 async function run() {
   const context = await getContext();
-  await context.initialBuild();
-  await context.startWatchers();
+  // context.logger.debug('debug');
+  // context.logger.info('info');
+  // context.logger.info({ print: 'info' }, 'info');
+  // context.logger.info({ print: 'log' }, 'log');
+  // context.logger.info({ print: 'succeed' }, 'succeed');
+  // context.logger.error('error');
   try {
+    // TODO: Should we add retry logic id initial build fails?
+    // Just a try with empty catch maybe?
+    await context.initialBuild();
+    await context.startWatchers();
     const serverPromise = startServer(context);
     await wait(800);
     if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
@@ -86,9 +98,9 @@ async function run() {
     }
     await serverPromise;
   } catch (error) {
-    console.log(error);
+    context.logger.error({ print: 'error' }, error?.message ?? error.toString());
     context.shutdownServer();
-    throw error;
+    process.exit();
   }
 }
 

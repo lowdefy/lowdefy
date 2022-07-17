@@ -20,7 +20,7 @@ function startServerProcess(context) {
   context.shutdownServer();
 
   const nextServer = spawnProcess({
-    logger: console,
+    logger: context.logger,
     command: 'node',
     args: [context.bin.next, 'start'],
     silent: false,
@@ -31,12 +31,13 @@ function startServerProcess(context) {
       },
     },
   });
-  // console.log(`Started server ${nextServer.pid}.`);
-  // nextServer.on('exit', (code, signal) => {
-  //   console.log(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
-  // });
+  context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
+  nextServer.on('exit', (code, signal) => {
+    // TODO: Needed?
+    context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
+  });
   nextServer.on('error', (error) => {
-    console.log(error);
+    context.logger.error(error);
   });
   context.nextServer = nextServer;
 }
