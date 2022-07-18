@@ -16,6 +16,7 @@
 
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+import appJson from '../build/app.json';
 
 class LowdefyDocument extends Document {
   render() {
@@ -25,10 +26,12 @@ class LowdefyDocument extends Document {
           <link rel="manifest" href="/manifest.webmanifest" />
           <link rel="icon" type="image/svg+xml" href="/icon.svg" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <div dangerouslySetInnerHTML={{ __html: appJson.html.appendHead }} />
         </Head>
         <body>
           <Main />
           <NextScript />
+          <div dangerouslySetInnerHTML={{ __html: appJson.html.appendBody }} />
         </body>
       </Html>
     );
