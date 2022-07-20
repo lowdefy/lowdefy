@@ -14,9 +14,14 @@
   limitations under the License.
 */
 
-function intlDateTimeFormat({ locale, options } = {}) {
-  const formatter = new Intl.DateTimeFormat(locale, options);
-  return (val) => formatter.format(val);
+function createAdapter(context, { authConfig, plugins }) {
+  const adapterConfig = authConfig.adapter;
+
+  if (!adapterConfig) {
+    return undefined;
+  }
+
+  return plugins.adapters[adapterConfig.type]({ properties: adapterConfig.properties });
 }
 
-export default intlDateTimeFormat;
+export default createAdapter;

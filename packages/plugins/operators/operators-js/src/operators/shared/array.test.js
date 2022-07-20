@@ -126,6 +126,13 @@ describe('_array.copyWithin', () => {
         location,
       })
     ).toEqual([]);
+    expect(
+      _array({
+        params: [null, 0, 1],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -162,6 +169,13 @@ describe('_array.every', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      _array({
         params: {
           on: [4, 5, 6],
           callback,
@@ -183,6 +197,23 @@ describe('_array.every', () => {
     expect(
       _array({
         params: [[4, 5, 6], callback],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      _array({
+        params: {
+          on: null,
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      _array({
+        params: [null, callback],
         methodName,
         location,
       })
@@ -252,6 +283,13 @@ describe('_array.fill', () => {
         location,
       })
     ).toEqual([]);
+    expect(
+      _array({
+        params: [null, 6],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -288,6 +326,13 @@ describe('_array.filter', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -303,6 +348,13 @@ describe('_array.filter', () => {
         location,
       })
     ).toEqual([5, 6]);
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -348,6 +400,13 @@ describe('_array.find', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(undefined);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -363,6 +422,13 @@ describe('_array.find', () => {
         location,
       })
     ).toEqual(5);
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(undefined);
   });
   test('throw', () => {
     expect(() =>
@@ -408,6 +474,13 @@ describe('_array.findIndex', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -423,6 +496,13 @@ describe('_array.findIndex', () => {
         location,
       })
     ).toEqual(1);
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
   });
   test('throw', () => {
     expect(() =>
@@ -462,6 +542,13 @@ describe('_array.flat', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: [[1, 2, [3], [[4]]]],
         methodName,
         location,
@@ -482,6 +569,13 @@ describe('_array.flat', () => {
       })
     ).toEqual([]);
   });
+  expect(
+    _array({
+      params: { on: null },
+      methodName,
+      location,
+    })
+  ).toEqual([]);
   test('throw', () => {
     expect(() =>
       _array({
@@ -511,6 +605,13 @@ describe('_array.includes', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      _array({
         params: [[1, 2, 3], 2],
         methodName,
         location,
@@ -533,6 +634,13 @@ describe('_array.includes', () => {
     expect(
       _array({
         params: { value: 1 },
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      _array({
+        params: [null, 2],
         methodName,
         location,
       })
@@ -567,6 +675,13 @@ describe('_array.indexOf', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
+    expect(
+      _array({
         params: [[1, 2, 3], 2],
         methodName,
         location,
@@ -589,6 +704,13 @@ describe('_array.indexOf', () => {
     expect(
       _array({
         params: { value: 1 },
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
+    expect(
+      _array({
+        params: { on: null, value: 'c' },
         methodName,
         location,
       })
@@ -623,6 +745,13 @@ describe('_array.join', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, '-'],
+        methodName,
+        location,
+      })
+    ).toEqual('');
+    expect(
+      _array({
         params: [[1, 2, 3], '-'],
         methodName,
         location,
@@ -638,6 +767,13 @@ describe('_array.join', () => {
     expect(
       _array({
         params: { separator: '.' },
+        methodName,
+        location,
+      })
+    ).toEqual('');
+    expect(
+      _array({
+        params: [null, '-'],
         methodName,
         location,
       })
@@ -670,6 +806,13 @@ describe('_array.join', () => {
 describe('_array.lastIndexOf', () => {
   const methodName = 'lastIndexOf';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
     expect(
       _array({
         params: [[1, 2, 3, 2], 2],
@@ -734,6 +877,13 @@ describe('_array.map', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -749,6 +899,20 @@ describe('_array.map', () => {
         location,
       })
     ).toEqual([2, 6, 7]);
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
+        params: { on: null, callback },
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -820,8 +984,35 @@ describe('_array.reduce', () => {
         location,
       })
     ).toEqual(12);
+    expect(
+      _array({
+        params: [null, callback, 0],
+        methodName,
+        location,
+      })
+    ).toEqual(0);
+    expect(
+      _array({
+        params: {
+          on: null,
+          callback,
+          initialValue: 8,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(8);
   });
   test('throw', () => {
+    expect(() =>
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduce - Reduce of empty array with no initial value Received: {\\"_array.reduce\\":[null,null]} at location."`
+    );
     expect(() =>
       _array({
         params: { on: 0 },
@@ -891,8 +1082,30 @@ describe('_array.reduceRight', () => {
         location,
       })
     ).toEqual(12);
+    expect(
+      _array({
+        params: {
+          on: null,
+          callback,
+          initialValue: 0,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(0);
   });
   test('throw', () => {
+    expect(() =>
+      expect(
+        _array({
+          params: [null, callback],
+          methodName,
+          location,
+        })
+      )
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduceRight - Reduce of empty array with no initial value Received: {\\"_array.reduceRight\\":[null,null]} at location."`
+    );
     expect(() =>
       _array({
         params: { on: 0 },
@@ -935,6 +1148,13 @@ describe('_array.reverse', () => {
         location,
       })
     ).toEqual([3, 2, 1]);
+    expect(
+      _array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -944,7 +1164,7 @@ describe('_array.reverse', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.reverse accepts one of the following types: array.
+      "Operator Error: _array.reverse accepts one of the following types: array, null.
             Received: {\\"_array.reverse\\":{\\"on\\":[1,2,3]}} at location."
     `);
     expect(() =>
@@ -954,18 +1174,8 @@ describe('_array.reverse', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.reverse accepts one of the following types: array.
+      "Operator Error: _array.reverse accepts one of the following types: array, null.
             Received: {\\"_array.reverse\\":\\"[1, 2, 3]\\"} at location."
-    `);
-    expect(() =>
-      _array({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.reverse accepts one of the following types: array.
-            Received: {\\"_array.reverse\\":null} at location."
     `);
   });
 });
@@ -973,6 +1183,13 @@ describe('_array.reverse', () => {
 describe('_array.slice', () => {
   const methodName = 'slice';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, 1, 2],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
     expect(
       _array({
         params: [[1, 2, 3, 4, 5], 1, 3],
@@ -990,6 +1207,13 @@ describe('_array.slice', () => {
     expect(
       _array({
         params: { start: 1 },
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
+        params: [null, 1, 3],
         methodName,
         location,
       })
@@ -1024,6 +1248,13 @@ describe('_array.splice', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, 1, 0],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: [['b', 'c', 'a'], 1, 0, 1, 2, 3],
         methodName,
         location,
@@ -1036,6 +1267,13 @@ describe('_array.splice', () => {
         location,
       })
     ).toEqual(['b', 1, 2, 3, 'c', 'a']);
+    expect(
+      _array({
+        params: [null, 1, 0, 1, 2, 3],
+        methodName,
+        location,
+      })
+    ).toEqual([1, 2, 3]);
   });
   test('throw', () => {
     expect(() =>
@@ -1082,6 +1320,13 @@ describe('_array.some', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(false);
+    expect(
+      _array({
         params: {
           on: [1, 2, 2],
           callback,
@@ -1107,6 +1352,16 @@ describe('_array.some', () => {
         location,
       })
     ).toEqual(true);
+    expect(
+      _array({
+        params: {
+          on: null,
+          callback,
+        },
+        methodName,
+        location,
+      })
+    ).toEqual(false);
   });
   test('throw', () => {
     expect(() =>
@@ -1141,9 +1396,17 @@ describe('_array.some', () => {
   });
 });
 
+// TODO: Is this correct? Should it not be singleArg? Reverse is singleArg
 describe('_array.sort', () => {
   const methodName = 'sort';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
     expect(
       _array({
         params: [[4, 1, 2, 3]],
@@ -1158,6 +1421,20 @@ describe('_array.sort', () => {
         location,
       })
     ).toEqual(['a', 'b', 'c', 'e']);
+    expect(
+      _array({
+        params: [['b', 'e', 'c', 'a']],
+        methodName,
+        location,
+      })
+    ).toEqual(['a', 'b', 'c', 'e']);
+    expect(
+      _array({
+        params: [null],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
   });
   test('throw', () => {
     expect(() =>
@@ -1198,6 +1475,13 @@ describe('_array.length', () => {
   test('valid', () => {
     expect(
       _array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual(0);
+    expect(
+      _array({
         params: [[1, 2, 3], 2],
         methodName,
         location,
@@ -1217,6 +1501,13 @@ describe('_array.length', () => {
         location,
       })
     ).toEqual(0);
+    expect(
+      _array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual(0);
   });
   test('throw', () => {
     expect(() =>
@@ -1226,7 +1517,7 @@ describe('_array.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.length accepts one of the following types: array.
+      "Operator Error: _array.length accepts one of the following types: array, null.
             Received: {\\"_array.length\\":{\\"on\\":[1]}} at location."
     `);
     expect(() =>
@@ -1236,18 +1527,8 @@ describe('_array.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.length accepts one of the following types: array.
+      "Operator Error: _array.length accepts one of the following types: array, null.
             Received: {\\"_array.length\\":\\"1\\"} at location."
-    `);
-    expect(() =>
-      _array({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _array.length accepts one of the following types: array.
-            Received: {\\"_array.length\\":null} at location."
     `);
   });
 });

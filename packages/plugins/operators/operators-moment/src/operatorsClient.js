@@ -14,9 +14,4 @@
   limitations under the License.
 */
 
-function intlRelativeTimeFormat({ locale, options, unit }) {
-  const formatter = new Intl.RelativeTimeFormat(locale, options);
-  return (val) => formatter.format(val, unit);
-}
-
-export default intlRelativeTimeFormat;
+export { default as _moment } from './operators/shared/moment.js';
