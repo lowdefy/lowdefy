@@ -24,20 +24,37 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describes different parts of the app.
+            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
 
             The root schema for a Lowdefy app is:
-            - `lowdefy: string`: __Required__ - The Lowdefy version number the app uses. This is required and cannot be a reference to another file.
+            - `lowdefy: string`: __Required__ - The Lowdefy version number that the app uses. This is required and cannot be a reference to another file.
             - `name: string`: A name for the application.
-            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's  license if you are licencing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
+            - `version: string`: The version number of the app that you are building. This is optional and allows you indicate the version of your app.
+            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's license if you are licensing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
             - `cli: object`: An object with configuration for the CLI.
             - `config: object`: An object with app configuration like the home page pageId.
+            - `auth: object` An object with auth configuration such as providers and an adapter.
             - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
             - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
-            - `types: object`: An object to customize and add block types.
+            - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.
 
+      - id: alert1
+        type: Alert
+        properties:
+          type: info
+          showIcon: false
+          message: |
+            <h3> YAML file extensions </h3>
+            <p> Both files with the <code>.yaml</code> and <code>.yml</code> file extensions are supported as YAML files. </p>
+            <h3> JSON instead of YAML </h3>
+            <p> Since you can reference JSON files, you can build your app using JSON instead of YAML files. The <code>lowdefy.yaml</code> file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code. </p>
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
             # Config
 
             The config object has the following properties:
@@ -45,105 +62,31 @@ _ref:
             - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
             - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
 
-      - id: alert1
-        type: Alert
-        properties:
-          type: warning
-          showIcon: false
-          message: Init page is an experimental feature, that may disappear in future releases as well as the flag itself can be changed. Use at your own risk.
+            # Auth
 
-      - id: md2
-        type: MarkdownWithCode
-        properties:
-          content: |
+            TODO: Add auth things here
+
             # Global
 
             Any data that you wish to use in your app can be stored in the __global__ object, and accessed using the [`_global`](/_global) operator. This is a good place to store data or configuration that is used throughout the app, for example the url of a logo or configuration of a page, since then these are only written once, and can be updated easily.
 
             The global object can also be modified using the [`SetGlobal`](/SetGlobal) action.
 
+            # Connections
+
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets such as passwords or API keys. Requests are used to interact with the connection, for example inserting a data record, executing a query or calling a API end-point.
+
+            See more about how `connections` and `requests` are used together [here](/connections-and-requests).
+
+            # Plugins
+
+            TODO: Add plugin things here
+
             # Menus
 
-            Menu objects are an object with links to pages. The are used by blocks like `PageSiderMenu` to render the links in the menu. If no menus are provided, a default menu is created, with links to all of the defined pages, and with their pageIds as menu item titles.
+            Menu objects are objects with links to pages. They are used by blocks like `PageSiderMenu` to render the links in the menu. If no menus are provided, a default menu is created, with links to all of the defined pages, and with their pageIds as menu item titles.
 
-            Blocks like like `PageSiderMenu` use the menu with `id: default` by default. This means that if you create a menu object with `id: default`, this will be used unless another menu is configured.
-
-            More than one menu can be configured in an app. As an example, this can be used when two logically different sections in the app need different menus.
-
-            If OpenID Connect authentication and role based authentication is configured, pages that the user is restricted from seeing are filtered from the menu object.
-
-            The schema for a menu object is:
-
-            - `id: string`: __Required__ - A identifier for the menu. If it is `default`, it will be used as default by pages.
-            - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that form the links in the menu. `MenuGroups` can be two levels deep.
-
-            The schema for a `MenuLink` is:
-            - `id: string`: __Required__ - A identifier for the link unique to the menu.
-            - `type: string`: __Required__ - The type should be `MenuLink`.
-            - `pageId: string`: The id of the page to link to. Used as the title if no title is provided.
-            - `url: string`: An external url to link to.
-            -  `properties: object`: The properties of the menu link. These are:
-                - `title: string`: The title to display for the link.
-                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the link. The icon is only shown if the link is at the top level of the menu (not in a menu group).
-
-            The schema for a `MenuGroup` is:
-            - `id: string`: __Required__ - A identifier for the group unique to the menu.
-            - `type: string`: __Required__ - The type should be `MenuGroup`.
-            -  `properties: object`: The properties of the menu group. These are:
-                - `title: string`: The title to display for the group.
-                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the group. The icon is only shown if the group is at the top level of the menu (not in a menu group).
-            - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that are should be grouped together in the group.
-
-            ###### Menus example:
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
-            menus:
-              - id: default
-                links:
-                  - id: page1
-                    type: MenuLink
-                    pageId: page1
-                    properties:
-                      title: Page 1
-                      icon: AiOutlineFile
-                  - id: top-group
-                    properties:
-                      title: Group
-                      icon: AiOutlineGroup
-                    links:
-                      - id: page2
-                        type: MenuLink
-                        pageId: page2 # pageId will be used as link title
-                      - id: external
-                        type: MenuLink
-                        url: https://external.com
-                        properties:
-                          title: External site
-                      - id: nested-group
-                        type: MenuGroup
-                        properties:
-                          title: Nested Group
-                        links:
-                          - id: page3
-                            type: MenuLink
-                            pageId: page3
-                            properties:
-                              title: Page 3
-              - id: page-1-and-3
-                links:
-                  - id: page1
-                    type: MenuLink
-                    pageId: page1
-                    properties:
-                      title: Page 1
-                      icon: AiOutlineFile
-                  - id: page3
-                    type: MenuLink
-                    pageId: page3
-                    properties:
-                      title: Page 3
-                      icon: AiOutlineControl
-            ```
+            See more about how menu objects are used and defined [here](/menus).
 
             # Pages
 
@@ -151,75 +94,15 @@ _ref:
 
             Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
 
-            Page blocks should be of category `context`, in order to create a context for the page. This means they always have the context initialization events like `onInit` to initialize the page.
-
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
 
             # References and templates
 
             References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
 
-            References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
+            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
 
-            ###### lowdefy.yaml
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
-
-            pages:
-              _ref: pages/page1.yaml # Path to the referenced file. Always from the root of the project.
-              _ref: pages/page1.yaml
-            ```
-
-            The `_ref` operator can take an argument called `vars`. This can be any data, and is passed down to later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
-
-            ###### pages/page1.yaml
-            ```yaml
-            _ref:
-              path: templates/text_page.yaml
-              vars:
-                id: page1
-                title: Page 1
-                content: |
-                  Page content text.
-            ```
-
-            ###### templates/text_page.yaml
-            ```yaml
-            id:
-              _var: id
-            type: PageHeaderMenu
-            properties:
-              title:
-                _var: title
-            blocks:
-              - id: content_card
-                type: Card
-                blocks:
-                  - id: title
-                    type: Title
-                    properties:
-                      content:
-                        _var: title
-                  - id: content
-                    type: Markdown
-                    properties:
-                      content:
-                        _var: content
-            ```
-
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. If a file ends with the `.njk` file extension, the file will first be hydrated as a Nunjucks template, using the `vars` as template variables. If the file ends with `.yaml.njk` or `.json.njk`, the output of the template will then be parsed. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
-
-            Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
-
-            The `_ref` operator can also be extended with custom JavaScript functions. A `resolver` function can be specified, which can overwrite the default way configuration files are read from the filesystem. A `transformer` function can be used to transform the value returned by the `_ref` operator.
-
-            ## YAML file extensions
-
-            Both files with the `.yaml` and `.yml` file extensions are supported as YAML files.
-
-            ## JSON instead of YAML
-
-            Since you can reference JSON files, you can build your app using JSON instead of YAML files. The `lowdefy.yaml` file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code.
+            See more about references and templates [here](/references-and-templates).
 
             # Lowdefy versions and version updates
 
