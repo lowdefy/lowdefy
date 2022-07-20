@@ -26,6 +26,7 @@ import _gt from './operators/shared/gt.js';
 import _gte from './operators/shared/gte.js';
 import _if_none from './operators/shared/if_none.js';
 import _if from './operators/shared/if.js';
+import _intl from './operators/shared/intl.js';
 import _json from './operators/shared/json.js';
 import _log from './operators/shared/log.js';
 import _lt from './operators/shared/lt.js';
@@ -68,6 +69,7 @@ export default {
   _hash,
   _if_none,
   _if,
+  _intl,
   _json,
   _log,
   _lt,
