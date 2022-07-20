@@ -30,6 +30,7 @@ function installPlugins({ logger, options, packageManager, packageManagerCmd }) 
       args: args[packageManager],
       silent: !options.verbose,
     });
+    logger.info({ print: 'log' }, 'Installed plugins.');
   };
 }
 

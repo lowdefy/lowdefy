@@ -73,18 +73,14 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
-/* TODO: Not killing server on errors properly
-- initial build fail?
+/* TODO:
+Not killing server on errors properly
+when:
+- initial build fails
 */
 
 async function run() {
   const context = await getContext();
-  // context.logger.debug('debug');
-  // context.logger.info('info');
-  // context.logger.info({ print: 'info' }, 'info');
-  // context.logger.info({ print: 'log' }, 'log');
-  // context.logger.info({ print: 'succeed' }, 'succeed');
-  // context.logger.error('error');
   try {
     // TODO: Should we add retry logic id initial build fails?
     // Just a try with empty catch maybe?

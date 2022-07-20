@@ -27,6 +27,7 @@ function lowdefyBuild({ directories, logger, options }) {
       refResolver: options.refResolver,
       stage: 'dev',
     });
+    logger.info({ print: 'log' }, 'Built config.');
   };
 }
 

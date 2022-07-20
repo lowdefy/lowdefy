@@ -47,7 +47,10 @@ function createOraPrint() {
     succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
     warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
     debug: (text) =>
-      spinner.start(`${dim}${text}${reset}`).stopAndPersist({ symbol: `${dim}+${reset}` }),
+      spinner
+        .stopAndPersist({ symbol: '∙' }) // Preserve any currently running spinner text
+        .start(`${dim}${text}${reset}`)
+        .stopAndPersist({ symbol: `${dim}+${reset}` }),
   };
 }
 
@@ -69,7 +72,6 @@ function createBasicPrint() {
 let print;
 
 function createPrint() {
-  // TODO: Add debug
   if (print) return print;
   if (process.env.CI === 'true' || process.env.CI === '1') {
     print = createBasicPrint();

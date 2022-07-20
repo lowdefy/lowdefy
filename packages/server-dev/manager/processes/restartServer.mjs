@@ -21,6 +21,7 @@ function restartServer(context) {
     context.shutdownServer(); // Is this needed here?
     context.logger.info({ print: 'spin' }, 'Restarting server...');
     startNextServer(context);
+    context.logger.info({ print: 'succeed' }, 'Restarted server.');
   };
 }
 
