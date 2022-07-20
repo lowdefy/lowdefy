@@ -17,20 +17,18 @@
 import { type } from '@lowdefy/helpers';
 
 class BatchChanges {
-  constructor({ context, fn, minDelay }) {
+  constructor({ context, fn, delay }) {
     this.context = context;
     this._call = this._call.bind(this);
     this.args = [];
-    this.delay = minDelay || 500;
+    this.delay = delay || 500;
     this.fn = fn;
-    this.minDelay = minDelay || 500;
     this.repeat = false;
     this.running = false;
   }
 
   newChange(...args) {
     this.args.push(args.filter((arg) => type.isString(arg))); // filter for string paths since chokidar also returns an stats object on windows.
-    this.delay = this.minDelay;
     this._startTimer();
   }
 
@@ -59,9 +57,6 @@ class BatchChanges {
     } catch (error) {
       this.running = false;
       this.context.logger.error(error?.message ?? error);
-      this.delay *= 2;
-      this.context.logger.warn(`Retrying in ${this.delay / 1000}s.`);
-      this._startTimer();
     }
   }
 }
