@@ -18,7 +18,7 @@ _ref:
     block_type: ControlledList
     category: list
     schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/schema.json
-    filePath: blocks/ControlledList/ControlledList.yaml
+    filePath: blocks/list/ControlledList.yaml
     description_content: |
       The ControlledList block renders a content area for all items in the array into the list card and provides easy UI elements to add or remove items in the list. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
     areas:
