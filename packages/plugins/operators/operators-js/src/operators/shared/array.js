@@ -76,7 +76,7 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
-  reverse: { prep, validTypes: ['array'], singleArg: true },
+  reverse: { prep, validTypes: ['array', 'null'], singleArg: true },
   slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
   some: {
     namedArgs: ['on', 'callback'],
@@ -91,7 +91,7 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
-  length: { validTypes: ['array'], prep, property: true },
+  length: { validTypes: ['array', 'null'], prep, property: true },
   // some,
   // forEach,
   // pop: { namedArgs: ['on'] },
