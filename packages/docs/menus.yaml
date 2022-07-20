@@ -84,6 +84,11 @@
           pageId: lowdefy-schema
           properties:
             title: Lowdefy App Schema
+        - id: menus
+          type: MenuLink
+          pageId: menus
+          properties:
+            title: Menus
         - id: context-and-state
           type: MenuLink
           pageId: context-and-state
