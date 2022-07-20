@@ -26,12 +26,20 @@ class LowdefyDocument extends Document {
           <link rel="manifest" href="/manifest.webmanifest" />
           <link rel="icon" type="image/svg+xml" href="/icon.svg" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <div dangerouslySetInnerHTML={{ __html: appJson.html.appendHead }} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `/* start of Lowdefy append head */</script>${appJson.html.appendHead}<script>/* end of Lowdefy append head */`,
+            }}
+          />
         </Head>
         <body>
           <Main />
           <NextScript />
-          <div dangerouslySetInnerHTML={{ __html: appJson.html.appendBody }} />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `/* start of Lowdefy append body */</script>${appJson.html.appendBody}<script>/* end of Lowdefy append body */`,
+            }}
+          />
         </body>
       </Html>
     );
