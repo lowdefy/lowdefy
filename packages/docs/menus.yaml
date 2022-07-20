@@ -89,6 +89,11 @@
           pageId: menus
           properties:
             title: Menus
+        - id: references-and-templates
+          type: MenuLink
+          pageId: references-and-templates
+          properties:
+            title: References and Templates
         - id: context-and-state
           type: MenuLink
           pageId: context-and-state
