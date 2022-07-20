@@ -169,6 +169,13 @@ describe('_array.every', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(true);
+    expect(
+      _array({
         params: {
           on: [4, 5, 6],
           callback,
@@ -319,6 +326,13 @@ describe('_array.filter', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -384,6 +398,13 @@ describe('_array.find', () => {
     parser,
   });
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(undefined);
     expect(
       _array({
         params: {
@@ -453,6 +474,13 @@ describe('_array.findIndex', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
+    expect(
+      _array({
         params: {
           on: [1, 5, 6],
           callback,
@@ -514,6 +542,13 @@ describe('_array.flat', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: [[1, 2, [3], [[4]]]],
         methodName,
         location,
@@ -568,6 +603,13 @@ describe('_array.flat', () => {
 describe('_array.includes', () => {
   const methodName = 'includes';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(false);
     expect(
       _array({
         params: [[1, 2, 3], 2],
@@ -633,6 +675,13 @@ describe('_array.indexOf', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
+    expect(
+      _array({
         params: [[1, 2, 3], 2],
         methodName,
         location,
@@ -696,6 +745,13 @@ describe('_array.join', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, '-'],
+        methodName,
+        location,
+      })
+    ).toEqual('');
+    expect(
+      _array({
         params: [[1, 2, 3], '-'],
         methodName,
         location,
@@ -750,6 +806,13 @@ describe('_array.join', () => {
 describe('_array.lastIndexOf', () => {
   const methodName = 'lastIndexOf';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, 1],
+        methodName,
+        location,
+      })
+    ).toEqual(-1);
     expect(
       _array({
         params: [[1, 2, 3, 2], 2],
@@ -812,6 +875,13 @@ describe('_array.map', () => {
     parser,
   });
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
     expect(
       _array({
         params: {
@@ -936,6 +1006,15 @@ describe('_array.reduce', () => {
   test('throw', () => {
     expect(() =>
       _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduce - Reduce of empty array with no initial value Received: {\\"_array.reduce\\":[null,null]} at location."`
+    );
+    expect(() =>
+      _array({
         params: { on: 0 },
         methodName,
         location,
@@ -1017,6 +1096,17 @@ describe('_array.reduceRight', () => {
   });
   test('throw', () => {
     expect(() =>
+      expect(
+        _array({
+          params: [null, callback],
+          methodName,
+          location,
+        })
+      )
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"Operator Error: _array.reduceRight - Reduce of empty array with no initial value Received: {\\"_array.reduceRight\\":[null,null]} at location."`
+    );
+    expect(() =>
       _array({
         params: { on: 0 },
         methodName,
@@ -1095,6 +1185,13 @@ describe('_array.slice', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null, 1, 2],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: [[1, 2, 3, 4, 5], 1, 3],
         methodName,
         location,
@@ -1149,6 +1246,13 @@ describe('_array.slice', () => {
 describe('_array.splice', () => {
   const methodName = 'splice';
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, 1, 0],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
     expect(
       _array({
         params: [['b', 'c', 'a'], 1, 0, 1, 2, 3],
@@ -1214,6 +1318,13 @@ describe('_array.some', () => {
     parser,
   });
   test('valid', () => {
+    expect(
+      _array({
+        params: [null, callback],
+        methodName,
+        location,
+      })
+    ).toEqual(false);
     expect(
       _array({
         params: {
@@ -1291,6 +1402,13 @@ describe('_array.sort', () => {
   test('valid', () => {
     expect(
       _array({
+        params: [null],
+        methodName,
+        location,
+      })
+    ).toEqual([]);
+    expect(
+      _array({
         params: [[4, 1, 2, 3]],
         methodName,
         location,
@@ -1355,6 +1473,13 @@ describe('_array.sort', () => {
 describe('_array.length', () => {
   const methodName = 'length';
   test('valid', () => {
+    expect(
+      _array({
+        params: null,
+        methodName,
+        location,
+      })
+    ).toEqual(0);
     expect(
       _array({
         params: [[1, 2, 3], 2],
