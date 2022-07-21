@@ -26,6 +26,18 @@ _ref:
           content: |
             A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
 
+      - id: alert1
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: |
+            A good understanding of YAML is needed before starting with Lowdefy. If you don't have any experience using YAML, you can find a good introduction video <a href = "https://www.youtube.com/watch?v=cdLNKUoMc6c">here</a>.
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
             The root schema for a Lowdefy app is:
             - `lowdefy: string`: __Required__ - The Lowdefy version number that the app uses. This is required and cannot be a reference to another file.
             - `name: string`: A name for the application.
@@ -40,7 +52,15 @@ _ref:
             - `menus: object[]`: An array of menu objects.
             - `pages: object[]`: An array of page objects.
 
-      - id: alert1
+            Pages are made up of blocks. Blocks have the following basic schema:
+            - `id: string`: __Required__ - A unique identifier for a block.
+            - `type: string`: __Required__ - This is the block type identifier and defines what block to used.
+            - `properties: object`: All the settings passed to a block component.
+            - `blocks: array`: An array of blocks to render within this block.
+
+            Find the more detailed block schema [here](/blocks).
+
+      - id: alert2
         type: Alert
         properties:
           type: info
@@ -51,7 +71,7 @@ _ref:
             <h3> JSON instead of YAML </h3>
             <p> Since you can reference JSON files, you can build your app using JSON instead of YAML files. The <code>lowdefy.yaml</code> file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code. </p>
 
-      - id: md2
+      - id: md3
         type: MarkdownWithCode
         properties:
           content: |
@@ -95,6 +115,175 @@ _ref:
             Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
+
+            Let's have a look at how to define a page and it's blocks. We can start with a simple page with an empty card block on it.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+            ```
+
+            We can then add a title block and a paragraph block to our card so that it won't be so empty.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    blocks:
+                      - id: title
+                        type: Title
+                        properties:
+                          content: Title
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
+            ```
+
+            Let's add another card to our page and give it some blocks which will allow us to get input from the user.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    blocks:
+                      - id: title
+                        type: Title
+                        properties:
+                          content: Title
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
+                  - id: input_card
+                    type: Card
+                    blocks:
+                      - id: text_input
+                        type: TextInput
+                        properties:
+                          label:
+                            title: Please Enter Your Name
+                      - id: radio_selector
+                        type: RadioSelector
+                        properties:
+                          label:
+                            title: How Are You Feeling?
+                            colon: false
+                          options:
+                            - label: Meh
+                              value: 1
+                              disabled: false
+                            - label: Okay
+                              value: 2
+                              disabled: false
+                            - label: Good
+                              value: 3
+                              disabled: false
+                            - label: Great
+                              value: 4
+                              disabled: false
+                            - label: Amazing Now That I'm Using Lowdefy
+                              value: 5
+                              disabled: false
+            ```
+
+            In order to build our page further, we will need to add more blocks. Let's leave this page as is and add another page, with it's own card block containing a title block and a paragraph block.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    blocks:
+                      - id: title
+                        type: Title
+                        properties:
+                          content: Title
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
+                  - id: input_card
+                    type: Card
+                    blocks:
+                      - id: text_input
+                        type: TextInput
+                        properties:
+                          label:
+                            title: Please Enter Your Name
+                      - id: radio_selector
+                        type: RadioSelector
+                        properties:
+                          label:
+                            title: How Are You Feeling?
+                            colon: false
+                          options:
+                            - label: Meh
+                              value: 1
+                              disabled: false
+                            - label: Okay
+                              value: 2
+                              disabled: false
+                            - label: Good
+                              value: 3
+                              disabled: false
+                            - label: Great
+                              value: 4
+                              disabled: false
+                            - label: Amazing Now That I'm Using Lowdefy
+                              value: 5
+                              disabled: false
+              - id: page2
+                type: PageHeaderMenu
+                properties:
+                  title: Page 2
+                blocks:
+                  - id: content_card
+                    type: Card
+                    blocks:
+                      - id: title
+                        type: Title
+                        properties:
+                          content: Title
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 2.
+            ```
+
+            In order to keep files neat and generally easier to read and understand, we suggest making use of references and templating.
 
             # References and templates
 
