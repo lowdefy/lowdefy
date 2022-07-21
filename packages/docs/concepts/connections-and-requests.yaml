@@ -24,13 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            ### TLDR
-              - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
-              - `requests` use connections to make a call to the connected external services.
-              - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
-
-            -----------
-            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, like inserting a data record, executing a query or calling a API end-point.
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling a API end-point.
 
       - id: alert2
         type: Alert
@@ -75,7 +69,7 @@ _ref:
 
             # Requests
 
-            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action. Operators in request properties are evaluated every time a request is called.
+            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action. The operators to be used are defined in the `payload` field and are accessed by making use of the `_payload` operator in the `properties` field. Operators in the request payload are evaluated every time a request is called.
 
             # Request Schema
 
@@ -83,8 +77,9 @@ _ref:
 
             - `id: string`: __Required__ - A identifier for the request. It must be unique within the context the request is defined in.
             - `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
+            - `payload: object`: The operators to be used inside of the request. __Operators are evaluated__.
             - `connectionId: string`: __Required__ - The `id` of the connection that should be used.
-            - `properties: object`: The settings passed to the request. __Operators are evaluated__.
+            - `properties: object`: The settings passed to the request. Make use of `_payload` operator to use operators that were evaluated in `payload` mentioned above. __Operators are evaluated__.
 
             ###### Requests definition example:
             ```yaml
@@ -94,6 +89,9 @@ _ref:
               - id: request1
                 type: RequestType1
                 connectionId: connectionId1
+                payload:
+                  field:
+                    _state: field
                 properties:
                   # ...
               - id: request2
@@ -104,6 +102,11 @@ _ref:
             properties:
               # ...
             ```
+
+            ### TLDR
+              - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
+              - `requests` use connections to make a call to the connected external services.
+              - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
 
       - _ref:
           path: templates/navigation_buttons.yaml
