@@ -38,12 +38,11 @@ const meta = {
   toString: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] },
 };
 
-function _number({ params, location, methodName }) {
+function _number({ params, methodName }) {
   if (
     ['toExponential', 'toFixed', 'toLocaleString', 'toPrecision', 'toString'].includes(methodName)
   ) {
     return runInstance({
-      location,
       meta: meta,
       methodName,
       operator: '_number',
@@ -53,7 +52,6 @@ function _number({ params, location, methodName }) {
   }
   return runClass({
     functions: Number,
-    location,
     meta: meta,
     methodName,
     operator: '_number',

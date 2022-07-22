@@ -25,14 +25,12 @@ test('input calls getFromObject', async () => {
   input({
     arrayIndices: [0],
     input: { input: true },
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: {
           input: true,
         },

@@ -16,11 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _or({ location, params }) {
+function _or({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _or takes an array type. Received: ${JSON.stringify(params)} at ${location}.`
-    );
+    throw new Error(`_or takes an array type.`);
   }
   return !!params.reduce((acc, el) => acc || el, false);
 }

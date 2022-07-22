@@ -62,10 +62,9 @@ const meta = {
   SQRT2: { property: true },
 };
 
-function _math({ params, location, methodName }) {
+function _math({ params, methodName }) {
   return runClass({
     functions: Math,
-    location,
     meta,
     methodName,
     operator: '_math',

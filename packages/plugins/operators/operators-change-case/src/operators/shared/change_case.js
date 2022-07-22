@@ -44,39 +44,25 @@ const changeCase = {
   snakeCase,
 };
 
-const prepRegex = (prop, location) => {
+const prepRegex = (prop) => {
   const regex = type.isString(prop) ? { pattern: prop } : prop;
   if (!type.isObject(regex)) {
-    throw new Error(
-      `Operator Error: regex must be string or an object. Received ${JSON.stringify(
-        prop
-      )} at ${location}.`
-    );
+    throw new Error(`regex must be string or an object.`);
   }
-  try {
-    return new RegExp(regex.pattern, regex.flags || 'gm');
-  } catch (e) {
-    throw new Error(
-      `Operator Error: ${e.message}. Received: ${JSON.stringify(prop)} at ${location}.`
-    );
-  }
+  return new RegExp(regex.pattern, regex.flags || 'gm');
 };
 
-const prep = (args, { location }) => {
+const prep = (args) => {
   const options = args[1];
   if (!type.isNone(options) && !type.isObject(options)) {
-    throw new Error(
-      `Operator Error: options must be an object. Received ${JSON.stringify(
-        options
-      )} at ${location}.`
-    );
+    throw new Error(`options must be an object.`);
   }
   if (type.isObject(options)) {
     if (options.splitRegexp) {
-      options.splitRegexp = prepRegex(options.splitRegexp, location);
+      options.splitRegexp = prepRegex(options.splitRegexp);
     }
     if (options.stripRegexp) {
-      options.stripRegexp = prepRegex(options.stripRegexp, location);
+      options.stripRegexp = prepRegex(options.stripRegexp);
     }
   }
   return args;
@@ -133,10 +119,9 @@ Object.keys(changeCase).forEach((methodName) => {
   meta[methodName] = { namedArgs: ['on', 'options'], validTypes: ['array', 'object'], prep };
 });
 
-function change_case({ params, location, methodName }) {
+function change_case({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_change_case',

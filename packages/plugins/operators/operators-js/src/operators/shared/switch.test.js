@@ -26,7 +26,6 @@ test('_switch evaluates to true for the first case', () => {
         ],
         default: 'C',
       },
-      location: 'locationId',
     })
   ).toEqual('A');
 });
@@ -41,21 +40,18 @@ test('_switch evaluates to the default case', () => {
         ],
         default: 'C',
       },
-      location: 'locationId',
     })
   ).toEqual('C');
 });
 
 test('switch params branches not an array', () => {
-  expect(() => _switch({ params: { branches: '1, 0' }, location: 'locationId' })).toThrow(
-    'Operator Error: switch takes an array type as input for the branches. Received: {"branches":"1, 0"} at locationId.'
+  expect(() => _switch({ params: { branches: '1, 0' } })).toThrow(
+    'switch takes an array type as input for the branches.'
   );
 });
 
 test("switch params branches if doesn't evaluate to boolean ", () => {
-  expect(() =>
-    _switch({ params: { branches: [{ if: '1, 0', then: 'A' }] }, location: 'locationId' })
-  ).toThrow(
-    'Operator Error: switch takes a boolean type for parameter test. Received: {"branches":[{"if":"1, 0","then":"A"}]} at locationId.'
+  expect(() => _switch({ params: { branches: [{ if: '1, 0', then: 'A' }] } })).toThrow(
+    'switch takes a boolean type for parameter test.'
   );
 });

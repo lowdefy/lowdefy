@@ -92,10 +92,9 @@ const meta = {
 
 const functions = { aggregate, expr, test };
 
-function mql({ params, location, methodName }) {
+function mql({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_mql',

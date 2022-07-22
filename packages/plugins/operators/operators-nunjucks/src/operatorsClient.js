@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as _nunjucks } from './operators/shared/nunjucks.js';
+export { default as _nunjucks } from './operators/client/nunjucks.js';

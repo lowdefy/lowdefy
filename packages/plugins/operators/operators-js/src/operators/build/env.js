@@ -16,10 +16,9 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-function _env({ arrayIndices, env, location, params }) {
+function _env({ arrayIndices, env, params }) {
   return getFromObject({
     arrayIndices,
-    location,
     object: env,
     operator: '_env',
     params,

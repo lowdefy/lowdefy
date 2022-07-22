@@ -16,34 +16,22 @@
 
 import eq from './eq.js';
 
-const location = 'location';
-
 test('_eq false', () => {
-  expect(eq({ params: [1, 2], location })).toEqual(false);
-  expect(eq({ params: [0, 1], location })).toEqual(false);
-  expect(eq({ params: [false, true], location })).toEqual(false);
-  expect(eq({ params: [true, false], location })).toEqual(false);
+  expect(eq({ params: [1, 2] })).toEqual(false);
+  expect(eq({ params: [0, 1] })).toEqual(false);
+  expect(eq({ params: [false, true] })).toEqual(false);
+  expect(eq({ params: [true, false] })).toEqual(false);
 });
 test('_eq true', () => {
-  expect(eq({ params: [1, 1], location })).toEqual(true);
-  expect(eq({ params: [0, 0], location })).toEqual(true);
-  expect(eq({ params: [true, true], location })).toEqual(true);
-  expect(eq({ params: [false, false], location })).toEqual(true);
+  expect(eq({ params: [1, 1] })).toEqual(true);
+  expect(eq({ params: [0, 0] })).toEqual(true);
+  expect(eq({ params: [true, true] })).toEqual(true);
+  expect(eq({ params: [false, false] })).toEqual(true);
 });
 test('_eq errors', () => {
-  expect(() => eq({ params: 'hello', location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: "hello" at location.'
-  );
-  expect(() => eq({ params: null, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: null at location.'
-  );
-  expect(() => eq({ params: true, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: true at location.'
-  );
-  expect(() => eq({ params: false, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: false at location.'
-  );
-  expect(() => eq({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _eq takes an array of length 2 as input. Received: [1,2,3] at location.'
-  );
+  expect(() => eq({ params: 'hello' })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: null })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: true })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: false })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: [1, 2, 3] })).toThrow('_eq takes an array of length 2 as input.');
 });

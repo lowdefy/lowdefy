@@ -29,7 +29,6 @@ test('_mql.aggregate on: null', () => {
           },
         ],
       },
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([]);
@@ -55,7 +54,6 @@ test('_mql.aggregate sort as array params', () => {
           },
         ],
       ],
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([
@@ -88,7 +86,6 @@ test('_mql.aggregate sort as object params', () => {
           },
         ],
       },
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([
@@ -122,7 +119,6 @@ test('_mql.aggregate group', () => {
           },
         ],
       },
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([
@@ -147,7 +143,6 @@ test('_mql.aggregate empty pipeline', () => {
         ],
         pipeline: [],
       },
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([
@@ -173,7 +168,6 @@ test('_mql.aggregate empty collection', () => {
           },
         ],
       },
-      location: 'locationId',
       methodName: 'aggregate',
     })
   ).toEqual([]);
@@ -192,12 +186,10 @@ test('_mql.aggregate on is string', () => {
           },
         ],
       },
-      location: 'locationId',
+
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate - Data must be of type array. Received: {\\"_mql.aggregate\\":{\\"on\\":\\"invalid\\",\\"pipeline\\":[{\\"$sort\\":{\\"id\\":1}}]}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.aggregate - Data must be of type array."`);
 });
 
 test('_mql.aggregate invalid', () => {
@@ -208,10 +200,12 @@ test('_mql.aggregate invalid', () => {
           {
             id: 2,
           },
+
           {
             id: 1,
           },
         ],
+
         pipeline: [
           {
             $badOp: {
@@ -220,12 +214,10 @@ test('_mql.aggregate invalid', () => {
           },
         ],
       },
-      location: 'locationId',
+
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate - invalid aggregation operator $badOp Received: {\\"_mql.aggregate\\":{\\"on\\":[{\\"id\\":2},{\\"id\\":1}],\\"pipeline\\":[{\\"$badOp\\":{\\"id\\":1}}]}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.aggregate - invalid aggregation operator $badOp"`);
 });
 
 test('_mql.aggregate on is object', () => {
@@ -235,6 +227,7 @@ test('_mql.aggregate on is object', () => {
         on: {
           id: 1,
         },
+
         pipeline: [
           {
             $sort: {
@@ -243,12 +236,10 @@ test('_mql.aggregate on is object', () => {
           },
         ],
       },
-      location: 'locationId',
+
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate - Data must be of type array. Received: {\\"_mql.aggregate\\":{\\"on\\":{\\"id\\":1},\\"pipeline\\":[{\\"$sort\\":{\\"id\\":1}}]}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.aggregate - Data must be of type array."`);
 });
 
 test('_mql.aggregate pipeline not an array', () => {
@@ -259,31 +250,29 @@ test('_mql.aggregate pipeline not an array', () => {
           {
             id: 2,
           },
+
           {
             id: 1,
           },
         ],
+
         pipeline: 'invalid',
       },
-      location: 'locationId',
+
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate - Pipeline must be of type array. Received: {\\"_mql.aggregate\\":{\\"on\\":[{\\"id\\":2},{\\"id\\":1}],\\"pipeline\\":\\"invalid\\"}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.aggregate - Pipeline must be of type array."`);
 });
 
 test('_mql.aggregate params not object or array', () => {
   expect(() =>
     mql({
       params: 'invalid',
-      location: 'locationId',
       methodName: 'aggregate',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _mql.aggregate accepts one of the following types: array, object.
-          Received: {\\"_mql.aggregate\\":\\"invalid\\"} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_mql.aggregate accepts one of the following types: array, object."`
+  );
 });
 
 test('_mql.expr $add on: null', () => {
@@ -293,7 +282,6 @@ test('_mql.expr $add on: null', () => {
         on: null,
         expr: { $add: ['$number', 2] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(NaN);
@@ -306,7 +294,6 @@ test('_mql.expr $sum on: null', () => {
         on: null,
         expr: { $sum: ['$number', 2] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(2);
@@ -319,7 +306,6 @@ test('_mql.expr $gt on: null', () => {
         on: null,
         expr: { $gt: ['$number', 2] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(false);
@@ -332,7 +318,6 @@ test('_mql.expr add number', () => {
         on: { number: 42 },
         expr: { $add: ['$number', 2] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(44);
@@ -345,7 +330,6 @@ test('_mql.expr null', () => {
         on: { number: 42 },
         expr: null,
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(null);
@@ -358,12 +342,10 @@ test('_mql.expr invalid', () => {
         on: { number: 42 },
         expr: { $cond: ['$number'] },
       },
-      location: 'locationId',
+
       methodName: 'expr',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.expr - $cond: invalid arguments Received: {\\"_mql.expr\\":{\\"on\\":{\\"number\\":42},\\"expr\\":{\\"$cond\\":[\\"$number\\"]}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.expr - $cond: invalid arguments"`);
 });
 
 test('_mql.expr invalid on', () => {
@@ -373,12 +355,10 @@ test('_mql.expr invalid on', () => {
         on: 'invalid',
         expr: { $cond: ['$number'] },
       },
-      location: 'locationId',
+
       methodName: 'expr',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.expr - Data must be of type object. Received: {\\"_mql.expr\\":{\\"on\\":\\"invalid\\",\\"expr\\":{\\"$cond\\":[\\"$number\\"]}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.expr - Data must be of type object."`);
 });
 
 test('_mql.expr logic', () => {
@@ -388,7 +368,6 @@ test('_mql.expr logic', () => {
         on: { number: 42, booleanTrue: true },
         expr: { $and: [{ $gt: ['$number', 41] }, '$booleanTrue'] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(true);
@@ -398,7 +377,6 @@ test('_mql.expr logic', () => {
         on: { number: 42, booleanFalse: false },
         expr: { $and: [{ $gt: ['$number', 41] }, '$booleanFalse'] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(false);
@@ -408,7 +386,6 @@ test('_mql.expr logic', () => {
         on: { number: 42, booleanTrue: true },
         expr: { $and: [{ $gt: ['$number', 42] }, '$booleanTrue'] },
       },
-      location: 'locationId',
       methodName: 'expr',
     })
   ).toEqual(false);
@@ -421,7 +398,6 @@ test('_mql.test on: null', () => {
         on: null,
         test: { string: { $eq: 'Some String' } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(false);
@@ -434,7 +410,6 @@ test('_mql.test $eq on: null', () => {
         on: null,
         test: { string: { $eq: 'Some String' } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(false);
@@ -447,7 +422,6 @@ test('_mql.test $ne on: null', () => {
         on: null,
         test: { string: { $ne: 'Some String' } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -460,7 +434,6 @@ test('_mql.test string equal', () => {
         on: { string: 'Some String' },
         test: { string: { $eq: 'Some String' } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -473,7 +446,6 @@ test('_mql.test string equal shorthand', () => {
         on: { string: 'Some String' },
         test: { string: 'Some String' },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -486,7 +458,6 @@ test('_mql.test string not equal', () => {
         on: { string: 'Some String' },
         test: { string: 'Some Other String' },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(false);
@@ -499,7 +470,6 @@ test('_mql.test number equal', () => {
         on: { number: 42 },
         test: { number: { $eq: 42 } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -512,7 +482,6 @@ test('_mql.test number not equal', () => {
         on: { number: 42 },
         test: { number: 40 },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(false);
@@ -525,7 +494,6 @@ test('_mql.test number greater than', () => {
         on: { number: 42 },
         test: { number: { $gt: 1 } },
       },
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -535,7 +503,6 @@ test('_mql.test array params', () => {
   expect(
     mql({
       params: [{ value: 30 }, { value: { $lt: 31 } }],
-      location: 'locationId',
       methodName: 'test',
     })
   ).toEqual(true);
@@ -548,25 +515,21 @@ test('_mql.test invalid expr', () => {
         on: { number: 42 },
         test: 'invalid',
       },
-      location: 'locationId',
+
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.test - Query test must be of type object. Received: {\\"_mql.test\\":{\\"on\\":{\\"number\\":42},\\"test\\":\\"invalid\\"}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.test - Query test must be of type object."`);
 });
 
 test('_mql.test invalid params', () => {
   expect(() =>
     mql({
       params: 'invalid',
-      location: 'locationId',
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _mql.test accepts one of the following types: array, object.
-          Received: {\\"_mql.test\\":\\"invalid\\"} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_mql.test accepts one of the following types: array, object."`
+  );
 });
 
 test('_mql.test null', () => {
@@ -576,12 +539,10 @@ test('_mql.test null', () => {
         on: { number: 42 },
         test: null,
       },
-      location: 'locationId',
+
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.test - Query test must be of type object. Received: {\\"_mql.test\\":{\\"on\\":{\\"number\\":42},\\"test\\":null}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.test - Query test must be of type object."`);
 });
 
 test('_mql.test invalid test', () => {
@@ -591,12 +552,10 @@ test('_mql.test invalid test', () => {
         on: { string: 'value' },
         test: { string: { $badOp: 'Some String' } },
       },
-      location: 'locationId',
+
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.test - unknown operator $badOp Received: {\\"_mql.test\\":{\\"on\\":{\\"string\\":\\"value\\"},\\"test\\":{\\"string\\":{\\"$badOp\\":\\"Some String\\"}}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.test - unknown operator $badOp"`);
 });
 
 test('_mql.test invalid on', () => {
@@ -606,12 +565,10 @@ test('_mql.test invalid on', () => {
         on: 'invalid',
         test: { $cond: ['$number'] },
       },
-      location: 'locationId',
+
       methodName: 'test',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.test - Data must be of type object. Received: {\\"_mql.test\\":{\\"on\\":\\"invalid\\",\\"test\\":{\\"$cond\\":[\\"$number\\"]}}} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_mql.test - Data must be of type object."`);
 });
 
 test('_mql invalid method name', () => {
@@ -621,13 +578,12 @@ test('_mql invalid method name', () => {
         on: { number: 42 },
         test: { number: 42 },
       },
-      location: 'locationId',
+
       methodName: 'invalid',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _mql.invalid is not supported, use one of the following: aggregate, expr, test.
-          Received: {\\"_mql.invalid\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_mql.invalid is not supported, use one of the following: aggregate, expr, test."`
+  );
 });
 
 test('_mql undefined method name', () => {
@@ -637,10 +593,8 @@ test('_mql undefined method name', () => {
         on: { number: 42 },
         test: { number: 42 },
       },
-      location: 'locationId',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _mql requires a valid method name, use one of the following: aggregate, expr, test.
-            Received: {\\"_mql.undefined\\":{\\"on\\":{\\"number\\":42},\\"test\\":{\\"number\\":42}}} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_mql requires a valid method name, use one of the following: aggregate, expr, test."`
+  );
 });

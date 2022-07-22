@@ -14,29 +14,10 @@
   limitations under the License.
 */
 
-import deepDiff from 'deep-diff';
-import { runClass } from '@lowdefy/operators';
+import nunjucks from '../nunjucks.js';
 
-function deep(lhs, rhs) {
-  const result = deepDiff.diff(lhs, rhs);
-  if (!result) {
-    return [];
-  }
-  return result;
+function _nunjucks({ params, state }) {
+  return nunjucks({ params, defaultOn: state });
 }
 
-const functions = { deep };
-const meta = {
-  deep: { namedArgs: ['lhs', 'rhs'], validTypes: ['object', 'array'] },
-};
-function _diff({ params, methodName }) {
-  return runClass({
-    functions,
-    meta,
-    methodName,
-    operator: '_diff',
-    params,
-  });
-}
-
-export default _diff;
+export default _nunjucks;

@@ -15,104 +15,71 @@
 */
 
 /* eslint-disable max-classes-per-file */
-import { WebParser } from '@lowdefy/operators';
 import _menu from './menu.js';
 
-const arrayIndices = [1];
-
-const context = {
-  _internal: {
-    lowdefy: {
-      basePath: 'basePath',
-      inputs: { id: true },
-      lowdefyGlobal: { global: true },
-      menus: [
-        {
-          menuId: 'default',
-        },
-        {
-          menuId: 'm_1',
-        },
-        {
-          menuId: 'm_2',
-        },
-      ],
-      urlQuery: { urlQuery: true },
-      user: { user: true },
-      home: {
-        pageId: 'home.pageId',
-        configured: false,
-      },
-      _internal: {
-        window: {
-          location: {
-            hash: 'window.location.hash',
-            host: 'window.location.host',
-            hostname: 'window.location.hostname',
-            href: 'window.location.href',
-            origin: 'window.location.origin',
-            pathname: 'window.location.pathname',
-            port: 'window.location.port',
-            protocol: 'window.location.protocol',
-            search: 'window.location.search',
-          },
-        },
-      },
-    },
+const menus = [
+  {
+    menuId: 'default',
   },
-  eventLog: [{ eventLog: true }],
-  id: 'id',
-  requests: [{ requests: true }],
-  state: { state: true },
-};
+  {
+    menuId: 'm_1',
+  },
+  {
+    menuId: 'm_2',
+  },
+];
 
-const operators = {
-  _menu,
-};
-
-console.error = () => {};
-
-test('_menu using string menuId', () => {
-  const input = { a: { _menu: 'default' } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: {
-      menuId: 'default',
-    },
+test('_media full media object', () => {
+  expect(_menu({ params: 'default', menus })).toEqual({
+    menuId: 'default',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_menu using index', () => {
-  const input = { a: { _menu: 1 } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: {
-      menuId: 'm_1',
-    },
+  expect(_menu({ params: 1, menus })).toEqual({
+    menuId: 'm_1',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu in object', () => {
-  const input = { a: { _menu: 'default' } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: {
+test('_menu using index', () => {
+  expect(_menu({ params: 1, menus })).toEqual({
+    menuId: 'm_1',
+  });
+});
+
+test('_menu using index', () => {
+  expect(_menu({ params: 1, menus })).toEqual({
+    menuId: 'm_1',
+  });
+});
+
+test('_menu using object index', () => {
+  expect(_menu({ params: { index: 1 }, menus })).toEqual({
+    menuId: 'm_1',
+  });
+});
+
+test('_menu using object value', () => {
+  expect(_menu({ params: { value: 'm_1' }, menus })).toEqual({
+    menuId: 'm_1',
+  });
+});
+test('_menu using object all', () => {
+  expect(_menu({ params: { all: true }, menus })).toEqual([
+    {
       menuId: 'default',
     },
-  });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+    {
+      menuId: 'm_1',
+    },
+    {
+      menuId: 'm_2',
+    },
+  ]);
 });
 
 test('_menu full menus', () => {
-  const input = { _menu: true };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
+  expect(_menu({ params: true, menus })).toEqual([
     {
       menuId: 'default',
     },
@@ -123,86 +90,28 @@ test('_menu full menus', () => {
       menuId: 'm_2',
     },
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_menu null', () => {
-  const input = { _menu: null };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu must be of type string, number or object. Received: null at locationId.],
-    ]
-  `);
-});
-
-test('_menu param object value', () => {
-  const input = {
-    _menu: {
-      value: 'm_2',
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ menuId: 'm_2' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_menu param object index', () => {
-  const input = {
-    _menu: {
-      index: 2,
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({ menuId: 'm_2' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(() => {
+    _menu({ params: null, menus });
+  }).toThrow('_menu must be of type string, number or object.');
 });
 
 test('_menu params object value not string', () => {
-  const input = {
-    _menu: {
-      value: 1,
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu.value must be of type string. Received: {"value":1} at locationId.],
-    ]
-  `);
+  expect(() => {
+    _menu({ params: { value: 1 }, menus });
+  }).toThrow('_menu.value must be of type string.');
 });
 
 test('_menu params object index not number', () => {
-  const input = {
-    _menu: {
-      index: 'a',
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu.index must be of type number. Received: {"index":"a"} at locationId.],
-    ]
-  `);
+  expect(() => {
+    _menu({ params: { index: 'a' }, menus });
+  }).toThrow('_menu.index must be of type number.');
 });
 
-test('_menu param object all', () => {
-  const input = {
-    _menu: {
-      all: true,
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
+test('_menu using object all and value', () => {
+  expect(_menu({ params: { all: true, value: 'default' }, menus })).toEqual([
     {
       menuId: 'default',
     },
@@ -213,44 +122,10 @@ test('_menu param object all', () => {
       menuId: 'm_2',
     },
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
-test('_menu param object all and value', () => {
-  const input = {
-    _menu: {
-      all: true,
-      value: 'default',
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([
-    {
-      menuId: 'default',
-    },
-    {
-      menuId: 'm_1',
-    },
-    {
-      menuId: 'm_2',
-    },
-  ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
-});
-
-test('_menu param object invalid', () => {
-  const input = {
-    _menu: {
-      other: true,
-    },
-  };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu must be of type string, number or object. Received: {"other":true} at locationId.],
-    ]
-  `);
+test('_menu params object invalid', () => {
+  expect(() => {
+    _menu({ params: { object: 'a' }, menus });
+  }).toThrow('_menu must be of type string, number or object.');
 });

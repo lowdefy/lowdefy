@@ -101,9 +101,8 @@ const meta = {
   // unshift: { namedArgs: ['on'] },
 };
 
-function _array({ params, location, methodName }) {
+function _array({ params, methodName }) {
   return runInstance({
-    location,
     meta,
     methodName,
     operator: '_array',

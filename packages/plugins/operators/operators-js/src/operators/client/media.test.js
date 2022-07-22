@@ -17,13 +17,11 @@
 /* eslint-disable no-global-assign */
 import media from './media.js';
 
-console.error = () => {};
-
 const window = { innerHeight: 300, innerWidth: 500 };
 const globals = { window };
 
 test('_media full media object', () => {
-  expect(media({ params: true, location: 'locationId', globals })).toEqual({
+  expect(media({ params: true, globals })).toEqual({
     height: 300,
     size: 'xs',
     width: 500,
@@ -34,57 +32,51 @@ test('_media size', () => {
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 500 } },
     })
   ).toEqual('xs');
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 700 } },
     })
   ).toEqual('sm');
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 900 } },
     })
   ).toEqual('md');
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 1100 } },
     })
   ).toEqual('lg');
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 1400 } },
     })
   ).toEqual('xl');
   expect(
     media({
       params: 'size',
-      location: 'locationId',
       globals: { window: { innerHeight: 300, innerWidth: 1900 } },
     })
   ).toEqual('xxl');
 });
 
 test('_media width', () => {
-  expect(media({ params: 'width', location: 'locationId', globals })).toEqual(500);
+  expect(media({ params: 'width', globals })).toEqual(500);
 });
 
 test('_media height', () => {
-  expect(media({ params: 'height', location: 'locationId', globals })).toEqual(300);
+  expect(media({ params: 'height', globals })).toEqual(300);
 });
 
 test('_media throw on no innerWidth', () => {
-  expect(() => media({ params: true, location: 'locationId', globals: { window: {} } })).toThrow(
-    'Operator Error: device window width not available for _media. Received: true at locationId.'
+  expect(() => media({ params: true, globals: { window: {} } })).toThrow(
+    'Device window width not available for _media.'
   );
 });

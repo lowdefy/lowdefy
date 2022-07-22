@@ -28,13 +28,12 @@ const meta = {
 
 const functions = { v1, v3, v4, v5 };
 
-function _uuid({ params, location, methodName }) {
+function _uuid({ params, methodName }) {
   if (type.isNone(methodName) && (type.isNone(params) || params === true)) {
     return v4();
   }
   return runClass({
     functions: functions,
-    location,
     meta,
     methodName,
     operator: '_uuid',

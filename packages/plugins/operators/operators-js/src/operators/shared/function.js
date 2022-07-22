@@ -14,21 +14,16 @@
   limitations under the License.
 */
 
-function _function({ actions, arrayIndices, event, location, operatorPrefix, params, parser }) {
+function _function({ actions, arrayIndices, event, operatorPrefix, params, parser }) {
   return (...args) => {
-    const { output, errors } = parser.parse({
+    return parser.parse({
       actions,
       arrayIndices,
       args,
       event,
       input: params,
-      location,
       operatorPrefix: `_${operatorPrefix}`,
     });
-    if (errors.length > 0) {
-      throw new Error(errors[0]);
-    }
-    return output;
   };
 }
 

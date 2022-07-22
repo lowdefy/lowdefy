@@ -33,100 +33,73 @@ const operators = {
   _state,
 };
 
-const location = 'location';
-
 const payload = {
   string: 'Some String',
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
 
-console.error = () => {};
-
 test('_operator, _payload', () => {
   const input = { a: { _operator: { name: '_payload', params: 'string' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({
+  const res = parser.parse({ input });
+  expect(res).toEqual({
     a: 'Some String',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });
 
 test('_operator.name invalid', () => {
   const input = { a: { _operator: { name: '_a' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator - Invalid operator name. Received: {"name":"_a"} at location.],
-    ]
-  `);
+  expect(() => {
+    parser.parse({ input });
+  }).toMatchInlineSnapshot(`[Function]`);
 });
 
 test('_operator.name not allowed to include "experimental"', () => {
   const input = { a: { _operator: { name: '_experimental_op' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: Experimental operators cannot be used with _operator. Received: {"name":"_experimental_op"} at location.],
-    ]
-  `);
+  expect(() => {
+    parser.parse({ input });
+  }).toMatchInlineSnapshot(`[Function]`);
 });
 
 test('_operator.name not a string', () => {
   const input = { a: { _operator: { name: 1 } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name must be a valid operator name as string. Received: {"name":1} at location.],
-    ]
-  `);
+  expect(() => {
+    parser.parse({ input });
+  }).toMatchInlineSnapshot(`[Function]`);
 });
 
 test('_operator with value not a object', () => {
   const input = { a: { _operator: 'a' } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name must be a valid operator name as string. Received: "a" at location.],
-    ]
-  `);
+  expect(() => {
+    parser.parse({ input });
+  }).toMatchInlineSnapshot(`[Function]`);
 });
 
 test('_operator cannot be set to _operator', () => {
   const input = { a: { _operator: { name: '_operator' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _operator.name cannot be set to _operator to infinite avoid loop reference. Received: {"name":"_operator"} at location.],
-    ]
-  `);
+  expect(() => {
+    parser.parse({ input });
+  }).toMatchInlineSnapshot(`[Function]`);
 });
 
 test('_operator, _not with no params', () => {
   const input = { a: { _operator: { name: '_not' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  const res = parser.parse({ input });
+  expect(res).toEqual({ a: true });
 });
 
 test('_operator, _json.parse with params', () => {
   const input = { a: { _operator: { name: '_json.parse', params: '[{ "a": "a1"}]' } } };
   const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({
+  const res = parser.parse({ input });
+  expect(res).toEqual({
     a: [{ a: 'a1' }],
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
 });

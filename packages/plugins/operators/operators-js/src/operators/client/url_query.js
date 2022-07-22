@@ -17,18 +17,13 @@
 import { getFromObject } from '@lowdefy/operators';
 import { urlQuery } from '@lowdefy/helpers';
 
-function _url_query({ arrayIndices, globals, location, params }) {
+function _url_query({ arrayIndices, globals, params }) {
   const { window } = globals;
   if (!window?.location) {
-    throw new Error(
-      `Operator Error: Browser window.location not available for _url_query. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error('Browser window.location not available for _url_query.');
   }
   return getFromObject({
     arrayIndices,
-    location,
     object: urlQuery.parse(window.location.search.slice(1)),
     operator: '_url_query',
     params,

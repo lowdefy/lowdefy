@@ -23,7 +23,6 @@ test('global calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   _global({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
     lowdefyGlobal: { lowdefyGlobal: true },
   });
@@ -31,7 +30,6 @@ test('global calls getFromObject', async () => {
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: {
           lowdefyGlobal: true,
         },

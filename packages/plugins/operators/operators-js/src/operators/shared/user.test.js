@@ -19,18 +19,10 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-  user: { name: 'first name' },
-};
-
 test('user calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   user({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
     user: { name: 'first name' },
   });
@@ -38,7 +30,6 @@ test('user calls getFromObject', async () => {
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: {
           name: 'first name',
         },

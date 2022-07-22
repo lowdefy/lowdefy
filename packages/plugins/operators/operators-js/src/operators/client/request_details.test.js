@@ -31,14 +31,12 @@ test('request_details calls getFromObject', async () => {
       },
     },
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: {
           request_id: {
             response: 'returned from action',

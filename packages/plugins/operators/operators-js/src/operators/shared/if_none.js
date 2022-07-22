@@ -16,20 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _if_none({ params, location }) {
+function _if_none({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _if_none takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_if_none takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _if_none takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_if_none takes an array of length 2 as input.`);
   }
   if (type.isNone(params[0])) {
     return params[1];

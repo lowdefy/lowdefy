@@ -17,8 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import _log from './log.js';
 
-const location = 'location';
-
+// TODO: check logger
 const logger = console.log;
 const mockLogger = jest.fn();
 beforeEach(() => {
@@ -30,35 +29,35 @@ afterAll(() => {
 });
 
 test('_log a string', () => {
-  expect(_log({ params: 'value', location })).toEqual('value');
+  expect(_log({ params: 'value' })).toEqual('value');
   expect(mockLogger).toHaveBeenCalledWith('value');
 });
 test('_log a number', () => {
-  expect(_log({ params: 1, location })).toEqual(1);
+  expect(_log({ params: 1 })).toEqual(1);
   expect(mockLogger).toHaveBeenCalledWith(1);
 });
 test('_log a null', () => {
-  expect(_log({ params: null, location })).toEqual(null);
+  expect(_log({ params: null })).toEqual(null);
   expect(mockLogger).toHaveBeenCalledWith(null);
 });
 // TODO: Confirm if this is expected behaviour??
 test('_log an undefined', () => {
-  expect(_log({ params: undefined, location })).toEqual(undefined);
+  expect(_log({ params: undefined })).toEqual(undefined);
   expect(mockLogger).toHaveBeenCalledWith(undefined);
 });
 test('_log a 0', () => {
-  expect(_log({ params: 0, location })).toEqual(0);
+  expect(_log({ params: 0 })).toEqual(0);
   expect(mockLogger).toHaveBeenCalledWith(0);
 });
 test('_log a false', () => {
-  expect(_log({ params: false, location })).toEqual(false);
+  expect(_log({ params: false })).toEqual(false);
   expect(mockLogger).toHaveBeenCalledWith(false);
 });
 test('_log an object', () => {
-  expect(_log({ params: { b: 1 }, location })).toEqual({ b: 1 });
+  expect(_log({ params: { b: 1 } })).toEqual({ b: 1 });
   expect(mockLogger).toHaveBeenCalledWith({ b: 1 });
 });
 test('_log an array', () => {
-  expect(_log({ params: [{ b: 1 }], location })).toEqual([{ b: 1 }]);
+  expect(_log({ params: [{ b: 1 }] })).toEqual([{ b: 1 }]);
   expect(mockLogger).toHaveBeenCalledWith([{ b: 1 }]);
 });

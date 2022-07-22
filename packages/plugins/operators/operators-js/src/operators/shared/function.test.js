@@ -37,7 +37,6 @@ const payload = {
   number: 42,
   arr: [{ a: 'a1' }, { a: 'a2' }],
 };
-const location = 'location';
 
 const context = {
   _internal: {
@@ -75,14 +74,12 @@ const context = {
   state,
 };
 
-console.error = () => {};
-
 // TODO: Test cases with different operatorPrefix
 
 test('NodeParser, _function that gets from payload', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: 'string' };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
+  const fn = _function({ params, parser, operatorPrefix: '_' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
@@ -90,7 +87,7 @@ test('NodeParser, _function that gets from payload', () => {
 test('NodeParser, nested function call', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { ___payload: 'string' };
-  const fn = _function({ location, params, parser, operatorPrefix: '__' });
+  const fn = _function({ params, parser, operatorPrefix: '__' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
@@ -98,7 +95,7 @@ test('NodeParser, nested function call', () => {
 test('NodeParser, _function gives args as an array', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __args: true };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
+  const fn = _function({ params, parser, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
@@ -106,16 +103,14 @@ test('NodeParser, _function gives args as an array', () => {
 test('NodeParser, _function throws on parser errors', () => {
   const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: [] };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
-  expect(fn).toThrow(
-    'Error: Operator Error: _payload params must be of type string, integer, boolean or object. Received: [] at location.'
-  );
+  const fn = _function({ params, parser, operatorPrefix: '_' });
+  expect(fn).toThrow('_payload params must be of type string, integer, boolean or object.');
 });
 
 test('WebParser, _function that gets from state', () => {
   const parser = new WebParser({ context, operators });
   const params = { __state: 'string' };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
+  const fn = _function({ params, parser, operatorPrefix: '_' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
   expect(fn()).toEqual('Some String');
@@ -124,7 +119,7 @@ test('WebParser, _function that gets from state', () => {
 test('WebParser, _function gives args as an array', () => {
   const parser = new WebParser({ context, operators });
   const params = { __args: true };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
+  const fn = _function({ params, parser, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
@@ -132,8 +127,6 @@ test('WebParser, _function gives args as an array', () => {
 test('WebParser, _function throws on parser errors', () => {
   const parser = new WebParser({ context, operators });
   const params = { __state: [] };
-  const fn = _function({ location, params, parser, operatorPrefix: '_' });
-  expect(fn).toThrow(
-    'Error: Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at location.'
-  );
+  const fn = _function({ params, parser, operatorPrefix: '_' });
+  expect(fn).toThrow('_state params must be of type string, integer, boolean or object.');
 });

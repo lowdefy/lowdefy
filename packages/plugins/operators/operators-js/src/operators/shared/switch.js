@@ -16,21 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _switch({ location, params }) {
+function _switch({ params }) {
   if (!type.isArray(params.branches)) {
-    throw new Error(
-      `Operator Error: switch takes an array type as input for the branches. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`switch takes an array type as input for the branches.`);
   }
   for (const branch of params.branches) {
     if (!type.isBoolean(branch.if)) {
-      throw new Error(
-        `Operator Error: switch takes a boolean type for parameter test. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`switch takes a boolean type for parameter test.`);
     }
     if (branch.if === true) {
       return branch.then;

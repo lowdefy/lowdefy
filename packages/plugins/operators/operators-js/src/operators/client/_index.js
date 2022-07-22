@@ -16,10 +16,9 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-function _index({ arrayIndices, location, params }) {
+function _index({ arrayIndices, params }) {
   return getFromObject({
     arrayIndices,
-    location,
     object: arrayIndices,
     operator: '_index',
     params,

@@ -16,20 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _ne({ params, location }) {
+function _ne({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _ne takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_ne takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _ne takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_ne takes an array of length 2 as input.`);
   }
   return params[0] !== params[1];
 }

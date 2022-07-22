@@ -13,87 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser, WebParser } from '@lowdefy/operators';
 import _and from './and.js';
 
-const operators = {
-  _and,
-};
-
-const location = 'location';
-
 test('_and false', () => {
-  expect(_and({ params: [0, 0], location })).toEqual(false);
-  expect(_and({ params: [0, 1], location })).toEqual(false);
-  expect(_and({ params: [1, 2, 3, 0], location })).toEqual(false);
-  expect(_and({ params: [false, false], location })).toEqual(false);
-  expect(_and({ params: [false, true], location })).toEqual(false);
+  expect(_and({ params: [0, 0] })).toEqual(false);
+  expect(_and({ params: [0, 1] })).toEqual(false);
+  expect(_and({ params: [1, 2, 3, 0] })).toEqual(false);
+  expect(_and({ params: [false, false] })).toEqual(false);
+  expect(_and({ params: [false, true] })).toEqual(false);
 });
 test('_and true', () => {
-  expect(_and({ params: [1, 2], location })).toEqual(true);
-  expect(_and({ params: [1, 2, 3], location })).toEqual(true);
-  expect(_and({ params: [true, true], location })).toEqual(true);
+  expect(_and({ params: [1, 2] })).toEqual(true);
+  expect(_and({ params: [1, 2, 3] })).toEqual(true);
+  expect(_and({ params: [true, true] })).toEqual(true);
 });
 test('_and errors', () => {
-  expect(() => _and({ params: 'hello', location })).toThrow(
-    'Operator Error: _and takes an array type. Received: "hello" at location.'
-  );
-  expect(() => _and({ params: null, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: null at location.'
-  );
-  expect(() => _and({ params: true, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: true at location.'
-  );
-  expect(() => _and({ params: false, location })).toThrow(
-    'Operator Error: _and takes an array type. Received: false at location.'
-  );
-});
-
-test('_and evaluated in NodeParser', () => {
-  const input = { a: { _and: [true, true] } };
-  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: true });
-});
-
-test('_and evaluated in WebParser', () => {
-  const context = {
-    _internal: {
-      lowdefy: {
-        basePath: 'basePath',
-        inputs: { id: true },
-        lowdefyGlobal: { global: true },
-        menus: [{ menus: true }],
-        urlQuery: { urlQuery: true },
-        user: { user: true },
-        home: {
-          pageId: 'home.pageId',
-          configured: false,
-        },
-        _internal: {
-          window: {
-            location: {
-              hash: 'window.location.hash',
-              host: 'window.location.host',
-              hostname: 'window.location.hostname',
-              href: 'window.location.href',
-              origin: 'window.location.origin',
-              pathname: 'window.location.pathname',
-              port: 'window.location.port',
-              protocol: 'window.location.protocol',
-              search: 'window.location.search',
-            },
-          },
-        },
-      },
-    },
-    eventLog: [{ eventLog: true }],
-    id: 'id',
-    requests: [{ requests: true }],
-    state: { state: true },
-  };
-  const input = { a: { _and: [true, true] } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: true });
+  expect(() => _and({ params: 'hello' })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: null })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: true })).toThrow('_and takes an array type.');
+  expect(() => _and({ params: false })).toThrow('_and takes an array type.');
 });

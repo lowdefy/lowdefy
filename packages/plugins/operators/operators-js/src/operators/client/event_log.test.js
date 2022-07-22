@@ -25,14 +25,12 @@ test('request_details calls getFromObject', async () => {
   event_log({
     eventLog: [{ eventName: 'test' }],
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: [{ eventName: 'test' }],
         operator: '_event_log',
         params: 'params',

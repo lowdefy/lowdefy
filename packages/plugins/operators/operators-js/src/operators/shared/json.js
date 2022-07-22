@@ -33,10 +33,9 @@ const meta = {
   parse: { singleArg: true, validTypes: ['string'] },
 };
 
-function _json({ params, location, methodName }) {
+function _json({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_json',

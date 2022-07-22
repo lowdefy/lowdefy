@@ -24,7 +24,6 @@ test('state calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   state({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
     state: { state: true },
   });
@@ -32,7 +31,6 @@ test('state calls getFromObject', async () => {
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: {
           state: true,
         },

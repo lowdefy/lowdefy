@@ -30,10 +30,9 @@ const meta = {
   decode: { singleArg: true, validTypes: ['string'] },
 };
 
-function _uri({ params, location, methodName }) {
+function _uri({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_uri',

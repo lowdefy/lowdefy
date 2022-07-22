@@ -31,103 +31,91 @@ afterEach(() => {
 });
 
 test('_random string', () => {
-  expect(random({ params: 'string', location: 'locationId' })).toEqual('iubr0inu');
+  expect(random({ params: 'string' })).toEqual('iubr0inu');
 });
 
 test('_random string with length', () => {
-  expect(random({ params: { type: 'string', length: 3 }, location: 'locationId' })).toEqual('iub');
-  expect(random({ params: { type: 'string', length: 10 }, location: 'locationId' })).toEqual(
-    'iubr0inugx'
-  );
+  expect(random({ params: { type: 'string', length: 3 } })).toEqual('iub');
+  expect(random({ params: { type: 'string', length: 10 } })).toEqual('iubr0inugx');
 });
 
 test('_random integer', () => {
-  expect(random({ params: 'integer', location: 'locationId' })).toEqual(52);
+  expect(random({ params: 'integer' })).toEqual(52);
 });
 
 test('_random integer with min', () => {
-  expect(random({ params: { type: 'integer', min: 500 }, location: 'locationId' })).toEqual(552);
+  expect(random({ params: { type: 'integer', min: 500 } })).toEqual(552);
 });
 
 test('_random integer with max', () => {
-  expect(random({ params: { type: 'integer', max: 500 }, location: 'locationId' })).toEqual(261);
+  expect(random({ params: { type: 'integer', max: 500 } })).toEqual(261);
 });
 
 test('_random integer with min and max', () => {
-  expect(
-    random({ params: { type: 'integer', max: 500, min: 450 }, location: 'locationId' })
-  ).toEqual(476);
+  expect(random({ params: { type: 'integer', max: 500, min: 450 } })).toEqual(476);
 });
 
 test('_random integer with min greater than max', () => {
-  expect(() =>
-    random({ params: { type: 'integer', max: 500, min: 550 }, location: 'locationId' })
-  ).toThrow(
-    'Operator Error: _random.min must be less than _random.max. Received: {"type":"integer","max":500,"min":550} at locationId.'
+  expect(() => random({ params: { type: 'integer', max: 500, min: 550 } })).toThrow(
+    '_random.min must be less than _random.max.'
   );
 });
 
 test('_random integer with max not a number', () => {
-  expect(() => random({ params: { type: 'integer', max: null }, location: 'locationId' })).toThrow(
-    'Operator Error: _random.max takes an number type. Received: {"type":"integer","max":null,"min":0} at locationId.'
+  expect(() => random({ params: { type: 'integer', max: null } })).toThrow(
+    '_random.max takes an number type.'
   );
 });
 
 test('_random integer with min not a number', () => {
-  expect(() => random({ params: { type: 'integer', min: null }, location: 'locationId' })).toThrow(
-    'Operator Error: _random.min takes an number type. Received: {"type":"integer","min":null} at locationId.'
+  expect(() => random({ params: { type: 'integer', min: null } })).toThrow(
+    '_random.min takes an number type.'
   );
 });
 
 test('_random float', () => {
-  expect(random({ params: 'float', location: 'locationId' })).toEqual(0.5234);
+  expect(random({ params: 'float' })).toEqual(0.5234);
 });
 
 test('_random float with min', () => {
-  expect(random({ params: { type: 'float', min: 500 }, location: 'locationId' })).toEqual(500.5234);
+  expect(random({ params: { type: 'float', min: 500 } })).toEqual(500.5234);
 });
 
 test('_random float with max', () => {
-  expect(random({ params: { type: 'float', max: 500 }, location: 'locationId' })).toEqual(261.7);
+  expect(random({ params: { type: 'float', max: 500 } })).toEqual(261.7);
 });
 
 test('_random float with min and max', () => {
-  expect(random({ params: { type: 'float', max: 500, min: 450 }, location: 'locationId' })).toEqual(
-    476.17
-  );
+  expect(random({ params: { type: 'float', max: 500, min: 450 } })).toEqual(476.17);
 });
 
 test('_random float with min greater than max', () => {
-  expect(() =>
-    random({ params: { type: 'float', max: 500, min: 550 }, location: 'locationId' })
-  ).toThrow(
-    'Operator Error: _random.min must be less than _random.max. Received: {"type":"float","max":500,"min":550} at locationId.'
+  expect(() => random({ params: { type: 'float', max: 500, min: 550 } })).toThrow(
+    '_random.min must be less than _random.max.'
   );
 });
 
 test('_random float with max not a number', () => {
-  expect(() => random({ params: { type: 'float', max: null }, location: 'locationId' })).toThrow(
-    'Operator Error: _random.max takes an number type. Received: {"type":"float","max":null,"min":0} at locationId.'
+  expect(() => random({ params: { type: 'float', max: null } })).toThrow(
+    '_random.max takes an number type.'
   );
 });
 
 test('_random float with min not a number', () => {
-  expect(() => random({ params: { type: 'float', min: null }, location: 'locationId' })).toThrow(
-    'Operator Error: _random.min takes an number type. Received: {"type":"float","min":null} at locationId.'
+  expect(() => random({ params: { type: 'float', min: null } })).toThrow(
+    '_random.min takes an number type.'
   );
 });
 
 test('_random type not a string', () => {
-  expect(() => random({ params: null, location: 'locationId' })).toThrow(
-    'Operator Error: _random takes an string or object type. Received: null at locationId.'
-  );
-  expect(() => random({ params: { type: null }, location: 'locationId' })).toThrow(
-    "Operator Error: _random type can be either 'string', 'integer' or 'float'. Received: {\"type\":null} at locationId."
+  expect(() => random({ params: null })).toThrow('_random takes an string or object type.');
+  expect(() => random({ params: { type: null } })).toThrow(
+    "_random type can be either 'string', 'integer' or 'float'."
   );
 });
 
 test('_random type not a supported type', () => {
-  expect(() => random({ params: 'boolean', location: 'locationId' })).toThrow(
-    "Operator Error: _random type can be either 'string', 'integer' or 'float'. Received: {\"type\":\"boolean\"} at locationId."
+  expect(() => random({ params: 'boolean' })).toThrow(
+    "_random type can be either 'string', 'integer' or 'float'."
   );
 });

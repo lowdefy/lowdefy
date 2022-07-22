@@ -14,153 +14,72 @@
   limitations under the License.
 */
 
-import { WebParser } from '@lowdefy/operators';
 import _request from './request.js';
 
-const operators = {
-  _request,
-};
-
 const arrayIndices = [1];
-
-const context = {
-  _internal: {
-    lowdefy: {
-      basePath: 'basePath',
-      inputs: { id: true },
-      lowdefyGlobal: { global: true },
-      menus: [{ menus: true }],
-      urlQuery: { urlQuery: true },
-      user: { user: true },
-      home: {
-        pageId: 'home.pageId',
-        configured: false,
-      },
-      _internal: {
-        window: {
-          location: {
-            hash: 'window.location.hash',
-            host: 'window.location.host',
-            hostname: 'window.location.hostname',
-            href: 'window.location.href',
-            origin: 'window.location.origin',
-            pathname: 'window.location.pathname',
-            port: 'window.location.port',
-            protocol: 'window.location.protocol',
-            search: 'window.location.search',
-          },
-        },
-      },
+const requests = {
+  arr: [
+    {
+      response: [{ a: 'request a1' }, { a: 'request a2' }],
+      loading: false,
+      error: [],
     },
-  },
-  eventLog: [{ eventLog: true }],
-  id: 'id',
-  requests: {
-    arr: [
-      {
-        response: [{ a: 'request a1' }, { a: 'request a2' }],
-        loading: false,
-        error: [],
-      },
-    ],
-    number: [
-      {
-        response: 500,
-        loading: false,
-        error: [],
-      },
-    ],
-    string: [
-      {
-        response: 'request String',
-        loading: false,
-        error: [],
-      },
-    ],
-  },
-  state: { state: true },
+  ],
+  number: [
+    {
+      response: 500,
+      loading: false,
+      error: [],
+    },
+  ],
+  string: [
+    {
+      response: 'request String',
+      loading: false,
+      error: [],
+    },
+  ],
 };
-
-console.error = () => {};
 
 test('_request by id', () => {
-  const input = { a: { _request: 'string' } };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual({
-    a: 'request String',
-  });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'string', requests, arrayIndices })).toEqual('request String');
 });
 
 test('_request true gives null', () => {
-  const input = { _request: true };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request accepts a string value. Received: true at locationId.],
-    ]
-  `);
+  expect(() => {
+    _request({ params: true, requests, arrayIndices });
+  }).toThrow('_request accepts a string value.');
 });
 
 test('_request return full array', () => {
-  const input = { _request: 'arr' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual([{ a: 'request a1' }, { a: 'request a2' }]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'arr', requests, arrayIndices })).toEqual([
+    { a: 'request a1' },
+    { a: 'request a2' },
+  ]);
 });
 
 test('_request return number', () => {
-  const input = { _request: 'number' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(500);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'number', requests, arrayIndices })).toEqual(500);
 });
 
 test('_request null', () => {
-  const input = { _request: null };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _request accepts a string value. Received: null at locationId.],
-    ]
-  `);
+  expect(() => {
+    _request({ params: null, requests, arrayIndices });
+  }).toThrow('_request accepts a string value.');
 });
 
 test('_request loading true', () => {
-  const input = { _request: 'not_loaded' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'not_loaded', requests, arrayIndices })).toEqual(null);
 });
 
 test('_request dot notation', () => {
-  const input = { _request: 'arr.0.a' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('request a1');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'arr.0.a', requests, arrayIndices })).toEqual('request a1');
 });
 
 test('_request dot notation with arrayindices', () => {
-  const input = { _request: 'arr.$.a' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual('request a2');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'arr.$.a', requests, arrayIndices })).toEqual('request a2');
 });
 
 test('_request dot notation returns null if ', () => {
-  const input = { _request: 'returnsNull.key' };
-  const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
-  expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(_request({ params: 'returnsNull.key', requests, arrayIndices })).toEqual(null);
 });

@@ -19,26 +19,17 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-const input = {
-  args: [{ args: true }],
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-};
-
 test('args calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   args({
     args: [{ args: true }],
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: [{ args: true }],
         operator: '_args',
         params: 'params',

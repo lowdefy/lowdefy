@@ -16,47 +16,39 @@
 
 import ne from './ne.js';
 
-const location = 'locationId';
-
 test('_ne param 0 equal 1', () => {
-  expect(ne({ params: [1, 1], location })).toBe(false);
-  expect(ne({ params: [0, 0], location })).toBe(false);
-  expect(ne({ params: [null, null], location })).toBe(false);
-  expect(ne({ params: [true, true], location })).toBe(false);
-  expect(ne({ params: [false, false], location })).toBe(false);
-  expect(ne({ params: ['123', '123'], location })).toBe(false);
-  expect(ne({ params: [new Date(1).toString(), new Date(1).toString()], location })).toBe(false);
+  expect(ne({ params: [1, 1] })).toBe(false);
+  expect(ne({ params: [0, 0] })).toBe(false);
+  expect(ne({ params: [null, null] })).toBe(false);
+  expect(ne({ params: [true, true] })).toBe(false);
+  expect(ne({ params: [false, false] })).toBe(false);
+  expect(ne({ params: ['123', '123'] })).toBe(false);
+  expect(ne({ params: [new Date(1).toString(), new Date(1).toString()] })).toBe(false);
 });
 
 test('_ne param 0 not eq 1', () => {
-  expect(ne({ params: [0, 1], location })).toBe(true);
-  expect(ne({ params: [-1, 0], location })).toBe(true);
-  expect(ne({ params: [-1, 1], location })).toBe(true);
-  expect(ne({ params: [0.1, 0.2], location })).toBe(true);
-  expect(ne({ params: [null, 1], location })).toBe(true);
-  expect(ne({ params: [null, 0], location })).toBe(true);
-  expect(ne({ params: [new Date(1), new Date(2)], location })).toBe(true);
-  expect(ne({ params: [new Date(1), new Date(1)], location })).toBe(true);
-  expect(ne({ params: [false, true], location })).toBe(true);
-  expect(ne({ params: ['a', 'b'], location })).toBe(true);
-  expect(ne({ params: ['aa', 'b'], location })).toBe(true);
-  expect(ne({ params: ['b', 'bb'], location })).toBe(true);
+  expect(ne({ params: [0, 1] })).toBe(true);
+  expect(ne({ params: [-1, 0] })).toBe(true);
+  expect(ne({ params: [-1, 1] })).toBe(true);
+  expect(ne({ params: [0.1, 0.2] })).toBe(true);
+  expect(ne({ params: [null, 1] })).toBe(true);
+  expect(ne({ params: [null, 0] })).toBe(true);
+  expect(ne({ params: [new Date(1), new Date(2)] })).toBe(true);
+  expect(ne({ params: [new Date(1), new Date(1)] })).toBe(true);
+  expect(ne({ params: [false, true] })).toBe(true);
+  expect(ne({ params: ['a', 'b'] })).toBe(true);
+  expect(ne({ params: ['aa', 'b'] })).toBe(true);
+  expect(ne({ params: ['b', 'bb'] })).toBe(true);
 });
 
 test('_ne params not an array', () => {
-  expect(() => ne({ params: '1, 0', location })).toThrow(
-    'Operator Error: _ne takes an array type as input. Received: "1, 0" at locationId.'
-  );
+  expect(() => ne({ params: '1, 0' })).toThrow('_ne takes an array type as input.');
 });
 
 test('_ne params array with length 1', () => {
-  expect(() => ne({ params: [1], location })).toThrow(
-    'Operator Error: _ne takes an array of length 2 as input. Received: [1] at locationId.'
-  );
+  expect(() => ne({ params: [1] })).toThrow('_ne takes an array of length 2 as input.');
 });
 
 test('_ne params array with length 3', () => {
-  expect(() => ne({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _ne takes an array of length 2 as input. Received: [1,2,3] at locationId.'
-  );
+  expect(() => ne({ params: [1, 2, 3] })).toThrow('_ne takes an array of length 2 as input.');
 });

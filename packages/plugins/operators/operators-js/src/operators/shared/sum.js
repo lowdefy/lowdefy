@@ -16,13 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _sum({ params, location }) {
+function _sum({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _sum takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_sum takes an array type as input.`);
   }
   return params.reduce((accumulator, value) => {
     if (type.isNumber(value)) {

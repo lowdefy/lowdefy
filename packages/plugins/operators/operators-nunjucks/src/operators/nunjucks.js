@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-function _nunjucks({ location, params, state, payload, runtime }) {
+function _nunjucks({ params, defaultOn }) {
   let templateString;
   let on;
   if (type.isObject(params) && type.isString(params.template)) {
@@ -26,7 +26,7 @@ function _nunjucks({ location, params, state, payload, runtime }) {
   }
   if (type.isString(params)) {
     templateString = params;
-    on = runtime === 'browser' ? state : payload;
+    on = defaultOn;
   }
   if (templateString) {
     try {
@@ -34,11 +34,7 @@ function _nunjucks({ location, params, state, payload, runtime }) {
       return template(on);
     } catch (e) {
       // log e to LowdefyError
-      throw new Error(
-        `Operator Error: _nunjucks failed to parse nunjucks template. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`_nunjucks failed to parse nunjucks template.`);
     }
   }
   return null;

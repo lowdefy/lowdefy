@@ -17,27 +17,18 @@
 import { get, type } from '@lowdefy/helpers';
 import { getFromObject } from '@lowdefy/operators';
 
-function _get({ arrayIndices, location, params }) {
+function _get({ arrayIndices, params }) {
   if (!type.isObject(params)) {
-    throw new Error(
-      `Operator Error: _get takes an object as params. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_get takes an object as params.`);
   }
 
   if (params.from === null) return get(params, 'default', { default: null, copy: true });
 
   if (!type.isObject(params.from) && !type.isArray(params.from)) {
-    throw new Error(
-      `Operator Error: _get.from is not an object or array. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_get.from is not an object or array.`);
   }
   return getFromObject({
     arrayIndices,
-    location,
     object: params.from,
     operator: '_get',
     params,

@@ -59,10 +59,9 @@ const functions = {
   relativeTimeFormat,
 };
 
-function intl({ params, location, methodName }) {
+function intl({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_intl',

@@ -17,29 +17,25 @@
 
 import _if from './if.js';
 
-const location = 'location';
-
-console.error = () => {};
-
 test('_if then', () => {
-  expect(_if({ params: { test: true, then: 1, else: 2 }, location })).toEqual(1);
-  expect(_if({ params: { test: true, else: 2 }, location })).toEqual(undefined);
+  expect(_if({ params: { test: true, then: 1, else: 2 } })).toEqual(1);
+  expect(_if({ params: { test: true, else: 2 } })).toEqual(undefined);
 });
 test('_if else', () => {
-  expect(_if({ params: { test: false, then: 1, else: 2 }, location })).toEqual(2);
-  expect(_if({ params: { test: false, then: 1 }, location })).toEqual(undefined);
+  expect(_if({ params: { test: false, then: 1, else: 2 } })).toEqual(2);
+  expect(_if({ params: { test: false, then: 1 } })).toEqual(undefined);
 });
 test('_if errors', () => {
-  expect(() => _if({ params: { then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"then":1,"else":2} at location.'
+  expect(() => _if({ params: { then: 1, else: 2 } })).toThrow(
+    '_if takes a boolean type for parameter test.'
   );
-  expect(() => _if({ params: { test: { a: [1, 3] }, then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":{"a":[1,3]},"then":1,"else":2} at location.'
+  expect(() => _if({ params: { test: { a: [1, 3] }, then: 1, else: 2 } })).toThrow(
+    '_if takes a boolean type for parameter test.'
   );
-  expect(() => _if({ params: { test: 'True', then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":"True","then":1,"else":2} at location.'
+  expect(() => _if({ params: { test: 'True', then: 1, else: 2 } })).toThrow(
+    '_if takes a boolean type for parameter test.'
   );
-  expect(() => _if({ params: { test: 1, then: 1, else: 2 }, location })).toThrow(
-    'Operator Error: _if takes a boolean type for parameter test. Received: {"test":1,"then":1,"else":2} at location.'
+  expect(() => _if({ params: { test: 1, then: 1, else: 2 } })).toThrow(
+    '_if takes a boolean type for parameter test.'
   );
 });

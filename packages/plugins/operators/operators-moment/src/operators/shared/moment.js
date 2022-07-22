@@ -35,10 +35,9 @@ const meta = {
 
 const functions = { format, humanizeDuration };
 
-function _moment({ params, location, methodName }) {
+function _moment({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_moment',

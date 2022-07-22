@@ -93,9 +93,8 @@ const meta = {
   length: { validTypes: ['string'], property: true, prep },
 };
 
-function _string({ params, location, methodName }) {
+function _string({ params, methodName }) {
   return runInstance({
-    location,
     meta,
     methodName,
     operator: '_string',

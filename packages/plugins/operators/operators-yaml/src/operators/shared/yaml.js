@@ -41,10 +41,9 @@ const meta = {
   parse: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
 };
 
-function _yaml({ params, location, methodName }) {
+function _yaml({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_yaml',

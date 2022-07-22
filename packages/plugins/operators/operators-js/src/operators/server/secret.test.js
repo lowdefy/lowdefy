@@ -20,20 +20,16 @@ jest.mock('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-console.error = () => {};
-
 test('secret calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
     secrets: { secrets: true },
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        location: 'location',
         object: {
           secrets: true,
         },
@@ -48,13 +44,11 @@ test('secret default value', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        location: 'location',
         object: {},
         operator: '_secret',
         params: 'params',
@@ -65,13 +59,13 @@ test('secret default value', async () => {
 
 test('secret get all is not allowed', () => {
   expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: true at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: true } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":true} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
   expect(() => secret({ params: { all: 'yes' } })).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Getting all secrets is not allowed. Received: {\\"all\\":\\"yes\\"} at undefined."`
+    `"Getting all secrets is not allowed."`
   );
 });
 
@@ -79,7 +73,6 @@ test('secret OpenID Connect and JSON web token secrets are filtered out', async 
   const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
     secrets: {
       OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
@@ -92,7 +85,6 @@ test('secret OpenID Connect and JSON web token secrets are filtered out', async 
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        location: 'location',
         object: {
           OPENID_CLIENT_ID: 'OPENID_CLIENT_ID',
           OPENID_DOMAIN: 'OPENID_DOMAIN',

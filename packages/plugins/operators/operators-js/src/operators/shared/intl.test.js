@@ -23,7 +23,6 @@ describe('_intl.dateTimeFormat', () => {
         params: {
           on: new Date(1560414023345),
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('6/13/2019');
@@ -35,7 +34,6 @@ describe('_intl.dateTimeFormat', () => {
           on: new Date(1560414023345),
           locale: 'de',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('13.6.2019');
@@ -47,7 +45,6 @@ describe('_intl.dateTimeFormat', () => {
           on: new Date(1560414023345),
           options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Thursday, June 13, 2019');
@@ -62,7 +59,6 @@ describe('_intl.listFormat', () => {
         params: {
           on: ['Motorcycle', 'Bus', 'Car'],
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle, Bus, and Car');
@@ -74,7 +70,6 @@ describe('_intl.listFormat', () => {
           on: ['Motorcycle', 'Bus', 'Car'],
           locale: 'fr',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle, Bus et Car');
@@ -86,7 +81,6 @@ describe('_intl.listFormat', () => {
           on: ['Motorcycle', 'Bus', 'Car'],
           options: { style: 'narrow', type: 'unit' },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle Bus Car');
@@ -101,7 +95,6 @@ describe('_intl.listFormat', () => {
         params: {
           on: ['Motorcycle', 'Bus', 'Car'],
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle, Bus, and Car');
@@ -113,7 +106,6 @@ describe('_intl.listFormat', () => {
           on: ['Motorcycle', 'Bus', 'Car'],
           locale: 'fr',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle, Bus et Car');
@@ -125,7 +117,6 @@ describe('_intl.listFormat', () => {
           on: ['Motorcycle', 'Bus', 'Car'],
           options: { style: 'narrow', type: 'unit' },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('Motorcycle Bus Car');
@@ -140,7 +131,6 @@ describe('_intl.numberFormat', () => {
         params: {
           on: 13182375813.47422,
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('13,182,375,813.474');
@@ -152,7 +142,6 @@ describe('_intl.numberFormat', () => {
           on: 13182375813.47422,
           locale: 'de',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('13.182.375.813,474');
@@ -164,7 +153,6 @@ describe('_intl.numberFormat', () => {
           on: 13182375813.47422,
           options: { style: 'unit', unit: 'mile-per-hour' },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('13,182,375,813.474 mph');
@@ -180,7 +168,6 @@ describe('_intl.relativeTimeFormat', () => {
           on: 4,
           unit: 'day',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('in 4 days');
@@ -193,7 +180,6 @@ describe('_intl.relativeTimeFormat', () => {
           unit: 'day',
           locale: 'fr',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('dans 4 jours');
@@ -206,7 +192,6 @@ describe('_intl.relativeTimeFormat', () => {
           unit: 'day',
           options: { numeric: 'auto' },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('tomorrow');

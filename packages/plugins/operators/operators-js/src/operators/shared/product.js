@@ -16,13 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _product({ params, location }) {
+function _product({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _product takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_product takes an array type as input.`);
   }
   return params.reduce((accumulator, value) => {
     if (type.isNumber(value)) {

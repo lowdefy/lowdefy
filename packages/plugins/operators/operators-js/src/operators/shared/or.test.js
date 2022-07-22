@@ -20,40 +20,30 @@ const operators = {
   _or,
 };
 
-const location = 'location';
-
 test('_or false', () => {
-  expect(_or({ params: [0, 0], location })).toEqual(false);
-  expect(_or({ params: [false, false], location })).toEqual(false);
+  expect(_or({ params: [0, 0] })).toEqual(false);
+  expect(_or({ params: [false, false] })).toEqual(false);
 });
 test('_or true', () => {
-  expect(_or({ params: [0, 1], location })).toEqual(true);
-  expect(_or({ params: [1, 2], location })).toEqual(true);
-  expect(_or({ params: [1, 2, 3], location })).toEqual(true);
-  expect(_or({ params: [1, 2, 3, 0], location })).toEqual(true);
-  expect(_or({ params: [true, true], location })).toEqual(true);
-  expect(_or({ params: [false, true], location })).toEqual(true);
+  expect(_or({ params: [0, 1] })).toEqual(true);
+  expect(_or({ params: [1, 2] })).toEqual(true);
+  expect(_or({ params: [1, 2, 3] })).toEqual(true);
+  expect(_or({ params: [1, 2, 3, 0] })).toEqual(true);
+  expect(_or({ params: [true, true] })).toEqual(true);
+  expect(_or({ params: [false, true] })).toEqual(true);
 });
 test('_or errors', () => {
-  expect(() => _or({ params: 'hello', location })).toThrow(
-    'Operator Error: _or takes an array type. Received: "hello" at location.'
-  );
-  expect(() => _or({ params: null, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: null at location.'
-  );
-  expect(() => _or({ params: true, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: true at location.'
-  );
-  expect(() => _or({ params: false, location })).toThrow(
-    'Operator Error: _or takes an array type. Received: false at location.'
-  );
+  expect(() => _or({ params: 'hello' })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: null })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: true })).toThrow('_or takes an array type.');
+  expect(() => _or({ params: false })).toThrow('_or takes an array type.');
 });
 
 test('_or evaluated in NodeParser', () => {
   const input = { a: { _or: [true, false] } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: true });
+  const res = parser.parse({ input });
+  expect(res).toEqual({ a: true });
 });
 
 test('_or evaluated in WebParser', () => {
@@ -94,6 +84,6 @@ test('_or evaluated in WebParser', () => {
   };
   const input = { a: { _or: [true, false] } };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual({ a: true });
+  const res = parser.parse({ input });
+  expect(res).toEqual({ a: true });
 });

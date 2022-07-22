@@ -16,51 +16,43 @@
 
 import gte from './gte.js';
 
-const location = 'locationId';
-
 test('_gte param 0 greater than param 1', () => {
-  expect(gte({ params: [1, 1], location })).toBe(true);
-  expect(gte({ params: [1, 0], location })).toBe(true);
-  expect(gte({ params: [0, -1], location })).toBe(true);
-  expect(gte({ params: [1, -1], location })).toBe(true);
-  expect(gte({ params: [0.2, 0.1], location })).toBe(true);
-  expect(gte({ params: [1, null], location })).toBe(true);
-  expect(gte({ params: [null, null], location })).toBe(true);
-  expect(gte({ params: [new Date(2), new Date(1)], location })).toBe(true);
-  expect(gte({ params: [new Date(2), null], location })).toBe(true);
-  expect(gte({ params: ['bbb', 'bb'], location })).toBe(true);
-  expect(gte({ params: ['b', 'b'], location })).toBe(true);
-  expect(gte({ params: [new Date(1), new Date(1)], location })).toBe(true);
+  expect(gte({ params: [1, 1] })).toBe(true);
+  expect(gte({ params: [1, 0] })).toBe(true);
+  expect(gte({ params: [0, -1] })).toBe(true);
+  expect(gte({ params: [1, -1] })).toBe(true);
+  expect(gte({ params: [0.2, 0.1] })).toBe(true);
+  expect(gte({ params: [1, null] })).toBe(true);
+  expect(gte({ params: [null, null] })).toBe(true);
+  expect(gte({ params: [new Date(2), new Date(1)] })).toBe(true);
+  expect(gte({ params: [new Date(2), null] })).toBe(true);
+  expect(gte({ params: ['bbb', 'bb'] })).toBe(true);
+  expect(gte({ params: ['b', 'b'] })).toBe(true);
+  expect(gte({ params: [new Date(1), new Date(1)] })).toBe(true);
 });
 
 test('_gte param 0 less than param 1', () => {
-  expect(gte({ params: [0, 1], location })).toBe(false);
-  expect(gte({ params: [-1, 0], location })).toBe(false);
-  expect(gte({ params: [-1, 1], location })).toBe(false);
-  expect(gte({ params: [0.1, 0.2], location })).toBe(false);
-  expect(gte({ params: [null, 1], location })).toBe(false);
-  expect(gte({ params: [new Date(1), new Date(2)], location })).toBe(false);
-  expect(gte({ params: [null, new Date(2)], location })).toBe(false);
-  expect(gte({ params: [false, true], location })).toBe(false);
-  expect(gte({ params: ['a', 'b'], location })).toBe(false);
-  expect(gte({ params: ['aa', 'b'], location })).toBe(false);
-  expect(gte({ params: ['b', 'bb'], location })).toBe(false);
+  expect(gte({ params: [0, 1] })).toBe(false);
+  expect(gte({ params: [-1, 0] })).toBe(false);
+  expect(gte({ params: [-1, 1] })).toBe(false);
+  expect(gte({ params: [0.1, 0.2] })).toBe(false);
+  expect(gte({ params: [null, 1] })).toBe(false);
+  expect(gte({ params: [new Date(1), new Date(2)] })).toBe(false);
+  expect(gte({ params: [null, new Date(2)] })).toBe(false);
+  expect(gte({ params: [false, true] })).toBe(false);
+  expect(gte({ params: ['a', 'b'] })).toBe(false);
+  expect(gte({ params: ['aa', 'b'] })).toBe(false);
+  expect(gte({ params: ['b', 'bb'] })).toBe(false);
 });
 
 test('_gte params not an array', () => {
-  expect(() => gte({ params: '1, 0', location })).toThrow(
-    'Operator Error: _gte takes an array type as input. Received: "1, 0" at locationId.'
-  );
+  expect(() => gte({ params: '1, 0' })).toThrow('_gte takes an array type as input.');
 });
 
 test('_gte params array with length 1', () => {
-  expect(() => gte({ params: [1], location })).toThrow(
-    'Operator Error: _gte takes an array of length 2 as input. Received: [1] at locationId.'
-  );
+  expect(() => gte({ params: [1] })).toThrow('_gte takes an array of length 2 as input.');
 });
 
 test('_gte params array with length 3', () => {
-  expect(() => gte({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _gte takes an array of length 2 as input. Received: [1,2,3] at locationId.'
-  );
+  expect(() => gte({ params: [1, 2, 3] })).toThrow('_gte takes an array of length 2 as input.');
 });

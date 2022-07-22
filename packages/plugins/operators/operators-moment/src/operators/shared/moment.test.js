@@ -25,7 +25,6 @@ describe('_moment.format', () => {
         params: {
           on: new Date(1560414023345),
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('2019-06-13T08:20:23+00:00');
@@ -38,7 +37,6 @@ describe('_moment.format', () => {
           on: new Date(1560414023345),
           locale: 'ar-EG',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('٢٠١٩-٠٦-١٣T٠٨:٢٠:٢٣+٠٠:٠٠');
@@ -51,7 +49,6 @@ describe('_moment.format', () => {
           on: new Date(1560414023345),
           format: 'd MMM YYYY',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('4 Jun 2019');
@@ -67,7 +64,6 @@ describe('_moment.humanizeDuration', () => {
         params: {
           on: 245923000,
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('3 days');
@@ -80,7 +76,6 @@ describe('_moment.humanizeDuration', () => {
           on: 245923000,
           locale: 'ar-EG',
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('٣ أيام');
@@ -93,7 +88,6 @@ describe('_moment.humanizeDuration', () => {
           on: 245923000,
           withSuffix: true,
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('in 3 days');
@@ -103,7 +97,6 @@ describe('_moment.humanizeDuration', () => {
           on: -245923000,
           withSuffix: true,
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('3 days ago');
@@ -115,7 +108,6 @@ describe('_moment.humanizeDuration', () => {
         params: {
           on: 604800000,
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('7 days');
@@ -125,7 +117,6 @@ describe('_moment.humanizeDuration', () => {
           on: 604800000,
           thresholds: { d: 7, w: 4 },
         },
-        location: 'locationId',
         methodName,
       })
     ).toEqual('a week');

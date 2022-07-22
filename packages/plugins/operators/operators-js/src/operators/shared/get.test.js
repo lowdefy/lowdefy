@@ -23,7 +23,6 @@ test('_get calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   get({
     arrayIndices: [0],
-    location: 'location',
     params: {
       from: { a: 1 },
       key: 'a',
@@ -33,7 +32,6 @@ test('_get calls getFromObject', async () => {
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: { a: 1 },
         operator: '_get',
         params: {
@@ -48,7 +46,6 @@ test('_get calls getFromObject', async () => {
 test('_get returns null if from is null', () => {
   const input = {
     arrayIndices: [0],
-    location: 'location',
     params: {
       from: null,
       key: 'a',
@@ -60,7 +57,6 @@ test('_get returns null if from is null', () => {
 test('_get returns default value if from is null', () => {
   const input = {
     arrayIndices: [0],
-    location: 'location',
     params: {
       from: null,
       key: 'a',
@@ -73,24 +69,20 @@ test('_get returns default value if from is null', () => {
 test('_get throws if params is not a object', () => {
   const input = {
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   };
-  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _get takes an object as params. Received: \\"params\\" at location."`
-  );
+  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(`"_get takes an object as params."`);
 });
 
 test('_get throws if from is not a object, array or null', () => {
   const input = {
     arrayIndices: [0],
-    location: 'location',
     params: {
       from: 1,
       key: 'a',
     },
   };
   expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _get.from is not an object or array. Received: {\\"from\\":1,\\"key\\":\\"a\\"} at location."`
+    `"_get.from is not an object or array."`
   );
 });

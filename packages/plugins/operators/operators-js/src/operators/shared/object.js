@@ -62,10 +62,9 @@ const metaClass = {
   values: { singleArg: true, validTypes: ['object', 'null'], prep },
 };
 
-function _object({ params, location, methodName }) {
+function _object({ params, methodName }) {
   if (methodName === 'hasOwnProperty') {
     return runInstance({
-      location,
       meta: metaInstance,
       methodName,
       operator: '_object',
@@ -75,7 +74,6 @@ function _object({ params, location, methodName }) {
   }
   return runClass({
     functions: Object,
-    location,
     meta: metaClass,
     methodName,
     operator: '_object',

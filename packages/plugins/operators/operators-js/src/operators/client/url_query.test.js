@@ -27,14 +27,12 @@ test('url_query calls getFromObject', async () => {
   url_query({
     arrayIndices: [0],
     globals,
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: { some: 'value' },
         operator: '_url_query',
         params: 'params',
@@ -46,11 +44,8 @@ test('url_query calls getFromObject', async () => {
       url_query({
         arrayIndices: [0],
         globals: {},
-        location: 'location',
         params: 'params',
       })
     )
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Browser window.location not available for _url_query. Received: \\"params\\" at location."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"Browser window.location not available for _url_query."`);
 });

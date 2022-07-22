@@ -17,53 +17,43 @@
 import yaml from './yaml.js';
 
 test('_yaml.parse string unquoted', () => {
-  expect(yaml({ params: ['firstName'], location: 'locationId', methodName: 'parse' })).toEqual(
-    'firstName'
-  );
+  expect(yaml({ params: ['firstName'], methodName: 'parse' })).toEqual('firstName');
 });
 
 test('_yaml.parse string quoted', () => {
-  expect(yaml({ params: ['"firstName"'], location: 'locationId', methodName: 'parse' })).toEqual(
-    'firstName'
-  );
+  expect(yaml({ params: ['"firstName"'], methodName: 'parse' })).toEqual('firstName');
 });
 
 test('_yaml.parse number', () => {
-  expect(yaml({ params: ['1'], location: 'locationId', methodName: 'parse' })).toEqual(1);
+  expect(yaml({ params: ['1'], methodName: 'parse' })).toEqual(1);
 });
 
 test('_yaml.parse boolean true', () => {
-  expect(yaml({ params: ['true'], location: 'locationId', methodName: 'parse' })).toEqual(true);
+  expect(yaml({ params: ['true'], methodName: 'parse' })).toEqual(true);
 });
 
 test('_yaml.parse boolean false', () => {
-  expect(yaml({ params: ['false'], location: 'locationId', methodName: 'parse' })).toEqual(false);
+  expect(yaml({ params: ['false'], methodName: 'parse' })).toEqual(false);
 });
 
 test('_yaml.parse null', () => {
-  expect(yaml({ params: ['null'], location: 'locationId', methodName: 'parse' })).toEqual(null);
+  expect(yaml({ params: ['null'], methodName: 'parse' })).toEqual(null);
 });
 
 test('_yaml.parse undefined string', () => {
-  expect(yaml({ params: ['undefined'], location: 'locationId', methodName: 'parse' })).toEqual(
-    undefined
-  );
+  expect(yaml({ params: ['undefined'], methodName: 'parse' })).toEqual(undefined);
 });
 
 test('_yaml.parse object not allowed', () => {
   expect(() =>
-    yaml({ params: [{ a: 'b' }], location: 'locationId', methodName: 'parse' })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[{\\"a\\":\\"b\\"}]} at locationId."`
-  );
+    yaml({ params: [{ a: 'b' }], methodName: 'parse' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_yaml.parse - requires a string type to parse."`);
 });
 
 test('_yaml.parse date not supported', () => {
   expect(() =>
-    yaml({ params: [new Date(0)], location: 'locationId', methodName: 'parse' })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[\\"1970-01-01T00:00:00.000Z\\"]} at locationId."`
-  );
+    yaml({ params: [new Date(0)], methodName: 'parse' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_yaml.parse - requires a string type to parse."`);
 });
 
 test('_yaml.parse array', () => {
@@ -73,7 +63,6 @@ test('_yaml.parse array', () => {
         `- a: a1
 - a: a2`,
       ],
-      location: 'locationId',
       methodName: 'parse',
     })
   ).toEqual([{ a: 'a1' }, { a: 'a2' }]);
@@ -86,7 +75,6 @@ test('_yaml.parse date array', () => {
         `- _date: "1970-01-01T00:00:00.000Z"
 - _date: "1970-01-01T00:00:00.001Z"`,
       ],
-      location: 'locationId',
       methodName: 'parse',
     })
   ).toEqual([new Date(0), new Date(1)]);
@@ -96,7 +84,6 @@ test('_yaml.parse date as object', () => {
   expect(
     yaml({
       params: [`_date: "1970-01-01T00:00:00.000Z"`],
-      location: 'locationId',
       methodName: 'parse',
     })
   ).toEqual(new Date(0));
@@ -109,70 +96,61 @@ test('_yaml.parse date object', () => {
         `a:
   _date: "1970-01-01T00:00:00.000Z"`,
       ],
-      location: 'locationId',
       methodName: 'parse',
     })
   ).toEqual({ a: new Date(0) });
 });
 
 test('_yaml.parse non string', () => {
-  expect(() =>
-    yaml({ params: [123], location: 'locationId', methodName: 'parse' })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[123]} at locationId."`
+  expect(() => yaml({ params: [123], methodName: 'parse' })).toThrowErrorMatchingInlineSnapshot(
+    `"_yaml.parse - requires a string type to parse."`
   );
 });
 
 test('_yaml.stringify string', () => {
-  expect(yaml({ params: ['firstName'], location: 'locationId', methodName: 'stringify' }))
-    .toEqual(`firstName
+  expect(yaml({ params: ['firstName'], methodName: 'stringify' })).toEqual(`firstName
 `);
 });
 
 test('_yaml.stringify number', () => {
-  expect(yaml({ params: [1], location: 'locationId', methodName: 'stringify' })).toEqual(`1
+  expect(yaml({ params: [1], methodName: 'stringify' })).toEqual(`1
 `);
 });
 
 test('_json.stringify boolean true', () => {
-  expect(yaml({ params: [true], location: 'locationId', methodName: 'stringify' })).toEqual(`true
+  expect(yaml({ params: [true], methodName: 'stringify' })).toEqual(`true
 `);
 });
 
 test('_yaml.stringify boolean false', () => {
-  expect(yaml({ params: [false], location: 'locationId', methodName: 'stringify' })).toEqual(`false
+  expect(yaml({ params: [false], methodName: 'stringify' })).toEqual(`false
 `);
 });
 
 test('_yaml.stringify null', () => {
-  expect(yaml({ params: [null], location: 'locationId', methodName: 'stringify' })).toEqual(`null
+  expect(yaml({ params: [null], methodName: 'stringify' })).toEqual(`null
 `);
 });
 
 test('_yaml.stringify undefined in object', () => {
-  expect(yaml({ params: [{ b: undefined }], location: 'locationId', methodName: 'stringify' }))
-    .toEqual(`{}
+  expect(yaml({ params: [{ b: undefined }], methodName: 'stringify' })).toEqual(`{}
 `);
 });
 
 test('_yaml.stringify undefined', () => {
-  expect(yaml({ params: [undefined], location: 'locationId', methodName: 'stringify' })).toEqual(
-    ''
-  );
+  expect(yaml({ params: [undefined], methodName: 'stringify' })).toEqual('');
 });
 
 test('_yaml.stringify date', () => {
-  expect(yaml({ params: [new Date(0)], location: 'locationId', methodName: 'stringify' }))
-    .toMatchInlineSnapshot(`
+  expect(yaml({ params: [new Date(0)], methodName: 'stringify' })).toMatchInlineSnapshot(`
     "_date: 1970-01-01T00:00:00.000Z
     "
   `);
 });
 
 test('_yaml.stringify array', () => {
-  expect(
-    yaml({ params: [[{ a: 'a1' }, { a: 'a2' }]], location: 'locationId', methodName: 'stringify' })
-  ).toMatchInlineSnapshot(`
+  expect(yaml({ params: [[{ a: 'a1' }, { a: 'a2' }]], methodName: 'stringify' }))
+    .toMatchInlineSnapshot(`
     "- a: a1
     - a: a2
     "
@@ -180,9 +158,8 @@ test('_yaml.stringify array', () => {
 });
 
 test('_yaml.stringify date array', () => {
-  expect(
-    yaml({ params: [[new Date(0), new Date(1)]], location: 'locationId', methodName: 'stringify' })
-  ).toMatchInlineSnapshot(`
+  expect(yaml({ params: [[new Date(0), new Date(1)]], methodName: 'stringify' }))
+    .toMatchInlineSnapshot(`
     "- _date: 1970-01-01T00:00:00.000Z
     - _date: 1970-01-01T00:00:00.001Z
     "
@@ -190,8 +167,7 @@ test('_yaml.stringify date array', () => {
 });
 
 test('_yaml.stringify date object', () => {
-  expect(yaml({ params: [{ a: new Date(0) }], location: 'locationId', methodName: 'stringify' }))
-    .toMatchInlineSnapshot(`
+  expect(yaml({ params: [{ a: new Date(0) }], methodName: 'stringify' })).toMatchInlineSnapshot(`
     "a:
       _date: 1970-01-01T00:00:00.000Z
     "
@@ -203,7 +179,6 @@ test('_yaml.stringify date object', () => {
 //   expect(
 //     yaml({
 //       params: [{ b: new Date(0), a: new Date(0) }, { sortKeys: false }],
-//       location: 'locationId',
 //       methodName: 'stringify',
 //     })
 //   ).toMatchInlineSnapshot(`
@@ -219,7 +194,6 @@ test('_yaml.stringify date object', () => {
 //   expect(
 //     yaml({
 //       params: { on: { b: new Date(0), a: new Date(0) }, options: { sortKeys: false } },
-//       location: 'locationId',
 //       methodName: 'stringify',
 //     })
 //   ).toMatchInlineSnapshot(`
@@ -235,7 +209,6 @@ test('_yaml.stringify date object', () => {
 //   expect(
 //     yaml({
 //       params: { on: { b: new Date(0), a: new Date(0) }, options: { sortKeys: true } },
-//       location: 'locationId',
 //       methodName: 'stringify',
 //     })
 //   ).toMatchInlineSnapshot(`

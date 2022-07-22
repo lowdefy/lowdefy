@@ -51,10 +51,9 @@ const meta = {
   ripemd160: { validTypes: ['string'], singleArg: true },
 };
 
-function _hash({ params, location, methodName }) {
+function _hash({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_hash',

@@ -16,13 +16,9 @@
 
 import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
-function _request({ arrayIndices, params, requests, location }) {
+function _request({ arrayIndices, params, requests }) {
   if (!type.isString(params)) {
-    throw new Error(
-      `Operator Error: _request accepts a string value. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_request accepts a string value.`);
   }
   const splitKey = params.split('.');
   const [requestId, ...keyParts] = splitKey;

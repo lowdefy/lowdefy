@@ -39,10 +39,9 @@ const meta = {
   now: { noArgs: true },
 };
 
-function _date({ params, location, methodName }) {
+function _date({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName: methodName,
     operator: '_date',

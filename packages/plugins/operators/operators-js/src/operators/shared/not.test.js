@@ -15,18 +15,14 @@
 */
 import _not from './not.js';
 
-const location = 'location';
-
-console.error = () => {};
-
 test('_not returns true', () => {
-  expect(_not({ params: 0, location })).toEqual(true);
-  expect(_not({ params: null, location })).toEqual(true);
-  expect(_not({ params: false, location })).toEqual(true);
+  expect(_not({ params: 0 })).toEqual(true);
+  expect(_not({ params: null })).toEqual(true);
+  expect(_not({ params: false })).toEqual(true);
 });
 test('_not returns false', () => {
-  expect(_not({ params: 1, location })).toEqual(false);
-  expect(_not({ params: true, location })).toEqual(false);
-  expect(_not({ params: [0, 0], location })).toEqual(false);
-  expect(_not({ params: 'string', location })).toEqual(false);
+  expect(_not({ params: 1 })).toEqual(false);
+  expect(_not({ params: true })).toEqual(false);
+  expect(_not({ params: [0, 0] })).toEqual(false);
+  expect(_not({ params: 'string' })).toEqual(false);
 });

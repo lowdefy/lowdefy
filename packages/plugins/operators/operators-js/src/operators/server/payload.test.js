@@ -23,14 +23,12 @@ jest.mock('@lowdefy/operators', () => ({
 test('payload calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   payload({
-    location: 'location',
     params: 'params',
     payload: { payload: true },
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        location: 'location',
         object: {
           payload: true,
         },

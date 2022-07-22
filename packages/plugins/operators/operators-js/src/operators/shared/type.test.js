@@ -23,8 +23,6 @@ const operators = {
   _type,
 };
 
-const location = 'location';
-
 const state = {
   string: 'Some String',
   number: 42,
@@ -32,80 +30,70 @@ const state = {
   boolean: true,
 };
 
-console.error = () => {};
-
 test('_type with on, pass', () => {
-  expect(_type({ params: { type: 'string', on: 'a' }, location })).toEqual(true);
+  expect(_type({ params: { type: 'string', on: 'a' } })).toEqual(true);
 });
 test('_type with on, fail', () => {
-  expect(_type({ params: { type: 'number', on: 'a' }, location })).toEqual(false);
+  expect(_type({ params: { type: 'number', on: 'a' } })).toEqual(false);
 });
 test('_type with key, pass', () => {
-  expect(_type({ params: { type: 'string', key: 'string' }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'string', key: 'string' }, state })).toEqual(true);
 });
 test('_type with key, fail', () => {
-  expect(_type({ params: { type: 'string', key: 'number' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'string', key: 'number' }, state })).toEqual(false);
 });
 test('_type with null on, pass', () => {
-  expect(_type({ params: { type: 'null', on: null }, location })).toEqual(true);
+  expect(_type({ params: { type: 'null', on: null } })).toEqual(true);
 });
 test('_type with null on, fail', () => {
-  expect(_type({ params: { type: 'boolean', on: null }, location })).toEqual(false);
+  expect(_type({ params: { type: 'boolean', on: null } })).toEqual(false);
 });
 test('_type with nonexistent key', () => {
-  expect(_type({ params: { type: 'boolean', key: 'notThere' }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'boolean', key: 'notThere' }, state })).toEqual(false);
 });
 test('_type with null key', () => {
-  expect(_type({ params: { type: 'boolean', key: null }, location, state })).toEqual(false);
+  expect(_type({ params: { type: 'boolean', key: null }, state })).toEqual(false);
 });
 test('_type null', () => {
-  expect(() => _type({ params: null, location })).toThrow(
-    'Operator Error: _type.type must be a string. Received: null at location.'
-  );
+  expect(() => _type({ params: null })).toThrow('_type.type must be a string.');
 });
 test('_type with non-string on', () => {
-  expect(_type({ params: { type: 'number', on: 5 }, location })).toEqual(true);
+  expect(_type({ params: { type: 'number', on: 5 } })).toEqual(true);
 });
 test('_type with unknown type', () => {
-  expect(() => _type({ params: { type: 'strings' }, location })).toThrow(
-    'Operator Error: "strings" is not a valid _type test. Received: {"type":"strings"} at location.'
+  expect(() => _type({ params: { type: 'strings' } })).toThrow(
+    '"strings" is not a valid _type test.'
   );
 });
 test('_type date on string date fail', () => {
-  expect(_type({ params: { type: 'date', on: '2019-11-28T08:10:09.844Z' }, location })).toEqual(
-    false
-  );
+  expect(_type({ params: { type: 'date', on: '2019-11-28T08:10:09.844Z' } })).toEqual(false);
 });
 test('_type date on date object pass', () => {
-  expect(_type({ params: { type: 'date', on: new Date() }, location })).toEqual(true);
+  expect(_type({ params: { type: 'date', on: new Date() } })).toEqual(true);
 });
 
 test('_type array', () => {
-  expect(_type({ params: { type: 'array', key: 'arr' }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'array', key: 'arr' }, state })).toEqual(true);
 });
 test('_type object', () => {
-  expect(_type({ params: { type: 'object', on: { key: 'value' } }, location, state })).toEqual(
-    true
-  );
+  expect(_type({ params: { type: 'object', on: { key: 'value' } }, state })).toEqual(true);
 });
 test('_type primitive', () => {
-  expect(_type({ params: { type: 'primitive', on: 'Primitive string' }, location, state })).toEqual(
-    true
-  );
+  expect(_type({ params: { type: 'primitive', on: 'Primitive string' }, state })).toEqual(true);
 });
 test('_type integer', () => {
-  expect(_type({ params: { type: 'integer', on: 42 }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'integer', on: 42 }, state })).toEqual(true);
 });
 test('_type undefined', () => {
-  expect(_type({ params: { type: 'undefined', on: undefined }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'undefined', on: undefined }, state })).toEqual(true);
 });
 test('_type none', () => {
-  expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
+  expect(_type({ params: { type: 'none' }, state })).toEqual(true);
 });
 
 test('_type date with on packed date pass and calls NodeParser', () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
   const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
-  const res = parser.parse({ input, location });
-  expect(res.output).toEqual(true);
+  const res = parser.parse({ input });
+  expect(res).toEqual(true);
 });

@@ -31,10 +31,9 @@ const meta = {
   encode: { singleArg: true, validTypes: ['string'] },
   decode: { singleArg: true, validTypes: ['string'] },
 };
-function _base64({ params, location, methodName }) {
+function _base64({ params, methodName }) {
   return runClass({
     functions,
-    location,
     meta,
     methodName,
     operator: '_base64',

@@ -16,10 +16,9 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-function _event({ arrayIndices, event, location, params }) {
+function _event({ arrayIndices, event, params }) {
   return getFromObject({
     arrayIndices,
-    location,
     object: event,
     operator: '_event',
     params,

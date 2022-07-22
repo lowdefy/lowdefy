@@ -16,9 +16,8 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-function _payload({ location, params, payload }) {
+function _payload({ params, payload }) {
   return getFromObject({
-    location,
     object: payload,
     operator: '_payload',
     params,

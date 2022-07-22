@@ -24,14 +24,12 @@ test('_index calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   _index({
     arrayIndices: [0],
-    location: 'location',
     params: 'params',
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
         arrayIndices: [0],
-        location: 'location',
         object: [0],
         operator: '_index',
         params: 'params',

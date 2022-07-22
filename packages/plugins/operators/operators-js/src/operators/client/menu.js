@@ -16,8 +16,8 @@
 
 import { getFromArray } from '@lowdefy/operators';
 
-function _menu({ params, menus, location }) {
-  return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu', location });
+function _menu({ params, menus }) {
+  return getFromArray({ params, array: menus, key: 'menuId', operator: '_menu' });
 }
 
 export default _menu;

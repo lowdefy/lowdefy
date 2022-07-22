@@ -16,10 +16,9 @@
 
 import { getFromObject } from '@lowdefy/operators';
 
-function _request_details({ params, requests, arrayIndices, location }) {
+function _request_details({ params, requests, arrayIndices }) {
   return getFromObject({
     arrayIndices,
-    location,
     object: requests,
     operator: '_request_details',
     params,
