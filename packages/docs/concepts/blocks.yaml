@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            A Lowdefy page is compiled out of an arrangement of blocks. Every HTML element of this page is rendered as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide what block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected.
+            A Lowdefy page is compiled out of an arrangement of blocks. Every HTML element of this page is rendered as a result of a block placed and configured on the page. Blocks make it simple for Lowdefy developers to create apps since they only have to decide which block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties`. How a block implements these `properties` is up to the specific block type selected.
 
             Lowdefy offers a list of over 30 block types to cater for a wide range of use cases. All blocks are categorized according to their primary function:
             - `display` - Display page elements.
@@ -32,14 +32,14 @@ _ref:
             - `container` - Render other blocks into [`content areas`](/layout).
             - `list` - Render `content areas` and blocks for each element in the data array.
 
-            When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_  to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas`, `blocks` and `loading` fields.
+            When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas`, `blocks` and `loading` fields.
 
             # Block Schema
 
             The schema for a Lowdefy block is:
 
             - `id: string`: __Required__ - A unique identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in `state`. Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
-            - `type: string`: __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `types` configuration.
+            - `type: string`: __Required__ - The is the block type identifier and defines what block to used. The block type used must either be a default block type or must defined in your app's `plugins` configuration.
             - `properties: object`: All the settings passed to a block component. __Operators are evaluated__.
             - `areas: object`: Used to set the content areas and content layout settings for `container` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
             - `blocks: array`: A array of blocks to render to the default `content` area for `container` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
@@ -47,7 +47,7 @@ _ref:
             - `layout: object`: Used to define the [layout](/layout) properties for a block. __Operators are evaluated__.
             - `skeleton: object`: Used to overwrite a block's default loading behavior by rendering a skeleton. Any block types from [`@lowdefy/blocks-basic`](https://www.npmjs.com/package/@lowdefy/blocks-basic) and [`@lowdefy/blocks-loaders`](https://www.npmjs.com/package/@lowdefy/blocks-loaders) can be used in the skeleton definition, including sub-blocks.
             - `loading: boolean`: When true, renders the block in loading. If a `skeleton` is defined, it will be rendered, else the block's default loading behavior will be rendered.
-            - `required: boolean | string`: For `input` blocks, whether or not a value value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
+            - `required: boolean | string`: For `input` blocks, whether or not a value is required in `state` when the [`Validate`](/Validate) action is called. Can be either a boolean or a string that is used as the validation error message . __Operators are evaluated__.
             - `style: css object`: Used to apply css style settings to the block's top level `div` element. __Operators are evaluated__.
             - `validate: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called. __Operators are evaluated__.
             - `visible: boolean`: Controls whether or not to render a block. Operators  are generally used here, and must evaluate to `false` to make the block invisible. Blocks with `visible: false` are excluded from `state`. __Operators are evaluated__.
