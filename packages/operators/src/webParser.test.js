@@ -17,8 +17,6 @@
 /* eslint-disable max-classes-per-file */
 import WebParser from './webParser.js';
 
-console.error = () => {};
-
 const args = [{ args: true }];
 
 const actions = [{ actions: true }];
@@ -64,12 +62,13 @@ const context = {
 
 const event = { event: true };
 
-const location = 'location';
-
 const operators = {
   _test: jest.fn(() => 'test'),
   _error: jest.fn(() => {
     throw new Error('Test error.');
+  }),
+  _error_cause: jest.fn(() => {
+    throw new Error('Test error.', { cause: { id: 'some_id' } });
   }),
   _init: jest.fn(),
 };
@@ -79,8 +78,7 @@ operators._init.init = jest.fn();
 test('parse input undefined', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({});
-  expect(res.output).toEqual();
-  expect(res.errors).toEqual([]);
+  expect(res).toEqual();
 });
 
 test('parse args not array', () => {
@@ -97,21 +95,11 @@ test('parse event not object', () => {
   expect(() => parser.parse({ event, input })).toThrow('Operator parser event must be a object.');
 });
 
-test('parse location not string', () => {
-  const input = {};
-  const location = [];
-  const parser = new WebParser({ context, operators });
-  expect(() => parser.parse({ args, input, location })).toThrow(
-    'Operator parser location must be a string.'
-  );
-});
-
 test('operator returns value', () => {
-  const input = { a: { _test: { params: true } } };
-  const location = 'location.$';
+  const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
-  expect(res.output).toEqual({ a: 'test' });
+  const res = parser.parse({ actions, args, arrayIndices, event, input });
+  expect(res).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -158,7 +146,6 @@ test('operator returns value', () => {
             "pageId": "home.pageId",
           },
           "input": true,
-          "location": "location.1",
           "lowdefyGlobal": Object {
             "global": true,
           },
@@ -171,6 +158,7 @@ test('operator returns value', () => {
           "operatorPrefix": "_",
           "operators": Object {
             "_error": [MockFunction],
+            "_error_cause": [MockFunction],
             "_init": [MockFunction],
             "_test": [MockFunction] {
               "calls": [Circular],
@@ -245,6 +233,7 @@ test('operator returns value', () => {
             },
             "operators": Object {
               "_error": [MockFunction],
+              "_error_cause": [MockFunction],
               "_init": [MockFunction],
               "_test": [MockFunction] {
                 "calls": [Circular],
@@ -263,7 +252,6 @@ test('operator returns value', () => {
               "requests": true,
             },
           ],
-          "runtime": "browser",
           "state": Object {
             "state": true,
           },
@@ -274,38 +262,40 @@ test('operator returns value', () => {
       ],
     ]
   `);
-  expect(res.errors).toEqual([]);
 });
 
 test('operator should be object with 1 key', () => {
-  const input = { a: { _test: { params: true }, x: 1 } };
+  const input = { a: { _test: { params: true, _k_: 'a' }, x: 1, _k_: 'b' }, _k_: 'c' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
+  const res = parser.parse({ actions, args, arrayIndices, event, input });
+  expect(res).toEqual({ a: { _test: { params: true }, x: 1 } });
 });
 
 test('operatorPrefix invalid', () => {
-  const input = { a: { _test: { params: true }, x: 1 } };
+  const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
   const operatorPrefix = 'invalid';
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location, operatorPrefix });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
+  const res = parser.parse({ actions, args, arrayIndices, event, input, operatorPrefix });
+  expect(res).toEqual({ a: { _test: { params: true } } });
 });
 
 test('undefined operator', () => {
-  const input = { a: { _id: { params: true } } };
+  const input = { a: { _id: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
+  const res = parser.parse({ actions, args, arrayIndices, event, input });
+  expect(res).toEqual({ a: { _id: { params: true } } });
 });
 
 test('operator errors', () => {
-  const input = { a: { _error: { params: true } } };
+  const input = { a: { _error: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toEqual([new Error('Test error.')]);
+  expect(() => {
+    parser.parse({ actions, args, arrayIndices, event, input });
+  }).toThrow('Test error.');
+});
+
+test('operator errors with cause', () => {
+  const input = { a: { _error_cause: { params: true } } };
+  const parser = new WebParser({ context, operators });
+  expect(() => parser.parse({ args, input })).toThrow('Test error.');
 });

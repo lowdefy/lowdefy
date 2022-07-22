@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
   constructor({ context, operators }) {
@@ -23,25 +23,32 @@ class WebParser {
     this.parse = this.parse.bind(this);
   }
 
-  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
+  parse({ actions, args, arrayIndices, event, input, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
-      return { output: input, errors: [] };
+      return input;
     }
     if (event && !type.isObject(event)) {
-      throw new Error('Operator parser event must be a object.');
+      throw new Error('Operator parser event must be a object.', {
+        cause: {
+          _k_: input?._k_,
+        },
+      });
     }
     if (args && !type.isArray(args)) {
-      throw new Error('Operator parser args must be an array.');
+      throw new Error('Operator parser args must be an array.', {
+        cause: {
+          _k_: input?._k_,
+        },
+      });
     }
-    if (!type.isString(location)) {
-      throw new Error('Operator parser location must be a string.');
-    }
-    const errors = [];
     const { basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
-      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+      if (!type.isObject(value)) return value;
+      const _k_ = value._k_;
+      delete value._k_;
 
+      if (Object.keys(value).length !== 1) return value;
       const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;
 
@@ -58,10 +65,9 @@ class WebParser {
           eventLog: this.context.eventLog,
           globals: _internal.globals,
           home,
-          input: inputs ? inputs[this.context.id] : {},
-          location: applyArrayIndices(arrayIndices, location),
-          lowdefyGlobal: lowdefyGlobal ?? {},
-          menus: menus ?? [],
+          input: inputs[this.context.id],
+          lowdefyGlobal: lowdefyGlobal,
+          menus: menus,
           methodName,
           operatorPrefix,
           operators: this.operators,
@@ -69,21 +75,22 @@ class WebParser {
           params: value[key],
           parser: this,
           requests: this.context.requests,
-          runtime: 'browser',
           state: this.context.state,
-          user: user ?? {},
+          user: user,
         });
         return res;
-      } catch (e) {
-        errors.push(e);
-        console.error(e);
-        return null;
+      } catch (error) {
+        const origionalCause = type.isObject(error.cause) ? error.cause : { cause: error.cause };
+        error.cause = {
+          _k_,
+          ...origionalCause, // maintain the deepest possible _k_
+          kind: 'operator',
+          type: op,
+        };
+        throw error;
       }
     };
-    return {
-      output: serializer.copy(input, { reviver }),
-      errors,
-    };
+    return serializer.copy(input, { reviver });
   }
 }
 

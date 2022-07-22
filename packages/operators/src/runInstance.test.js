@@ -16,7 +16,6 @@
 
 import runInstance from './runInstance.js';
 
-const location = 'locationId';
 const operator = '_op';
 const functions = {
   singleArg: () => 30,
@@ -48,7 +47,6 @@ const meta = {
 test('singleArg', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'singleArg',
@@ -61,7 +59,6 @@ test('singleArg', () => {
 test('namedArgs', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'namedArgs',
@@ -71,7 +68,6 @@ test('namedArgs', () => {
   ).toEqual(3);
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'namedArgs',
@@ -84,7 +80,6 @@ test('namedArgs', () => {
 test('spreadArgs', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'spreadArgs',
@@ -97,7 +92,6 @@ test('spreadArgs', () => {
 test('nameAndSpread', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'nameAndSpread',
@@ -107,7 +101,6 @@ test('nameAndSpread', () => {
   ).toEqual(21);
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'nameAndSpread',
@@ -120,23 +113,20 @@ test('nameAndSpread', () => {
 test('nameAndSpread - spread args must be an array', () => {
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'nameAndSpread',
       params: { on: functions, x: 1, y: 2, z: 'x' },
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.nameAndSpread takes an array as input argument for z.
-              Received: {\\"_op.nameAndSpread\\":{\\"on\\":{\\"property\\":42},\\"x\\":1,\\"y\\":2,\\"z\\":\\"x\\"}} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.nameAndSpread takes an array as input argument for z."`
+  );
 });
 
 test('property', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'property',
@@ -149,7 +139,6 @@ test('property', () => {
 test('returnInstance', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'returnInstance',
@@ -162,22 +151,18 @@ test('returnInstance', () => {
 test('error', () => {
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'error',
       params: [functions],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _op.error - Function error. Received: {\\"_op.error\\":[{\\"property\\":42}]} at locationId."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"_op.error - Function error."`);
 });
 
 test('typeCheck', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'typeCheck',
@@ -187,7 +172,6 @@ test('typeCheck', () => {
   ).toEqual(true);
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'typeCheck',
@@ -197,23 +181,20 @@ test('typeCheck', () => {
   ).toEqual(true);
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'typeCheck',
       params: ['x'],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array.
-        Received: {\\"_op.typeCheck\\":[\\"x\\"]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.typeCheck must be evaluated on an object instance. For named args provide an object instance to the \\"on\\" property, for listed args provide and object instance as the first element in the operator argument array."`
+  );
 });
 
 test('combination', () => {
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'combination',
@@ -223,7 +204,6 @@ test('combination', () => {
   ).toEqual(-21);
   expect(
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'combination',
@@ -233,46 +213,40 @@ test('combination', () => {
   ).toEqual(-21);
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'combination',
       params: 'x',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.combination accepts one of the following types: array, object.
-          Received: {\\"_op.combination\\":\\"x\\"} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.combination accepts one of the following types: array, object."`
+  );
 });
 
 test('calling an undefined function', () => {
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'x',
       params: [],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
-          Received: {\\"_op.x\\":[]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op.x is not supported, use one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+  );
 });
 
 test('calling an undefined instance function', () => {
   expect(() =>
     runInstance({
-      location,
       meta,
       operator,
       methodName: 'noFunction',
       params: [{}],
       instanceType: 'object',
     })
-  ).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance.
-          Received: {\\"_op.noFunction\\":[{}]} at locationId."
-  `);
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_op must be evaluated using one of the following: singleArg, namedArgs, spreadArgs, nameAndSpread, property, typeCheck, combination, error, noFunction, returnInstance."`
+  );
 });

@@ -24,12 +24,13 @@ const operators = {
   _error: jest.fn(() => {
     throw new Error('Test error.');
   }),
+  _error_cause: jest.fn(() => {
+    throw new Error('Test error.', { cause: { id: 'some_id' } });
+  }),
   _init: jest.fn(),
 };
 
 operators._init.init = jest.fn();
-
-const location = 'location';
 
 const payload = {
   payload: true,
@@ -43,68 +44,41 @@ const user = {
   user: true,
 };
 
-test('parse input undefined', () => {
-  const parser = new NodeParser({ operators, payload });
-  const res = parser.parse({});
-  expect(res.output).toEqual();
-  expect(res.errors).toEqual([]);
-});
+describe('on server', () => {
+  test('parse input undefined', () => {
+    const parser = new NodeParser({ operators, payload });
+    const res = parser.parse({});
+    expect(res).toEqual();
+  });
 
-test('parse args not array', () => {
-  const input = {};
-  const args = 'not an array';
-  const parser = new NodeParser({ operators, payload });
-  expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
-});
+  test('parse args not array', () => {
+    const input = {};
+    const args = 'not an array';
+    const parser = new NodeParser({ operators, payload });
+    expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
+  });
 
-test('parse location not string', () => {
-  const input = {};
-  const location = [];
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  expect(() => parser.parse({ args, input, location })).toThrow(
-    'Operator parser location must be a string.'
-  );
-});
-
-test('operator returns value', () => {
-  const input = { a: { _test: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual({ a: 'test' });
-  expect(operators._test.mock.calls).toMatchInlineSnapshot(`
-    Array [
+  test('operator returns value', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: 'test' });
+    expect(operators._test.mock.calls).toMatchInlineSnapshot(`
       Array [
-        Object {
-          "args": Array [
-            Object {
-              "args": true,
-            },
-          ],
-          "arrayIndices": Array [],
-          "env": undefined,
-          "location": "location",
-          "methodName": undefined,
-          "operatorPrefix": "_",
-          "operators": Object {
-            "_error": [MockFunction],
-            "_init": [MockFunction],
-            "_test": [MockFunction] {
-              "calls": [Circular],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": "test",
-                },
-              ],
-            },
-          },
-          "params": Object {
-            "params": true,
-          },
-          "parser": NodeParser {
+        Array [
+          Object {
+            "args": Array [
+              Object {
+                "args": true,
+              },
+            ],
+            "arrayIndices": Array [],
             "env": undefined,
+            "methodName": undefined,
+            "operatorPrefix": "_",
             "operators": Object {
               "_error": [MockFunction],
+              "_error_cause": [MockFunction],
               "_init": [MockFunction],
               "_test": [MockFunction] {
                 "calls": [Circular],
@@ -116,7 +90,37 @@ test('operator returns value', () => {
                 ],
               },
             },
-            "parse": [Function],
+            "params": Object {
+              "params": true,
+            },
+            "parser": NodeParser {
+              "build": undefined,
+              "env": undefined,
+              "operators": Object {
+                "_error": [MockFunction],
+                "_error_cause": [MockFunction],
+                "_init": [MockFunction],
+                "_test": [MockFunction] {
+                  "calls": [Circular],
+                  "results": Array [
+                    Object {
+                      "type": "return",
+                      "value": "test",
+                    },
+                  ],
+                },
+              },
+              "parse": [Function],
+              "payload": Object {
+                "payload": true,
+              },
+              "secrets": Object {
+                "secrets": true,
+              },
+              "user": Object {
+                "user": true,
+              },
+            },
             "payload": Object {
               "payload": true,
             },
@@ -127,52 +131,119 @@ test('operator returns value', () => {
               "user": true,
             },
           },
-          "payload": Object {
-            "payload": true,
-          },
-          "runtime": "node",
-          "secrets": Object {
-            "secrets": true,
-          },
-          "user": Object {
-            "user": true,
-          },
-        },
-      ],
-    ]
-  `);
-  expect(res.errors).toEqual([]);
+        ],
+      ]
+    `);
+  });
+
+  test('operator should be object with 1 key', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, x: 1, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: { _test: { params: true }, x: 1 } });
+  });
+
+  test('operatorPrefix invalid', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const operatorPrefix = 'invalid';
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input, operatorPrefix });
+    expect(res).toEqual({ a: { _test: { params: true } } });
+  });
+
+  test('undefined operator', () => {
+    const input = { a: { _id: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: { _id: { params: true } } });
+  });
+
+  test('operator errors', () => {
+    const input = { a: { _error: { params: true } } };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    expect(() => parser.parse({ args, input })).toThrow('Test error.');
+  });
+
+  test('operator errors with cause', () => {
+    const input = { a: { _error_cause: { params: true } } };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    expect(() => parser.parse({ args, input })).toThrow('Test error.');
+  });
+
+  test('operator should remove _k_ value', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: 'test' });
+  });
 });
 
-test('operator should be object with 1 key', () => {
-  const input = { a: { _test: { params: true }, x: 1 } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
-});
+describe('during build', () => {
+  test('parse input undefined', () => {
+    const parser = new NodeParser({ operators, payload, build: true });
+    const res = parser.parse({});
+    expect(res).toEqual();
+  });
 
-test('operatorPrefix invalid', () => {
-  const input = { a: { _test: { params: true }, x: 1 } };
-  const operatorPrefix = 'invalid';
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location, operatorPrefix });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
-});
+  test('parse args not array', () => {
+    const input = {};
+    const args = 'not an array';
+    const parser = new NodeParser({ operators, payload, build: true });
+    expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
+  });
 
-test('undefined operator', () => {
-  const input = { a: { _id: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual(input);
-  expect(res.errors).toEqual([]);
-});
+  test('operator returns value', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: 'test', _k_: 'c' });
+  });
 
-test('operator errors', () => {
-  const input = { a: { _error: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
-  const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual({ a: null });
-  expect(res.errors).toEqual([new Error('Test error.')]);
+  test('operator should be object with 1 key', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, x: 1, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual(input);
+  });
+
+  test('operatorPrefix invalid', () => {
+    const input = { a: { _test: { params: true, _k_: 'a' }, x: 1, _k_: 'b' }, _k_: 'c' };
+    const operatorPrefix = 'invalid';
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    const res = parser.parse({ args, input, operatorPrefix });
+    expect(res).toEqual(input);
+  });
+
+  test('undefined operator', () => {
+    const input = { a: { _id: { params: true, _k_: 'a' }, _k_: 'b' }, _k_: 'c' };
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual(input);
+  });
+
+  test('operator errors', () => {
+    const input = { a: { _error: { params: true } } };
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    expect(() => parser.parse({ args, input })).toThrow('Test error.');
+  });
+
+  test('operator errors with cause', () => {
+    const input = { a: { _error_cause: { params: true } } };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    expect(() => parser.parse({ args, input })).toThrow('Test error.');
+  });
+
+  test('operator should remove _k_ value', () => {
+    const input = { a: { _test: { params: true, _k_: 'p' }, _k_: 'x' }, _k_: 'm' };
+    const parser = new NodeParser({ operators, payload, secrets, user });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: 'test' });
+  });
+
+  test('build: operator should not remove _k_ value', () => {
+    const input = { a: { _test: { params: true, _k_: 'p' }, _k_: 'x' }, _k_: 'm' };
+    const parser = new NodeParser({ operators, payload, secrets, user, build: true });
+    const res = parser.parse({ args, input });
+    expect(res).toEqual({ a: 'test', _k_: 'm' });
+  });
 });
