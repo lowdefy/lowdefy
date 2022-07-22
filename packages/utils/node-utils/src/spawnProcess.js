@@ -43,7 +43,7 @@ function spawnProcess({
     stdErrLineHandler = stdOutLineHandler;
   }
   const process = spawn(command, args, processOptions);
-  logger.debug(`Spawned process. command: ${command}, args:${args}, pid: ${process.pid}.`);
+  logger.debug(`Spawned process. command: ${command}, args: ${args}, pid: ${process.pid}.`);
   process.stdout.on('data', createStdIOHandler({ lineHandler: stdOutLineHandler }));
   // process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
 

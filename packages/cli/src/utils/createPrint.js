@@ -32,53 +32,78 @@ function getTime() {
   return `${h > 9 ? '' : '0'}${h}:${m > 9 ? '' : '0'}${m}:${s > 9 ? '' : '0'}${s}`;
 }
 
-function createOraPrint() {
+// Same levels as pino with added custom levels
+const logLevelValues = {
+  error: 50,
+  warn: 40,
+  succeed: 33,
+  spin: 32,
+  log: 31,
+  info: 30,
+  debug: 20,
+};
+
+function filterLevels(logger, level) {
+  const levelValue = logLevelValues[level];
+  Object.keys(logger).forEach((key) => {
+    if (logLevelValues[key] < levelValue) {
+      logger[key] = () => {};
+    }
+  });
+  return logger;
+}
+
+function createOraPrint({ logLevel }) {
   const spinner = ora({
     spinner: 'random',
     prefixText: () => `${dim}${getTime()}${reset}`,
     color: 'blue',
   });
-  return {
-    type: 'ora',
-    error: (text) => spinner.fail(`${red}${text}${reset}`),
-    info: (text) => spinner.info(`${blue}${text}${reset}`),
-    log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
-    spin: (text) => spinner.start(text),
-    succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
-    warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
-    debug: (text) => {
-      if (spinner.isSpinning) {
-        spinner.stopAndPersist({ symbol: '∙', text });
-      }
-      spinner.stopAndPersist({ symbol: `${dim}+${reset}`, text: `${dim}${text}${reset}` });
+  return filterLevels(
+    {
+      error: (text) => spinner.fail(`${red}${text}${reset}`),
+      info: (text) => spinner.info(`${blue}${text}${reset}`),
+      log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
+      spin: (text) => spinner.start(text),
+      succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
+      warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
+      debug: (text) => {
+        if (spinner.isSpinning) {
+          spinner.stopAndPersist({ symbol: '∙', text });
+        }
+        spinner.stopAndPersist({ symbol: `${dim}+${reset}`, text: `${dim}${text}${reset}` });
+      },
     },
-  };
+    logLevel
+  );
 }
 
-function createBasicPrint() {
+function createBasicPrint({ logLevel = 'info' }) {
   const { error, info, log, warn, debug } = console;
-  return {
-    type: 'basic',
-    error,
-    info,
-    log,
-    spin: log,
-    succeed: log,
-    warn,
-    debug,
-  };
+  return filterLevels(
+    {
+      error,
+      info,
+      log,
+      spin: log,
+      succeed: log,
+      warn,
+      debug,
+    },
+    logLevel
+  );
 }
 
 // Memoise print so that error handler can get the same spinner object
 let print;
 
-function createPrint() {
+function createPrint({ logLevel }) {
   if (print) return print;
   if (process.env.CI === 'true' || process.env.CI === '1') {
-    print = createBasicPrint();
+    print = createBasicPrint({ logLevel });
     return print;
   }
-  print = createOraPrint();
+  print = createOraPrint({ logLevel });
   return print;
 }
 

@@ -46,7 +46,7 @@ async function getContext() {
       config: path.resolve(argv.configDirectory || env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
       server: process.cwd(),
     },
-    logger: createLogger({ level: 'debug' }),
+    logger: createLogger({ level: env.LOWDEFY_LOG_LEVEL }),
     options: {
       port: argv.port || env.PORT || 3000,
       refResolver: argv.refResolver || env.LOWDEFY_BUILD_REF_RESOLVER,
@@ -56,8 +56,6 @@ async function getContext() {
         argv.watchIgnore || env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
-      // TODO: read option from env
-      verbose: argv.verbose || false,
     },
     packageManager: argv.packageManager || env.LOWDEFY_PACKAGE_MANAGER || 'npm',
     version: env.npm_package_version,

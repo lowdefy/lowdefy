@@ -19,6 +19,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 async function runNextBuild({ context, directory }) {
   context.print.log('Running Next build.');
   try {
+    // TODO: stdIoHandler
     await spawnProcess({
       logger: context.print,
       command: context.packageManagerCmd,

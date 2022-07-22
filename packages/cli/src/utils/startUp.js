@@ -29,7 +29,7 @@ import createPrint from './createPrint.js';
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
   context.commandLineOptions = options;
-  context.print = createPrint();
+  console.log(options);
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
@@ -40,6 +40,8 @@ async function startUp({ context, options = {}, command }) {
   context.appId = appId;
 
   context.options = getOptions(context);
+  context.print = createPrint({ logLevel: context.options.logLevel });
+
   context.directories = getDirectories(context);
   context.packageManager = getPackageManager(context);
   context.packageManagerCmd =

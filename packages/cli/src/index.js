@@ -42,15 +42,23 @@ const options = {
     '--dev-directory <dev-directory>',
     'Change the development server directory. Default is "<config-directory>/.lowdefy/dev".'
   ).env('LOWDEFY_DIRECTORY_DEV'),
-  disableTelemetry: new Option('--disable-telemetry', 'Disable telemetry.'),
+  disableTelemetry: new Option('--disable-telemetry', 'Disable telemetry.').env(
+    'LOWDEFY_DISABLE_TELEMETRY'
+  ),
+  logLevel: new Option(
+    '--log-level <level>',
+    'The minimum severity of logs to show in the CLI output.'
+  )
+    .choices(['error', 'warn', 'info', 'debug'])
+    .default('info')
+    .env('LOWDEFY_LOG_LEVEL'),
   packageManager: new Option('--package-manager <package-manager>', 'The package manager to use.')
     .env('LOWDEFY_PACKAGE_MANAGER')
     .choices(['npm', 'yarn']),
-  // TODO: Env variable?
   port: new Option(
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
-  ),
+  ).env('PORT'),
   refResolver: new Option(
     '--ref-resolver <ref-resolver-function-path>',
     'Path to a JavaScript file containing a _ref resolver function to be used as the app default _ref resolver.'
@@ -75,6 +83,7 @@ program
   .usage(`[options]`)
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
   .option('--no-next-build', 'Do not build the Next.js server.')
   .addOption(options.packageManager)
   .addOption(options.refResolver)
@@ -88,6 +97,7 @@ program
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
   .option('--no-open', 'Do not open a new tab in the default browser.')
   .addOption(options.packageManager)
   .addOption(options.port)
@@ -100,6 +110,8 @@ program
   .command('init')
   .description('Initialize a Lowdefy project.')
   .usage(`[options]`)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: init }));
 
 program
@@ -107,6 +119,7 @@ program
   .description('Start a Lowdefy production app.')
   .usage(`[options]`)
   .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
   .addOption(options.packageManager)
   .addOption(options.port)
   .addOption(options.serverDirectory)
