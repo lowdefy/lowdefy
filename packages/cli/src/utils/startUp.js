@@ -30,9 +30,7 @@ async function startUp({ context, options = {}, command }) {
   context.command = command.name();
   context.commandLineOptions = options;
   context.print = createPrint();
-  context.configDirectory = path.resolve(
-    options.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
-  );
+  context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
   context.lowdefyVersion = lowdefyVersion;
