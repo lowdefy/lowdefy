@@ -13,15 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { type } from '@lowdefy/helpers';
 import makeRefDefinition from './makeRefDefinition.js';
 
-function getRefsFromFile(fileContent) {
+function getRefsFromFile(fileContent, parentRefDefId, refMap) {
   const foundRefs = [];
   const reviver = (key, value) => {
     if (type.isObject(value)) {
+      value._r_ = parentRefDefId;
       if (!type.isUndefined(value._ref)) {
-        const def = makeRefDefinition(value._ref);
+        const def = makeRefDefinition(value._ref, parentRefDefId, refMap);
         foundRefs.push(def);
         return {
           _ref: def,

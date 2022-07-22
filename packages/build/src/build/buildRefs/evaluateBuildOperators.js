@@ -19,6 +19,7 @@ import operators from '@lowdefy/operators-js/operators/build';
 
 async function evaluateBuildOperators({ context, input, refDef }) {
   const operatorsParser = new NodeParser({
+    build: true,
     env: process.env,
     operators,
   });

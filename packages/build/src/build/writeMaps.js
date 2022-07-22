@@ -14,22 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-function countOperators(obj, { counter }) {
-  function getOperatorsReviver(_, value) {
-    if (type.isObject(value) && Object.keys(value).filter((key) => key !== '_r_').length === 1) {
-      const key = Object.keys(value)[0];
-      const [op] = key.split('.');
-      const operator = op.replace(/^(_+)/gm, '_');
-      if (operator.length > 1 && operator[0] === '_') {
-        counter.increment(operator);
-      }
-    }
-    return value;
-  }
-
-  JSON.parse(JSON.stringify(obj), getOperatorsReviver);
+async function writeMaps({ context }) {
+  await context.writeBuildArtifact('keyMap.json', JSON.stringify(context.keyMap, null, 2));
+  await context.writeBuildArtifact('refMap.json', JSON.stringify(context.refMap, null, 2));
 }
 
-export default countOperators;
+export default writeMaps;

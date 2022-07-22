@@ -26,7 +26,11 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
 
-  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
+  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
+    fileContent,
+    refDef.id,
+    context.refMap
+  );
 
   const parsedFiles = {};
 

@@ -20,19 +20,21 @@ import buildBlock from './buildBlock.js';
 
 function buildSubBlocks(block, pageContext) {
   if (type.isObject(block.areas)) {
-    Object.keys(block.areas).forEach((key) => {
-      if (type.isNone(block.areas[key].blocks)) {
-        block.areas[key].blocks = [];
-      }
-      if (!type.isArray(block.areas[key].blocks)) {
-        throw new Error(
-          `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
-            pageContext.pageId
-          }. Received ${JSON.stringify(block.areas[key].blocks)}`
-        );
-      }
-      block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
-    });
+    Object.keys(block.areas)
+      .filter((key) => key !== '_r_')
+      .forEach((key) => {
+        if (type.isNone(block.areas[key].blocks)) {
+          block.areas[key].blocks = [];
+        }
+        if (!type.isArray(block.areas[key].blocks)) {
+          throw new Error(
+            `Expected blocks to be an array at ${block.blockId} in area ${key} on page ${
+              pageContext.pageId
+            }. Received ${JSON.stringify(block.areas[key].blocks)}`
+          );
+        }
+        block.areas[key].blocks.map((blk) => buildBlock(blk, pageContext));
+      });
   }
 }
 

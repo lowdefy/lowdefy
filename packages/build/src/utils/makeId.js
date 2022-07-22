@@ -14,22 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { v4 as uuid } from 'uuid';
 
-function countOperators(obj, { counter }) {
-  function getOperatorsReviver(_, value) {
-    if (type.isObject(value) && Object.keys(value).filter((key) => key !== '_r_').length === 1) {
-      const key = Object.keys(value)[0];
-      const [op] = key.split('.');
-      const operator = op.replace(/^(_+)/gm, '_');
-      if (operator.length > 1 && operator[0] === '_') {
-        counter.increment(operator);
-      }
-    }
-    return value;
-  }
-
-  JSON.parse(JSON.stringify(obj), getOperatorsReviver);
+function makeId(map, length = 6) {
+  let id;
+  do {
+    id = uuid().replaceAll('-', '').slice(0, length);
+  } while (map[id]);
+  return id;
 }
 
-export default countOperators;
+export default makeId;
