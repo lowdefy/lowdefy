@@ -20,7 +20,7 @@ _ref:
     section: Concepts
     filePath: concepts/menus.yaml
     content:
-      - id: alert2
+      - id: menu_filter_alert
         type: Alert
         properties:
           type: info

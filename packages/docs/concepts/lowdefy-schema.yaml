@@ -26,7 +26,7 @@ _ref:
           content: |
             A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
 
-      - id: alert1
+      - id: yaml_understanding_alert
         type: Alert
         properties:
           type: warning
@@ -60,7 +60,7 @@ _ref:
 
             Find the more detailed block schema [here](/blocks).
 
-      - id: alert2
+      - id: yaml_json_files_alert
         type: Alert
         properties:
           type: info
