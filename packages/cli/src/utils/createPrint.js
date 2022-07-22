@@ -42,15 +42,16 @@ function createOraPrint() {
     type: 'ora',
     error: (text) => spinner.fail(`${red}${text}${reset}`),
     info: (text) => spinner.info(`${blue}${text}${reset}`),
-    log: (text) => spinner.start(text).stopAndPersist({ symbol: '∙' }),
+    log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
     spin: (text) => spinner.start(text),
     succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
     warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
-    debug: (text) =>
-      spinner
-        .stopAndPersist({ symbol: '∙' }) // Preserve any currently running spinner text
-        .start(`${dim}${text}${reset}`)
-        .stopAndPersist({ symbol: `${dim}+${reset}` }),
+    debug: (text) => {
+      if (spinner.isSpinning) {
+        spinner.stopAndPersist({ symbol: '∙', text });
+      }
+      spinner.stopAndPersist({ symbol: `${dim}+${reset}`, text: `${dim}${text}${reset}` });
+    },
   };
 }
 

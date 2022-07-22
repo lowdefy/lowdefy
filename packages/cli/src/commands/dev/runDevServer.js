@@ -20,6 +20,7 @@ import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 async function runDevServer({ context, directory }) {
   await spawnProcess({
     stdOutLineHandler: createStdOutLineHandler({ context }),
+    logger: context.print,
     args: ['run', 'start'],
     command: context.packageManagerCmd,
     processOptions: {

@@ -16,41 +16,53 @@
 
 import { spawn } from 'child_process';
 
-function createStdOutHandler({ stdOutLineHandler, silent }) {
+function createStdIOHandler({ lineHandler }) {
   function handler(data) {
-    if (!silent) {
-      data
-        .toString('utf8')
-        .split('\n')
-        .forEach((line) => {
-          // TODO: Do we handle empty lines here?
-          if (line) {
-            stdOutLineHandler(line);
-          }
-        });
-    }
+    data
+      .toString('utf8')
+      .split('\n')
+      .forEach((line) => {
+        if (line) {
+          lineHandler(line);
+        }
+      });
   }
   return handler;
 }
 
-async function spawnProcess({
-  stdOutLineHandler = () => {},
-  command,
+function spawnProcess({
   args,
+  command,
+  logger,
   processOptions,
-  silent,
+  returnProcess,
+  stdErrLineHandler,
+  stdOutLineHandler = () => {},
 }) {
+  if (!stdErrLineHandler) {
+    stdErrLineHandler = stdOutLineHandler;
+  }
+  const process = spawn(command, args, processOptions);
+  logger.debug(`Spawned process. command: ${command}, args:${args}, pid: ${process.pid}.`);
+  process.stdout.on('data', createStdIOHandler({ lineHandler: stdOutLineHandler }));
+  // process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
+
+  if (returnProcess) {
+    return process;
+  }
+
   return new Promise((resolve, reject) => {
-    const process = spawn(command, args, processOptions);
-
-    process.stdout.on('data', createStdOutHandler({ stdOutLineHandler, silent }));
-    process.stderr.on('data', createStdOutHandler({ stdOutLineHandler, silent }));
-
     process.on('error', (error) => {
-      reject(error);
+      logger.debug(
+        `Process error. error: ${error}, command: ${command}, args:${args}, pid: ${process.pid}.`
+      );
+      stdErrLineHandler(error);
     });
 
     process.on('exit', (code) => {
+      logger.debug(
+        `Process exit. code: ${code}, command: ${command}, args:${args}, pid: ${process.pid}.`
+      );
       if (code !== 0) {
         reject(new Error(`${command} exited with code ${code}`));
       }

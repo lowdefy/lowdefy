@@ -14,26 +14,27 @@
   limitations under the License.
 */
 
-import spawnProcess from '../utils/spawnProcess.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
 function startServerProcess(context) {
   context.shutdownServer();
 
   const nextServer = spawnProcess({
     logger: context.logger,
+    stdOutLineHandler: (line) => context.logger.info({ print: 'log' }, line),
+    stdErrLineHandler: (line) => context.logger.error(line),
     command: 'node',
     args: [context.bin.next, 'start'],
-    silent: false,
     processOptions: {
       env: {
         ...process.env,
         PORT: context.options.port,
       },
     },
+    returnProcess: true,
   });
   context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
   nextServer.on('exit', (code, signal) => {
-    // TODO: Needed?
     context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
   });
   nextServer.on('error', (error) => {
