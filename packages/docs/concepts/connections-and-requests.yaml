@@ -26,7 +26,7 @@ _ref:
           content: |
             In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling a API end-point.
 
-      - id: alert2
+      - id: secrets_alert
         type: Alert
         properties:
           type: warning
@@ -37,11 +37,15 @@ _ref:
         type: Markdown
         properties:
           content: |
+            To implement requests, the following steps are required:
+            - define a connection.
+            - define a request.
+            - call the request using a [request action](/Request).
+            - use returned data by making use of the [request operator](/_request).
+
             # Connections
 
             Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection. Operators in connection properties are evaluated every time a request is called.
-
-            # Connection Schema
 
             The schema for a Lowdefy connection is:
 
@@ -69,17 +73,28 @@ _ref:
 
             # Requests
 
-            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action. The operators to be used are defined in the `payload` field and are accessed by making use of the `_payload` operator in the `properties` field. Operators in the request payload are evaluated every time a request is called.
+            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
 
-            # Request Schema
+            The client operators to be used are defined in the `payload` field and are accessed by making use of the `_payload` operator in the `properties` field. These operators are evaluated on the client. Operators defined in `properties`, such as `_secret` and `_user`, are evaluated on the server. Operators in the request are evaluated every time a request is called.
 
+      - id: _users_alert
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: The <code>_user</code> operator should be used under <code>properties</code> and not <code>payload</code>. This is important since operators under <code>payload</code> are evaluated on the client, and are therefore vulnerable to users with malicious intent.
+
+      - id: md3
+        type: Markdown
+        properties:
+          content: |
             The schema for a Lowdefy request is:
 
             - `id: string`: __Required__ - A identifier for the request. It must be unique within the context the request is defined in.
             - `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
-            - `payload: object`: The operators to be used inside of the request. __Operators are evaluated__.
+            - `payload: object`: The operators to be used inside of the request. __Operators are evaluated on the client__.
             - `connectionId: string`: __Required__ - The `id` of the connection that should be used.
-            - `properties: object`: The settings passed to the request. Make use of `_payload` operator to use operators that were evaluated in `payload` mentioned above. __Operators are evaluated__.
+            - `properties: object`: The settings passed to the request. Make use of `_payload` operator to use operators that were evaluated in `payload` mentioned above. __Operators are evaluated on the server__.
 
             ###### Requests definition example:
             ```yaml
@@ -88,7 +103,7 @@ _ref:
             requests:
               - id: request1
                 type: RequestType1
-                connectionId: connectionId1
+                connectionId: connectionId1 # NOTE: connection with id: connectionId1 must be defined
                 payload:
                   field:
                     _state: field
@@ -96,11 +111,70 @@ _ref:
                   # ...
               - id: request2
                 type: RequestType2
-                connectionId: connectionId2
+                connectionId: connectionId2 # NOTE: connection with id: connectionId2 must be defined
                 properties:
                   # ...
             properties:
               # ...
+            ```
+
+            # Request Action
+
+            The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads. Read more about the `Request` action [here](/Request).
+
+            ###### Call a single request:
+            ```yaml
+            - id: call_one_request
+              type: Request
+              params: request1
+            ```
+
+            # _request operator
+
+            The `_request` operator returns the response value of a request. If the request has not yet been call, or is still executing, the returned value is `null`. Read more about the `_request` operator [here](/_request).
+
+            ###### Using a request response:
+            ```yaml
+            _request: my_request
+            ```
+
+            # General Example
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: connection1
+                type: ConnectionType1
+                properties:
+                  # ...
+
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                requests:
+                  - id: request1
+                    type: RequestType1
+                    connectionId: connection1
+                    properties:
+                      # ...
+                events:
+                  onInit:
+                    - id: call_request
+                      type: Request
+                      params: request1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    blocks:
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content:
+                            _request: request1
             ```
 
             ### TLDR
