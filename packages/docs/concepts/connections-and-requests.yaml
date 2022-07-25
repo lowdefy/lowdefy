@@ -24,14 +24,14 @@ _ref:
         type: Markdown
         properties:
           content: |
-            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling a API end-point.
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling an API end-point.
 
       - id: secrets_alert
         type: Alert
         properties:
           type: warning
           showIcon: false
-          message: Sensitive information like passwords or API keys are often required to use external services. The _secret operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
+          message: Sensitive information like passwords or API keys are often required to use external services. The <a href = "./_secret">_secret</a> operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
 
       - id: md2
         type: Markdown
@@ -40,10 +40,10 @@ _ref:
             To implement requests, the following steps are required:
             - define a connection.
             - define a request.
-            - call the request using a [request action](/Request).
-            - use returned data by making use of the [request operator](/_request).
+            - call the request using a [Request](/Request) action.
+            - use returned data by making use of the [_request](/_request) operator.
 
-            # Connections
+            ## Connections
 
             Connections are defined at the root of your Lowdefy configuration, in the `connections` array. Each connection must have an `id`, a `type`, and `properties` defining the connection. Operators in connection properties are evaluated every time a request is called.
 
@@ -71,9 +71,9 @@ _ref:
 
             Our goal is to make connections for everything. As the Lowdefy community grows, we will continue to develop the most requested connections. If the connection you require is not supported yet, please head over to our [new connections voting board](https://github.com/lowdefy/lowdefy/discussions/309) to request and vote for new connections.
 
-            # Requests
+            ## Requests
 
-            Requests can be defined on any block, and the results of the request are available to any block in the same context. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
+            Requests can be defined on any block, and the results of the request can be access using the `_request` operator anywhere on the same page. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
 
             The client operators to be used are defined in the `payload` field and are accessed by making use of the `_payload` operator in the `properties` field. These operators are evaluated on the client. Operators defined in `properties`, such as `_secret` and `_user`, are evaluated on the server. Operators in the request are evaluated every time a request is called.
 
@@ -118,7 +118,7 @@ _ref:
               # ...
             ```
 
-            # Request Action
+            ## Request Action
 
             The `Request` action calls a request, or if used during an `onInit` event, calls those requests while a page loads. Read more about the `Request` action [here](/Request).
 
@@ -129,7 +129,7 @@ _ref:
               params: request1
             ```
 
-            # _request operator
+            ## _request operator
 
             The `_request` operator returns the response value of a request. If the request has not yet been call, or is still executing, the returned value is `null`. Read more about the `_request` operator [here](/_request).
 
@@ -138,7 +138,7 @@ _ref:
             _request: my_request
             ```
 
-            # General Example
+            ## General Example
 
             ###### lowdefy.yaml
             ```yaml
