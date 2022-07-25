@@ -96,4 +96,3 @@ _ref:
                 - id: perform_search
                   type: Request
                   params: example_search
-              catch: []
