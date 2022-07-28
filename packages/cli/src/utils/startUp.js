@@ -29,7 +29,6 @@ import createPrint from './createPrint.js';
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
   context.commandLineOptions = options;
-  console.log(options);
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
   const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
