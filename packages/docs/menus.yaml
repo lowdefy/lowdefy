@@ -524,9 +524,18 @@
         title: Actions
         icon: AiOutlineThunderbolt
       links:
+        - id: Break
+          type: MenuLink
+          pageId: Break
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
+        - id: DisplayMessage
+          type: MenuLink
+          pageId: DisplayMessage
+        - id: Fetch
+          type: MenuLink
+          pageId: Fetch
         - id: Link
           type: MenuLink
           pageId: Link
@@ -536,16 +545,6 @@
         - id: Logout
           type: MenuLink
           pageId: Logout
-        - id: MessageAction
-          type: MenuLink
-          pageId: MessageAction # Clash with Message block
-          properties:
-            title: Message
-        - id: NotificationAction
-          type: MenuLink
-          pageId: NotificationAction # Clash with Notification block
-          properties:
-            title: Notification
         - id: Request
           type: MenuLink
           pageId: Request
@@ -564,9 +563,6 @@
         - id: SetState
           type: MenuLink
           pageId: SetState
-        - id: Throw
-          type: MenuLink
-          pageId: Throw
         - id: Validate
           type: MenuLink
           pageId: Validate

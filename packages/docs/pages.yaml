@@ -143,13 +143,13 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
+- _ref: actions/Break.yaml
 - _ref: actions/CallMethod.yaml
-# - _ref: actions/JsAction.yaml
+- _ref: actions/DisplayMessage.yaml
+- _ref: actions/Fetch.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
-- _ref: actions/Message.yaml
-- _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
