@@ -15,9 +15,9 @@
 _ref:
   path: templates/actions.yaml.njk
   vars:
-    pageId: MessageAction
-    pageTitle: Message
-    filePath: actions/Message.yaml
+    pageId: DisplayMessage
+    pageTitle: DisplayMessage
+    filePath: actions/DisplayMessage.yaml
     types: |
       ```
       (params: {
@@ -27,10 +27,10 @@ _ref:
       }): void
       ```
     description: |
-      The `Message` action is used to display a message to a user.
+      The `DisplayMessage` action is used to display a message to a user.
     params: |
       ###### object
-        - `status: enum`: Message status type. Defaults to `success`. One of:
+        - `status: enum`: DisplayMessage status type. Defaults to `success`. One of:
           - `success`
           - `error`
           - `info`
@@ -42,7 +42,7 @@ _ref:
       ###### Display a success message:
       ```yaml
       - id: success_message
-        type: Message
+        type: DisplayMessage
         params:
           content: Success
       ```
@@ -50,7 +50,7 @@ _ref:
       ###### Display an info message that remains visible for 10 seconds:
       ```yaml
       - id: info_message
-        type: Message
+        type: DisplayMessage
         params:
           content: Something happened
           status: info
@@ -60,7 +60,7 @@ _ref:
       ###### Display an error message that never disappears:
       ```yaml
       - id: error_message
-        type: Message
+        type: DisplayMessage
         params:
           content: Something bad happened
           status: error

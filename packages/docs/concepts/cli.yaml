@@ -24,6 +24,8 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
+            ##### TODO: This page needs to be updated.
+
             The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.
 
             We recommend running the CLI using `npx`, to always use the latest version:
