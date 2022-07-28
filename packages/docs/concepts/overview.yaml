@@ -24,12 +24,14 @@ _ref:
         type: Markdown
         properties:
           content: |
+            ##### TODO: This page needs to be updated.
+
             Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then serve the build artifacts.
 
             You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently, you can host Lowdefy apps on Netlify, and as a Docker container.
 
             The diagram below provides an overview of the Lowdefy app schematic:
-            ![Lowdefy App Diagram](https://deploy-preview-481--lowdefy-docs.netlify.app/lowdefy_app_schema.png "Lowdefy App Diagram")
+            ![Lowdefy App Diagram](./images/lowdefy_app_schema.png "Lowdefy App Diagram")
 
             The Lowdefy server manages connections and executes requests, serves a web client, and serves the configuration for app pages to the client. The server does not have a data-store, but can connect to external data sources like APIs and databases.
 
