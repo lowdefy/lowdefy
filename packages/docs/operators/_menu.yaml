@@ -42,12 +42,12 @@ _ref:
       The index of the `menu` to return.
 
       ###### boolean
-      If the `_media` operator is called with boolean argument `true`, the entire `menus` object is returned.
+      If the `_menu` operator is called with boolean argument `true`, the entire `menus` object is returned.
 
       ###### object
         - `value: string`: The `menuId` of the `menu` to return.
         - `index: number`: The index of the `menu` to return.
-        - `all: boolean`: If the `_media` operator is called with boolean argument `true`, the entire `menus` object is returned.
+        - `all: boolean`: If the `_menu` operator is called with boolean argument `true`, the entire `menus` object is returned.
 
     examples: |
       ###### Get the `menus` object:
