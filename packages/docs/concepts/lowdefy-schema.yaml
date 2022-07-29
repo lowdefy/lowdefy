@@ -53,7 +53,7 @@ _ref:
             - `pages: object[]`: An array of page objects.
 
             Pages are made up of blocks. Blocks have the following basic schema:
-            - `id: string`: __Required__ - An identifier for a block.
+            - `id: string`: An identifier for a block.
             - `type: string`: __Required__ - This is the block type identifier and defines which block will render.
             - `properties: object`: The settings passed to a block component.
             - `layout`: Control how the block will be rendered in the page flow, or in other words, how the block is placed in relation to other blocks. See [layout](/layout) for more details.
@@ -81,7 +81,7 @@ _ref:
             The config object has the following properties:
 
             - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
-            - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, for example, `yourdomain.com`.
+            - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`.
 
             ## Auth
 
@@ -93,7 +93,7 @@ _ref:
 
             ## Connections
 
-            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Use connections to configure the settings to a service, for example, settings such as urls, authentication config or [`secrets`](/secrets) like passwords or API keys. Requests use connections to send and receive data from external services, for example, inserting a data record or executing a query on a database, or simply calling an API end-point.
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Use connections to configure the settings to a service, for example, settings such as urls or [`secrets`](/secrets) like passwords or API keys. Requests use connections to interact with external services, for example, inserting a data record or executing a query on a database, or simply calling an API end-point.
 
             See more about how `connections` and `requests` are used together [here](/connections-and-requests).
 
@@ -103,7 +103,7 @@ _ref:
 
             ## Menus
 
-            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as `PageSiderMenu` render menu links and by default if no menu defined, a default menu is created, containing links to all pages defined in the app.
+            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as `PageSiderMenu` render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
 
             See more about how menu objects are used and defined [here](/menus).
 
@@ -117,7 +117,7 @@ _ref:
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
 
-            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title and a paragraph block to our card so that it won't be so empty.
+            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title to our card, by making use of the card block's title property. We can also add a paragraph block to our card so that it won't be so empty.
 
             ###### lowdefy.yaml
             ```yaml
