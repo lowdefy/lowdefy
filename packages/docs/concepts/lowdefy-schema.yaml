@@ -53,9 +53,10 @@ _ref:
             - `pages: object[]`: An array of page objects.
 
             Pages are made up of blocks. Blocks have the following basic schema:
-            - `id: string`: __Required__ - A unique identifier for a block.
-            - `type: string`: __Required__ - This is the block type identifier and defines what block to used.
-            - `properties: object`: All the settings passed to a block component.
+            - `id: string`: __Required__ - An identifier for a block.
+            - `type: string`: __Required__ - This is the block type identifier and defines which block will render.
+            - `properties: object`: The settings passed to a block component.
+            - `layout`: Control how the block will be rendered in the page flow, or in other words, how the block is placed in relation to other blocks. See [layout](/layout) for more details.
             - `blocks: array`: An array of blocks to render within this block.
 
             Find the more detailed block schema [here](/blocks).
@@ -80,7 +81,7 @@ _ref:
             The config object has the following properties:
 
             - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
-            - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
+            - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, for example, `yourdomain.com`.
 
             ## Auth
 
@@ -88,13 +89,11 @@ _ref:
 
             ## Global
 
-            Any data that you wish to use in your app can be stored in the __global__ object, and accessed using the [`_global`](/_global) operator. This is a good place to store data or configuration that is used throughout the app, for example the url of a logo or configuration of a page, since then these are only written once, and can be updated easily.
-
-            The global object can also be modified using the [`SetGlobal`](/SetGlobal) action.
+            In a Lowdefy app, you can define global variables in the __global__ object, which can be accessed using the [`_global`](/_global) operator, and modified using the [`SetGlobal`](/SetGlobal) action. This is a good place to store data or configuration that is used over various pages throughout the app, for example, user preferences that can be modified using `SetGlobal` on one page and easily referenced on all others.
 
             ## Connections
 
-            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the connection settings to the service, and often contain parameters like connection strings, urls and secrets such as passwords or API keys. Requests are used to interact with the connection, for example inserting a data record, executing a query or calling a API end-point.
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Use connections to configure the settings to a service, for example, settings such as urls, authentication config or [`secrets`](/secrets) like passwords or API keys. Requests use connections to send and receive data from external services, for example, inserting a data record or executing a query on a database, or simply calling an API end-point.
 
             See more about how `connections` and `requests` are used together [here](/connections-and-requests).
 
@@ -104,7 +103,7 @@ _ref:
 
             ## Menus
 
-            Menu objects are objects with links to pages. They are filtered to only show pages that the user is authorized to see and are used by blocks such as `PageSiderMenu` to render the links in the menu. If no menus are provided, a default menu is created, with links to all of the defined pages, and with their pageIds as menu item titles.
+            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as `PageSiderMenu` render menu links and by default if no menu defined, a default menu is created, containing links to all pages defined in the app.
 
             See more about how menu objects are used and defined [here](/menus).
 
@@ -112,13 +111,13 @@ _ref:
 
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
-            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
+            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`.
 
             [TODO]: <> (# TODO: Below will change once we add the head configuration option on pages. Discuss that here.)
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
 
-            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title block and a paragraph block to our card so that it won't be so empty.
+            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title and a paragraph block to our card so that it won't be so empty.
 
             ###### lowdefy.yaml
             ```yaml
@@ -132,11 +131,9 @@ _ref:
                 blocks:
                   - id: content_card
                     type: Card
+                    properties:
+                      title: Title
                     blocks:
-                      - id: title
-                        type: Title
-                        properties:
-                          content: Title
                       - id: paragraph
                         type: Paragraph
                         properties:
@@ -157,11 +154,9 @@ _ref:
                 blocks:
                   - id: content_card
                     type: Card
+                    properties:
+                      title: Title
                     blocks:
-                      - id: title
-                        type: Title
-                        properties:
-                          content: Title
                       - id: paragraph
                         type: Paragraph
                         properties:
@@ -212,11 +207,9 @@ _ref:
                 blocks:
                   - id: content_card
                     type: Card
+                    properties:
+                      title: Title
                     blocks:
-                      - id: title
-                        type: Title
-                        properties:
-                          content: Title
                       - id: paragraph
                         type: Paragraph
                         properties:
@@ -258,11 +251,9 @@ _ref:
                 blocks:
                   - id: content_card
                     type: Card
+                    properties:
+                      title: Title
                     blocks:
-                      - id: title
-                        type: Title
-                        properties:
-                          content: Title
                       - id: paragraph
                         type: Paragraph
                         properties:
@@ -273,15 +264,17 @@ _ref:
 
             ## References and templates
 
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
+            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. Configuration is primarily split up for two reasons, to improve readability or for reusability, for example, when used as templates. References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema.
 
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
+            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
 
             See more about references and templates [here](/references-and-templates).
 
             ## Lowdefy versions and version updates
 
-            Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is in the early stages of development and under active development, with new versions published on a regular basis.
+            Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is under active development and is widely used in enterprise projects. New features and fixes are published on a regular basis, see our [changelog](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md) for the latest release notes.
+
+            [TODO]: <> (# TODO: Add roadmap, for whats to expect next.)
 
             To update the version of your app, change the `lowdefy` version field in the `lowdefy.yaml` file, and redeploy the app. You might also need to make some changes to your app configuration to be compatible with the new version.
 
