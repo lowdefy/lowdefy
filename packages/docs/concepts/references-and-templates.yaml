@@ -24,7 +24,9 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
+            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. Configuration is primarily split up for two reasons, to improve readability or for reusability, for example, when used as templates. References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema.
+
+            ## Using References to Improve Readability
 
             References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
 
@@ -36,6 +38,8 @@ _ref:
               _ref: pages/page1.yaml # Path to the referenced file. Always from the root of the project.
               _ref: pages/page1.yaml
             ```
+
+            ## Using References as Templates for Improved Reusability
 
             The `_ref` operator can take an argument called `vars`. This can be any data, and is passed down to later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
 
@@ -81,7 +85,7 @@ _ref:
 
             ## Nunjucks Templating
 
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. If a file ends with the `.njk` file extension, the file will first be hydrated as a Nunjucks template, using the `vars` as template variables. If the file ends with `.yaml.njk` or `.json.njk`, the output of the template will then be parsed. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
+            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
 
             Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
 
