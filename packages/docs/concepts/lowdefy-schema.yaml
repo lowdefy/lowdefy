@@ -264,9 +264,15 @@ _ref:
 
             ## References and templates
 
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. Configuration is primarily split up for two reasons, to improve readability or for reusability, for example, when used as templates. References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema.
+            References and templates have the following use cases:
 
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
+            - Splitting out the config for readability and code navigation.
+            - Splitting out a piece of config in order to use the exact same config in multiple places.
+            - Using a reference with variables to make use of a shared piece of config with dynamic variables.
+            - Using an njk file which allows for much more complicated things - this is an advanced feature and easily overused.
+            - Using transformers - even more complicated than njk files - should be used if justified, for example, building config from a JSONSchema file.
+
+            References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema. Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
 
             See more about references and templates [here](/references-and-templates).
 
