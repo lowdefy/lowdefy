@@ -28,13 +28,17 @@ _ref:
 
             All blocks implements `onMount` and `onMountAsync` events. These are useful for triggering actions when a block is mounted. For the `onMount` event, the block only mounts when the event action chain is completed, however, for the `onMountAsync` event, the block will mount as soon as possible while the event actions completes execution.
 
-            _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for an event on a block. If that event gets triggered, those actions will execute sequentially. If any actions error while executing, the actions that follow it won't be executed, however, `catch` actions chain can be defined on an event to trigger when an error in a chain of actions occurs.
+            _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for an event on a block. If that event gets triggered, those actions will execute sequentially.
+
+            The chain of actions will stop executing if the action raises a break condition, or if the action throws an unexpected error.
+
+            If a break condition was raised, the user will be shown an error message and no further actions will execute. If an unexpected error is thrown, the app will show an error screen and the error will be logged. To handle errors and break conditions, a `catch` action chain can be defined on the event to handle the error, as described below.
 
             Actions which are `async: true` are an exception to the sequential rule of the actions chain. These actions will be executed asynchronously and the next actions in the chain will not wait for them to finish. If any `async: true` action throws an error, the chain will not be stopped and the event will still be completed successfully.
 
             Each action has an `id`, unique to that action chain, and a `type` field which are required.
 
-            Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have data relating to that event, such as what the new value of an input is, or the row that was clicked in a table. The `event` object can be used in the action using the [`_event`](/_event) operator. Some actions also return values which can be passed to preceding actions in the same action chain using the [`_actions`](/_actions) operator.
+            Actions can have a `params` field for specifying input parameters when executing the action. Operators used in action `params` will be evaluated right before the action is executed. Some events might have data relating to that event, such as what the new value of an input is, or the row that was clicked in a table. The `event` object can be used in the action using the [`_event`](/_event) operator. Some actions also return values which can be passed to succeeding actions in the same action chain using the [`_actions`](/_actions) operator.
 
             Actions can also have a `skip` field. Operators in the `skip` field will be evaluated before an action is executed, and if the evaluated result is `true`, that action is skipped and the next action is executed.
 
