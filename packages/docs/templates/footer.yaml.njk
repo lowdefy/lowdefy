@@ -187,28 +187,32 @@
                 - id: lowdefy_api_feedback
                   type: AxiosHttp
                   connectionId: lowdefy_api_marketing
+                  payload:
+                    text:
+                      _state: feedback.text
+                    score:
+                      _state: feedback.score
+                    email:
+                      _state: feedback.email
+                    source: docs
+                    type: Docs feedback
+                    page_id:
+                      _var: pageId
                   properties:
                     data:
-                      text:
-                        _state: feedback.text
-                      score:
-                        _state: feedback.score
-                      email:
-                        _state: feedback.email
-                      source: docs
-                      type: Docs feedback
-                      page_id:
-                        _var: pageId
+                      _payload: true
                 - id: discord_channel_feedback
                   type: AxiosHttp
                   connectionId: discord_channel
+                  payload:
+                    content:
+                      _nunjucks:
+                        template: 'Docs feedback: {{ text }}'
+                        on:
+                          _state: feedback
                   properties:
                     data:
-                      content:
-                        _nunjucks:
-                          template: 'Docs feedback: {{ text }}'
-                          on:
-                            _state: feedback
+                      _payload: true
               layout:
                 size: auto
               properties:
@@ -422,14 +426,16 @@
                 - id: lowdefy_api_subscribe
                   type: AxiosHttp
                   connectionId: lowdefy_api_marketing
+                  payload:
+                    type: Newsletter subscription
+                    email:
+                      _state: footer_cta_input
+                    source: docs
+                    page_id:
+                      _var: pageId
                   properties:
                     data:
-                      type: Newsletter subscription
-                      email:
-                        _state: footer_cta_input
-                      source: docs
-                      page_id:
-                        _var: pageId
+                      _payload: true
                 - id: discord_channel_subscribe
                   type: AxiosHttp
                   connectionId: discord_channel

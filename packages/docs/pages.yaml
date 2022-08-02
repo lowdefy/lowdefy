@@ -1,30 +1,32 @@
 - _ref: introduction.yaml
 - _ref: tutorial/tutorial-start.yaml
-- _ref: tutorial/tutorial-create-page.yaml
-- _ref: tutorial/tutorial-create-page-config.yaml
-- _ref: tutorial/tutorial-add-blocks.yaml
-- _ref: tutorial/tutorial-add-blocks-config.yaml
-- _ref: tutorial/tutorial-actions-operators.yaml
-- _ref: tutorial/tutorial-actions-operators-config.yaml
-- _ref: tutorial/tutorial-requests.yaml
-- _ref: tutorial/tutorial-requests-config.yaml
-- _ref: tutorial/tutorial-deploy.yaml
-- _ref: tutorial/next-steps.yaml
+# - _ref: tutorial/tutorial-create-page.yaml
+# - _ref: tutorial/tutorial-create-page-config.yaml
+# - _ref: tutorial/tutorial-add-blocks.yaml
+# - _ref: tutorial/tutorial-add-blocks-config.yaml
+# - _ref: tutorial/tutorial-actions-operators.yaml
+# - _ref: tutorial/tutorial-actions-operators-config.yaml
+# - _ref: tutorial/tutorial-requests.yaml
+# - _ref: tutorial/tutorial-requests-config.yaml
+# - _ref: tutorial/tutorial-deploy.yaml
+# - _ref: tutorial/next-steps.yaml
 
-- _ref:
-    path: howto/generate-csv.yaml.njk
-    vars:
-      version:
-        _ref: version.yaml
-- _ref:
-    path: howto/generate-pdf.yaml.njk
-    vars:
-      version:
-        _ref: version.yaml
+# - _ref:
+#     path: howto/generate-csv.yaml.njk
+#     vars:
+#       version:
+#         _ref: version.yaml
+# - _ref:
+#     path: howto/generate-pdf.yaml.njk
+#     vars:
+#       version:
+#         _ref: version.yaml
 
 - _ref: concepts/overview.yaml
 - _ref: concepts/cli.yaml
 - _ref: concepts/lowdefy-schema.yaml
+- _ref: concepts/menus.yaml
+- _ref: concepts/references-and-templates.yaml
 - _ref: concepts/context-and-state.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout.yaml
@@ -35,19 +37,16 @@
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-code.yaml
-- _ref: concepts/custom-blocks.yaml
 
-- _ref: deployment/aws-lambda.yaml
 - _ref: deployment/docker.yaml
-- _ref: deployment/netlify.yaml
 - _ref: deployment/node-server.yaml
 
 - _ref: users/users-introduction.yaml
-- _ref: users/openid-connect.yaml
-- _ref: users/login-and-logout.yaml
-- _ref: users/protected-pages.yaml
-- _ref: users/user-object.yaml
-- _ref: users/roles.yaml
+# - _ref: users/openid-connect.yaml
+# - _ref: users/login-and-logout.yaml
+# - _ref: users/protected-pages.yaml
+# - _ref: users/user-object.yaml
+# - _ref: users/roles.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
@@ -65,7 +64,7 @@
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
-# - _ref: blocks/input/S3UploadButton.yaml # TODO: Add with custom plugin
+# - _ref: blocks/input/S3UploadButton.yaml # TODO: Add with @lowdefy/plugin-aws
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
@@ -141,20 +140,19 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
+- _ref: actions/Break.yaml
 - _ref: actions/CallMethod.yaml
-# - _ref: actions/JsAction.yaml
+- _ref: actions/DisplayMessage.yaml
+- _ref: actions/Fetch.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
-- _ref: actions/Message.yaml
-- _ref: actions/Notification.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
-- _ref: actions/Throw.yaml
 - _ref: actions/Validate.yaml
 - _ref: actions/Wait.yaml
 
@@ -169,7 +167,7 @@
 - _ref: operators/_divide.yaml
 - _ref: operators/_eq.yaml
 - _ref: operators/_event.yaml
-- _ref: operators/_format.yaml
+# - _ref: operators/_format.yaml
 - _ref: operators/_function.yaml
 - _ref: operators/_get.yaml
 - _ref: operators/_global.yaml

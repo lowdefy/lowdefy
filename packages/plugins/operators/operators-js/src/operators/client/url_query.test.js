@@ -41,4 +41,16 @@ test('url_query calls getFromObject', async () => {
       },
     ],
   ]);
+  expect(() =>
+    expect(
+      url_query({
+        arrayIndices: [0],
+        globals: {},
+        location: 'location',
+        params: 'params',
+      })
+    )
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"Operator Error: Browser window.location not available for _url_query. Received: \\"params\\" at location."`
+  );
 });

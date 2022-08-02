@@ -24,57 +24,59 @@ _ref:
         type: Markdown
         properties:
           content: |
-            To add user authentication and authorization to a Lowdefy app, you need to do the following:
-            - Configure an OpenID Connect provider
-            - Configure which pages should be public and protected (only available to logged in users).
-            - Add the `Login` and `Logout` actions to your app, to allow users to log in and out.
+            ##### TODO: This page needs to be updated.
 
-            Optionally, you can also:
-            - Use role based authorization to make certain pages available only to users with the correct roles.
+      #       To add user authentication and authorization to a Lowdefy app, you need to do the following:
+      #       - Configure an OpenID Connect provider
+      #       - Configure which pages should be public and protected (only available to logged in users).
+      #       - Add the `Login` and `Logout` actions to your app, to allow users to log in and out.
 
-            An example app implementing OpenID Connect can be found [here](https://github.com/lowdefy/lowdefy-example-openid-connect).
+      #       Optionally, you can also:
+      #       - Use role based authorization to make certain pages available only to users with the correct roles.
 
-      - id: jwt_session_warning
-        type: Alert
-        properties:
-          type: warning
-          icon: AiFillWarning
-          message: Stateful JSON Web Tokens are used for authentication
-          description: Lowdefy uses stateful JSON Web Tokens for user authentication, since the Lowdefy server is stateless and does not maintain a database of user sessions. This means that once a token is issued, it is valid until the token expires. Any changes to the user's access will only reflect after the token has expired, and the user obtains (or fails to obtain) a new token from the OpenID Connect provider. We recommend making sure tokens have a relatively short expiry time (the default is 4 hours), and evaluating if the security provided by this system is appropriate for your use case.
+      #       An example app implementing OpenID Connect can be found [here](https://github.com/lowdefy/lowdefy-example-openid-connect).
 
-      - id: auth_config
-        type: MarkdownWithCode
-        properties:
-          content: |
-            Most authorization and authentication settings are configured in the `config.auth` object in the Lowdefy configuration. The following config can be set:
-            ```yaml
-            lowdefy: 3.23.2
-            config:
-              auth:
-                openId:
-                  # The url the user should be redirected to after logout.
-                  logoutRedirectUri: [string]
-                  # Field in the user idToken that contains the roles array.
-                  rolesField: [string]
-                  # The OpenID Connect scope to request. The default is 'openid profile email'.
-                  scope: [string]
-                jwt:
-                  # The length of time a user token should be valid.
-                  expiresIn: [string | number]
-                pages:
-                  # Either set all pages as protected, or list specific protected pages.
-                  protected: [boolean | string[]]
-                  # Either set all pages as public, or list specific public pages.
-                  public: [boolean | string[]]
-                roles:
-                  # Restrict pages to only users with a certain role.
-                  {roleName}: string[]
-            ```
+      # - id: jwt_session_warning
+      #   type: Alert
+      #   properties:
+      #     type: warning
+      #     icon: AiFillWarning
+      #     message: Stateful JSON Web Tokens are used for authentication
+      #     description: Lowdefy uses stateful JSON Web Tokens for user authentication, since the Lowdefy server is stateless and does not maintain a database of user sessions. This means that once a token is issued, it is valid until the token expires. Any changes to the user's access will only reflect after the token has expired, and the user obtains (or fails to obtain) a new token from the OpenID Connect provider. We recommend making sure tokens have a relatively short expiry time (the default is 4 hours), and evaluating if the security provided by this system is appropriate for your use case.
 
-      - _ref:
-          path: templates/navigation_buttons.yaml
-          vars:
-            previous_page_title: Overview
-            previous_page_id: overview
-            next_page_title: OpenID Connect
-            next_page_id: openid-connect
+      # - id: auth_config
+      #   type: MarkdownWithCode
+      #   properties:
+      #     content: |
+      #       Most authorization and authentication settings are configured in the `config.auth` object in the Lowdefy configuration. The following config can be set:
+      #       ```yaml
+      #       lowdefy: 3.23.2
+      #       config:
+      #         auth:
+      #           openId:
+      #             # The url the user should be redirected to after logout.
+      #             logoutRedirectUri: [string]
+      #             # Field in the user idToken that contains the roles array.
+      #             rolesField: [string]
+      #             # The OpenID Connect scope to request. The default is 'openid profile email'.
+      #             scope: [string]
+      #           jwt:
+      #             # The length of time a user token should be valid.
+      #             expiresIn: [string | number]
+      #           pages:
+      #             # Either set all pages as protected, or list specific protected pages.
+      #             protected: [boolean | string[]]
+      #             # Either set all pages as public, or list specific public pages.
+      #             public: [boolean | string[]]
+      #           roles:
+      #             # Restrict pages to only users with a certain role.
+      #             {roleName}: string[]
+      #       ```
+
+      # - _ref:
+      #     path: templates/navigation_buttons.yaml
+      #     vars:
+      #       previous_page_title: Overview
+      #       previous_page_id: overview
+      #       next_page_title: OpenID Connect
+      #       next_page_id: openid-connect

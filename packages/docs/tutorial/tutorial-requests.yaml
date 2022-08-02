@@ -62,9 +62,9 @@ _ref:
 
             Choose the following:
             - **Which API are you using?**: Google Sheets API
-            - **Where will you be calling the API from?** : Web server (e.g. node.js, Tomcat)
             - **What data will you be accessing?**: Application data
             - **Are you planning to use this API with App Engine or Compute Engine?**: No, I'm not using them
+            - **Where will you be calling the API from?** : Web server (e.g. node.js, Tomcat)
 
             Then click "What credentials do I need?"
 
@@ -72,7 +72,7 @@ _ref:
 
             Choose the following:
             - Give the account a name.
-            - Chose "Project > Editor" as the role.
+            - Choose "Project > Editor" as the role.
             - Choose JSON as the key type.
 
             Click continue.

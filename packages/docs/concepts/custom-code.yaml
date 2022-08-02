@@ -29,11 +29,12 @@ _ref:
       - id: md1
         type: MarkdownWithCode
         properties:
-          # TODO: Remove JsAction reference.
           content: |
+            ##### TODO: This page needs to be updated.
+
             Lowdefy runs as a single page web app (SPA). It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` to of the default `index.html` page.
 
-            The content loaded into the `head` and `body` tag can be any valid HTML, most often `script` tags are loaded to register a new [`JsAction`](/JsAction) or [`_js`](/_js) operator. However, third party code can also be imported, for example Google Analytics, Intercom, etc. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can easily be hosted from the [Lowdefy public folder](/hosting-files).
+            The content loaded into the `head` and `body` tag can be any valid HTML. Third party code can be imported, for example Google Analytics, Intercom, etc. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can easily be hosted from the [Lowdefy public folder](/hosting-files).
 
             > __Warning__: Lowdefy implements the [Ant design](https://ant.design/) UI component framework for app layout and most blocks, thus the default Ant Design CSS is loaded for all Lowdefy apps. Take caution not to unintentionally overwrite existing style settings and classes which can result in a degraded user experience.
 
@@ -72,126 +73,8 @@ _ref:
                   <!-- End Google Analytics -->
             # ...
             ```
-
-            ###### Load, register and trigger a custom `JsAction` from code in the app `public` folder:
-
-            This example fetches a list of Todos from [{JSON}placeholder](https://jsonplaceholder.typicode.com/), and updates [state](/context-and-state).
-
-            1) First, add the JavaScript code to the `public` folder and resister the `JsAction`:
-            ```js
-            // /public/fetchTodos.js
-            function async fetchTodos(context, numItems, skip) {
-              const data = await fetch('https://jsonplaceholder.typicode.com/todos');
-              const todos = await data.json();
-              return todos.slice(skip, skip + numItems);
-            }
-            // Register the JsAction for the Lowdefy app to use.
-            window.lowdefy.registerJsAction('fetchTodos', fetchTodos);
-            ```
-
-            2) Import the JavaScript as a module into the page:
-            ```html
-            <!-- /header_modules.html -->
-            <script type="module" src="/public/fetchTodos.js"></script>
-            ```
-
-            3) Set load the custom code into the app header and trigger the action on page load:
-            ```yaml
-            # /lowdefy.yaml
-            name: json-todos
-            lowdefy: 3.23.2
-            app:
-              html:
-                appendHead:
-                  _ref: header_modules.html # Load the custom HTML into the header.
-            pages:
-              - id: todos
-                type: PageHeaderMenu
-                events:
-                  onInit:
-                    - id: get_todos
-                      type: JsAction # TODO:
-                      params:
-                        name: fetchTodos # Trigger the custom JavaScript action.
-                        args:
-                          - 10   # numItems
-                          - 0    # skip
-                    - id: set_todos
-                      type: SetState
-                      params:
-                        todos:
-                          # Set the response of the get_todos action to state.
-                          _actions: get_todos.response
-                # ...
-            ```
-
-            ## Loading and registering a [`_js`](/_js) operator
-
-            Similar to the loading custom JavaScript actions, custom JavaScript operators can also be loaded. In order for the Lowdefy app engine to execute a custom JavaScript [operator](/operators), the JavaScript code for the operator must be loaded onto the page and registered using the `registerJsOperator` method available on the browser [`window`](https://developer.mozilla.org/en-US/docs/Web/API/window) object by calling `window.lowdefy.registerJsOperator(name: string, action: function)`.
-
-            All `_js` functions must be synchronous.
-
-            #### Examples
-
-            ###### Load, register and use a custom `_js` operator from code in the app `public` folder:
-
-            This example uses a `_js` operator to remove all duplicates from a list of names.
-
-            1) First, add the JavaScript code to the `public` folder and resister the `_js` operator:
-            ```js
-            // /public/foo_operators.js
-            function removeDuplicates(items) {
-              return [ ...new Set(items) ];
-            }
-            // Register the removeDuplicates function as a _js.deduplicate operator.
-            window.lowdefy.registerJsOperator('deduplicate', removeDuplicates);
-            ```
-
-            2) Import the JavaScript as a module into the page:
-            ```html
-            <!-- /header.html -->
-            <script type="module" src="/public/foo_operators.js"></script>
-            ```
-
-            3) Set load the custom code into the app header and use the new operator on the page:
-            ```yaml
-            # /lowdefy.yaml
-            name: operator-example
-            lowdefy: 3.23.2
-            app:
-              html:
-                appendHead:
-                  _ref: header.html # Load the custom HTML into the header.
-            pages:
-              - id: some_names
-                type: PageHeaderMenu
-                blocks:
-                  - id: names
-                    type: ButtonSelector
-                    properties:
-                      title: Select your new friend
-                      options:
-                      # use the removeDuplicates function and pass a list of names as a function argument
-                        _js.deduplicate:
-                          - - Anne
-                            - Sam
-                            - Joe
-                            - Micheal
-                            - Sam
-                            - Steven
-                            - Anne
-                            - Pepper
-                # ...
-            ```
-
-            ------
-
-            Custom code provides an easy way to extent the logic functionality of Lowdefy apps. However, to extend the UI capabilities beyond the existing features provided by the default Lowdefy blocks, custom blocks can be loaded onto apps.
-
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Lists
             previous_page_id: lists
-            next_page_title: Custom Blocks
-            next_page_id: custom-blocks

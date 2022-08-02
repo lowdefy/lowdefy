@@ -18,16 +18,18 @@ requests:
   - id: post_telemetry
     type: AxiosHttp
     connectionId: lowdefy_api_telemetry
+    payload:
+      session_id:
+        _global: session_id
+      page_id:
+        _var: pageId
+      url_query:
+        _url_query: true
+      input:
+        _input: true
     properties:
       data:
-        session_id:
-          _global: session_id
-        page_id:
-          _var: pageId
-        url_query:
-          _url_query: true
-        input:
-          _input: true
+        _payload: true
 
 events:
   onInit:

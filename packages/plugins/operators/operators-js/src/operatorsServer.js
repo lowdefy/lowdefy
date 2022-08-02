@@ -26,6 +26,7 @@ export { default as _gt } from './operators/shared/gt.js';
 export { default as _gte } from './operators/shared/gte.js';
 export { default as _if_none } from './operators/shared/if_none.js';
 export { default as _if } from './operators/shared/if.js';
+export { default as _intl } from './operators/shared/intl.js';
 export { default as _json } from './operators/shared/json.js';
 export { default as _log } from './operators/shared/log.js';
 export { default as _lt } from './operators/shared/lt.js';

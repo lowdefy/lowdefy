@@ -146,14 +146,14 @@ test('block events actions as try array and catch not defined.', () => {
       },
     ],
   };
-  expect(() =>
-    buildPages({
-      components,
-      context,
-    })
-  ).toThrow(
-    'Catch actions must be an array at "block_1" in event "onClick.catch" on page "page_1". Received undefined'
-  );
+  const res = buildPages({ components, context });
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.try')).toEqual([
+    {
+      id: 'action_1',
+      type: 'Reset',
+    },
+  ]);
+  expect(get(res, 'pages.0.areas.content.blocks.0.events.onClick.catch')).toEqual([]);
 });
 
 test('block events actions try not an array', () => {
