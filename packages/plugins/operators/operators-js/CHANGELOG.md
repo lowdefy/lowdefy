@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
+
+
+### Bug Fixes
+
+* Add additional operator tests. ([ddf8e51](https://github.com/lowdefy/lowdefy/commit/ddf8e51f8b1d9bab1490015021afa2bb0e29c6d8))
+* Fix _intl.relativeTimeFormat operator and add tests. ([627b970](https://github.com/lowdefy/lowdefy/commit/627b9707073d7298c04683d0265d8eaab1bd2ac2))
+* Fix handling of null values in _array and _object operators. ([1333f43](https://github.com/lowdefy/lowdefy/commit/1333f43315fc7895139e1c981992dac83b1dabf1))
+* **operators-js:** Fix intl operator tests. ([841bbe6](https://github.com/lowdefy/lowdefy/commit/841bbe60e507a876c75644422999b2c9a2b48915))
+
+
+### Features
+
+* Add _intl operator. ([fbf4b14](https://github.com/lowdefy/lowdefy/commit/fbf4b14960ad176037546fd67bbe0ababf30aa3e))
+* Add _object.entries and _object.fromEntries operator methods. ([499b726](https://github.com/lowdefy/lowdefy/commit/499b7269f2a91bd079f20a69df7ec7b2823633e4))
+
+
+
+
+
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 **Note:** Version bump only for package @lowdefy/operators-js
