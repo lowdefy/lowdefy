@@ -230,7 +230,7 @@ _ref:
             ```yaml
             requests:
               - id: delete_selected_document
-                type:  MongoDBUpdateMany
+                type:  MongoDBDeleteOne
                 connectionId: my_mongodb_collection_id
                 properties:
                   filter:
