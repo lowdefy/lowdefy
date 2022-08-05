@@ -33,6 +33,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     typeCounters: {
       actions: createCounter(),
       auth: {
+        adapters: createCounter(),
         callbacks: createCounter(),
         events: createCounter(),
         providers: createCounter(),

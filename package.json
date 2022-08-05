@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-alpha.22",
+  "version": "4.0.0-alpha.23",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -35,7 +35,7 @@
     "lerna:version": "lerna version --no-git-tag-version",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "start": "yarn start:server:app",
-    "test:ci": "yarn test --ignore='@lowdefy/format' --ignore='@lowdefy/blocks-*' --ignore='@lowdefy/plugin-aws'",
+    "test:ci": "yarn test --ignore='@lowdefy/blocks-*' --ignore='@lowdefy/plugin-aws'",
     "test": "lerna run test",
     "app:cli:build": "yarn build:turbo && yarn workspace lowdefy start build --config-directory ../../app --server-directory ../server",
     "app:cli:dev": "yarn build:turbo && yarn workspace lowdefy start dev --config-directory ../../app --dev-directory ../server-dev",

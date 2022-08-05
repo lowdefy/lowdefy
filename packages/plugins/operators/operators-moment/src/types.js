@@ -13,11 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import * as client from './operatorsClient.js';
+import * as server from './operatorsServer.js';
 
-import moment from 'moment';
-
-function momentFormat({ locale = 'en', format } = {}) {
-  return (val) => moment(val).locale(locale).format(format);
-}
-
-export default momentFormat;
+export default {
+  operators: {
+    client: Object.keys(client),
+    server: Object.keys(server),
+  },
+};

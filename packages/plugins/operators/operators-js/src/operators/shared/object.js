@@ -23,6 +23,13 @@ const prep = (args) => {
   return args;
 };
 
+const prepArray = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = [];
+  }
+  return args;
+};
+
 const prepDescriptor = (args) => {
   const descriptor = args[2] || {};
   if (type.isNone(descriptor.enumerable)) {
@@ -43,14 +50,16 @@ const metaInstance = {
 };
 
 const metaClass = {
-  keys: { singleArg: true, validTypes: ['object'], prep },
-  values: { singleArg: true, validTypes: ['object'], prep },
   assign: { spreadArgs: true, validTypes: ['array'], prep },
   defineProperty: {
     namedArgs: ['on', 'key', 'descriptor'],
     validTypes: ['array', 'object'],
     prep: prepDescriptor,
   },
+  entries: { singleArg: true, validTypes: ['object', 'null'], prep },
+  fromEntries: { singleArg: true, validTypes: ['array', 'null'], prep: prepArray },
+  keys: { singleArg: true, validTypes: ['object', 'null'], prep },
+  values: { singleArg: true, validTypes: ['object', 'null'], prep },
 };
 
 function _object({ params, location, methodName }) {

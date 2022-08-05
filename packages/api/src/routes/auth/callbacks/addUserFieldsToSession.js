@@ -14,10 +14,17 @@
   limitations under the License.
 */
 
-function addUserFieldsToSession(context, { session, token, authConfig }) {
-  Object.keys(authConfig.userFields).forEach((fieldName) => {
-    session.user[fieldName] = token[fieldName];
-  });
+function addUserFieldsToSession(context, { session, token, authConfig, user }) {
+  if (token) {
+    Object.keys(authConfig.userFields).forEach((fieldName) => {
+      session.user[fieldName] = token[fieldName];
+    });
+  }
+  if (user) {
+    Object.keys(authConfig.userFields).forEach((fieldName) => {
+      session.user[fieldName] = user[fieldName];
+    });
+  }
 }
 
 export default addUserFieldsToSession;

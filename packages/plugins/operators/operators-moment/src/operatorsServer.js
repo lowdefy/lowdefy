@@ -14,9 +14,4 @@
   limitations under the License.
 */
 
-function intlListFormat({ locale, options } = {}) {
-  const formatter = new Intl.ListFormat(locale, options);
-  return (val) => formatter.format(val);
-}
-
-export default intlListFormat;
+export { default as _moment } from './operators/shared/moment.js';

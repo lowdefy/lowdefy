@@ -1,13 +1,13 @@
 {
-  "name": "@lowdefy/format",
-  "version": "4.0.0-alpha.22",
+  "name": "@lowdefy/operators-moment",
+  "version": "4.0.0-alpha.23",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "format",
-    "formatter"
+    "lowdefy operator",
+    "lowdefy plugin"
   ],
   "bugs": {
     "url": "https://github.com/lowdefy/lowdefy/issues"
@@ -20,6 +20,10 @@
     {
       "name": "Gerrie van Wyk",
       "url": "https://github.com/Gervwyk"
+    },
+    {
+      "name": "Stephanie Smit",
+      "url": "https://github.com/StephanieJKS"
     }
   ],
   "repository": {
@@ -27,7 +31,11 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    "./operators/client": "./dist/operatorsClient.js",
+    "./operators/server": "./dist/operatorsServer.js",
+    "./types": "./dist/types.js"
+  },
   "files": [
     "dist/*"
   ],
@@ -35,17 +43,19 @@
     "build": "yarn swc",
     "clean": "rm -rf dist",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "jest --coverage"
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "TZ=UTC jest --coverage"
   },
   "dependencies": {
+    "@lowdefy/operators": "4.0.0-alpha.23",
     "moment": "2.29.4"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
-    "jest": "28.1.0"
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0"
   },
   "publishConfig": {
     "access": "public"

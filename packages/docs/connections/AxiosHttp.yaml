@@ -30,7 +30,7 @@ _ref:
 
             The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseURL to be set on the connection, with request specific properties like the request.
 
-            >Secrets like authentication headers and API keys should be stored using the [`_secret`](operators/secret.md) operator.
+            >Secrets like authentication headers and API keys should be stored using the [`_secret`](_secret) operator.
 
             ## Connections
 

@@ -76,7 +76,7 @@ const labelLogic = ({
     [methods.makeCssClass([
       {
         height: 'fit-content !important',
-        minHeight: properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32,
+        // minHeight: properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32,
       },
       properties.style,
     ])]: true,
