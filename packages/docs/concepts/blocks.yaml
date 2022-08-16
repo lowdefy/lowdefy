@@ -32,7 +32,7 @@ _ref:
             - `container` - Render other blocks into [`content areas`](/layout).
             - `list` - Render `content areas` and blocks for each element in the data array.
 
-            When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas`, `blocks` and `loading` fields.
+            When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas` and `blocks` fields.
 
             The schema for a Lowdefy block is:
 
@@ -52,7 +52,7 @@ _ref:
 
             ## Block types
 
-            Lowdefy has a list of default block types as defined in the Lowdefy docs. The default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) react component library. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
+            Lowdefy has a list of default block types as defined in the Lowdefy docs. Most of the default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) react component library, but are not limited to Ant Design since blocks are just simple React components. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
 
             ###### Default block type config example:
             ```yaml
