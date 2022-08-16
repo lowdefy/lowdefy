@@ -69,7 +69,7 @@ const RadioSelector = ({
               );
               methods.triggerEvent({ name: 'onChange' });
             }}
-            value={getValueIndex(value, uniqueValueOptions)}
+            value={`${getValueIndex(value, uniqueValueOptions)}`}
           >
             <Space
               direction={properties.direction}
@@ -85,7 +85,7 @@ const RadioSelector = ({
                   <Radio
                     id={`${blockId}_${i}`}
                     key={i}
-                    value={i}
+                    value={`${i}`}
                     disabled={opt.disabled}
                     className={methods.makeCssClass(opt.style)}
                   >
