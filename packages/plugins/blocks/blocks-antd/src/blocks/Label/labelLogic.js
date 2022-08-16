@@ -76,7 +76,9 @@ const labelLogic = ({
     [methods.makeCssClass([
       {
         height: 'fit-content !important',
-        // minHeight: properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32,
+        minHeight:
+          properties.inline &&
+          (properties.size === 'large' ? 40 : properties.size === 'small' ? 24 : 32), // set height for inline label to be centered
       },
       properties.style,
     ])]: true,
