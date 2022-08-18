@@ -23,15 +23,17 @@ import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
+export const authOptions = getNextAuthConfig(
+  { logger: console }, // TODO: make createApiContext synchronous
+  { authJson, plugins: { adapters, callbacks, events, providers } }
+)
+
 export default async function auth(req, res) {
   if (authJson.configured === true) {
     return await NextAuth(
       req,
       res,
-      getNextAuthConfig(
-        { logger: console },
-        { authJson, plugins: { adapters, callbacks, events, providers } }
-      )
+      authOptions
     );
   }
 
