@@ -31,6 +31,13 @@ const MAP_DEFAULTS = {
   },
 };
 
+const MAP_PROPS = {
+  center: {
+    lat: 0,
+    lng: 0,
+  },
+};
+
 // Implements https://react-google-maps-api-docs.netlify.app/#googlemap
 const Map = ({ blockId, children, content, methods, properties }) => {
   const [map, setMap] = useState();
@@ -64,12 +71,19 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     }
   }
 
+  if (
+    properties.map?.center &&
+    JSON.stringify(properties.map.center) !== JSON.stringify(MAP_PROPS.center)
+  ) {
+    MAP_PROPS.center = properties.map.center;
+  }
+
   return (
     <GoogleMap
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
       id={blockId}
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
-      center={properties.map?.center ?? MAP_DEFAULTS.center}
+      center={MAP_PROPS.center}
       zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
       onLoad={(newMap, event) => {
         setMap(newMap);
