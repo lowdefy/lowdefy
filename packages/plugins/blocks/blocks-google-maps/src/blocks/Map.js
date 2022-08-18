@@ -73,7 +73,8 @@ const Map = ({ blockId, children, content, methods, properties }) => {
 
   if (
     properties.map?.center &&
-    JSON.stringify(properties.map.center) !== JSON.stringify(MAP_PROPS.center)
+    (properties.map.center?.lat !== MAP_PROPS.center.lat ||
+      properties.map.center?.lng !== MAP_PROPS.center.lng)
   ) {
     MAP_PROPS.center = properties.map.center;
   }
