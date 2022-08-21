@@ -71,9 +71,10 @@ function createSessionCallback(context, { authConfig, plugins }) {
         updated_at,
         ...session.user,
       };
-      if (authConfig.userFields) {
-        addUserFieldsToSession(context, { authConfig, session, token });
-      }
+    }
+
+    if (authConfig.userFields) {
+      addUserFieldsToSession(context, { authConfig, session, token, user });
     }
 
     for (const plugin of sessionCallbackPlugins) {
