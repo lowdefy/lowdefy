@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Lowdefy" src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" data-canonical-src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" width="450" />
+  <img alt="Lowdefy"  src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" data-canonical-src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" width="450" />
 </p>
 
 [![Discord](https://img.shields.io/discord/729696747261263962?label=Join%20our%20Discord&logo=discord&logoColor=white)](https://discord.gg/WmcJgXt)
