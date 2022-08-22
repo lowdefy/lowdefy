@@ -47,12 +47,6 @@ const labelLogic = ({
   const rowClassName = classNames({
     [`ant-form-item`]: true,
     [`ant-form-item-with-help`]: false,
-    // Status
-    [`ant-form-item-has-feedback`]: validation.status && properties.hasFeedback !== false,
-    [`ant-form-item-has-success`]: validation.status === 'success',
-    [`ant-form-item-has-warning`]: validation.status === 'warning',
-    [`ant-form-item-has-error`]: validation.status === 'error',
-    [`ant-form-item-is-validating`]: validation.status === 'validating',
     [methods.makeCssClass({
       flexWrap: properties.inline && 'inherit', // wrap extra content below input
       marginBottom: 0,
@@ -94,14 +88,14 @@ const labelLogic = ({
       properties.extraStyle,
     ])]: true,
   });
+
   const feedbackClassName = classNames({
     'ant-form-item-explain': true,
     'ant-form-item-extra': true,
     [`ant-form-item-explain-feedback`]: validation.status && properties.hasFeedback !== false,
-    [`ant-form-item-explain-success`]: validation.status === 'success',
-    [`ant-form-item-explain-warning`]: validation.status === 'warning',
-    [`ant-form-item-explain-error`]: validation.status === 'error',
-    [`ant-form-item-explain-validating`]: validation.status === 'validating',
+    [`ldf-label-success`]: validation.status === 'success',
+    [`ldf-label-warning`]: validation.status === 'warning',
+    [`ldf-label-error`]: validation.status === 'error',
     [methods.makeCssClass([
       {
         marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
