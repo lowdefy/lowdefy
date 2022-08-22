@@ -82,19 +82,21 @@ when:
 async function run() {
   const context = await getContext();
   try {
-    // TODO: Should we add retry logic id initial build fails?
-    // Just a try with empty catch maybe?
-    await context.initialBuild();
+    try {
+      await context.initialBuild();
+    } catch (error) {
+      context.logger.error(error);
+    }
     await context.startWatchers();
-    const serverPromise = startServer(context);
+    startServer(context);
     await wait(800);
     if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
       // TODO: Wait 1 sec for a ping and don't open if a ping is seen
       opener(`http://localhost:${context.options.port}`);
     }
-    await serverPromise;
+    await new Promise(() => {});
   } catch (error) {
-    context.logger.error({ print: 'error' }, error?.message ?? error.toString());
+    context.logger.error(error);
     context.shutdownServer();
     process.exit();
   }

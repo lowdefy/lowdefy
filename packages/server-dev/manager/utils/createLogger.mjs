@@ -15,7 +15,7 @@
 */
 import pino from 'pino';
 
-function createLogger({ level }) {
+function createLogger({ level = 'info' }) {
   const logger = pino({
     name: 'lowdefy build',
     level,
