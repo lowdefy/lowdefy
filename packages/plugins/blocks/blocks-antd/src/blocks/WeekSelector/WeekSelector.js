@@ -60,6 +60,7 @@ const WeekSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               placeholder={properties.placeholder || 'Select Week'}
               size={properties.size}
+              status={validation.status}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon

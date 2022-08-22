@@ -60,6 +60,7 @@ const MonthSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               placeholder={properties.placeholder || 'Select Month'}
               size={properties.size}
+              status={validation.status}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
               suffixIcon={
                 properties.suffixIcon && (

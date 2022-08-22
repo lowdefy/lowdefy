@@ -67,6 +67,7 @@ const DateTimeSelector = ({
               showNow={properties.showNow}
               showToday={properties.showToday}
               size={properties.size}
+              status={validation.status}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
