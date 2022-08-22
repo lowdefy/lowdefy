@@ -16,13 +16,12 @@
 
 import ora from 'ora';
 
-// TODO: Maybe we could look at 256 bit colors
-const red = '\x1b[31m';
-const green = '\x1b[32m';
-const yellow = '\x1b[33m';
-const blue = '\x1b[34m';
-const dim = '\x1b[2m';
 const reset = '\x1b[0m';
+const red = (text) => `\x1b[31m4${text}${reset}`;
+const green = (text) => `\x1b[32m${text}${reset}`;
+const yellow = (text) => `\x1b[33m${text}${reset}`;
+const blue = (text) => `\x1b[34m${text}${reset}`;
+const dim = (text) => `\x1b[2m${text}${reset}`;
 
 function getTime() {
   const time = new Date(Date.now());
@@ -56,22 +55,22 @@ function filterLevels(logger, level) {
 function createOraPrint({ logLevel }) {
   const spinner = ora({
     spinner: 'random',
-    prefixText: () => `${dim}${getTime()}${reset}`,
+    prefixText: () => dim(getTime()),
     color: 'blue',
   });
   return filterLevels(
     {
-      error: (text) => spinner.fail(`${red}${text}${reset}`),
-      info: (text) => spinner.info(`${blue}${text}${reset}`),
+      error: (text) => spinner.fail(red(text)),
+      info: (text) => spinner.info(blue(text)),
       log: (text) => spinner.stopAndPersist({ symbol: '∙', text }),
       spin: (text) => spinner.start(text),
-      succeed: (text) => spinner.succeed(`${green}${text}${reset}`),
-      warn: (text) => spinner.warn(`${yellow}${text}${reset}`),
+      succeed: (text) => spinner.succeed(green(text)),
+      warn: (text) => spinner.warn(yellow(text)),
       debug: (text) => {
         if (spinner.isSpinning) {
           spinner.stopAndPersist({ symbol: '∙', text });
         }
-        spinner.stopAndPersist({ symbol: `${dim}+${reset}`, text: `${dim}${text}${reset}` });
+        spinner.stopAndPersist({ symbol: dim('+'), text: dim(text) });
       },
     },
     logLevel
