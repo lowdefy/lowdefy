@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+export { default as Break } from './actions/Break.js';
 export { default as CallMethod } from './actions/CallMethod.js';
 export { default as Link } from './actions/Link.js';
 export { default as Login } from './actions/Login.js';
@@ -26,6 +27,5 @@ export { default as ResetValidation } from './actions/ResetValidation.js';
 export { default as ScrollTo } from './actions/ScrollTo.js';
 export { default as SetGlobal } from './actions/SetGlobal.js';
 export { default as SetState } from './actions/SetState.js';
-export { default as Throw } from './actions/Throw.js';
 export { default as Validate } from './actions/Validate.js';
 export { default as Wait } from './actions/Wait.js';

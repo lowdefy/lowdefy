@@ -26,6 +26,7 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
       <Icon blockId={`${blockId}_icon`} events={events} properties={properties.icon} />
     );
   }
+  // TODO: REMOVE TEST
   throw new Error('This is broken');
   return (
     <Alert
