@@ -14,31 +14,35 @@
   limitations under the License.
 */
 
-import { Break, BreakActionError } from './Break.js';
+import Break from './Break.js';
 
-const methods = { getBlockId: () => 'blockId', getPageId: () => 'pageId' };
+const methods = {
+  breakActionChain: (message) => {
+    throw new Error(message);
+  },
+};
 
 test('BreakBreak no params', () => {
-  expect(() => Break({ methods })).toThrow('Throw action params should be an object.');
+  expect(() => Break({ methods })).toThrow('Break action params should be an object.');
 });
 
-test('Break params.throw should be a boolean.', () => {
-  expect(() => Break({ methods, params: { throw: 'invalid' } })).toThrow(
-    'Break action "throw" param should be an boolean.'
+test('Break params.break should be a boolean.', () => {
+  expect(() => Break({ methods, params: { break: 'invalid' } })).toThrow(
+    'Break action "break" param should be an boolean.'
   );
 });
 
-test('Break params.throw null', () => {
-  expect(() => Break({ methods, params: { throw: null } })).not.toThrow();
+test('Break params.break null', () => {
+  expect(() => Break({ methods, params: { break: null } })).not.toThrow();
 });
 
-test('Break params.throw false', () => {
-  expect(() => Break({ methods, params: { throw: false } })).not.toThrow();
+test('Break params.break false', () => {
+  expect(() => Break({ methods, params: { break: false } })).not.toThrow();
 });
 
-test('Break params.throw true, no message or metaData', () => {
-  const params = { throw: true };
-  expect(() => Break({ methods, params })).toThrow(BreakActionError);
+test('Break params.break true, no message', () => {
+  const params = { break: true };
+  expect(() => Break({ methods, params })).toThrow(Error);
   let error;
   try {
     Break({ methods, params });
@@ -46,14 +50,11 @@ test('Break params.throw true, no message or metaData', () => {
     error = e;
   }
   expect(error.message).toEqual('');
-  expect(error.blockId).toEqual('blockId');
-  expect(error.metaData).toEqual(undefined);
-  expect(error.pageId).toEqual('pageId');
 });
 
-test('Break params.throw true, message and  no metaData', () => {
-  const params = { throw: true, message: 'My error message' };
-  expect(() => Break({ methods, params })).toThrow(BreakActionError);
+test('Break params.break true, message', () => {
+  const params = { break: true, message: 'My error message' };
+  expect(() => Break({ methods, params })).toThrow(Error);
   let error;
   try {
     Break({ methods, params });
@@ -61,37 +62,4 @@ test('Break params.throw true, message and  no metaData', () => {
     error = e;
   }
   expect(error.message).toEqual('My error message');
-  expect(error.blockId).toEqual('blockId');
-  expect(error.metaData).toEqual(undefined);
-  expect(error.pageId).toEqual('pageId');
-});
-
-test('Break params.throw true, message and  metaData string', () => {
-  const params = { throw: true, message: 'My error message', metaData: 'Meta string' };
-  expect(() => Break({ methods, params })).toThrow(BreakActionError);
-  let error;
-  try {
-    Break({ methods, params });
-  } catch (e) {
-    error = e;
-  }
-  expect(error.message).toEqual('My error message');
-  expect(error.blockId).toEqual('blockId');
-  expect(error.metaData).toEqual('Meta string');
-  expect(error.pageId).toEqual('pageId');
-});
-
-test('Break params.throw true, message and metaData object', () => {
-  const params = { throw: true, message: 'My error message', metaData: { key: 'value' } };
-  expect(() => Break({ methods, params })).toThrow(BreakActionError);
-  let error;
-  try {
-    Break({ methods, params });
-  } catch (e) {
-    error = e;
-  }
-  expect(error.message).toEqual('My error message');
-  expect(error.blockId).toEqual('blockId');
-  expect(error.metaData).toEqual({ key: 'value' });
-  expect(error.pageId).toEqual('pageId');
 });

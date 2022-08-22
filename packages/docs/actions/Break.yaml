@@ -21,56 +21,25 @@ _ref:
     types: |
       ```
       (params: {
-        throw?: boolean,
-        message?: string,
-        metaData?: any
+        break?: boolean,
+        message?: string
       }): void
       ```
     description: |
-      ##### TODO: This page needs to be updated.
-
-      The `Break` action is used throw an error to the user and log to the console. If `throw: true`, the `Break`
-      action will throw an error, and this will stop the execution of actions that are defined after it. If the action does not thrown, the `Break` action will do nothing and the actions defined after it will be executed.
+      The `Break` action is used stop the action chain. If `break: true`, the `Break`
+      action will will stop the execution of actions that are defined after it. If the action does not break, the `Break` action will do nothing and the actions defined after it will be executed.
 
     params: |
-      - `throw: boolean`: Breaks an error and stops the action chain when `true` or continues the action chain when `false` or undefined.
-      - `message: string`: The error message to show to the user and log to the console if `throw: true`. This message can be overridden by setting the action's `messages.error`.
-      - `metaData: any`: Data to log to the console if `throw: true`.
+      - `break: boolean`: Breaks the action chain when `true` or continues the action chain when `false` or undefined.
+      - `message: string`: The message to show to the user if `break: true`. This message can be overridden by setting the action's `messages.error`.
 
     examples: |
       ###### Break with custom message:
       ```yaml
-      - id: throw
+      - id: break_msg
         type: Break
         params:
-          throw:
-            _eq:
-              - _state: lukes_father
-              - Darth Vader
-          message: Nooooooooooooooooo
-      ```
-
-      ###### Break with metaData:
-      ```yaml
-      - id: throw
-        type: Break
-        params:
-          throw:
-            _eq:
-              - _state: lukes_father
-              - Darth Vader
-          message: Nooooooooooooooooo
-          metaData:
-            realisation: Luke kissed his sister
-      ```
-      ###### Override custom message:
-      ```yaml
-      - id: throw
-        type: Break
-        messages:
-          error: Meh.
-        params:
-          throw:
+          break:
             _eq:
               - _state: lukes_father
               - Darth Vader
@@ -78,12 +47,12 @@ _ref:
       ```
       ###### Fail silently:
       ```yaml
-      - id: throw
+      - id: break_silent
         type: Break
         messages:
           error: false
         params:
-          throw:
+          break:
             _eq:
               - _state: lukes_father
               - Darth Vader
