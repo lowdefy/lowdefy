@@ -1,0 +1,91 @@
+# Copyright 2020-2022 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: Break
+    pageTitle: Break
+    filePath: actions/Break.yaml
+    types: |
+      ```
+      (params: {
+        throw?: boolean,
+        message?: string,
+        metaData?: any
+      }): void
+      ```
+    description: |
+      ##### TODO: This page needs to be updated.
+
+      The `Break` action is used throw an error to the user and log to the console. If `throw: true`, the `Break`
+      action will throw an error, and this will stop the execution of actions that are defined after it. If the action does not thrown, the `Break` action will do nothing and the actions defined after it will be executed.
+
+    params: |
+      - `throw: boolean`: Breaks an error and stops the action chain when `true` or continues the action chain when `false` or undefined.
+      - `message: string`: The error message to show to the user and log to the console if `throw: true`. This message can be overridden by setting the action's `messages.error`.
+      - `metaData: any`: Data to log to the console if `throw: true`.
+
+    examples: |
+      ###### Break with custom message:
+      ```yaml
+      - id: throw
+        type: Break
+        params:
+          throw:
+            _eq:
+              - _state: lukes_father
+              - Darth Vader
+          message: Nooooooooooooooooo
+      ```
+
+      ###### Break with metaData:
+      ```yaml
+      - id: throw
+        type: Break
+        params:
+          throw:
+            _eq:
+              - _state: lukes_father
+              - Darth Vader
+          message: Nooooooooooooooooo
+          metaData:
+            realisation: Luke kissed his sister
+      ```
+      ###### Override custom message:
+      ```yaml
+      - id: throw
+        type: Break
+        messages:
+          error: Meh.
+        params:
+          throw:
+            _eq:
+              - _state: lukes_father
+              - Darth Vader
+          message: Nooooooooooooooooo
+      ```
+      ###### Fail silently:
+      ```yaml
+      - id: throw
+        type: Break
+        messages:
+          error: false
+        params:
+          throw:
+            _eq:
+              - _state: lukes_father
+              - Darth Vader
+          message: Nooooooooooooooooo
+      ```

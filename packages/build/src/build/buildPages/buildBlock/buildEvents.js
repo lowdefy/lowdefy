@@ -69,6 +69,10 @@ function buildEvents(block, pageContext) {
             catch: [],
           };
         }
+        if (type.isNone(block.events[key].catch)) {
+          // Add default for catch, when try is defined and catch is not.
+          block.events[key].catch = [];
+        }
         if (!type.isArray(block.events[key].try)) {
           throw new Error(
             `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${

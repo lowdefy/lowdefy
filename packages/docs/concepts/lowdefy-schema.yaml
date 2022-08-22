@@ -24,206 +24,263 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describes different parts of the app.
+            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
 
-            The root schema for a Lowdefy app is:
-            - `lowdefy: string`: __Required__ - The Lowdefy version number the app uses. This is required and cannot be a reference to another file.
-            - `name: string`: A name for the application.
-            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's  license if you are licencing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
-            - `cli: object`: An object with configuration for the CLI.
-            - `config: object`: An object with app configuration like the home page pageId.
-            - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
-            - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
-            - `types: object`: An object to customize and add block types.
-            - `menus: object[]`: An array of menu objects.
-            - `pages: object[]`: An array of page objects.
-
-            # Config
-
-            The config object has the following properties:
-
-            - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
-            - `homePageId: string`: The pageId of the page that should be loaded when a user loads the app without a pageId in the url route. This is the page that is loaded when you navigate to `yourdomain.com`.
-
-      - id: alert1
+      - id: yaml_understanding_alert
         type: Alert
         properties:
           type: warning
           showIcon: false
-          message: Init page is an experimental feature, that may disappear in future releases as well as the flag itself can be changed. Use at your own risk.
+          message: |
+            A good understanding of YAML is needed before starting with Lowdefy. If you don't have any experience using YAML, you can find a good introduction video <a href = "https://www.youtube.com/watch?v=cdLNKUoMc6c">here</a>.
 
       - id: md2
         type: MarkdownWithCode
         properties:
           content: |
-            # Global
+            The root schema for a Lowdefy app is:
+            - `lowdefy: string`: __Required__ - The Lowdefy version number that the app uses. This is required and cannot be a reference to another file.
+            - `name: string`: A name for the application.
+            - `version: string`: The version number of the app that you are building. This is optional and allows you indicate the version of your app.
+            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's license if you are licensing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
+            - `cli: object`: An object with configuration for the CLI.
+            - `config: object`: An object with app configuration like the home page pageId.
+            - `auth: object` An object with auth configuration such as providers and an adapter.
+            - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
+            - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
+            - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
+            - `menus: object[]`: An array of menu objects.
+            - `pages: object[]`: An array of page objects.
 
-            Any data that you wish to use in your app can be stored in the __global__ object, and accessed using the [`_global`](/_global) operator. This is a good place to store data or configuration that is used throughout the app, for example the url of a logo or configuration of a page, since then these are only written once, and can be updated easily.
+            Pages are made up of blocks. Blocks have the following basic schema:
+            - `id: string`: An identifier for a block.
+            - `type: string`: __Required__ - This is the block type identifier and defines which block will render.
+            - `properties: object`: The settings passed to a block component.
+            - `layout`: Control how the block will be rendered in the page flow, or in other words, how the block is placed in relation to other blocks. See [layout](/layout) for more details.
+            - `blocks: array`: An array of blocks to render within this block.
 
-            The global object can also be modified using the [`SetGlobal`](/SetGlobal) action.
+            Find the more detailed block schema [here](/blocks).
 
-            # Menus
+      - id: yaml_json_files_alert
+        type: Alert
+        properties:
+          type: info
+          showIcon: false
+          message: |
+            <h3> YAML file extensions </h3>
+            <p> Both files with the <code>.yaml</code> and <code>.yml</code> file extensions are supported as YAML files. </p>
+            <h3> JSON instead of YAML </h3>
+            <p> Since you can reference JSON files, you can build your app using JSON instead of YAML files. The <code>lowdefy.yaml</code> file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code. </p>
 
-            Menu objects are an object with links to pages. The are used by blocks like `PageSiderMenu` to render the links in the menu. If no menus are provided, a default menu is created, with links to all of the defined pages, and with their pageIds as menu item titles.
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Config
 
-            Blocks like like `PageSiderMenu` use the menu with `id: default` by default. This means that if you create a menu object with `id: default`, this will be used unless another menu is configured.
+            The config object has the following properties:
 
-            More than one menu can be configured in an app. As an example, this can be used when two logically different sections in the app need different menus.
+            - `basePath: string`: Set the base path to serve the Lowdefy application from. This will route all pages under `https://example.com/<base-path>/<page-id>` instead of the default `https://example.com/<page-id>`. The basePath value must start with "/".
+            - `homePageId: string`: The id of the page that will load when a visitor navigates to the home route, in other words, when the visitor navigates to `yourdomain.com` or `yourdomain.com/`.
 
-            If OpenID Connect authentication and role based authentication is configured, pages that the user is restricted from seeing are filtered from the menu object.
+            ## Auth
 
-            The schema for a menu object is:
+            [TODO]: <> (# TODO: Add auth things here)
 
-            - `id: string`: __Required__ - A identifier for the menu. If it is `default`, it will be used as default by pages.
-            - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that form the links in the menu. `MenuGroups` can be two levels deep.
+            ## Global
 
-            The schema for a `MenuLink` is:
-            - `id: string`: __Required__ - A identifier for the link unique to the menu.
-            - `type: string`: __Required__ - The type should be `MenuLink`.
-            - `pageId: string`: The id of the page to link to. Used as the title if no title is provided.
-            - `url: string`: An external url to link to.
-            -  `properties: object`: The properties of the menu link. These are:
-                - `title: string`: The title to display for the link.
-                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the link. The icon is only shown if the link is at the top level of the menu (not in a menu group).
+            In a Lowdefy app, you can define global variables in the __global__ object, which can be accessed using the [`_global`](/_global) operator, and modified using the [`SetGlobal`](/SetGlobal) action. This is a good place to store data or configuration that is used over various pages throughout the app, for example, user preferences that can be modified using `SetGlobal` on one page and easily referenced on all others.
 
-            The schema for a `MenuGroup` is:
-            - `id: string`: __Required__ - A identifier for the group unique to the menu.
-            - `type: string`: __Required__ - The type should be `MenuGroup`.
-            -  `properties: object`: The properties of the menu group. These are:
-                - `title: string`: The title to display for the group.
-                - `icon: string | object`: The name of an [Ant Design Icon](https://ant.design/components/icon/) or properties of an Icon block to use as the icon for the group. The icon is only shown if the group is at the top level of the menu (not in a menu group).
-            - `links: object[]`: An array of `MenuLink` or `MenuGroup` objects that are should be grouped together in the group.
+            ## Connections
 
-            ###### Menus example:
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
-            menus:
-              - id: default
-                links:
-                  - id: page1
-                    type: MenuLink
-                    pageId: page1
-                    properties:
-                      title: Page 1
-                      icon: AiOutlineFile
-                  - id: top-group
-                    properties:
-                      title: Group
-                      icon: AiOutlineGroup
-                    links:
-                      - id: page2
-                        type: MenuLink
-                        pageId: page2 # pageId will be used as link title
-                      - id: external
-                        type: MenuLink
-                        url: https://external.com
-                        properties:
-                          title: External site
-                      - id: nested-group
-                        type: MenuGroup
-                        properties:
-                          title: Nested Group
-                        links:
-                          - id: page3
-                            type: MenuLink
-                            pageId: page3
-                            properties:
-                              title: Page 3
-              - id: page-1-and-3
-                links:
-                  - id: page1
-                    type: MenuLink
-                    pageId: page1
-                    properties:
-                      title: Page 1
-                      icon: AiOutlineFile
-                  - id: page3
-                    type: MenuLink
-                    pageId: page3
-                    properties:
-                      title: Page 3
-                      icon: AiOutlineControl
-            ```
+            In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Use connections to configure the settings to a service, for example, settings such as urls or [`secrets`](/secrets) like passwords or API keys. Requests use connections to interact with external services, for example, inserting a data record or executing a query on a database, or simply calling an API end-point.
 
-            # Pages
+            See more about how `connections` and `requests` are used together [here](/connections-and-requests).
+
+            ## Plugins
+
+            [TODO]: <> (# TODO: Add plugins things here)
+
+            ## Menus
+
+            Menu objects describe links to pages, within the app or external. Menu lists are filtered to only show pages that the user is authorized to see as a result of public, private or [role based access controlled (RBAC)](/roles) pages. Blocks such as `PageSiderMenu` render menu links. If no menu defined, a default menu is created, containing links to all pages defined in the app.
+
+            See more about how menu objects are used and defined [here](/menus).
+
+            ## Pages
 
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
-            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if you create a page with id `page1`, it will be served at `domain.com/page1`.
+            Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`.
 
-            Page blocks should be of category `context`, in order to create a context for the page. This means they always have the context initialization events like `onInit` to initialize the page.
+            [TODO]: <> (# TODO: Below will change once we add the head configuration option on pages. Discuss that here.)
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
 
-            # References and templates
-
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
-
-            References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
+            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title to our card, by making use of the card block's title property. We can also add a paragraph block to our card so that it won't be so empty.
 
             ###### lowdefy.yaml
             ```yaml
             lowdefy: LOWDEFY_VERSION
 
             pages:
-              _ref: pages/page1.yaml # Path to the referenced file. Always from the root of the project.
-              _ref: pages/page1.yaml
-            ```
-
-            The `_ref` operator can take an argument called `vars`. This can be any data, and is passed down to later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
-
-            ###### pages/page1.yaml
-            ```yaml
-            _ref:
-              path: templates/text_page.yaml
-              vars:
-                id: page1
-                title: Page 1
-                content: |
-                  Page content text.
-            ```
-
-            ###### templates/text_page.yaml
-            ```yaml
-            id:
-              _var: id
-            type: PageHeaderMenu
-            properties:
-              title:
-                _var: title
-            blocks:
-              - id: content_card
-                type: Card
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
                 blocks:
-                  - id: title
-                    type: Title
+                  - id: content_card
+                    type: Card
                     properties:
-                      content:
-                        _var: title
-                  - id: content
-                    type: Markdown
-                    properties:
-                      content:
-                        _var: content
+                      title: Title
+                    blocks:
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
             ```
 
-            Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files. If a file ends with the `.njk` file extension, the file will first be hydrated as a Nunjucks template, using the `vars` as template variables. If the file ends with `.yaml.njk` or `.json.njk`, the output of the template will then be parsed. Nunjucks templates are useful since the template file does not need to be valid yaml before it is hydrated, and features like for-loops and if-statements can be used.
+            Let's add another card to our page and give it some blocks which will allow us to get input from the user.
 
-            Templating is used extensively to create the Lowdefy docs (these docs are a Lowdefy app). You can look at how they are used [here](https://github.com/lowdefy/lowdefy/tree/main/packages/docs).
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
 
-            The `_ref` operator can also be extended with custom JavaScript functions. A `resolver` function can be specified, which can overwrite the default way configuration files are read from the filesystem. A `transformer` function can be used to transform the value returned by the `_ref` operator.
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    properties:
+                      title: Title
+                    blocks:
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
+                  - id: input_card
+                    type: Card
+                    blocks:
+                      - id: text_input
+                        type: TextInput
+                        properties:
+                          label:
+                            title: Please Enter Your Name
+                      - id: radio_selector
+                        type: RadioSelector
+                        properties:
+                          label:
+                            title: How Are You Feeling?
+                            colon: false
+                          options:
+                            - label: Meh
+                              value: 1
+                              disabled: false
+                            - label: Okay
+                              value: 2
+                              disabled: false
+                            - label: Good
+                              value: 3
+                              disabled: false
+                            - label: Great
+                              value: 4
+                              disabled: false
+                            - label: Amazing Now That I'm Using Lowdefy
+                              value: 5
+                              disabled: false
+            ```
 
-            ## YAML file extensions
+            In order to build our page further, we will need to add more blocks. Let's leave this page as is and add another page, with it's own card block containing a title block and a paragraph block.
 
-            Both files with the `.yaml` and `.yml` file extensions are supported as YAML files.
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
 
-            ## JSON instead of YAML
+            pages:
+              - id: page1
+                type: PageHeaderMenu
+                properties:
+                  title: Page 1
+                blocks:
+                  - id: content_card
+                    type: Card
+                    properties:
+                      title: Title
+                    blocks:
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 1.
+                  - id: input_card
+                    type: Card
+                    blocks:
+                      - id: text_input
+                        type: TextInput
+                        properties:
+                          label:
+                            title: Please Enter Your Name
+                      - id: radio_selector
+                        type: RadioSelector
+                        properties:
+                          label:
+                            title: How Are You Feeling?
+                            colon: false
+                          options:
+                            - label: Meh
+                              value: 1
+                              disabled: false
+                            - label: Okay
+                              value: 2
+                              disabled: false
+                            - label: Good
+                              value: 3
+                              disabled: false
+                            - label: Great
+                              value: 4
+                              disabled: false
+                            - label: Amazing Now That I'm Using Lowdefy
+                              value: 5
+                              disabled: false
+              - id: page2
+                type: PageHeaderMenu
+                properties:
+                  title: Page 2
+                blocks:
+                  - id: content_card
+                    type: Card
+                    properties:
+                      title: Title
+                    blocks:
+                      - id: paragraph
+                        type: Paragraph
+                        properties:
+                          content: This is a paragraph on Page 2.
+            ```
 
-            Since you can reference JSON files, you can build your app using JSON instead of YAML files. The `lowdefy.yaml` file needs to be a YAML file, but all other configuration can be in referenced JSON files. It also makes sense to use JSON instead of YAML if you are generating configuration using code.
+            In order to keep files neat and generally easier to read and understand, we suggest making use of references and templating.
 
-            # Lowdefy versions and version updates
+            ## References and templates
 
-            Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is in the early stages of development and under active development, with new versions published on a regular basis.
+            References and templates have the following use cases:
+
+            - Splitting out the config for readability and code navigation.
+            - Splitting out a piece of config in order to use the exact same config in multiple places.
+            - Using a reference with variables to make use of a shared piece of config with dynamic variables.
+            - Using an njk file which allows for much more complicated things - this is an advanced feature and easily overused.
+            - Using transformers - even more complicated than njk files - should be used if justified, for example, building config from a JSONSchema file.
+
+            References can be used anywhere in the configuration, as long as the configuration resolves to comply with the Lowdefy app schema. Templating can be taken further by referencing [Nunjucks](https://mozilla.github.io/nunjucks/) template files by simply adding .njk to the file extensions, for example, .yaml.njk. Nunjucks templates hydrate variables at build time, before the yaml is parsed, enabling Nunjucks features like for-loops and if-statements.
+
+            See more about references and templates [here](/references-and-templates).
+
+            ## Lowdefy versions and version updates
+
+            Lowdefy is versioned using semantic versioning, with a three part version number, with the form `major.minor.patch`. Lowdefy is under active development and is widely used in enterprise projects. New features and fixes are published on a regular basis, see our [changelog](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md) for the latest release notes.
+
+            [TODO]: <> (# TODO: Add roadmap, for whats to expect next.)
 
             To update the version of your app, change the `lowdefy` version field in the `lowdefy.yaml` file, and redeploy the app. You might also need to make some changes to your app configuration to be compatible with the new version.
 

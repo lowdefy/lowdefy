@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
-    const session = await getServerSession({ req });
+    const session = await getServerSession({ req, res });
     const apiContext = await createApiContext({
       buildDirectory: './build',
       connections,

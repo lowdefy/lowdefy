@@ -13,7 +13,7 @@
 # limitations under the License.
 
 name: '@lowdefy/docs'
-lowdefy: 4.0.0-alpha.17
+lowdefy: 4.0.0-alpha.23
 license: Apache-2.0
 
 cli:
@@ -21,7 +21,7 @@ cli:
 
 plugins:
   - name: '@lowdefy/docs'
-    version: '4.0.0-alpha.10'
+    version: '4.0.0-alpha.23'
 
 global:
   all_icons:
