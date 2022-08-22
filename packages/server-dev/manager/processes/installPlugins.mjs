@@ -25,7 +25,6 @@ function installPlugins({ logger, packageManager, packageManagerCmd }) {
   return async () => {
     logger.info({ print: 'spin' }, 'Installing plugins...');
     await spawnProcess({
-      logger,
       command: packageManagerCmd,
       args: args[packageManager],
       stdOutLineHandler: (line) => logger.debug(line),

@@ -20,7 +20,6 @@ function nextBuild({ bin, logger }) {
   return async () => {
     logger.info({ print: 'spin' }, 'Building app...');
     await spawnProcess({
-      logger,
       command: 'node',
       args: [bin.next, 'build'],
       stdOutLineHandler: (line) => logger.debug(line),

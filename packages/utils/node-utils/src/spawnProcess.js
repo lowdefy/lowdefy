@@ -33,7 +33,6 @@ function createStdIOHandler({ lineHandler }) {
 function spawnProcess({
   args,
   command,
-  logger,
   processOptions,
   returnProcess,
   stdErrLineHandler,
@@ -43,9 +42,8 @@ function spawnProcess({
     stdErrLineHandler = stdOutLineHandler;
   }
   const process = spawn(command, args, processOptions);
-  logger.debug(`Spawned process. command: ${command}, args: ${args}, pid: ${process.pid}.`);
   process.stdout.on('data', createStdIOHandler({ lineHandler: stdOutLineHandler }));
-  // process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
+  process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
 
   if (returnProcess) {
     return process;
@@ -53,16 +51,10 @@ function spawnProcess({
 
   return new Promise((resolve, reject) => {
     process.on('error', (error) => {
-      logger.debug(
-        `Process error. error: ${error}, command: ${command}, args:${args}, pid: ${process.pid}.`
-      );
       stdErrLineHandler(error);
     });
 
     process.on('exit', (code) => {
-      logger.debug(
-        `Process exit. code: ${code}, command: ${command}, args:${args}, pid: ${process.pid}.`
-      );
       if (code !== 0) {
         reject(new Error(`${command} exited with code ${code}`));
       }

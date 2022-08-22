@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import startNextServer from './startNextServer.mjs';
+import startServer from './startServer.mjs';
 
 function restartServer(context) {
   return () => {
-    context.shutdownServer(); // Is this needed here?
+    context.shutdownServer();
     context.logger.info({ print: 'spin' }, 'Restarting server...');
-    startNextServer(context);
+    startServer(context);
     context.logger.info({ print: 'succeed' }, 'Restarted server.');
   };
 }
