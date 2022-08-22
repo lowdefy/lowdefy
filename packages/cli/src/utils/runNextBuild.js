@@ -16,18 +16,28 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
+function createStdOutLineHandler({ context }) {
+  function stdOutLineHandler(line) {
+    // Matches next build output of form: ┌ λ /           261 B        403 kB
+    const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/);
+    if (match) {
+      context.print.info(`Home page first load JS size: ${match[1]}.`);
+    }
+    context.print.debug(line);
+  }
+  return stdOutLineHandler;
+}
+
 async function runNextBuild({ context, directory }) {
-  context.print.log('Running Next build.');
+  context.print.spin('Running Next build.');
   try {
-    // TODO: stdIoHandler
     await spawnProcess({
-      logger: context.print,
       command: context.packageManagerCmd,
       args: ['run', 'build:next'],
+      stdOutLineHandler: createStdOutLineHandler({ context }),
       processOptions: {
         cwd: directory,
       },
-      silent: false,
     });
   } catch (error) {
     throw new Error('Next build failed.');

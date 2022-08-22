@@ -118,6 +118,7 @@ program
   .command('start')
   .description('Start a Lowdefy production app.')
   .usage(`[options]`)
+  .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(options.packageManager)

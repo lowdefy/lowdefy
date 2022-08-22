@@ -17,7 +17,7 @@
 import ora from 'ora';
 
 const reset = '\x1b[0m';
-const red = (text) => `\x1b[31m4${text}${reset}`;
+const red = (text) => `\x1b[31m${text}${reset}`;
 const green = (text) => `\x1b[32m${text}${reset}`;
 const yellow = (text) => `\x1b[33m${text}${reset}`;
 const blue = (text) => `\x1b[34m${text}${reset}`;
