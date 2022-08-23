@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
+
+
+### Bug Fixes
+
+* Clean up files. ([eaf6bde](https://github.com/lowdefy/lowdefy/commit/eaf6bde3364e24cc5fce949ad03b9db2c779ea6e))
+* **cli:** Fix CLI print tests. ([fd8345e](https://github.com/lowdefy/lowdefy/commit/fd8345e5dee20b993662e2990850dd543acd3cb6))
+* **cli:** Improve CLI options specification. ([6d550fd](https://github.com/lowdefy/lowdefy/commit/6d550fd4620cde2ded905c3946ed86500c3efed5))
+* **cli:** Remove dependency chalk. ([aebe925](https://github.com/lowdefy/lowdefy/commit/aebe925ea61ba10109b1c59e79cbe12fbce1840e))
+* **deps:** Update dependency commander to v9.4.0. ([e2cd7d6](https://github.com/lowdefy/lowdefy/commit/e2cd7d6aecb6f0d0f4d7c6a15571010b8acc1237))
+* Fix dev server auth api route. ([a51af68](https://github.com/lowdefy/lowdefy/commit/a51af68e6291eea9185f65425e480ace6a269103))
+* **server-dev:** Remove build retries. ([c27ff36](https://github.com/lowdefy/lowdefy/commit/c27ff36e174f085d00bc0c76f2e2c3d8d2ad9bd2))
+* **server-dev:** Simplify server-dev manager code. ([e4101d0](https://github.com/lowdefy/lowdefy/commit/e4101d019b47d8cf1d5065116f003bcdf8a38fdf))
+
+
+### Features
+
+* Cleanup dev server logs. ([27a22c8](https://github.com/lowdefy/lowdefy/commit/27a22c8d34b822268a834704fe9c022397180386))
+* CLI output improvements. ([f00bb9b](https://github.com/lowdefy/lowdefy/commit/f00bb9b32e03e77ef1ef19c69055da4b05880cd8))
+* **cli:** Add log level option. ([5903c8e](https://github.com/lowdefy/lowdefy/commit/5903c8e4165334eb31f80580c3816a34ac36592d))
+* **cli:** Imporve build and start command output. ([f721792](https://github.com/lowdefy/lowdefy/commit/f721792ba9bafd00c8b126ae0ed86c1523025c15))
+* **cli:** Throw if Lowdefy CLI is run with node < v14. ([4a99337](https://github.com/lowdefy/lowdefy/commit/4a9933798e304ce0b00bab8b85b851b90dfc2d96))
+* **docs:** Add nunjucks date filter example. ([c4df77d](https://github.com/lowdefy/lowdefy/commit/c4df77d0b2bdeb1280db4f315a975952f09d27ef))
+* **docs:** Update Events and Actions concept page. ([eb61475](https://github.com/lowdefy/lowdefy/commit/eb614758df9c5036d24ce224142dda3c60172021))
+* **docs:** Update Menus concept page. ([0f8e3eb](https://github.com/lowdefy/lowdefy/commit/0f8e3ebcba1315a5f14cec4a02cd6f8426f948e2))
+* **docs:** Update Secrets concept page. ([f0bddb8](https://github.com/lowdefy/lowdefy/commit/f0bddb86e11e71b9705c231eba66a8d71c8cdf56))
+* Improved logging WIP. ([0bbf19d](https://github.com/lowdefy/lowdefy/commit/0bbf19d69926440930995d457514544608ec5b5b))
+* **server-dev:** Do not stop process if initial build fails. ([506cbeb](https://github.com/lowdefy/lowdefy/commit/506cbeb090b130cacbbb923aa0fa8d0e3a48ad5a))
+
+
+
+
+
 # [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-dev",
-  "version": "4.0.0-alpha.24",
+  "version": "4.0.0-alpha.25",
   "license": "Apache-2.0",
   "description": "Lowdefy Block Development Tools",
   "homepage": "https://lowdefy.com",
@@ -38,8 +38,8 @@
   },
   "dependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/block-utils": "4.0.0-alpha.24",
-    "@lowdefy/helpers": "4.0.0-alpha.24",
+    "@lowdefy/block-utils": "4.0.0-alpha.25",
+    "@lowdefy/helpers": "4.0.0-alpha.25",
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.2.0",
