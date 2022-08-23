@@ -7,7 +7,7 @@
       "dynamicImport": true,
       "topLevelAwait": true
     },
-    "target": "es2022",
+    "target": "es2020",
     "keepClassNames": true,
     "transform": { "react": { "runtime": "classic" } }
   },
