@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-next-auth",
-  "version": "4.0.0-alpha.23",
+  "version": "4.0.0-alpha.24",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,7 +41,7 @@
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files"
   },
   "dependencies": {
-    "next-auth": "4.9.0"
+    "next-auth": "4.10.3"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
