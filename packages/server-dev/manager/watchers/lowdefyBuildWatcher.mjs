@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
@@ -27,7 +26,7 @@ function lowdefyBuildWatcher(context) {
       const lowdefyVersion = await getLowdefyVersion(context);
       if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
         context.shutdownServer();
-        console.warn('Lowdefy version changed. You should restart your development server.');
+        context.logger.warn('Lowdefy version changed. You should restart your development server.');
         process.exit();
       }
     }
@@ -37,6 +36,7 @@ function lowdefyBuildWatcher(context) {
   };
   return setupWatcher({
     callback,
+    context,
     ignorePaths: context.options.watchIgnore,
     watchPaths: [context.directories.config, ...context.options.watch],
   });

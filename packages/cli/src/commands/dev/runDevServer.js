@@ -15,18 +15,20 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
+import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 
 async function runDevServer({ context, directory }) {
   await spawnProcess({
-    logger: context.print,
     args: ['run', 'start'],
     command: context.packageManagerCmd,
+    stdOutLineHandler: createStdOutLineHandler({ context }),
     processOptions: {
       cwd: directory,
       env: {
         ...process.env,
         LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        LOWDEFY_LOG_LEVEL: context.options.logLevel,
         LOWDEFY_PACKAGE_MANAGER: context.packageManager,
         LOWDEFY_SERVER_DEV_OPEN_BROWSER: !!context.options.open,
         LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),

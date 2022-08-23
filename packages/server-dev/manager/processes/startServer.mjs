@@ -13,19 +13,33 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable no-console */
 
-import startNextServer from './startNextServer.mjs';
+import { spawnProcess } from '@lowdefy/node-utils';
 
-async function startServer(context) {
-  return new Promise((resolve, reject) => {
-    try {
-      startNextServer(context);
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
+function startServer(context) {
+  context.shutdownServer();
+
+  const nextServer = spawnProcess({
+    stdOutLineHandler: (line) => context.logger.info({ print: 'log' }, line),
+    stdErrLineHandler: (line) => context.logger.error(line),
+    command: 'node',
+    args: [context.bin.next, 'start'],
+    processOptions: {
+      env: {
+        ...process.env,
+        PORT: context.options.port,
+      },
+    },
+    returnProcess: true,
   });
+  context.logger.debug(`Started next server with pid ${nextServer.pid}.`);
+  nextServer.on('exit', (code, signal) => {
+    context.logger.debug(`nextServer exit ${nextServer.pid}, signal: ${signal}, code: ${code}`);
+  });
+  nextServer.on('error', (error) => {
+    context.logger.error(error);
+  });
+  context.nextServer = nextServer;
 }
 
 export default startServer;

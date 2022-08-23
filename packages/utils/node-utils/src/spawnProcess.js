@@ -16,38 +16,42 @@
 
 import { spawn } from 'child_process';
 
-async function spawnProcess({ logger, command, args, processOptions, silent }) {
+function createStdIOHandler({ lineHandler }) {
+  function handler(data) {
+    data
+      .toString('utf8')
+      .split('\n')
+      .forEach((line) => {
+        if (line) {
+          lineHandler(line);
+        }
+      });
+  }
+  return handler;
+}
+
+function spawnProcess({
+  args,
+  command,
+  processOptions,
+  returnProcess,
+  stdErrLineHandler,
+  stdOutLineHandler = () => {},
+}) {
+  if (!stdErrLineHandler) {
+    stdErrLineHandler = stdOutLineHandler;
+  }
+  const process = spawn(command, args, processOptions);
+  process.stdout.on('data', createStdIOHandler({ lineHandler: stdOutLineHandler }));
+  process.stderr.on('data', createStdIOHandler({ lineHandler: stdErrLineHandler }));
+
+  if (returnProcess) {
+    return process;
+  }
+
   return new Promise((resolve, reject) => {
-    const process = spawn(command, args, processOptions);
-
-    process.stdout.on('data', (data) => {
-      if (!silent) {
-        data
-          .toString('utf8')
-          .split('\n')
-          .forEach((line) => {
-            if (line) {
-              logger.log(line);
-            }
-          });
-      }
-    });
-
-    process.stderr.on('data', (data) => {
-      if (!silent) {
-        data
-          .toString('utf8')
-          .split('\n')
-          .forEach((line) => {
-            if (line) {
-              logger.warn(line);
-            }
-          });
-      }
-    });
-
     process.on('error', (error) => {
-      reject(error);
+      stdErrLineHandler(error);
     });
 
     process.on('exit', (code) => {
