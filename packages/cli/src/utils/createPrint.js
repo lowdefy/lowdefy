@@ -68,7 +68,7 @@ function createOraPrint({ logLevel }) {
       warn: (text) => spinner.warn(yellow(text)),
       debug: (text) => {
         if (spinner.isSpinning) {
-          spinner.stopAndPersist({ symbol: '∙', text });
+          spinner.stopAndPersist({ symbol: '∙' });
         }
         spinner.stopAndPersist({ symbol: dim('+'), text: dim(text) });
       },
