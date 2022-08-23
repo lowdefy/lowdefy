@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-aggrid",
-  "version": "4.0.0-alpha.23",
+  "version": "4.0.0-alpha.24",
   "license": "Apache-2.0",
   "description": "AgGrid Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -54,15 +54,15 @@
     "@ag-grid-community/all-modules": "27.3.0",
     "@ag-grid-community/core": "27.3.0",
     "@ag-grid-community/react": "27.3.0",
-    "@lowdefy/block-utils": "4.0.0-alpha.23",
-    "@lowdefy/helpers": "4.0.0-alpha.23",
+    "@lowdefy/block-utils": "4.0.0-alpha.24",
+    "@lowdefy/helpers": "4.0.0-alpha.24",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/block-dev": "4.0.0-alpha.23",
-    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.23",
+    "@lowdefy/block-dev": "4.0.0-alpha.24",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.24",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

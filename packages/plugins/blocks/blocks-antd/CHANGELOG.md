@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Center Label when inline. ([491e4a9](https://github.com/lowdefy/lowdefy/commit/491e4a99c85c106cfc8502ec3dddb8e5d14d73d3))
+* **blocks-antd:** Fix RadioSelector not displaying which item is checked. ([8df75e6](https://github.com/lowdefy/lowdefy/commit/8df75e6136597f68f7073a0a26f92ff6a2a51d4a))
+* **blocks-antd:** Remove minHight on Label. ([0999baa](https://github.com/lowdefy/lowdefy/commit/0999baaa22f476a01e14e769a30a81953a0b2faf))
+
+
+
+
+
 # [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
 
 

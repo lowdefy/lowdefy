@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Features
+
+* Add Next-Auth MongoDB adapter. ([bdffb86](https://github.com/lowdefy/lowdefy/commit/bdffb86edf578c5ea603f382b237601c42e14044))
+
+
+
+
+
 # [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
 
 
