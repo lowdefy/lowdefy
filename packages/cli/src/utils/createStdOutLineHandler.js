@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import startServer from './startServer.mjs';
-
-function restartServer(context) {
-  return () => {
-    context.shutdownServer();
-    context.logger.info({ print: 'spin' }, 'Restarting server...');
-    startServer(context);
-    context.logger.info({ print: 'succeed' }, 'Restarted server.');
-  };
+function createStdOutLineHandler({ context }) {
+  function stdOutLineHandler(line) {
+    try {
+      const { print, msg } = JSON.parse(line);
+      context.print[print](msg);
+    } catch (error) {
+      context.print.log(line);
+    }
+  }
+  return stdOutLineHandler;
 }
 
-export default restartServer;
+export default createStdOutLineHandler;

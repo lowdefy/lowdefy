@@ -13,16 +13,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import pino from 'pino';
 
-import startServer from './startServer.mjs';
-
-function restartServer(context) {
-  return () => {
-    context.shutdownServer();
-    context.logger.info({ print: 'spin' }, 'Restarting server...');
-    startServer(context);
-    context.logger.info({ print: 'succeed' }, 'Restarted server.');
-  };
+function createLogger({ level = 'info' }) {
+  const logger = pino({
+    name: 'lowdefy build',
+    level,
+    base: { pid: undefined, hostname: undefined },
+    // TODO: Add log as custom level
+    mixin: (context, level) => {
+      return {
+        ...context,
+        print: context.print ?? logger.levels.labels[level],
+      };
+    },
+  });
+  return logger;
 }
 
-export default restartServer;
+export default createLogger;

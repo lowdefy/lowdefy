@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 const nodeMajorVersion = process.version.split(/^v(\d+)/)[1];
 if (Number(nodeMajorVersion) < 14) {
   // TODO: This error handled with telemetry.

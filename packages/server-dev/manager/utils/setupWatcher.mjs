@@ -19,6 +19,7 @@ import BatchChanges from './BatchChanges.mjs';
 
 function setupWatcher({
   callback,
+  context,
   watchDotfiles = false,
   ignorePaths = [],
   watchPaths,
@@ -28,7 +29,7 @@ function setupWatcher({
     // const { watch = [], watchIgnore = [] } = context.options;
     // const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
 
-    const batchChanges = new BatchChanges({ fn: callback, minDelay });
+    const batchChanges = new BatchChanges({ context, fn: callback, minDelay });
     const defaultIgnorePaths = watchDotfiles
       ? []
       : [

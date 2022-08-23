@@ -41,7 +41,7 @@ async function logError({ error, context = {} }) {
 }
 
 async function errorHandler({ context, error }) {
-  const print = createPrint();
+  const print = createPrint({ logLevel: 'info' });
   print.error(error.message);
   if (!context.disableTelemetry) {
     await logError({ context, error });
