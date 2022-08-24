@@ -16,15 +16,15 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-function nextBuild({ bin, options }) {
+function nextBuild({ bin, logger }) {
   return async () => {
-    console.log('Building app...');
+    logger.info({ print: 'spin' }, 'Building app...');
     await spawnProcess({
-      logger: console,
       command: 'node',
       args: [bin.next, 'build'],
-      silent: !options.verbose,
+      stdOutLineHandler: (line) => logger.debug(line),
     });
+    logger.info({ print: 'log' }, 'Built app.');
   };
 }
 
