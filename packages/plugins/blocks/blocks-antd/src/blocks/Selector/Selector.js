@@ -47,7 +47,7 @@ const Selector = ({
       validation={validation}
       required={required}
       content={{
-        content: () => (
+        content: (icon) => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <Select
@@ -61,12 +61,17 @@ const Selector = ({
               placeholder={get(properties, 'placeholder', { default: 'Select item' })}
               status={validation.status}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
+                (icon || properties.suffixIcon) && (
+                  <>
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                    {icon && icon}
+                  </>
                 )
               }
               clearIcon={

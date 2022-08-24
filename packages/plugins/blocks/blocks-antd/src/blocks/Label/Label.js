@@ -82,9 +82,8 @@ const Label = ({
       <Col {...wrapperCol} className="ant-form-item-control">
         <div className="ant-form-item-control-input">
           <div className="ant-form-item-control-input-content">
-            {content.content && content.content()}
+            {content.content && content.content(icon)}
           </div>
-          {icon}
         </div>
         {(showFeedback || showExtra) && (
           <CSSMotion

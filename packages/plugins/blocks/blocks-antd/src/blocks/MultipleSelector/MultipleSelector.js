@@ -46,7 +46,7 @@ const MultipleSelector = ({
       required={required}
       validation={validation}
       content={{
-        content: () => (
+        content: (icon) => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <Select
@@ -65,12 +65,17 @@ const MultipleSelector = ({
               status={validation.status}
               value={getValueIndex(value, uniqueValueOptions, true)}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
+                (icon || properties.suffixIcon) && (
+                  <>
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                    {icon && icon}
+                  </>
                 )
               }
               clearIcon={

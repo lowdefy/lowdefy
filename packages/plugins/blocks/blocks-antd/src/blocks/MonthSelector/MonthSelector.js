@@ -45,7 +45,7 @@ const MonthSelector = ({
       required={required}
       validation={validation}
       content={{
-        content: () => (
+        content: (icon) => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <MonthPicker
@@ -63,12 +63,17 @@ const MonthSelector = ({
               status={validation.status}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
+                (icon || properties.suffixIcon) && (
+                  <>
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                    {icon && icon}
+                  </>
                 )
               }
               onChange={(newVal) => {

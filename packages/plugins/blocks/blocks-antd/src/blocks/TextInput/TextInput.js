@@ -41,7 +41,7 @@ const TextInput = ({
       required={required}
       validation={validation}
       content={{
-        content: () => {
+        content: (icon) => {
           const runAfterUpdate = useRunAfterUpdate();
           return (
             <Input
@@ -79,14 +79,19 @@ const TextInput = ({
                 ))
               }
               suffix={
-                properties.suffix ||
-                (properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
-                ))
+                (properties.suffix || icon || properties.suffixIcon) && (
+                  <>
+                    {properties.suffix && properties.suffix}
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                    {icon && icon}
+                  </>
+                )
               }
             />
           );
