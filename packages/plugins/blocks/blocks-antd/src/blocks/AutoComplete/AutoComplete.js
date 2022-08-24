@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
@@ -76,7 +76,7 @@ const AutoCompleteInput = ({
                 key={i}
                 value={`${opt}`}
               >
-                {renderHtml({ html: `${opt}`, methods })}
+                {`${opt}`}
               </Option>
             ))}
           </AutoComplete>
