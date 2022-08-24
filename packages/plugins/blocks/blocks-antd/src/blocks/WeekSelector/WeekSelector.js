@@ -45,7 +45,7 @@ const WeekSelector = ({
       validation={validation}
       required={required}
       content={{
-        content: () => (
+        content: ({ icon }) => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <WeekPicker
@@ -62,12 +62,17 @@ const WeekSelector = ({
               size={properties.size}
               status={validation.status}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
+                (icon || properties.suffixIcon) && (
+                  <>
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                    {icon && icon}
+                  </>
                 )
               }
               onChange={(newVal) => {
