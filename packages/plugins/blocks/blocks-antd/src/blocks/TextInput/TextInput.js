@@ -41,7 +41,7 @@ const TextInput = ({
       required={required}
       validation={validation}
       content={{
-        content: (icon) => {
+        content: ({ icon }) => {
           const runAfterUpdate = useRunAfterUpdate();
           return (
             <Input

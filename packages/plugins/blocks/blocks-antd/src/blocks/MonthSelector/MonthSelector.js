@@ -45,7 +45,7 @@ const MonthSelector = ({
       required={required}
       validation={validation}
       content={{
-        content: (icon) => (
+        content: ({ icon }) => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <MonthPicker
