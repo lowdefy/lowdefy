@@ -90,12 +90,10 @@ const labelLogic = ({
   });
 
   const feedbackClassName = classNames({
-    'ant-form-item-explain': true,
-    'ant-form-item-extra': true,
-    [`ant-form-item-explain-feedback`]: validation.status && properties.hasFeedback !== false,
-    [`ldf-label-success`]: validation.status === 'success',
-    [`ldf-label-warning`]: validation.status === 'warning',
-    [`ldf-label-error`]: validation.status === 'error',
+    [`ant-form-item-explain-success`]: validation.status === 'success',
+    [`ant-form-item-explain-warning`]: validation.status === 'warning',
+    [`ant-form-item-explain-error`]: validation.status === 'error',
+    [`ant-form-item-explain-validating`]: validation.status === 'validating',
     [methods.makeCssClass([
       {
         marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
