@@ -93,21 +93,19 @@ const Label = ({
             motionAppear
             removeOnLeave
           >
-            {showFeedback
-              ? ({ className: motionClassName }) => (
-                  <div className={classNames(extraClassName, motionClassName)}>
-                    <div className={classNames(feedbackClassName)}>
-                      {validation[validationKeyMap[validation.status]] &&
-                        validation[validationKeyMap[validation.status]].length > 0 &&
-                        validation[validationKeyMap[validation.status]][0]}
-                    </div>
+            {({ className: motionClassName }) => (
+              <div className={classNames(extraClassName, motionClassName)}>
+                {showFeedback ? (
+                  <div className={classNames(feedbackClassName)}>
+                    {validation[validationKeyMap[validation.status]] &&
+                      validation[validationKeyMap[validation.status]].length > 0 &&
+                      validation[validationKeyMap[validation.status]][0]}
                   </div>
-                )
-              : ({ className: motionClassName }) => (
-                  <div className={classNames(extraClassName, motionClassName)}>
-                    {renderHtml({ html: properties.extra, methods })}
-                  </div>
+                ) : (
+                  renderHtml({ html: properties.extra, methods })
                 )}
+              </div>
+            )}
           </CSSMotion>
         )}
       </Col>
