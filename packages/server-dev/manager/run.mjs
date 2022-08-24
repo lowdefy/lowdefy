@@ -88,7 +88,9 @@ try {
     context.logger.error(error);
   }
 
-  await context.startWatchers();
+  // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
+  // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
+  context.startWatchers();
 
   startServer(context);
   await wait(800);
