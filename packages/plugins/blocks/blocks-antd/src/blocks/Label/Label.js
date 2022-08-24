@@ -85,17 +85,29 @@ const Label = ({
           </div>
           {icon}
         </div>
-        <CSSMotion visible={showFeedback} motionName="show-help" motionAppear removeOnLeave>
-          {({ className: motionClassName }) => (
-            <div className={classNames(feedbackClassName, motionClassName)}>
-              {validation[validationKeyMap[validation.status]] &&
-                validation[validationKeyMap[validation.status]].length > 0 &&
-                validation[validationKeyMap[validation.status]][0]}
-            </div>
-          )}
-        </CSSMotion>
-        {showExtra && (
-          <div className={extraClassName}>{renderHtml({ html: properties.extra, methods })}</div>
+        {(showFeedback || showExtra) && (
+          <CSSMotion
+            visible={showFeedback || showExtra}
+            motionName="show-help"
+            motionAppear
+            removeOnLeave
+          >
+            {showFeedback
+              ? ({ className: motionClassName }) => (
+                  <div className={classNames(extraClassName, motionClassName)}>
+                    <div className={classNames(feedbackClassName)}>
+                      {validation[validationKeyMap[validation.status]] &&
+                        validation[validationKeyMap[validation.status]].length > 0 &&
+                        validation[validationKeyMap[validation.status]][0]}
+                    </div>
+                  </div>
+                )
+              : ({ className: motionClassName }) => (
+                  <div className={classNames(extraClassName, motionClassName)}>
+                    {renderHtml({ html: properties.extra, methods })}
+                  </div>
+                )}
+          </CSSMotion>
         )}
       </Col>
     </Row>
