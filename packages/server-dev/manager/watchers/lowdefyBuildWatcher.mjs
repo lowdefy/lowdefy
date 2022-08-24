@@ -37,7 +37,7 @@ function lowdefyBuildWatcher(context) {
   return setupWatcher({
     callback,
     context,
-    ignorePaths: context.options.watchIgnore,
+    ignorePaths: ['**/node_modules/**', ...context.options.watchIgnore],
     watchPaths: [context.directories.config, ...context.options.watch],
   });
 }
