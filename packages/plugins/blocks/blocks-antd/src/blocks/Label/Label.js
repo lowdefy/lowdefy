@@ -44,6 +44,7 @@ const Label = ({
   const {
     extraClassName,
     feedbackClassName,
+    iconClassName,
     label,
     labelClassName,
     labelCol,
@@ -64,7 +65,7 @@ const Label = ({
   const IconNode = validation.status && iconMap[validation.status];
   const icon =
     validation.status && IconNode ? (
-      <span className="ant-form-item-children-icon">
+      <span className={iconClassName}>
         <IconNode />
       </span>
     ) : null;

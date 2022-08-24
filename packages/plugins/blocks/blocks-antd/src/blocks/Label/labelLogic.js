@@ -102,11 +102,26 @@ const labelLogic = ({
     ])]: true,
   });
 
+  const iconClassName = classNames({
+    'ant-form-item-feedback-icon': true,
+    [`ant-form-item-feedback-icon-success`]: validation.status === 'success',
+    [`ant-form-item-feedback-icon-warning`]: validation.status === 'warning',
+    [`ant-form-item-feedback-icon-error`]: validation.status === 'error',
+    [`ant-form-item-feedback-icon-validating`]: validation.status === 'validating',
+    [methods.makeCssClass([
+      {
+        marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
+      },
+      properties.feedbackStyle,
+    ])]: true,
+  });
+
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
   const showFeedback = validation.status === 'warning' || validation.status === 'error';
   return {
     extraClassName,
     feedbackClassName,
+    iconClassName,
     label: !properties.disabled && label,
     labelClassName,
     labelCol,
