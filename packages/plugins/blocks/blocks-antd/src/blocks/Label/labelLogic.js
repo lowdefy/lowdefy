@@ -108,11 +108,7 @@ const labelLogic = ({
     [`ant-form-item-feedback-icon-warning`]: validation.status === 'warning',
     [`ant-form-item-feedback-icon-error`]: validation.status === 'error',
     [`ant-form-item-feedback-icon-validating`]: validation.status === 'validating',
-    [methods.makeCssClass([
-      {
-        marginLeft: 4,
-      },
-    ])]: true,
+    'ldf-feedback-icon': true,
   });
 
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
