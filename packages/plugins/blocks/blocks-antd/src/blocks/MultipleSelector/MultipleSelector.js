@@ -62,6 +62,7 @@ const MultipleSelector = ({
               placeholder={get(properties, 'placeholder', { default: 'Select items' })}
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
+              status={validation.status}
               value={getValueIndex(value, uniqueValueOptions, true)}
               suffixIcon={
                 properties.suffixIcon && (

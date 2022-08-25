@@ -66,6 +66,7 @@ const DateRangeSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               separator={properties.separator || '~'}
               size={properties.size}
+              status={validation.status}
               placeholder={
                 (type.isArray(properties.placeholder) && [
                   properties.placeholder[0] || 'Start Date',
@@ -73,13 +74,11 @@ const DateRangeSelector = ({
                 ]) || ['Start Date', 'End Date']
               }
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               onChange={(newVal) => {
                 methods.setValue(

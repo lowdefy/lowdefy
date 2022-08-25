@@ -161,9 +161,9 @@ _ref:
                 type: AxiosHttp
                 properties:
                   url: myapp.com/api/count
-                headers:
-                  X-Api-Key:
-                    _secret: API_KEY
+                  headers:
+                    X-Api-Key:
+                      _secret: API_KEY
             # ...
             requests:
               - id: get_count

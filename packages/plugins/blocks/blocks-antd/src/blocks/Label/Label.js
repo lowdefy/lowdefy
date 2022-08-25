@@ -44,6 +44,7 @@ const Label = ({
   const {
     extraClassName,
     feedbackClassName,
+    iconClassName,
     label,
     labelClassName,
     labelCol,
@@ -64,7 +65,7 @@ const Label = ({
   const IconNode = validation.status && iconMap[validation.status];
   const icon =
     validation.status && IconNode ? (
-      <span className="ant-form-item-children-icon">
+      <span className={iconClassName}>
         <IconNode />
       </span>
     ) : null;
@@ -85,17 +86,27 @@ const Label = ({
           </div>
           {icon}
         </div>
-        <CSSMotion visible={showFeedback} motionName="show-help" motionAppear removeOnLeave>
-          {({ className: motionClassName }) => (
-            <div className={classNames(feedbackClassName, motionClassName)}>
-              {validation[validationKeyMap[validation.status]] &&
-                validation[validationKeyMap[validation.status]].length > 0 &&
-                validation[validationKeyMap[validation.status]][0]}
-            </div>
-          )}
-        </CSSMotion>
-        {showExtra && (
-          <div className={extraClassName}>{renderHtml({ html: properties.extra, methods })}</div>
+        {(showFeedback || showExtra) && (
+          <CSSMotion
+            visible={showFeedback || showExtra}
+            motionName="show-help"
+            motionAppear
+            removeOnLeave
+          >
+            {({ className: motionClassName }) => (
+              <div className={classNames(extraClassName, motionClassName)}>
+                {showFeedback ? (
+                  <div className={classNames(feedbackClassName)}>
+                    {validation[validationKeyMap[validation.status]] &&
+                      validation[validationKeyMap[validation.status]].length > 0 &&
+                      validation[validationKeyMap[validation.status]][0]}
+                  </div>
+                ) : (
+                  renderHtml({ html: properties.extra, methods })
+                )}
+              </div>
+            )}
+          </CSSMotion>
         )}
       </Col>
     </Row>

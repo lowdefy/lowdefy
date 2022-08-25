@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Add class for feedback icon margin. ([1e29169](https://github.com/lowdefy/lowdefy/commit/1e29169774e9c70295573bc5051ee91aaeb5e5be))
+* **blocks-antd:** Fix autocomplete bug when option is selected. ([2c02f08](https://github.com/lowdefy/lowdefy/commit/2c02f088e592b3a3cd1c48e22a515e655cddc098))
+* **blocks-antd:** Fix feedback icon classes so that correct color is shown. ([c1f9b7d](https://github.com/lowdefy/lowdefy/commit/c1f9b7d8e61bfffa3e643955ef8d44468885babd))
+* Fix extra bouncing when changing from displaying feedback to displaying extra. ([f5b70a4](https://github.com/lowdefy/lowdefy/commit/f5b70a4e371d01632a75d015ac18ab42a7901e62))
+* Revert back to ant classes. ([8bdcfd5](https://github.com/lowdefy/lowdefy/commit/8bdcfd54d42dcffa57a88aaaafc00c6bbbdec850))
+
+
+### Features
+
+* **blocks-antd:** Add default suffix icon to date selectors. ([997fae8](https://github.com/lowdefy/lowdefy/commit/997fae855d901b36f2fe3e637b2b38ac7193158d))
+* **blocks-antd:** Add feedback classes for corresponding colors. ([230570b](https://github.com/lowdefy/lowdefy/commit/230570b0008dfc627b85205d22545ae5f728e7ed))
+* **blocks-antd:** Add feedback icon to TextInput and Selectors. ([f7f78e9](https://github.com/lowdefy/lowdefy/commit/f7f78e9aece55b5da3aa95c70b2a8a694db2487a))
+* **blocks-antd:** Add feedback icon to WeekSelector. ([2719887](https://github.com/lowdefy/lowdefy/commit/2719887bde4019e109e0e57157389ecc48467fc8))
+* **blocks-antd:** Add status to input components. ([91f7532](https://github.com/lowdefy/lowdefy/commit/91f753242b640c3722ef922632e77c5a23d2640b))
+* **blocks-antd:** Change content to use named args. ([832f68c](https://github.com/lowdefy/lowdefy/commit/832f68c671e23c30f960792c8dd91164c6742f6a))
+* **blocks-antd:** Change feedback icon to be added in label. ([91a1e8b](https://github.com/lowdefy/lowdefy/commit/91a1e8b5e44d8f0e3f7cbc4e945f5dca063de8db))
+* **blocks-antd:** Cleanup AutoComplete. ([8732368](https://github.com/lowdefy/lowdefy/commit/8732368ac140a6c9782de942ef66d3b348651b3e))
+* **blocks-antd:** Fix autocomplete bugs. ([71523cb](https://github.com/lowdefy/lowdefy/commit/71523cba4365b00ca7d1243a5f36ab77b4b073dc))
+* **blocks-antd:** Replace ant feedback classes. ([51ba949](https://github.com/lowdefy/lowdefy/commit/51ba94947fd6b836408ba0dd2cc0fa7d9d42be62))
+
+
+
+
+
 # [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
 
 **Note:** Version bump only for package @lowdefy/blocks-antd

@@ -67,14 +67,13 @@ const DateTimeSelector = ({
               showNow={properties.showNow}
               showToday={properties.showToday}
               size={properties.size}
+              status={validation.status}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               showTime={{
                 format: properties.timeFormat || 'HH:mm',

@@ -65,6 +65,7 @@ const PasswordInput = ({
               placeholder={properties.placeholder}
               value={value}
               size={properties.size}
+              status={validation.status}
               visibilityToggle={properties.visibilityToggle}
             />
           );

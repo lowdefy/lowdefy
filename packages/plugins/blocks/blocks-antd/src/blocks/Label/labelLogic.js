@@ -47,12 +47,6 @@ const labelLogic = ({
   const rowClassName = classNames({
     [`ant-form-item`]: true,
     [`ant-form-item-with-help`]: false,
-    // Status
-    [`ant-form-item-has-feedback`]: validation.status && properties.hasFeedback !== false,
-    [`ant-form-item-has-success`]: validation.status === 'success',
-    [`ant-form-item-has-warning`]: validation.status === 'warning',
-    [`ant-form-item-has-error`]: validation.status === 'error',
-    [`ant-form-item-is-validating`]: validation.status === 'validating',
     [methods.makeCssClass({
       flexWrap: properties.inline && 'inherit', // wrap extra content below input
       marginBottom: 0,
@@ -94,10 +88,8 @@ const labelLogic = ({
       properties.extraStyle,
     ])]: true,
   });
+
   const feedbackClassName = classNames({
-    'ant-form-item-explain': true,
-    'ant-form-item-extra': true,
-    [`ant-form-item-explain-feedback`]: validation.status && properties.hasFeedback !== false,
     [`ant-form-item-explain-success`]: validation.status === 'success',
     [`ant-form-item-explain-warning`]: validation.status === 'warning',
     [`ant-form-item-explain-error`]: validation.status === 'error',
@@ -110,11 +102,21 @@ const labelLogic = ({
     ])]: true,
   });
 
+  const iconClassName = classNames({
+    'ant-form-item-feedback-icon': true,
+    [`ant-form-item-feedback-icon-success`]: validation.status === 'success',
+    [`ant-form-item-feedback-icon-warning`]: validation.status === 'warning',
+    [`ant-form-item-feedback-icon-error`]: validation.status === 'error',
+    [`ant-form-item-feedback-icon-validating`]: validation.status === 'validating',
+    'ldf-feedback-icon': true,
+  });
+
   const showExtra = !!properties.extra && (!validation.status || validation.status === 'success');
   const showFeedback = validation.status === 'warning' || validation.status === 'error';
   return {
     extraClassName,
     feedbackClassName,
+    iconClassName,
     label: !properties.disabled && label,
     labelClassName,
     labelCol,
