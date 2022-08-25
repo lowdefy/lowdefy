@@ -63,13 +63,11 @@ const MonthSelector = ({
               status={validation.status}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               onChange={(newVal) => {
                 methods.setValue(

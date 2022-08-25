@@ -74,13 +74,11 @@ const DateRangeSelector = ({
                 ]) || ['Start Date', 'End Date']
               }
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               onChange={(newVal) => {
                 methods.setValue(
