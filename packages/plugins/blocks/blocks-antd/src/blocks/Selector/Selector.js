@@ -59,6 +59,7 @@ const Selector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               disabled={properties.disabled || loading}
               placeholder={get(properties, 'placeholder', { default: 'Select item' })}
+              status={validation.status}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
