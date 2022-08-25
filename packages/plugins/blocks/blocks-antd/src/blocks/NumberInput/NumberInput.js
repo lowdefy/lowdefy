@@ -57,6 +57,7 @@ const NumberInput = ({
             placeholder={properties.placeholder}
             precision={properties.precision}
             size={properties.size}
+            status={validation.status}
             step={properties.step}
             onChange={(newVal) => {
               methods.setValue(newVal);

@@ -56,9 +56,7 @@ const AutoCompleteInput = ({
             allowClear={properties.allowClear !== false}
             size={properties.size}
             filterOption={(input, option) =>
-              (option.filterstring || option.children.props.html || '')
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
+              `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             onChange={(newVal) => {
               methods.setValue(newVal);
