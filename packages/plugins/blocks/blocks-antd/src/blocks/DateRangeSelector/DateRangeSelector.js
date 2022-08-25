@@ -51,7 +51,7 @@ const DateRangeSelector = ({
       validation={validation}
       required={required}
       content={{
-        content: ({ icon }) => (
+        content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
             <div id={`${blockId}_popup`} />
             <RangePicker
@@ -74,17 +74,12 @@ const DateRangeSelector = ({
                 ]) || ['Start Date', 'End Date']
               }
               suffixIcon={
-                (icon || properties.suffixIcon) && (
-                  <>
-                    {properties.suffixIcon && (
-                      <Icon
-                        blockId={`${blockId}_suffixIcon`}
-                        events={events}
-                        properties={properties.suffixIcon}
-                      />
-                    )}
-                    {icon && icon}
-                  </>
+                properties.suffixIcon && (
+                  <Icon
+                    blockId={`${blockId}_suffixIcon`}
+                    events={events}
+                    properties={properties.suffixIcon}
+                  />
                 )
               }
               onChange={(newVal) => {

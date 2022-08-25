@@ -110,9 +110,8 @@ const labelLogic = ({
     [`ant-form-item-feedback-icon-validating`]: validation.status === 'validating',
     [methods.makeCssClass([
       {
-        marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
+        marginLeft: 4,
       },
-      properties.feedbackStyle,
     ])]: true,
   });
 

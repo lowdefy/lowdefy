@@ -41,7 +41,7 @@ const TextInput = ({
       required={required}
       validation={validation}
       content={{
-        content: ({ icon }) => {
+        content: () => {
           const runAfterUpdate = useRunAfterUpdate();
           return (
             <Input
@@ -79,7 +79,7 @@ const TextInput = ({
                 ))
               }
               suffix={
-                (properties.suffix || icon || properties.suffixIcon) && (
+                (properties.suffix || properties.suffixIcon) && (
                   <>
                     {properties.suffix && properties.suffix}
                     {properties.suffixIcon && (
@@ -89,7 +89,6 @@ const TextInput = ({
                         properties={properties.suffixIcon}
                       />
                     )}
-                    {icon && icon}
                   </>
                 )
               }
