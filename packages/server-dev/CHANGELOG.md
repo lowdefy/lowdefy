@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+
+### Bug Fixes
+
+* **server-dev:** Fix server dev file watchers. ([7e3fedd](https://github.com/lowdefy/lowdefy/commit/7e3feddffe017edefcc325a8a146918318a8b329))
+
+
+
+
+
 # [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
 
 
