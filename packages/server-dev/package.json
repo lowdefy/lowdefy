@@ -47,6 +47,7 @@
     "@lowdefy/blocks-echarts": "4.0.0-alpha.26",
     "@lowdefy/blocks-loaders": "4.0.0-alpha.26",
     "@lowdefy/blocks-markdown": "4.0.0-alpha.26",
+    "@lowdefy/blocks-qr": "4.0.0-alpha.26",
     "@lowdefy/build": "4.0.0-alpha.26",
     "@lowdefy/client": "4.0.0-alpha.26",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.26",
