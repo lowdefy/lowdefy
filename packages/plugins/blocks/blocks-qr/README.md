@@ -13,9 +13,10 @@ When a code is scanned by the QR scanner, the value of the block is set to the d
 
 - `fps: number`: Expected framerate of QR code scanning.
 - `qrbox: number | {width: number, height: number}`: The dimensions for the QR scanning area. If not set, the entire area of the video stream will be used by the scanner.
-- `aspectRatio: number`: The aspect ratio for the video.
+- `aspectRatio: float`: The aspect ratio for the video.
 - `disableFlip: boolean`: Disable the ability to scan QR codes that have been flipped.
 - `formatsToSupport: List of Html5QrcodeSupportedFormats`: Limit the code formats that can be scanned. See [Html5QrcodeSupportedFormats](https://github.com/mebjas/html5-qrcode#documentation:~:text=library.%0A%20*/%0Aenum-,Html5QrcodeSupportedFormats,-%7B%0A%20%20QR_CODE%20%3D).
+- `inactiveByDefault: boolean`: Determines whether or not the scanner is started when it is mounted.
 - `style: cssObject`: A style object applied to the scanner element.
 
 ### Events

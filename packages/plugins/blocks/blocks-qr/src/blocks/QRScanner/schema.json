@@ -14,11 +14,17 @@
       },
       "aspectRatio": {
         "type": "float",
+        "default": 1,
         "description": "The aspect ratio for the video."
       },
       "disableFlip": {
         "type": "boolean",
         "description": "Disable the ability to scan QR codes that have been flipped."
+      },
+      "inactiveByDefault": {
+        "type": "boolean",
+        "default": false,
+        "description": "Determines whether or not the scanner is started when it is mounted."
       },
       "formatsToSupport": {
         "type": "array",
