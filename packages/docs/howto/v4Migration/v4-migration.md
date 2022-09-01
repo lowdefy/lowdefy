@@ -27,3 +27,4 @@
 - Convert all request operators except `_user`, to use `_payload`.
 - Convert `Message` action to `DisplayMessage`
 - Static files are no longer at 'public/...', (our logged out page for example)
+- The `Notification` action has been removed. Switch to `DisplayMessage` or use a `Notification` block and the `CallMethod` action

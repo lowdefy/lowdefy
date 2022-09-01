@@ -54,6 +54,7 @@ const TextInput = ({
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               size={properties.size}
+              status={validation.status}
               value={value}
               onChange={(event) => {
                 methods.setValue(event.target.value);
@@ -78,14 +79,18 @@ const TextInput = ({
                 ))
               }
               suffix={
-                properties.suffix ||
-                (properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon}
-                  />
-                ))
+                (properties.suffix || properties.suffixIcon) && (
+                  <>
+                    {properties.suffix && properties.suffix}
+                    {properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        events={events}
+                        properties={properties.suffixIcon}
+                      />
+                    )}
+                  </>
+                )
               }
             />
           );

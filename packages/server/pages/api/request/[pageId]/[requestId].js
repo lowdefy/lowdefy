@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
       throw new Error('Only POST requests are supported.');
     }
-    const session = await getServerSession({ req });
+    const session = await getServerSession({ req, res });
     // Important to give absolute path so Next can trace build files
     const apiContext = await createApiContext({
       buildDirectory: path.join(process.cwd(), 'build'),

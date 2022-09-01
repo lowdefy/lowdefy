@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+**Note:** Version bump only for package @lowdefy/server
+
+
+
+
+
+# [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
+
+
+### Bug Fixes
+
+* Fix dev server auth api route. ([a51af68](https://github.com/lowdefy/lowdefy/commit/a51af68e6291eea9185f65425e480ace6a269103))
+
+
+
+
+
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Bug Fixes
+
+* Fix next-auth getServerSession. ([c5ee6ae](https://github.com/lowdefy/lowdefy/commit/c5ee6aef6227b68786b955d83de2a4f733569225))
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+* Update next-auth. ([972d5f3](https://github.com/lowdefy/lowdefy/commit/972d5f30ce57886419bc26fd5f19e386418e3dbb))
+
+
+
+
+
+# [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+
+
+
+
+
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 **Note:** Version bump only for package @lowdefy/server

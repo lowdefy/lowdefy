@@ -3,6 +3,193 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Add class for feedback icon margin. ([1e29169](https://github.com/lowdefy/lowdefy/commit/1e29169774e9c70295573bc5051ee91aaeb5e5be))
+* **blocks-antd:** Fix autocomplete bug when option is selected. ([2c02f08](https://github.com/lowdefy/lowdefy/commit/2c02f088e592b3a3cd1c48e22a515e655cddc098))
+* **blocks-antd:** Fix feedback icon classes so that correct color is shown. ([c1f9b7d](https://github.com/lowdefy/lowdefy/commit/c1f9b7d8e61bfffa3e643955ef8d44468885babd))
+* Fix extra bouncing when changing from displaying feedback to displaying extra. ([f5b70a4](https://github.com/lowdefy/lowdefy/commit/f5b70a4e371d01632a75d015ac18ab42a7901e62))
+* Log server install output at debug level. ([c77a220](https://github.com/lowdefy/lowdefy/commit/c77a2205c6cc10a7f6e282f02ac787ee13ea4bb9))
+* Revert back to ant classes. ([8bdcfd5](https://github.com/lowdefy/lowdefy/commit/8bdcfd54d42dcffa57a88aaaafc00c6bbbdec850))
+* **server-dev:** Fix server dev file watchers. ([7e3fedd](https://github.com/lowdefy/lowdefy/commit/7e3feddffe017edefcc325a8a146918318a8b329))
+
+
+### Features
+
+* **blocks-antd:** Add default suffix icon to date selectors. ([997fae8](https://github.com/lowdefy/lowdefy/commit/997fae855d901b36f2fe3e637b2b38ac7193158d))
+* **blocks-antd:** Add feedback classes for corresponding colors. ([230570b](https://github.com/lowdefy/lowdefy/commit/230570b0008dfc627b85205d22545ae5f728e7ed))
+* **blocks-antd:** Add feedback icon to TextInput and Selectors. ([f7f78e9](https://github.com/lowdefy/lowdefy/commit/f7f78e9aece55b5da3aa95c70b2a8a694db2487a))
+* **blocks-antd:** Add feedback icon to WeekSelector. ([2719887](https://github.com/lowdefy/lowdefy/commit/2719887bde4019e109e0e57157389ecc48467fc8))
+* **blocks-antd:** Add status to input components. ([91f7532](https://github.com/lowdefy/lowdefy/commit/91f753242b640c3722ef922632e77c5a23d2640b))
+* **blocks-antd:** Change content to use named args. ([832f68c](https://github.com/lowdefy/lowdefy/commit/832f68c671e23c30f960792c8dd91164c6742f6a))
+* **blocks-antd:** Change feedback icon to be added in label. ([91a1e8b](https://github.com/lowdefy/lowdefy/commit/91a1e8b5e44d8f0e3f7cbc4e945f5dca063de8db))
+* **blocks-antd:** Cleanup AutoComplete. ([8732368](https://github.com/lowdefy/lowdefy/commit/8732368ac140a6c9782de942ef66d3b348651b3e))
+* **blocks-antd:** Fix autocomplete bugs. ([71523cb](https://github.com/lowdefy/lowdefy/commit/71523cba4365b00ca7d1243a5f36ab77b4b073dc))
+* **blocks-antd:** Replace ant feedback classes. ([51ba949](https://github.com/lowdefy/lowdefy/commit/51ba94947fd6b836408ba0dd2cc0fa7d9d42be62))
+
+
+
+
+
+# [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
+
+
+### Bug Fixes
+
+* Clean up files. ([eaf6bde](https://github.com/lowdefy/lowdefy/commit/eaf6bde3364e24cc5fce949ad03b9db2c779ea6e))
+* **cli:** Fix CLI print tests. ([fd8345e](https://github.com/lowdefy/lowdefy/commit/fd8345e5dee20b993662e2990850dd543acd3cb6))
+* **cli:** Improve CLI options specification. ([6d550fd](https://github.com/lowdefy/lowdefy/commit/6d550fd4620cde2ded905c3946ed86500c3efed5))
+* **cli:** Remove dependency chalk. ([aebe925](https://github.com/lowdefy/lowdefy/commit/aebe925ea61ba10109b1c59e79cbe12fbce1840e))
+* **deps:** Update dependency commander to v9.4.0. ([e2cd7d6](https://github.com/lowdefy/lowdefy/commit/e2cd7d6aecb6f0d0f4d7c6a15571010b8acc1237))
+* Fix dev server auth api route. ([a51af68](https://github.com/lowdefy/lowdefy/commit/a51af68e6291eea9185f65425e480ace6a269103))
+* **server-dev:** Remove build retries. ([c27ff36](https://github.com/lowdefy/lowdefy/commit/c27ff36e174f085d00bc0c76f2e2c3d8d2ad9bd2))
+* **server-dev:** Simplify server-dev manager code. ([e4101d0](https://github.com/lowdefy/lowdefy/commit/e4101d019b47d8cf1d5065116f003bcdf8a38fdf))
+
+
+### Features
+
+* Cleanup dev server logs. ([27a22c8](https://github.com/lowdefy/lowdefy/commit/27a22c8d34b822268a834704fe9c022397180386))
+* CLI output improvements. ([f00bb9b](https://github.com/lowdefy/lowdefy/commit/f00bb9b32e03e77ef1ef19c69055da4b05880cd8))
+* **cli:** Add log level option. ([5903c8e](https://github.com/lowdefy/lowdefy/commit/5903c8e4165334eb31f80580c3816a34ac36592d))
+* **cli:** Imporve build and start command output. ([f721792](https://github.com/lowdefy/lowdefy/commit/f721792ba9bafd00c8b126ae0ed86c1523025c15))
+* **cli:** Throw if Lowdefy CLI is run with node < v14. ([4a99337](https://github.com/lowdefy/lowdefy/commit/4a9933798e304ce0b00bab8b85b851b90dfc2d96))
+* **docs:** Add nunjucks date filter example. ([c4df77d](https://github.com/lowdefy/lowdefy/commit/c4df77d0b2bdeb1280db4f315a975952f09d27ef))
+* **docs:** Update Events and Actions concept page. ([eb61475](https://github.com/lowdefy/lowdefy/commit/eb614758df9c5036d24ce224142dda3c60172021))
+* **docs:** Update Menus concept page. ([0f8e3eb](https://github.com/lowdefy/lowdefy/commit/0f8e3ebcba1315a5f14cec4a02cd6f8426f948e2))
+* **docs:** Update Secrets concept page. ([f0bddb8](https://github.com/lowdefy/lowdefy/commit/f0bddb86e11e71b9705c231eba66a8d71c8cdf56))
+* Improved logging WIP. ([0bbf19d](https://github.com/lowdefy/lowdefy/commit/0bbf19d69926440930995d457514544608ec5b5b))
+* **server-dev:** Do not stop process if initial build fails. ([506cbeb](https://github.com/lowdefy/lowdefy/commit/506cbeb090b130cacbbb923aa0fa8d0e3a48ad5a))
+
+
+
+
+
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Bug Fixes
+
+* Add additional operator tests. ([ddf8e51](https://github.com/lowdefy/lowdefy/commit/ddf8e51f8b1d9bab1490015021afa2bb0e29c6d8))
+* Add buildAuthPlugin tests. ([df77f5d](https://github.com/lowdefy/lowdefy/commit/df77f5d51e4a36c997040c0575cdf66edc0a371f))
+* **blocks-antd:** Center Label when inline. ([491e4a9](https://github.com/lowdefy/lowdefy/commit/491e4a99c85c106cfc8502ec3dddb8e5d14d73d3))
+* **blocks-antd:** Fix RadioSelector not displaying which item is checked. ([8df75e6](https://github.com/lowdefy/lowdefy/commit/8df75e6136597f68f7073a0a26f92ff6a2a51d4a))
+* **blocks-antd:** Remove minHight on Label. ([0999baa](https://github.com/lowdefy/lowdefy/commit/0999baaa22f476a01e14e769a30a81953a0b2faf))
+* **blocks-google-maps:** Fix map jumping when clicking markers. ([6a6c2c7](https://github.com/lowdefy/lowdefy/commit/6a6c2c78acb9d6b565aa9760c4c385c68c75e8d8))
+* **build:** Add default for catch when try is defined and catch is not. ([b1159e1](https://github.com/lowdefy/lowdefy/commit/b1159e147380e024e66879f4fe2e8061d215cedc))
+* **docs:** Add catch to Selector and MultipleSelector block pages. ([9777175](https://github.com/lowdefy/lowdefy/commit/9777175ed6028d9ee6eabe68e63e14c4508d6d0b))
+* **docs:** correct filePath for ControlledList ([c3a2cce](https://github.com/lowdefy/lowdefy/commit/c3a2cce54ee21064786571977183321f154f058a))
+* **docs:** correct link to _secret operator ([7124669](https://github.com/lowdefy/lowdefy/commit/712466993dd9b35e76d12da3146e6820138d41e6))
+* **docs:** Docs V4 compatibilty fixes. ([520dce1](https://github.com/lowdefy/lowdefy/commit/520dce1f7bfa5d5b2eab36ebb58f340e5bf15cc6))
+* **docs:** Fix MongoDB page. ([e282e54](https://github.com/lowdefy/lowdefy/commit/e282e54f650c06fed0bf947eecd0946fbbf8b469))
+* **docs:** Fix typo media to menu. ([bccc978](https://github.com/lowdefy/lowdefy/commit/bccc978190e617689050df44af9183f68ce10ccf))
+* **docs:** Remove catch from MultipleSelector and Selector block pages. ([adf6932](https://github.com/lowdefy/lowdefy/commit/adf6932528f9104905c272282e10ad5369a6bcd3))
+* **docs:** Remove outdated pages and add todos. ([ff2c02b](https://github.com/lowdefy/lowdefy/commit/ff2c02b54476e92bf8a949bd91990d1a112791c3))
+* **docs:** Rename and remove actions pages. ([0da95f3](https://github.com/lowdefy/lowdefy/commit/0da95f3ac97170864519e39b934c5b6ce9626919))
+* Fix _intl.relativeTimeFormat operator and add tests. ([627b970](https://github.com/lowdefy/lowdefy/commit/627b9707073d7298c04683d0265d8eaab1bd2ac2))
+* Fix addUserFieldsToSession when using auth adapter. ([850ee69](https://github.com/lowdefy/lowdefy/commit/850ee69e1ab2245b9abb1af4eeb1636286a6af64))
+* Fix handling of null values in _array and _object operators. ([1333f43](https://github.com/lowdefy/lowdefy/commit/1333f43315fc7895139e1c981992dac83b1dabf1))
+* Fix next-auth getServerSession. ([c5ee6ae](https://github.com/lowdefy/lowdefy/commit/c5ee6aef6227b68786b955d83de2a4f733569225))
+* **google-maps:** update center comparison. ([c0cedb7](https://github.com/lowdefy/lowdefy/commit/c0cedb74159a896bb1b6b5cf44dc183fe5982302))
+* **operators-js:** Fix intl operator tests. ([841bbe6](https://github.com/lowdefy/lowdefy/commit/841bbe60e507a876c75644422999b2c9a2b48915))
+* **operators-moment:** Change tests to run on UTC timezone. ([f8db062](https://github.com/lowdefy/lowdefy/commit/f8db062b122b28e0e8b5d5808a078dd09766856a))
+* Revert image url ([714ce8c](https://github.com/lowdefy/lowdefy/commit/714ce8c9298738b5097074d68c25db5b24ee272b))
+
+
+### Features
+
+* Add _intl operator. ([fbf4b14](https://github.com/lowdefy/lowdefy/commit/fbf4b14960ad176037546fd67bbe0ababf30aa3e))
+* Add _object.entries and _object.fromEntries operator methods. ([499b726](https://github.com/lowdefy/lowdefy/commit/499b7269f2a91bd079f20a69df7ec7b2823633e4))
+* Add Next-Auth MongoDB adapter. ([bdffb86](https://github.com/lowdefy/lowdefy/commit/bdffb86edf578c5ea603f382b237601c42e14044))
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+* **docs:** Add examples to Lowdefy App Schema concept page. ([f27f7dd](https://github.com/lowdefy/lowdefy/commit/f27f7dd58e9cbb19ab620e4c9b265851a6396617))
+* **docs:** Add examples to References and Templates concept page. ([cbe8690](https://github.com/lowdefy/lowdefy/commit/cbe8690877cfe8495f51f56a0b4284e8245c8dd3))
+* **docs:** Add Menu concept page. ([5dfc51e](https://github.com/lowdefy/lowdefy/commit/5dfc51e2b1975bf45b713a0423a2ed6ce066cd1f))
+* **docs:** Add more to references section on Lowdefy App Schema concept page. ([5837c29](https://github.com/lowdefy/lowdefy/commit/5837c29b0e95dd7432b8f4c6d314179c9aaf1428))
+* **docs:** Add payload to Connections and Requests concept page. ([4f9bff6](https://github.com/lowdefy/lowdefy/commit/4f9bff6889655f6ae7cc4f8f517015adb3c0dc7f))
+* **docs:** Add References and Templates concept page. ([874bc37](https://github.com/lowdefy/lowdefy/commit/874bc37e9ba3e59505d85787af5df0b0686d30c2))
+* **docs:** Add roles example to Menus concept page. ([54c13df](https://github.com/lowdefy/lowdefy/commit/54c13dfac0aa5eabe507227ae174d4123fbcc0a0))
+* **docs:** Add small changes to Blocks concept page. ([b4bcd68](https://github.com/lowdefy/lowdefy/commit/b4bcd68767166479063cf5cf27a7b242846eae2c))
+* **docs:** Change pages example on Lowdefy App Schema concept page. ([1d17867](https://github.com/lowdefy/lowdefy/commit/1d17867585b365a21baccdb87c96bd049a70cda2))
+* **docs:** Format changes to Blocks concept page. ([4713be6](https://github.com/lowdefy/lowdefy/commit/4713be632dbd35ab13855bf6f0c44f72fd0ee5b8))
+* **docs:** General improvements to Events and Actions concept page. ([182ffc2](https://github.com/lowdefy/lowdefy/commit/182ffc2a787b7119716122b35d3035f1fdb5acb1))
+* **docs:** General improvements to the Secrets concept page. ([1121edb](https://github.com/lowdefy/lowdefy/commit/1121edb66a6c4207c867e009bba9a9751aee0319))
+* **docs:** Small changes in Blocks concept page. ([588e4aa](https://github.com/lowdefy/lowdefy/commit/588e4aa679103aeafccfcd3b5c073dd05bb8f7a2))
+* **docs:** Small changes to Connections and Requests concept page. ([7c13734](https://github.com/lowdefy/lowdefy/commit/7c13734c6b8088bd9b0d92f90fa17f1c2ce2aae4))
+* **docs:** Small format changes to Lowdefy App Schema concept page. ([8bf7f78](https://github.com/lowdefy/lowdefy/commit/8bf7f781cb7b85ba7206636816cca5f7dd69073f))
+* **docs:** Small improvements to Lowdefy App Schema concept page. ([3864638](https://github.com/lowdefy/lowdefy/commit/386463869c78c494c05636e1e435419c96917b02))
+* **docs:** Update blocks concept page. ([3e6a9b2](https://github.com/lowdefy/lowdefy/commit/3e6a9b2affd70c97aac60e80a5aa2c291002ad0b))
+* **docs:** Update Connections and Requests concept page. ([879891e](https://github.com/lowdefy/lowdefy/commit/879891e2213cc57bad66ab0b73dba97e93985979))
+* **docs:** Update Lowdefy App Schema concept page. ([7cd587e](https://github.com/lowdefy/lowdefy/commit/7cd587e1d4595c1ce26f57035583971218b4d479))
+* **docs:** Update Lowdefy App Schema Concept Page. ([b39ce85](https://github.com/lowdefy/lowdefy/commit/b39ce85d47b7501974107ea6b3b04178945bb06d))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+* **operators-moment:** Add moment operators. ([bf82067](https://github.com/lowdefy/lowdefy/commit/bf82067e90c247a2a8b8deb111cd8ceb75071bce))
+* Update next-auth. ([972d5f3](https://github.com/lowdefy/lowdefy/commit/972d5f30ce57886419bc26fd5f19e386418e3dbb))
+
+
+
+
+
+# [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
+
+
+### Bug Fixes
+
+* Add additional operator tests. ([ddf8e51](https://github.com/lowdefy/lowdefy/commit/ddf8e51f8b1d9bab1490015021afa2bb0e29c6d8))
+* Add buildAuthPlugin tests. ([df77f5d](https://github.com/lowdefy/lowdefy/commit/df77f5d51e4a36c997040c0575cdf66edc0a371f))
+* **blocks-antd:** Remove minHight on Label. ([0999baa](https://github.com/lowdefy/lowdefy/commit/0999baaa22f476a01e14e769a30a81953a0b2faf))
+* **build:** Add default for catch when try is defined and catch is not. ([b1159e1](https://github.com/lowdefy/lowdefy/commit/b1159e147380e024e66879f4fe2e8061d215cedc))
+* **docs:** Add catch to Selector and MultipleSelector block pages. ([9777175](https://github.com/lowdefy/lowdefy/commit/9777175ed6028d9ee6eabe68e63e14c4508d6d0b))
+* **docs:** correct filePath for ControlledList ([c3a2cce](https://github.com/lowdefy/lowdefy/commit/c3a2cce54ee21064786571977183321f154f058a))
+* **docs:** correct link to _secret operator ([7124669](https://github.com/lowdefy/lowdefy/commit/712466993dd9b35e76d12da3146e6820138d41e6))
+* **docs:** Docs V4 compatibilty fixes. ([520dce1](https://github.com/lowdefy/lowdefy/commit/520dce1f7bfa5d5b2eab36ebb58f340e5bf15cc6))
+* **docs:** Fix typo media to menu. ([bccc978](https://github.com/lowdefy/lowdefy/commit/bccc978190e617689050df44af9183f68ce10ccf))
+* **docs:** Remove catch from MultipleSelector and Selector block pages. ([adf6932](https://github.com/lowdefy/lowdefy/commit/adf6932528f9104905c272282e10ad5369a6bcd3))
+* **docs:** Remove outdated pages and add todos. ([ff2c02b](https://github.com/lowdefy/lowdefy/commit/ff2c02b54476e92bf8a949bd91990d1a112791c3))
+* **docs:** Rename and remove actions pages. ([0da95f3](https://github.com/lowdefy/lowdefy/commit/0da95f3ac97170864519e39b934c5b6ce9626919))
+* Fix _intl.relativeTimeFormat operator and add tests. ([627b970](https://github.com/lowdefy/lowdefy/commit/627b9707073d7298c04683d0265d8eaab1bd2ac2))
+* Fix addUserFieldsToSession when using auth adapter. ([850ee69](https://github.com/lowdefy/lowdefy/commit/850ee69e1ab2245b9abb1af4eeb1636286a6af64))
+* Fix handling of null values in _array and _object operators. ([1333f43](https://github.com/lowdefy/lowdefy/commit/1333f43315fc7895139e1c981992dac83b1dabf1))
+* **operators-js:** Fix intl operator tests. ([841bbe6](https://github.com/lowdefy/lowdefy/commit/841bbe60e507a876c75644422999b2c9a2b48915))
+* **operators-moment:** Change tests to run on UTC timezone. ([f8db062](https://github.com/lowdefy/lowdefy/commit/f8db062b122b28e0e8b5d5808a078dd09766856a))
+* Revert image url ([714ce8c](https://github.com/lowdefy/lowdefy/commit/714ce8c9298738b5097074d68c25db5b24ee272b))
+
+
+### Features
+
+* Add _intl operator. ([fbf4b14](https://github.com/lowdefy/lowdefy/commit/fbf4b14960ad176037546fd67bbe0ababf30aa3e))
+* Add _object.entries and _object.fromEntries operator methods. ([499b726](https://github.com/lowdefy/lowdefy/commit/499b7269f2a91bd079f20a69df7ec7b2823633e4))
+* Add Next-Auth MongoDB adapter. ([bdffb86](https://github.com/lowdefy/lowdefy/commit/bdffb86edf578c5ea603f382b237601c42e14044))
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+* **docs:** Add examples to Lowdefy App Schema concept page. ([f27f7dd](https://github.com/lowdefy/lowdefy/commit/f27f7dd58e9cbb19ab620e4c9b265851a6396617))
+* **docs:** Add examples to References and Templates concept page. ([cbe8690](https://github.com/lowdefy/lowdefy/commit/cbe8690877cfe8495f51f56a0b4284e8245c8dd3))
+* **docs:** Add Menu concept page. ([5dfc51e](https://github.com/lowdefy/lowdefy/commit/5dfc51e2b1975bf45b713a0423a2ed6ce066cd1f))
+* **docs:** Add payload to Connections and Requests concept page. ([4f9bff6](https://github.com/lowdefy/lowdefy/commit/4f9bff6889655f6ae7cc4f8f517015adb3c0dc7f))
+* **docs:** Add References and Templates concept page. ([874bc37](https://github.com/lowdefy/lowdefy/commit/874bc37e9ba3e59505d85787af5df0b0686d30c2))
+* **docs:** Add roles example to Menus concept page. ([54c13df](https://github.com/lowdefy/lowdefy/commit/54c13dfac0aa5eabe507227ae174d4123fbcc0a0))
+* **docs:** Change pages example on Lowdefy App Schema concept page. ([1d17867](https://github.com/lowdefy/lowdefy/commit/1d17867585b365a21baccdb87c96bd049a70cda2))
+* **docs:** Format changes to Blocks concept page. ([4713be6](https://github.com/lowdefy/lowdefy/commit/4713be632dbd35ab13855bf6f0c44f72fd0ee5b8))
+* **docs:** General improvements to Events and Actions concept page. ([182ffc2](https://github.com/lowdefy/lowdefy/commit/182ffc2a787b7119716122b35d3035f1fdb5acb1))
+* **docs:** General improvements to the Secrets concept page. ([1121edb](https://github.com/lowdefy/lowdefy/commit/1121edb66a6c4207c867e009bba9a9751aee0319))
+* **docs:** Small changes in Blocks concept page. ([588e4aa](https://github.com/lowdefy/lowdefy/commit/588e4aa679103aeafccfcd3b5c073dd05bb8f7a2))
+* **docs:** Small changes to Connections and Requests concept page. ([7c13734](https://github.com/lowdefy/lowdefy/commit/7c13734c6b8088bd9b0d92f90fa17f1c2ce2aae4))
+* **docs:** Small format changes to Lowdefy App Schema concept page. ([8bf7f78](https://github.com/lowdefy/lowdefy/commit/8bf7f781cb7b85ba7206636816cca5f7dd69073f))
+* **docs:** Update blocks concept page. ([3e6a9b2](https://github.com/lowdefy/lowdefy/commit/3e6a9b2affd70c97aac60e80a5aa2c291002ad0b))
+* **docs:** Update Connections and Requests concept page. ([879891e](https://github.com/lowdefy/lowdefy/commit/879891e2213cc57bad66ab0b73dba97e93985979))
+* **docs:** Update Lowdefy App Schema concept page. ([7cd587e](https://github.com/lowdefy/lowdefy/commit/7cd587e1d4595c1ce26f57035583971218b4d479))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+* **operators-moment:** Add moment operators. ([bf82067](https://github.com/lowdefy/lowdefy/commit/bf82067e90c247a2a8b8deb111cd8ceb75071bce))
+
+
+
+
+
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 

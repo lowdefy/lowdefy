@@ -32,6 +32,7 @@ import cognito from 'next-auth/providers/cognito';
 import coinbase from 'next-auth/providers/coinbase';
 import discord from 'next-auth/providers/discord';
 import dropbox from 'next-auth/providers/dropbox';
+import duendeids6 from 'next-auth/providers/duende-identity-server6';
 import eveonline from 'next-auth/providers/eveonline';
 import facebook from 'next-auth/providers/facebook';
 import faceit from 'next-auth/providers/faceit';
@@ -67,6 +68,7 @@ import twitch from 'next-auth/providers/twitch';
 import twitter from 'next-auth/providers/twitter';
 import vk from 'next-auth/providers/vk';
 import united_effects from 'next-auth/providers/united-effects';
+import wikimedia from 'next-auth/providers/wikimedia';
 import wordpress from 'next-auth/providers/wordpress';
 import workos from 'next-auth/providers/workos';
 import yandex from 'next-auth/providers/yandex';
@@ -88,6 +90,7 @@ const CognitoProvider = cognito.default;
 const CoinbaseProvider = coinbase.default;
 const DiscordProvider = discord.default;
 const DropboxProvider = dropbox.default;
+const DuendeIDS6Provider = duendeids6.default;
 const EVEOnlineProvider = eveonline.default;
 const FacebookProvider = facebook.default;
 const FaceItProvider = faceit.default;
@@ -123,6 +126,7 @@ const TwitchProvider = twitch.default;
 const TwitterProvider = twitter.default;
 const UnitedEffects = united_effects.default;
 const VkProvider = vk.default;
+const WikimediaProvider = wikimedia.default;
 const WordpressProvider = wordpress.default;
 const WorkOSProvider = workos.default;
 const YandexProvider = yandex.default;
@@ -145,6 +149,7 @@ export {
   CoinbaseProvider,
   DiscordProvider,
   DropboxProvider,
+  DuendeIDS6Provider,
   EVEOnlineProvider,
   FacebookProvider,
   FaceItProvider,
@@ -180,6 +185,7 @@ export {
   TwitterProvider,
   UnitedEffects,
   VkProvider,
+  WikimediaProvider,
   WordpressProvider,
   WorkOSProvider,
   YandexProvider,

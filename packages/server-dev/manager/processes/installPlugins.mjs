@@ -21,15 +21,15 @@ const args = {
   yarn: ['install'],
 };
 
-function installPlugins({ packageManager, packageManagerCmd, options }) {
+function installPlugins({ logger, packageManager, packageManagerCmd }) {
   return async () => {
-    console.log('Installing plugins...');
+    logger.info({ print: 'spin' }, 'Installing plugins...');
     await spawnProcess({
-      logger: console,
       command: packageManagerCmd,
       args: args[packageManager],
-      silent: !options.verbose,
+      stdOutLineHandler: (line) => logger.debug(line),
     });
+    logger.info({ print: 'log' }, 'Installed plugins.');
   };
 }
 

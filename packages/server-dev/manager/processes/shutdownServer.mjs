@@ -17,15 +17,15 @@
 function shutdownServer(context) {
   return () => {
     if (context.nextServer) {
-      // console.log(
-      //   `Existing server ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
-      // );
+      context.logger.debug(
+        `Existing next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+      );
       if (!context.nextServer.killed) {
-        console.log('Shutting down server...');
+        context.logger.info({ print: 'spin' }, 'Shutting down server...');
         context.nextServer.kill();
-        // console.log(
-        //   `Killed server ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
-        // );
+        context.logger.debug(
+          `Killed next server with pid ${context.nextServer.pid}, killed: ${context.nextServer.killed}`
+        );
       }
       context.nextServer = null;
     }

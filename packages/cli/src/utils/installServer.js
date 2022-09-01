@@ -25,13 +25,12 @@ async function installServer({ context, directory }) {
   context.print.spin(`Running ${context.packageManager} install.`);
   try {
     await spawnProcess({
-      logger: context.print,
       command: context.packageManagerCmd,
       args: args[context.packageManager],
+      stdOutLineHandler: (line) => context.print.debug(line),
       processOptions: {
         cwd: directory,
       },
-      silent: false,
     });
   } catch (error) {
     console.log(error);
