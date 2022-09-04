@@ -73,23 +73,34 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
-async function run() {
-  const context = await getContext();
-  await context.initialBuild();
-  await context.startWatchers();
-  try {
-    const serverPromise = startServer(context);
-    await wait(800);
-    if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
-      // TODO: Wait 1 sec for a ping and don't open if a ping is seen
-      opener(`http://localhost:${context.options.port}`);
-    }
-    await serverPromise;
-  } catch (error) {
-    console.log(error);
-    context.shutdownServer();
-    throw error;
-  }
-}
+/* TODO:
+Not killing server on errors properly
+when:
+- initial build fails
+*/
 
-run();
+const context = await getContext();
+
+try {
+  try {
+    await context.initialBuild();
+  } catch (error) {
+    context.logger.error(error);
+  }
+
+  // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
+  // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
+  context.startWatchers();
+
+  startServer(context);
+  await wait(800);
+  if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
+    // TODO: Wait 1 sec for a ping and don't open if a ping is seen
+    opener(`http://localhost:${context.options.port}`);
+  }
+  await new Promise(() => {});
+} catch (error) {
+  context.logger.error(error);
+  context.shutdownServer();
+  process.exit();
+}

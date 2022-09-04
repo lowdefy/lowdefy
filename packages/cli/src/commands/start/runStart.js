@@ -15,21 +15,21 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
+import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 
 async function runStart({ context, directory }) {
-  context.print.spin(`Running "${context.packageManager} run start".`);
   await spawnProcess({
-    logger: context.print,
     args: ['run', 'start'],
     command: context.packageManagerCmd,
+    stdOutLineHandler: createStdOutLineHandler({ context }),
     processOptions: {
       cwd: directory,
       env: {
         ...process.env,
+        LOWDEFY_LOG_LEVEL: context.options.logLevel,
         PORT: context.options.port,
       },
     },
-    silent: false,
   });
 }
 

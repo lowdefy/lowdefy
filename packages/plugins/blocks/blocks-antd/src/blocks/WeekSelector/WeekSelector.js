@@ -60,14 +60,13 @@ const WeekSelector = ({
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               placeholder={properties.placeholder || 'Select Week'}
               size={properties.size}
+              status={validation.status}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               onChange={(newVal) => {
                 methods.setValue(

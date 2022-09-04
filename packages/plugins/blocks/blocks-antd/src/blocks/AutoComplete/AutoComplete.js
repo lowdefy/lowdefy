@@ -16,11 +16,10 @@
 
 import React from 'react';
 import { AutoComplete } from 'antd';
-import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
-import getUniqueValues from '../../getUniqueValues.js';
 
 const Option = AutoComplete.Option;
 
@@ -35,7 +34,6 @@ const AutoCompleteInput = ({
   validation,
   value,
 }) => {
-  const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
       blockId={blockId}
@@ -51,57 +49,34 @@ const AutoCompleteInput = ({
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
             bordered={properties.bordered}
-            className={methods.makeCssClass(properties.inputStyle)}
+            className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
             placeholder={properties.placeholder || 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
             filterOption={(input, option) =>
-              (option.filterstring || option.children.props.html || '')
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
+              `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }
             onChange={(newVal) => {
-              let val = type.isPrimitive(uniqueValueOptions[newVal])
-                ? uniqueValueOptions[newVal]
-                : uniqueValueOptions[newVal].value;
-              if (type.isNone(val)) {
-                val = newVal;
-              }
-              methods.setValue(val);
+              methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange' });
             }}
             onSearch={(newVal) => {
               methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
             }}
-            value={type.isNone(value) ? undefined : value}
+            value={type.isNone(value) ? undefined : `${value}`}
           >
-            {(properties.options || []).map((opt, i) =>
-              type.isPrimitive(opt) ? (
-                <Option
-                  className={methods.makeCssClass(properties.optionsStyle)}
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={`${i}`}
-                >
-                  {renderHtml({ html: `${opt}`, methods })}
-                </Option>
-              ) : (
-                <Option
-                  className={methods.makeCssClass([properties.optionsStyle, opt.style])}
-                  disabled={opt.disabled}
-                  filterstring={opt.filterString}
-                  id={`${blockId}_${i}`}
-                  key={i}
-                  value={`${i}`}
-                >
-                  {type.isNone(opt.label)
-                    ? renderHtml({ html: `${opt.value}`, methods })
-                    : renderHtml({ html: opt.label, methods })}
-                </Option>
-              )
-            )}
+            {(properties.options || []).map((opt, i) => (
+              <Option
+                className={methods.makeCssClass(properties.optionsStyle)}
+                id={`${blockId}_${i}`}
+                key={i}
+                value={`${opt}`}
+              >
+                {`${opt}`}
+              </Option>
+            ))}
           </AutoComplete>
         ),
       }}

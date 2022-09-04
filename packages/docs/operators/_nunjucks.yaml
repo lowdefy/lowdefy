@@ -71,3 +71,17 @@ _ref:
       - Coca Cola: The original.
       - Pepsi: The same but different.
       ```
+
+      ###### Make use of the _nunjucks date filter:
+
+      ```yaml
+      _nunjucks:
+        template: {{ date | date('D MMM YYYY') }}
+        on:
+          date:
+            _date: 2022-08-01
+      ```
+
+      Returns:  `"1 Aug 2022"`
+
+      The `_nunjucks` date filter formats dates using the [moment.js](/https://momentjs.com/docs/#/displaying/format/) library.

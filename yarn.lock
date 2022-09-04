@@ -106,18 +106,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ant-design/react-slick@npm:~0.28.1":
-  version: 0.28.4
-  resolution: "@ant-design/react-slick@npm:0.28.4"
+"@ant-design/react-slick@npm:~0.29.1":
+  version: 0.29.2
+  resolution: "@ant-design/react-slick@npm:0.29.2"
   dependencies:
     "@babel/runtime": ^7.10.4
     classnames: ^2.2.5
     json2mq: ^0.2.0
     lodash: ^4.17.21
-    resize-observer-polyfill: ^1.5.0
+    resize-observer-polyfill: ^1.5.1
   peerDependencies:
     react: ">=16.9.0"
-  checksum: 8b8b076adb56ebccc38383e11bb3dca0d4963104026b55aade06ffdc345041f964d1f9e31d2a405a579e4dd3f550b4e38e01e02b1ecac715b31345a6f3811b0e
+  checksum: a7031466714303d123321cac56fb7fc00ba7702bedbfdac1c7f9dda177dd8a4c34757c4e2d5a9dc7dd118e362e9b8b6f5b6c33557bc1234215336d5eb69081c0
   languageName: node
   linkType: hard
 
@@ -2123,12 +2123,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lowdefy/actions-core@4.0.0-alpha.22, @lowdefy/actions-core@workspace:packages/plugins/actions/actions-core":
+"@lowdefy/actions-core@4.0.0-alpha.26, @lowdefy/actions-core@workspace:packages/plugins/actions/actions-core":
   version: 0.0.0-use.local
   resolution: "@lowdefy/actions-core@workspace:packages/plugins/actions/actions-core"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2137,11 +2137,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/ajv@4.0.0-alpha.22, @lowdefy/ajv@workspace:packages/utils/ajv":
+"@lowdefy/ajv@4.0.0-alpha.26, @lowdefy/ajv@workspace:packages/utils/ajv":
   version: 0.0.0-use.local
   resolution: "@lowdefy/ajv@workspace:packages/utils/ajv"
   dependencies:
-    "@lowdefy/nunjucks": 4.0.0-alpha.22
+    "@lowdefy/nunjucks": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2151,17 +2151,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/api@4.0.0-alpha.22, @lowdefy/api@workspace:packages/api":
+"@lowdefy/api@4.0.0-alpha.26, @lowdefy/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@lowdefy/api@workspace:packages/api"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
-    "@lowdefy/nunjucks": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
-    "@lowdefy/operators-js": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
+    "@lowdefy/nunjucks": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
+    "@lowdefy/operators-js": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2169,13 +2169,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-dev@4.0.0-alpha.22, @lowdefy/block-dev@workspace:packages/utils/block-dev":
+"@lowdefy/block-dev@4.0.0-alpha.26, @lowdefy/block-dev@workspace:packages/utils/block-dev":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-dev@workspace:packages/utils/block-dev"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@testing-library/dom": 8.13.0
@@ -2191,13 +2191,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/block-utils@4.0.0-alpha.22, @lowdefy/block-utils@workspace:packages/utils/block-utils":
+"@lowdefy/block-utils@4.0.0-alpha.26, @lowdefy/block-utils@workspace:packages/utils/block-utils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/block-utils@workspace:packages/utils/block-utils"
   dependencies:
     "@emotion/css": 11.9.0
     "@emotion/jest": 11.9.1
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2214,7 +2214,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-aggrid@4.0.0-alpha.22, @lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid":
+"@lowdefy/blocks-aggrid@4.0.0-alpha.26, @lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-aggrid@workspace:packages/plugins/blocks/blocks-aggrid"
   dependencies:
@@ -2222,10 +2222,10 @@ __metadata:
     "@ag-grid-community/core": 27.3.0
     "@ag-grid-community/react": 27.3.0
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2241,24 +2241,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-antd@4.0.0-alpha.22, @lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd":
+"@lowdefy/blocks-antd@4.0.0-alpha.26, @lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-antd@workspace:packages/plugins/blocks/blocks-antd"
   dependencies:
     "@ant-design/icons": 4.7.0
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     "@testing-library/dom": 8.13.0
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.0
-    antd: 4.20.7
+    antd: 4.22.5
     classnames: 2.3.1
     copyfiles: 2.4.1
     jest: 28.1.0
@@ -2272,15 +2272,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-basic@4.0.0-alpha.22, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
+"@lowdefy/blocks-basic@4.0.0-alpha.26, @lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-basic@workspace:packages/plugins/blocks/blocks-basic"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2297,15 +2297,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-color-selectors@4.0.0-alpha.22, @lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors":
+"@lowdefy/blocks-color-selectors@4.0.0-alpha.26, @lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-color-selectors@workspace:packages/plugins/blocks/blocks-color-selectors"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/blocks-antd": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/blocks-antd": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2324,14 +2324,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-echarts@4.0.0-alpha.22, @lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts":
+"@lowdefy/blocks-echarts@4.0.0-alpha.26, @lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-echarts@workspace:packages/plugins/blocks/blocks-echarts"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2349,14 +2349,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-google-maps@4.0.0-alpha.22, @lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps":
+"@lowdefy/blocks-google-maps@4.0.0-alpha.26, @lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-google-maps@workspace:packages/plugins/blocks/blocks-google-maps"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@react-google-maps/api": 2.12.0
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2373,15 +2373,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-loaders@4.0.0-alpha.22, @lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders":
+"@lowdefy/blocks-loaders@4.0.0-alpha.26, @lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-loaders@workspace:packages/plugins/blocks/blocks-loaders"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2397,14 +2397,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/blocks-markdown@4.0.0-alpha.22, @lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown":
+"@lowdefy/blocks-markdown@4.0.0-alpha.26, @lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown":
   version: 0.0.0-use.local
   resolution: "@lowdefy/blocks-markdown@workspace:packages/plugins/blocks/blocks-markdown"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2425,41 +2425,41 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/build@4.0.0-alpha.22, @lowdefy/build@workspace:packages/build":
+"@lowdefy/build@4.0.0-alpha.26, @lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/actions-core": 4.0.0-alpha.22
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/blocks-aggrid": 4.0.0-alpha.22
-    "@lowdefy/blocks-antd": 4.0.0-alpha.22
-    "@lowdefy/blocks-basic": 4.0.0-alpha.22
-    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.22
-    "@lowdefy/blocks-echarts": 4.0.0-alpha.22
-    "@lowdefy/blocks-google-maps": 4.0.0-alpha.22
-    "@lowdefy/blocks-loaders": 4.0.0-alpha.22
-    "@lowdefy/blocks-markdown": 4.0.0-alpha.22
-    "@lowdefy/connection-axios-http": 4.0.0-alpha.22
-    "@lowdefy/connection-elasticsearch": 4.0.0-alpha.22
-    "@lowdefy/connection-google-sheets": 4.0.0-alpha.22
-    "@lowdefy/connection-knex": 4.0.0-alpha.22
-    "@lowdefy/connection-mongodb": 4.0.0-alpha.22
-    "@lowdefy/connection-redis": 4.0.0-alpha.22
-    "@lowdefy/connection-sendgrid": 4.0.0-alpha.22
-    "@lowdefy/connection-stripe": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
-    "@lowdefy/nunjucks": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
-    "@lowdefy/operators-change-case": 4.0.0-alpha.22
-    "@lowdefy/operators-diff": 4.0.0-alpha.22
-    "@lowdefy/operators-js": 4.0.0-alpha.22
-    "@lowdefy/operators-mql": 4.0.0-alpha.22
-    "@lowdefy/operators-nunjucks": 4.0.0-alpha.22
-    "@lowdefy/operators-uuid": 4.0.0-alpha.22
-    "@lowdefy/operators-yaml": 4.0.0-alpha.22
-    "@lowdefy/plugin-next-auth": 4.0.0-alpha.22
+    "@lowdefy/actions-core": 4.0.0-alpha.26
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/blocks-aggrid": 4.0.0-alpha.26
+    "@lowdefy/blocks-antd": 4.0.0-alpha.26
+    "@lowdefy/blocks-basic": 4.0.0-alpha.26
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.26
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.26
+    "@lowdefy/blocks-google-maps": 4.0.0-alpha.26
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.26
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.26
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.26
+    "@lowdefy/connection-elasticsearch": 4.0.0-alpha.26
+    "@lowdefy/connection-google-sheets": 4.0.0-alpha.26
+    "@lowdefy/connection-knex": 4.0.0-alpha.26
+    "@lowdefy/connection-mongodb": 4.0.0-alpha.26
+    "@lowdefy/connection-redis": 4.0.0-alpha.26
+    "@lowdefy/connection-sendgrid": 4.0.0-alpha.26
+    "@lowdefy/connection-stripe": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
+    "@lowdefy/nunjucks": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
+    "@lowdefy/operators-change-case": 4.0.0-alpha.26
+    "@lowdefy/operators-diff": 4.0.0-alpha.26
+    "@lowdefy/operators-js": 4.0.0-alpha.26
+    "@lowdefy/operators-mql": 4.0.0-alpha.26
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.26
+    "@lowdefy/operators-uuid": 4.0.0-alpha.26
+    "@lowdefy/operators-yaml": 4.0.0-alpha.26
+    "@lowdefy/plugin-next-auth": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2474,17 +2474,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/client@4.0.0-alpha.22, @lowdefy/client@workspace:packages/client":
+"@lowdefy/client@4.0.0-alpha.26, @lowdefy/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@lowdefy/client@workspace:packages/client"
   dependencies:
     "@ant-design/icons": 4.7.0
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/engine": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
-    "@lowdefy/layout": 4.0.0-alpha.22
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/engine": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
+    "@lowdefy/layout": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2501,12 +2501,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-axios-http@4.0.0-alpha.22, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
+"@lowdefy/connection-axios-http@4.0.0-alpha.26, @lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-axios-http@workspace:packages/plugins/connections/connection-axios-http"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2515,13 +2515,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-elasticsearch@4.0.0-alpha.22, @lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch":
+"@lowdefy/connection-elasticsearch@4.0.0-alpha.26, @lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-elasticsearch@workspace:packages/plugins/connections/connection-elasticsearch"
   dependencies:
     "@elastic/elasticsearch": 7.16.0
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2529,12 +2529,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-google-sheets@4.0.0-alpha.22, @lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets":
+"@lowdefy/connection-google-sheets@4.0.0-alpha.26, @lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-google-sheets@workspace:packages/plugins/connections/connection-google-sheets"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2545,12 +2545,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-knex@4.0.0-alpha.22, @lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
+"@lowdefy/connection-knex@4.0.0-alpha.26, @lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-knex@workspace:packages/plugins/connections/connection-knex"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2563,12 +2563,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-mongodb@4.0.0-alpha.22, @lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
+"@lowdefy/connection-mongodb@4.0.0-alpha.26, @lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-mongodb@workspace:packages/plugins/connections/connection-mongodb"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@next-auth/mongodb-adapter": 1.0.3
     "@shelf/jest-mongodb": 2.2.2
     "@swc/cli": 0.1.57
@@ -2580,12 +2580,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-redis@4.0.0-alpha.22, @lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis":
+"@lowdefy/connection-redis@4.0.0-alpha.26, @lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-redis@workspace:packages/plugins/connections/connection-redis"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2594,12 +2594,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-sendgrid@4.0.0-alpha.22, @lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid":
+"@lowdefy/connection-sendgrid@4.0.0-alpha.26, @lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-sendgrid@workspace:packages/plugins/connections/connection-sendgrid"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@sendgrid/mail": 7.7.0
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
@@ -2608,12 +2608,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/connection-stripe@4.0.0-alpha.22, @lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe":
+"@lowdefy/connection-stripe@4.0.0-alpha.26, @lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe":
   version: 0.0.0-use.local
   resolution: "@lowdefy/connection-stripe@workspace:packages/plugins/connections/connection-stripe"
   dependencies:
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2627,7 +2627,7 @@ __metadata:
   resolution: "@lowdefy/docs@workspace:packages/docs"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2635,17 +2635,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/engine@4.0.0-alpha.22, @lowdefy/engine@workspace:packages/engine":
+"@lowdefy/engine@4.0.0-alpha.26, @lowdefy/engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@lowdefy/engine@workspace:packages/engine"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/actions-core": 4.0.0-alpha.22
-    "@lowdefy/build": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
-    "@lowdefy/operators-js": 4.0.0-alpha.22
-    "@lowdefy/operators-mql": 4.0.0-alpha.22
+    "@lowdefy/actions-core": 4.0.0-alpha.26
+    "@lowdefy/build": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
+    "@lowdefy/operators-js": 4.0.0-alpha.26
+    "@lowdefy/operators-mql": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2653,7 +2653,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/helpers@4.0.0-alpha.22, @lowdefy/helpers@workspace:packages/utils/helpers":
+"@lowdefy/helpers@4.0.0-alpha.26, @lowdefy/helpers@workspace:packages/utils/helpers":
   version: 0.0.0-use.local
   resolution: "@lowdefy/helpers@workspace:packages/utils/helpers"
   dependencies:
@@ -2667,7 +2667,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/jest-yaml-transform@4.0.0-alpha.22, @lowdefy/jest-yaml-transform@workspace:packages/utils/jest-yaml-transform":
+"@lowdefy/jest-yaml-transform@4.0.0-alpha.26, @lowdefy/jest-yaml-transform@workspace:packages/utils/jest-yaml-transform":
   version: 0.0.0-use.local
   resolution: "@lowdefy/jest-yaml-transform@workspace:packages/utils/jest-yaml-transform"
   dependencies:
@@ -2679,22 +2679,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/layout@4.0.0-alpha.22, @lowdefy/layout@workspace:packages/layout":
+"@lowdefy/layout@4.0.0-alpha.26, @lowdefy/layout@workspace:packages/layout":
   version: 0.0.0-use.local
   resolution: "@lowdefy/layout@workspace:packages/layout"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     "@testing-library/dom": 8.13.0
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.0
-    antd: 4.20.7
+    antd: 4.22.5
     copyfiles: 2.4.1
     jest: 28.1.0
     jest-environment-jsdom: 28.1.0
@@ -2723,11 +2723,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/node-utils@4.0.0-alpha.22, @lowdefy/node-utils@workspace:packages/utils/node-utils":
+"@lowdefy/node-utils@4.0.0-alpha.26, @lowdefy/node-utils@workspace:packages/utils/node-utils":
   version: 0.0.0-use.local
   resolution: "@lowdefy/node-utils@workspace:packages/utils/node-utils"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2736,11 +2736,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/nunjucks@4.0.0-alpha.22, @lowdefy/nunjucks@workspace:packages/utils/nunjucks":
+"@lowdefy/nunjucks@4.0.0-alpha.26, @lowdefy/nunjucks@workspace:packages/utils/nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/nunjucks@workspace:packages/utils/nunjucks"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2750,12 +2750,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-change-case@4.0.0-alpha.22, @lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case":
+"@lowdefy/operators-change-case@4.0.0-alpha.26, @lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-change-case@workspace:packages/plugins/operators/operators-change-case"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2765,12 +2765,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-diff@4.0.0-alpha.22, @lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff":
+"@lowdefy/operators-diff@4.0.0-alpha.26, @lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-diff@workspace:packages/plugins/operators/operators-diff"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2780,12 +2780,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-js@4.0.0-alpha.22, @lowdefy/operators-js@workspace:packages/plugins/operators/operators-js":
+"@lowdefy/operators-js@4.0.0-alpha.26, @lowdefy/operators-js@workspace:packages/plugins/operators/operators-js":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-js@workspace:packages/plugins/operators/operators-js"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2798,7 +2798,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-moment@workspace:packages/plugins/operators/operators-moment"
   dependencies:
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2808,12 +2808,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-mql@4.0.0-alpha.22, @lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
+"@lowdefy/operators-mql@4.0.0-alpha.26, @lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-mql@workspace:packages/plugins/operators/operators-mql"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2823,13 +2823,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-nunjucks@4.0.0-alpha.22, @lowdefy/operators-nunjucks@workspace:packages/plugins/operators/operators-nunjucks":
+"@lowdefy/operators-nunjucks@4.0.0-alpha.26, @lowdefy/operators-nunjucks@workspace:packages/plugins/operators/operators-nunjucks":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-nunjucks@workspace:packages/plugins/operators/operators-nunjucks"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/nunjucks": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/nunjucks": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2838,12 +2838,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-uuid@4.0.0-alpha.22, @lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid":
+"@lowdefy/operators-uuid@4.0.0-alpha.26, @lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-uuid@workspace:packages/plugins/operators/operators-uuid"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2853,12 +2853,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators-yaml@4.0.0-alpha.22, @lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml":
+"@lowdefy/operators-yaml@4.0.0-alpha.26, @lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators-yaml@workspace:packages/plugins/operators/operators-yaml"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/operators": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/operators": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2868,11 +2868,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/operators@4.0.0-alpha.22, @lowdefy/operators@workspace:packages/operators":
+"@lowdefy/operators@4.0.0-alpha.26, @lowdefy/operators@workspace:packages/operators":
   version: 0.0.0-use.local
   resolution: "@lowdefy/operators@workspace:packages/operators"
   dependencies:
-    "@lowdefy/helpers": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
@@ -2886,19 +2886,19 @@ __metadata:
   resolution: "@lowdefy/plugin-aws@workspace:packages/plugins/plugins/plugin-aws"
   dependencies:
     "@emotion/jest": 11.9.1
-    "@lowdefy/ajv": 4.0.0-alpha.22
-    "@lowdefy/block-dev": 4.0.0-alpha.22
-    "@lowdefy/block-utils": 4.0.0-alpha.22
-    "@lowdefy/blocks-antd": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.22
+    "@lowdefy/ajv": 4.0.0-alpha.26
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/blocks-antd": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     "@testing-library/dom": 8.13.0
     "@testing-library/react": 13.3.0
     "@testing-library/user-event": 14.2.0
-    antd: 4.20.7
+    antd: 4.22.5
     aws-sdk: 2.1145.0
     copyfiles: 2.4.1
     jest: 28.1.0
@@ -2909,7 +2909,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@lowdefy/plugin-next-auth@4.0.0-alpha.22, @lowdefy/plugin-next-auth@workspace:packages/plugins/plugins/plugin-next-auth":
+"@lowdefy/plugin-next-auth@4.0.0-alpha.26, @lowdefy/plugin-next-auth@workspace:packages/plugins/plugins/plugin-next-auth":
   version: 0.0.0-use.local
   resolution: "@lowdefy/plugin-next-auth@workspace:packages/plugins/plugins/plugin-next-auth"
   dependencies:
@@ -2917,7 +2917,7 @@ __metadata:
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     jest: 28.1.0
-    next-auth: 4.9.0
+    next-auth: 4.10.3
   languageName: unknown
   linkType: soft
 
@@ -2925,38 +2925,39 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server-dev@workspace:packages/server-dev"
   dependencies:
-    "@lowdefy/actions-core": 4.0.0-alpha.22
-    "@lowdefy/api": 4.0.0-alpha.22
-    "@lowdefy/blocks-antd": 4.0.0-alpha.22
-    "@lowdefy/blocks-basic": 4.0.0-alpha.22
-    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.22
-    "@lowdefy/blocks-echarts": 4.0.0-alpha.22
-    "@lowdefy/blocks-loaders": 4.0.0-alpha.22
-    "@lowdefy/blocks-markdown": 4.0.0-alpha.22
-    "@lowdefy/build": 4.0.0-alpha.22
-    "@lowdefy/client": 4.0.0-alpha.22
-    "@lowdefy/connection-axios-http": 4.0.0-alpha.22
-    "@lowdefy/engine": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/layout": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
-    "@lowdefy/operators-change-case": 4.0.0-alpha.22
-    "@lowdefy/operators-diff": 4.0.0-alpha.22
-    "@lowdefy/operators-js": 4.0.0-alpha.22
-    "@lowdefy/operators-mql": 4.0.0-alpha.22
-    "@lowdefy/operators-nunjucks": 4.0.0-alpha.22
-    "@lowdefy/operators-uuid": 4.0.0-alpha.22
-    "@lowdefy/operators-yaml": 4.0.0-alpha.22
-    "@lowdefy/plugin-next-auth": 4.0.0-alpha.22
+    "@lowdefy/actions-core": 4.0.0-alpha.26
+    "@lowdefy/api": 4.0.0-alpha.26
+    "@lowdefy/blocks-antd": 4.0.0-alpha.26
+    "@lowdefy/blocks-basic": 4.0.0-alpha.26
+    "@lowdefy/blocks-color-selectors": 4.0.0-alpha.26
+    "@lowdefy/blocks-echarts": 4.0.0-alpha.26
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.26
+    "@lowdefy/blocks-markdown": 4.0.0-alpha.26
+    "@lowdefy/build": 4.0.0-alpha.26
+    "@lowdefy/client": 4.0.0-alpha.26
+    "@lowdefy/connection-axios-http": 4.0.0-alpha.26
+    "@lowdefy/engine": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/layout": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
+    "@lowdefy/operators-change-case": 4.0.0-alpha.26
+    "@lowdefy/operators-diff": 4.0.0-alpha.26
+    "@lowdefy/operators-js": 4.0.0-alpha.26
+    "@lowdefy/operators-mql": 4.0.0-alpha.26
+    "@lowdefy/operators-nunjucks": 4.0.0-alpha.26
+    "@lowdefy/operators-uuid": 4.0.0-alpha.26
+    "@lowdefy/operators-yaml": 4.0.0-alpha.26
+    "@lowdefy/plugin-next-auth": 4.0.0-alpha.26
     "@next/eslint-plugin-next": 12.1.6
     chokidar: 3.5.3
     dotenv: 16.0.1
     less: 4.1.2
     less-loader: 11.0.0
     next: 12.1.6
-    next-auth: 4.9.0
+    next-auth: 4.10.3
     next-with-less: 2.0.5
     opener: 1.5.2
+    pino: 8.1.0
     process: 0.11.10
     react: 18.1.0
     react-dom: 18.1.0
@@ -2971,23 +2972,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@lowdefy/server@workspace:packages/server"
   dependencies:
-    "@lowdefy/actions-core": 4.0.0-alpha.22
-    "@lowdefy/api": 4.0.0-alpha.22
-    "@lowdefy/blocks-antd": 4.0.0-alpha.22
-    "@lowdefy/blocks-basic": 4.0.0-alpha.22
-    "@lowdefy/blocks-loaders": 4.0.0-alpha.22
-    "@lowdefy/build": 4.0.0-alpha.22
-    "@lowdefy/client": 4.0.0-alpha.22
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/layout": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
-    "@lowdefy/operators-js": 4.0.0-alpha.22
-    "@lowdefy/plugin-next-auth": 4.0.0-alpha.22
+    "@lowdefy/actions-core": 4.0.0-alpha.26
+    "@lowdefy/api": 4.0.0-alpha.26
+    "@lowdefy/blocks-antd": 4.0.0-alpha.26
+    "@lowdefy/blocks-basic": 4.0.0-alpha.26
+    "@lowdefy/blocks-loaders": 4.0.0-alpha.26
+    "@lowdefy/build": 4.0.0-alpha.26
+    "@lowdefy/client": 4.0.0-alpha.26
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/layout": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
+    "@lowdefy/operators-js": 4.0.0-alpha.26
+    "@lowdefy/plugin-next-auth": 4.0.0-alpha.26
     "@next/eslint-plugin-next": 12.1.6
     less: 4.1.2
     less-loader: 11.0.0
     next: 12.1.6
-    next-auth: 4.9.0
+    next-auth: 4.10.3
     next-with-less: 2.0.5
     process: 0.11.10
     react: 18.1.0
@@ -3884,6 +3885,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@testing-library/user-event@npm:^14.4.2":
+  version: 14.4.3
+  resolution: "@testing-library/user-event@npm:14.4.3"
+  peerDependencies:
+    "@testing-library/dom": ">=7.21.4"
+  checksum: 852c48ea6db1c9471b18276617c84fec4320771e466cd58339a732ca3fd73ad35e5a43ae14f51af51a8d0a150dcf60fcaab049ef367871207bea8f92c4b8195e
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:1":
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
@@ -4657,58 +4667,59 @@ __metadata:
   languageName: node
   linkType: hard
 
-"antd@npm:4.20.7":
-  version: 4.20.7
-  resolution: "antd@npm:4.20.7"
+"antd@npm:4.22.5":
+  version: 4.22.5
+  resolution: "antd@npm:4.22.5"
   dependencies:
     "@ant-design/colors": ^6.0.0
     "@ant-design/icons": ^4.7.0
-    "@ant-design/react-slick": ~0.28.1
-    "@babel/runtime": ^7.12.5
+    "@ant-design/react-slick": ~0.29.1
+    "@babel/runtime": ^7.18.3
     "@ctrl/tinycolor": ^3.4.0
+    "@testing-library/user-event": ^14.4.2
     classnames: ^2.2.6
     copy-to-clipboard: ^3.2.0
     lodash: ^4.17.21
     memoize-one: ^6.0.0
     moment: ^2.29.2
-    rc-cascader: ~3.5.0
+    rc-cascader: ~3.6.0
     rc-checkbox: ~2.3.0
-    rc-collapse: ~3.1.0
-    rc-dialog: ~8.8.1
-    rc-drawer: ~4.4.2
-    rc-dropdown: ~3.5.0
-    rc-field-form: ~1.26.1
-    rc-image: ~5.6.0
+    rc-collapse: ~3.3.0
+    rc-dialog: ~8.9.0
+    rc-drawer: ~5.1.0
+    rc-dropdown: ~4.0.0
+    rc-field-form: ~1.27.0
+    rc-image: ~5.7.0
     rc-input: ~0.0.1-alpha.5
-    rc-input-number: ~7.3.0
-    rc-mentions: ~1.7.0
-    rc-menu: ~9.5.5
-    rc-motion: ^2.5.1
+    rc-input-number: ~7.3.5
+    rc-mentions: ~1.9.1
+    rc-menu: ~9.6.0
+    rc-motion: ^2.6.1
     rc-notification: ~4.6.0
-    rc-pagination: ~3.1.9
-    rc-picker: ~2.6.4
-    rc-progress: ~3.2.1
+    rc-pagination: ~3.1.17
+    rc-picker: ~2.6.10
+    rc-progress: ~3.3.2
     rc-rate: ~2.9.0
     rc-resize-observer: ^1.2.0
-    rc-segmented: "~2.1.0 "
+    rc-segmented: ~2.1.0
     rc-select: ~14.1.1
     rc-slider: ~10.0.0
     rc-steps: ~4.1.0
     rc-switch: ~3.2.0
-    rc-table: ~7.24.0
-    rc-tabs: ~11.13.0
+    rc-table: ~7.25.3
+    rc-tabs: ~11.16.0
     rc-textarea: ~0.3.0
-    rc-tooltip: ~5.1.1
-    rc-tree: ~5.5.0
-    rc-tree-select: ~5.3.0
+    rc-tooltip: ~5.2.0
+    rc-tree: ~5.6.5
+    rc-tree-select: ~5.4.0
     rc-trigger: ^5.2.10
     rc-upload: ~4.3.0
-    rc-util: ^5.20.0
+    rc-util: ^5.22.5
     scroll-into-view-if-needed: ^2.2.25
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: aa0ff43ff8347da5bf04c043488135c6b8901673bc4d8c458e6c4543b0b85b08564a827ba54779cc00f5512dc77b387d1ff836e03d2ab376946d1219f4f0ee15
+  checksum: 43cc6a784f1bfa214e5b9f9d2c2eede70b749bf47f8a6f02d5ad1a5f4d9d662dfc5ca1a6dcc85a0d9fec7339f64e652d953d585421ed6b3762a3b70cb7507f41
   languageName: node
   linkType: hard
 
@@ -4926,6 +4937,13 @@ __metadata:
   version: 1.0.0
   resolution: "at-least-node@npm:1.0.0"
   checksum: 463e2f8e43384f1afb54bc68485c436d7622acec08b6fad269b421cb1d29cebb5af751426793d0961ed243146fe4dc983402f6d5a51b720b277818dbf6f2e49e
+  languageName: node
+  linkType: hard
+
+"atomic-sleep@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "atomic-sleep@npm:1.0.0"
+  checksum: b95275afb2f80732f22f43a60178430c468906a415a7ff18bcd0feeebc8eec3930b51250aeda91a476062a90e07132b43a1794e8d8ffcf9b650e8139be75fa36
   languageName: node
   linkType: hard
 
@@ -5519,16 +5537,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:4.1.2, chalk@npm:^4.0.0, chalk@npm:^4.1.0":
-  version: 4.1.2
-  resolution: "chalk@npm:4.1.2"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
-  languageName: node
-  linkType: hard
-
 "chalk@npm:^2.0.0":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
@@ -5547,6 +5555,16 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 8e3ddf3981c4da405ddbd7d9c8d91944ddf6e33d6837756979f7840a29272a69a5189ecae0ff84006750d6d1e92368d413335eab4db5476db6e6703a1d1e0505
+  languageName: node
+  linkType: hard
+
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
+  version: 4.1.2
+  resolution: "chalk@npm:4.1.2"
+  dependencies:
+    ansi-styles: ^4.1.0
+    supports-color: ^7.1.0
+  checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
   languageName: node
   linkType: hard
 
@@ -5883,10 +5901,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.0.0":
-  version: 9.0.0
-  resolution: "commander@npm:9.0.0"
-  checksum: 15066e433d528315ded8261d16bc600d1f3c5671c75021e685ae67e4d62f7551243ff28411b28dc0a6f8b23c2a0f033550ec6f3e66bdf9d11a4fdc2d33dd9802
+"commander@npm:9.4.0":
+  version: 9.4.0
+  resolution: "commander@npm:9.4.0"
+  checksum: a322de584a6ccd1ea83c24f6a660e52d16ffbe2613fcfbb8d2cc68bc9dec637492456d754fe8bb5b039ad843ed8e04fb0b107e581a75f62cde9e1a0ab1546e09
   languageName: node
   linkType: hard
 
@@ -7431,6 +7449,13 @@ __metadata:
   version: 2.0.6
   resolution: "fast-levenshtein@npm:2.0.6"
   checksum: 92cfec0a8dfafd9c7a15fba8f2cc29cd0b62b85f056d99ce448bbcd9f708e18ab2764bda4dd5158364f4145a7c72788538994f0d1787b956ef0d1062b0f7c24c
+  languageName: node
+  linkType: hard
+
+"fast-redact@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "fast-redact@npm:3.1.1"
+  checksum: e486cc9990b5c9724f39bf4e392c1b250c8fd5e8c0145be80c73de3461fc390babe7b48f35746b50bf3cbcd917e093b5685ae66295162c7d9b686a761d48e989
   languageName: node
   linkType: hard
 
@@ -10360,14 +10385,13 @@ __metadata:
   resolution: "lowdefy@workspace:packages/cli"
   dependencies:
     "@jest/globals": 28.1.0
-    "@lowdefy/helpers": 4.0.0-alpha.22
-    "@lowdefy/node-utils": 4.0.0-alpha.22
+    "@lowdefy/helpers": 4.0.0-alpha.26
+    "@lowdefy/node-utils": 4.0.0-alpha.26
     "@swc/cli": 0.1.57
     "@swc/core": 1.2.194
     "@swc/jest": 0.2.21
     axios: 0.27.2
-    chalk: 4.1.2
-    commander: 9.0.0
+    commander: 9.4.0
     decompress: 4.2.1
     decompress-targz: 4.1.1
     dotenv: 16.0.1
@@ -11595,9 +11619,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:4.9.0":
-  version: 4.9.0
-  resolution: "next-auth@npm:4.9.0"
+"next-auth@npm:4.10.3":
+  version: 4.10.3
+  resolution: "next-auth@npm:4.10.3"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -11615,7 +11639,7 @@ __metadata:
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 7f776f0a8db26bb19c4fd2b916e38fc27b1e046cc173541d7c398605b3f538c898907ff09b3010a3610b9ddb31e25009056377e3ed33dee68930346ed6dd4eb9
+  checksum: 7c78fe88a8be3a7fb1947d151ed3cb45e549f652acbf7aeadcae405a4a62998d068656702df88f4e240ad5348b8f8428b0c4d3f5dd5a870fb2e6c1597130b815
   languageName: node
   linkType: hard
 
@@ -12181,6 +12205,13 @@ __metadata:
   version: 5.0.1
   resolution: "oidc-token-hash@npm:5.0.1"
   checksum: d62aa8c665f1a0133a3694785e4cd75f471364e6a2f4fbf7997e193a49ccf8f8de15596f475c7fdf8510d021c3b72f7ff6ab8bc5b07bff4cf21d490177f164a5
+  languageName: node
+  linkType: hard
+
+"on-exit-leak-free@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "on-exit-leak-free@npm:2.1.0"
+  checksum: 7334d98b87b0c89c9b69c747760b21196ff35afdedc4eaf1a0a3a02964463d7f6802481b120e4c8298967c74773ca7b914ab2eb3d9b279010eb7f67ac4960eed
   languageName: node
   linkType: hard
 
@@ -12776,6 +12807,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pino-abstract-transport@npm:v1.0.0":
+  version: 1.0.0
+  resolution: "pino-abstract-transport@npm:1.0.0"
+  dependencies:
+    readable-stream: ^4.0.0
+    split2: ^4.0.0
+  checksum: 05dd0eda52dd99fd204b39fe7b62656744b63e863bc052cdd5105d25f226a236966d0a46e39a1ace4838f6e988c608837ff946d2d0bc92835ca7baa0a3bff8d8
+  languageName: node
+  linkType: hard
+
+"pino-std-serializers@npm:^5.0.0":
+  version: 5.6.0
+  resolution: "pino-std-serializers@npm:5.6.0"
+  checksum: aaea5bdb99b45889a370a1f8de316343be6a65a528ba3a0a989522a0d265197d71991659456d8df140017669cbc4466cae53c399a7f15e1c287e8e4bdf8f2fe5
+  languageName: node
+  linkType: hard
+
+"pino@npm:8.1.0":
+  version: 8.1.0
+  resolution: "pino@npm:8.1.0"
+  dependencies:
+    atomic-sleep: ^1.0.0
+    fast-redact: ^3.1.1
+    on-exit-leak-free: ^2.1.0
+    pino-abstract-transport: v1.0.0
+    pino-std-serializers: ^5.0.0
+    process-warning: ^2.0.0
+    quick-format-unescaped: ^4.0.3
+    real-require: ^0.1.0
+    safe-stable-stringify: ^2.3.1
+    sonic-boom: ^3.0.0
+    thread-stream: ^1.0.0
+  bin:
+    pino: bin.js
+  checksum: 4912f40bdd78d53c92703606e84fede324900a9a6a6e18ee0834eff61f41fce5709902362fcfd180faaf956f567a0791161fe408de17cc68aa2f83e9b9361866
+  languageName: node
+  linkType: hard
+
 "pirates@npm:^4.0.4":
   version: 4.0.5
   resolution: "pirates@npm:4.0.5"
@@ -12952,6 +13021,13 @@ __metadata:
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
   checksum: 1d38588e520dab7cea67cbbe2efdd86a10cc7a074c09657635e34f035277b59fbb57d09d8638346bf7090f8e8ebc070c96fa5fd183b777fff4f5edff5e9466cf
+  languageName: node
+  linkType: hard
+
+"process-warning@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "process-warning@npm:2.0.0"
+  checksum: a2bb299835bced58e63cbe06a8fd6e048a648d3649e81b62c442b63112a3f0a86912e7b1a9c557daca30652232d3b0a7f1972fb87c36334e2a5a6f3d5c4a76c9
   languageName: node
   linkType: hard
 
@@ -13173,6 +13249,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"quick-format-unescaped@npm:^4.0.3":
+  version: 4.0.4
+  resolution: "quick-format-unescaped@npm:4.0.4"
+  checksum: 7bc32b99354a1aa46c089d2a82b63489961002bb1d654cee3e6d2d8778197b68c2d854fd23d8422436ee1fdfd0abaddc4d4da120afe700ade68bd357815b26fd
+  languageName: node
+  linkType: hard
+
 "quick-lru@npm:^4.0.1":
   version: 4.0.1
   resolution: "quick-lru@npm:4.0.1"
@@ -13204,20 +13287,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-cascader@npm:~3.5.0":
-  version: 3.5.0
-  resolution: "rc-cascader@npm:3.5.0"
+"rc-cascader@npm:~3.6.0":
+  version: 3.6.2
+  resolution: "rc-cascader@npm:3.6.2"
   dependencies:
     "@babel/runtime": ^7.12.5
     array-tree-filter: ^2.1.0
     classnames: ^2.3.1
     rc-select: ~14.1.0
-    rc-tree: ~5.5.0
+    rc-tree: ~5.6.3
     rc-util: ^5.6.1
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 458df17782a57f1bd97cd231f9462fef1c02c53b26153c1110b80e11a5841ed94e4260cf7f75a5fa844bf1107dbc39043918d64f00dd05e5e3529db01d5d73c2
+  checksum: f94aef618d03eed4a7a24fe3833a911d10f511eb70d961144d97c7341d5df139cbd2acb7f334729336f1bb1a1cf2b359c66ebe96e7d852994bed7492f3705f1a
   languageName: node
   linkType: hard
 
@@ -13234,9 +13317,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-collapse@npm:~3.1.0":
-  version: 3.1.4
-  resolution: "rc-collapse@npm:3.1.4"
+"rc-collapse@npm:~3.3.0":
+  version: 3.3.1
+  resolution: "rc-collapse@npm:3.3.1"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: 2.x
@@ -13246,13 +13329,13 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: df7bb7cbe5652c2b61f5bfb86c0141e387b2eac337389bbc5a79bb222d9d53281e8e7f7ae3ce4a4fd28591689580cbe267c3d9b095209af2fb8d2b6d334ba8bb
+  checksum: 5070f529450511f18e7f0fcfd459c2009714d19bc61c5ed76564b0d41b0425916bf1ec8273e89895087aa9fecdde69cc0f67481a8967d99bd0ea8dbf7f0dc6c4
   languageName: node
   linkType: hard
 
-"rc-dialog@npm:~8.8.0, rc-dialog@npm:~8.8.1":
-  version: 8.8.1
-  resolution: "rc-dialog@npm:8.8.1"
+"rc-dialog@npm:~8.9.0":
+  version: 8.9.0
+  resolution: "rc-dialog@npm:8.9.0"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.6
@@ -13261,42 +13344,43 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: de4214021bccd8d6f74dcc1b04e77048ed059d75b59a0762137a85987e8e0890db210d5026c0e1ad9cf5e99a25c03043d51e75c5b02372f0e2e4a3d047ca3568
+  checksum: 8bed8d4926825d5de1b581e4bb5807fad893ad36a3a7512ccbfa8ce30cb8d357f7421774d15bde73f4f3153bae37893c2a5e7b0fd47e851acce760d10765cf21
   languageName: node
   linkType: hard
 
-"rc-drawer@npm:~4.4.2":
-  version: 4.4.3
-  resolution: "rc-drawer@npm:4.4.3"
+"rc-drawer@npm:~5.1.0":
+  version: 5.1.0
+  resolution: "rc-drawer@npm:5.1.0"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.6
-    rc-util: ^5.7.0
+    rc-motion: ^2.6.1
+    rc-util: ^5.21.2
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: bb0b3932dbe351f67c21221d08612272854166d84c4425beda365e17d89c356aecfd964f7f6451a19eb31034c4b22e515939bef1319a067c2a669541e1658084
+  checksum: dc2ce0924b338c8a68975bdc66ece46bf640f3ce522f002ce15d17236184f2377900d190fa7699edc1063c3e62829bd4d3f2a75405b63e8f47e5d9c440d824ef
   languageName: node
   linkType: hard
 
-"rc-dropdown@npm:~3.5.0":
-  version: 3.5.2
-  resolution: "rc-dropdown@npm:3.5.2"
+"rc-dropdown@npm:~4.0.0":
+  version: 4.0.1
+  resolution: "rc-dropdown@npm:4.0.1"
   dependencies:
-    "@babel/runtime": ^7.10.1
+    "@babel/runtime": ^7.18.3
     classnames: ^2.2.6
-    rc-trigger: ^5.0.4
+    rc-trigger: ^5.3.1
     rc-util: ^5.17.0
   peerDependencies:
     react: ">=16.11.0"
     react-dom: ">=16.11.0"
-  checksum: c83fb3b5b80fa20cde80825769069fafa0c3923cec48beddc464ec26ca3ec1d03581ff20aae73454f1ccb146209384c63d787fd304aa6460619c35860070fb44
+  checksum: 12d16fc49dbab3f548ba1674b12cf688f58bcb73932285354a506b2f443aa58dc09cad3e07edb5d8de8e659c91b985022eef0734f233b76261af1b17a61ce619
   languageName: node
   linkType: hard
 
-"rc-field-form@npm:~1.26.1":
-  version: 1.26.6
-  resolution: "rc-field-form@npm:1.26.6"
+"rc-field-form@npm:~1.27.0":
+  version: 1.27.1
+  resolution: "rc-field-form@npm:1.27.1"
   dependencies:
     "@babel/runtime": ^7.18.0
     async-validator: ^4.1.0
@@ -13304,36 +13388,36 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 45238fb38aea97a6feb4174d856e4a021181002f5219bf2a02073d65c9952fecbb414a8d1b435aed778ed7b6b07539837d3363ccbd478d9c9274b7668bf1adc9
+  checksum: 120808dd7e0f07dcb83806b495fa14e0a837dce7a61001bd78707f0d6d1f49284ea6648d3ff1e5505a09e44c7487d62bead208634b1c9b0ca40dfe4f62b906a8
   languageName: node
   linkType: hard
 
-"rc-image@npm:~5.6.0":
-  version: 5.6.2
-  resolution: "rc-image@npm:5.6.2"
+"rc-image@npm:~5.7.0":
+  version: 5.7.1
+  resolution: "rc-image@npm:5.7.1"
   dependencies:
     "@babel/runtime": ^7.11.2
     classnames: ^2.2.6
-    rc-dialog: ~8.8.0
+    rc-dialog: ~8.9.0
     rc-util: ^5.0.6
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: ab831cd9a3837029bb771f027e50ae67c3c4f5d6d99afd45fe3362947941f9b69d04634b8d840e8729065561017b8699ea03ee94dfc010b060e11d5c6b3f90a2
+  checksum: f38a6b109f9b3606cdbdddbfb2e96477f11d6e9a89205ed10cf32ea99df39fade025980d0d6e45ed472e5872524c47f2e0b36b46394a26ac0cdf931d69e613e6
   languageName: node
   linkType: hard
 
-"rc-input-number@npm:~7.3.0":
-  version: 7.3.4
-  resolution: "rc-input-number@npm:7.3.4"
+"rc-input-number@npm:~7.3.5":
+  version: 7.3.6
+  resolution: "rc-input-number@npm:7.3.6"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.5
-    rc-util: ^5.9.8
+    rc-util: ^5.23.0
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 18cef039a8eb3a445547b6904912c87e8a72ec7ebd6caf2a758d2ac0ce9b2a25839db5f159d3de74861b18c38ba0ffe7b948f67e141fe9a12034c1894d2c3d1b
+  checksum: 4a807ff200a802edb83fc2dcdf0f815ff4abb4055495555f54c3c0b1f2a18aa099359f2196a8f804cf4318f751e804abc441a660fad8e2abfee42081b8a8bf29
   languageName: node
   linkType: hard
 
@@ -13351,26 +13435,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-mentions@npm:~1.7.0":
-  version: 1.7.1
-  resolution: "rc-mentions@npm:1.7.1"
+"rc-mentions@npm:~1.9.1":
+  version: 1.9.1
+  resolution: "rc-mentions@npm:1.9.1"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.6
-    rc-menu: ~9.5.1
+    rc-menu: ~9.6.0
     rc-textarea: ^0.3.0
     rc-trigger: ^5.0.4
-    rc-util: ^5.0.1
+    rc-util: ^5.22.5
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: f6ee2705d8de091a2f565097d1e18f7e4402779582bac8d0cc4d5dba50bca4e5dd4cad563b6204871f11ba48b7a6ecabb43eef2522dbda9c2457e18a2ce02ce3
+  checksum: 348088f54382d7938e7e9847e9055d6ab9519af30d9a4114d70686e29be6aed85945a0a38614571724d1bcb3de56f3c4f530e0edd8f7be95e0aba792c7750ef2
   languageName: node
   linkType: hard
 
-"rc-menu@npm:~9.5.1, rc-menu@npm:~9.5.5":
-  version: 9.5.5
-  resolution: "rc-menu@npm:9.5.5"
+"rc-menu@npm:~9.6.0":
+  version: 9.6.3
+  resolution: "rc-menu@npm:9.6.3"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: 2.x
@@ -13382,11 +13466,11 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 168fda92f7348eedb95a9cf3b959eb20ae7401e0a17268f2a2d5093c39cca7aa0132ad8872e866a02bc565b59755aacdbbf1e8b039f85ce0a2efed52c7ff5b9a
+  checksum: 9f0faf722466cab90685f37d0a00740c5fa8b675fbbfa8184eaaa8015396436363db412d85fd70fd05af9230ca73c47c7118bd37137baf9f849fabe2f96dc4ba
   languageName: node
   linkType: hard
 
-"rc-motion@npm:2.6.0, rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.2.0, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4, rc-motion@npm:^2.5.1":
+"rc-motion@npm:2.6.0, rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.2.0, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4":
   version: 2.6.0
   resolution: "rc-motion@npm:2.6.0"
   dependencies:
@@ -13397,6 +13481,20 @@ __metadata:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
   checksum: cb0d5f168653a7ddeb6d89e666e66022504251e48443fc74d6d7db51a8dc7685cb89be4838ec09c655033d022c27b07595a38745329895b382468646aa4b53e7
+  languageName: node
+  linkType: hard
+
+"rc-motion@npm:^2.6.1":
+  version: 2.6.2
+  resolution: "rc-motion@npm:2.6.2"
+  dependencies:
+    "@babel/runtime": ^7.11.1
+    classnames: ^2.2.1
+    rc-util: ^5.21.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: e91ec8a9f8748ae34d6f9c0380d4587729453c7c8afe23c026ff096905b5a24672b050e04789061c833994e05ed18fec02919bc0e27c1e05b06fe7a0c0b75532
   languageName: node
   linkType: hard
 
@@ -13430,22 +13528,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-pagination@npm:~3.1.9":
-  version: 3.1.16
-  resolution: "rc-pagination@npm:3.1.16"
+"rc-pagination@npm:~3.1.17":
+  version: 3.1.17
+  resolution: "rc-pagination@npm:3.1.17"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.1
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 0ed7783731745a463af9cb290c5aae60ae270e4a12e614085117082e353058f601b096ee4515919b0c9ceb944ab242860da77113ea492d914e122062ae71b3c3
+  checksum: 34852cfc85ee39436eff45ec29f2cf56285b26bf53a19800d453a9bdc2b46dac7567637bd878061cf643519ec487ba0b65ea8571e4d4b4ca8665b93fb62904a6
   languageName: node
   linkType: hard
 
-"rc-picker@npm:~2.6.4":
-  version: 2.6.9
-  resolution: "rc-picker@npm:2.6.9"
+"rc-picker@npm:~2.6.10":
+  version: 2.6.10
+  resolution: "rc-picker@npm:2.6.10"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.1
@@ -13458,13 +13556,13 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 881b98d8227571b194e8c980e629bf1349f1261976a93638ddc9f171a4c155454cdc30b5b5caea18de1e541222b38fddb0aee314a409d001e37cde682d2aa000
+  checksum: 4a94b64ce57d6bbd9dab3b496c652ccfb05f4a621e1cfbd71071a81fc184dc81dc3a4a6095765c34b20f547774adbc8615125179ca89b0795c38c966a5cce135
   languageName: node
   linkType: hard
 
-"rc-progress@npm:~3.2.1":
-  version: 3.2.4
-  resolution: "rc-progress@npm:3.2.4"
+"rc-progress@npm:~3.3.2":
+  version: 3.3.3
+  resolution: "rc-progress@npm:3.3.3"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.6
@@ -13472,7 +13570,7 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 9efc3c3296a0dbdd35a3f399a427b33d67aae966a00016dc2acf7f2ad09ce937a9d5c73ccf2531e8f096469088811eb4d9fb390a46a27284c40d3b91e66ec473
+  checksum: ab1126f2ea565d5ca7a8f4d045198037a17b5053d54e2a9f6932eeeeb524917804979d8c21f35d19876ccdfd65eaf3047b08b4563c88b6bb656fc0a5a3e4d6cc
   languageName: node
   linkType: hard
 
@@ -13505,7 +13603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-segmented@npm:~2.1.0 ":
+"rc-segmented@npm:~2.1.0":
   version: 2.1.0
   resolution: "rc-segmented@npm:2.1.0"
   dependencies:
@@ -13582,36 +13680,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-table@npm:~7.24.0":
-  version: 7.24.2
-  resolution: "rc-table@npm:7.24.2"
+"rc-table@npm:~7.25.3":
+  version: 7.25.3
+  resolution: "rc-table@npm:7.25.3"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.5
     rc-resize-observer: ^1.1.0
-    rc-util: ^5.14.0
+    rc-util: ^5.22.5
     shallowequal: ^1.1.0
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: a9402da364442f8a84bf13e5638a1cee6fce79df6cc301beec8e234a64a127eab4ec7d055e11e0274205c5014893deacbfdc9288594c578179c3e46ffc1b8478
+  checksum: d5c4f82b06cceeec69bbcb3a91cd7b03f9f733e2f14e18c654416bdf772007e145b8f781be1ec56d94085fd544d79c301277642dae6edebde7772d098d1b3073
   languageName: node
   linkType: hard
 
-"rc-tabs@npm:~11.13.0":
-  version: 11.13.0
-  resolution: "rc-tabs@npm:11.13.0"
+"rc-tabs@npm:~11.16.0":
+  version: 11.16.1
+  resolution: "rc-tabs@npm:11.16.1"
   dependencies:
     "@babel/runtime": ^7.11.2
     classnames: 2.x
-    rc-dropdown: ~3.5.0
-    rc-menu: ~9.5.1
+    rc-dropdown: ~4.0.0
+    rc-menu: ~9.6.0
     rc-resize-observer: ^1.0.0
     rc-util: ^5.5.0
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 382c63e6985deace50225dd321a81f149b47abe2d01fd9adaadaf8aa2b007725645a5c3cf8cee5c79dcb3e85d930521b210e93c682d24f381da5ad0f1515d888
+  checksum: 83d0f5f4905f0b588eba1cb95d0cf61a319b02f40d035157aef7bdc32a27801dad79f8d5f2bf052e61c79453c71cf74711c964265c877218a7281927d60ac096
   languageName: node
   linkType: hard
 
@@ -13631,7 +13729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-tooltip@npm:^5.0.1, rc-tooltip@npm:~5.1.1":
+"rc-tooltip@npm:^5.0.1":
   version: 5.1.1
   resolution: "rc-tooltip@npm:5.1.1"
   dependencies:
@@ -13644,39 +13742,53 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-tree-select@npm:~5.3.0":
-  version: 5.3.0
-  resolution: "rc-tree-select@npm:5.3.0"
+"rc-tooltip@npm:~5.2.0":
+  version: 5.2.2
+  resolution: "rc-tooltip@npm:5.2.2"
+  dependencies:
+    "@babel/runtime": ^7.11.2
+    classnames: ^2.3.1
+    rc-trigger: ^5.0.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: df6a59096876becf930df0347cfe6379cde9647f338a333dd0aae99039bf45e72db866f03ab6b5fd5ce616b074ec888f50e61ebe0f8d2a135c2617595dbf0583
+  languageName: node
+  linkType: hard
+
+"rc-tree-select@npm:~5.4.0":
+  version: 5.4.0
+  resolution: "rc-tree-select@npm:5.4.0"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: 2.x
     rc-select: ~14.1.0
-    rc-tree: ~5.5.0
+    rc-tree: ~5.6.1
     rc-util: ^5.16.1
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 6033d1826f390b327716346f5cc9b6bbd12cc134b34239a32acadd87aba1ecffd0d04a24fb69dbe4250ef764a6926336136c086ceb914ea5d2817159a9f70223
+  checksum: e1f4b3cf025b371579a686fa1b04a9439ac84fa663f6ed52e384059a15255b634d0ab94a49a555727ada0b2686fd43daf4ba0b244529d1ff7ae6816a2cba2c34
   languageName: node
   linkType: hard
 
-"rc-tree@npm:~5.5.0":
-  version: 5.5.0
-  resolution: "rc-tree@npm:5.5.0"
+"rc-tree@npm:~5.6.1, rc-tree@npm:~5.6.3, rc-tree@npm:~5.6.5":
+  version: 5.6.6
+  resolution: "rc-tree@npm:5.6.6"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: 2.x
     rc-motion: ^2.0.1
     rc-util: ^5.16.1
-    rc-virtual-list: ^3.4.2
+    rc-virtual-list: ^3.4.8
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 5ea172eef6530b0741697dbaccddeb959d8e183e89a64c61774c82f5f92a686ad7e050d38ad11dab7d5595cd391ae5428251b9624a74040b268a22a457c39c2d
+  checksum: 9584413b9b22d845fde70723db4994fe01982b6753bd02f154947c18e8187e3c276533b0c888dc41d813315dc91a40b0cf4dba9b10067f914f1deecdb7219677
   languageName: node
   linkType: hard
 
-"rc-trigger@npm:^5.0.0, rc-trigger@npm:^5.0.4, rc-trigger@npm:^5.1.2, rc-trigger@npm:^5.2.10":
+"rc-trigger@npm:^5.0.0, rc-trigger@npm:^5.0.4, rc-trigger@npm:^5.1.2, rc-trigger@npm:^5.2.10, rc-trigger@npm:^5.3.1":
   version: 5.3.1
   resolution: "rc-trigger@npm:5.3.1"
   dependencies:
@@ -13706,7 +13818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-util@npm:^5.0.1, rc-util@npm:^5.0.6, rc-util@npm:^5.12.0, rc-util@npm:^5.14.0, rc-util@npm:^5.15.0, rc-util@npm:^5.16.1, rc-util@npm:^5.17.0, rc-util@npm:^5.18.1, rc-util@npm:^5.19.2, rc-util@npm:^5.2.0, rc-util@npm:^5.2.1, rc-util@npm:^5.20.0, rc-util@npm:^5.20.1, rc-util@npm:^5.21.0, rc-util@npm:^5.3.0, rc-util@npm:^5.4.0, rc-util@npm:^5.5.0, rc-util@npm:^5.6.1, rc-util@npm:^5.7.0, rc-util@npm:^5.8.0, rc-util@npm:^5.9.4, rc-util@npm:^5.9.8":
+"rc-util@npm:^5.0.1, rc-util@npm:^5.0.6, rc-util@npm:^5.12.0, rc-util@npm:^5.15.0, rc-util@npm:^5.16.1, rc-util@npm:^5.17.0, rc-util@npm:^5.18.1, rc-util@npm:^5.19.2, rc-util@npm:^5.2.0, rc-util@npm:^5.2.1, rc-util@npm:^5.20.1, rc-util@npm:^5.21.0, rc-util@npm:^5.3.0, rc-util@npm:^5.4.0, rc-util@npm:^5.5.0, rc-util@npm:^5.6.1, rc-util@npm:^5.7.0, rc-util@npm:^5.8.0, rc-util@npm:^5.9.4":
   version: 5.21.5
   resolution: "rc-util@npm:5.21.5"
   dependencies:
@@ -13720,7 +13832,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-virtual-list@npm:^3.2.0, rc-virtual-list@npm:^3.4.2":
+"rc-util@npm:^5.21.2, rc-util@npm:^5.22.5, rc-util@npm:^5.23.0":
+  version: 5.23.0
+  resolution: "rc-util@npm:5.23.0"
+  dependencies:
+    "@babel/runtime": ^7.18.3
+    react-is: ^16.12.0
+    shallowequal: ^1.1.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: 58cebf9744fa67c1b1d666e8d8eea2ed24e911198c3ecf2c729132a39b4716b1d150f8717a7aeb2ce08ad7b8bea5124d1a65662b020cb9714e21b8d13ea97ce1
+  languageName: node
+  linkType: hard
+
+"rc-virtual-list@npm:^3.2.0, rc-virtual-list@npm:^3.4.8":
   version: 3.4.8
   resolution: "rc-virtual-list@npm:3.4.8"
   dependencies:
@@ -13975,6 +14101,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"readable-stream@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "readable-stream@npm:4.1.0"
+  dependencies:
+    abort-controller: ^3.0.0
+  checksum: ff2bb513af6fb43618c8360211b5b9052e25a59e6626d3669c7ba060d021dfffa43c43832e11b18acd6aac15b057c6deae1c41004c1731688c95c455ad02f982
+  languageName: node
+  linkType: hard
+
 "readable-stream@npm:~1.0.31":
   version: 1.0.34
   resolution: "readable-stream@npm:1.0.34"
@@ -14005,6 +14140,13 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"real-require@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "real-require@npm:0.1.0"
+  checksum: 96745583ed4f82cd5c6a6af012fd1d3c6fc2f13ae1bcff1a3c4f8094696013a1a07c82c5aa66a403d7d4f84949fc2203bc927c7ad120caad125941ca2d7e5e8e
   languageName: node
   linkType: hard
 
@@ -14151,7 +14293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resize-observer-polyfill@npm:^1.5.0, resize-observer-polyfill@npm:^1.5.1":
+"resize-observer-polyfill@npm:^1.5.1":
   version: 1.5.1
   resolution: "resize-observer-polyfill@npm:1.5.1"
   checksum: 57e7f79489867b00ba43c9c051524a5c8f162a61d5547e99333549afc23e15c44fd43f2f318ea0261ea98c0eb3158cca261e6f48d66e1ed1cd1f340a43977094
@@ -14337,6 +14479,13 @@ __metadata:
   version: 5.2.1
   resolution: "safe-buffer@npm:5.2.1"
   checksum: b99c4b41fdd67a6aaf280fcd05e9ffb0813654894223afb78a31f14a19ad220bba8aba1cb14eddce1fcfb037155fe6de4e861784eb434f7d11ed58d1e70dd491
+  languageName: node
+  linkType: hard
+
+"safe-stable-stringify@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "safe-stable-stringify@npm:2.3.1"
+  checksum: a0a0bad0294c3e2a9d1bf3cf2b1096dfb83c162d09a5e4891e488cce082120bd69161d2a92aae7fc48255290f17700decae9c89a07fe139794e61b5c8b411377
   languageName: node
   linkType: hard
 
@@ -14583,6 +14732,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sonic-boom@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "sonic-boom@npm:3.0.0"
+  dependencies:
+    atomic-sleep: ^1.0.0
+  checksum: fdab09872bd2d0bdaaa974841a719820cbc50d9db4a620ce46da159efe19d0b6cf1e450b51a28e65d9cbf910d15d1f259d5c247a7c51912cf287048bd35525b4
+  languageName: node
+  linkType: hard
+
 "sort-keys@npm:^2.0.0":
   version: 2.0.0
   resolution: "sort-keys@npm:2.0.0"
@@ -14721,7 +14879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"split2@npm:^4.1.0":
+"split2@npm:^4.0.0, split2@npm:^4.1.0":
   version: 4.1.0
   resolution: "split2@npm:4.1.0"
   checksum: ec581597cb74c13cdfb5e2047543dd40cb1e8e9803c7b1e0c29ede05f2b4f049b2d6e7f2788a225d544549375719658b8f38e9366364dec35dc7a12edfda5ee5
@@ -15242,6 +15400,15 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: b6937a38c80c7f84d9c11dd75e49d5c44f71d95e810a3250bd1f1797fc7117c57698204adf676b71497acc205d769d65c16ae8fa10afad832ae1322630aef10a
+  languageName: node
+  linkType: hard
+
+"thread-stream@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "thread-stream@npm:1.0.1"
+  dependencies:
+    real-require: ^0.1.0
+  checksum: 5e76e29611842607aff06110673615575131c2e2b153f8be8cbddd1dae2ae12e1eccb04d3b31527df79323b0433bb31edf7ee18a5799dddc9ddc503cafb8d42b
   languageName: node
   linkType: hard
 

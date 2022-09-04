@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
+
+**Note:** Version bump only for package @lowdefy/build
+
+
+
+
+
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Bug Fixes
+
+* Add buildAuthPlugin tests. ([df77f5d](https://github.com/lowdefy/lowdefy/commit/df77f5d51e4a36c997040c0575cdf66edc0a371f))
+* **build:** Add default for catch when try is defined and catch is not. ([b1159e1](https://github.com/lowdefy/lowdefy/commit/b1159e147380e024e66879f4fe2e8061d215cedc))
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+
+
+
+
+
+# [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
+
+
+### Bug Fixes
+
+* Add buildAuthPlugin tests. ([df77f5d](https://github.com/lowdefy/lowdefy/commit/df77f5d51e4a36c997040c0575cdf66edc0a371f))
+* **build:** Add default for catch when try is defined and catch is not. ([b1159e1](https://github.com/lowdefy/lowdefy/commit/b1159e147380e024e66879f4fe2e8061d215cedc))
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+
+
+
+
+
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 **Note:** Version bump only for package @lowdefy/build

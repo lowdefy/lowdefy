@@ -15,23 +15,24 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
+import createStdOutLineHandler from './createStdOutLineHandler.js';
 
 async function runLowdefyBuild({ context, directory }) {
-  context.print.log('Running Lowdefy build.');
+  context.print.spin('Running Lowdefy build.');
   try {
     await spawnProcess({
-      logger: context.print,
       command: context.packageManagerCmd,
       args: ['run', 'build:lowdefy'],
+      stdOutLineHandler: createStdOutLineHandler({ context }),
       processOptions: {
         cwd: directory,
         env: {
           ...process.env,
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
           LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+          LOWDEFY_LOG_LEVEL: context.options.logLevel,
         },
       },
-      silent: false,
     });
   } catch (error) {
     throw new Error('Lowdefy build failed.');

@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
+
+
+### Bug Fixes
+
+* **server-dev:** Fix server dev file watchers. ([7e3fedd](https://github.com/lowdefy/lowdefy/commit/7e3feddffe017edefcc325a8a146918318a8b329))
+
+
+
+
+
+# [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
+
+
+### Bug Fixes
+
+* **cli:** Improve CLI options specification. ([6d550fd](https://github.com/lowdefy/lowdefy/commit/6d550fd4620cde2ded905c3946ed86500c3efed5))
+* Fix dev server auth api route. ([a51af68](https://github.com/lowdefy/lowdefy/commit/a51af68e6291eea9185f65425e480ace6a269103))
+* **server-dev:** Remove build retries. ([c27ff36](https://github.com/lowdefy/lowdefy/commit/c27ff36e174f085d00bc0c76f2e2c3d8d2ad9bd2))
+* **server-dev:** Simplify server-dev manager code. ([e4101d0](https://github.com/lowdefy/lowdefy/commit/e4101d019b47d8cf1d5065116f003bcdf8a38fdf))
+
+
+### Features
+
+* Cleanup dev server logs. ([27a22c8](https://github.com/lowdefy/lowdefy/commit/27a22c8d34b822268a834704fe9c022397180386))
+* CLI output improvements. ([f00bb9b](https://github.com/lowdefy/lowdefy/commit/f00bb9b32e03e77ef1ef19c69055da4b05880cd8))
+* **cli:** Add log level option. ([5903c8e](https://github.com/lowdefy/lowdefy/commit/5903c8e4165334eb31f80580c3816a34ac36592d))
+* Improved logging WIP. ([0bbf19d](https://github.com/lowdefy/lowdefy/commit/0bbf19d69926440930995d457514544608ec5b5b))
+* **server-dev:** Do not stop process if initial build fails. ([506cbeb](https://github.com/lowdefy/lowdefy/commit/506cbeb090b130cacbbb923aa0fa8d0e3a48ad5a))
+
+
+
+
+
+# [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
+
+
+### Bug Fixes
+
+* Fix next-auth getServerSession. ([c5ee6ae](https://github.com/lowdefy/lowdefy/commit/c5ee6aef6227b68786b955d83de2a4f733569225))
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+* Update next-auth. ([972d5f3](https://github.com/lowdefy/lowdefy/commit/972d5f30ce57886419bc26fd5f19e386418e3dbb))
+
+
+
+
+
+# [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
+
+
+### Features
+
+* Add support for auth adapters in build and servers. ([5ae6e2b](https://github.com/lowdefy/lowdefy/commit/5ae6e2bb232f5ad634d92b171887066a6f0a57a0))
+* Add support for Next-Auth adapters. ([337dbf4](https://github.com/lowdefy/lowdefy/commit/337dbf46278ee8306b603a13357c14130cd6c3e9))
+* Implement appendHead and appendBody in v4. ([ba7ef7d](https://github.com/lowdefy/lowdefy/commit/ba7ef7d4000bb0ba757092114a90979387daba8a)), closes [#1047](https://github.com/lowdefy/lowdefy/issues/1047)
+* Implement appendHead and appendBody. ([d9ae2ee](https://github.com/lowdefy/lowdefy/commit/d9ae2eef8ef848f335901dd1332b8d995c03bdb0))
+
+
+
+
+
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 **Note:** Version bump only for package @lowdefy/server-dev

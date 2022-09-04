@@ -58,14 +58,13 @@ const DateSelector = ({
               placeholder={properties.placeholder || 'Select Date'}
               showToday={properties.showToday}
               size={properties.size}
+              status={validation.status}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    events={events}
-                    properties={properties.suffixIcon || 'AiOutlineCalendar'}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  events={events}
+                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                />
               }
               disabledDate={disabledDate(properties.disabledDates)}
               onChange={(newVal) => {
