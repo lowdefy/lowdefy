@@ -15,26 +15,21 @@
 */
 
 async function GeolocationCurrentPosition({ globals, params }) {
-  const geolocation = globals?.window?.navigator?.geolocation;
-  if (!geolocation) {
-    return null;
-  }
-
   try {
-    const res = await new Promise((resolve, reject) => {
-      geolocation.getCurrentPosition(resolve, reject, params);
+    const position = await new Promise((resolve, reject) => {
+      globals.window.navigator.geolocation.getCurrentPosition(resolve, reject, params);
     });
     return {
       coords: {
-        accuracy: res.coords.accuracy,
-        altitude: res.coords.altitude,
-        altitudeAccuracy: res.coords.altitudeAccuracy,
-        heading: res.coords.heading,
-        latitude: res.coords.latitude,
-        longitude: res.coords.longitude,
-        speed: res.coords.speed,
+        accuracy: position.coords.accuracy,
+        altitude: position.coords.altitude,
+        altitudeAccuracy: position.coords.altitudeAccuracy,
+        heading: position.coords.heading,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        speed: position.coords.speed,
       },
-      timestamp: res.timestamp,
+      timestamp: position.timestamp,
     };
   } catch (error) {
     return null;
