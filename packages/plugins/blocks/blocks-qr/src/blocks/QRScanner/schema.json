@@ -30,9 +30,9 @@
         "type": "array",
         "description": "List of Html5QrcodeSupportedFormats to support. See <a href='https://github.com/mebjas/html5-qrcode#documentation:~:text=library.%0A%20*/%0Aenum-,Html5QrcodeSupportedFormats,-%7B%0A%20%20QR_CODE%20%3D'>more</a>.",
         "items": {
-          "type": "number",
+          "type": "string",
           "enum": [
-            "QR_CODE = 0",
+            "QR_CODE",
             "AZTEC",
             "CODABAR",
             "CODE_39",
