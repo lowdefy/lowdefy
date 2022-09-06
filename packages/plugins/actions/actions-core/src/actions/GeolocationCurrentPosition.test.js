@@ -25,12 +25,12 @@ const getCurrentPositionSuccessImp = async (success, error, options) => {
   success({
     coords: {
       accuracy: 1,
-      altitude: null,
-      altitudeAccuracy: null,
+      altitude: 2,
+      altitudeAccuracy: 45,
       heading: 90,
       latitude: -30.5595,
       longitude: 22.9375,
-      speed: null,
+      speed: 100,
     },
     timestamp: 123,
   });
@@ -65,12 +65,12 @@ test('GeolocationCurrentPosition get successful geolocation', async () => {
   expect(res).toEqual({
     coords: {
       accuracy: 1,
-      altitude: null,
-      altitudeAccuracy: null,
+      altitude: 2,
+      altitudeAccuracy: 45,
       heading: 90,
       latitude: -30.5595,
       longitude: 22.9375,
-      speed: null,
+      speed: 100,
     },
     timestamp: 123,
   });
