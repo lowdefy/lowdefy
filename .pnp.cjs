@@ -89,6 +89,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/plugins/blocks/blocks-markdown"\
       },\
       {\
+        "name": "@lowdefy/blocks-qr",\
+        "reference": "workspace:packages/plugins/blocks/blocks-qr"\
+      },\
+      {\
         "name": "@lowdefy/connection-axios-http",\
         "reference": "workspace:packages/plugins/connections/connection-axios-http"\
       },\
@@ -213,6 +217,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@lowdefy/blocks-google-maps", ["workspace:packages/plugins/blocks/blocks-google-maps"]],\
       ["@lowdefy/blocks-loaders", ["workspace:packages/plugins/blocks/blocks-loaders"]],\
       ["@lowdefy/blocks-markdown", ["workspace:packages/plugins/blocks/blocks-markdown"]],\
+      ["@lowdefy/blocks-qr", ["workspace:packages/plugins/blocks/blocks-qr"]],\
       ["@lowdefy/build", ["workspace:packages/build"]],\
       ["@lowdefy/client", ["workspace:packages/client"]],\
       ["@lowdefy/connection-axios-http", ["workspace:packages/plugins/connections/connection-axios-http"]],\
@@ -3329,6 +3334,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@lowdefy/blocks-qr", [\
+        ["workspace:packages/plugins/blocks/blocks-qr", {\
+          "packageLocation": "./packages/plugins/blocks/blocks-qr/",\
+          "packageDependencies": [\
+            ["@lowdefy/blocks-qr", "workspace:packages/plugins/blocks/blocks-qr"],\
+            ["@emotion/jest", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:11.9.1"],\
+            ["@lowdefy/block-dev", "workspace:packages/utils/block-dev"],\
+            ["@lowdefy/block-utils", "workspace:packages/utils/block-utils"],\
+            ["@lowdefy/jest-yaml-transform", "workspace:packages/utils/jest-yaml-transform"],\
+            ["@swc/cli", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.1.57"],\
+            ["@swc/core", "npm:1.2.194"],\
+            ["@swc/jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:0.2.21"],\
+            ["@testing-library/dom", "npm:8.13.0"],\
+            ["@testing-library/react", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:13.3.0"],\
+            ["@testing-library/user-event", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:14.2.0"],\
+            ["copyfiles", "npm:2.4.1"],\
+            ["html5-qrcode", "npm:2.2.1"],\
+            ["jest", "virtual:babee6e81435a5d101529cd67f2c6b175f4db37a4ab0b58df15adf73dd11be8917ac14caf44ab4e6882a92c61661055072365b349016e85173e049f006fc2305#npm:28.1.0"],\
+            ["jest-environment-jsdom", "npm:28.1.0"],\
+            ["jest-serializer-html", "npm:7.1.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:573fe255dffc9c89f4f7aa60da718603753ee98acc55d6772bbd0ebdcf07f9183fb8e54b4f3f2246c538a14ead402db8d2e076039c667d1538702638a0cc87b8#npm:18.1.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@lowdefy/build", [\
         ["workspace:packages/build", {\
           "packageLocation": "./packages/build/",\
@@ -3345,6 +3376,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/blocks-google-maps", "workspace:packages/plugins/blocks/blocks-google-maps"],\
             ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],\
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],\
+            ["@lowdefy/blocks-qr", "workspace:packages/plugins/blocks/blocks-qr"],\
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],\
             ["@lowdefy/connection-elasticsearch", "workspace:packages/plugins/connections/connection-elasticsearch"],\
             ["@lowdefy/connection-google-sheets", "workspace:packages/plugins/connections/connection-google-sheets"],\
@@ -3927,6 +3959,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@lowdefy/blocks-echarts", "workspace:packages/plugins/blocks/blocks-echarts"],\
             ["@lowdefy/blocks-loaders", "workspace:packages/plugins/blocks/blocks-loaders"],\
             ["@lowdefy/blocks-markdown", "workspace:packages/plugins/blocks/blocks-markdown"],\
+            ["@lowdefy/blocks-qr", "workspace:packages/plugins/blocks/blocks-qr"],\
             ["@lowdefy/build", "workspace:packages/build"],\
             ["@lowdefy/client", "workspace:packages/client"],\
             ["@lowdefy/connection-axios-http", "workspace:packages/plugins/connections/connection-axios-http"],\
@@ -10453,6 +10486,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/html-void-elements-npm-2.0.1-2e8871982c-06d41f13b9.zip/node_modules/html-void-elements/",\
           "packageDependencies": [\
             ["html-void-elements", "npm:2.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["html5-qrcode", [\
+        ["npm:2.2.1", {\
+          "packageLocation": "./.yarn/cache/html5-qrcode-npm-2.2.1-054aa94730-1f1753b28e.zip/node_modules/html5-qrcode/",\
+          "packageDependencies": [\
+            ["html5-qrcode", "npm:2.2.1"]\
           ],\
           "linkType": "HARD"\
         }]\
