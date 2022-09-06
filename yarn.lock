@@ -2425,6 +2425,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@lowdefy/blocks-qr@4.0.0-alpha.26, @lowdefy/blocks-qr@workspace:packages/plugins/blocks/blocks-qr":
+  version: 0.0.0-use.local
+  resolution: "@lowdefy/blocks-qr@workspace:packages/plugins/blocks/blocks-qr"
+  dependencies:
+    "@emotion/jest": 11.9.1
+    "@lowdefy/block-dev": 4.0.0-alpha.26
+    "@lowdefy/block-utils": 4.0.0-alpha.26
+    "@lowdefy/jest-yaml-transform": 4.0.0-alpha.26
+    "@swc/cli": 0.1.57
+    "@swc/core": 1.2.194
+    "@swc/jest": 0.2.21
+    "@testing-library/dom": 8.13.0
+    "@testing-library/react": 13.3.0
+    "@testing-library/user-event": 14.2.0
+    copyfiles: 2.4.1
+    html5-qrcode: 2.2.1
+    jest: 28.1.0
+    jest-environment-jsdom: 28.1.0
+    jest-serializer-html: 7.1.0
+    react: 18.1.0
+    react-dom: 18.1.0
+  languageName: unknown
+  linkType: soft
+
 "@lowdefy/build@4.0.0-alpha.26, @lowdefy/build@workspace:packages/build":
   version: 0.0.0-use.local
   resolution: "@lowdefy/build@workspace:packages/build"
@@ -2440,6 +2464,7 @@ __metadata:
     "@lowdefy/blocks-google-maps": 4.0.0-alpha.26
     "@lowdefy/blocks-loaders": 4.0.0-alpha.26
     "@lowdefy/blocks-markdown": 4.0.0-alpha.26
+    "@lowdefy/blocks-qr": 4.0.0-alpha.26
     "@lowdefy/connection-axios-http": 4.0.0-alpha.26
     "@lowdefy/connection-elasticsearch": 4.0.0-alpha.26
     "@lowdefy/connection-google-sheets": 4.0.0-alpha.26
@@ -2933,6 +2958,7 @@ __metadata:
     "@lowdefy/blocks-echarts": 4.0.0-alpha.26
     "@lowdefy/blocks-loaders": 4.0.0-alpha.26
     "@lowdefy/blocks-markdown": 4.0.0-alpha.26
+    "@lowdefy/blocks-qr": 4.0.0-alpha.26
     "@lowdefy/build": 4.0.0-alpha.26
     "@lowdefy/client": 4.0.0-alpha.26
     "@lowdefy/connection-axios-http": 4.0.0-alpha.26
@@ -8438,6 +8464,13 @@ __metadata:
   version: 2.0.1
   resolution: "html-void-elements@npm:2.0.1"
   checksum: 06d41f13b9d5d6e0f39861c4bec9a9196fa4906d56cd5cf6cf54ad2e52a85bf960cca2bf9600026bde16c8331db171bedba5e5a35e2e43630c8f1d497b2fb658
+  languageName: node
+  linkType: hard
+
+"html5-qrcode@npm:2.2.1":
+  version: 2.2.1
+  resolution: "html5-qrcode@npm:2.2.1"
+  checksum: 1f1753b28e6d33008b8f9c6939f3f679410b627f512d1d81239173bb3d6c2fb907d79c0de16dbaa33862c960aa88f06f337cef2afd6ad462e41308aae865a3b3
   languageName: node
   linkType: hard
 
