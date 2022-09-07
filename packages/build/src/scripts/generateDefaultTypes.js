@@ -31,6 +31,7 @@ const defaultPackages = [
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
+  '@lowdefy/blocks-qr',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-google-sheets',

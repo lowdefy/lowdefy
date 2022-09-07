@@ -76,6 +76,7 @@
     "@lowdefy/blocks-echarts": "4.0.0-alpha.26",
     "@lowdefy/blocks-google-maps": "4.0.0-alpha.26",
     "@lowdefy/blocks-markdown": "4.0.0-alpha.26",
+    "@lowdefy/blocks-qr": "4.0.0-alpha.26",
     "@lowdefy/connection-axios-http": "4.0.0-alpha.26",
     "@lowdefy/connection-elasticsearch": "4.0.0-alpha.26",
     "@lowdefy/connection-google-sheets": "4.0.0-alpha.26",
