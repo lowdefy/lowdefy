@@ -1,12 +1,13 @@
 {
-  "name": "@lowdefy/actions-core",
+  "name": "@lowdefy/blocks-qr",
   "version": "4.0.0-alpha.26",
   "license": "Apache-2.0",
-  "description": "",
+  "description": "Lowdefy qr blocks.",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
-    "lowdefy actions",
+    "lowdefy blocks",
+    "qr",
     "lowdefy plugin"
   ],
   "bugs": {
@@ -22,10 +23,6 @@
       "url": "https://github.com/Gervwyk"
     },
     {
-      "name": "Sandile Memela",
-      "url": "https://github.com/sah-memela"
-    },
-    {
       "name": "Stephanie Smit",
       "url": "https://github.com/StephanieJKS"
     }
@@ -36,7 +33,8 @@
   },
   "type": "module",
   "exports": {
-    "./actions": "./dist/actions.js",
+    "./*": "./dist/*",
+    "./blocks": "./dist/blocks.js",
     "./types": "./dist/types.js"
   },
   "files": [
@@ -45,20 +43,32 @@
   "scripts": {
     "build": "yarn swc",
     "clean": "rm -rf dist",
+    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "test:watch": "jest --coverage --watch",
+    "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.26"
+    "@lowdefy/block-utils": "4.0.0-alpha.26",
+    "html5-qrcode": "2.2.1",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "devDependencies": {
-    "@jest/globals": "28.1.0",
+    "@emotion/jest": "11.9.1",
+    "@lowdefy/block-dev": "4.0.0-alpha.26",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.26",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
+    "@testing-library/dom": "8.13.0",
+    "@testing-library/react": "13.3.0",
+    "@testing-library/user-event": "14.2.0",
+    "copyfiles": "2.4.1",
     "jest": "28.1.0",
-    "jest-environment-jsdom": "28.1.0"
+    "jest-environment-jsdom": "28.1.0",
+    "jest-serializer-html": "7.1.0"
   },
   "publishConfig": {
     "access": "public"
