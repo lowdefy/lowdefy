@@ -1,0 +1,56 @@
+{
+  "name": "@lowdefy/plugin-csv",
+  "version": "4.0.0-alpha.26",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy actions",
+    "lowdefy plugin",
+    "csv"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./actions": "./dist/actions.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "yarn swc",
+    "clean": "rm -rf dist",
+    "prepare": "yarn build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+  },
+  "devDependencies": {
+    "@jest/globals": "28.1.0",
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.194",
+    "@swc/jest": "0.2.21",
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

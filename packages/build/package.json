@@ -69,6 +69,7 @@
   "devDependencies": {
     "@jest/globals": "28.1.0",
     "@lowdefy/actions-core": "4.0.0-alpha.26",
+    "@lowdefy/actions-pdf-make": "4.0.0-alpha.26",
     "@lowdefy/blocks-aggrid": "4.0.0-alpha.26",
     "@lowdefy/blocks-antd": "4.0.0-alpha.26",
     "@lowdefy/blocks-color-selectors": "4.0.0-alpha.26",
@@ -90,6 +91,8 @@
     "@lowdefy/operators-nunjucks": "4.0.0-alpha.26",
     "@lowdefy/operators-uuid": "4.0.0-alpha.26",
     "@lowdefy/operators-yaml": "4.0.0-alpha.26",
+    "@lowdefy/plugin-auth0": "4.0.0-alpha.26",
+    "@lowdefy/plugin-csv": "4.0.0-alpha.26",
     "@lowdefy/plugin-next-auth": "4.0.0-alpha.26",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
