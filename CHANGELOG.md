@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.27](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.26...v4.0.0-alpha.27) (2022-09-08)
+
+
+### Bug Fixes
+
+* **actions-core:** Change geolocation test values. ([f8c68ff](https://github.com/lowdefy/lowdefy/commit/f8c68ffe60913efb0292a01cd826239b723a922f))
+* **actions-core:** Change res to position. ([0bcf8c2](https://github.com/lowdefy/lowdefy/commit/0bcf8c293b2b6b70c8e8221f6ba5508c436147fa))
+* **blocks-aggrid:** Import all input types. ([06f753e](https://github.com/lowdefy/lowdefy/commit/06f753ef0dc821ec9f62617b28109e56d3e62347))
+* **blocks-qr:** Change formatsToSupport enum to handle strings. ([7794dee](https://github.com/lowdefy/lowdefy/commit/7794deed9e63bcd281a7fa61ce101f31f3a7f1bb))
+* **build:** Add additional default types. ([9f42115](https://github.com/lowdefy/lowdefy/commit/9f421151fd67d2d0c7985b38343472454bc8332b))
+
+
+### Features
+
+* **actions-core:** Add GeolocationCurrentPosition action. ([b55f529](https://github.com/lowdefy/lowdefy/commit/b55f529d3476d4640a7fb539a3276d431dca8f80))
+* **blocks-qr:** Add inactiveByDefault property to README and schema. ([cb4b780](https://github.com/lowdefy/lowdefy/commit/cb4b780187346c167ced524eea1d1d149549ee79))
+* **blocks-qr:** Add QRScanner block. ([5778234](https://github.com/lowdefy/lowdefy/commit/5778234f366a030d055f0e1a604cfa27f47617ac))
+* **blocks-qr:** Update README and schema for QRScanner. ([53f216d](https://github.com/lowdefy/lowdefy/commit/53f216d0b8631ba322a75d096e487276cdac0e8e))
+* **dosc:** Update Connections and Requests concept page. ([97d1d76](https://github.com/lowdefy/lowdefy/commit/97d1d764505e2c23bfcbf67116271b2ab8a853f0))
+* **plugins:** Add actions-pdf-make. ([f9b30e4](https://github.com/lowdefy/lowdefy/commit/f9b30e45dc1672dbb0314e65dd5c7428720a4b13))
+* **plugins:** Add plugin-auth0. ([10a6206](https://github.com/lowdefy/lowdefy/commit/10a6206f93bf5a78e90b5c3659a64bc08132bdc1))
+* **plugins:** Add plugin-csv. ([403eb15](https://github.com/lowdefy/lowdefy/commit/403eb150f51efe478959ba93c16c6bb2554024ae))
+
+
+
+
+
 # [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
 
 
