@@ -157,11 +157,20 @@ Duplicate action ids in the same action chain were allowed in version 3, but are
 
 The `Notification` action has been removed. Switch to the `DisplayMessage` action, or use a `Notification` block and the `CallMethod` action to open the notification.
 
+The 404 page is now always a public page.
+
+The `Anchor` block properties schema has changed. The `href` property has been removed and it now takes the same props as the `Link` action.
+
+The `_yaml.parse` operator now takes an object with a `on` property or an array where the first argument is the string to parse, instead of just a string, to allow it to take additional options.
+
+The `ChromeColorSelector`, `CircleColorSelector`, `CompactColorSelector`, `GithubColorSelector`, `SliderColorSelector`, `SwatchesColorSelector`, and `TwitterColorSelector` have been replaced by the `ColorSelector` block.
+
+The `color` properties in blocks like `MobileMenu`, `PageHeaderMenu`, `PageSiderMenu`, `PageHCF`, `PageHCSF`, `PageHSCF`, and  `PageSHCF` have been removed. Use Ant Design theme less variables instead.
 ## Block Loading States
 
 The page loading states in version 4 have been improved. In general apps should load a lot faster. Blocks will now be a lot less likely to show a loading state and rather render as normal, and render their children. Input blocks will be disabled while in a loading state. This contributes to users seeing useful content sooner, and to less layout shift once the app finishes loading.
 
-In version 3, blocks had a `loading` (property?) to specify the loading skeleton that should be used while the block is in a loading state. This functionality gas been replaced by the `skeleton` property. The `loading` property is now used to control the loading state of the block. The block will be in a loading state if an `onInit` or `onMount` event is busy, if a parent block is loading of if the `loading` property evaluates to true. See more about loading here.
+In version 3, blocks had a `loading` (property?) to specify the loading skeleton that should be used while the block is in a loading state. This functionality has been replaced by the `skeleton` property. The `loading` property is now used to control the loading state of the block. The block will be in a loading state if an `onInit` or `onMount` event is busy, if a parent block is loading of if the `loading` property evaluates to true. See more about loading here.
 
 #### TODO: Add link to loading docs.
 
