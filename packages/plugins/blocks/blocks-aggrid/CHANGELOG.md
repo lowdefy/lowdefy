@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.27](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.26...v4.0.0-alpha.27) (2022-09-08)
+
+
+### Bug Fixes
+
+* **blocks-aggrid:** Import all input types. ([06f753e](https://github.com/lowdefy/lowdefy/commit/06f753ef0dc821ec9f62617b28109e56d3e62347))
+
+
+
+
+
 # [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
 
 **Note:** Version bump only for package @lowdefy/blocks-aggrid
