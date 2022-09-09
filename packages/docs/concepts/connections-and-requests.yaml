@@ -38,8 +38,8 @@ _ref:
         properties:
           content: |
             To implement requests, the following steps are required:
-            - define a connection.
-            - define a request.
+            - define a Connection.
+            - define a Request.
             - call the request using a [Request](/Request) action.
             - use returned data by making use of the [_request](/_request) operator.
 
@@ -75,7 +75,7 @@ _ref:
 
             Requests can be defined on any block, and the results of the request can be access using the `_request` operator anywhere on the same page. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
 
-            The client operators to be used are defined in the `payload` field and are accessed by making use of the `_payload` operator in the `properties` field. These operators are evaluated on the client. Operators defined in `properties`, such as `_secret` and `_user`, are evaluated on the server. Operators in the request are evaluated every time a request is called.
+            Data that should be passed to the request from the client can be defined in the `payload` field. Operators can be used to create the payload. An example of this would be to use the `_state` operator to include the value of an input block in the payload. The data in the payload can be accessed in the request by making use of the `_payload` operator in the `properties` field. The operators defined in the properties field are evaluated on the server, while those defined in the payload field are evaluated on the client. Operators in the request are evaluated every time a request is called.
 
       - id: _users_alert
         type: Alert

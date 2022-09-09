@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.27](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.26...v4.0.0-alpha.27) (2022-09-08)
+
+
+### Bug Fixes
+
+* **actions-core:** Change geolocation test values. ([f8c68ff](https://github.com/lowdefy/lowdefy/commit/f8c68ffe60913efb0292a01cd826239b723a922f))
+* **actions-core:** Change res to position. ([0bcf8c2](https://github.com/lowdefy/lowdefy/commit/0bcf8c293b2b6b70c8e8221f6ba5508c436147fa))
+
+
+### Features
+
+* **actions-core:** Add GeolocationCurrentPosition action. ([b55f529](https://github.com/lowdefy/lowdefy/commit/b55f529d3476d4640a7fb539a3276d431dca8f80))
+
+
+
+
+
 # [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
 
 **Note:** Version bump only for package @lowdefy/actions-core

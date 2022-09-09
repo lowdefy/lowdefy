@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-sendgrid",
-  "version": "4.0.0-alpha.26",
+  "version": "4.0.0-alpha.27",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,11 +42,11 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.26",
+    "@lowdefy/helpers": "4.0.0-alpha.27",
     "@sendgrid/mail": "7.7.0"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.26",
+    "@lowdefy/ajv": "4.0.0-alpha.27",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

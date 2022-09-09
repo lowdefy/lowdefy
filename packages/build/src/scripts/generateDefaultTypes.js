@@ -22,6 +22,7 @@ import createPluginTypesMap from '../utils/createPluginTypesMap.js';
 
 const defaultPackages = [
   '@lowdefy/actions-core',
+  '@lowdefy/actions-pdf-make',
   '@lowdefy/blocks-aggrid',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
@@ -30,6 +31,7 @@ const defaultPackages = [
   '@lowdefy/blocks-google-maps',
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
+  '@lowdefy/blocks-qr',
   '@lowdefy/connection-axios-http',
   '@lowdefy/connection-elasticsearch',
   '@lowdefy/connection-google-sheets',
@@ -45,6 +47,8 @@ const defaultPackages = [
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
+  '@lowdefy/plugin-auth0',
+  '@lowdefy/plugin-csv',
   '@lowdefy/plugin-next-auth',
 ];
 
