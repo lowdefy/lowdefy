@@ -62,8 +62,8 @@ test('startUp, options empty', async () => {
     },
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
-    packageManager: 'npm',
-    packageManagerCmd: process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    packageManager: context.packageManager,
+    packageManagerCmd: context.packageManagerCmd,
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -109,8 +109,8 @@ test('startUp, options undefined', async () => {
     },
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
-    packageManager: 'npm',
-    packageManagerCmd: process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    packageManager: context.packageManager,
+    packageManagerCmd: context.packageManagerCmd,
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -158,8 +158,8 @@ test('startUp, options configDirectory', async () => {
       cliConfig: true,
       configDirectory: './configDirectory',
     },
-    packageManager: 'npm',
-    packageManagerCmd: process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    packageManager: context.packageManager,
+    packageManagerCmd: context.packageManagerCmd,
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -188,8 +188,8 @@ test('startUp, no lowdefyVersion returned', async () => {
     },
     lowdefyVersion: undefined,
     options: {},
-    packageManager: 'npm',
-    packageManagerCmd: process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    packageManager: context.packageManager,
+    packageManagerCmd: context.packageManagerCmd,
     print,
     sendTelemetry: 'sendTelemetry',
   });
