@@ -118,7 +118,7 @@ test('deleteMany mongodb error', async () => {
   const res = await MongoDBDeleteMany({ request, connection });
   expect(res).toEqual({
     acknowledged: false,
-    deletedCount: undefined,
+    deletedCount: 0,
   });
 });
 
