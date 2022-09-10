@@ -21,13 +21,4 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
-      - name: Upload coverage to codecov
-        run: bash <(curl -s https://codecov.io/bash)
-      - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v3.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/packages/**/coverage/lcov.info:lcov
-        continue-on-error: true
+      - uses: codecov/codecov-action@v3
