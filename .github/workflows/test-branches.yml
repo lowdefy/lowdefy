@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - develop
-      - v4
 
 jobs:
   test:
@@ -16,13 +15,10 @@ jobs:
         with:
           node-version: '14.x'
       - uses: actions/checkout@v2
-      - name: Check yarn cache integrity
-        run: yarn install --immutable --immutable-cache --check-cache
-      - name: Build packages
-        run: yarn build
-      # format tests don't pass on node 12 since icu is missing and tests don't work with locales
+      - name: Install and build
+        run: pnpm install --frozen-lockfile
       - name: Test packages
-        run: yarn test:ci
+        run: pnpm test
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
       - name: Upload coverage to codeclimate

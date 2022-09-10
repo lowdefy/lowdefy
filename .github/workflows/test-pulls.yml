@@ -13,17 +13,12 @@ jobs:
         with:
           node-version: '14.x'
       - uses: actions/checkout@v2
-      - name: yarn install
-        run: yarn install
-      - name: Build packages
-        run: yarn build
-
+      - name: Install and build
+        run: pnpm install --frozen-lockfile
       - name: Test packages
-        run: yarn test:ci
-
+        run: pnpm test
       - name: Upload coverage to codecov
         run: bash <(curl -s https://codecov.io/bash)
-
       - name: Upload coverage to codeclimate
         uses: paambaati/codeclimate-action@v2.7.5
         env:
@@ -32,15 +27,3 @@ jobs:
           coverageLocations: |
             ${{github.workspace}}/packages/**/coverage/lcov.info:lcov
         continue-on-error: true
-
-  check-yarn-cache:
-    name: Check yarn cache
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - uses: actions/checkout@v2
-      - name: Check yarn cache integrity
-        run: yarn install --immutable --immutable-cache --check-cache

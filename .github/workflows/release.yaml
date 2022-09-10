@@ -17,10 +17,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: pnpm install
-        run: pnpm install
-
-      - name: pnpm build
-        run: pnpm build
+        run: pnpm install --frozen-lockfile
 
       # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
       # --ignore-scripts to avoid scripts that could read npm token
