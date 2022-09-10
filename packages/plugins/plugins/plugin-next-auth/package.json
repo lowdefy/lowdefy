@@ -35,9 +35,9 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "pnpm swc",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
+    "prepare": "pnpm build",
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files"
   },
   "dependencies": {
@@ -47,7 +47,9 @@
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
-    "jest": "28.1.0"
+    "jest": "28.1.0",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "publishConfig": {
     "access": "public"

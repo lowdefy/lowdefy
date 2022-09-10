@@ -41,11 +41,11 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "pnpm swc",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "prepare": "pnpm build",
+    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
     "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },

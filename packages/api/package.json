@@ -34,11 +34,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "prepare": "pnpm build",
+    "test": "node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.27",

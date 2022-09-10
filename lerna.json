@@ -7,7 +7,7 @@
     "src/packages/plugins/**",
     "src/packages/utils/*"
   ],
-  "npmClient": "yarn",
+  "npmClient": "pnpm",
   "useWorkspaces": true,
   "changelogPreset": "angular",
   "command": {

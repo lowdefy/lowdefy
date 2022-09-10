@@ -39,9 +39,9 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "pnpm swc",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
+    "prepare": "pnpm build",
     "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "test": "jest --coverage"
   },

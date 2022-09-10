@@ -44,12 +44,12 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc && node dist/scripts/generateDefaultTypes.js",
+    "build": "pnpm swc && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
+    "prepare": "pnpm build",
     "start": "node dist/scripts/run.js",
     "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "test": "pnpm node --experimental-vm-modules $(pnpm bin jest)"
   },
   "dependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.27",
