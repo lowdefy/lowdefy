@@ -29,7 +29,8 @@
   ],
   "scripts": {
     "build:turbo": "turbo run build",
-    "clean": "lerna run clean",
+    "build": "pnpm -r run build",
+    "clean": "pnpm -r run clean",
     "lerna:publish": "lerna publish from-git",
     "lerna:version": "lerna version --no-git-tag-version",
     "prettier": "prettier --config .prettierrc --write **/*.js",

@@ -44,11 +44,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "pnpm swc && node dist/scripts/generateDefaultTypes.js",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
     "prepare": "pnpm build",
     "start": "node dist/scripts/run.js",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "test": "pnpm node --experimental-vm-modules $(pnpm bin jest)"
   },
   "dependencies": {

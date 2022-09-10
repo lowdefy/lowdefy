@@ -26,10 +26,9 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "scripts": {
-    "build": "pnpm swc",
+    "build": "swc src --out-dir dist --config-file ./.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "pnpm build",
-    "swc": "swc src --out-dir dist --config-file ./.swcrc --delete-dir-on-start"
+    "prepare": "pnpm build"
   },
   "dependencies": {
     "@swc/cli": "0.1.57",

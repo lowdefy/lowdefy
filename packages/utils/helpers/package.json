@@ -31,10 +31,9 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "pnpm swc",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
     "prepare": "pnpm build",
-    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "test": "jest --coverage"
   },
   "dependencies": {
