@@ -14,11 +14,11 @@ jobs:
         node: [14, 16, 18]
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           cache: 'pnpm'
-      - uses: pnpm/action-setup@v2
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - name: Upload coverage to codecov
