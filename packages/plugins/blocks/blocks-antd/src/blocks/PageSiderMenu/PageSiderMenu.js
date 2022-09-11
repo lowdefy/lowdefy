@@ -168,12 +168,13 @@ const PageSiderMenu = ({
                         <source
                           media={`(min-width:${properties.logo?.breakpoint ?? 577}px)`}
                           srcSet={
-                            properties.logo?.srcSet ??
+                            properties.logo?.src ??
                             `${basePath}/logo-${properties.header?.theme ?? 'dark'}-theme.png`
                           }
                         />
                         <img
                           src={
+                            properties.logo?.srcMobile ??
                             properties.logo?.src ??
                             `${basePath}/logo-square-${
                               properties.header?.theme ?? 'dark'
