@@ -59,8 +59,9 @@ const PageHeaderMenu = ({
     logo: {
       margin: '0px 30px',
       flex: '0 1 auto',
-      xs: { margin: '0 5px' },
-      sm: { margin: '0 10px' },
+      width: 130,
+      xs: { margin: '0 5px', width: 40 },
+      sm: { margin: '0 10px', width: 130 },
       md: { margin: '0 15px' },
     },
     lgMenu: {
@@ -93,6 +94,9 @@ const PageHeaderMenu = ({
       md: { padding: '0 20px 20px 20px' },
       lg: { padding: '0 40px 40px 40px' },
     },
+    breadcrumb: {
+      margin: '16px 0',
+    },
     noBreadcrumb: {
       padding: '20px 0',
       xs: { padding: '5px 0' },
@@ -104,7 +108,7 @@ const PageHeaderMenu = ({
     <Layout
       blockId={blockId}
       events={events}
-      properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
+      properties={{ style: mergeObjects([styles.layout, properties.style]) }}
       components={{ Icon, Link }}
       content={{
         content: () => (
@@ -141,17 +145,7 @@ const PageHeaderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className={methods.makeCssClass([
-                            {
-                              width: 130,
-                              xs: {
-                                width: 40,
-                              },
-                              sm: { width: 130 },
-                            },
-                            styles.logo,
-                            properties.logo?.style,
-                          ])}
+                          className={methods.makeCssClass([styles.logo, properties.logo?.style])}
                         />
                       </picture>
                     </Link>
@@ -216,7 +210,7 @@ const PageHeaderMenu = ({
                         events={events}
                         methods={methods}
                         properties={mergeObjects([
-                          { style: { padding: '16px 0' } },
+                          { style: styles.breadcrumb },
                           properties.breadcrumb,
                         ])}
                         rename={{

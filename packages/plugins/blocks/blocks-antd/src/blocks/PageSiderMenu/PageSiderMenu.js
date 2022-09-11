@@ -72,8 +72,9 @@ const PageSiderMenu = ({
     logo: {
       margin: '0 30px 0 0',
       flex: '0 1 auto',
-      xs: { margin: '0 5px' },
-      sm: { margin: '0 10px' },
+      width: 130,
+      xs: { margin: '0 5px', width: 40 },
+      sm: { margin: '0 10px', width: 130 },
       md: { margin: '0 15px' },
     },
     desktop: {
@@ -115,7 +116,7 @@ const PageSiderMenu = ({
       blockId={blockId}
       components={{ Icon, Link }}
       events={events}
-      properties={{ style: mergeObjects([{ minHeight: '100vh' }, properties.style]) }}
+      properties={{ style: mergeObjects([styles.layout, properties.style]) }}
       content={{
         // TODO: use next/image
         content: () => (
@@ -181,17 +182,7 @@ const PageSiderMenu = ({
                             }-theme.png`
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
-                          className={methods.makeCssClass([
-                            {
-                              width: 130,
-                              xs: {
-                                width: 40,
-                              },
-                              sm: { width: 130 },
-                            },
-                            styles.logo,
-                            properties.logo?.style,
-                          ])}
+                          className={methods.makeCssClass([styles.logo, properties.logo?.style])}
                         />
                       </picture>
                     </Link>
@@ -331,7 +322,7 @@ const PageSiderMenu = ({
                                 events={events}
                                 methods={methods}
                                 properties={mergeObjects([
-                                  { style: { padding: '16px 0' } },
+                                  { style: styles.breadcrumb },
                                   properties.breadcrumb,
                                 ])}
                                 rename={{
