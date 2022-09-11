@@ -31,19 +31,24 @@ const Page = ({ auth, Components, config, pageId, resetContext, router, types })
     return <RestartingPage />;
   }
   return (
-    <Client
-      auth={auth}
-      Components={Components}
-      config={{
-        ...config,
-        pageConfig,
-      }}
-      resetContext={resetContext}
-      router={router}
-      stage="dev"
-      types={types}
-      window={window}
-    />
+    <>
+      <Components.Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Components.Head>
+      <Client
+        auth={auth}
+        Components={Components}
+        config={{
+          ...config,
+          pageConfig,
+        }}
+        resetContext={resetContext}
+        router={router}
+        stage="dev"
+        types={types}
+        window={window}
+      />
+    </>
   );
 };
 
