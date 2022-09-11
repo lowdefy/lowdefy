@@ -45,6 +45,7 @@ const PageHeaderMenu = ({
       display: 'flex',
       alignItems: 'center',
       padding: '0 46px',
+      xs: { padding: '0 10px' },
       sm: { padding: '0 15px' },
       md: { padding: '0 30px' },
       lg: { padding: '0 46px' },
@@ -58,11 +59,13 @@ const PageHeaderMenu = ({
     logo: {
       margin: '0px 30px',
       flex: '0 1 auto',
+      xs: { margin: '0 5px' },
       sm: { margin: '0 10px' },
       md: { margin: '0 15px' },
     },
     lgMenu: {
       flex: '1 1 auto',
+      xs: { display: 'none' },
       sm: { display: 'none' },
       md: { display: 'none' },
       lg: { display: 'flex' },
@@ -70,6 +73,7 @@ const PageHeaderMenu = ({
     mdMenu: {
       flex: '0 1 auto',
       paddingLeft: '1rem',
+      xs: { display: 'flex' },
       sm: { display: 'flex' },
       md: { display: 'flex' },
       lg: { display: 'none' },
@@ -84,12 +88,14 @@ const PageHeaderMenu = ({
     },
     body: {
       padding: '0 40px 40px 40px',
+      xs: { padding: '0 5px 5px 5px' },
       sm: { padding: '0 10px 10px 10px' },
       md: { padding: '0 20px 20px 20px' },
       lg: { padding: '0 40px 40px 40px' },
     },
     noBreadcrumb: {
       padding: '20px 0',
+      xs: { padding: '5px 0' },
       sm: { padding: '5px 0' },
       md: { padding: '10px 0' },
     },
@@ -118,39 +124,35 @@ const PageHeaderMenu = ({
                 content: () => (
                   <>
                     <Link home={true}>
-                      <img
-                        src={
-                          (properties.logo && properties.logo.src) ||
-                          (get(properties, 'header.theme') === 'light'
-                            ? `${basePath}/logo-light-theme.png`
-                            : `${basePath}/logo-dark-theme.png`)
-                        }
-                        srcSet={
-                          (properties.logo && (properties.logo.srcSet || properties.logo.src)) ||
-                          (get(properties, 'header.theme') === 'light'
-                            ? `${basePath}/logo-square-light-theme.png 40w, ${basePath}/logo-light-theme.png 577w`
-                            : `${basePath}/logo-square-dark-theme.png 40w, ${basePath}/logo-dark-theme.png 577w`)
-                        }
-                        sizes={
-                          (properties.logo && properties.logo.sizes) ||
-                          '(max-width: 576px) 40px, 577px'
-                        }
-                        alt={(properties.logo && properties.logo.alt) || 'Lowdefy'}
-                        className={methods.makeCssClass([
-                          {
-                            width: 130,
-                            sm: {
-                              width:
-                                properties.logo && properties.logo.src && !properties.logo.srcSet
-                                  ? 130
-                                  : 40,
+                      <picture>
+                        <source
+                          media={`(min-width:${properties.logo?.breakpoint ?? 577}px)`}
+                          srcSet={
+                            properties.logo?.srcSet ??
+                            `${basePath}/logo-${properties.header?.theme ?? 'dark'}-theme.png`
+                          }
+                        />
+                        <img
+                          src={
+                            properties.logo?.src ??
+                            `${basePath}/logo-square-${
+                              properties.header?.theme ?? 'dark'
+                            }-theme.png`
+                          }
+                          alt={properties.logo?.alt ?? 'Lowdefy'}
+                          className={methods.makeCssClass([
+                            {
+                              width: 130,
+                              xs: {
+                                width: 40,
+                              },
+                              sm: { width: 130 },
                             },
-                            md: { width: 130 },
-                          },
-                          styles.logo,
-                          properties.logo && properties.logo.style,
-                        ])}
-                      />
+                            styles.logo,
+                            properties.logo?.style,
+                          ])}
+                        />
+                      </picture>
                     </Link>
                     <div className={methods.makeCssClass(styles.headerContent)}>
                       <div className={methods.makeCssClass([styles.desktop, styles.lgMenu])}>
@@ -166,7 +168,7 @@ const PageHeaderMenu = ({
                             {
                               mode: 'horizontal',
                               collapsed: false,
-                              theme: get(properties, 'header.theme') || 'dark',
+                              theme: get(properties, 'header.theme') ?? 'dark',
                             },
                             properties.menu,
                             properties.menuLg,
@@ -177,7 +179,7 @@ const PageHeaderMenu = ({
                         content.header(
                           mergeObjects([
                             { width: 'auto', flex: '0 1 auto' },
-                            properties.header && properties.header.contentStyle,
+                            properties.header?.contentStyle,
                           ])
                         )}
                       <div className={methods.makeCssClass([styles.mobile, styles.mdMenu])}>
@@ -201,7 +203,7 @@ const PageHeaderMenu = ({
               blockId={`${blockId}_content`}
               components={{ Icon, Link }}
               events={events}
-              properties={mergeObjects([properties.content, { style: styles.body }])}
+              properties={mergeObjects([{ style: styles.body }, properties.content])}
               content={{
                 content: () => (
                   <>
@@ -213,8 +215,8 @@ const PageHeaderMenu = ({
                         events={events}
                         methods={methods}
                         properties={mergeObjects([
-                          properties.breadcrumb,
                           { style: { padding: '16px 0' } },
+                          properties.breadcrumb,
                         ])}
                         rename={{
                           events: {
