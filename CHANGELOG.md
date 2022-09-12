@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.28](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.27...v4.0.0-alpha.28) (2022-09-12)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Cleanup styles objects. ([c771cc9](https://github.com/lowdefy/lowdefy/commit/c771cc9a339a14b2f30dac65253f1b46178bba7d))
+* **blocks-antd:** Fix issues in PageHeaderMenu and PageSiderMenu. ([81668f0](https://github.com/lowdefy/lowdefy/commit/81668f0e8a9452077c861fdc71cc40257de44bcc))
+* **server:** Move viewport setting to the _document. ([4471e49](https://github.com/lowdefy/lowdefy/commit/4471e499cd384491df493c0be6095e27af3a003b))
+* **server:** Set page viewport. ([9c05a6d](https://github.com/lowdefy/lowdefy/commit/9c05a6d8d7cc16c723089c6499005945fc2a5aaa))
+
+
+### Features
+
+* **blocks-antd:** Add logo.srcMobile and logo.breakpoint properties. ([21bbeab](https://github.com/lowdefy/lowdefy/commit/21bbeabc2ce7b8cd81fd9904bc4a0735b4afdd9d))
+
+
+
+
+
 # [4.0.0-alpha.27](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.26...v4.0.0-alpha.27) (2022-09-08)
 
 
