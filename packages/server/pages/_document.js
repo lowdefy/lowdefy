@@ -26,6 +26,7 @@ class LowdefyDocument extends Document {
           <link rel="manifest" href="/manifest.webmanifest" />
           <link rel="icon" type="image/svg+xml" href="/icon.svg" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script
             dangerouslySetInnerHTML={{
               __html: `/* start of Lowdefy append head */</script>${appJson.html.appendHead}<script>/* end of Lowdefy append head */`,
