@@ -12,6 +12,7 @@
 packages/server/build/**
 packages/server-dev/build/**
 !packages/docs/lowdefy.yaml
+!packages/docs/.lowdefy/deploy
 !packages/docs/howto/**/lowdefy.yaml
 packages/cli/server/**
 
