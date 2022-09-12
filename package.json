@@ -22,11 +22,6 @@
     "type": "git",
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/plugins/**",
-    "packages/utils/*"
-  ],
   "scripts": {
     "build:turbo": "turbo run build",
     "build": "pnpm -r build",

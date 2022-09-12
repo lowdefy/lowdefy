@@ -36,7 +36,7 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm build",
     "test": "jest --coverage --testTimeout=10000",
     "test:watch": "jest --coverage --watch"
   },

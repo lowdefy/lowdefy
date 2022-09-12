@@ -46,7 +46,7 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start && node dist/scripts/generateDefaultTypes.js",
     "clean": "rm -rf dist",
-    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm build",
     "start": "node dist/scripts/run.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },

@@ -37,7 +37,7 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist",
-    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm build",
     "test": "jest --coverage"
   },
   "dependencies": {

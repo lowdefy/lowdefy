@@ -33,7 +33,7 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "pnpm build"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@emotion/jest": "11.9.1",
