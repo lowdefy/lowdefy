@@ -29,27 +29,22 @@ import operators from '../build/plugins/operators/client.js';
 const Page = ({ auth, pageConfig, rootConfig }) => {
   const router = useRouter();
   return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Client
-        auth={auth}
-        Components={{ Head, Link }}
-        config={{
-          pageConfig,
-          rootConfig,
-        }}
-        router={router}
-        types={{
-          actions,
-          blocks,
-          icons,
-          operators,
-        }}
-        window={window}
-      />
-    </>
+    <Client
+      auth={auth}
+      Components={{ Head, Link }}
+      config={{
+        pageConfig,
+        rootConfig,
+      }}
+      router={router}
+      types={{
+        actions,
+        blocks,
+        icons,
+        operators,
+      }}
+      window={window}
+    />
   );
 };
 
