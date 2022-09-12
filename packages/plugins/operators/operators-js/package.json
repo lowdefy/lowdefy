@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-js",
-  "version": "4.0.0-alpha.27",
+  "version": "4.0.0-alpha.28",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -49,8 +49,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.27",
-    "@lowdefy/operators": "4.0.0-alpha.27"
+    "@lowdefy/helpers": "4.0.0-alpha.28",
+    "@lowdefy/operators": "4.0.0-alpha.28"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",

@@ -13,13 +13,13 @@
             "type": "string",
             "description": "Header logo source url."
           },
-          "srcSet": {
+          "srcMobile": {
             "type": "string",
-            "description": "Header logo srcSet for logo img element."
+            "description": "Header logo img element for mobile."
           },
-          "size": {
-            "type": "string",
-            "description": "Header logo size for logo img element."
+          "breakpoint": {
+            "type": "number",
+            "description": "Header logo breakpoint for switching between mobile and desktop logo."
           },
           "alt": {
             "type": "string",

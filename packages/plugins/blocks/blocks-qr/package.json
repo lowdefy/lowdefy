@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-qr",
-  "version": "4.0.0-alpha.27",
+  "version": "4.0.0-alpha.28",
   "license": "Apache-2.0",
   "description": "Lowdefy qr blocks.",
   "homepage": "https://lowdefy.com",
@@ -50,15 +50,15 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.27",
+    "@lowdefy/block-utils": "4.0.0-alpha.28",
     "html5-qrcode": "2.2.1",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/block-dev": "4.0.0-alpha.27",
-    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.27",
+    "@lowdefy/block-dev": "4.0.0-alpha.28",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.28",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
