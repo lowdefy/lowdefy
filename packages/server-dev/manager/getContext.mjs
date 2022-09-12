@@ -57,12 +57,10 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    packageManager: argv.packageManager || env.LOWDEFY_PACKAGE_MANAGER || 'npm',
     version: env.npm_package_version,
   };
 
-  context.packageManagerCmd =
-    process.platform === 'win32' ? `${context.packageManager}.cmd` : context.packageManager;
+  context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);

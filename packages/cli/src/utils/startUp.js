@@ -18,11 +18,11 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import checkForUpdatedVersions from './checkForUpdatedVersions.js';
+import checkPnpmIsInstalled from './checkPnpmIsInstalled.js';
 import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
 import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
-import getPackageManager from './getPackageManager.js';
 import getSendTelemetry from './getSendTelemetry.js';
 import createPrint from './createPrint.js';
 
@@ -42,9 +42,9 @@ async function startUp({ context, options = {}, command }) {
   context.print = createPrint({ logLevel: context.options.logLevel });
 
   context.directories = getDirectories(context);
-  context.packageManager = getPackageManager(context);
-  context.packageManagerCmd =
-    process.platform === 'win32' ? `${context.packageManager}.cmd` : context.packageManager;
+
+  context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+  checkPnpmIsInstalled(context);
   await checkForUpdatedVersions(context);
 
   context.sendTelemetry = getSendTelemetry(context);

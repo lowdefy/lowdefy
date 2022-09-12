@@ -20,7 +20,7 @@ import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 async function runDevServer({ context, directory }) {
   await spawnProcess({
     args: ['run', 'start'],
-    command: context.packageManagerCmd,
+    command: context.pnpmCmd,
     stdOutLineHandler: createStdOutLineHandler({ context }),
     processOptions: {
       cwd: directory,
@@ -29,7 +29,6 @@ async function runDevServer({ context, directory }) {
         LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         LOWDEFY_LOG_LEVEL: context.options.logLevel,
-        LOWDEFY_PACKAGE_MANAGER: context.packageManager,
         LOWDEFY_SERVER_DEV_OPEN_BROWSER: !!context.options.open,
         LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
         LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
