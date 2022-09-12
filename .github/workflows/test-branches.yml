@@ -24,5 +24,6 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - run: pnpm build
       - run: pnpm test
       - uses: codecov/codecov-action@v3
