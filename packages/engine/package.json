@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/engine",
-  "version": "4.0.0-alpha.27",
+  "version": "4.0.0-alpha.28",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -37,15 +37,15 @@
     "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.27",
-    "@lowdefy/operators": "4.0.0-alpha.27"
+    "@lowdefy/helpers": "4.0.0-alpha.28",
+    "@lowdefy/operators": "4.0.0-alpha.28"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
-    "@lowdefy/actions-core": "4.0.0-alpha.27",
-    "@lowdefy/build": "4.0.0-alpha.27",
-    "@lowdefy/operators-js": "4.0.0-alpha.27",
-    "@lowdefy/operators-mql": "4.0.0-alpha.27",
+    "@lowdefy/actions-core": "4.0.0-alpha.28",
+    "@lowdefy/build": "4.0.0-alpha.28",
+    "@lowdefy/operators-js": "4.0.0-alpha.28",
+    "@lowdefy/operators-mql": "4.0.0-alpha.28",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
