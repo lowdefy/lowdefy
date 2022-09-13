@@ -61,7 +61,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.30.0",
     "eslint-plugin-react-hooks": "4.5.0",
-    "lerna": "5.0.0",
+    "lerna": "5.5.1",
     "prettier": "2.6.2",
     "turbo": "1.2.14"
   },
