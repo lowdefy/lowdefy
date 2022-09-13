@@ -36,11 +36,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
-    "test": "jest --coverage"
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.28",
@@ -50,11 +49,15 @@
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.0.0-alpha.28",
-    "@shelf/jest-mongodb": "2.2.2",
+    "@shelf/jest-mongodb": "4.1.0",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
-    "jest": "28.1.0"
+    "jest": "28.1.0",
+    "jest-environment-node": "28.1.0",
+    "next-auth": "4.10.3",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "publishConfig": {
     "access": "public"

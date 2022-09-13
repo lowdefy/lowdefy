@@ -14,24 +14,21 @@
   limitations under the License.
 */
 
-import { spawnProcess } from '@lowdefy/node-utils';
+import { execSync } from 'child_process';
 
-async function installServer({ context, directory }) {
-  context.print.spin('Installing dependencies.');
+function checkPnpmIsInstalled({ print, pnpmCmd }) {
   try {
-    await spawnProcess({
-      command: context.pnpmCmd,
-      args: ['install'],
-      stdOutLineHandler: (line) => context.print.debug(line),
-      processOptions: {
-        cwd: directory,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    throw new Error('Dependency installation failed.');
+    execSync(`${pnpmCmd} --version`, { stdio: 'ignore' });
+  } catch (e) {
+    print.error(`
+-------------------------------------------------------------
+  The package manager "pnpm" is required to run Lowdefy.
+  Install pnpm as describe here:
+  https://pnpm.io/installation
+  or run  'corepack enable'.
+-------------------------------------------------------------`);
+    throw new Error('The package manager "pnpm" is required to run Lowdefy.');
   }
-  context.print.log('Dependencies install successfully.');
 }
 
-export default installServer;
+export default checkPnpmIsInstalled;

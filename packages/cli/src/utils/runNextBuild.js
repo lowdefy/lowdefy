@@ -32,7 +32,7 @@ async function runNextBuild({ context, directory }) {
   context.print.spin('Running Next build.');
   try {
     await spawnProcess({
-      command: context.packageManagerCmd,
+      command: context.pnpmCmd,
       args: ['run', 'build:next'],
       stdOutLineHandler: createStdOutLineHandler({ context }),
       processOptions: {

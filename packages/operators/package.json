@@ -34,10 +34,9 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
+    "prepublishOnly": "pnpm build",
     "test": "jest --coverage --testTimeout=10000",
     "test:watch": "jest --coverage --watch"
   },

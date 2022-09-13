@@ -32,12 +32,11 @@
   ],
   "exports": "./dist/index.js",
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist && rm -rf .lowdefy",
-    "start": "yarn node ./dist/index.js",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "FORCE_COLOR=3 yarn node --experimental-vm-modules $(yarn bin jest)"
+    "start": "node ./dist/index.js",
+    "prepublishOnly": "pnpm build",
+    "test": "FORCE_COLOR=3 node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.28",

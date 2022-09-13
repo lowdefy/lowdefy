@@ -51,9 +51,6 @@ const options = {
     .choices(['error', 'warn', 'info', 'debug'])
     .default('info')
     .env('LOWDEFY_LOG_LEVEL'),
-  packageManager: new Option('--package-manager <package-manager>', 'The package manager to use.')
-    .env('LOWDEFY_PACKAGE_MANAGER')
-    .choices(['npm', 'yarn']),
   port: new Option(
     '--port <port>',
     'Change the port the development server is hosted at. Default is 3000.'
@@ -84,7 +81,6 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .option('--no-next-build', 'Do not build the Next.js server.')
-  .addOption(options.packageManager)
   .addOption(options.refResolver)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: build }));
@@ -98,7 +94,6 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .option('--no-open', 'Do not open a new tab in the default browser.')
-  .addOption(options.packageManager)
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(options.watch)
@@ -120,7 +115,6 @@ program
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
-  .addOption(options.packageManager)
   .addOption(options.port)
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: start }));

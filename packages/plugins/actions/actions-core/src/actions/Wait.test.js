@@ -21,15 +21,15 @@ test('wait set ms before continuing', async () => {
   let flag = false;
 
   const waitAndSetFlag = async () => {
-    await Wait({ params: { ms: 10 } });
+    await Wait({ params: { ms: 100 } });
     flag = true;
   };
   expect(flag).toBe(false);
   waitAndSetFlag();
   expect(flag).toBe(false);
-  await wait(5);
+  await wait(50);
   expect(flag).toBe(false);
-  await wait(6);
+  await wait(60);
   expect(flag).toBe(true);
 });
 

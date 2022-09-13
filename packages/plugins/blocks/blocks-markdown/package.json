@@ -38,11 +38,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "prepublishOnly": "pnpm build",
     "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },
@@ -66,6 +65,7 @@
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.2.0",
+    "@types/react": "18.0.19",
     "copyfiles": "2.4.1",
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",

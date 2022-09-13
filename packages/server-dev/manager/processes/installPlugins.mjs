@@ -16,17 +16,12 @@
 
 import { spawnProcess } from '@lowdefy/node-utils';
 
-const args = {
-  npm: ['install', '--legacy-peer-deps'],
-  yarn: ['install'],
-};
-
-function installPlugins({ logger, packageManager, packageManagerCmd }) {
+function installPlugins({ logger, packageManagerCmd }) {
   return async () => {
     logger.info({ print: 'spin' }, 'Installing plugins...');
     await spawnProcess({
       command: packageManagerCmd,
-      args: args[packageManager],
+      args: ['install'],
       stdOutLineHandler: (line) => logger.debug(line),
     });
     logger.info({ print: 'log' }, 'Installed plugins.');

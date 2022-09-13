@@ -36,11 +36,10 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf .lowdefy",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.28"

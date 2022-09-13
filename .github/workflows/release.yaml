@@ -9,18 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: publish
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: 16
           registry-url: https://registry.npmjs.org/
-      - uses: actions/checkout@v2
-
-      - name: yarn install
-        run: yarn install
-
-      - name: yarn build
-        run: yarn build
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
       # --ignore-scripts to avoid scripts that could read npm token
