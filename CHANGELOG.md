@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.29](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.28...v4.0.0-alpha.29) (2022-09-13)
+
+
+### Bug Fixes
+
+* Fix CLI tests failing due to pnpm. ([d95524a](https://github.com/lowdefy/lowdefy/commit/d95524ad6b4e37452176cf1aaa046269daf2ba53))
+* Update Wait action tests to be more robust. ([b2c559c](https://github.com/lowdefy/lowdefy/commit/b2c559c7edf5d01b30d10268ad2e6c35006b6718))
+
+
+### Features
+
+* Add additional migration guide notes. ([45eae2c](https://github.com/lowdefy/lowdefy/commit/45eae2cbb0845981ead2cc76028925a0f7b1372e))
+* Change CLI to use pnpm as package manager. ([e9d7d73](https://github.com/lowdefy/lowdefy/commit/e9d7d73aed2fc9d40699210f2f8846df0170d481))
+* Update the V4 migration guide. ([e05e424](https://github.com/lowdefy/lowdefy/commit/e05e424a1851da6cbf40f91f4a6d9628f1a7421d))
+
+
+
+
+
 # [4.0.0-alpha.28](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.27...v4.0.0-alpha.28) (2022-09-12)
 
 

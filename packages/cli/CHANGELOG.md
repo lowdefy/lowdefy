@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.29](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.28...v4.0.0-alpha.29) (2022-09-13)
+
+
+### Bug Fixes
+
+* Fix CLI tests failing due to pnpm. ([d95524a](https://github.com/lowdefy/lowdefy/commit/d95524ad6b4e37452176cf1aaa046269daf2ba53))
+
+
+### Features
+
+* Change CLI to use pnpm as package manager. ([e9d7d73](https://github.com/lowdefy/lowdefy/commit/e9d7d73aed2fc9d40699210f2f8846df0170d481))
+
+
+
+
+
 # [4.0.0-alpha.28](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.27...v4.0.0-alpha.28) (2022-09-12)
 
 **Note:** Version bump only for package lowdefy
