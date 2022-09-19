@@ -24,7 +24,14 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            References are used to split the configuration of an app into logically distinct files, and to reuse configuration in the app. References can be used almost anywhere in the configuration, as long as the configuration remains valid YAML.
+            References and templates have the following use cases:
+            - Splitting out the config for readability and code navigation.
+            - Splitting out a piece of config in order to use the exact same config in multiple places.
+            - Using a reference with variables to make use of a shared piece of config with dynamic variables.
+            - Using a `.njk` file to create config files using the Nunjucks templating language.
+            - Using resolver and transformer functions to create Lowdefy config using Javascript functions.
+
+            ## Using References to Improve Readability
 
             References are made using the [`_ref`](/_ref) operator. If the referenced file has a `.yaml` or `.json` extension, the contents of the file will be parsed, else the file content is included as a string (this is useful for `.md` or `.html` files). As an example of splitting an app into logically distinct files, references can be used to write each page as a separate file:
 
@@ -36,6 +43,8 @@ _ref:
               _ref: pages/page1.yaml # Path to the referenced file. Always from the root of the project.
               _ref: pages/page1.yaml
             ```
+
+            ## Using References as Templates for Improved Reusability
 
             The `_ref` operator can take an argument called `vars`. This can be any data, and is passed down to later be accessed with the [`_var`](/_var) operator. By using vars, the referenced file can become a template, using the given variables. For example, a standard page template might be used for multiple pages in an app:
 
