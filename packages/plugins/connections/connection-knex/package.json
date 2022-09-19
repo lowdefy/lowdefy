@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-knex",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -35,14 +35,13 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "prepublishOnly": "pnpm build",
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.28",
+    "@lowdefy/helpers": "4.0.0-alpha.30",
     "knex": "1.0.7",
     "mssql": "8.1.2",
     "mysql": "2.18.1",
@@ -50,7 +49,7 @@
     "sqlite3": "5.0.8"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.28",
+    "@lowdefy/ajv": "4.0.0-alpha.30",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

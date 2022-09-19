@@ -6,41 +6,21 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        node: [14, 16, 18]
     steps:
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - uses: actions/checkout@v2
-      - name: yarn install
-        run: yarn install
-      - name: Build packages
-        run: yarn build
-
-      - name: Test packages
-        run: yarn test:ci
-
-      - name: Upload coverage to codecov
-        run: bash <(curl -s https://codecov.io/bash)
-
-      - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v2.7.5
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/packages/**/coverage/lcov.info:lcov
-        continue-on-error: true
-
-  check-yarn-cache:
-    name: Check yarn cache
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-      - uses: actions/checkout@v2
-      - name: Check yarn cache integrity
-        run: yarn install --immutable --immutable-cache --check-cache
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test
+      - uses: codecov/codecov-action@v3

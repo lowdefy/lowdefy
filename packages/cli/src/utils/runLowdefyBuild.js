@@ -21,8 +21,8 @@ async function runLowdefyBuild({ context, directory }) {
   context.print.spin('Running Lowdefy build.');
   try {
     await spawnProcess({
-      command: context.packageManagerCmd,
       args: ['run', 'build:lowdefy'],
+      command: context.pnpmCmd,
       stdOutLineHandler: createStdOutLineHandler({ context }),
       processOptions: {
         cwd: directory,

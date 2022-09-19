@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -32,16 +32,15 @@
   ],
   "exports": "./dist/index.js",
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist && rm -rf .lowdefy",
-    "start": "yarn node ./dist/index.js",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "FORCE_COLOR=3 yarn node --experimental-vm-modules $(yarn bin jest)"
+    "start": "node ./dist/index.js",
+    "prepublishOnly": "pnpm build",
+    "test": "FORCE_COLOR=3 node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.28",
-    "@lowdefy/node-utils": "4.0.0-alpha.28",
+    "@lowdefy/helpers": "4.0.0-alpha.30",
+    "@lowdefy/node-utils": "4.0.0-alpha.30",
     "axios": "0.27.2",
     "commander": "9.4.0",
     "decompress": "4.2.1",

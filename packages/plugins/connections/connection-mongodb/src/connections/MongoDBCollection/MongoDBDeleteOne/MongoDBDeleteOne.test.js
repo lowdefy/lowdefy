@@ -84,7 +84,7 @@ test('deleteOne catch invalid options', async () => {
   const res = await MongoDBDeleteOne({ request, connection });
   expect(res).toEqual({
     acknowledged: false,
-    deletedCount: undefined,
+    deletedCount: 0,
   });
 });
 

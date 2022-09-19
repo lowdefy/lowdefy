@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/block-utils",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "Lowdefy Block Utils",
   "homepage": "https://lowdefy.com",
@@ -34,22 +34,22 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "prepublishOnly": "pnpm build",
     "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },
   "dependencies": {
     "@emotion/css": "11.9.0",
-    "@lowdefy/helpers": "4.0.0-alpha.28",
+    "@lowdefy/helpers": "4.0.0-alpha.30",
     "dompurify": "2.3.8",
     "react": "18.1.0",
     "react-dom": "18.1.0"
   },
   "devDependencies": {
+    "@babel/core": "7.19.0",
     "@emotion/jest": "11.9.1",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",

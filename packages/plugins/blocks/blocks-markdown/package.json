@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-markdown",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "Lowdefy markdown blocks.",
   "homepage": "https://lowdefy.com",
@@ -38,16 +38,15 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && pnpm copyfiles",
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start && yarn copyfiles",
+    "prepublishOnly": "pnpm build",
     "test:watch": "jest --coverage --watch",
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-alpha.28",
+    "@lowdefy/block-utils": "4.0.0-alpha.30",
     "dompurify": "2.3.8",
     "react": "18.1.0",
     "react-dom": "18.1.0",
@@ -58,14 +57,15 @@
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/block-dev": "4.0.0-alpha.28",
-    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.28",
+    "@lowdefy/block-dev": "4.0.0-alpha.30",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.30",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",
     "@testing-library/dom": "8.13.0",
     "@testing-library/react": "13.3.0",
     "@testing-library/user-event": "14.2.0",
+    "@types/react": "18.0.19",
     "copyfiles": "2.4.1",
     "jest": "28.1.0",
     "jest-environment-jsdom": "28.1.0",

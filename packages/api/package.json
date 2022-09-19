@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/api",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -34,19 +34,18 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/ajv": "4.0.0-alpha.28",
-    "@lowdefy/helpers": "4.0.0-alpha.28",
-    "@lowdefy/node-utils": "4.0.0-alpha.28",
-    "@lowdefy/nunjucks": "4.0.0-alpha.28",
-    "@lowdefy/operators": "4.0.0-alpha.28",
-    "@lowdefy/operators-js": "4.0.0-alpha.28"
+    "@lowdefy/ajv": "4.0.0-alpha.30",
+    "@lowdefy/helpers": "4.0.0-alpha.30",
+    "@lowdefy/node-utils": "4.0.0-alpha.30",
+    "@lowdefy/nunjucks": "4.0.0-alpha.30",
+    "@lowdefy/operators": "4.0.0-alpha.30",
+    "@lowdefy/operators-js": "4.0.0-alpha.30"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",

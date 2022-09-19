@@ -20,7 +20,7 @@ import createStdOutLineHandler from '../../utils/createStdOutLineHandler.js';
 async function runStart({ context, directory }) {
   await spawnProcess({
     args: ['run', 'start'],
-    command: context.packageManagerCmd,
+    command: context.pnpmCmd,
     stdOutLineHandler: createStdOutLineHandler({ context }),
     processOptions: {
       cwd: directory,

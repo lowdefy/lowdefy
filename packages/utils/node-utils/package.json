@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -34,14 +34,13 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
+    "prepublishOnly": "pnpm build",
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.28",
+    "@lowdefy/helpers": "4.0.0-alpha.30",
     "fs-extra": "10.1.0"
   },
   "devDependencies": {

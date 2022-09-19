@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-auth0",
-  "version": "4.0.0-alpha.28",
+  "version": "4.0.0-alpha.30",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -35,10 +35,9 @@
     "*"
   ],
   "scripts": {
-    "build": "yarn swc",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist",
-    "prepare": "yarn build",
-    "swc": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
