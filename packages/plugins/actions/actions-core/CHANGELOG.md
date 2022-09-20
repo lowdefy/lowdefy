@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.30](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.29...v4.0.0-alpha.30) (2022-09-17)
+
+**Note:** Version bump only for package @lowdefy/actions-core
+
+
+
+
+
+# [4.0.0-alpha.29](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.28...v4.0.0-alpha.29) (2022-09-13)
+
+
+### Bug Fixes
+
+* Update Wait action tests to be more robust. ([b2c559c](https://github.com/lowdefy/lowdefy/commit/b2c559c7edf5d01b30d10268ad2e6c35006b6718))
+
+
+
+
+
 # [4.0.0-alpha.28](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.27...v4.0.0-alpha.28) (2022-09-12)
 
 **Note:** Version bump only for package @lowdefy/actions-core
