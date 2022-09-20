@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+/* eslint-disable no-param-reassign */
+
+import { get, type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
 import YAML from 'yaml';
@@ -31,12 +33,17 @@ function parseRefContent({ content, refDef }) {
     }
 
     if (ext === 'yaml' || ext === 'yml') {
-      return YAML.parse(content);
+      content = YAML.parse(content);
     }
     if (ext === 'json') {
-      return JSON5.parse(content);
+      content = JSON5.parse(content);
     }
   }
+
+  if (refDef.key) {
+    content = get(content, refDef.key, { default: null });
+  }
+
   return content;
 }
 

@@ -790,6 +790,96 @@ ref2:
   });
 });
 
+describe('get key from referenced file', () => {
+  test('buildRefs get key from referenced yaml file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    key: targetField`,
+      },
+      {
+        path: 'target.yaml',
+        content: 'targetField: value',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'value',
+    });
+  });
+
+  test('buildRefs get key from referenced yaml file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.json
+    key: targetField`,
+      },
+      {
+        path: 'target.json',
+        content: '{"targetField": "value"}',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'value',
+    });
+  });
+
+  test('buildRefs get key from referenced file returns default null', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    key: field2`,
+      },
+      {
+        path: 'target.yaml',
+        content: 'field1: value',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: null,
+    });
+  });
+
+  test('buildRefs get key from referenced file returns null if file is not a yaml or json file', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.txt
+    key: targetField`,
+      },
+      {
+        path: 'target.txt',
+        content: 'targetField: value',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: null,
+    });
+  });
+});
+
 describe('transformer functions', () => {
   test('buildRefs with transformer function', async () => {
     const files = [
