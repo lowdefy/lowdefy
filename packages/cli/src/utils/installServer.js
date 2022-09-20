@@ -21,7 +21,7 @@ async function installServer({ context, directory }) {
   try {
     await spawnProcess({
       command: context.pnpmCmd,
-      args: ['install'],
+      args: ['install', '--no-frozen-lockfile'],
       stdOutLineHandler: (line) => context.print.debug(line),
       processOptions: {
         cwd: directory,
