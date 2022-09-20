@@ -31,7 +31,8 @@
     "pages/*",
     "public/*",
     "next.config.js",
-    ".eslintrc.yaml"
+    ".eslintrc.yaml",
+    ".npmrc"
   ],
   "scripts": {
     "start": "node manager/run.mjs",
