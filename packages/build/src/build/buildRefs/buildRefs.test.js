@@ -47,13 +47,13 @@ test('buildRefs no refs', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
-      content: `key: value`,
+      content: `field: value`,
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
   expect(res).toEqual({
-    key: 'value',
+    field: 'value',
   });
 });
 
@@ -278,17 +278,17 @@ templated:
   _ref:
     path: template.json.njk
     vars:
-      key: key1`,
+      field: field1`,
       },
       {
         path: 'template.json.njk',
-        content: '{ "{{ key }}": true }',
+        content: '{ "{{ field }}": true }',
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(res).toEqual({
-      templated: { key1: true },
+      templated: { field1: true },
     });
   });
 
@@ -309,7 +309,7 @@ templated:
         path: 'template.yaml.njk',
         content: `list:
 {% for value in values %}
-  - key: {{ value }}
+  - field: {{ value }}
 {% endfor %}
 `,
       },
@@ -317,7 +317,7 @@ templated:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(res).toEqual({
-      templated: { list: [{ key: 'value1' }, { key: 'value2' }] },
+      templated: { list: [{ field: 'value1' }, { field: 'value2' }] },
     });
   });
 
@@ -338,7 +338,7 @@ templated:
         path: 'template.yml.njk',
         content: `list:
 {% for value in values %}
-  - key: {{ value }}
+  - field: {{ value }}
 {% endfor %}
       `,
       },
@@ -346,13 +346,13 @@ templated:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(res).toEqual({
-      templated: { list: [{ key: 'value1' }, { key: 'value2' }] },
+      templated: { list: [{ field: 'value1' }, { field: 'value2' }] },
     });
   });
 });
 
 describe('vars', () => {
-  test('buildRefs var specified by name', async () => {
+  test('buildRefs var specified by field', async () => {
     const files = [
       {
         path: 'lowdefy.yaml',
@@ -366,16 +366,16 @@ describe('vars', () => {
       {
         path: 'file.yaml',
         content: `
-  key:
+  field:
     _var:
-      name: var1`,
+      key: var1`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        key: 'value',
+        field: 'value',
       },
     });
   });
@@ -394,9 +394,9 @@ describe('vars', () => {
       {
         path: 'file.yaml',
         content: `
-  key:
+  field:
     _var:
-      name: var1
+      key: var1
       default: default`,
       },
     ];
@@ -404,7 +404,7 @@ describe('vars', () => {
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        key: 'value',
+        field: 'value',
       },
     });
   });
@@ -423,13 +423,13 @@ describe('vars', () => {
       {
         path: 'file.yaml',
         content: `
-  key1:
+  field1:
     _var:
-      name: var1
+      key: var1
       default: default
-  key2:
+  field2:
     _var:
-      name: var2
+      key: var2
       default: default`,
       },
     ];
@@ -437,8 +437,8 @@ describe('vars', () => {
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        key1: null,
-        key2: 'default',
+        field1: null,
+        field2: 'default',
       },
     });
   });
@@ -455,25 +455,25 @@ describe('vars', () => {
       {
         path: 'file.yaml',
         content: `
-  key_empty_str:
+  field_empty_str:
     _var:
-      name: var1
+      key: var1
       default: ''
-  key_false:
+  field_false:
     _var:
-      name: var2
+      key: var2
       default: false
-  key_NaN:
+  field_NaN:
     _var:
-      name: var3
+      key: var3
       default: .nan
-  key_Inf:
+  field_Inf:
     _var:
-      name: var4
+      key: var4
       default: .inf
-  key_zero:
+  field_zero:
     _var:
-      name: var5
+      key: var5
       default: 0`,
       },
     ];
@@ -481,11 +481,11 @@ describe('vars', () => {
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        key_empty_str: '',
-        key_false: false,
-        key_NaN: null,
-        key_Inf: null,
-        key_zero: 0,
+        field_empty_str: '',
+        field_false: false,
+        field_NaN: null,
+        field_Inf: null,
+        field_zero: 0,
       },
     });
   });
@@ -504,13 +504,13 @@ describe('vars', () => {
       {
         path: 'file.yaml',
         content: `
-  key:
+  field:
     _var: [1]`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      '"_var" operator takes a string or object with name field as arguments. Received "{"_var":[1]}"'
+      '"_var" operator takes a string or object with "key" field as arguments. Received "{"_var":[1]}"'
     );
   });
 
@@ -524,7 +524,7 @@ describe('vars', () => {
       path: file.yaml
       vars:
         var1:
-          key: value`,
+          field: value`,
       },
       {
         path: 'file.yaml',
@@ -539,15 +539,15 @@ describe('vars', () => {
     const res = await buildRefs({ context });
     expect(res).toEqual({
       ref: {
-        ref1: { key: 'value' },
-        ref2: { key: 'value' },
+        ref1: { field: 'value' },
+        ref2: { field: 'value' },
       },
     });
-    res.ref.ref1.key = 'newValue';
+    res.ref.ref1.field = 'newValue';
     expect(res).toEqual({
       ref: {
-        ref1: { key: 'newValue' },
-        ref2: { key: 'value' },
+        ref1: { field: 'newValue' },
+        ref2: { field: 'value' },
       },
     });
   });
