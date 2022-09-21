@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.31](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.30...v4.0.0-alpha.31) (2022-09-21)
+
+
+### Features
+
+* **api:** Map nextAuthConfig.pages. ([0798d39](https://github.com/lowdefy/lowdefy/commit/0798d393c65bd22ece769be7d56d456d07b3b74b))
+
+
+
+
+
 # [4.0.0-alpha.30](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.29...v4.0.0-alpha.30) (2022-09-17)
 
 **Note:** Version bump only for package @lowdefy/api

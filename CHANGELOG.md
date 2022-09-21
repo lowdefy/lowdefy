@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.31](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.30...v4.0.0-alpha.31) (2022-09-21)
+
+
+### Bug Fixes
+
+* **docs:** Fix Refernces and Templates wording. ([d9ad6e0](https://github.com/lowdefy/lowdefy/commit/d9ad6e012a786eeb90ec2e938dd465040c158fb1))
+* **docs:** Update docs build script. ([6b2ace3](https://github.com/lowdefy/lowdefy/commit/6b2ace32fe406daf8879d6de282a38e7dfcdd652))
+* Fix server pnpm installs. ([c7be221](https://github.com/lowdefy/lowdefy/commit/c7be22150ed14afcb8b6508bd771112a542e0a26))
+
+
+### Features
+
+* Add the abilty to get a key from a reference JSON or YAML file. ([192267e](https://github.com/lowdefy/lowdefy/commit/192267ef716df1997a998a923e8b050aa5b86d35))
+* **api:** Map nextAuthConfig.pages. ([0798d39](https://github.com/lowdefy/lowdefy/commit/0798d393c65bd22ece769be7d56d456d07b3b74b))
+* **docs:** Add References and Templates use cases. ([1ee298e](https://github.com/lowdefy/lowdefy/commit/1ee298ee370bac30e1189237d5cf9ccb69a5fac3))
+* **docs:** Update References and Templates concept page. ([9468acf](https://github.com/lowdefy/lowdefy/commit/9468acfa6e458bb72216e485b520fa0cf37d8cb4))
+* Rename _var name param to key for consistency ([d5bda68](https://github.com/lowdefy/lowdefy/commit/d5bda6876a52cd97fcdaac62c8aa3b99085bc3d5))
+
+
+### BREAKING CHANGES
+
+* The _var operator ‘name’ param has been renamed to ‘key’ to be more consistent with other getter operators.
+
+
+
+
+
 # [4.0.0-alpha.30](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.29...v4.0.0-alpha.30) (2022-09-17)
 
 **Note:** Version bump only for package @lowdefy/lowdefy
