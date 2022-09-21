@@ -53,8 +53,8 @@
     "@lowdefy/block-utils": "4.0.0-alpha.30",
     "echarts": "5.3.2",
     "echarts-for-react": "3.0.2",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",

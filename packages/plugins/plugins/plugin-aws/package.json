@@ -46,8 +46,8 @@
     "@lowdefy/helpers": "4.0.0-alpha.30",
     "antd": "4.22.5",
     "aws-sdk": "2.1145.0",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
