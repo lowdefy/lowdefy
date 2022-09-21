@@ -54,11 +54,11 @@
     "@lowdefy/node-utils": "4.0.0-alpha.30",
     "@lowdefy/operators-js": "4.0.0-alpha.30",
     "@lowdefy/plugin-next-auth": "4.0.0-alpha.30",
-    "next": "12.1.6",
+    "next": "12.3.1",
     "next-auth": "4.10.3",
     "process": "0.11.10",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-icons": "4.3.1"
   },
   "devDependencies": {
