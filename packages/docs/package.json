@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/docs",
-  "version": "4.0.0-alpha.30",
+  "version": "4.0.0-alpha.31",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,7 +42,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.30"
+    "@lowdefy/helpers": "4.0.0-alpha.31"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",

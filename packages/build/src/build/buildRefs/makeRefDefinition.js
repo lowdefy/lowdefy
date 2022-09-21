@@ -24,6 +24,7 @@ function makeRefDefinition(refDefinition) {
     id: uuid(),
     original: refDefinition,
     path: getRefPath(refDefinition),
+    key: get(refDefinition, 'key'),
     resolver: get(refDefinition, 'resolver'),
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),

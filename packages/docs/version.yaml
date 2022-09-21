@@ -1,1 +1,3 @@
-v4.0.0-alpha.30
+_ref:
+  path: package.json
+  key: version

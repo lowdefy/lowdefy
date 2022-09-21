@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/nunjucks",
-  "version": "4.0.0-alpha.30",
+  "version": "4.0.0-alpha.31",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.30",
+    "@lowdefy/helpers": "4.0.0-alpha.31",
     "moment": "2.29.4"
   },
   "devDependencies": {

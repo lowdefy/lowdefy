@@ -25,17 +25,17 @@ function refReviver(key, value) {
       if (type.isString(value._var)) {
         return JSON.parse(JSON.stringify(get(this.vars, value._var, { default: null })));
       }
-      if (type.isObject(value._var) && type.isString(value._var.name)) {
+      if (type.isObject(value._var) && type.isString(value._var.key)) {
         return JSON.parse(
           JSON.stringify(
-            get(this.vars, value._var.name, {
+            get(this.vars, value._var.key, {
               default: type.isNone(value._var.default) ? null : value._var.default,
             })
           )
         );
       }
       throw new Error(
-        `"_var" operator takes a string or object with name field as arguments. Received "${JSON.stringify(
+        `"_var" operator takes a string or object with "key" field as arguments. Received "${JSON.stringify(
           value
         )}"`
       );

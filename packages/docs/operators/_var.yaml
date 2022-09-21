@@ -22,9 +22,9 @@ _ref:
     env: Build Only
     types: |
       ```
-      (name: string): any
+      (key: string): any
       (arguments: {
-        name: string,
+        key: string,
         default?: any,
       }): any
       ```
@@ -38,8 +38,8 @@ _ref:
       If the `_var` operator is called with a string argument, the value of the key in the `vars` object is returned. If the value is not found, `null` is returned. Dot notation is supported.
 
       ###### object
-        - `name: string`: The value of the key in the `vars` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation is supported.
-        - `default: any`: A value to return if the `name` is not found in `vars`. By default, `null` is returned if a value is not found.
+        - `key: string`: The value of the key in the `vars` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation is supported.
+        - `default: any`: A value to return if the `key` is not found in `vars`. By default, `null` is returned if a value is not found.
 
     examples: |
       ###### Using a standardized input label template:
@@ -76,7 +76,7 @@ _ref:
       extraStyle:
         color:
           _var:
-            name: descriptionTextColor
+            key: descriptionTextColor
             default: '#333333'
       ```
       Returns:

@@ -21,7 +21,7 @@ function installPlugins({ logger, packageManagerCmd }) {
     logger.info({ print: 'spin' }, 'Installing plugins...');
     await spawnProcess({
       command: packageManagerCmd,
-      args: ['install'],
+      args: ['install', '--no-frozen-lockfile'],
       stdOutLineHandler: (line) => logger.debug(line),
     });
     logger.info({ print: 'log' }, 'Installed plugins.');

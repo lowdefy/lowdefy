@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.31](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.30...v4.0.0-alpha.31) (2022-09-21)
+
+
+### Bug Fixes
+
+* Fix server pnpm installs. ([c7be221](https://github.com/lowdefy/lowdefy/commit/c7be22150ed14afcb8b6508bd771112a542e0a26))
+
+
+
+
+
 # [4.0.0-alpha.30](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.29...v4.0.0-alpha.30) (2022-09-17)
 
 **Note:** Version bump only for package lowdefy
