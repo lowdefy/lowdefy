@@ -177,6 +177,273 @@ _ref:
                             _request: request1
             ```
 
+            ## Working Example
+
+            For this example, a connection to [{JSON}Placeholder](https://jsonplaceholder.typicode.com/) will be used.
+            To create this `connection`, define the connection as follows in the `lowdefy.yaml` file:
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+            ```
+
+            To use this connection, a `request` must be defined, which references the corresponding `connectionId`. A request to get the list of users can be added to the home page as follows:
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+
+                requests:
+                  - id: get_users
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /users
+            ```
+
+            This request should be called when the page is mounted. To do this, the `Request` action will be used during the `onMount` event of the home page.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+
+                requests:
+                  - id: get_users
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /users
+
+                events:
+                  onMount:
+                    - id: fetch_get_users
+                      type: Request
+                      params: get_users
+            ```
+
+            A block can be added to the page, that can use or display the data returned by this request. The `_request` operator is used to get the the results of the request.
+            In this example, a `Selector` block will be added. The `_array.map` operator is used to get the data in a form that can be used by the Selector.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+
+                requests:
+                  - id: get_users
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /users
+
+                events:
+                  onMount:
+                    - id: fetch_get_users
+                      type: Request
+                      params: get_users
+
+                blocks:
+                  - id: user_id
+                    type: Selector
+                    properties:
+                      title: Select a User
+                      options:
+                        _array.map:
+                          - _request: get_users.data
+                          - _function:
+                              label:
+                                __args: 0.name
+                              value:
+                                __args: 0.id
+            ```
+
+            To get the posts made by the selected user, a new request should be created and called once the value of the Selector changes.
+            To do this, create a new request that will make us of a `payload` to get the posts with the selected user id. Add an `onChange` event on the `Selector` block, during which the new request is called.
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+
+                requests:
+                  - id: get_users
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /users
+                  - id: get_posts
+                    type: AxiosHttp
+                    connectionId: my_api
+                    payload:
+                      id:
+                        _state: user_id
+                    properties:
+                      url:
+                        _string.concat:
+                          - /users/
+                          - _payload: id
+                          - /posts
+
+                events:
+                  onMount:
+                    - id: fetch_get_users
+                      type: Request
+                      params: get_users
+
+                blocks:
+                  - id: user_id
+                    type: Selector
+                    properties:
+                      title: Select a User
+                      options:
+                        _array.map:
+                          - _request: get_users.data
+                          - _function:
+                              label:
+                                __args: 0.name
+                              value:
+                                __args: 0.id
+                    events:
+                      onChange:
+                        - id: fetch_get_posts
+                          type: Request
+                          params: get_posts
+            ```
+
+            Save the data from the result of this request in state by using the `SetState` action. To display the posts, make use of a `List` block. In this `List` block, display the data returned of each post in a `Markdown` block.
+            This is done as follows:
+
+            ###### lowdefy.yaml
+            ```yaml
+            lowdefy: LOWDEFY_VERSION
+
+            connections:
+              - id: my_api
+                type: AxiosHttp
+                properties:
+                  baseURL: https://jsonplaceholder.typicode.com
+
+            pages:
+              - id: home
+                type: PageHeaderMenu
+
+                requests:
+                  - id: get_users
+                    type: AxiosHttp
+                    connectionId: my_api
+                    properties:
+                      url: /users
+
+                  - id: get_posts
+                    type: AxiosHttp
+                    connectionId: my_api
+                    payload:
+                      id:
+                        _state: user_id
+                    properties:
+                      url:
+                        _string.concat:
+                          - /users/
+                          - _payload: id
+                          - /posts
+
+                events:
+                  onMount:
+                    - id: fetch_get_users
+                      type: Request
+                      params: get_users
+
+                blocks:
+                  - id: user_id
+                    type: Selector
+                    properties:
+                      title: Select a User
+                      options:
+                        _array.map:
+                          - _request: get_users.data
+                          - _function:
+                              label:
+                                __args: 0.name
+                              value:
+                                __args: 0.id
+                    events:
+                      onChange:
+                        - id: fetch_get_posts
+                          type: Request
+                          params: get_posts
+                        - id: set_posts
+                          type: SetState
+                          params:
+                            posts:
+                              _request: get_posts.data
+
+                  - id: posts
+                    type: List
+                    blocks:
+                      - id: posts.$
+                        type: Markdown
+                        style:
+                          padding: 10
+                        properties:
+                          content:
+                            _string.concat:
+                              - |
+                                ```yaml
+                              - _yaml.stringify:
+                                  - _state: posts.$
+                              - |
+                                ```
+
+            ```
+
             ### TLDR
               - `connections` define links to other services, like connecting to a database. They are defined at the root of the lowdefy configuration.
               - `requests` use connections to make a call to the connected external services.
