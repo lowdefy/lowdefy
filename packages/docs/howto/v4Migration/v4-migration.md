@@ -4,12 +4,12 @@
 
 In version 3, the `state`, `global`, `input`, `urlQuery` and `event` data objects were sent with the request, so that the `_state`, `_global`, `_input`, `_url_query` and `_event` operators can be used inside requests and connections. This caused problems if the state became to large, as this would result in a payload size exceeded error on request calls.
 
-
 In version 4, these operators can no longer be used in requests, and request payloads are introduced, which can be used to specify the data that should be sent with the request. The data specified in the payload can be accessed using the `_payload` operator. Operators are evaluated in the payload before it is sent, so operators like `_state` can be used in the payload.
 
 If only the `_state` operator was used, the entire state object can be set as the payload:
 
 ###### Version 3:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -25,6 +25,7 @@ properties:
 ```
 
 ###### Version 4:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -44,6 +45,7 @@ properties:
 The payload can also be created more explicitly using more than one operator type:
 
 ###### Version 3:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -59,6 +61,7 @@ properties:
 ```
 
 ###### Version 4:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -81,6 +84,7 @@ properties:
 The `user` operator is still available in requests, and the `_user` operator should be used in the request properties not in they payload as malicious users can modify the data sent in payload.
 
 ###### Don't do:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -99,6 +103,7 @@ properties:
 ```
 
 ###### Do:
+
 ```yaml
 id: api_call
 type: AxiosHttp
@@ -123,6 +128,7 @@ The Ant Design icons used in version 3 have been replaced by [React Icons](https
 To convert existing Ant Design icons to React Icons, the icon names should be changed to the new format:
 
 ###### Version 3:
+
 ```yaml
 id: save_button
 type: Button
@@ -131,6 +137,7 @@ properties:
 ```
 
 ###### Version 4:
+
 ```yaml
 # Using the same Ant Design icon
 id: save_button
@@ -165,7 +172,10 @@ The `_yaml.parse` operator now takes an object with a `on` property or an array 
 
 The `ChromeColorSelector`, `CircleColorSelector`, `CompactColorSelector`, `GithubColorSelector`, `SliderColorSelector`, `SwatchesColorSelector`, and `TwitterColorSelector` have been replaced by the `ColorSelector` block.
 
-The `color` properties in blocks like `MobileMenu`, `PageHeaderMenu`, `PageSiderMenu`, `PageHCF`, `PageHCSF`, `PageHSCF`, and  `PageSHCF` have been removed. Use Ant Design theme less variables instead.
+The `color` properties in blocks like `MobileMenu`, `PageHeaderMenu`, `PageSiderMenu`, `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` have been removed. Use Ant Design theme less variables instead.
+
+The `_var` operator `name` param has been renamed to `key` to be more consistent with other getter operators.
+
 ## Block Loading States
 
 The page loading states in version 4 have been improved. In general apps should load a lot faster. Blocks will now be a lot less likely to show a loading state and rather render as normal, and render their children. Input blocks will be disabled while in a loading state. This contributes to users seeing useful content sooner, and to less layout shift once the app finishes loading.
@@ -177,6 +187,7 @@ In version 3, blocks had a `loading` (property?) to specify the loading skeleton
 The convert from version 3 to version 4, replace the `loading` property on blocks with the `skeleton` property.
 
 ###### Version 3:
+
 ```yaml
 id: paragraph_one
 type: Markdown
@@ -190,6 +201,7 @@ properties:
 ```
 
 ###### Version 4:
+
 ```yaml
 id: paragraph_one
 type: Markdown
@@ -237,7 +249,6 @@ If you still want to serve assests under the `/public` path, you can add an addi
 
 #### TODO: Update once new auth has been documented
 
-
 In version 4, authentication has been reworked to use [NextAuth.js](https://next-auth.js.org), which offers a lot more flexibility and additional features.
 
 - `auth` is now a root level property.
@@ -245,16 +256,16 @@ In version 4, authentication has been reworked to use [NextAuth.js](https://next
 - add providers:
 
 ```yaml
-    providers:
-      - id: auth0
-        type: Auth0Provider
-        properties:
-          clientId:
-            _secret: AUTH0_CLIENT_ID
-          clientSecret:
-            _secret: AUTH0_CLIENT_SECRET
-          issuer:
-            _secret: AUTH0_ISSUER
+providers:
+  - id: auth0
+    type: Auth0Provider
+    properties:
+      clientId:
+        _secret: AUTH0_CLIENT_ID
+      clientSecret:
+        _secret: AUTH0_CLIENT_SECRET
+      issuer:
+        _secret: AUTH0_ISSUER
 ```
 
 - Add env vars `NEXTAUTH_URL` and `NEXTAUTH_SECRET`.
@@ -280,6 +291,7 @@ The `Context` type block was removed, as it was a `Box` block that also created 
 If the `Context` block is no longer necessary it can also be removed.
 
 ###### Version 3:
+
 ```yaml
 id: '404'
 type: Context
@@ -295,6 +307,7 @@ blocks:
 ```
 
 ###### Version 4:
+
 ```yaml
 id: '404'
 type: Result
