@@ -54,6 +54,7 @@ function getNextAuthConfig(context, { authJson, plugins }) {
 
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
+  nextAuthConfig.pages = authConfig.pages;
   nextAuthConfig.cookies = authConfig?.advanced?.cookies;
   initialized = true;
   return nextAuthConfig;
