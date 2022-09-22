@@ -27,6 +27,9 @@ async function validateAuthConfig({ components }) {
   if (!type.isObject(components.auth)) {
     throw new Error('lowdefy.auth is not an object.');
   }
+  if (type.isNone(components.auth.authPages)) {
+    components.auth.authPages = {};
+  }
   if (type.isNone(components.auth.pages)) {
     components.auth.pages = {};
   }
