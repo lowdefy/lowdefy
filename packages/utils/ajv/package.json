@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "4.0.0-alpha.32",
+  "version": "4.0.0-alpha.33",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "4.0.0-alpha.32",
+    "@lowdefy/nunjucks": "4.0.0-alpha.33",
     "ajv": "8.11.0",
     "ajv-errors": "3.0.0"
   },
