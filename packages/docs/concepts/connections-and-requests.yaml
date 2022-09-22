@@ -34,7 +34,7 @@ _ref:
           message: Sensitive information like passwords or API keys are often required to use external services. The <a href = "./_secret">_secret</a> operator should be used to reference these secrets, they should never be coded directly in your app, or committed to source control.
 
       - id: md2
-        type: Markdown
+        type: MarkdownWithCode
         properties:
           content: |
             To implement requests, the following steps are required:
@@ -85,7 +85,7 @@ _ref:
           message: The <code>_user</code> operator should be used under <code>properties</code> and not <code>payload</code>. This is important since operators under <code>payload</code> are evaluated on the client, and are therefore vulnerable to users with malicious intent.
 
       - id: md3
-        type: Markdown
+        type: MarkdownWithCode
         properties:
           content: |
             The schema for a Lowdefy request is:
@@ -221,7 +221,7 @@ _ref:
                       url: /users
             ```
 
-            This request should be called when the page is mounted. To do this, the `Request` action will be used during the `onMount` event of the home page.
+            This request should be called when the page is mounted. To do this, the [`Request`](/Request) action will be used during the `onMount` event of the home page[`PageHeaderMenu`](/PageHeaderMenu) block.
 
             ###### lowdefy.yaml
             ```yaml
@@ -251,8 +251,8 @@ _ref:
                       params: get_users
             ```
 
-            A block can be added to the page, that can use or display the data returned by this request. The `_request` operator is used to get the the results of the request.
-            In this example, a `Selector` block will be added. The `_array.map` operator is used to get the data in a form that can be used by the Selector.
+            A block can be added to the page, that can use or display the data returned by this request. The [`_request`](/_request) operator is used to get the the results of the request.
+            In this example, a [`Selector`](/Selector) block will be added. The [`_array.map`](/_array) operator is used to get the data in a form that can be used by the Selector.
 
             ###### lowdefy.yaml
             ```yaml
@@ -297,7 +297,7 @@ _ref:
             ```
 
             To get the posts made by the selected user, a new request should be created and called once the value of the Selector changes.
-            To do this, create a new request that will make us of a `payload` to get the posts with the selected user id. Add an `onChange` event on the `Selector` block, during which the new request is called.
+            To do this, create a new request that will make use of a `payload` to get the posts with the selected user id. Add an `onChange` event on the `Selector` block, during which the new request is called.
 
             ###### lowdefy.yaml
             ```yaml
@@ -358,7 +358,7 @@ _ref:
                           params: get_posts
             ```
 
-            Save the data from the result of this request in state by using the `SetState` action. To display the posts, make use of a `List` block. In this `List` block, display the data returned of each post in a `Markdown` block.
+            Save the data from the result of this request in state by using the [`SetState`](/SetState) action. To display the posts, make use of a [`List`](/List) block. In this `List` block, display the data returned of each post in a `Markdown` block.
             This is done as follows:
 
             ###### lowdefy.yaml
