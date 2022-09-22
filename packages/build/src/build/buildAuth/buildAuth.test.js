@@ -30,6 +30,7 @@ test('buildAuth default', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: false,
       events: [],
@@ -53,6 +54,7 @@ test('buildAuth no pages', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: false,
       events: [],
@@ -83,6 +85,7 @@ test('buildAuth all protected, some public', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -119,6 +122,7 @@ test('buildAuth all public, some protected', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -155,6 +159,7 @@ test('buildAuth all public', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -191,6 +196,7 @@ test('buildAuth all protected', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       events: [],
       configured: true,
@@ -229,6 +235,7 @@ test('buildAuth roles', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -282,6 +289,7 @@ test('buildAuth roles and protected pages array', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -314,6 +322,7 @@ test('buildAuth roles and protected true', async () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       callbacks: [],
       configured: true,
       events: [],
@@ -373,6 +382,7 @@ test('Auth plugins are counted', () => {
   const res = buildAuth({ components, context });
   expect(res).toEqual({
     auth: {
+      authPages: {},
       adapter: {
         id: 'adapter',
         properties: {

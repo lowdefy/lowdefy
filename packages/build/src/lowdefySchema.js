@@ -108,6 +108,36 @@ export default {
             },
           },
         },
+        authPages: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            signIn: {
+              type: 'string',
+              default: '/auth/signin',
+            },
+            signOut: {
+              type: 'string',
+              default: '/auth/signout',
+            },
+            error: {
+              type: 'string',
+              description: 'Error code passed in query string as ?error=',
+              default: '/auth/error',
+            },
+            verifyRequest: {
+              type: 'string',
+              description: 'Used for check email message',
+              default: '/auth/verify-request',
+            },
+            newUser: {
+              type: 'string',
+              description:
+                'New users will be directed here on first sign in (leave the property out if not of interest)',
+              default: '/auth/new-user',
+            },
+          },
+        },
         callbacks: {
           type: 'array',
           items: {
