@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.33](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.32...v4.0.0-alpha.33) (2022-09-22)
+
+**Note:** Version bump only for package @lowdefy/lowdefy
+
+
+
+
+
+# [4.0.0-alpha.32](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.31...v4.0.0-alpha.32) (2022-09-22)
+
+
+### Bug Fixes
+
+* **buiid:** Add authPages to ldf schema. ([814b474](https://github.com/lowdefy/lowdefy/commit/814b4747da03cfe941010d558070f814d0f66a86))
+* **docs:** Add links to relevant pages on Connections and Requests concept page. ([d611ea5](https://github.com/lowdefy/lowdefy/commit/d611ea5901b9c9e552b83c41f6a7f5b674515f34))
+
+
+### Features
+
+* **docs:** Add working example to Connections and Requests concept page. ([a567a35](https://github.com/lowdefy/lowdefy/commit/a567a35ec213aa1507de4303f9c2423efc503e64))
+
+
+
+
+
 # [4.0.0-alpha.31](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.30...v4.0.0-alpha.31) (2022-09-21)
 
 
