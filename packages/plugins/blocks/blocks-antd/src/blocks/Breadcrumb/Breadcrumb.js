@@ -61,7 +61,7 @@ const BreadcrumbBlock = ({
                     properties={{
                       name: type.isString(link.icon) && link.icon,
                       ...(type.isObject(link.icon) ? link.icon : {}),
-                      style: { paddingRight: 8, ...(link.icon.style || {}) },
+                      style: { marginRight: 8, ...(link.icon.style || {}) },
                     }}
                   />
                 )}
