@@ -172,7 +172,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 5.12
+            #### Step 5.16
 
             Create a file called `.env` in your project directory with the following:
 
@@ -195,11 +195,11 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            #### Step 5.13
+            #### Step 5.17
 
             Because we changed the environment variables, we need to restart the dev server. Run `npx lowdefy@latest dev` again to restart the server.
 
-            #### Step 5.14
+            #### Step 5.18
 
             We need to give our service account access to our Google Sheet. Go to your Google Sheet and click the "Share" button. Share the sheet with the client email of the service account we just created, with the "Editor" role.
 
@@ -213,7 +213,7 @@ _ref:
 
             ### Using the Google Sheets connection
 
-            #### Step 5.15
+            #### Step 5.19
 
             To use a Google Sheet with the Lowdefy connection, we first need to define the columns in the sheet. This will be the same fields as the data we will be saving later.
 
@@ -225,7 +225,7 @@ _ref:
             - confirm_restart
             - created_date
 
-            #### Step 5.16
+            #### Step 5.20
 
             In your `lowdefy.yaml` file, add the following:
 
@@ -254,7 +254,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.17
+            #### Step 5.21
 
             Note down your spreadsheetId. You can find this by looking at the url in your browser when you are looking at your sheet. It should look something like:
 
@@ -262,7 +262,7 @@ _ref:
 
             where the spreadsheetId is a 44 character random string. Fill in your spreadsheetId in the spreadsheet connection.
 
-            #### Step 5.18
+            #### Step 5.22
 
             In your `new-ticket.yaml` file, add the following request:
 
@@ -300,7 +300,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.19
+            #### Step 5.23
 
             In your `new-ticket.yaml` file, add the following action to the submit button:
 
@@ -333,7 +333,7 @@ _ref:
                         ################ ------- Copy to here ----------- ################
             ```
 
-            #### Step 5.20
+            #### Step 5.24
 
             If you click the submit button, you should see your data submitted to your Google Sheet.
 
