@@ -44,7 +44,7 @@ _ref:
 
             #### Step 5.4
 
-            Go to the "APIs and Services" section, and the click "ENABLE APIS AND SERVICES" button.
+            Go to the "APIs and Services" section, and then click "ENABLE APIS AND SERVICES" button.
 
             #### Step 5.5
 
@@ -56,34 +56,56 @@ _ref:
 
             #### Step 5.7
 
-            Click "CREATE CREDENTIALS".
+            Click "CREATE CREDENTIALS" and select the **Help me choose** option.
 
             #### Step 5.8
 
-            Choose the following:
+            Choose the following options:
             - **Which API are you using?**: Google Sheets API
             - **What data will you be accessing?**: Application data
             - **Are you planning to use this API with App Engine or Compute Engine?**: No, I'm not using them
-            - **Where will you be calling the API from?** : Web server (e.g. node.js, Tomcat)
 
-            Then click "What credentials do I need?"
+            Click next.
 
             #### Step 5.9
 
             Choose the following:
             - Give the account a name.
-            - Choose "Project > Editor" as the role.
-            - Choose JSON as the key type.
+            - Give the account id.
+            - Give the account description(optional)
 
             Click continue.
 
             #### Step 5.10
 
-            You will be asked to save a file. This file contains the credentials to access your sheet, so make sure to handle it securely. Download the file. Do not commit it to source control.
+            Choose the following:
+            - Choose "Project > Editor" as the role.
+
+            Click continue.
+
+            #### Step 5.10
+
+            Skip the **Grant users access to this service account** section and click done.
 
             #### Step 5.11
 
-            In the next section we will be deploying our app using Netlify. To use the private key on Netlify, we need to base64 encode it, since the new-line characters cause problems when used in an environment variable.
+            Go to the "APIs & Services" section, and then click "CREDENTIALS" button.
+
+            #### Step 5.12
+
+            In "Services Accounts" section on the page, click on the account you create in the previous steps.
+
+            #### Step 5.13
+
+            Go to "Keys" section.
+
+            #### Step 5.14
+
+            Click "Add Key", and then select "Create new key > JSON". It will download a file. This file contains the credentials to access your sheet, so make sure to handle it securely. Download the file. Do not commit it to source control.
+
+            #### Step 5.15
+
+            In the next section, we will be deploying our app using Netlify. To use the private key on Netlify, we need to base64 encode it, since the new-line characters cause problems when used in an environment variable.
 
             You can use the converter below to convert your key. This will output a long stream of characters that are your encoded key.
 
