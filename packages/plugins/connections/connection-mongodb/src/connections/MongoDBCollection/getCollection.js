@@ -26,7 +26,7 @@ async function getCollection({ connection }) {
     return {
       client,
       collection: db.collection(collection),
-      logCollection: changeLog?.collection ?? db.collection(changeLog.collection),
+      logCollection: changeLog?.collection && db.collection(changeLog.collection),
     };
   } catch (error) {
     await client.close();
