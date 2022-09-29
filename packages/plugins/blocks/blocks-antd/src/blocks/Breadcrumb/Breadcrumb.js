@@ -52,7 +52,7 @@ const BreadcrumbBlock = ({
             ])}
             {...link}
           >
-            {(defaultTitle) => (
+            {() => (
               <>
                 {link.icon && (
                   <Icon
@@ -65,7 +65,7 @@ const BreadcrumbBlock = ({
                     }}
                   />
                 )}
-                {type.isString(link) ? link : link.label || defaultTitle}
+                {type.isString(link) ? link : link.label}
               </>
             )}
           </Link>
