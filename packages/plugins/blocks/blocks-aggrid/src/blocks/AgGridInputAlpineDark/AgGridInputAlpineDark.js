@@ -53,6 +53,7 @@ const AgGridInputAlpineDark = ({
 AgGridInputAlpineDark.defaultProps = blockDefaultProps;
 AgGridInputAlpineDark.meta = {
   category: 'input',
+  valueType: 'array',
   icons: [],
   styles: ['blocks/AgGridInputAlpineDark/style.less'],
 };

@@ -18,19 +18,32 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbDeleteMany({ request, connection }) {
+async function MongodbDeleteMany({ blockId, connection, pageId, request, requestId, payload }) {
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let res;
+  const { collection, client, logCollection } = await getCollection({ connection });
+  let response;
   try {
-    res = await collection.deleteMany(filter, options);
+    response = await collection.deleteMany(filter, options);
+    if (logCollection) {
+      await logCollection.insertOne({
+        args: { filter, options },
+        blockId,
+        pageId,
+        payload,
+        requestId,
+        response,
+        timestamp: new Date(),
+        type: 'MongoDBInsertMany',
+        user: connection.changeLog?.user,
+      });
+    }
   } catch (error) {
     await client.close();
     throw error;
   }
   await client.close();
-  const { acknowledged, deletedCount } = serialize(res);
+  const { acknowledged, deletedCount } = serialize(response);
   return { acknowledged, deletedCount };
 }
 

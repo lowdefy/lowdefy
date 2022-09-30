@@ -18,19 +18,32 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbInsertOne({ request, connection }) {
+async function MongodbInsertOne({ blockId, connection, pageId, request, requestId, payload }) {
   const deserializedRequest = deserialize(request);
   const { doc, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let res;
+  const { collection, client, logCollection } = await getCollection({ connection });
+  let response;
   try {
-    res = await collection.insertOne(doc, options);
+    response = await collection.insertOne(doc, options);
+    if (logCollection) {
+      await logCollection.insertOne({
+        args: { doc, options },
+        blockId,
+        pageId,
+        payload,
+        requestId,
+        response,
+        timestamp: new Date(),
+        type: 'MongoDBInsertOne',
+        user: connection.changeLog?.user,
+      });
+    }
   } catch (error) {
     await client.close();
     throw error;
   }
   await client.close();
-  const { acknowledged, insertedId } = serialize(res);
+  const { acknowledged, insertedId } = serialize(response);
   return { acknowledged, insertedId };
 }
 

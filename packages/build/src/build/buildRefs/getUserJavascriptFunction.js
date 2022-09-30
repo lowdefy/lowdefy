@@ -14,10 +14,11 @@
   limitations under the License.
 */
 import path from 'path';
+import { pathToFileURL } from 'url';
 
 async function getUserJavascriptFunction({ context, filePath }) {
   try {
-    return (await import(path.resolve(context.directories.config, filePath))).default;
+    return (await import(pathToFileURL(path.join(context.directories.config, filePath)))).default;
   } catch (error) {
     context.logger.error(`Error importing ${filePath}.`);
     throw Error(error);
