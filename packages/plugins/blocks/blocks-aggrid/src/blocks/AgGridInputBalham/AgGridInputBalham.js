@@ -53,6 +53,7 @@ const AgGridInputBalham = ({
 AgGridInputBalham.defaultProps = blockDefaultProps;
 AgGridInputBalham.meta = {
   category: 'input',
+  valueType: 'array',
   icons: [],
   styles: ['blocks/AgGridInputBalham/style.less'],
 };
