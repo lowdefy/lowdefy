@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.34](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.33...v4.0.0-alpha.34) (2022-09-30)
+
+
+### Features
+
+* **connection-mongodb:** Add changeLog to connection and requests. ([8e3a0b9](https://github.com/lowdefy/lowdefy/commit/8e3a0b9bc84a410f6dcf2954ba62d3e231a53672))
+
+
+
+
+
 # [4.0.0-alpha.33](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.32...v4.0.0-alpha.33) (2022-09-22)
 
 **Note:** Version bump only for package @lowdefy/connection-mongodb

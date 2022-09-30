@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.34](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.33...v4.0.0-alpha.34) (2022-09-30)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Breadcrumb should not render defaultTitle as label. ([a8762f0](https://github.com/lowdefy/lowdefy/commit/a8762f05a17e086b8e4ee62e1a67e9b0d46c64a7))
+* **blocks-antd:** Fix breadcrumb icon size bug. ([c3b022f](https://github.com/lowdefy/lowdefy/commit/c3b022fd9fb67100f9cb5039500b0e9063930053))
+
+
+
+
+
 # [4.0.0-alpha.33](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.32...v4.0.0-alpha.33) (2022-09-22)
 
 **Note:** Version bump only for package @lowdefy/blocks-antd
