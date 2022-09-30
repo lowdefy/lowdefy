@@ -176,6 +176,8 @@ The `color` properties in blocks like `MobileMenu`, `PageHeaderMenu`, `PageSider
 
 The `_var` operator `name` param has been renamed to `key` to be more consistent with other getter operators.
 
+The `_format` operator has been replaced with the `_intl` and `_moment` operator, with some minor schema changes.
+
 ## Block Loading States
 
 The page loading states in version 4 have been improved. In general apps should load a lot faster. Blocks will now be a lot less likely to show a loading state and rather render as normal, and render their children. Input blocks will be disabled while in a loading state. This contributes to users seeing useful content sooner, and to less layout shift once the app finishes loading.

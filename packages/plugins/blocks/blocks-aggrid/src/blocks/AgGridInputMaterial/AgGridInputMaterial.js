@@ -53,6 +53,7 @@ const AgGridInputMaterial = ({
 AgGridInputMaterial.defaultProps = blockDefaultProps;
 AgGridInputMaterial.meta = {
   category: 'input',
+  valueType: 'array',
   icons: [],
   styles: ['blocks/AgGridInputMaterial/style.less'],
 };

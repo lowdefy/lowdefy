@@ -18,19 +18,36 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbUpdateOne({ request, connection }) {
+async function MongodbUpdateOne({ blockId, connection, pageId, request, requestId, payload }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const { collection, client } = await getCollection({ connection });
-  let res;
+  const { collection, client, logCollection } = await getCollection({ connection });
+  let response;
   try {
-    res = await collection.updateOne(filter, update, options);
+    if (logCollection) {
+      response = await collection.findOneAndUpdate(filter, update, options);
+      const after = await collection.findOne({ _id: response._id });
+      await logCollection.insertOne({
+        args: { filter, update, options },
+        blockId,
+        pageId,
+        payload,
+        requestId,
+        before: response,
+        after,
+        timestamp: new Date(),
+        type: 'MongoDBUpdateOne',
+        user: connection.changeLog?.user,
+      });
+    } else {
+      response = await collection.updateOne(filter, update, options);
+    }
   } catch (error) {
     await client.close();
     throw error;
   }
   await client.close();
-  const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(res);
+  const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }
 

@@ -39,10 +39,11 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const deserializedPayload = serializer.deserialize(payload);
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
-    payload: serializer.deserialize(payload),
+    payload: deserializedPayload,
     requestConfig,
   });
   checkConnectionRead(context, {
@@ -65,10 +66,12 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestProperties,
   });
   const response = await callRequestResolver(context, {
+    blockId,
     connectionProperties,
+    payload: deserializedPayload,
     requestConfig,
-    requestResolver,
     requestProperties,
+    requestResolver,
   });
   return {
     id: requestConfig.id,
