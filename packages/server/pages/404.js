@@ -16,11 +16,15 @@
 import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
+import config from '../build/config.json';
 import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
   // Important to give absolute path so Next can trace build files
-  const apiContext = await createApiContext({ buildDirectory: path.join(process.cwd(), 'build') });
+  const apiContext = createApiContext({
+    buildDirectory: path.join(process.cwd(), 'build'),
+    config,
+  });
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(apiContext),

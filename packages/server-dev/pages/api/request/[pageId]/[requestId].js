@@ -17,6 +17,7 @@
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
+import config from '../../../../build/config.json';
 import connections from '../../../../build/plugins/connections.js';
 import getServerSession from '../../../../lib/auth/getServerSession.js';
 import operators from '../../../../build/plugins/operators/server.js';
@@ -27,8 +28,9 @@ export default async function handler(req, res) {
       throw new Error('Only POST requests are supported.');
     }
     const session = await getServerSession({ req, res });
-    const apiContext = await createApiContext({
+    const apiContext = createApiContext({
       buildDirectory: './build',
+      config,
       connections,
       logger: console,
       operators,
