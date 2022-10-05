@@ -17,6 +17,7 @@
 import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
+import config from '../build/config.json';
 import getServerSession from '../lib/auth/getServerSession.js';
 import Page from '../lib/Page.js';
 
@@ -24,8 +25,9 @@ export async function getServerSideProps(context) {
   const { pageId } = context.params;
   const session = await getServerSession(context);
   // Important to give absolute path so Next can trace build files
-  const apiContext = await createApiContext({
+  const apiContext = createApiContext({
     buildDirectory: path.join(process.cwd(), 'build'),
+    config,
     logger: console,
     session,
   });

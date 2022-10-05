@@ -17,8 +17,9 @@
 import createAuthorize from './createAuthorize.js';
 import createReadConfigFile from './createReadConfigFile.js';
 
-async function createApiContext({
+function createApiContext({
   buildDirectory,
+  config,
   connections,
   logger,
   operators,
@@ -26,7 +27,6 @@ async function createApiContext({
   session,
 }) {
   const readConfigFile = createReadConfigFile({ buildDirectory });
-  const config = await readConfigFile('config.json');
   return {
     authorize: createAuthorize({ session }),
     config,

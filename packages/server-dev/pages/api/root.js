@@ -16,12 +16,14 @@
 
 import { createApiContext, getRootConfig } from '@lowdefy/api';
 
+import config from '../../build/config.json';
 import getServerSession from '../../lib/auth/getServerSession.js';
 
 export default async function handler(req, res) {
   const session = await getServerSession({ req, res });
-  const apiContext = await createApiContext({
+  const apiContext = createApiContext({
     buildDirectory: './build',
+    config,
     logger: console,
     session,
   });

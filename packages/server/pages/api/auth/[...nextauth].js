@@ -15,16 +15,20 @@
 */
 
 import NextAuth from 'next-auth';
-import { getNextAuthConfig } from '@lowdefy/api';
+import { createApiContext, getNextAuthConfig } from '@lowdefy/api';
 
 import authJson from '../../../build/auth.json';
+import config from '../../../build/config.json';
 import adapters from '../../../build/plugins/auth/adapters.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
 export const authOptions = getNextAuthConfig(
-  { logger: console }, // TODO: make createApiContext synchronous
+  createApiContext({
+    config,
+    logger: console,
+  }),
   { authJson, plugins: { adapters, callbacks, events, providers } }
 );
 
