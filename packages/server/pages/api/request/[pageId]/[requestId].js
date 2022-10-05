@@ -18,9 +18,9 @@ import path from 'path';
 import { callRequest, createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
-import getServerSession from '../../../../lib/auth/getServerSession.js';
-
+import config from '../../../../build/config.json';
 import connections from '../../../../build/plugins/connections.js';
+import getServerSession from '../../../../lib/auth/getServerSession.js';
 import operators from '../../../../build/plugins/operators/server.js';
 
 export default async function handler(req, res) {
@@ -30,8 +30,9 @@ export default async function handler(req, res) {
     }
     const session = await getServerSession({ req, res });
     // Important to give absolute path so Next can trace build files
-    const apiContext = await createApiContext({
+    const apiContext = createApiContext({
       buildDirectory: path.join(process.cwd(), 'build'),
+      config,
       connections,
       // logger: console,
       logger: { debug: () => {} },
