@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.34](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.33...v4.0.0-alpha.34) (2022-09-30)
+
+
+### Bug Fixes
+
+* **docs:** Add format operator change to migration guide. ([deee945](https://github.com/lowdefy/lowdefy/commit/deee945b5fab1ed6716824ed01a04de94dc99b50))
+
+
+
+
+
 # [4.0.0-alpha.33](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.32...v4.0.0-alpha.33) (2022-09-22)
 
 **Note:** Version bump only for package @lowdefy/docs
