@@ -14,14 +14,7 @@
   limitations under the License.
 */
 
-async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (pageConfig && authorize(pageConfig)) {
-    // eslint-disable-next-line no-unused-vars
-    const { auth, ...rest } = pageConfig;
-    return { ...rest };
-  }
-  return null;
-}
-
-export default getPageConfig;
+export default {
+  get: () => undefined,
+  set: () => undefined,
+};

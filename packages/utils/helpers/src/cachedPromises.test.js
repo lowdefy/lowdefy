@@ -18,8 +18,9 @@ import createCachedPromises from './cachedPromises.js';
 import wait from './wait.js';
 
 test('cachedPromises calls getter with key', async () => {
+  const cache = new Map();
   const getter = jest.fn(() => Promise.resolve('value'));
-  const cachedGetter = createCachedPromises(getter);
+  const cachedGetter = createCachedPromises({ cache, getter });
   const promise = cachedGetter('key');
   expect(`${promise}`).toEqual('[object Promise]');
   const result = await promise;
@@ -28,8 +29,10 @@ test('cachedPromises calls getter with key', async () => {
 });
 
 test('cachedPromises only calls getter once', async () => {
+  const cache = new Map();
+
   const getter = jest.fn(() => Promise.resolve('value'));
-  const cachedGetter = createCachedPromises(getter);
+  const cachedGetter = createCachedPromises({ cache, getter });
   const result1 = await cachedGetter('key');
   expect(result1).toEqual('value');
   const result2 = await cachedGetter('key');
@@ -38,11 +41,13 @@ test('cachedPromises only calls getter once', async () => {
 });
 
 test('getter is called once if first call has not yet resolved', async () => {
+  const cache = new Map();
+
   const getter = jest.fn(async () => {
     await wait(10);
     return 'value';
   });
-  const cachedGetter = createCachedPromises(getter);
+  const cachedGetter = createCachedPromises({ cache, getter });
   const promise1 = cachedGetter('key');
   const promise2 = cachedGetter('key');
   expect(getter.mock.calls).toEqual([['key']]);

@@ -22,6 +22,7 @@ import config from '../../../../build/config.json';
 import connections from '../../../../build/plugins/connections.js';
 import getServerSession from '../../../../lib/auth/getServerSession.js';
 import operators from '../../../../build/plugins/operators/server.js';
+import fileCache from '../../../../lib/fileCache.js';
 
 export default async function handler(req, res) {
   try {
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       connections,
+      fileCache,
       // logger: console,
       logger: { debug: () => {} },
       operators,

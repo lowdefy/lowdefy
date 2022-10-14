@@ -21,12 +21,13 @@ function createApiContext({
   buildDirectory,
   config,
   connections,
+  fileCache,
   logger,
   operators,
   secrets,
   session,
 }) {
-  const readConfigFile = createReadConfigFile({ buildDirectory });
+  const readConfigFile = createReadConfigFile({ buildDirectory, fileCache });
   return {
     authorize: createAuthorize({ session }),
     config,
