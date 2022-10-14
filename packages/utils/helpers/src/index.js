@@ -17,6 +17,7 @@
 import applyArrayIndices from './applyArrayIndices.js';
 import cachedPromises from './cachedPromises.js';
 import get from './get.js';
+import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
 import serializer from './serializer.js';
@@ -32,6 +33,7 @@ export {
   applyArrayIndices,
   cachedPromises,
   get,
+  LRUCache,
   mergeObjects,
   omit,
   serializer,

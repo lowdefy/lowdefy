@@ -17,6 +17,7 @@
 import { createApiContext, getRootConfig } from '@lowdefy/api';
 
 import config from '../../build/config.json';
+import fileCache from '../../lib/fileCache.js';
 import getServerSession from '../../lib/auth/getServerSession.js';
 
 export default async function handler(req, res) {
@@ -24,6 +25,7 @@ export default async function handler(req, res) {
   const apiContext = createApiContext({
     buildDirectory: './build',
     config,
+    fileCache,
     logger: console,
     session,
   });

@@ -17,6 +17,7 @@ import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import config from '../build/config.json';
+import fileCache from '../lib/fileCache.js';
 import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
@@ -24,6 +25,8 @@ export async function getStaticProps() {
   const apiContext = createApiContext({
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
+    fileCache,
+    logger: console,
   });
 
   const [rootConfig, pageConfig] = await Promise.all([

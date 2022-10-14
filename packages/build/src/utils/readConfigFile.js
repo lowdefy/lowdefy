@@ -22,7 +22,10 @@ function createReadConfigFile({ directories }) {
   async function readConfigFile(filePath) {
     return readFile(path.resolve(directories.config, filePath));
   }
-  return cachedPromises(readConfigFile);
+  return cachedPromises({
+    cache: new Map(),
+    getter: readConfigFile,
+  });
 }
 
 export default createReadConfigFile;
