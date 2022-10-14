@@ -19,6 +19,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
 import config from '../../../../build/config.json';
 import connections from '../../../../build/plugins/connections.js';
+import fileCache from '../../../../lib/fileCache.js';
 import getServerSession from '../../../../lib/auth/getServerSession.js';
 import operators from '../../../../build/plugins/operators/server.js';
 
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
       buildDirectory: './build',
       config,
       connections,
+      fileCache,
       logger: console,
       operators,
       secrets: getSecretsFromEnv(),

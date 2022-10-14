@@ -22,11 +22,13 @@ import config from '../../../build/config.json';
 import adapters from '../../../build/plugins/auth/adapters.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
+import fileCache from '../../../lib/fileCache.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
 export const authOptions = getNextAuthConfig(
   createApiContext({
     config,
+    fileCache,
     logger: console,
   }),
   { authJson, plugins: { adapters, callbacks, events, providers } }

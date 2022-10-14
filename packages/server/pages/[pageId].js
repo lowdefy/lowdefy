@@ -18,6 +18,7 @@ import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import config from '../build/config.json';
+import fileCache from '../lib/fileCache.js';
 import getServerSession from '../lib/auth/getServerSession.js';
 import Page from '../lib/Page.js';
 
@@ -28,6 +29,7 @@ export async function getServerSideProps(context) {
   const apiContext = createApiContext({
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
+    fileCache,
     logger: console,
     session,
   });

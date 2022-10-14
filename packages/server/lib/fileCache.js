@@ -14,14 +14,8 @@
   limitations under the License.
 */
 
-async function getPageConfig({ authorize, readConfigFile }, { pageId }) {
-  const pageConfig = await readConfigFile(`pages/${pageId}/${pageId}.json`);
-  if (pageConfig && authorize(pageConfig)) {
-    // eslint-disable-next-line no-unused-vars
-    const { auth, ...rest } = pageConfig;
-    return { ...rest };
-  }
-  return null;
-}
+import { LRUCache } from '@lowdefy/helpers';
 
-export default getPageConfig;
+const fileCache = new LRUCache({ maxSize: 100 });
+
+export default fileCache;

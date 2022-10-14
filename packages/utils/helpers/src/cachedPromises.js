@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-function createCachedPromises(getter) {
-  const cache = new Map();
-
+function createCachedPromises({ getter, cache }) {
   function cachedPromises(key) {
-    if (cache.has(key)) {
-      return Promise.resolve(cache.get(key));
+    const cached = cache.get(key);
+
+    if (cached) {
+      return Promise.resolve(cached);
     }
+
     const promise = getter(key);
     cache.set(key, promise);
     return Promise.resolve(promise);
