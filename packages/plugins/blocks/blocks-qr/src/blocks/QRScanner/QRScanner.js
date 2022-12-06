@@ -44,6 +44,7 @@ class QRScanner extends React.Component {
     this.onNewScanResult = this.onNewScanResult.bind(this);
     this.onStart = this.onStart.bind(this);
     this.onStop = this.onStop.bind(this);
+    this.scanning = false;
   }
 
   onNewScanResult(decodedText, decodedResult) {
@@ -52,19 +53,25 @@ class QRScanner extends React.Component {
   }
 
   onStart() {
-    this.html5QrCode?.start(
-      { facingMode: this.props.properties.facingMode || 'environment' },
-      {
-        ...{ aspectRatio: 1 },
-        ...this.props.properties,
-        ...{ formatsToSupport: codes[this.props.properties.formatsToSupport] },
-      },
-      this.onNewScanResult
-    );
+    if (!this.scanning) {
+      this.scanning = true;
+      this.html5QrCode?.start(
+        { facingMode: this.props.properties.facingMode || 'environment' },
+        {
+          ...{ aspectRatio: 1 },
+          ...this.props.properties,
+          ...{ formatsToSupport: codes[this.props.properties.formatsToSupport] },
+        },
+        this.onNewScanResult
+      );
+    }
   }
 
   onStop() {
-    this.html5QrCode?.stop();
+    if (this.scanning) {
+      this.scanning = false;
+      this.html5QrCode?.stop();
+    }
   }
 
   componentDidMount() {
