@@ -110,6 +110,13 @@
         "type": "number",
         "description": "Maximum value allowed by the block."
       },
+      "parser": {
+        "type": "object",
+        "description": "A function specifying the value extracted from the formatter.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
       "placeholder": {
         "type": "string",
         "description": "Placeholder text inside the block to show message before user types input."

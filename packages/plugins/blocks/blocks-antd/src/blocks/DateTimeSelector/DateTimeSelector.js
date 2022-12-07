@@ -81,7 +81,9 @@ const DateTimeSelector = ({
                 minuteStep: properties.minuteStep || 5,
                 secondStep: properties.secondStep || 30,
               }}
-              onChange={(newVal) => {
+              onSelect={(newVal) => {
+                // NOTE: we use on select instead of onChange to make the block UX
+                // more like the DataSelector which changes date on click and not on ok.
                 methods.setValue(
                   !newVal
                     ? null

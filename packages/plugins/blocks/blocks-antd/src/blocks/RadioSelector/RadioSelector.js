@@ -78,7 +78,7 @@ const RadioSelector = ({
             >
               {uniqueValueOptions.map((opt, i) =>
                 type.isPrimitive(opt) ? (
-                  <Radio id={`${blockId}_${opt}`} key={i} value={i}>
+                  <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
                     {renderHtml({ html: `${opt}`, methods })}
                   </Radio>
                 ) : (

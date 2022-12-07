@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/client",
-  "version": "4.0.0-alpha.36",
+  "version": "4.0.0-alpha.37",
   "license": "Apache-2.0",
   "description": "Lowdefy Client",
   "homepage": "https://lowdefy.com",
@@ -42,17 +42,17 @@
   },
   "dependencies": {
     "@ant-design/icons": "4.7.0",
-    "@lowdefy/block-utils": "4.0.0-alpha.36",
-    "@lowdefy/engine": "4.0.0-alpha.36",
-    "@lowdefy/helpers": "4.0.0-alpha.36",
-    "@lowdefy/layout": "4.0.0-alpha.36",
+    "@lowdefy/block-utils": "4.0.0-alpha.37",
+    "@lowdefy/engine": "4.0.0-alpha.37",
+    "@lowdefy/helpers": "4.0.0-alpha.37",
+    "@lowdefy/layout": "4.0.0-alpha.37",
     "classnames": "2.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.9.1",
-    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.36",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.37",
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194",
     "@swc/jest": "0.2.21",

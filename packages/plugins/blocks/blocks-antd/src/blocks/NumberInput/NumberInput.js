@@ -54,6 +54,7 @@ const NumberInput = ({
             keyboard={properties.keyboard}
             max={properties.max}
             min={properties.min}
+            parser={properties.parser}
             placeholder={properties.placeholder}
             precision={properties.precision}
             size={properties.size}
