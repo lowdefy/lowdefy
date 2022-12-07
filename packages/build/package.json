@@ -86,6 +86,7 @@
     "@lowdefy/connection-stripe": "4.0.0-alpha.36",
     "@lowdefy/operators-change-case": "4.0.0-alpha.36",
     "@lowdefy/operators-diff": "4.0.0-alpha.36",
+    "@lowdefy/operators-moment": "4.0.0-alpha.36",
     "@lowdefy/operators-mql": "4.0.0-alpha.36",
     "@lowdefy/operators-nunjucks": "4.0.0-alpha.36",
     "@lowdefy/operators-uuid": "4.0.0-alpha.36",
