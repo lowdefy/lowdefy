@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
+
+
+### Bug Fixes
+
+* **blocks-antd:** DateTimePicker to use onSelect for better UX. ([6ea10cc](https://github.com/lowdefy/lowdefy/commit/6ea10cc437399c78f781746320e5f5d23cb6c2dd))
+* **blocks-antd:** Import tooltip styles on Paragraph and Title for copy. ([ec3ad08](https://github.com/lowdefy/lowdefy/commit/ec3ad0876f4a31d6ee8cad708d9a807439326bb4))
+* **blocks-qr:** Don't call start and stop if scanner is not running. ([2e6c1fe](https://github.com/lowdefy/lowdefy/commit/2e6c1fe3017a4e36ea50922c2ff569ad275e261c))
+* **build:** Include operators-moment as default in build. ([633bcf9](https://github.com/lowdefy/lowdefy/commit/633bcf989bafcfd916c97f7b98b8ec654d17b338))
+* Fix Radio Selector not working for non-label/value fields. ([f3897c7](https://github.com/lowdefy/lowdefy/commit/f3897c7b63aa30d7b77953ba80e95ce31384b367))
+
+
+### Features
+
+* **blocks-antd:** Add parser property to NumberInput. ([95fbf13](https://github.com/lowdefy/lowdefy/commit/95fbf1301a59393d693b4f6480596ee17897b9c5))
+* **blocks-antd:** Add parser to NumberInput schema file ([88aabdf](https://github.com/lowdefy/lowdefy/commit/88aabdfe08d530467898ed485d42d52a7de7e132))
+* **build:** Add operators-moment to generateDefaultTypes ([1e869ad](https://github.com/lowdefy/lowdefy/commit/1e869ad45af7d2e84319a6170c8d0ec735be957e))
+
+
+
+
+
 # [4.0.0-alpha.36](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.35...v4.0.0-alpha.36) (2022-10-14)
 
 
