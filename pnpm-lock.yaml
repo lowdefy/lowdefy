@@ -85,6 +85,7 @@ importers:
       '@lowdefy/operators-change-case': 4.0.0-alpha.36
       '@lowdefy/operators-diff': 4.0.0-alpha.36
       '@lowdefy/operators-js': 4.0.0-alpha.36
+      '@lowdefy/operators-moment': 4.0.0-alpha.36
       '@lowdefy/operators-mql': 4.0.0-alpha.36
       '@lowdefy/operators-nunjucks': 4.0.0-alpha.36
       '@lowdefy/operators-uuid': 4.0.0-alpha.36
@@ -136,6 +137,7 @@ importers:
       '@lowdefy/connection-stripe': link:../plugins/connections/connection-stripe
       '@lowdefy/operators-change-case': link:../plugins/operators/operators-change-case
       '@lowdefy/operators-diff': link:../plugins/operators/operators-diff
+      '@lowdefy/operators-moment': link:../plugins/operators/operators-moment
       '@lowdefy/operators-mql': link:../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks': link:../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid': link:../plugins/operators/operators-uuid
