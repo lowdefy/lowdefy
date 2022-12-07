@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import path from 'path';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 function lowdefyBuildWatcher(context) {
+  const fixRelativePathConfigDir = (item) =>
+    path.isAbsolute(item) ? item : path.resolve(context.directories.config, item);
+
   const callback = async (filePaths) => {
     const lowdefyYamlModified = filePaths
       .flat()
@@ -37,8 +41,14 @@ function lowdefyBuildWatcher(context) {
   return setupWatcher({
     callback,
     context,
-    ignorePaths: ['**/node_modules/**', ...context.options.watchIgnore],
-    watchPaths: [context.directories.config, ...context.options.watch],
+    ignorePaths: [
+      '**/node_modules/**',
+      ...context.options.watchIgnore.map(fixRelativePathConfigDir),
+    ],
+    watchPaths: [
+      context.directories.config,
+      ...context.options.watch.map(fixRelativePathConfigDir),
+    ],
   });
 }
 
