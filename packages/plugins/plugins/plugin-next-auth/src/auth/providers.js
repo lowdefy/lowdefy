@@ -17,7 +17,6 @@
 // This syntax does not work because next-auth is not an es module.
 // export { default as Auth0Provider } from 'next-auth/providers/auth0';
 
-import OpenIDConnectProvider from './OpenIDConnectProvider.js';
 import forty_two_school from 'next-auth/providers/42-school';
 import apple from 'next-auth/providers/apple';
 import atlassian from 'next-auth/providers/atlassian';
@@ -75,6 +74,7 @@ import workos from 'next-auth/providers/workos';
 import yandex from 'next-auth/providers/yandex';
 import zoho from 'next-auth/providers/zoho';
 import zoom from 'next-auth/providers/zoom';
+import OpenIDConnectProvider from './OpenIDConnectProvider.js';
 
 const FortyTwoProvider = forty_two_school.default;
 const AppleProvider = apple.default;
