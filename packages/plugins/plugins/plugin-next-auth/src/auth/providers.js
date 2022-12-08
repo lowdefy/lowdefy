@@ -17,6 +17,7 @@
 // This syntax does not work because next-auth is not an es module.
 // export { default as Auth0Provider } from 'next-auth/providers/auth0';
 
+import OpenIDConnectProvider from './OpenIDConnectProvider.js';
 import forty_two_school from 'next-auth/providers/42-school';
 import apple from 'next-auth/providers/apple';
 import atlassian from 'next-auth/providers/atlassian';
@@ -171,6 +172,7 @@ export {
   NetlifyProvider,
   OktaProvider,
   OneLoginProvider,
+  OpenIDConnectProvider,
   OssoProvider,
   OsuProvider,
   PatreonProvider,
