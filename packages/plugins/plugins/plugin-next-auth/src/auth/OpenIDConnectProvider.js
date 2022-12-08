@@ -14,24 +14,21 @@
   limitations under the License.
 */
 
-function OpenIDConnectProvider(options) {
+function OpenIDConnectProvider(properties) {
   return {
-    id: options.id ?? 'OpenIDConnectProvider',
-    name: options.name ?? 'OpenIDConnectProvider',
-    wellKnown: `${options.issuer}/.well-known/openid-configuration`,
+    id: properties.id ?? 'OpenIDConnectProvider',
+    name: properties.name ?? 'OpenIDConnectProvider',
     type: 'oauth',
-    authorization: options.authorization ?? { params: { scope: 'openid email profile' } },
-    checks: options.checks ?? ['pkce', 'state'],
-    idToken: options.idToken ?? true,
+    authorization: { params: { scope: 'openid email profile' } },
+    checks: ['pkce', 'state'],
+    idToken: true,
     profile(profile) {
       return {
         id: profile.sub,
-        name: profile.nickname,
-        email: profile.email,
-        image: profile.picture,
+        ...profile,
       };
     },
-    options: options,
+    ...properties,
   };
 }
 
