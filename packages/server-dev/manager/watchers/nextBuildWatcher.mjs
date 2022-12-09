@@ -36,6 +36,7 @@ const watchedFiles = [
   'build/plugins/operators/client.js',
   'build/plugins/operators/server.js',
   'build/plugins/styles.less',
+  'public/styles.less',
   'package.json',
 ];
 

@@ -761,21 +761,6 @@ export default {
             type: 'App "config.homePageId" should be a string.',
           },
         },
-        theme: {
-          type: 'object',
-          errorMessage: {
-            type: 'App "config.theme" should be an object.',
-          },
-          properties: {
-            lessVariables: {
-              type: 'object',
-              description: 'App theme less variables.',
-              errorMessage: {
-                type: 'App "config.theme.lessVariables" should be an object.',
-              },
-            },
-          },
-        },
       },
     },
     plugins: {
