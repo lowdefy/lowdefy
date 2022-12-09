@@ -15,9 +15,9 @@
 _ref:
   path: templates/actions.yaml.njk
   vars:
-    pageId: Break
-    pageTitle: Break
-    filePath: actions/Break.yaml
+    pageId: Throw
+    pageTitle: Throw
+    filePath: actions/Throw.yaml
     types: |
       ```
       (params: {
@@ -29,19 +29,19 @@ _ref:
     description: |
       ##### TODO: This page needs to be updated.
 
-      The `Break` action is used throw an error to the user and log to the console. If `throw: true`, the `Break`
-      action will throw an error, and this will stop the execution of actions that are defined after it. If the action does not thrown, the `Break` action will do nothing and the actions defined after it will be executed.
+      The `Throw` action is used throw an error to the user and log to the console. If `throw: true`, the `Throw`
+      action will throw an error, and this will stop the execution of actions that are defined after it. If the action does not thrown, the `Throw` action will do nothing and the actions defined after it will be executed.
 
     params: |
-      - `throw: boolean`: Breaks an error and stops the action chain when `true` or continues the action chain when `false` or undefined.
+      - `throw: boolean`: Throws an error and stops the action chain when `true` or continues the action chain when `false` or undefined.
       - `message: string`: The error message to show to the user and log to the console if `throw: true`. This message can be overridden by setting the action's `messages.error`.
       - `metaData: any`: Data to log to the console if `throw: true`.
 
     examples: |
-      ###### Break with custom message:
+      ###### Throw with custom message:
       ```yaml
-      - id: throw
-        type: Break
+      - id: foo_trow
+        type: Throw
         params:
           throw:
             _eq:
@@ -50,10 +50,10 @@ _ref:
           message: Nooooooooooooooooo
       ```
 
-      ###### Break with metaData:
+      ###### Throw with metaData:
       ```yaml
-      - id: throw
-        type: Break
+      - id: foo_trow
+        type: Throw
         params:
           throw:
             _eq:
@@ -65,8 +65,8 @@ _ref:
       ```
       ###### Override custom message:
       ```yaml
-      - id: throw
-        type: Break
+      - id: foo_trow
+        type: Throw
         messages:
           error: Meh.
         params:
@@ -78,8 +78,8 @@ _ref:
       ```
       ###### Fail silently:
       ```yaml
-      - id: throw
-        type: Break
+      - id: foo_trow
+        type: Throw
         messages:
           error: false
         params:
