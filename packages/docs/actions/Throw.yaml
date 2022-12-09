@@ -40,7 +40,7 @@ _ref:
     examples: |
       ###### Throw with custom message:
       ```yaml
-      - id: foo_trow
+      - id: foo_throw
         type: Throw
         params:
           throw:
@@ -52,7 +52,7 @@ _ref:
 
       ###### Throw with metaData:
       ```yaml
-      - id: foo_trow
+      - id: foo_throw
         type: Throw
         params:
           throw:
@@ -65,7 +65,7 @@ _ref:
       ```
       ###### Override custom message:
       ```yaml
-      - id: foo_trow
+      - id: foo_throw
         type: Throw
         messages:
           error: Meh.
@@ -78,7 +78,7 @@ _ref:
       ```
       ###### Fail silently:
       ```yaml
-      - id: foo_trow
+      - id: foo_throw
         type: Throw
         messages:
           error: false
