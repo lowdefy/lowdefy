@@ -53,7 +53,6 @@ const ColorSelector = ({
               methods.triggerEvent({ name: 'onChange' });
             }}
             size={properties.size}
-            undefinedColor={properties.undefinedColor}
             value={value}
             hideInput={properties.hideInput}
             disabled={properties.disabled || loading}
