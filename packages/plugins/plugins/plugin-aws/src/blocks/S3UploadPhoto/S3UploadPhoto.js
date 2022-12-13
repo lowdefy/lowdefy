@@ -17,9 +17,8 @@
 import React, { useEffect, useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
-import { Button } from '@lowdefy/blocks-antd/blocks';
 
-import { Upload } from 'antd';
+import { message, Upload } from 'antd';
 
 const makeFileValue = (file, s3Parameters) => {
   const { lastModified, name, percent, size, status, type, uid } = file;
@@ -35,19 +34,13 @@ const makeOnChangeValue = (s3Parameters, changeEvent) => {
   };
 };
 
-const getDisabled = ({ properties, value }) => {
-  if (properties.disabled) return true;
-  if (properties.singleFile && value && (value.fileList || []).length >= 1) {
-    return true;
-  }
-  return false;
-};
-
 const getCustomRequest =
-  ({ methods, setS3Parameters }) =>
+  ({ methods, setS3Parameters, setLoading }) =>
   async ({ file, onError, onProgress, onSuccess }) => {
     try {
+      setLoading(true);
       const { name, size, type, uid } = file;
+      if (size > 1024 * 1024 * 10) throw new Error('File cannot exceed 10mb.');
 
       const s3PostPolicyResponse = await methods.triggerEvent({
         name: '__getS3PostPolicy',
@@ -95,6 +88,7 @@ const getCustomRequest =
       });
       xhr.addEventListener('loadend', async (event) => {
         await methods.triggerEvent({ name: 'onDone', event: { meta, event } });
+        setLoading(false);
       });
       xhr.open('post', url);
       xhr.send(formData);
@@ -105,13 +99,15 @@ const getCustomRequest =
     }
   };
 
-const S3UploadButtonBlock = ({ blockId, components, events, methods, properties, value }) => {
+const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
   // Use state here because we need to set s3 bucket and key as block value
   // The customRequest function does not have access to the updated block value,
   // so it cannot set the value directly. customRequest sets the parameters to s3Parameters state,
   // and then onChange updates the block value.
   const [s3Parameters, setS3Parameters] = useState(value);
-  const customRequest = getCustomRequest({ methods, setS3Parameters });
+  const [loading, setLoading] = useState(false);
+
+  const customRequest = getCustomRequest({ methods, setS3Parameters, setLoading });
   useEffect(() => {
     methods.setValue({ file: null, fileList: [] });
     methods.registerEvent({
@@ -126,12 +122,13 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
     });
   }, []);
 
-  const disabled = getDisabled({ properties, value });
   return (
     <Upload
-      accept={properties.accept}
+      listType="picture-card"
+      className="avatar-uploader"
+      accept="image/*"
       customRequest={customRequest}
-      disabled={disabled}
+      maxCount={1}
       id={blockId}
       multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
       showUploadList={properties.showUploadList}
@@ -140,29 +137,38 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
         methods.triggerEvent({ name: 'onChange' });
       }}
     >
-      <Button
-        blockId={`${blockId}_button`}
-        components={components}
-        events={events}
-        properties={{
-          disabled,
-          icon: 'AiOutlineUpload',
-          title: 'Upload',
-          type: 'default',
-          ...properties.button,
-        }}
-        methods={methods}
-      />
+      <div>
+        {loading ? (
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={{ name: 'AiOutlineLoading', size: 24 }}
+          />
+        ) : (
+          <Icon
+            blockId={`${blockId}_icon`}
+            events={events}
+            properties={{ name: 'AiOutlineCamera', size: 24 }}
+          />
+        )}
+        <div
+          style={{
+            marginTop: 8,
+          }}
+        >
+          Uploa a photo nwe anesrgwer
+        </div>
+      </div>
     </Upload>
   );
 };
 
-S3UploadButtonBlock.defaultProps = blockDefaultProps;
-S3UploadButtonBlock.meta = {
+S3UploadPhoto.defaultProps = blockDefaultProps;
+S3UploadPhoto.meta = {
   valueType: 'object',
   category: 'input',
-  icons: ['AiOutlineUpload'],
-  styles: ['blocks/S3UploadButton/style.less'],
+  icons: ['AiOutlineLoading', 'AiOutlineCamera'],
+  styles: ['blocks/S3UploadPhoto/style.less'],
 };
 
-export default S3UploadButtonBlock;
+export default S3UploadPhoto;
