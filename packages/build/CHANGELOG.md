@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
+
+
+### Bug Fixes
+
+* **build:** Include operators-moment as default in build. ([633bcf9](https://github.com/lowdefy/lowdefy/commit/633bcf989bafcfd916c97f7b98b8ec654d17b338))
+
+
+### Features
+
+* **build:** Add operators-moment to generateDefaultTypes ([1e869ad](https://github.com/lowdefy/lowdefy/commit/1e869ad45af7d2e84319a6170c8d0ec735be957e))
+
+
+
+
+
+# [4.0.0-alpha.36](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.35...v4.0.0-alpha.36) (2022-10-14)
+
+
+### Bug Fixes
+
+* Cache API file reads across all requests. ([2b90efb](https://github.com/lowdefy/lowdefy/commit/2b90efb041cf43e5344c5f2f5a8630ae06c8aad6))
+
+
+
+
+
 # [4.0.0-alpha.35](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.34...v4.0.0-alpha.35) (2022-10-05)
 
 **Note:** Version bump only for package @lowdefy/build

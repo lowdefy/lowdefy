@@ -43,6 +43,7 @@ const defaultPackages = [
   '@lowdefy/operators-change-case',
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
+  '@lowdefy/operators-moment',
   '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',
   '@lowdefy/operators-uuid',

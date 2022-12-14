@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-aws",
-  "version": "4.0.0-alpha.35",
+  "version": "4.0.0-alpha.37",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,23 +46,29 @@
     "prepare": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "~4.0.0-alpha.36",
-    "@lowdefy/blocks-antd": "~4.0.0-alpha.36",
-    "@lowdefy/helpers": "~4.0.0-alpha.36",
-    "antd": "~4.22.5",
-    "aws-sdk": "~2.1145.0",
-    "react": "~18.1.0",
-    "react-dom": "~18.1.0"
+    "@lowdefy/block-utils": "4.0.0-alpha.37",
+    "@lowdefy/blocks-antd": "4.0.0-alpha.37",
+    "@lowdefy/helpers": "4.0.0-alpha.37",
+    "antd": "4.22.5",
+    "aws-sdk": "2.1145.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@emotion/jest": "^11.9.1",
-    "@lowdefy/ajv": "~4.0.0-alpha.36",
-    "@lowdefy/block-dev": "~4.0.0-alpha.36",
-    "@lowdefy/jest-yaml-transform": "~4.0.0-alpha.36",
-    "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.194",
-    "@swc/jest": "^0.2.21",
-    "copyfiles": "^2.4.1"
+    "@emotion/jest": "11.9.1",
+    "@lowdefy/ajv": "4.0.0-alpha.37",
+    "@lowdefy/block-dev": "4.0.0-alpha.37",
+    "@lowdefy/jest-yaml-transform": "4.0.0-alpha.37",
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.194",
+    "@swc/jest": "0.2.21",
+    "@testing-library/dom": "8.13.0",
+    "@testing-library/react": "13.3.0",
+    "@testing-library/user-event": "14.2.0",
+    "copyfiles": "2.4.1",
+    "jest": "28.1.0",
+    "jest-environment-jsdom": "28.1.0",
+    "jest-serializer-html": "7.1.0"
   },
   "publishConfig": {
     "access": "public"

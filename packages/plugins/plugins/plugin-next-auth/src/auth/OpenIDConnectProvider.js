@@ -14,5 +14,22 @@
   limitations under the License.
 */
 
-@import 'antd/lib/typography/style/index.less';
-@import 'antd/lib/tooltip/style/index.less';
+function OpenIDConnectProvider(properties) {
+  return {
+    id: properties.id ?? 'OpenIDConnectProvider',
+    name: properties.name ?? 'OpenIDConnectProvider',
+    type: 'oauth',
+    authorization: { params: { scope: 'openid email profile' } },
+    checks: ['pkce', 'state'],
+    idToken: true,
+    profile(profile) {
+      return {
+        id: profile.sub,
+        ...profile,
+      };
+    },
+    ...properties,
+  };
+}
+
+export default OpenIDConnectProvider;

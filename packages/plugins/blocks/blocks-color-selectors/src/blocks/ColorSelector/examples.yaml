@@ -26,11 +26,6 @@
   properties:
     title: size_large
     size: large
-- id: undefined_color
-  type: ColorSelector
-  properties:
-    title: undefined_color
-    undefinedColor: '#0092f0'
 - id: style
   type: ColorSelector
   style:

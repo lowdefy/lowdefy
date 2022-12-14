@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-alpha.35",
+  "version": "4.0.0-alpha.37",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -65,5 +65,5 @@
     "prettier": "2.6.2",
     "turbo": "1.2.14"
   },
-  "packageManager": "pnpm@7.11.0"
+  "packageManager": "pnpm@7.18.1"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "4.0.0-alpha.35",
+  "version": "4.0.0-alpha.37",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,7 +41,7 @@
     "test:watch": "jest --coverage --watch"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-alpha.35"
+    "@lowdefy/helpers": "4.0.0-alpha.37"
   },
   "devDependencies": {
     "@swc/cli": "0.1.57",
