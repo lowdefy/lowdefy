@@ -156,7 +156,7 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
             marginTop: 8,
           }}
         >
-          Uploa a photo nwe anesrgwer
+          Upload a photo
         </div>
       </div>
     </Upload>
