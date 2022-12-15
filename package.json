@@ -39,7 +39,7 @@
     "app:server:next-dev": "pnpm app:cli:build && pnpm -r --filter='@lowdefy/server' dev",
     "app:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../../app && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start",
     "docs:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../docs --server-directory ../server",
-    "docs:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../docs --dev-directory ../server-dev",
+    "docs:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../docs --dev-directory ../server-dev --log-level=debug",
     "docs:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../docs --server-directory ../server",
     "docs:server-dev": "pnpm -r --filter='@lowdefy/server-dev' start --config-directory ../docs",
     "docs:server:next-dev": "pnpm docs:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",
