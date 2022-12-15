@@ -49,6 +49,7 @@ const defaultPackages = [
   '@lowdefy/operators-uuid',
   '@lowdefy/operators-yaml',
   '@lowdefy/plugin-auth0',
+  '@lowdefy/plugin-aws',
   '@lowdefy/plugin-csv',
   '@lowdefy/plugin-next-auth',
 ];

@@ -92,6 +92,7 @@
     "@lowdefy/operators-uuid": "4.0.0-alpha.37",
     "@lowdefy/operators-yaml": "4.0.0-alpha.37",
     "@lowdefy/plugin-auth0": "4.0.0-alpha.37",
+    "@lowdefy/plugin-aws": "4.0.0-alpha.37",
     "@lowdefy/plugin-csv": "4.0.0-alpha.37",
     "@lowdefy/plugin-next-auth": "4.0.0-alpha.37",
     "@swc/cli": "0.1.57",
