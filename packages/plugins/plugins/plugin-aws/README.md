@@ -1,11 +1,13 @@
 # Lowdefy S3 Upload Blocks
 
-This is a Lowdefy blocks wrapper for the [Amazon S3 API](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html).
+To securely upload files to S3, the `S3UploadButton` or `S3UploadPhoto` blocks can be used. S3 file downloads can be done by getting a presigned URL using a `AwsS3PresignedGetObject` request and opening the URL in a new tab which will result in the browser starting the file download.
 
-The following blocks are available: `S3UploadButton` and `S3UploadPhoto`.
+To access the [Amazon S3 API](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html), a `AwsS3Bucket` connection is defined, and a `AwsS3PresignedPostPolicy` or `AwsS3PresignedGetObject` requests can be used to either upload or download files to S3.
 
-To use these blocks, an `AwsS3Bucket` connection must be defined with the following properties:
+### AwsS3Bucket Connection
+The `AwsS3Bucket` connenction provides functionality of the [Amazon S3 API](https://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html).
 
+##### Properties
 - `accessKeyId: string`: AWS IAM access key id with s3 access.
 - `secretAccessKey:  string` : AWS IAM secret access key with s3 access.
 - `region:  string`: AWS region the bucket is located in
@@ -13,24 +15,28 @@ To use these blocks, an `AwsS3Bucket` connection must be defined with the follow
 - `read: boolean` : Allow reads from the bucket.
 - `write: boolean`: Allow writes to the bucket.
 
-To upload files, a request of type `AwsS3PresignedPostPolicy` should be defined with properties:
+### AwsS3PresignedPostPolicy File Upload Request
+To upload files, a request of type `AwsS3PresignedPostPolicy` is used.
 
+##### Properties
 - `acl: string`: Access control lists used to grant read and write access.
 - `conditions: array`: Conditions to be enforced on the request.
 - `expires: number`: Number of seconds for which the policy should be valid.
 - `key: string`: Key under which object will be stored.
 
-To download files, a request of type `AwsS3PresignedGetObject` should be defined with properties:
+### AwsS3PresignedGetObject File Download Request
+To download files, a request of type `AwsS3PresignedGetObject` is used.
 
+##### Properties
 - `expires: number`: Number of seconds for which the policy should be valid.
 - `key: string`: Key under which object is stored .
 - `responseContentDisposition: string`: Sets the Content-Disposition header of the response.
 - `responseContentType: string`: Sets the Content-Type header of the response.
 - `versionId: string`: VersionId used to reference a specific version of the object.
 
+### S3UploadButton and S3UploadPhoto Blocks
 
-### Properties
-
+##### Properties
 - `accept: string`: File types accepted by the input. See html file type input accept property at [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept).
 - `button: object`: Button block properties.
 - `disabled: boolean`: Disable the file input.
@@ -38,8 +44,7 @@ To download files, a request of type `AwsS3PresignedGetObject` should be defined
 - `showUploadList: boolean`: Whether to show default upload list.
 - `singleFile: boolean`: Only allow a single file to be uploaded. Only one file can be selected in the prompt and the upload button is disabled after a file is uploaded.
 
-### Events
-
+##### Events
 - `onChange`: Triggered when the upload state is changing.
 - `onClick`: Triggered when the upload button is clicked.
 - `onSuccess`: Triggered when the upload is successful, returns `_event` object:
