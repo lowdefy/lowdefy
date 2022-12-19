@@ -20,7 +20,7 @@ _ref:
     pageTitle: _moment
     filePath: operators/_moment.yaml
     description: |
-      The `_moment` operator converts date objects to strings, using a specified format. It can only be used on the web-client (not in requests or connections).
+      The `_moment` operator converts date objects to strings, using a specified format.
     methods:
       - name: format
         types: |
