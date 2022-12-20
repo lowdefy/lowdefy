@@ -140,7 +140,6 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
-- _ref: actions/Break.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/Fetch.yaml
@@ -153,6 +152,7 @@
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
+- _ref: actions/Throw.yaml
 - _ref: actions/Validate.yaml
 - _ref: actions/Wait.yaml
 
