@@ -634,6 +634,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
+        - id: _moment
+          type: MenuLink
+          pageId: _moment
         - id: _mql
           type: MenuLink
           pageId: _mql
