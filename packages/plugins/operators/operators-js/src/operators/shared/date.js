@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { runClass } from '@lowdefy/operators';
+import { runClass, runInstance } from '@lowdefy/operators';
 
 function date(input) {
   const result = new Date(input);
@@ -29,25 +29,98 @@ function now() {
   return new Date();
 }
 
+function parse(input) {
+  return Date.parse(input);
+}
+
+function UTC(year, month, day, hours, minutes, seconds) {
+  return Date.UTC(year, month, day, hours, minutes, seconds);
+}
+
 const functions = {
   __default: date,
+  parse,
   now,
+  UTC,
+};
+
+// TODO: return null instead of current date when null is passed in, consider modifying run instance and run class
+const prep = (args) => {
+  if (type.isNone(args[0])) {
+    args[0] = new Date();
+  }
+  return args;
 };
 
 const meta = {
-  __default: { singleArg: true, validTypes: ['number', 'string'] },
+  getDate: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getDay: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getFullYear: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getHours: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getMilliseconds: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getMinutes: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getMonth: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getSeconds: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getTime: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getTimezoneOffset: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCDate: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCDay: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCFullYear: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCHours: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCMilliseconds: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCMinutes: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCMonth: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  getUTCSeconds: { singleArg: true, prep, validTypes: ['date', 'null'] },
   now: { noArgs: true },
+  parse: { singleArg: true, prep, validTypes: ['string', 'null'] },
+  setDate: { namedArgs: ['on', 'dayOfMonth'], validTypes: ['array', 'object'] },
+  setFullYear: { namedArgs: ['on', 'year'], validTypes: ['array', 'object'] },
+  setHours: { namedArgs: ['on', 'hours'], validTypes: ['array', 'object'] },
+  setMilliseconds: { namedArgs: ['on', 'milliseconds'], validTypes: ['array', 'object'] },
+  setMinutes: { namedArgs: ['on', 'minutes'], validTypes: ['array', 'object'] },
+  setMonth: { namedArgs: ['on', 'month'], validTypes: ['array', 'object'] },
+  setSeconds: { namedArgs: ['on', 'seconds'], validTypes: ['array', 'object'] },
+  setTime: { namedArgs: ['on', 'time'], validTypes: ['array', 'object'] },
+  setUTCDate: { namedArgs: ['on', 'dayOfMonth'], validTypes: ['array', 'object'] },
+  setUTCFullYear: { namedArgs: ['on', 'year'], validTypes: ['array', 'object'] },
+  setUTCHours: { namedArgs: ['on', 'hours'], validTypes: ['array', 'object'] },
+  setUTCMilliseconds: { namedArgs: ['on', 'milliseconds'], validTypes: ['array', 'object'] },
+  setUTCMinutes: { namedArgs: ['on', 'minutes'], validTypes: ['array', 'object'] },
+  setUTCMonth: { namedArgs: ['on', 'month'], validTypes: ['array', 'object'] },
+  setUTCSeconds: { namedArgs: ['on', 'seconds'], validTypes: ['array', 'object'] },
+  toDateString: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  toISOString: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  toJSON: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  toString: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  toTimeString: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  toUTCString: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  UTC: {
+    namedArgs: ['year', 'month', 'day', 'hours', 'minutes', 'seconds'],
+    validTypes: ['array', 'object'],
+  },
+  valueOf: { singleArg: true, prep, validTypes: ['date', 'null'] },
+  __default: { singleArg: true, validTypes: ['number', 'string'] },
 };
 
 function _date({ params, location, methodName }) {
-  return runClass({
-    functions,
+  if (['now', 'parse', 'UTC'].includes(methodName) || methodName === undefined) {
+    return runClass({
+      functions,
+      location,
+      meta,
+      methodName,
+      operator: '_date',
+      params,
+      defaultFunction: '__default',
+    });
+  }
+  return runInstance({
     location,
     meta,
-    methodName: methodName,
+    methodName,
     operator: '_date',
     params,
-    defaultFunction: '__default',
+    instanceType: 'date',
   });
 }
 
