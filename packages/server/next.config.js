@@ -22,9 +22,10 @@ module.exports = withLess({
   },
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
-  // experimental: {
-  //   concurrentFeatures: true,
-  // },
+  experimental: {
+    outputStandalone: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' || false,
+    // concurrentFeatures: true,
+  },
   outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,
