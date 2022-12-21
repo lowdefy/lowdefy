@@ -23,6 +23,7 @@ module.exports = withLess({
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
   experimental: {
+    // TODO: Convert from experimental.outputStandalone to output: 'standalone' when upgrading to Next 13
     outputStandalone: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' || false,
     // concurrentFeatures: true,
   },
