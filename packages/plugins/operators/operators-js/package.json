@@ -45,7 +45,7 @@
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "jest --coverage"
+    "test": "TZ=UTC jest --coverage"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.37",

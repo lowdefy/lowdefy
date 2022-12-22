@@ -95,7 +95,7 @@ test('_date getFullYear', () => {
 test('_date getHours', () => {
   expect(
     _date({ params: new Date('2022-12-21T10:17:03.100+02:00'), methodName: 'getHours' })
-  ).toEqual(10);
+  ).toEqual(8);
 });
 
 test('_date getMilliseconds', () => {
@@ -137,7 +137,7 @@ test('_date getTimezoneOffset', () => {
       params: new Date('2022-12-21T10:17:03.100+02:00'),
       methodName: 'getTimezoneOffset',
     })
-  ).toEqual(-120);
+  ).toEqual(0);
 });
 
 test('_date getUTCDate', () => {
@@ -224,7 +224,7 @@ test('_date setHours', () => {
       params: { on: new Date('2022-12-21T10:17:03.100+02:00'), hours: 11 },
       methodName: 'setHours',
     })
-  ).toEqual(1671614223100);
+  ).toEqual(1671621423100);
 });
 
 test('_date setMilliseconds', () => {
@@ -356,7 +356,7 @@ test('_date toJSON', () => {
 test('_date toTimeString', () => {
   expect(
     _date({ params: new Date('2022-12-21T10:17:03.100+02:00'), methodName: 'toTimeString' })
-  ).toEqual('10:17:03 GMT+0200 (Central Africa Time)');
+  ).toEqual('08:17:03 GMT+0000 (Coordinated Universal Time)');
 });
 
 test('_date toUTCString', () => {
