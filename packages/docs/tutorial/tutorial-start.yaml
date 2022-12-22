@@ -49,6 +49,8 @@ _ref:
 
             The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 16 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
+            Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making use of [Corepack](https://nodejs.org/api/corepack.html) for this installation. The installation steps for using Corepack can be found [here](https://pnpm.io/installation#using-corepack). Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation).
+
             #### Step 1.1 - Create a project directory
 
             Create a directory (folder) on your computer where you would like to create the configuration files for your project. We will be referring to this directory as the project directory.
@@ -75,7 +77,7 @@ _ref:
           content: |
             This will create two files in your current working directory. The first file, called `lowdefy.yaml` is the starting point of your app's configuration. The second, called `.gitignore`, is a hidden file that tells `git`, a version control tool, not to version or upload some specific files.
 
-            > We recommend using [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to run the Lowdefy CLI, since this ensures your are always running the latest version. You can also install the CLI globally or locally using `npm install lowdefy`
+            > We recommend using [`pnpx`](https://pnpm.io/6.x/pnpx-cli) to run the Lowdefy CLI, since this ensures you are always running the latest version. You can also install the CLI globally or locally using `pnpm add lowdefy`.
 
       - id: info_windows_paste
         type: Alert
