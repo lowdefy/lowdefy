@@ -22,23 +22,6 @@ _ref:
     prefetchPages:
       - tutorial-requests
     content:
-      - id: tutorial_video
-        type: DangerousMarkdown
-        properties:
-          DOMPurifyOptions:
-            ADD_TAGS:
-              - iframe
-            ADD_ATTR:
-              - allowfullscreen
-              - allow
-              - frameborder
-          content: |
-            <iframe
-              width="800"
-              height="470"
-              src="https://www.youtube.com/embed/s1qMpkxHa3Y" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-            </iframe>
       - id: body_reset
         type: MarkdownWithCode
         properties:
@@ -184,8 +167,8 @@ _ref:
                 properties:
                   title: Ticket type
                   options:
-                    - Feature request
-                    - Bug report
+                    - Suggestion
+                    - Complaint
                     - Question
               - id: ticket_description
                 type: TextArea
@@ -228,7 +211,7 @@ _ref:
 
             ## Hiding blocks
 
-            We would like to ask users if they restarted their device if they want to create a bug report. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Bug report`
+            We would like to ask user if they had purchased the product that they are formulating a complaint about, within the last month. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Complaint`
 
             #### Step 4.4 - Add a block with a visible condition
             Add the following [`ButtonSelector`](ButtonSelector) to your app.
@@ -247,14 +230,14 @@ _ref:
                     properties:
                       title: Description
             ################ -------- Copy from here -------- ################
-                  - id: confirm_restart
+                  - id: purchase_in_last_month
                     type: ButtonSelector
                     visible: # Test if block should be visible to the user
                       _eq: # Equals operator
                         - _state: ticket_type # Get the ticket_type value from state.
-                        - Bug report
+                        - Complaint
                     properties:
-                      title: Did you restart your device?
+                      title: Did you purchase this product within the last month?
                       label:
                         colon: false # Hide the label colon
                       options:
@@ -265,7 +248,7 @@ _ref:
                     type: Button
             ```
 
-            If you select the "Bug report" ticket type, the selector confirming if you restarted your device should appear.
+            If you select the "Complaint" ticket type, the selector confirming if you purchased the product within the last month should appear.
 
             ### How it works
 
@@ -277,11 +260,11 @@ _ref:
 
             ## Validation rules
 
-            We would like to add a validation rule on the `confirm_restart` block to warn users that they should restart their device before creating a bug report.
+            We would like to add a validation rule on the `purchase_in_last_month` block to warn users that the product that they have purchased may not be eligible for replacement.
 
-             #### Step 4.5 - Add a validation rule
+            #### Step 4.5 - Add a validation rule
 
-             Add the following to your app
+            Add the following to your app
             ##### `pages/new-ticket.yaml`
             ```yaml
             id: new-ticket
@@ -291,25 +274,25 @@ _ref:
                 # ...
                 blocks:
                   # ...
-                  - id: confirm_restart
+                  - id: purchase_in_last_month
                     type: ButtonSelector
                     visible: # Test if block should be visible to the user
                       _eq: # Equals operator
                         - _state: ticket_type # Get the ticket_type value from state.
-                        - Bug report
+                        - Complaint
             ################ ------- Copy from here -------- ################
                     validate:
                       # Show a warning that shows before validate is called
                       # and does not block Validate action.
                       - status: warning
-                        message: If you did not restart your device, we will ask you to restart it.
+                        message: If you have had the product for over a month, we may not be able to replace it.
                         pass:
                           _eq:
                             - _state: confirm_restart
                             - Yes
             ################ -------- Copy to here ---------- ################
                     properties:
-                      title: Did you restart your device?
+                      title: Did you purchase this product within the last month?
                       label:
                         colon: false # Hide the label colon
                       options:
@@ -317,7 +300,7 @@ _ref:
                         - No
             ```
 
-            Your app should now show a warning message if `confirm_restart` is not yes.
+            Your app should now show a warning message if `purchase_in_last_month` is not yes.
 
             ### How it works
 
@@ -364,28 +347,30 @@ _ref:
                 properties:
                   title: Ticket type
                   options: # Set the allowed options
-                    - Feature request
-                    - Bug report
+                    - Suggestion
+                    - Complaint
                     - Question
               - id: ticket_description
                 type: TextArea
                 properties:
                   title: Description
-              - id: confirm_restart
+              - id: purchase_in_last_month
                 type: ButtonSelector
                 visible: # Test if block should be visible to the user
                   _eq: # Equals operator
                     - _state: ticket_type # Get the ticket_type value from state.
-                    - Bug report
+                    - Complaint
                 validate:
-                  - status: warning # Show a warning that shows before validate is called and does not block Validate action.
-                    message: If you did not restart your device, we will ask you to restart it.
+                  # Show a warning that shows before validate is called
+                  # and does not block Validate action.
+                  - status: warning
+                    message: If you have had the product for over a month, we may not be able to replace it.
                     pass:
                       _eq:
                         - _state: confirm_restart
                         - Yes
                 properties:
-                  title: Did you restart your device?
+                  title: Did you purchase this product within the last month?
                   label:
                     colon: false # Hide the label colon
                   options:

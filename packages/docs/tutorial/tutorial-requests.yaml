@@ -20,190 +20,26 @@ _ref:
     section: Tutorial
     filePath: tutorial/tutorial-requests.yaml
     prefetchPages:
-      - tutorial-deploy
+      - tutorial-additional-page
     content:
-      - id: body_google_cloud
+      - id: body_axios
         type: MarkdownWithCode
         properties:
           content: |
-            We will be saving the data from our form in a Google Sheet, using the [`GoogleSheet`](/GoogleSheet) connection. To do this, we will first need to set up a Google Cloud Platform project to get credentials to access the API.
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/04-interactive-pages).
 
-            ### Creating a Google Sheet and getting credentials
+            We will now add an [`AxiosHttp`](/AxiosHttp) connection and an [`SQLite`](/SQLite) connection to our app.
+            The [`AxiosHttp`](/AxiosHttp) connection will be used to get the list of products that tickets can be logged for.
+            The [`SQLite`](/SQLite) connection will be used to store the tickets created by the user.
 
-            #### Step 5.1
+            ## Configuring the AxiosHttp Connection and Request
 
-            Go to [Google Sheets](https://docs.google.com/spreadsheets) and create a new Google Sheet.
+            We want to add a [`Selector`](/selector) block to our form that will allow the user to select which product they are logging a ticket about, from a preset list of options. This list of preset product options will be obtained from the [DummyJSON](https://dummyjson.com/) api.
+            For this, we will make use of an [`AxiosHttp`](/AxiosHttp) connection.
 
-            #### Step 5.2
+            In order to do this, we must follow the following steps:
 
-            Go to [console.cloud.google.com](https://console.cloud.google.com) and sign in.
-
-            #### Step 5.3
-
-            Click on the "Select a project" dropdown at the top left, and then choose "NEW PROJECT". Give your project a name and click "Create".
-
-            #### Step 5.4
-
-            Go to the "APIs and Services" section, and the click "ENABLE APIS AND SERVICES" button.
-
-            #### Step 5.5
-
-            Search for "Sheets" and select the Google Sheets API.
-
-            #### Step 5.6
-
-            Click "Enable".
-
-            #### Step 5.7
-
-            Click "CREATE CREDENTIALS".
-
-            #### Step 5.8
-
-            Choose the following:
-            - **Which API are you using?**: Google Sheets API
-            - **What data will you be accessing?**: Application data
-            - **Are you planning to use this API with App Engine or Compute Engine?**: No, I'm not using them
-            - **Where will you be calling the API from?** : Web server (e.g. node.js, Tomcat)
-
-            Then click "What credentials do I need?"
-
-            #### Step 5.9
-
-            Choose the following:
-            - Give the account a name.
-            - Choose "Project > Editor" as the role.
-            - Choose JSON as the key type.
-
-            Click continue.
-
-            #### Step 5.10
-
-            You will be asked to save a file. This file contains the credentials to access your sheet, so make sure to handle it securely. Download the file. Do not commit it to source control.
-
-            #### Step 5.11
-
-            In the next section we will be deploying our app using Netlify. To use the private key on Netlify, we need to base64 encode it, since the new-line characters cause problems when used in an environment variable.
-
-            You can use the converter below to convert your key. This will output a long stream of characters that are your encoded key.
-
-            > The base64 conversion happens on the web client. We won't store your key. You can look at how the key is encoded [here](https://github.com/lowdefy/lowdefy/blob/main/packages/docs/tutorial/tutorial-requests.yaml) or convert your key in the browser console using [btoa()](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa).
-
-      # Because of weird layout with flex
-      - id: base_64_box
-        type: Box
-        layout:
-          contentGutter: 16
-        blocks:
-          - id: base64_input
-            type: TextInput
-            layout:
-              flex: 1 1 auto
-            properties:
-              label:
-                disabled: true
-              placeholder: Paste your key here (without quotes)
-
-          - id: base64_encode_button
-            type: Button
-            layout:
-              flex: 0 1 auto
-            properties:
-              title: Encode
-            events:
-              onClick:
-                - id: convert_key
-                  type: SetState
-                  params:
-                    base64_ouput:
-                      _base64.encode:
-                        _string.replace:
-                          on:
-                            _state: base64_input
-                          regex: "\\\\n"
-                          newSubstr: "\n"
-                          regexFlags: g
-
-      - id: base64_output
-        type: Paragraph
-        style:
-          maxWidth: 600px
-        visible:
-          _not:
-            _eq:
-              - _state: base64_ouput
-              - null
-        properties:
-          code: true
-          copyable: true
-          content:
-            _state: base64_ouput
-
-      - id: warning_base64
-        type: Alert
-        properties:
-          type: warning
-          icon: AiFillWarning
-          description: By base64 encoding your credentials you have not encrypted them. They are still just as sensitive as before.
-
-      - id: body_env
-        type: MarkdownWithCode
-        properties:
-          content: |
-            #### Step 5.12
-
-            Create a file called `.env` in your project directory with the following:
-
-            ##### `.env`
-            ```
-            LOWDEFY_SECRET_SHEETS_CLIENT_EMAIL=__YOUR_CLIENT_EMAIL__
-            LOWDEFY_SECRET_SHEETS_PRIVATE_KEY=__YOUR_ENCODED_PRIVATE_KEY__
-            ```
-
-            Fill in the client email from the credentials file and your encoded private key values (without quotes). This will give the development server access to these secrets.
-
-      - id: warning_dont_commit
-        type: Alert
-        properties:
-          type: warning
-          icon: AiFillWarning
-          description: The .env file contains your credentials. Do not commit this file to git. It should be listed in your .gitignore file if you used the CLI init command.
-
-      - id: body_use_connection
-        type: MarkdownWithCode
-        properties:
-          content: |
-            #### Step 5.13
-
-            Because we changed the environment variables, we need to restart the dev server. Run `npx lowdefy@latest dev` again to restart the server.
-
-            #### Step 5.14
-
-            We need to give our service account access to our Google Sheet. Go to your Google Sheet and click the "Share" button. Share the sheet with the client email of the service account we just created, with the "Editor" role.
-
-            ### What happened
-
-            We created a Google Cloud Platform (GCP) project, and created a service account in that project that we can use to access Google sheets. This gave us the credentials we need for the [`GoogleSheet`](/GoogleSheet) connection.
-
-            We set up these credentials for our local dev environment using a `.env` file. The `.env` file sets [environment variables](https://en.wikipedia.org/wiki/Environment_variable) in the process the server is running in.
-
-            Because we set environment variables that start with `LOWDEFY_SECRET_`, these values become part of the [`secrets`](/Secrets) object, and can be accessed using the [`_secret`](/_secret) operator.
-
-            ### Using the Google Sheets connection
-
-            #### Step 5.15
-
-            To use a Google Sheet with the Lowdefy connection, we first need to define the columns in the sheet. This will be the same fields as the data we will be saving later.
-
-            In the first row of your sheet, add the following column headers:
-
-            - ticket_title
-            - ticket_type
-            - ticket_description
-            - confirm_restart
-            - created_date
-
-            #### Step 5.16
+            #### Step 5.1.1
 
             In your `lowdefy.yaml` file, add the following:
 
@@ -215,32 +51,17 @@ _ref:
 
             ################ -------- Copy from here -------- ################
             connections:
-              - id: google_sheet
-                type: GoogleSheet
+              - id: dummy_api
+                type: AxiosHttp
                 properties:
-                  client_email:
-                    _secret: SHEETS_CLIENT_EMAIL
-                  private_key:
-                    _base64.decode:
-                      _secret: SHEETS_PRIVATE_KEY
-                  sheetIndex: 0
-                  spreadsheetId: __YOUR_SPREADSHEET_ID__
-                  write: true
+                  baseURL: https://dummyjson.com/
             ################ ------- Copy to here ----------- ################
 
             menus:
               # ...
             ```
 
-            #### Step 5.17
-
-            Note down your spreadsheetId. You can find this by looking at the url in your browser when you are looking at your sheet. It should look something like:
-
-            `https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit#gid=0`
-
-            where the spreadsheetId is a 44 character random string. Fill in your spreadsheetId in the spreadsheet connection.
-
-            #### Step 5.18
+            #### Step 5.1.2
 
             In your `new-ticket.yaml` file, add the following request:
 
@@ -251,21 +72,230 @@ _ref:
             type: PageHeaderMenu
             ################ -------- Copy from here -------- ################
             requests:
-              - id: save_data
-                type: GoogleSheetAppendOne
-                connectionId: google_sheet
+              - id: get_products
+                type: AxiosHttp
+                connectionId: dummy_api
                 properties:
-                  row:
-                    # Get all the values to save from state
+                  url: /products
+            ################ ------- Copy to here ----------- ################
+
+            properties:
+              title: New ticket # The title in the browser tab.
+            layout:
+              contentJustify: center # Center the contents of the page
+            blocks:
+              # ...
+            ```
+
+            #### Step 5.1.3
+
+            In your `new-ticket.yaml` file, add an onMount event that calls `get_products` request:
+
+            ##### `pages/new-ticket.yaml`
+
+            ```yaml
+            requests:
+              - id: get_products
+                type: AxiosHttp
+                connectionId: dummy_api
+                properties:
+                  url: /products
+
+            ################ -------- Copy from here -------- ################
+            events:
+              onMount:
+                - id: fetch_products
+                  type: Request
+                  params: get_products
+            ################ ------- Copy to here ----------- ################
+
+            properties:
+              title: New ticket # The title in the browser tab.
+            layout:
+              contentJustify: center # Center the contents of the page
+            blocks:
+              # ...
+            ```
+
+            #### Step 5.1.3
+
+            In your `new-ticket.yaml` file, add the a Selector block and populate it with the results from the `get_products` request. We will make use of `_array.map` to get the product titles from the response obtained from the request. This is done as follows:
+
+            ##### `pages/new-ticket.yaml`
+
+            ```yaml
+            id: new-ticket
+                # ...
+            blocks:
+              - id: content_card
+                # ...
+                blocks:
+                  - id: page_heading
+                    type: Title
+                    properties:
+                      content: Log a ticket # Change the title on the page.
+                      level: 3 # Make the title a little smaller (an html `<h3>`).
+                  - id: ticket_title
+                    type: TextInput
+                    properties:
+                      title: Title
+                  - id: ticket_type
+                    type: ButtonSelector
+                    properties:
+                      title: Ticket type
+                      options: # Set the allowed options
+                        - Suggestion
+                        - Complaint
+                        - Question
+
+            ################ ------- Copy from here -------- ################
+                  - id: product
+                    type: Selector
+                    required: true
+                    properties:
+                      title: Product
+                      options: # Set the allowed options QUERY FROM API
+                        _array.map:
+                          - _request: get_products.data.products
+                          - _function:
+                              __args: 0.title
+            ################ ------- Copy to here -------- ################
+
+                  - id: ticket_description
+                    type: TextArea
+                    properties:
+                      title: Description
+            ```
+
+            ### What happened
+
+            We defined the `AxiosHttp` connection to be used to obtain the list of products that tickets can be created for.
+
+            We also defined an `AxiosHttp` request, to fetch the products data when the page is mounted.
+
+      - id: body_sqlite
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Configuring the SQLite Connection and Request
+
+            We will be saving the data from our form in a SQLite database, using the [`SQLite`](/SQLite) connection. To do this, we will first need to set up an SQLite database. The products that we want to gain access to can be found at https://dummyjson.com/products/.
+
+            In order to do this, we must follow the following steps:
+
+            #### Step 5.2.1
+
+            We will make use of an SQLite database with a table called `tickets`, that has the following columns:
+
+            - ticket_title
+            - ticket_type
+            - ticket_description
+            - product
+            - purchase_in_last_month
+            - created_date
+
+      - id: table_download
+        type: Html
+        properties:
+          html: |
+            The database used in this tutorial can be downloaded <a href="/tutorial/tutorial_db.sqlite" download>here</a>.
+
+      - id: body_sqlite_steps
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Alternatively, install [SQLite](https://www.sqlite.org/) on your computer and use the following to create the needed table:
+
+            ```
+            CREATE TABLE tickets (
+              ticket_title varchar(100),
+              ticket_type varchar(50),
+              ticket_description varchar(200),
+              product varchar(100),
+              purchase_in_last_month real,
+              created_date real
+            );
+            ```
+
+            #### Step 5.2.2
+
+            Create a file called `.env` in your project directory with the following:
+
+            ##### `.env`
+            ```
+            LOWDEFY_SECRET_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
+            ```
+
+            #### Step 5.2.3
+
+            In your `lowdefy.yaml` file, add the following:
+
+            ##### `lowdefy.yaml`
+
+            ```yaml
+            name: lowdefy-project-template
+            version: CURRENT_LOWDEFY_VERSION
+
+            connections:
+              # ...
+            ################ -------- Copy from here -------- ################
+                - id: knex
+                  type: Knex
+                  properties:
+                    client: sqlite
+                    connection:
+                      filename:
+                        _secret: SQLITE_FILENAME
+            ################ ------- Copy to here ----------- ################
+
+            menus:
+              # ...
+            ```
+
+            #### Step 5.2.4
+
+            In your `new-ticket.yaml` file, add the following request:
+
+            ##### `pages/new-ticket.yaml`
+
+            ```yaml
+            id: new-ticket
+            type: PageHeaderMenu
+            requests:
+              # ...
+            ################ -------- Copy from here -------- ################
+              - id: save_new_ticket
+                type: KnexRaw
+                connectionId: knex
+                payload:
+                  _state: true
+                properties:
+                  query: |
+                    INSERT INTO tickets (
+                    ticket_title,
+                    ticket_type,
+                    ticket_description,
+                    product,
+                    purchase_in_last_month,
+                    created_date)
+                    VALUES(
+                    :ticket_title,
+                    :ticket_type,
+                    :ticket_description,
+                    :product,
+                    :purchase_in_last_month,
+                    :created_date)
+                  parameters:
                     ticket_title:
-                      _state: ticket_title
+                      _payload: ticket_title
                     ticket_type:
-                      _state: ticket_type
+                      _payload: ticket_type
                     ticket_description:
-                      _state: ticket_description
-                    confirm_restart:
-                      _state: confirm_restart
-                    # Add the date the row was created using the `_date.now` operator.
+                      _payload: ticket_description
+                    product:
+                      _payload: product
+                    purchase_in_last_month:
+                      _payload: purchase_in_last_month
                     created_date:
                       _date: now
             ################ ------- Copy to here ----------- ################
@@ -278,7 +308,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.19
+            #### Step 5.2.5
 
             In your `new-ticket.yaml` file, add the following action to the submit button:
 
@@ -303,7 +333,7 @@ _ref:
                         - id: validate
                           type: Validate
                         ################ -------- Copy from here -------- ################
-                        - id: save_data # Make a request to Google Sheets
+                        - id: save_data # Make a request to the SQLite database
                           type: Request
                           params: save_data
                         - id: reset # Reset the form once data has been submitted
@@ -311,19 +341,18 @@ _ref:
                         ################ ------- Copy to here ----------- ################
             ```
 
-            #### Step 5.20
+            #### Step 5.2.6
 
-            If you click the submit button, you should see your data submitted to your Google Sheet.
+            If you click the submit button, your form data should be added into the tickets table.
 
             ### What happened
+            We set up the table and column names we will be using in our SQLite database. We need to do this to use the `SQLite` connection.
 
-            We set up the column names we will be using in our Google Sheet. We need to do this to use the `GoogleSheet` connection.
+            We defined the `Knex` connection, with the SQLite client.
 
-            We defined the `GoogleSheet` connection we will be using in our app, using the credentials we obtained earlier.
+            We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button.
 
-            We also defined a `GoogleSheetAppendOne` request, to save the data to our sheet, and called that request when clicking the submit button.
-
-            > You can find the final configuration files for this section [here](tutorial-requests-config).
+            > You can find the final configuration files for this section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/05-requests).
 
             ### Up next
 
@@ -334,5 +363,5 @@ _ref:
           vars:
             previous_page_title: Interactive pages
             previous_page_id: tutorial-actions-operators
-            next_page_title: Deploy to Netlify
-            next_page_id: tutorial-deploy
+            next_page_title: Additional Page
+            next_page_id: tutorial-additional-page

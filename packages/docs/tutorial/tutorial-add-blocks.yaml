@@ -22,23 +22,6 @@ _ref:
     prefetchPages:
       - tutorial-actions-operators
     content:
-      - id: tutorial_video
-        type: DangerousMarkdown
-        properties:
-          DOMPurifyOptions:
-            ADD_TAGS:
-              - iframe
-            ADD_ATTR:
-              - allowfullscreen
-              - allow
-              - frameborder
-          content: |
-            <iframe
-              width="800"
-              height="470"
-              src="https://www.youtube.com/embed/YHeMlW9y6V0" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-            </iframe>
       - id: body_add_blocks
         type: MarkdownWithCode
         properties:
@@ -78,8 +61,8 @@ _ref:
                     properties:
                       title: Ticket type
                       options: # Set the allowed options
-                        - Feature request
-                        - Bug report
+                        - Suggestion
+                        - Complaint
                         - Question
                   - id: ticket_description
                     type: TextArea
@@ -106,7 +89,7 @@ _ref:
             ################ -------- Copy to here ---------- ################
             ```
 
-            >  If you would like to see how your config should look at this point, you can find it [here](/tutorial-add-blocks-config).
+            >  If you would like to see how your config should look at this point, you can find it [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/03-adding-blocks).
 
             Your booking page should something like this:
       - id: example1
@@ -139,8 +122,8 @@ _ref:
                 properties:
                   title: Ticket type
                   options:
-                    - Feature request
-                    - Bug report
+                    - Suggestion
+                    - Complaint
                     - Question
               - id: ticket_description
                 type: TextArea
@@ -176,9 +159,7 @@ _ref:
 
             ### How it works
 
-            Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 5 block categories, namely display, input, container, list, and context.
-
-            The first block on a page needs to be a [context](/context-and-state) block. For now, it is enough to understand that this context allows the Lowdefy magic to happen.
+            Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 4 block categories, namely display, input, container, and list.
 
             All blocks need to have an `id` that identifies the block. This id should be unique in that block's context.
 
