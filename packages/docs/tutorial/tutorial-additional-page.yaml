@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: tutorial-additional-page
-    pageTitle: 4. Additional Page
+    pageTitle: 4. Data Display Page
     section: Tutorial
     filePath: tutorial/tutorial-additional-page.yaml
     content:
@@ -26,7 +26,9 @@ _ref:
           content: |
             If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/05-requests).
 
-            We will now add an additional page to our app. This page will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-additional-page) and you can move on to [Next Steps](/next-steps).
+            We currently do not have a way to view the tickets that have been added to our database. In order to add this functionality, we will be creating a new page which will contain a table that will display the saved tickets.
+
+            This section of the tutorial will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-additional-page) and you can move on to [Next Steps](/next-steps).
 
             #### Step 4.1 - Create `view-tickets.yaml`
 

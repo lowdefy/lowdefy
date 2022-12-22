@@ -41,7 +41,7 @@
           type: MenuLink
           pageId: tutorial-additional-page
           properties:
-            title: Additional Page
+            title: Data Display Page
         # - id: tutorial-deploy
         #   type: MenuLink
         #   pageId: tutorial-deploy
