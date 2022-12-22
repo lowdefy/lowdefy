@@ -19,8 +19,6 @@ _ref:
     pageTitle: 3. Adding blocks
     section: Tutorial
     filePath: tutorial/tutorial-add-blocks.yaml
-    prefetchPages:
-      - tutorial-actions-operators
     content:
       - id: body_add_blocks
         type: MarkdownWithCode

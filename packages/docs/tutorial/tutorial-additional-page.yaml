@@ -19,8 +19,6 @@ _ref:
     pageTitle: 4. Additional Page
     section: Tutorial
     filePath: tutorial/tutorial-additional-page.yaml
-    prefetchPages:
-      - next-steps
     content:
       - id: add_page
         type: MarkdownWithCode

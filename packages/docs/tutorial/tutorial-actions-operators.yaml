@@ -19,8 +19,6 @@ _ref:
     pageTitle: 4. Interactive pages
     section: Tutorial
     filePath: tutorial/tutorial-actions-operators.yaml
-    prefetchPages:
-      - tutorial-requests
     content:
       - id: body_reset
         type: MarkdownWithCode
@@ -211,7 +209,7 @@ _ref:
 
             ## Hiding blocks
 
-            We would like to ask user if they had purchased the product that they are formulating a complaint about, within the last month. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Complaint`
+            We would like to ask the user if they had purchased the product that they are formulating a complaint about, within the last month. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Complaint`
 
             #### Step 4.4 - Add a block with a visible condition
             Add the following [`ButtonSelector`](ButtonSelector) to your app.

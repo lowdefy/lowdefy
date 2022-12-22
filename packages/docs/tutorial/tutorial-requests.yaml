@@ -19,8 +19,6 @@ _ref:
     pageTitle: 5. Requests
     section: Tutorial
     filePath: tutorial/tutorial-requests.yaml
-    prefetchPages:
-      - tutorial-additional-page
     content:
       - id: body_axios
         type: MarkdownWithCode
@@ -34,7 +32,7 @@ _ref:
 
             ## Configuring the AxiosHttp Connection and Request
 
-            We want to add a [`Selector`](/selector) block to our form that will allow the user to select which product they are logging a ticket about, from a preset list of options. This list of preset product options will be obtained from the [DummyJSON](https://dummyjson.com/) api.
+            We want to add a [`Selector`](/selector) block to our form that will allow the user to select which product they are logging a ticket about, from a preset list of options. This list of preset product options will be obtained from the [DummyJSON](https://dummyjson.com/) API.
             For this, we will make use of an [`AxiosHttp`](/AxiosHttp) connection.
 
             In order to do this, we must follow the following steps:
@@ -171,7 +169,9 @@ _ref:
 
             We defined the `AxiosHttp` connection to be used to obtain the list of products that tickets can be created for.
 
-            We also defined an `AxiosHttp` request, to fetch the products data when the page is mounted.
+            We also defined an `AxiosHttp` request, to fetch the products data when the page is mounted. To do this, we used the onMount event to execute the Request action to make the API call.
+
+            We then used the request response in the product selector by using the [_request](/_request) and [_array.map](/_array#map_title) operators.
 
       - id: body_sqlite
         type: MarkdownWithCode
@@ -179,7 +179,7 @@ _ref:
           content: |
             ## Configuring the SQLite Connection and Request
 
-            We will be saving the data from our form in a SQLite database, using the [`SQLite`](/SQLite) connection. To do this, we will first need to set up an SQLite database. The products that we want to gain access to can be found at https://dummyjson.com/products/.
+            We will be saving the data from our form in a SQLite database, using the [`SQLite`](/SQLite) connection. To do this, we will first need to set up an SQLite database.
 
             In order to do this, we must follow the following steps:
 
@@ -350,7 +350,7 @@ _ref:
 
             We defined the `Knex` connection, with the SQLite client.
 
-            We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button.
+            We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button. This was done by making use of the onCLick event on the button to execute the Request action to make the API call.
 
             > You can find the final configuration files for this section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/05-requests).
 

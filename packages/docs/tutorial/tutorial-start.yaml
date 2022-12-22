@@ -19,8 +19,6 @@ _ref:
     pageTitle: 1. Getting started
     section: Tutorial
     filePath: tutorial/tutorial-start.yaml
-    prefetchPages:
-      - tutorial-create-page
     content:
       # TODO: Create new tutorial videos
       # - id: tutorial_video
@@ -49,7 +47,7 @@ _ref:
 
             ### Requirements
 
-            The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 12 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
+            The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 16 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
             #### Step 1.1 - Create a project directory
 
