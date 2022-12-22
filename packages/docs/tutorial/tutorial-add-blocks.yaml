@@ -89,7 +89,7 @@ _ref:
             ################ -------- Copy to here ---------- ################
             ```
 
-            >  If you would like to see how your config should look at this point, you can find it [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/03-adding-blocks).
+            >  If you would like to see how your config should look at this point, you can find it [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/03-adding-blocks).
 
             Your booking page should something like this:
       - id: example1

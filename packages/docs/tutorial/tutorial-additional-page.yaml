@@ -26,9 +26,9 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/05-requests).
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/05-requests).
 
-            We will now add an additional page to our app. This page will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/06-additional-page) and you can move on to [Next Steps](/next-steps).
+            We will now add an additional page to our app. This page will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-additional-page) and you can move on to [Next Steps](/next-steps).
 
             #### Step 4.1 - Create `view-tickets.yaml`
 

@@ -26,7 +26,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/04-interactive-pages).
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/04-interactive-pages).
 
             We will now add an [`AxiosHttp`](/AxiosHttp) connection and an [`SQLite`](/SQLite) connection to our app.
             The [`AxiosHttp`](/AxiosHttp) connection will be used to get the list of products that tickets can be logged for.
@@ -352,7 +352,7 @@ _ref:
 
             We also defined a `KnexRaw` request, to save the data to our SQLite database, and called that request when clicking the submit button.
 
-            > You can find the final configuration files for this section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/develop/05-requests).
+            > You can find the final configuration files for this section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/05-requests).
 
             ### Up next
 
