@@ -14,20 +14,6 @@
   limitations under the License.
 */
 
-/*
-// TODO: docs - arguments for all formatters
-(arguments: {
-  on: date,
-  options?: object
-  locale?: string,
-}): string
-(arguments: [
-  on: date,
-  options?: object
-  locale?: string,
-]): string
-*/
-
 import { runClass } from '@lowdefy/operators';
 
 function createFormatter({ IntlClass }) {
@@ -38,7 +24,6 @@ function createFormatter({ IntlClass }) {
 }
 
 const meta = {
-  // TODO: Is namedArgs order correct?
   dateTimeFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
   listFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
   numberFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
