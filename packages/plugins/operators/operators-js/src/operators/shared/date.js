@@ -29,19 +29,11 @@ function now() {
   return new Date();
 }
 
-function parse(input) {
-  return Date.parse(input);
-}
-
-function UTC(year, month, day, hours, minutes, seconds) {
-  return Date.UTC(year, month, day, hours, minutes, seconds);
-}
-
 const functions = {
   __default: date,
-  parse,
+  parse: Date.parse,
   now,
-  UTC,
+  UTC: Date.UTC,
 };
 
 // TODO: return null instead of current date when null is passed in, consider modifying run instance and run class
