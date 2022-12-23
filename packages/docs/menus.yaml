@@ -606,6 +606,9 @@
         - id: _input
           type: MenuLink
           pageId: _input
+        - id: _intl
+          type: MenuLink
+          pageId: _intl
         # - id: _js
         #   type: MenuLink
         #   pageId: _js
@@ -636,6 +639,9 @@
         - id: _menu
           type: MenuLink
           pageId: _menu
+        - id: _moment
+          type: MenuLink
+          pageId: _moment
         - id: _mql
           type: MenuLink
           pageId: _mql
