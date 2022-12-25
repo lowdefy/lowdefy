@@ -91,6 +91,7 @@ importers:
       '@lowdefy/operators-uuid': 4.0.0-alpha.37
       '@lowdefy/operators-yaml': 4.0.0-alpha.37
       '@lowdefy/plugin-auth0': 4.0.0-alpha.37
+      '@lowdefy/plugin-aws': 4.0.0-alpha.37
       '@lowdefy/plugin-csv': 4.0.0-alpha.37
       '@lowdefy/plugin-next-auth': 4.0.0-alpha.37
       '@swc/cli': 0.1.57
@@ -143,6 +144,7 @@ importers:
       '@lowdefy/operators-uuid': link:../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml': link:../plugins/operators/operators-yaml
       '@lowdefy/plugin-auth0': link:../plugins/plugins/plugin-auth0
+      '@lowdefy/plugin-aws': link:../plugins/plugins/plugin-aws
       '@lowdefy/plugin-csv': link:../plugins/plugins/plugin-csv
       '@lowdefy/plugin-next-auth': link:../plugins/plugins/plugin-next-auth
       '@swc/cli': 0.1.57_@swc+core@1.2.194

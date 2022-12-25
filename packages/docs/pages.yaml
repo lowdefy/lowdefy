@@ -140,7 +140,6 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
-- _ref: actions/Break.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/Fetch.yaml
@@ -153,6 +152,7 @@
 - _ref: actions/ScrollTo.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
+- _ref: actions/Throw.yaml
 - _ref: actions/Validate.yaml
 - _ref: actions/Wait.yaml
 
@@ -178,6 +178,7 @@
 - _ref: operators/_if_none.yaml
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
+- _ref: operators/_intl.yaml
 # - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_list_contexts.yaml
@@ -188,6 +189,7 @@
 - _ref: operators/_math.yaml
 - _ref: operators/_media.yaml
 - _ref: operators/_menu.yaml
+- _ref: operators/_moment.yaml
 - _ref: operators/_mql.yaml
 - _ref: operators/_ne.yaml
 - _ref: operators/_not.yaml
