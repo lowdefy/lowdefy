@@ -25,20 +25,19 @@ _ref:
         type: Markdown
         properties:
           content: |
-            ##### TODO: This page needs to be updated.
+            Lowdefy makes it really easy to build web apps. With Lowdefy you can build CRUD apps, admin panels, internal tools, BI dashboards, workflow apps, websites, blogs, webforms or even documentation pages such as this one.
 
-
-            Lowdefy simplifies creating software that helps manage internal data - think web apps, admin panels, BI dashboards, CRUD and workflow apps. Within most companies the need exists to connect to a variety of data sources and execute actions on such data. This must be done without compromising data security while respecting complex data integrity rules.
-
-            Lowdefy aims to enable companies to better control and monitor business data, by simplifying the process of creating internal tools. Lowdefy makes these tools easy to build, change and maintain, making it easier to evolve your internal tools with your business.
+            Lowdefy apps are defined in YAML config that follows a structured schema - this makes Lowdefy apps easy to read, write and understand.
 
             ## Quickstart
+
+            Run the following command to initialize a new Lowdefy app in your current working directory.
 
       - _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: quickstart
-            command: 'npx lowdefy@latest init && npx lowdefy@latest dev'
+            command: 'pnpx lowdefy@latest init && npx lowdefy@latest dev'
 
       - id: body_features
         type: Markdown
@@ -46,39 +45,37 @@ _ref:
           content: |
             This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
 
-            ### Create internal tools by only writing simple, readable YAML
+            > You need Node v16 or newer and pnpm installed to run Lowdefy. For more details see [the tutorial](/tutorial-start).
 
-            Using Lowdefy means all the complicated parts of developing a web app for your internal tools are taken care of, allowing you to focus on the pure business logic. The Lowdefy config schema is easy to learn, understand and remember. In order to achieve this, we aim to be consistent in how things work so that you predict how an app will behave by simply reading the config.
+            ## Why creating web apps using a YAML schema?
 
-            Advantages of writing internal tools in YAML:
-              - All apps use the same structured config schema, this makes it easy to debug large apps or pick up where others left off.
-              - Nothing is hidden in a GUI. This allows you to do basic essential stuff, like copy, paste, find, replace etc. which makes developing apps more productive.
-              - App config is just data, thus you can even develop scripts to create and manage your apps.
+            The Lowdefy schema is a simple definition of a web app which primarily makes use of block, action, operator and request definitions.
+
+            Some advantages of writing web apps in YAML are:
+              - All apps use the same schema. This makes it easy to debug large apps or pick up where others left off.
+              - Nothing is hidden in a GUI. This allows you to do basic stuff, like copy, paste, find, replace etc. which makes developing apps more productive.
+              - App config is just data, thus you can develop scripts to create and manage your apps.
               - YAML files work with your favorite developer and source control tools.
 
             > If you aren't a fan of YAML, you can also build your app using JSON files.
 
-            ### Work with your data where it is stored
+            ## Build future proof web apps on an open-source platform
 
-            Lowdefy apps can connect to multiple data bases, APIs and apps. Day to day business requires people working with data which is stored in a variety of different data bases and applications.
+            We've built Lowdefy to scale our own ability to develop and maintain web apps and internal tools for our customers.
 
-            Too often data is exported, duplicated and lost, creating additional risk. Lowdefy only runs your application config, and does not store any data, but rather connects to your data sources and APIs.
+            Lowdefy is an open-source Apache-2 licensed project, free from vendor lock-in. We hope to see many community open-source Lowdefy apps and plugins in the future and actively nurture the Lowdefy community on [Github](https://github.com/lowdefy/lowdefy/discussions) and [Discord](https://discord.gg/QQY9eJ7A2D) to help other developers to get started with Lowdefy and grow the ecosystem.
 
-            ### Build future proof web applications on an open-source platform
+            To date, more than 20 000 apps have been built using Lowdefy.
 
-            Lowdefy is a open-source Apache-2 licensed project, free from vendor lock-in. Our business model is to build optional "nice-to-have" services best suited for Lowdefy applications, enriching the Lowdefy ecosystem.
+            In the future, we plan to build optional "nice-to-have" services best suited for Lowdefy apps to further enriching the Lowdefy ecosystem.
 
-            Since Lowdefy apps are easy to manage in a git repository, we hope to see many community open-source Lowdefy apps in the future.
+            Currently, we also provide Custom Software as a Service for larger customers, as well as support plans for those who need some extra help.
 
-            ### Deploy your Lowdefy app as you like
-
-            Host your Lowdefy app in your own environment as a docker image or even on Netlify using serverless functions. Serving a Lowdefy app, requires a the Lowdefy graphQl server and hosting the Lowdefy React app and blocks.
-
-            The Lowdefy front-end makes use of Webpack module federation to serve blocks and assemble your Lowdefy app as a micro-front-end solution. Developing your own custom front-end React blocks makes Lowdefy apps truly expandable.
+            We've been bootstrapping the project by deploying Lowdefy apps for businesses. We've built ticketing systems, call center solutions, advanced CRMs, custom MRPs, surveys and BI dashboard solutions and more for startup to enterprise customers. If you are looking for a Custom Software as a Service partner, please [reach out to us](/contact).
 
             ## Tutorial
 
-            The easiest way to get started with Lowdefy is to follow the tutorial. In this tutorial we will be building a simple support ticketing app to get you started.
+            The easiest way to get started with Lowdefy is to follow the tutorial. In this tutorial we will be building a simple Lowdefy app to get you started.
 
       - id: start_tutorial_button
         type: Button
