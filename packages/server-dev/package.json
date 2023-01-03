@@ -65,7 +65,7 @@
     "@lowdefy/operators-yaml": "4.0.0-alpha.37",
     "@lowdefy/plugin-next-auth": "4.0.0-alpha.37",
     "chokidar": "3.5.3",
-    "dotenv": "16.0.1",
+    "dotenv": "16.0.3",
     "next": "12.3.1",
     "next-auth": "4.10.3",
     "opener": "1.5.2",

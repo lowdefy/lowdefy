@@ -42,10 +42,10 @@
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "@lowdefy/node-utils": "4.0.0-alpha.37",
     "axios": "0.27.2",
-    "commander": "9.4.0",
+    "commander": "9.4.1",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
-    "dotenv": "16.0.1",
+    "dotenv": "16.0.3",
     "ora": "5.4.1",
     "uuid": "8.3.2",
     "yaml": "2.1.1"

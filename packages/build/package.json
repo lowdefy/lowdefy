@@ -59,8 +59,8 @@
     "@lowdefy/nunjucks": "4.0.0-alpha.37",
     "@lowdefy/operators": "4.0.0-alpha.37",
     "@lowdefy/operators-js": "4.0.0-alpha.37",
-    "ajv": "8.11.0",
-    "json5": "2.2.1",
+    "ajv": "8.11.2",
+    "json5": "2.2.3",
     "uuid": "8.3.2",
     "yaml": "2.1.1",
     "yargs": "17.5.1"
