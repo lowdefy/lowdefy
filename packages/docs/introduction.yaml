@@ -27,7 +27,7 @@ _ref:
           content: |
             Lowdefy makes it really easy to build web apps. With Lowdefy you can build CRUD apps, admin panels, internal tools, BI dashboards, workflow apps, websites, blogs, webforms or even documentation pages such as this one.
 
-            Lowdefy apps are defined in YAML config that follows a structured schema - this makes Lowdefy apps are easy to read, write and understand.
+            Lowdefy apps are defined in YAML config that follows a structured schema - this makes Lowdefy apps easy to read, write and understand.
 
             ## Quickstart
 
