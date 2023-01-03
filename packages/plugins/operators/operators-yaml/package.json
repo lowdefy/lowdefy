@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "@lowdefy/operators": "4.0.0-alpha.37",
-    "yaml": "2.1.1"
+    "yaml": "2.2.1"
   },
   "devDependencies": {
     "@swc/cli": "0.1.59",

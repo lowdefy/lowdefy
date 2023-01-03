@@ -68,8 +68,8 @@
     "less-loader": "11.1.0",
     "next-with-less": "2.0.5",
     "webpack": "5.75.0",
-    "yaml": "2.1.1",
-    "yargs": "17.5.1"
+    "yaml": "2.2.1",
+    "yargs": "17.6.2"
   },
   "packageManager": "pnpm@7.11.0",
   "publishConfig": {

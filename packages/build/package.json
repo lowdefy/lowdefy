@@ -62,8 +62,8 @@
     "ajv": "8.11.2",
     "json5": "2.2.3",
     "uuid": "8.3.2",
-    "yaml": "2.1.1",
-    "yargs": "17.5.1"
+    "yaml": "2.2.1",
+    "yargs": "17.6.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",

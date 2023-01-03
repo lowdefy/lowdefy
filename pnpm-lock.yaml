@@ -101,8 +101,8 @@ importers:
       jest: 28.1.0
       json5: 2.2.3
       uuid: 8.3.2
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
     dependencies:
       '@lowdefy/ajv': link:../utils/ajv
       '@lowdefy/blocks-basic': link:../plugins/blocks/blocks-basic
@@ -115,8 +115,8 @@ importers:
       ajv: 8.11.2
       json5: 2.2.3
       uuid: 8.3.2
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
     devDependencies:
       '@jest/globals': 28.1.0
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
@@ -168,7 +168,7 @@ importers:
       jest: 28.1.0
       ora: 5.4.1
       uuid: 8.3.2
-      yaml: 2.1.1
+      yaml: 2.2.1
     dependencies:
       '@lowdefy/helpers': link:../utils/helpers
       '@lowdefy/node-utils': link:../utils/node-utils
@@ -179,7 +179,7 @@ importers:
       dotenv: 16.0.3
       ora: 5.4.1
       uuid: 8.3.2
-      yaml: 2.1.1
+      yaml: 2.2.1
     devDependencies:
       '@jest/globals': 28.1.0
       '@swc/cli': 0.1.59_@swc+core@1.3.24
@@ -442,7 +442,7 @@ importers:
       rc-motion: 2.6.2
       react: 18.2.0
       react-dom: 18.2.0
-      tinycolor2: 1.4.2
+      tinycolor2: 1.5.2
     dependencies:
       '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
       '@lowdefy/block-utils': link:../../../utils/block-utils
@@ -453,7 +453,7 @@ importers:
       rc-motion: 2.6.2_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      tinycolor2: 1.4.2
+      tinycolor2: 1.5.2
     devDependencies:
       '@emotion/jest': 11.9.1
       '@lowdefy/block-dev': link:../../../utils/block-dev
@@ -484,7 +484,7 @@ importers:
       '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
       copyfiles: 2.4.1
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
       jest-serializer-html: 7.1.0
@@ -493,7 +493,7 @@ importers:
     dependencies:
       '@lowdefy/block-utils': link:../../../utils/block-utils
       '@lowdefy/helpers': link:../../../utils/helpers
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -689,7 +689,7 @@ importers:
       '@testing-library/user-event': 14.4.3
       '@types/react': 18.0.26
       copyfiles: 2.4.1
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
       jest-serializer-html: 7.1.0
@@ -701,7 +701,7 @@ importers:
       remark-gfm: 3.0.1
     dependencies:
       '@lowdefy/block-utils': link:../../../utils/block-utils
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-markdown: 8.0.4_kzbn2opkn2327fwg5yzwzya5o4
@@ -810,12 +810,12 @@ importers:
       '@swc/jest': 0.2.24
       google-spreadsheet: 3.3.0
       jest: 28.1.0
-      mingo: 6.0.6
+      mingo: 6.2.1
       moment: 2.29.4
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
       google-spreadsheet: 3.3.0
-      mingo: 6.0.6
+      mingo: 6.2.1
       moment: 2.29.4
     devDependencies:
       '@lowdefy/ajv': link:../../../utils/ajv
@@ -1030,11 +1030,11 @@ importers:
       '@swc/jest': 0.2.24
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
-      mingo: 6.0.6
+      mingo: 6.2.1
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
       '@lowdefy/operators': link:../../../operators
-      mingo: 6.0.6
+      mingo: 6.2.1
     devDependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -1093,11 +1093,11 @@ importers:
       '@swc/jest': 0.2.24
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
-      yaml: 2.1.1
+      yaml: 2.2.1
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
       '@lowdefy/operators': link:../../../operators
-      yaml: 2.1.1
+      yaml: 2.2.1
     devDependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -1224,8 +1224,8 @@ importers:
       react-dom: 18.2.0
       react-icons: 4.3.1
       webpack: 5.75.0
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
     dependencies:
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
       '@lowdefy/api': link:../api
@@ -1251,8 +1251,8 @@ importers:
       less-loader: 11.1.0_less@4.1.3+webpack@5.75.0
       next-with-less: 2.0.5_bhmov3cur4gcctpw4k2zrhdwma
       webpack: 5.75.0
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
 
   packages/server-dev:
     specifiers:
@@ -1289,15 +1289,15 @@ importers:
       next-auth: 4.10.3
       next-with-less: 2.0.5
       opener: 1.5.2
-      pino: 8.1.0
+      pino: 8.8.0
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0
       react-icons: 4.3.1
       swr: 1.3.0
       webpack: 5.75.0
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
     dependencies:
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
       '@lowdefy/api': link:../api
@@ -1328,14 +1328,14 @@ importers:
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.10.3_biqbaboplfbrettd7655fr4n2y
       opener: 1.5.2
-      pino: 8.1.0
+      pino: 8.8.0
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.3.1_react@18.2.0
       swr: 1.3.0_react@18.2.0
-      yaml: 2.1.1
-      yargs: 17.5.1
+      yaml: 2.2.1
+      yargs: 17.6.2
     devDependencies:
       '@next/eslint-plugin-next': 12.1.6
       less: 4.1.3
@@ -1410,7 +1410,7 @@ importers:
       '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
       copyfiles: 2.4.1
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
       jest-serializer-html: 7.1.0
@@ -1419,7 +1419,7 @@ importers:
     dependencies:
       '@emotion/css': 11.9.0_@babel+core@7.20.7
       '@lowdefy/helpers': link:../helpers
-      dompurify: 2.3.8
+      dompurify: 2.4.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -1461,13 +1461,13 @@ importers:
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24
       jest: 28.1.0
-      yaml: 2.1.1
+      yaml: 2.2.1
     dependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24_@swc+core@1.3.24
       jest: 28.1.0
-      yaml: 2.1.1
+      yaml: 2.2.1
 
   packages/utils/node-utils:
     specifiers:
@@ -5582,6 +5582,15 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
+    dev: true
+
+  /cliui/8.0.1:
+    resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      string-width: 4.2.3
+      strip-ansi: 6.0.1
+      wrap-ansi: 7.0.0
 
   /clone-deep/4.0.1:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
@@ -6310,8 +6319,8 @@ packages:
     dependencies:
       domelementtype: 1.3.1
 
-  /dompurify/2.3.8:
-    resolution: {integrity: sha512-eVhaWoVibIzqdGYjwsBWodIQIaXFSB+cKDf4cfxLMsK0xiud6SE+/WCVx/Xw/UwQsa4cS3T2eITcdtmTg2UKcw==}
+  /dompurify/2.4.1:
+    resolution: {integrity: sha512-ewwFzHzrrneRjxzmK6oVz/rZn9VWspGFRDb4/rRtIsM1n36t9AKma/ye8syCpcw+XJ25kOK/hOG7t1j2I2yBqA==}
     dev: false
 
   /domutils/1.7.0:
@@ -8609,7 +8618,7 @@ packages:
       jest-util: 28.1.3
       jest-validate: 28.1.3
       prompts: 2.4.2
-      yargs: 17.5.1
+      yargs: 17.6.2
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -10155,8 +10164,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /mingo/6.0.6:
-    resolution: {integrity: sha512-zhzgwMCow/bcAWQM48gepV1Ph5PT8l/5Gr4HpaM7DRHlOLJTS7L0eCsOa69GO/ZbW4QfxoVFzx959mFjChBsIA==}
+  /mingo/6.2.1:
+    resolution: {integrity: sha512-0gHnErBHs2borfxmTmVeu0fRKBgBl1Qewtd8pt2eva8qHa4rw43pEvzbOGHNdyPtsYkxIEbifV+xWIFjhFwWWw==}
     dev: false
 
   /minimatch/3.0.5:
@@ -11429,29 +11438,29 @@ packages:
   /pino-abstract-transport/1.0.0:
     resolution: {integrity: sha512-c7vo5OpW4wIS42hUVcT5REsL8ZljsUfBjqV/e2sFxmFEFZiq1XLUp5EYLtuDH6PEHq9W1egWqRbnLUP5FuZmOA==}
     dependencies:
-      readable-stream: 4.1.0
+      readable-stream: 4.3.0
       split2: 4.1.0
     dev: false
 
-  /pino-std-serializers/5.6.0:
-    resolution: {integrity: sha512-VdUXCw8gO+xhir7sFuoYSjTnzB+TMDGxhAC/ph3YS3sdHnXNdsK0wMtADNUltfeGkn2KDxEM21fnjF3RwXyC8A==}
+  /pino-std-serializers/6.1.0:
+    resolution: {integrity: sha512-KO0m2f1HkrPe9S0ldjx7za9BJjeHqBku5Ch8JyxETxT8dEFGz1PwgrHaOQupVYitpzbFSYm7nnljxD8dik2c+g==}
     dev: false
 
-  /pino/8.1.0:
-    resolution: {integrity: sha512-53jlxs+02UNTtF1XwVWfa0dHipBiM5GK73XhkHn8M2hUl9y3L94dNwB8BwQhpd5WdHjBkyJiO7v0LRt4SGgsPg==}
+  /pino/8.8.0:
+    resolution: {integrity: sha512-cF8iGYeu2ODg2gIwgAHcPrtR63ILJz3f7gkogaHC/TXVVXxZgInmNYiIpDYEwgEkxZti2Se6P2W2DxlBIZe6eQ==}
     hasBin: true
     dependencies:
       atomic-sleep: 1.0.0
       fast-redact: 3.1.2
       on-exit-leak-free: 2.1.0
       pino-abstract-transport: 1.0.0
-      pino-std-serializers: 5.6.0
-      process-warning: 2.0.0
+      pino-std-serializers: 6.1.0
+      process-warning: 2.1.0
       quick-format-unescaped: 4.0.4
-      real-require: 0.1.0
-      safe-stable-stringify: 2.3.1
-      sonic-boom: 3.2.0
-      thread-stream: 1.0.1
+      real-require: 0.2.0
+      safe-stable-stringify: 2.4.2
+      sonic-boom: 3.2.1
+      thread-stream: 2.2.0
     dev: false
 
   /pirates/4.0.5:
@@ -11573,8 +11582,8 @@ packages:
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
-  /process-warning/2.0.0:
-    resolution: {integrity: sha512-+MmoAXoUX+VTHAlwns0h+kFUWFs/3FZy+ZuchkgjyOu3oioLAo2LB5aCfKPh2+P9O18i3m43tUEv3YqttSy0Ww==}
+  /process-warning/2.1.0:
+    resolution: {integrity: sha512-9C20RLxrZU/rFnxWncDkuF6O999NdIf3E1ws4B0ZeY3sRVPzWBMsYDE2lxjxhiXxg464cQTgKUGm8/i6y2YGXg==}
     dev: false
 
   /process/0.11.10:
@@ -12447,11 +12456,14 @@ packages:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
 
-  /readable-stream/4.1.0:
-    resolution: {integrity: sha512-sVisi3+P2lJ2t0BPbpK629j8wRW06yKGJUcaLAGXPAUhyUxVJm7VsCTit1PFgT4JHUDMrGNR+ZjSKpzGaRF3zw==}
+  /readable-stream/4.3.0:
+    resolution: {integrity: sha512-MuEnA0lbSi7JS8XM+WNJlWZkHAAdm7gETHdFK//Q/mChGyj2akEFtdLZh32jSdkWGbRwCW9pn6g3LWDdDeZnBQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       abort-controller: 3.0.0
+      buffer: 6.0.3
+      events: 3.3.0
+      process: 0.11.10
     dev: false
 
   /readdir-scoped-modules/1.1.0:
@@ -12469,8 +12481,8 @@ packages:
     dependencies:
       picomatch: 2.3.1
 
-  /real-require/0.1.0:
-    resolution: {integrity: sha512-r/H9MzAWtrv8aSVjPCMFpDMl5q66GqtmmRkRjpHTsp4zBAa+snZyiQNlMONiUmEJcsnaw0wCauJ2GWODr/aFkg==}
+  /real-require/0.2.0:
+    resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
     engines: {node: '>= 12.13.0'}
     dev: false
 
@@ -12693,8 +12705,8 @@ packages:
       get-intrinsic: 1.1.3
       is-regex: 1.1.4
 
-  /safe-stable-stringify/2.3.1:
-    resolution: {integrity: sha512-kYBSfT+troD9cDA85VDnHZ1rpHC50O0g1e6WlGHVCz/g+JS+9WKLj+XwFYyR8UbrZN8ll9HUpDAAddY58MGisg==}
+  /safe-stable-stringify/2.4.2:
+    resolution: {integrity: sha512-gMxvPJYhP0O9n2pvcfYfIuYgbledAOJFcqRThtPRmjscaipiwcwPPKLytpVzMkG2HAN87Qmo2d4PtGiri1dSLA==}
     engines: {node: '>=10'}
     dev: false
 
@@ -12910,8 +12922,8 @@ packages:
       ip: 2.0.0
       smart-buffer: 4.2.0
 
-  /sonic-boom/3.2.0:
-    resolution: {integrity: sha512-SbbZ+Kqj/XIunvIAgUZRlqd6CGQYq71tRRbXR92Za8J/R3Yh4Av+TWENiSiEgnlwckYLyP0YZQWVfyNC0dzLaA==}
+  /sonic-boom/3.2.1:
+    resolution: {integrity: sha512-iITeTHxy3B9FGu8aVdiDXUVAcHMF9Ss0cCsAOo2HfCrmVGT3/DT5oYaeu0M/YKZDlKTvChEyPq0zI9Hf33EX6A==}
     dependencies:
       atomic-sleep: 1.0.0
     dev: false
@@ -13521,10 +13533,10 @@ packages:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
 
-  /thread-stream/1.0.1:
-    resolution: {integrity: sha512-JuZyfzx81e5MBk8uIr8ZH76bXyjEQvbRDEkSdlV1JFBdq/rbby2RuvzBYlTBd/xCljxy6lPxrTLXzB9Jl1bNrw==}
+  /thread-stream/2.2.0:
+    resolution: {integrity: sha512-rUkv4/fnb4rqy/gGy7VuqK6wE1+1DOCOWy4RMeaV69ZHMP11tQKZvZSip1yTgrKCMZzEMcCL/bKfHvSfDHx+iQ==}
     dependencies:
-      real-require: 0.1.0
+      real-require: 0.2.0
     dev: false
 
   /through/2.3.8:
@@ -13555,8 +13567,8 @@ packages:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
     dev: false
 
-  /tinycolor2/1.4.2:
-    resolution: {integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==}
+  /tinycolor2/1.5.2:
+    resolution: {integrity: sha512-h80m9GPFGbcLzZByXlNSEhp1gf8Dy+VX/2JCGUZsWLo7lV1mnE/XlxGYgRBoMLJh1lIDXP0EMC4RPTjlRaV+Bg==}
     dev: false
 
   /tmp/0.0.33:
@@ -14481,6 +14493,11 @@ packages:
   /yaml/2.1.1:
     resolution: {integrity: sha512-o96x3OPo8GjWeSLF+wOAbrPfhFOGY0W00GNaxCDv+9hkcDJEnev1yh8S7pgHF0ik6zc8sQLuL8hjHjJULZp8bw==}
     engines: {node: '>= 14'}
+    dev: false
+
+  /yaml/2.2.1:
+    resolution: {integrity: sha512-e0WHiYql7+9wr4cWMx3TVQrNwejKaEe7/rHNmQmqRjazfOP5W8PB6Jpebb5o6fIapbz9o9+2ipcaTM2ZwDI6lw==}
+    engines: {node: '>= 14'}
 
   /yargs-parser/20.2.4:
     resolution: {integrity: sha512-WOkpgNhPTlE73h4VFAFsOnomJVaovO8VqLDzy5saChRBFQFBoMYirowyW+Q9HB4HFF4Z7VZTiG3iSzJJA29yRA==}
@@ -14519,6 +14536,19 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       cliui: 7.0.4
+      escalade: 3.1.1
+      get-caller-file: 2.0.5
+      require-directory: 2.1.1
+      string-width: 4.2.3
+      y18n: 5.0.8
+      yargs-parser: 21.1.1
+    dev: true
+
+  /yargs/17.6.2:
+    resolution: {integrity: sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw==}
+    engines: {node: '>=12'}
+    dependencies:
+      cliui: 8.0.1
       escalade: 3.1.1
       get-caller-file: 2.0.5
       require-directory: 2.1.1
