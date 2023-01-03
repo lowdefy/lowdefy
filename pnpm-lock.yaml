@@ -1294,7 +1294,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       react-icons: 4.3.1
-      swr: 1.3.0
+      swr: 2.0.0
       webpack: 5.75.0
       yaml: 2.2.1
       yargs: 17.6.2
@@ -1333,7 +1333,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.3.1_react@18.2.0
-      swr: 1.3.0_react@18.2.0
+      swr: 2.0.0_react@18.2.0
       yaml: 2.2.1
       yargs: 17.6.2
     devDependencies:
@@ -14136,12 +14136,14 @@ packages:
       webpack: 5.75.0_j4fht5rhwkwao5ayfbumfp46la
     dev: true
 
-  /swr/1.3.0_react@18.2.0:
-    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+  /swr/2.0.0_react@18.2.0:
+    resolution: {integrity: sha512-IhUx5yPkX+Fut3h0SqZycnaNLXLXsb2ECFq0Y29cxnK7d8r7auY2JWNbCW3IX+EqXUg3rwNJFlhrw5Ye/b6k7w==}
+    engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /symbol-tree/3.2.4:
