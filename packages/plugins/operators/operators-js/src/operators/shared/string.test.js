@@ -1142,7 +1142,7 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toLowerCase accepts one of the following types: string.
+      "Operator Error: _string.toLowerCase accepts one of the following types: string, null.
             Received: {\\"_string.toLowerCase\\":[1,2]} at location."
     `);
     expect(() =>
@@ -1152,7 +1152,7 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toLowerCase accepts one of the following types: string.
+      "Operator Error: _string.toLowerCase accepts one of the following types: string, null.
             Received: {\\"_string.toLowerCase\\":[\\"abc\\"]} at location."
     `);
     expect(() =>
@@ -1162,18 +1162,8 @@ describe('_string.toLowerCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toLowerCase accepts one of the following types: string.
+      "Operator Error: _string.toLowerCase accepts one of the following types: string, null.
             Received: {\\"_string.toLowerCase\\":{\\"on\\":\\"abc\\"}} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toLowerCase accepts one of the following types: string.
-            Received: {\\"_string.toLowerCase\\":null} at location."
     `);
   });
 });
@@ -1197,7 +1187,7 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toUpperCase accepts one of the following types: string.
+      "Operator Error: _string.toUpperCase accepts one of the following types: string, null.
             Received: {\\"_string.toUpperCase\\":[1,2]} at location."
     `);
     expect(() =>
@@ -1207,7 +1197,7 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toUpperCase accepts one of the following types: string.
+      "Operator Error: _string.toUpperCase accepts one of the following types: string, null.
             Received: {\\"_string.toUpperCase\\":[\\"abc\\"]} at location."
     `);
     expect(() =>
@@ -1217,18 +1207,8 @@ describe('_string.toUpperCase', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toUpperCase accepts one of the following types: string.
+      "Operator Error: _string.toUpperCase accepts one of the following types: string, null.
             Received: {\\"_string.toUpperCase\\":{\\"on\\":\\"abc\\"}} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.toUpperCase accepts one of the following types: string.
-            Received: {\\"_string.toUpperCase\\":null} at location."
     `);
   });
 });
@@ -1252,7 +1232,7 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trim accepts one of the following types: string.
+      "Operator Error: _string.trim accepts one of the following types: string, null.
             Received: {\\"_string.trim\\":[1,2]} at location."
     `);
     expect(() =>
@@ -1262,7 +1242,7 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trim accepts one of the following types: string.
+      "Operator Error: _string.trim accepts one of the following types: string, null.
             Received: {\\"_string.trim\\":[\\"abc\\"]} at location."
     `);
     expect(() =>
@@ -1272,18 +1252,8 @@ describe('_string.trim', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trim accepts one of the following types: string.
+      "Operator Error: _string.trim accepts one of the following types: string, null.
             Received: {\\"_string.trim\\":{\\"on\\":\\"abc\\"}} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trim accepts one of the following types: string.
-            Received: {\\"_string.trim\\":null} at location."
     `);
   });
 });
@@ -1307,7 +1277,7 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimEnd accepts one of the following types: string.
+      "Operator Error: _string.trimEnd accepts one of the following types: string, null.
             Received: {\\"_string.trimEnd\\":[1,2]} at location."
     `);
     expect(() =>
@@ -1317,7 +1287,7 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimEnd accepts one of the following types: string.
+      "Operator Error: _string.trimEnd accepts one of the following types: string, null.
             Received: {\\"_string.trimEnd\\":[\\"abc\\"]} at location."
     `);
     expect(() =>
@@ -1327,18 +1297,8 @@ describe('_string.trimEnd', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimEnd accepts one of the following types: string.
+      "Operator Error: _string.trimEnd accepts one of the following types: string, null.
             Received: {\\"_string.trimEnd\\":{\\"on\\":\\"abc\\"}} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimEnd accepts one of the following types: string.
-            Received: {\\"_string.trimEnd\\":null} at location."
     `);
   });
 });
@@ -1362,7 +1322,7 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimStart accepts one of the following types: string.
+      "Operator Error: _string.trimStart accepts one of the following types: string, null.
             Received: {\\"_string.trimStart\\":[1,2]} at location."
     `);
     expect(() =>
@@ -1372,7 +1332,7 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimStart accepts one of the following types: string.
+      "Operator Error: _string.trimStart accepts one of the following types: string, null.
             Received: {\\"_string.trimStart\\":[\\"abc\\"]} at location."
     `);
     expect(() =>
@@ -1382,18 +1342,8 @@ describe('_string.trimStart', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimStart accepts one of the following types: string.
+      "Operator Error: _string.trimStart accepts one of the following types: string, null.
             Received: {\\"_string.trimStart\\":{\\"on\\":\\"abc\\"}} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.trimStart accepts one of the following types: string.
-            Received: {\\"_string.trimStart\\":null} at location."
     `);
   });
 });
@@ -1417,7 +1367,7 @@ describe('_string.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.length accepts one of the following types: string.
+      "Operator Error: _string.length accepts one of the following types: string, null.
             Received: {\\"_string.length\\":{\\"on\\":\\"231\\"}} at location."
     `);
     expect(() =>
@@ -1427,18 +1377,8 @@ describe('_string.length', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.length accepts one of the following types: string.
+      "Operator Error: _string.length accepts one of the following types: string, null.
             Received: {\\"_string.length\\":[\\"1\\"]} at location."
-    `);
-    expect(() =>
-      string({
-        params: null,
-        methodName,
-        location,
-      })
-    ).toThrowErrorMatchingInlineSnapshot(`
-      "Operator Error: _string.length accepts one of the following types: string.
-            Received: {\\"_string.length\\":null} at location."
     `);
   });
 });

@@ -85,12 +85,12 @@ const meta = {
   substring: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
   // toLocaleLowerCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
   // toLocaleUpperCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
-  toLowerCase: { validTypes: ['string'], singleArg: true, prep },
-  toUpperCase: { validTypes: ['string'], singleArg: true, prep },
-  trim: { validTypes: ['string'], singleArg: true, prep },
-  trimEnd: { validTypes: ['string'], singleArg: true, prep },
-  trimStart: { validTypes: ['string'], singleArg: true, prep },
-  length: { validTypes: ['string'], property: true, prep },
+  toLowerCase: { validTypes: ['string', 'null'], singleArg: true, prep },
+  toUpperCase: { validTypes: ['string', 'null'], singleArg: true, prep },
+  trim: { validTypes: ['string', 'null'], singleArg: true, prep },
+  trimEnd: { validTypes: ['string', 'null'], singleArg: true, prep },
+  trimStart: { validTypes: ['string', 'null'], singleArg: true, prep },
+  length: { validTypes: ['string', 'null'], property: true, prep },
 };
 
 function _string({ params, location, methodName }) {
