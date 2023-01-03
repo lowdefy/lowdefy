@@ -43,7 +43,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "knex": "1.0.7",
-    "mssql": "8.1.2",
+    "mssql": "9.0.1",
     "mysql": "2.18.1",
     "pg": "8.8.0",
     "sqlite3": "5.1.4"
