@@ -46,7 +46,7 @@
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
     "dotenv": "16.0.3",
-    "ora": "5.4.1",
+    "ora": "6.1.2",
     "uuid": "9.0.0",
     "yaml": "2.2.1"
   },
