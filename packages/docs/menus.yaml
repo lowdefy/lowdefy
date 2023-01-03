@@ -17,36 +17,41 @@
           pageId: tutorial-start
           properties:
             title: Getting started
-        # - id: tutorial-create-page
-        #   type: MenuLink
-        #   pageId: tutorial-create-page
-        #   properties:
-        #     title: Creating a page
-        # - id: tutorial-add-blocks
-        #   type: MenuLink
-        #   pageId: tutorial-add-blocks
-        #   properties:
-        #     title: Adding blocks
-        # - id: tutorial-actions-operators
-        #   type: MenuLink
-        #   pageId: tutorial-actions-operators
-        #   properties:
-        #     title: Interactive pages
-        # - id: tutorial-requests
-        #   type: MenuLink
-        #   pageId: tutorial-requests
-        #   properties:
-        #     title: Requests
+        - id: tutorial-create-page
+          type: MenuLink
+          pageId: tutorial-create-page
+          properties:
+            title: Creating a page
+        - id: tutorial-add-blocks
+          type: MenuLink
+          pageId: tutorial-add-blocks
+          properties:
+            title: Adding blocks
+        - id: tutorial-actions-operators
+          type: MenuLink
+          pageId: tutorial-actions-operators
+          properties:
+            title: Interactive pages
+        - id: tutorial-requests
+          type: MenuLink
+          pageId: tutorial-requests
+          properties:
+            title: Requests
+        - id: tutorial-additional-page
+          type: MenuLink
+          pageId: tutorial-additional-page
+          properties:
+            title: Data Display Page
         # - id: tutorial-deploy
         #   type: MenuLink
         #   pageId: tutorial-deploy
         #   properties:
         #     title: Deploy to Netlify
-        # - id: next-steps
-        #   type: MenuLink
-        #   pageId: next-steps
-        #   properties:
-        #     title: Next steps
+        - id: next-steps
+          type: MenuLink
+          pageId: next-steps
+          properties:
+            title: Next steps
     # - id: howto
     #   type: MenuGroup
     #   properties:

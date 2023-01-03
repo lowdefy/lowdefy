@@ -77,7 +77,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Requests
-            previous_page_id: tutorial-requests
+            previous_page_title: Additional Page
+            previous_page_id: tutorial-additional-page
             next_page_title: Lowdefy overview
             next_page_id: overview
