@@ -930,10 +930,10 @@ importers:
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24
       jest: 28.1.0
-      stripe: 8.222.0
+      stripe: 11.5.0
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
-      stripe: 8.222.0
+      stripe: 11.5.0
     devDependencies:
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
@@ -14076,11 +14076,11 @@ packages:
     dependencies:
       escape-string-regexp: 1.0.5
 
-  /stripe/8.222.0:
-    resolution: {integrity: sha512-hrA79fjmN2Eb6K3kxkDzU4ODeVGGjXQsuVaAPSUro6I9MM3X+BvIsVqdphm3BXWfimAGFvUqWtPtHy25mICY1w==}
-    engines: {node: ^8.1 || >=10.*}
+  /stripe/11.5.0:
+    resolution: {integrity: sha512-yjTqnzeUk2wg1yIeYWOAH6CL5qu9fINzOhqkibXfbyeWSBEBauQrfCoB8shMmREoK2qdkScz1HjahF9qUg+X3g==}
+    engines: {node: '>=12.*'}
     dependencies:
-      '@types/node': 18.7.16
+      '@types/node': 18.11.18
       qs: 6.11.0
     dev: false
 
