@@ -32,7 +32,7 @@ _ref:
 
             There should also be submit and reset buttons at the bottom of the page.
 
-            #### Step 3.1 - Add some input blocks
+            #### 3.1 - Add some input blocks
 
             Copy the following blocks and add them in the card's blocks array.
 

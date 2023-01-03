@@ -30,7 +30,7 @@ _ref:
 
             This section of the tutorial will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-additional-page) and you can move on to [Next Steps](/next-steps).
 
-            #### Step 4.1 - Create `view-tickets.yaml`
+            #### 4.1 - Create `view-tickets.yaml`
 
             Create a new YAML file in the project directory (the same directory as the `lowdefy.yaml` file) called `view-tickets.yaml`.
 
@@ -60,7 +60,7 @@ _ref:
                       level: 3 # Make the title a little smaller (an html `<h3>`).
             ```
 
-            #### Step 4.2 - Add request to `view-tickets.yaml`
+            #### 4.2 - Add request to `view-tickets.yaml`
 
             Next we shall add a request to fetch the tickets currently in the tickets table in the SQLite database. To do this, we shall create a `fetch_tickets` request and call it when the page is mounted.
 
@@ -88,7 +88,7 @@ _ref:
             #...
             ```
 
-            ### Step 4.3 - Add an `AgGridBalham` block
+            ### 4.3 - Add an `AgGridBalham` block
 
             We will add an `AgGridBalham` table block to our page to display the tickets that have been saved in the tickets table. We will display five columns in our table, these will be `ticket_title`, `created_date`, `ticket_type`, `product` and `ticket_description`.
 
@@ -150,7 +150,7 @@ _ref:
                 ################ -------- Copy to here -------- ################
               ```
 
-            #### Step 4.4 - Update `lowdefy.yaml`
+            #### 4.4 - Update `lowdefy.yaml`
 
             Last step is to add the page to our app. In order to do this, we need to update the `lowdefy.yaml`.
 

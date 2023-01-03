@@ -37,7 +37,7 @@ _ref:
 
             In order to do this, we must follow the following steps:
 
-            #### Step 5.1.1
+            #### 5.1.1
 
             In your `lowdefy.yaml` file, add the following:
 
@@ -59,7 +59,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.1.2
+            #### 5.1.2
 
             In your `new-ticket.yaml` file, add the following request:
 
@@ -85,7 +85,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.1.3
+            #### 5.1.3
 
             In your `new-ticket.yaml` file, add an onMount event that calls `get_products` request:
 
@@ -115,7 +115,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.1.3
+            #### 5.1.3
 
             In your `new-ticket.yaml` file, add the a Selector block and populate it with the results from the `get_products` request. We will make use of `_array.map` to get the product titles from the response obtained from the request. This is done as follows:
 
@@ -183,7 +183,7 @@ _ref:
 
             In order to do this, we must follow the following steps:
 
-            #### Step 5.2.1
+            #### 5.2.1
 
             We will make use of an SQLite database with a table called `tickets`, that has the following columns:
 
@@ -217,7 +217,7 @@ _ref:
             );
             ```
 
-            #### Step 5.2.2
+            #### 5.2.2
 
             Create a file called `.env` in your project directory with the following:
 
@@ -226,7 +226,7 @@ _ref:
             LOWDEFY_SECRET_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
             ```
 
-            #### Step 5.2.3
+            #### 5.2.3
 
             In your `lowdefy.yaml` file, add the following:
 
@@ -252,7 +252,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.2.4
+            #### 5.2.4
 
             In your `new-ticket.yaml` file, add the following request:
 
@@ -308,7 +308,7 @@ _ref:
               # ...
             ```
 
-            #### Step 5.2.5
+            #### 5.2.5
 
             In your `new-ticket.yaml` file, add the following action to the submit button:
 
@@ -341,7 +341,7 @@ _ref:
                         ################ ------- Copy to here ----------- ################
             ```
 
-            #### Step 5.2.6
+            #### 5.2.6
 
             If you click the submit button, your form data should be added into the tickets table.
 

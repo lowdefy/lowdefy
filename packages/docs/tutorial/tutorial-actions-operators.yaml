@@ -30,7 +30,7 @@ _ref:
 
             The reset button should reset all the user's inputs. To do this, we can add a reset action to the reset button.
 
-            #### Step 4.1 - Configure the reset button
+            #### 4.1 - Configure the reset button
 
             Copy the following into the definition of the reset button:
 
@@ -76,7 +76,7 @@ _ref:
 
             We should validate the data users are submitting to make sure our app has clean data and works as expected. The `ticket_title` and `ticket_type` fields should be compulsory, and the user should not be able to submit the ticket if they are not completed.
 
-            #### Step 4.2 - Mark fields as required
+            #### 4.2 - Mark fields as required
 
             To make the fields required, add a required property to the input blocks like this:
 
@@ -100,7 +100,7 @@ _ref:
           content: |
             We can now add a `Validate` action to the submit button. This will validate the inputs and give an error if any inputs are not filled in.
 
-            #### Step 4.3 - Add a Validate action
+            #### 4.3 - Add a Validate action
 
             Add the validate action like this:
 
@@ -211,7 +211,7 @@ _ref:
 
             We would like to ask the user if they had purchased the product that they are formulating a complaint about, within the last month. To do this we will add a input block with a `visible` property. This property expects a boolean value, so we will use the [`_eq`](/_eq) [`operator`](/operators) to test if the ticket type is equal to `Complaint`
 
-            #### Step 4.4 - Add a block with a visible condition
+            #### 4.4 - Add a block with a visible condition
             Add the following [`ButtonSelector`](ButtonSelector) to your app.
 
             ##### `pages/new-ticket.yaml`
@@ -260,7 +260,7 @@ _ref:
 
             We would like to add a validation rule on the `purchase_in_last_month` block to warn users that the product that they have purchased may not be eligible for replacement.
 
-            #### Step 4.5 - Add a validation rule
+            #### 4.5 - Add a validation rule
 
             Add the following to your app
             ##### `pages/new-ticket.yaml`

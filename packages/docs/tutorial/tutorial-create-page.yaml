@@ -26,7 +26,7 @@ _ref:
           content: |
             Let's create a page for a web form where users can log a new ticket.
 
-            #### Step 2.1 - Create `new-ticket.yaml`
+            #### 2.1 - Create `new-ticket.yaml`
 
             Create a new YAML file in the project directory (the same directory as the `lowdefy.yaml` file) called `new-ticket.yaml`, with the following content:
 
@@ -51,7 +51,7 @@ _ref:
                       level: 3 # Make the title a little smaller (an html `<h3>`).
             ```
 
-            #### Step 2.2 - Update `lowdefy.yaml`
+            #### 2.2 - Update `lowdefy.yaml`
 
             Change the `lowdefy.yaml` to look like this:
 
@@ -82,7 +82,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            #### Step 2.3 - Navigate to the new page
+            #### 2.3 - Navigate to the new page
 
             Your browser should reload, and you should see a link in the header menu to the booking page. If you click on that link it should take you to a page that looks like this:
 
@@ -133,7 +133,7 @@ _ref:
 
             A menu is created by default from all the pages in your app, in the order that they appear in the pages array. Often more control is needed over the menu. You might want to group menu items into different groups, change the title, exclude a page or add an icon. To do this, we can define a menu in the `menus` section of the `lowdefy.yaml` file.
 
-            #### Step 2.4 - Add the menu configuration
+            #### 2.4 - Add the menu configuration
 
             Copy the following and add it to your `lowdefy.yaml` file just before the pages section:
 
