@@ -36,7 +36,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@emotion/jest": "11.9.1",
+    "@emotion/jest": "11.10.5",
     "@lowdefy/block-utils": "4.0.0-alpha.37",
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "@testing-library/dom": "8.19.1",
