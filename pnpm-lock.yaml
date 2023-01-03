@@ -1475,11 +1475,11 @@ importers:
       '@swc/cli': 0.1.59
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24
-      fs-extra: 10.1.0
+      fs-extra: 11.1.0
       jest: 28.1.0
     dependencies:
       '@lowdefy/helpers': link:../helpers
-      fs-extra: 10.1.0
+      fs-extra: 11.1.0
     devDependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -8112,6 +8112,16 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
+    dev: true
+
+  /fs-extra/11.1.0:
+    resolution: {integrity: sha512-0rcTq621PD5jM/e0a3EJoGC/1TC5ZBCERW82LQuwfGnCa1V8w7dpYH1yNu+SLb6E5dkeCBzKEyLGlFrnr+dUyw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.10
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: false
 
   /fs-extra/9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
