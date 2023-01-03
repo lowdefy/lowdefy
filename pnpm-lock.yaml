@@ -1222,7 +1222,7 @@ importers:
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0
-      react-icons: 4.3.1
+      react-icons: 4.7.1
       webpack: 5.75.0
       yaml: 2.2.1
       yargs: 17.6.2
@@ -1243,7 +1243,7 @@ importers:
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-icons: 4.3.1_react@18.2.0
+      react-icons: 4.7.1_react@18.2.0
     devDependencies:
       '@lowdefy/build': link:../build
       '@next/eslint-plugin-next': 12.1.6
@@ -1293,7 +1293,7 @@ importers:
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0
-      react-icons: 4.3.1
+      react-icons: 4.7.1
       swr: 2.0.0
       webpack: 5.75.0
       yaml: 2.2.1
@@ -1332,7 +1332,7 @@ importers:
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-icons: 4.3.1_react@18.2.0
+      react-icons: 4.7.1_react@18.2.0
       swr: 2.0.0_react@18.2.0
       yaml: 2.2.1
       yargs: 17.6.2
@@ -13085,8 +13085,8 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-icons/4.3.1_react@18.2.0:
-    resolution: {integrity: sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==}
+  /react-icons/4.7.1_react@18.2.0:
+    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
     peerDependencies:
       react: '*'
     dependencies:
