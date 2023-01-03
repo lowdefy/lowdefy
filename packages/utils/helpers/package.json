@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "lodash.merge": "4.6.2",
-    "query-string": "7.1.1"
+    "query-string": "8.1.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.59",
