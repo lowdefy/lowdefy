@@ -38,7 +38,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "pdfmake": "0.2.5"
+    "pdfmake": "0.2.7"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
