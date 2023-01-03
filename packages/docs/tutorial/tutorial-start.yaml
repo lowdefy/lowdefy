@@ -253,6 +253,8 @@ _ref:
 
             We also used the `pnpx lowdefy@latest dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
 
+            Next, let's see how easy it is to create a new page.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
