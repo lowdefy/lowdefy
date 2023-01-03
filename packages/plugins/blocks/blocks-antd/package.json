@@ -50,7 +50,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@ant-design/icons": "4.7.0",
+    "@ant-design/icons": "4.8.0",
     "@lowdefy/block-utils": "4.0.0-alpha.37",
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "antd": "4.22.5",

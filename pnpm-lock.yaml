@@ -189,7 +189,7 @@ importers:
 
   packages/client:
     specifiers:
-      '@ant-design/icons': 4.7.0
+      '@ant-design/icons': 4.8.0
       '@emotion/jest': 11.10.5
       '@lowdefy/block-utils': 4.0.0-alpha.37
       '@lowdefy/engine': 4.0.0-alpha.37
@@ -210,7 +210,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
     dependencies:
-      '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
+      '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@lowdefy/block-utils': link:../utils/block-utils
       '@lowdefy/engine': link:../engine
       '@lowdefy/helpers': link:../utils/helpers
@@ -419,7 +419,7 @@ importers:
 
   packages/plugins/blocks/blocks-antd:
     specifiers:
-      '@ant-design/icons': 4.7.0
+      '@ant-design/icons': 4.8.0
       '@emotion/jest': 11.10.5
       '@lowdefy/block-dev': 4.0.0-alpha.37
       '@lowdefy/block-utils': 4.0.0-alpha.37
@@ -444,7 +444,7 @@ importers:
       react-dom: 18.2.0
       tinycolor2: 1.5.2
     dependencies:
-      '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
+      '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@lowdefy/block-utils': link:../../../utils/block-utils
       '@lowdefy/helpers': link:../../../utils/helpers
       antd: 4.22.5_qduxo4avim535knijfrctywtaq
@@ -1577,8 +1577,8 @@ packages:
     resolution: {integrity: sha512-EB0iwlKDGpG93hW8f85CTJTs4SvMX7tt5ceupvhALp1IF44SeUFOMhKUOYqpsoYWQKAOuTRDMqn75rEaKDp0Xw==}
     dev: false
 
-  /@ant-design/icons/4.7.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-aoB4Z7JA431rt6d4u+8xcNPPCrdufSRMUOpxa1ab6mz1JCQZOEVolj2WVs/tDFmN62zzK30mNelEsprLYsSF3g==}
+  /@ant-design/icons/4.8.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-T89P2jG2vM7OJ0IfGx2+9FC5sQjtTzRSz+mCHTXkFn/ELZc2YpfStmYHmqzq2Jx55J0F7+O6i5/ZKFSVNWCKNg==}
     engines: {node: '>=8'}
     peerDependencies:
       react: '>=16.0.0'
@@ -1586,9 +1586,9 @@ packages:
     dependencies:
       '@ant-design/colors': 6.0.0
       '@ant-design/icons-svg': 4.2.1
-      '@babel/runtime': 7.19.0
+      '@babel/runtime': 7.20.7
       classnames: 2.3.2
-      rc-util: 5.24.2_biqbaboplfbrettd7655fr4n2y
+      rc-util: 5.27.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -5455,7 +5455,7 @@ packages:
       react-dom: '>=16.9.0'
     dependencies:
       '@ant-design/colors': 6.0.0
-      '@ant-design/icons': 4.7.0_biqbaboplfbrettd7655fr4n2y
+      '@ant-design/icons': 4.8.0_biqbaboplfbrettd7655fr4n2y
       '@ant-design/react-slick': 0.29.2_react@18.2.0
       '@babel/runtime': 7.19.0
       '@ctrl/tinycolor': 3.4.1
