@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.37",
     "@lowdefy/operators": "4.0.0-alpha.37",
-    "uuid": "8.3.2"
+    "uuid": "9.0.0"
   },
   "devDependencies": {
     "@swc/cli": "0.1.59",

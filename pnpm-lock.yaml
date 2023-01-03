@@ -100,7 +100,7 @@ importers:
       ajv: 8.11.2
       jest: 28.1.0
       json5: 2.2.3
-      uuid: 8.3.2
+      uuid: 9.0.0
       yaml: 2.2.1
       yargs: 17.6.2
     dependencies:
@@ -114,7 +114,7 @@ importers:
       '@lowdefy/operators-js': link:../plugins/operators/operators-js
       ajv: 8.11.2
       json5: 2.2.3
-      uuid: 8.3.2
+      uuid: 9.0.0
       yaml: 2.2.1
       yargs: 17.6.2
     devDependencies:
@@ -167,7 +167,7 @@ importers:
       dotenv: 16.0.3
       jest: 28.1.0
       ora: 5.4.1
-      uuid: 8.3.2
+      uuid: 9.0.0
       yaml: 2.2.1
     dependencies:
       '@lowdefy/helpers': link:../utils/helpers
@@ -178,7 +178,7 @@ importers:
       decompress-targz: 4.1.1
       dotenv: 16.0.3
       ora: 5.4.1
-      uuid: 8.3.2
+      uuid: 9.0.0
       yaml: 2.2.1
     devDependencies:
       '@jest/globals': 28.1.0
@@ -1072,11 +1072,11 @@ importers:
       '@swc/jest': 0.2.24
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
-      uuid: 8.3.2
+      uuid: 9.0.0
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
       '@lowdefy/operators': link:../../../operators
-      uuid: 8.3.2
+      uuid: 9.0.0
     devDependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -14807,6 +14807,11 @@ packages:
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /uvu/0.5.6:
     resolution: {integrity: sha512-+g8ENReyr8YsOc6fv/NVJs2vFdHBnBNdfE49rshrTzDWOlUx4Gq7KOS2GD8eqhy2j+Ejq29+SbKH8yjkAqXqoA==}
