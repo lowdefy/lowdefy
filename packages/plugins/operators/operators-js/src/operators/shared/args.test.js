@@ -13,21 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import args from './args.js';
 
-jest.mock('@lowdefy/operators', () => ({
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-const input = {
-  args: [{ args: true }],
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-};
-
 test('args calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const args = (await import('./args.js')).default;
+
   args({
     args: [{ args: true }],
     arrayIndices: [0],

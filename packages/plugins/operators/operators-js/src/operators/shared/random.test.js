@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import random from './random.js';
 
 const mockRandom = jest.fn();

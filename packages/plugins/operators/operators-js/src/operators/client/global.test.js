@@ -13,14 +13,16 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import _global from './global.js';
 
-jest.mock('@lowdefy/operators', () => ({
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('global calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const _global = (await import('./global.js')).default;
   _global({
     arrayIndices: [0],
     location: 'location',

@@ -36,7 +36,7 @@
     "build": "swc src --out-dir dist --config-file ../../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm build",
-    "test": "jest --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/nunjucks": "4.0.0-alpha.37",

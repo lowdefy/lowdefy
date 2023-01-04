@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import payload from './payload.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('payload calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const payload = (await import('./payload.js')).default;
   payload({
     location: 'location',
     params: 'params',
