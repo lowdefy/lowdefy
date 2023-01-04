@@ -191,6 +191,7 @@ importers:
     specifiers:
       '@ant-design/icons': 4.8.0
       '@emotion/jest': 11.10.5
+      '@jest/globals': 28.1.0
       '@lowdefy/block-utils': 4.0.0-alpha.37
       '@lowdefy/engine': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
@@ -220,6 +221,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@emotion/jest': 11.10.5
+      '@jest/globals': 28.1.0
       '@lowdefy/jest-yaml-transform': link:../utils/jest-yaml-transform
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -279,6 +281,7 @@ importers:
   packages/layout:
     specifiers:
       '@emotion/jest': 11.10.5
+      '@jest/globals': 28.1.0
       '@lowdefy/block-dev': 4.0.0-alpha.37
       '@lowdefy/block-utils': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
@@ -304,6 +307,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
       '@emotion/jest': 11.10.5
+      '@jest/globals': 28.1.0
       '@lowdefy/block-dev': link:../utils/block-dev
       '@lowdefy/jest-yaml-transform': link:../utils/jest-yaml-transform
       '@swc/cli': 0.1.59_@swc+core@1.3.24
@@ -894,6 +898,7 @@ importers:
 
   packages/plugins/connections/connection-redis:
     specifiers:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
       '@swc/cli': 0.1.59
@@ -905,6 +910,7 @@ importers:
       '@lowdefy/helpers': link:../../../utils/helpers
       redis: 4.5.1
     devDependencies:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -913,6 +919,7 @@ importers:
 
   packages/plugins/connections/connection-sendgrid:
     specifiers:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
       '@sendgrid/mail': 7.7.0
@@ -924,6 +931,7 @@ importers:
       '@lowdefy/helpers': link:../../../utils/helpers
       '@sendgrid/mail': 7.7.0
     devDependencies:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -932,6 +940,7 @@ importers:
 
   packages/plugins/connections/connection-stripe:
     specifiers:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
       '@swc/cli': 0.1.59
@@ -943,6 +952,7 @@ importers:
       '@lowdefy/helpers': link:../../../utils/helpers
       stripe: 11.5.0
     devDependencies:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24

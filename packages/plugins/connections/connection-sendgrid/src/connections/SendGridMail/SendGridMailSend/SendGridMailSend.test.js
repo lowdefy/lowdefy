@@ -14,28 +14,27 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import SendGridMailSend from './SendGridMailSend.js';
-
-const { checkRead, checkWrite } = SendGridMailSend.meta;
-const schema = SendGridMailSend.schema;
 
 const mockSend = jest.fn();
 
-jest.mock('@sendgrid/mail', () => {
+jest.unstable_mockModule('@sendgrid/mail', () => {
   return {
-    setApiKey: jest.fn(),
-    send: (msg) => {
-      if (msg[0].to === 'response_error') {
-        const error = new Error('Test error.');
-        error.response = { body: ['Test error 1.', 'Test error 2.'] };
-        throw error;
-      }
-      if (msg[0].to === 'generic_error') {
-        throw new Error('Test error.');
-      }
-      mockSend(msg);
-      return Promise.resolve(msg);
+    default: {
+      setApiKey: jest.fn(),
+      send: (msg) => {
+        if (msg[0].to === 'response_error') {
+          const error = new Error('Test error.');
+          error.response = { body: ['Test error 1.', 'Test error 2.'] };
+          throw error;
+        }
+        if (msg[0].to === 'generic_error') {
+          throw new Error('Test error.');
+        }
+        mockSend(msg);
+        return Promise.resolve(msg);
+      },
     },
   };
 });
@@ -46,6 +45,7 @@ afterEach(() => {
 });
 
 test('send with valid request and connection', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
   const request = {
     to: 'a@b.com',
     subject: 'A',
@@ -76,6 +76,7 @@ test('send with valid request and connection', async () => {
 });
 
 test('send to list of emails', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
   const request = {
     to: ['a@b.com', 'aaa bbb <aaa@bbb.com>', { name: 'ccc', email: 'ddd@eee.com' }],
     subject: 'A',
@@ -106,6 +107,7 @@ test('send to list of emails', async () => {
 });
 
 test('send a list of different emails', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
   const request = [
     {
       to: 'a@b.com',
@@ -151,6 +153,8 @@ test('send a list of different emails', async () => {
 });
 
 test('Error request with no to', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     subject: 'A',
     text: 'B',
@@ -161,6 +165,8 @@ test('Error request with no to', async () => {
 });
 
 test('Error request with to is not a email address', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     subject: 'A',
     text: 'B',
@@ -172,6 +178,8 @@ test('Error request with to is not a email address', async () => {
 });
 
 test('Error request with subject is not a string', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     subject: true,
     text: 'B',
@@ -183,6 +191,8 @@ test('Error request with subject is not a string', async () => {
 });
 
 test('Error request with text is not a string', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     text: true,
     to: 'a@b.com',
@@ -193,6 +203,8 @@ test('Error request with text is not a string', async () => {
 });
 
 test('Error request with html is not a string', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     html: true,
     to: 'a@b.com',
@@ -203,6 +215,8 @@ test('Error request with html is not a string', async () => {
 });
 
 test('Error request with dynamicTemplateData is not an object', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const schema = SendGridMailSend.schema;
   const request = {
     dynamicTemplateData: true,
     to: 'a@b.com',
@@ -213,6 +227,7 @@ test('Error request with dynamicTemplateData is not an object', async () => {
 });
 
 test('request throws an error', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
   const request = {
     to: 'generic_error',
     subject: 'A',
@@ -226,6 +241,7 @@ test('request throws an error', async () => {
 });
 
 test('request throws an error with response body', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
   const request = {
     to: 'response_error',
     subject: 'A',
@@ -241,9 +257,13 @@ test('request throws an error with response body', async () => {
 });
 
 test('checkRead should be false', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const { checkRead } = SendGridMailSend.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be false', async () => {
+  const SendGridMailSend = (await import('./SendGridMailSend.js')).default;
+  const { checkWrite } = SendGridMailSend.meta;
   expect(checkWrite).toBe(false);
 });

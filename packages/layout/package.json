@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@emotion/jest": "11.10.5",
+    "@jest/globals": "28.1.0",
     "@lowdefy/block-dev": "4.0.0-alpha.37",
     "@lowdefy/jest-yaml-transform": "4.0.0-alpha.37",
     "@swc/cli": "0.1.59",
