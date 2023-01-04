@@ -15,26 +15,26 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: tutorial-additional-page
-    pageTitle: 4. Data Display Page
+    pageId: tutorial-display-data-page
+    pageTitle: 7. Display ticket data
     section: Tutorial
-    filePath: tutorial/tutorial-additional-page.yaml
+    filePath: tutorial/tutorial-display-data-page.yaml
     content:
       - id: add_page
         type: MarkdownWithCode
         properties:
           content: |
-            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/05-requests).
+            If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-requests-sql).
 
-            We currently do not have a way to view the tickets that have been added to our database. In order to add this functionality, we will be creating a new page which will contain a table that will display the saved tickets.
+            In this section we will add a page with a table to view the tickets that have been saved to our database.
 
-            This section of the tutorial will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/06-additional-page) and you can move on to [Next Steps](/next-steps).
+            We will make use of the concepts shown throughout the previous steps of this tutorial. If you would like to skip this, the final config can be found [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/07-display-data) and you can move on to [Next Steps](/tutorial-next-steps).
 
-            #### 4.1 - Create `view-tickets.yaml`
+            #### 7.1. Create `view-tickets.yaml`
 
             Create a new YAML file in the project directory (the same directory as the `lowdefy.yaml` file) called `view-tickets.yaml`.
 
-            In this file we will add an `AgGridBalham` table block that will be used to display the tickets that are currently in our SQLite table.
+            In this file we will add an `AgGridBalham` table block, using [Ag-Grid](https://www.ag-grid.com/), that will be used to display the tickets that are currently in our SQLite table.
 
             We shall start with the basic page structure, as follows:
 
@@ -60,7 +60,7 @@ _ref:
                       level: 3 # Make the title a little smaller (an html `<h3>`).
             ```
 
-            #### 4.2 - Add request to `view-tickets.yaml`
+            #### 7.2. Add request to `view-tickets.yaml`
 
             Next we shall add a request to fetch the tickets currently in the tickets table in the SQLite database. To do this, we shall create a `fetch_tickets` request and call it when the page is mounted.
 
@@ -88,12 +88,13 @@ _ref:
             #...
             ```
 
-            ### 4.3 - Add an `AgGridBalham` block
+            ### 7.3. Add an `AgGridBalham` block
 
-            We will add an `AgGridBalham` table block to our page to display the tickets that have been saved in the tickets table. We will display five columns in our table, these will be `ticket_title`, `created_date`, `ticket_type`, `product` and `ticket_description`.
+            We will add an `AgGridBalham` table block to our page to display the tickets that have been saved in the tickets table. We want to display five columns in our table; `ticket_title`, `created_date`, `ticket_type`, `product` and `ticket_description`.
 
             The `rowData` used for our table will be the result from our `fetch_tickets` request and is accessed by making use of the [_request](/_request) operator.
-            In order to display the `created_date` in a more compact format, we will make use of [_nunjucks](/_nunjucks).
+
+            In order to display the `created_date` in a more compact format, we will make use of the [_nunjucks](/_nunjucks) operator.
 
             Add the following config to the `view-tickets.yaml` filename:
 
@@ -133,8 +134,7 @@ _ref:
                             template: |
                               {{ created_date | date('DD MMM YYYY') }}
                             on:
-                              created_date:
-                                __args: 0.data.created_date
+                              __args: 0.data
                     - headerName: Ticket Type
                       field: ticket_type
                       width: 150
@@ -150,7 +150,7 @@ _ref:
                 ################ -------- Copy to here -------- ################
               ```
 
-            #### 4.4 - Update `lowdefy.yaml`
+            #### 7.4. Update `lowdefy.yaml`
 
             Last step is to add the page to our app. In order to do this, we need to update the `lowdefy.yaml`.
 
@@ -210,4 +210,4 @@ _ref:
             previous_page_title: Requests
             previous_page_id: tutorial-requests
             next_page_title: Next Steps
-            next_page_id: next-steps
+            next_page_id: tutorial-next-steps

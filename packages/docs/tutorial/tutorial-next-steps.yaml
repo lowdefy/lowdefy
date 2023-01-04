@@ -15,24 +15,28 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: next-steps
+    pageId: tutorial-next-steps
     pageTitle: Next steps
     section: Tutorial
     prefetchPages:
       - overview
-    filePath: tutorial/next-steps.yaml
+    filePath: tutorial/tutorial-next-steps.yaml
     content:
       - id: body_next_steps
         type: MarkdownWithCode
         properties:
           content: |
-            Congratulations! You have completed the tutorial and built a sort-of functioning app.
+            Congratulations! You have completed the tutorial and built a basic functioning app, which can request data from an API, as well as validate and save user input to a database.
 
-            To carry on from here, you have a couple of options
+            Next, consider joining the Lowdefy community, and exploring Lowdefy in more detail.
 
             ### Join the community
 
-            At our [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) page you can get help with any problems you have, share you ideas, ask questions, and show off the apps you have built.
+            Whether Get help with any problems you have, share you ideas, ask questions, and show off the apps you have built, join and hlep us grow the Lowdefy community.
+
+            - [Github Discussions](https://github.com/lowdefy/lowdefy/discussions)
+            - [Lowdefy Discord](https://discord.gg/QQY9eJ7A2D)
+            - [Lowdefy Twitter](https://twitter.com/lowdefy)
 
             ### Understand the concepts
 
@@ -40,7 +44,7 @@ _ref:
 
             ### Play with blocks
 
-            The docs have an interactive playground where you can adjust a block's properties and see how that affects the block in real time. Go look at what you can do with a [`Button`](/Button).
+            The docs are interactive, so you can adjust a block's properties and see how that affects the block in real time. Go look at what you can do with a [`Button`](/Button).
 
             ### Look at an example app
 

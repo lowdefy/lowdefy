@@ -239,7 +239,7 @@ _ref:
 
                 First, change `Let's build something` to `Join Lowdefy on Discord`, then save the file. Your page should automatically refresh and you should see the changed text of the button.
 
-                Next, update the link url to the Lowdefy Discord link, replace `https://docs.lowdefy.com` with `https://discord.gg/QQY9eJ7A2D`, then save the file. If you now click the button it should open a new window linking to the Lowdefy Discord Channel - Join our community to ask questions or learn more regarding Lowdefy ❤️
+                Next, update the link url to the Lowdefy Discord link, replace `https://docs.lowdefy.com` with [`https://discord.gg/QQY9eJ7A2D`](https://discord.gg/QQY9eJ7A2D), then save the file. If you now click the button it should open a new window linking to the Lowdefy Discord Channel - Join our community to ask questions or learn more regarding Lowdefy ❤️
 
       - id: body_what_happened
         type: Markdown
@@ -252,6 +252,10 @@ _ref:
             We used the `pnpx lowdefy@latest init` command to initialize a new project. This created all the essential files.
 
             We also used the `pnpx lowdefy@latest dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
+
+            ### Up next
+
+            Let's see how easy it is to create a new page.
 
       - _ref:
           path: templates/navigation_buttons.yaml
