@@ -163,7 +163,7 @@ _ref:
 
             ### Up next
 
-            Currently our form doesn't do very much. In the next section we will use [actions](/events-and-actions) and [operators](/operators) to make the it more interactive.
+            Currently our form doesn't do very much. In the next section we will use [actions](/events-and-actions) and [operators](/operators) to make it more interactive.
 
       - _ref:
           path: templates/navigation_buttons.yaml
