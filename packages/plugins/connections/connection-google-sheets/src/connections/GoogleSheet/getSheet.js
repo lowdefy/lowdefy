@@ -44,8 +44,6 @@ function getSheetFromDoc({ doc, sheetId, sheetIndex }) {
 }
 
 async function getSheet({ connection }) {
-  console.log('in getSheet', GoogleSpreadsheet);
-
   const { apiKey, client_email, private_key, sheetId, sheetIndex, spreadsheetId } = connection;
   const doc = new GoogleSpreadsheet(spreadsheetId);
 
