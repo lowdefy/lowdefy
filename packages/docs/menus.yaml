@@ -32,24 +32,29 @@
           pageId: tutorial-actions-operators
           properties:
             title: Interactive pages
-        - id: tutorial-requests
+        - id: tutorial-requests-api
           type: MenuLink
-          pageId: tutorial-requests
+          pageId: tutorial-requests-api
           properties:
-            title: Requests
-        - id: tutorial-additional-page
+            title: API / HTTP requests
+        - id: tutorial-requests-sql
           type: MenuLink
-          pageId: tutorial-additional-page
+          pageId: tutorial-requests-sql
           properties:
-            title: Data Display Page
+            title: Saving data
+        - id: tutorial-display-data-page
+          type: MenuLink
+          pageId: tutorial-display-data-page
+          properties:
+            title: Display data
         # - id: tutorial-deploy
         #   type: MenuLink
         #   pageId: tutorial-deploy
         #   properties:
         #     title: Deploy to Netlify
-        - id: next-steps
+        - id: tutorial-next-steps
           type: MenuLink
-          pageId: next-steps
+          pageId: tutorial-next-steps
           properties:
             title: Next steps
     # - id: howto

@@ -32,7 +32,7 @@ _ref:
 
             There should also be submit and reset buttons at the bottom of the page.
 
-            #### 3.1 - Add some input blocks
+            #### 3.1. Add some input blocks
 
             Copy the following blocks and add them in the card's blocks array.
 
@@ -86,8 +86,6 @@ _ref:
                       icon: AiOutlineSave
             ################ -------- Copy to here ---------- ################
             ```
-
-            >  If you would like to see how your config should look at this point, you can find it [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/03-adding-blocks).
 
             Your booking page should something like this:
       - id: example1
@@ -149,6 +147,8 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
+            >  If you would like to see how your config should look at this point, you can find it [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/03-adding-blocks).
+
             ### What happened
 
             We added 3 form input blocks to the page. For each of those blocks, we set the `title` property, and for the ticket type selector we set a list of ticket types to the `options` property.
@@ -159,7 +159,7 @@ _ref:
 
             Lowdefy apps are made from blocks. These blocks can be the page layout with header and menu, a piece of text, a chart or table, tabs or even a popup message or icon. You specify which block is rendered with the `type` field. There are 4 block categories, namely display, input, container, and list.
 
-            All blocks need to have an `id` that identifies the block. This id should be unique in that block's context.
+            All blocks need to have an `id` that identifies the block. Blocks of category input and list use this `id` as the object key to represent a value in page state, but more on this later.
 
             ### Up next
 
