@@ -807,6 +807,7 @@ importers:
 
   packages/plugins/connections/connection-google-sheets:
     specifiers:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
       '@swc/cli': 0.1.59
@@ -822,6 +823,7 @@ importers:
       mingo: 6.2.1
       moment: 2.29.4
     devDependencies:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -830,6 +832,7 @@ importers:
 
   packages/plugins/connections/connection-knex:
     specifiers:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': 4.0.0-alpha.37
       '@lowdefy/helpers': 4.0.0-alpha.37
       '@swc/cli': 0.1.59
@@ -849,6 +852,7 @@ importers:
       pg: 8.8.0
       sqlite3: 5.1.4
     devDependencies:
+      '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24

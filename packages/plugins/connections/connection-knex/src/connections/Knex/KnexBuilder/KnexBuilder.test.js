@@ -14,20 +14,21 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import knex from 'knex';
-import KnexBuilder from './KnexBuilder.js';
-
-const { checkRead, checkWrite } = KnexBuilder.meta;
-const schema = KnexBuilder.schema;
 
 const mockKnexClient = jest.fn(() => mockKnexClient);
+const mockKnex = jest.fn(() => mockKnexClient);
 
 mockKnexClient.select = jest.fn(() => mockKnexClient);
 mockKnexClient.from = jest.fn(() => mockKnexClient);
 mockKnexClient.where = jest.fn(() => mockKnexClient);
 
-jest.mock('knex', () => jest.fn(() => mockKnexClient));
+jest.unstable_mockModule('knex', () => {
+  return {
+    default: mockKnex,
+  };
+});
 
 const connection = {
   client: 'pg',
@@ -35,6 +36,8 @@ const connection = {
 };
 
 test('KnexBuilder with tableName', async () => {
+  const knex = (await import('knex')).default;
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
   mockKnexClient.where.mockImplementationOnce(() =>
     Promise.resolve([
       {
@@ -66,6 +69,8 @@ test('KnexBuilder with tableName', async () => {
 });
 
 test('KnexBuilder', async () => {
+  const knex = (await import('knex')).default;
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
   mockKnexClient.where.mockImplementationOnce(() =>
     Promise.resolve([
       {
@@ -96,6 +101,7 @@ test('KnexBuilder', async () => {
 });
 
 test('KnexBuilder, invalid method', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
   const request = {
     query: [{ invalid: ['*'] }],
   };
@@ -105,6 +111,7 @@ test('KnexBuilder, invalid method', async () => {
 });
 
 test('KnexBuilder, more than one method', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
   const request = {
     query: [{ select: ['*'], where: ['name', 'steve'] }],
   };
@@ -114,6 +121,7 @@ test('KnexBuilder, more than one method', async () => {
 });
 
 test('KnexBuilder, method args not an array', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
   const request = {
     query: [{ select: '*' }],
   };
@@ -122,7 +130,9 @@ test('KnexBuilder, method args not an array', async () => {
   );
 });
 
-test('valid request', () => {
+test('valid request', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
+  const schema = KnexBuilder.schema;
   let request = {
     query: [{ select: ['*'] }, { from: ['table'] }],
   };
@@ -139,7 +149,9 @@ test('valid request', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('query missing', () => {
+test('query missing', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
+  const schema = KnexBuilder.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'KnexBuilder request should have required property "query".'
@@ -147,9 +159,13 @@ test('query missing', () => {
 });
 
 test('checkRead should be false', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
+  const { checkRead } = KnexBuilder.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be false', async () => {
+  const KnexBuilder = (await import('./KnexBuilder.js')).default;
+  const { checkWrite } = KnexBuilder.meta;
   expect(checkWrite).toBe(false);
 });
