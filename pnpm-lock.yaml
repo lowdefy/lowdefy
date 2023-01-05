@@ -31,12 +31,12 @@ importers:
   packages/api:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
-      '@lowdefy/nunjucks': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
-      '@lowdefy/operators-js': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
+      '@lowdefy/nunjucks': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
+      '@lowdefy/operators-js': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -58,42 +58,42 @@ importers:
   packages/build:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/actions-core': 4.0.0-alpha.37
-      '@lowdefy/actions-pdf-make': 4.0.0-alpha.37
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/blocks-aggrid': 4.0.0-alpha.37
-      '@lowdefy/blocks-antd': 4.0.0-alpha.37
-      '@lowdefy/blocks-basic': 4.0.0-alpha.37
-      '@lowdefy/blocks-color-selectors': 4.0.0-alpha.37
-      '@lowdefy/blocks-echarts': 4.0.0-alpha.37
-      '@lowdefy/blocks-google-maps': 4.0.0-alpha.37
-      '@lowdefy/blocks-loaders': 4.0.0-alpha.37
-      '@lowdefy/blocks-markdown': 4.0.0-alpha.37
-      '@lowdefy/blocks-qr': 4.0.0-alpha.37
-      '@lowdefy/connection-axios-http': 4.0.0-alpha.37
-      '@lowdefy/connection-elasticsearch': 4.0.0-alpha.37
-      '@lowdefy/connection-google-sheets': 4.0.0-alpha.37
-      '@lowdefy/connection-knex': 4.0.0-alpha.37
-      '@lowdefy/connection-mongodb': 4.0.0-alpha.37
-      '@lowdefy/connection-redis': 4.0.0-alpha.37
-      '@lowdefy/connection-sendgrid': 4.0.0-alpha.37
-      '@lowdefy/connection-stripe': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
-      '@lowdefy/nunjucks': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
-      '@lowdefy/operators-change-case': 4.0.0-alpha.37
-      '@lowdefy/operators-diff': 4.0.0-alpha.37
-      '@lowdefy/operators-js': 4.0.0-alpha.37
-      '@lowdefy/operators-moment': 4.0.0-alpha.37
-      '@lowdefy/operators-mql': 4.0.0-alpha.37
-      '@lowdefy/operators-nunjucks': 4.0.0-alpha.37
-      '@lowdefy/operators-uuid': 4.0.0-alpha.37
-      '@lowdefy/operators-yaml': 4.0.0-alpha.37
-      '@lowdefy/plugin-auth0': 4.0.0-alpha.37
-      '@lowdefy/plugin-aws': 4.0.0-alpha.37
-      '@lowdefy/plugin-csv': 4.0.0-alpha.37
-      '@lowdefy/plugin-next-auth': 4.0.0-alpha.37
+      '@lowdefy/actions-core': 4.0.0-rc.0
+      '@lowdefy/actions-pdf-make': 4.0.0-rc.0
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/blocks-aggrid': 4.0.0-rc.0
+      '@lowdefy/blocks-antd': 4.0.0-rc.0
+      '@lowdefy/blocks-basic': 4.0.0-rc.0
+      '@lowdefy/blocks-color-selectors': 4.0.0-rc.0
+      '@lowdefy/blocks-echarts': 4.0.0-rc.0
+      '@lowdefy/blocks-google-maps': 4.0.0-rc.0
+      '@lowdefy/blocks-loaders': 4.0.0-rc.0
+      '@lowdefy/blocks-markdown': 4.0.0-rc.0
+      '@lowdefy/blocks-qr': 4.0.0-rc.0
+      '@lowdefy/connection-axios-http': 4.0.0-rc.0
+      '@lowdefy/connection-elasticsearch': 4.0.0-rc.0
+      '@lowdefy/connection-google-sheets': 4.0.0-rc.0
+      '@lowdefy/connection-knex': 4.0.0-rc.0
+      '@lowdefy/connection-mongodb': 4.0.0-rc.0
+      '@lowdefy/connection-redis': 4.0.0-rc.0
+      '@lowdefy/connection-sendgrid': 4.0.0-rc.0
+      '@lowdefy/connection-stripe': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
+      '@lowdefy/nunjucks': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
+      '@lowdefy/operators-change-case': 4.0.0-rc.0
+      '@lowdefy/operators-diff': 4.0.0-rc.0
+      '@lowdefy/operators-js': 4.0.0-rc.0
+      '@lowdefy/operators-moment': 4.0.0-rc.0
+      '@lowdefy/operators-mql': 4.0.0-rc.0
+      '@lowdefy/operators-nunjucks': 4.0.0-rc.0
+      '@lowdefy/operators-uuid': 4.0.0-rc.0
+      '@lowdefy/operators-yaml': 4.0.0-rc.0
+      '@lowdefy/plugin-auth0': 4.0.0-rc.0
+      '@lowdefy/plugin-aws': 4.0.0-rc.0
+      '@lowdefy/plugin-csv': 4.0.0-rc.0
+      '@lowdefy/plugin-next-auth': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -155,8 +155,8 @@ importers:
   packages/cli:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -191,11 +191,11 @@ importers:
     specifiers:
       '@ant-design/icons': 4.7.0
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/engine': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
-      '@lowdefy/layout': 4.0.0-alpha.37
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/engine': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
+      '@lowdefy/layout': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -235,7 +235,7 @@ importers:
   packages/docs:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -252,12 +252,12 @@ importers:
   packages/engine:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/actions-core': 4.0.0-alpha.37
-      '@lowdefy/build': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
-      '@lowdefy/operators-js': 4.0.0-alpha.37
-      '@lowdefy/operators-mql': 4.0.0-alpha.37
+      '@lowdefy/actions-core': 4.0.0-rc.0
+      '@lowdefy/build': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
+      '@lowdefy/operators-js': 4.0.0-rc.0
+      '@lowdefy/operators-mql': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -279,10 +279,10 @@ importers:
   packages/layout:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -319,7 +319,7 @@ importers:
 
   packages/operators:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -337,7 +337,7 @@ importers:
   packages/plugins/actions/actions-core:
     specifiers:
       '@jest/globals': 28.1.0
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -378,10 +378,10 @@ importers:
       '@ag-grid-community/core': 27.3.0
       '@ag-grid-community/react': 27.3.0
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -421,11 +421,11 @@ importers:
     specifiers:
       '@ant-design/icons': 4.7.0
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -473,10 +473,10 @@ importers:
   packages/plugins/blocks/blocks-basic:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -514,10 +514,10 @@ importers:
   packages/plugins/blocks/blocks-color-selectors:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/blocks-antd': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/blocks-antd': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -559,9 +559,9 @@ importers:
   packages/plugins/blocks/blocks-echarts:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -600,9 +600,9 @@ importers:
   packages/plugins/blocks/blocks-google-maps:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@react-google-maps/api': 2.12.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
@@ -639,10 +639,10 @@ importers:
   packages/plugins/blocks/blocks-loaders:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -678,9 +678,9 @@ importers:
   packages/plugins/blocks/blocks-markdown:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -727,9 +727,9 @@ importers:
   packages/plugins/blocks/blocks-qr:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -765,8 +765,8 @@ importers:
 
   packages/plugins/connections/connection-axios-http:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -785,8 +785,8 @@ importers:
   packages/plugins/connections/connection-elasticsearch:
     specifiers:
       '@elastic/elasticsearch': 7.16.0
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -803,8 +803,8 @@ importers:
 
   packages/plugins/connections/connection-google-sheets:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -826,8 +826,8 @@ importers:
 
   packages/plugins/connections/connection-knex:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -853,8 +853,8 @@ importers:
 
   packages/plugins/connections/connection-mongodb:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@next-auth/mongodb-adapter': 1.0.3
       '@shelf/jest-mongodb': 4.1.0
       '@swc/cli': 0.1.57
@@ -886,8 +886,8 @@ importers:
 
   packages/plugins/connections/connection-redis:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -905,8 +905,8 @@ importers:
 
   packages/plugins/connections/connection-sendgrid:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@sendgrid/mail': 7.7.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
@@ -924,8 +924,8 @@ importers:
 
   packages/plugins/connections/connection-stripe:
     specifiers:
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -943,8 +943,8 @@ importers:
 
   packages/plugins/operators/operators-change-case:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -964,8 +964,8 @@ importers:
 
   packages/plugins/operators/operators-diff:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -985,8 +985,8 @@ importers:
 
   packages/plugins/operators/operators-js:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1004,7 +1004,7 @@ importers:
 
   packages/plugins/operators/operators-moment:
     specifiers:
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1023,8 +1023,8 @@ importers:
 
   packages/plugins/operators/operators-mql:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1044,9 +1044,9 @@ importers:
 
   packages/plugins/operators/operators-nunjucks:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/nunjucks': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/nunjucks': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1065,8 +1065,8 @@ importers:
 
   packages/plugins/operators/operators-uuid:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1086,8 +1086,8 @@ importers:
 
   packages/plugins/operators/operators-yaml:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/operators': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/operators': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1120,12 +1120,12 @@ importers:
   packages/plugins/plugins/plugin-aws:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/ajv': 4.0.0-alpha.37
-      '@lowdefy/block-dev': 4.0.0-alpha.37
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/blocks-antd': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/jest-yaml-transform': 4.0.0-alpha.37
+      '@lowdefy/ajv': 4.0.0-rc.0
+      '@lowdefy/block-dev': 4.0.0-rc.0
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/blocks-antd': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/jest-yaml-transform': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1201,18 +1201,18 @@ importers:
 
   packages/server:
     specifiers:
-      '@lowdefy/actions-core': 4.0.0-alpha.37
-      '@lowdefy/api': 4.0.0-alpha.37
-      '@lowdefy/blocks-antd': 4.0.0-alpha.37
-      '@lowdefy/blocks-basic': 4.0.0-alpha.37
-      '@lowdefy/blocks-loaders': 4.0.0-alpha.37
-      '@lowdefy/build': 4.0.0-alpha.37
-      '@lowdefy/client': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/layout': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
-      '@lowdefy/operators-js': 4.0.0-alpha.37
-      '@lowdefy/plugin-next-auth': 4.0.0-alpha.37
+      '@lowdefy/actions-core': 4.0.0-rc.0
+      '@lowdefy/api': 4.0.0-rc.0
+      '@lowdefy/blocks-antd': 4.0.0-rc.0
+      '@lowdefy/blocks-basic': 4.0.0-rc.0
+      '@lowdefy/blocks-loaders': 4.0.0-rc.0
+      '@lowdefy/build': 4.0.0-rc.0
+      '@lowdefy/client': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/layout': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
+      '@lowdefy/operators-js': 4.0.0-rc.0
+      '@lowdefy/plugin-next-auth': 4.0.0-rc.0
       '@next/eslint-plugin-next': 12.1.6
       less: 4.1.2
       less-loader: 11.0.0
@@ -1256,30 +1256,30 @@ importers:
 
   packages/server-dev:
     specifiers:
-      '@lowdefy/actions-core': 4.0.0-alpha.37
-      '@lowdefy/api': 4.0.0-alpha.37
-      '@lowdefy/blocks-antd': 4.0.0-alpha.37
-      '@lowdefy/blocks-basic': 4.0.0-alpha.37
-      '@lowdefy/blocks-color-selectors': 4.0.0-alpha.37
-      '@lowdefy/blocks-echarts': 4.0.0-alpha.37
-      '@lowdefy/blocks-loaders': 4.0.0-alpha.37
-      '@lowdefy/blocks-markdown': 4.0.0-alpha.37
-      '@lowdefy/blocks-qr': 4.0.0-alpha.37
-      '@lowdefy/build': 4.0.0-alpha.37
-      '@lowdefy/client': 4.0.0-alpha.37
-      '@lowdefy/connection-axios-http': 4.0.0-alpha.37
-      '@lowdefy/engine': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
-      '@lowdefy/layout': 4.0.0-alpha.37
-      '@lowdefy/node-utils': 4.0.0-alpha.37
-      '@lowdefy/operators-change-case': 4.0.0-alpha.37
-      '@lowdefy/operators-diff': 4.0.0-alpha.37
-      '@lowdefy/operators-js': 4.0.0-alpha.37
-      '@lowdefy/operators-mql': 4.0.0-alpha.37
-      '@lowdefy/operators-nunjucks': 4.0.0-alpha.37
-      '@lowdefy/operators-uuid': 4.0.0-alpha.37
-      '@lowdefy/operators-yaml': 4.0.0-alpha.37
-      '@lowdefy/plugin-next-auth': 4.0.0-alpha.37
+      '@lowdefy/actions-core': 4.0.0-rc.0
+      '@lowdefy/api': 4.0.0-rc.0
+      '@lowdefy/blocks-antd': 4.0.0-rc.0
+      '@lowdefy/blocks-basic': 4.0.0-rc.0
+      '@lowdefy/blocks-color-selectors': 4.0.0-rc.0
+      '@lowdefy/blocks-echarts': 4.0.0-rc.0
+      '@lowdefy/blocks-loaders': 4.0.0-rc.0
+      '@lowdefy/blocks-markdown': 4.0.0-rc.0
+      '@lowdefy/blocks-qr': 4.0.0-rc.0
+      '@lowdefy/build': 4.0.0-rc.0
+      '@lowdefy/client': 4.0.0-rc.0
+      '@lowdefy/connection-axios-http': 4.0.0-rc.0
+      '@lowdefy/engine': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
+      '@lowdefy/layout': 4.0.0-rc.0
+      '@lowdefy/node-utils': 4.0.0-rc.0
+      '@lowdefy/operators-change-case': 4.0.0-rc.0
+      '@lowdefy/operators-diff': 4.0.0-rc.0
+      '@lowdefy/operators-js': 4.0.0-rc.0
+      '@lowdefy/operators-mql': 4.0.0-rc.0
+      '@lowdefy/operators-nunjucks': 4.0.0-rc.0
+      '@lowdefy/operators-uuid': 4.0.0-rc.0
+      '@lowdefy/operators-yaml': 4.0.0-rc.0
+      '@lowdefy/plugin-next-auth': 4.0.0-rc.0
       '@next/eslint-plugin-next': 12.1.6
       chokidar: 3.5.3
       dotenv: 16.0.1
@@ -1345,7 +1345,7 @@ importers:
 
   packages/utils/ajv:
     specifiers:
-      '@lowdefy/nunjucks': 4.0.0-alpha.37
+      '@lowdefy/nunjucks': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1365,8 +1365,8 @@ importers:
   packages/utils/block-dev:
     specifiers:
       '@emotion/jest': 11.9.1
-      '@lowdefy/block-utils': 4.0.0-alpha.37
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/block-utils': 4.0.0-rc.0
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@testing-library/dom': 8.13.0
@@ -1402,7 +1402,7 @@ importers:
       '@babel/core': 7.19.0
       '@emotion/css': 11.9.0
       '@emotion/jest': 11.9.1
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1471,7 +1471,7 @@ importers:
 
   packages/utils/node-utils:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21
@@ -1488,7 +1488,7 @@ importers:
 
   packages/utils/nunjucks:
     specifiers:
-      '@lowdefy/helpers': 4.0.0-alpha.37
+      '@lowdefy/helpers': 4.0.0-rc.0
       '@swc/cli': 0.1.57
       '@swc/core': 1.2.194
       '@swc/jest': 0.2.21

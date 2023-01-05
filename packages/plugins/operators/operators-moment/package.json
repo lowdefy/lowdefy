@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-moment",
-  "version": "4.0.0-alpha.37",
+  "version": "4.0.0-rc.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,7 +46,7 @@
     "test": "TZ=UTC jest --coverage"
   },
   "dependencies": {
-    "@lowdefy/operators": "4.0.0-alpha.37",
+    "@lowdefy/operators": "4.0.0-rc.0",
     "moment": "2.29.4"
   },
   "devDependencies": {
