@@ -14,17 +14,13 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import ElasticsearchUpdate from './ElasticsearchUpdate.js';
-
-const { checkRead, checkWrite } = ElasticsearchUpdate.meta;
-const schema = ElasticsearchUpdate.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.update = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -33,7 +29,9 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     id: '42',
     body: {
@@ -42,7 +40,10 @@ test('valid request schema', () => {
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
-test('valid request schema, numeric ID', () => {
+
+test('valid request schema, numeric ID', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
     body: {
@@ -53,6 +54,8 @@ test('valid request schema, numeric ID', () => {
 });
 
 test('request no ID', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     body: {
       doc: {},
@@ -64,6 +67,8 @@ test('request no ID', async () => {
 });
 
 test('request no body', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
   };
@@ -73,6 +78,8 @@ test('request no body', async () => {
 });
 
 test('request neither script nor doc in body', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
     body: {},
@@ -83,6 +90,8 @@ test('request neither script nor doc in body', async () => {
 });
 
 test('request invalid script in body', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const schema = ElasticsearchUpdate.schema;
   const request = {
     id: 42,
     body: {
@@ -97,14 +106,20 @@ test('request invalid script in body', async () => {
 });
 
 test('checkRead should be false', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const { checkRead } = ElasticsearchUpdate.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
+  const { checkWrite } = ElasticsearchUpdate.meta;
   expect(checkWrite).toBe(true);
 });
 
 test('ElasticsearchUpdate', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchUpdate = (await import('./ElasticsearchUpdate.js')).default;
   const responseData = {
     body: {
       _index: 'test',

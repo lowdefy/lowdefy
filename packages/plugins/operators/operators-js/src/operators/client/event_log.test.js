@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
-import event_log from './event_log.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('request_details calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const event_log = (await import('./event_log.js')).default;
   event_log({
     eventLog: [{ eventName: 'test' }],
     arrayIndices: [0],
     location: 'location',
     params: 'params',
   });
+
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {

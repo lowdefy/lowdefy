@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import _index from './_index.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('_index calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const _index = (await import('./_index.js')).default;
+
   _index({
     arrayIndices: [0],
     location: 'location',

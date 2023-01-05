@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import actions from './actions.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('actions calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const actions = (await import('./actions.js')).default;
   actions({
     actions: {
       action_id: {

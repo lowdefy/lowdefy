@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import React from 'react';
 import { render } from '@testing-library/react';
 import { makeCssClass } from '@lowdefy/block-utils';

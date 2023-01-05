@@ -14,17 +14,12 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import ElasticsearchIndex from './ElasticsearchIndex.js';
-
-const { checkRead, checkWrite } = ElasticsearchIndex.meta;
-const schema = ElasticsearchIndex.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.index = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -33,7 +28,9 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
   const request = {
     id: '42',
     body: {
@@ -42,7 +39,9 @@ test('valid request schema', () => {
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
-test('valid request schema, numeric ID', () => {
+test('valid request schema, numeric ID', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
   const request = {
     id: 42,
     body: {
@@ -52,7 +51,9 @@ test('valid request schema, numeric ID', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, no ID', () => {
+test('valid request schema, no ID', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
   const request = {
     body: {
       foo: 'bar',
@@ -61,7 +62,9 @@ test('valid request schema, no ID', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, empty document', () => {
+test('valid request schema, empty document', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
   const request = {
     body: {},
   };
@@ -69,6 +72,8 @@ test('valid request schema, empty document', () => {
 });
 
 test('request no body', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'ElasticsearchIndex request should have required property "body".'
@@ -76,14 +81,20 @@ test('request no body', async () => {
 });
 
 test('checkRead should be false', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const { checkRead } = ElasticsearchIndex.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const { checkWrite } = ElasticsearchIndex.meta;
   expect(checkWrite).toBe(true);
 });
 
 test('ElasticsearchIndex', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
   const responseData = {
     body: {
       _index: 'test',
