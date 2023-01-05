@@ -99,7 +99,7 @@ importers:
       '@swc/jest': 0.2.21
       ajv: 8.11.0
       jest: 28.1.0
-      json5: 2.2.1
+      json5: 2.2.2
       uuid: 8.3.2
       yaml: 2.1.1
       yargs: 17.5.1
@@ -113,7 +113,7 @@ importers:
       '@lowdefy/operators': link:../operators
       '@lowdefy/operators-js': link:../plugins/operators/operators-js
       ajv: 8.11.0
-      json5: 2.2.1
+      json5: 2.2.2
       uuid: 8.3.2
       yaml: 2.1.1
       yargs: 17.5.1
@@ -1793,7 +1793,7 @@ packages:
       convert-source-map: 1.8.0
       debug: 4.3.4
       gensync: 1.0.0-beta.2
-      json5: 2.2.1
+      json5: 2.2.2
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
@@ -8641,8 +8641,8 @@ packages:
       minimist: 1.2.6
     dev: true
 
-  /json5/2.2.1:
-    resolution: {integrity: sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==}
+  /json5/2.2.2:
+    resolution: {integrity: sha512-46Tk9JiOL2z7ytNQWFLpj99RZkVgeHf87yGQKsIkaPz1qSH9UczKH1rO7K3wgRselo0tYMUNfecYpm/p1vC7tQ==}
     engines: {node: '>=6'}
     hasBin: true
 
@@ -8950,7 +8950,7 @@ packages:
     dependencies:
       big.js: 5.2.2
       emojis-list: 3.0.0
-      json5: 2.2.1
+      json5: 2.2.2
     dev: false
 
   /locate-path/2.0.0:

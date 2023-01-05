@@ -60,7 +60,7 @@
     "@lowdefy/operators": "4.0.0-rc.0",
     "@lowdefy/operators-js": "4.0.0-rc.0",
     "ajv": "8.11.0",
-    "json5": "2.2.1",
+    "json5": "2.2.2",
     "uuid": "8.3.2",
     "yaml": "2.1.1",
     "yargs": "17.5.1"
