@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* **plugin-aws:** s3-upload-blocks readme update. ([cede9eb](https://github.com/lowdefy/lowdefy/commit/cede9eb77d6a44db89486ecc68ff22d06ee2d568))
+
+
+### Features
+
+* **plugin-aws:** Add README for S3 Upload Blocks. ([e8d462f](https://github.com/lowdefy/lowdefy/commit/e8d462f5455da4adb67e9150d499d471e5044f72))
+* **plugin-aws:** Make s3 blocks available for use. ([26c4d15](https://github.com/lowdefy/lowdefy/commit/26c4d15c3cfa0220b2c783592f36ebdb5e32c334))
+* **plugin-aws:** Update s3-upload-blocks. ([55eda89](https://github.com/lowdefy/lowdefy/commit/55eda89d24a5169cb17a8742199ce67e8d3eab78))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/plugin-aws

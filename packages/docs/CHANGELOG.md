@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* **docs:**  Add lowdefy_app_schema.png ([f5a583b](https://github.com/lowdefy/lowdefy/commit/f5a583bf3b250d0b56d1cd4681872d6f8bb275ea))
+* Docs introduction updates and fixes. ([57b3e93](https://github.com/lowdefy/lowdefy/commit/57b3e935e860587a2b69391aac324601a9f64df9))
+* **docs:** Change Additional Page to Data Display Page. ([fafa178](https://github.com/lowdefy/lowdefy/commit/fafa178269045db9fe30d99b804558ff83657243))
+* **docs:** Changed feedback anchors to boxes ([8f407ac](https://github.com/lowdefy/lowdefy/commit/8f407ac73a38d5859d33c912f458de4610aab792))
+* **docs:** Fix typo. ([a01b4b9](https://github.com/lowdefy/lowdefy/commit/a01b4b982d10991e995c3b93a6973d2211a27b44))
+* **docs:** Next for tutorial-start. ([e7de18b](https://github.com/lowdefy/lowdefy/commit/e7de18baee7e6445dc9a6e986be0589126a524e6))
+* **docs:** Not renaming throw to break. ([a9ce920](https://github.com/lowdefy/lowdefy/commit/a9ce920919b6d1d4189ced072e88fabde7db5d55))
+* **docs:** Simplify step titles. ([ade6016](https://github.com/lowdefy/lowdefy/commit/ade601674ad617165a4caba1e0335dc346a18d91))
+* **docs:** Small fixes to v4 tutorial pages. ([9654eef](https://github.com/lowdefy/lowdefy/commit/9654eef9a0e0ece57d5e66f6400d8265e9346466))
+* **docs:** Small grammar changes on introduction page. ([2185f7c](https://github.com/lowdefy/lowdefy/commit/2185f7c393e3cb32cf216ae86ec4d59f0b1a25a3))
+* **docs:** Small grammar changes on overview concept page. ([d7f5f95](https://github.com/lowdefy/lowdefy/commit/d7f5f958bb5326e80b79cad66c7c811233af2893))
+* **docs:** Update example tutorial code repo links. ([96399a2](https://github.com/lowdefy/lowdefy/commit/96399a2f88c7c58f5e0d8d837f92ffad1791ecf2))
+* **docs:** Update overview page. ([89863fc](https://github.com/lowdefy/lowdefy/commit/89863fc7b13f4acb5a505ef5ec46d2922d92fbeb))
+* **docs:** Update the introduction page for v4. ([d0cee2d](https://github.com/lowdefy/lowdefy/commit/d0cee2d77ddcf5a84e9eb41283c1128170870c47))
+* **docs:** Update tutorial to reference pnpm instead of npm. ([03779d5](https://github.com/lowdefy/lowdefy/commit/03779d5cfac0a1aa60c314008ea9419ede966cff))
+* **docs:** Updated moment operator description ([875f0ae](https://github.com/lowdefy/lowdefy/commit/875f0aeb8da33e7a316840835896c08db2431845))
+* Fix broken ref in docs ([10cdb56](https://github.com/lowdefy/lowdefy/commit/10cdb561c6e9c7078bab4af09b20d2da762d9f4b))
+
+
+### Features
+
+* **docs:** Add updated tutorial for v4. ([7b9cb77](https://github.com/lowdefy/lowdefy/commit/7b9cb7798503463120ba730c81d6e0ae6ba46fd5))
+* **docs:** Added intl operator doc ([924f7fa](https://github.com/lowdefy/lowdefy/commit/924f7fa4d7b5c47765184bc72f9d3a4b7e410d40))
+* **docs:** Added moment operator doc ([4c8540b](https://github.com/lowdefy/lowdefy/commit/4c8540b711c7773e48d01b05c2040fdef5016e46))
+* **docs:** Rename some tutorial files and minor fixes. ([0b1122d](https://github.com/lowdefy/lowdefy/commit/0b1122d9687a15673f2cfae030df09e6092fe9ca))
+* **docs:** Update tutorial-start. ([200bcb0](https://github.com/lowdefy/lowdefy/commit/200bcb0429680f374afcf51bf0a770a956bf08a4))
+* **docs:** Updated date operator doc with more methods ([fb423d7](https://github.com/lowdefy/lowdefy/commit/fb423d7307141bba482dd3a837530abd5501e76f))
+* Updates to overview page. ([936159c](https://github.com/lowdefy/lowdefy/commit/936159cfc0762837fb1dd7a4e427d51e507f7831))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/docs
