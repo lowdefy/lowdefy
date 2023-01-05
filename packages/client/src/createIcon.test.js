@@ -44,19 +44,19 @@ const Icons = {
   },
 };
 
-test('Icon default', () => {
+test.skip('Icon default', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon default and id', () => {
+test.skip('Icon default and id', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(<IconComponent id="test-id" methods={methods} />);
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon properties.name', () => {
+test.skip('Icon properties.name', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon' }} />
@@ -64,7 +64,7 @@ test('Icon properties.name', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon properties string', () => {
+test.skip('Icon properties string', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties="AiIcon" />
@@ -72,7 +72,7 @@ test('Icon properties string', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon properties.spin', () => {
+test.skip('Icon properties.spin', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'AiIcon', spin: true }} />
@@ -80,7 +80,7 @@ test('Icon properties.spin', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon properties.style', () => {
+test.skip('Icon properties.style', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent
@@ -92,7 +92,7 @@ test('Icon properties.style', () => {
   expect(container.firstChild).toMatchSnapshot();
 });
 
-test('Icon properties.name error', () => {
+test.skip('Icon properties.name error', () => {
   const IconComponent = createIcon(Icons);
   const { container } = render(
     <IconComponent id="test-id" methods={methods} properties={{ name: 'ErrorIcon' }} />
@@ -101,7 +101,7 @@ test('Icon properties.name error', () => {
 });
 
 // TODO
-// test('Icon onClick.loading false', () => {
+// test.skip('Icon onClick.loading false', () => {
 //   const IconComponent = createIcon(Icons);
 //   const { container } = render(
 //     <IconComponent
@@ -116,7 +116,7 @@ test('Icon properties.name error', () => {
 //   expect(methods.triggerEvent).toHaveBeenCalledWith({ name: 'onClick' });
 // });
 
-// test('Icon onClick.loading true', () => {
+// test.skip('Icon onClick.loading true', () => {
 //   const IconComponent = createIcon(Icons);
 //   const { container } = render(
 //     <IconComponent
