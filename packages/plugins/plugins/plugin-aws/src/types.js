@@ -16,8 +16,18 @@
 */
 
 import * as connections from './connections.js';
+import * as blocks from './blocks.js';
 
+const icons = {};
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  icons[block] = blocks[block].meta.icons || [];
+  styles[block] = blocks[block].meta.styles || [];
+});
 export default {
+  blocks: Object.keys(blocks),
+  icons,
+  styles: { default: [], ...styles },
   connections: Object.keys(connections),
   requests: Object.keys(connections)
     .map((connection) => Object.keys(connections[connection].requests))

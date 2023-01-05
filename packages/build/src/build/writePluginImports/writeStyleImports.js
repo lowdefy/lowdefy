@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const template = `@import '@lowdefy/layout/style.less';
@@ -21,13 +23,19 @@ const template = `@import '@lowdefy/layout/style.less';
 {% for style in styles -%}
 @import '{{ style }}';
 {% endfor -%}
+{% if importUserStyles %}
+@import '../../public/styles.less';
+{% endif %}
 `;
 
 async function writeStyleImports({ components, context }) {
   const templateFn = nunjucksFunction(template);
   await context.writeBuildArtifact(
     'plugins/styles.less',
-    templateFn({ styles: components.imports.styles })
+    templateFn({
+      styles: components.imports.styles,
+      importUserStyles: fs.existsSync(path.join(context.directories.config, 'public/styles.less')),
+    })
   );
 }
 

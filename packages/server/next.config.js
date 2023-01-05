@@ -4,11 +4,6 @@ const lowdefyConfig = require('./build/config.json');
 // TODO: Trace env and args from cli that is required on the server.
 module.exports = withLess({
   basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
-  lessLoaderOptions: {
-    lessOptions: {
-      modifyVars: lowdefyConfig.theme.lessVariables,
-    },
-  },
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -27,9 +22,11 @@ module.exports = withLess({
   },
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
-  // experimental: {
-  //   concurrentFeatures: true,
-  // },
+  experimental: {
+    // TODO: Convert from experimental.outputStandalone to output: 'standalone' when upgrading to Next 13
+    outputStandalone: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' || false,
+    // concurrentFeatures: true,
+  },
   outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,

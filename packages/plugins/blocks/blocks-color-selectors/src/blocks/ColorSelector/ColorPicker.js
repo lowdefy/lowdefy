@@ -28,18 +28,17 @@ export const ColorPicker = ({
   hideInput,
   onChange,
   size,
-  undefinedColor,
-  value,
+  value = DEFAULT_COLOR,
 }) => {
   const popover = useRef();
   const [isOpen, toggle] = useState(false);
-  const [color, setColor] = useState(value || undefinedColor || DEFAULT_COLOR);
 
   const close = useCallback((newColor) => {
     toggle(false);
     onChange(newColor);
   }, []);
-  useClickOutside(popover, close, color);
+
+  useClickOutside(popover, close, value);
   return (
     <div
       className={classNames({
@@ -54,7 +53,7 @@ export const ColorPicker = ({
           'color-picker-swatch-lg': size === 'large',
           'color-picker-swatch-disabled': disabled,
         })}
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: value }}
         onClick={() => !disabled && toggle(true)}
       />
       {!hideInput && (
@@ -67,9 +66,8 @@ export const ColorPicker = ({
             'ant-input-sm': size === 'small',
             'ant-input-lg': size === 'large',
           })}
-          color={color}
+          color={value || ''}
           onChange={(newColor) => {
-            setColor(newColor);
             onChange(newColor);
           }}
           prefixed={true}
@@ -78,7 +76,7 @@ export const ColorPicker = ({
       )}
       {isOpen && (
         <div className="color-picker-popover" ref={popover}>
-          <HexColorPicker color={color} onChange={setColor} />
+          <HexColorPicker color={value || DEFAULT_COLOR} onChange={onChange} />
         </div>
       )}
     </div>

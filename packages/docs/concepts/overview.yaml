@@ -24,22 +24,23 @@ _ref:
         type: Markdown
         properties:
           content: |
-            ##### TODO: This page needs to be updated.
+            A Lowdefy app is a [Next.js](https://nextjs.org) application, that interprets / evaluates Lowdefy config. Lowdefy apps are written as YAML configuration files, which are easy to read, write and understand - and can be managed in source control. This makes Lowdefy quick to learn, maintain and pick up where others left off.
 
-            Lowdefy apps are written as YAML configuration files. These files can be managed in source control, and multiple apps can be deployed with the same configuration. To serve an app, the configuration first needs to be built using the Lowdefy CLI. A Lowdefy server can then serve the build artifacts.
+            Lowdefy can be considered as another level of abstraction on top of Next.js. The Lowdefy schema is designed to be a standardized, declarative and flexible expression of application parameters and logic. This allows developers to focus on translating the business problem into configuration.
 
-            You need to host your own Lowdefy server. We want to enable you to host a Lowdefy anywhere and Lowdefy was designed to run in a serverless environment. Currently, you can host Lowdefy apps on Netlify, and as a Docker container.
+            The Lowdefy schema abstracts app definitions into 5 categories:
+            - [**Blocks**](/blocks): The building blocks of the UI, the client-side React component to render. Blocks are usually stateless since all app state is managed by the Lowdefy engine.
+            - [**Operators**](/operators): The application logic is defined using operator functions, which can be used both server-side and client-side. These are synchronous methods, which are continuously evaluated every time the app state changes.
+            - [**Actions**](/actions): Asynchronous client-side methods triggered by events, such as clicking a button or initializing the page state. These methods usually apply an action like setting state, using the ([SetState](/SetState)) action, or calling a request, using the [Request]/Request action.
+            - [**Connections and Requests**](connections-and-requests): Asynchronous server-side methods, which allow a Lowdefy app to make server requests to other services like APIs or databases. Requests are evoked by the [Request]/Request action, and are only called after all user authentication and authorization checks have passed. Requests consume a payload from the client, and have access to server-side secrets like passwords and API keys.
+            - [**Auth Providers and Adapters**](/authentication): Lowdefy implements [NextAuth.js](https://next-auth.js.org) for authentication. NextAuth allows for the configuration of a wide range of authentication providers and adapters, which can be configured in Lowdefy apps.
 
             The diagram below provides an overview of the Lowdefy app schematic:
-            ![Lowdefy App Diagram](https://deploy-preview-481--lowdefy-docs.netlify.app/lowdefy_app_schema.png "Lowdefy App Diagram")
+            ![Lowdefy App Diagram](/images/lowdefy_app_schema.png)
 
-            The Lowdefy server manages connections and executes requests, serves a web client, and serves the configuration for app pages to the client. The server does not have a data-store, but can connect to external data sources like APIs and databases.
+            Lowdefy offers a large number of default actions, blocks, operators, connections, and auth integrations - but also provides a [plugin interface](/plugins) for the extension of new types. All plugins are installed as [npm](https://www.npmjs.com/) modules, which means you can extend your Lowdefy application by any existing npm module - enabling developers to make use of anything that is available in the Javascript ecosystem.
 
-            The Lowdefy web client manages the layout and loading of Lowdefy blocks. Blocks are loaded to the client using _webpack Module Federation_. This means that Lowdefy blocks are external to your apps and can be hosted separately on any static file server, which allows you to extend Lowdefy's capabilities with custom Lowdefy blocks.
-
-            The client also manages each context in the app, executes actions that are triggered by events, and evaluates operators that allow for "live updates" to the UI.
-
-            Authentication for private pages in Lowdefy apps is implemented by connecting to your preferred, external OpenID Connect provider.
+            Since Lowdefy apps are self-hosted Next.js applications, they do not ship with a built in data store and typically connect to one or more APIs or databases. Server instances are also stateless, which simplifies deployment. We recommend using [Vercel](https://vercel.com) since it is the hosting platform provided by the team behind Next.js. Alternatively, you can deploy your app using Docker or use another hosting provider that supports hosting Next.js applications.
 
       - _ref:
           path: templates/navigation_buttons.yaml

@@ -25,9 +25,6 @@ function validateConfig({ components }) {
   if (!type.isObject(components.config)) {
     throw new Error('lowdefy.config is not an object.');
   }
-  if (type.isNone(components.config.theme)) {
-    components.config.theme = {};
-  }
   if (type.isString(components.config.basePath)) {
     if (components.config.basePath[0] !== '/') {
       throw Error('Base path must start with "/".');

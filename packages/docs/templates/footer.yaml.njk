@@ -37,8 +37,8 @@
       align: middle
       gutter: 16
       blocks:
-        - id: cry_anchor
-          type: Anchor
+        - id: cry_box
+          type: Box
           visible:
             _not:
               _state: feedback_sent
@@ -54,15 +54,15 @@
                 then: 48
                 else: 32
           properties:
-            title: 😭
+            content: 😭
           events:
             onClick:
               - id: resize
                 type: SetState
                 params:
                   feedback.score: cry
-        - id: sad_anchor
-          type: Anchor
+        - id: sad_box
+          type: Box
           visible:
             _not:
               _state: feedback_sent
@@ -78,15 +78,15 @@
                 then: 48
                 else: 32
           properties:
-            title: 😟
+            content: 😟
           events:
             onClick:
               - id: resize
                 type: SetState
                 params:
                   feedback.score: sad
-        - id: smile_anchor
-          type: Anchor
+        - id: smile_box
+          type: Box
           visible:
             _not:
               _state: feedback_sent
@@ -102,15 +102,15 @@
                 then: 48
                 else: 32
           properties:
-            title: 😊
+            content: 😊
           events:
             onClick:
               - id: resize
                 type: SetState
                 params:
                   feedback.score: smile
-        - id: happy_anchor
-          type: Anchor
+        - id: happy_box
+          type: Box
           visible:
             _not:
               _state: feedback_sent
@@ -126,7 +126,7 @@
                 then: 48
                 else: 32
           properties:
-            title: 😀
+            content: 😀
           events:
             onClick:
               - id: resize

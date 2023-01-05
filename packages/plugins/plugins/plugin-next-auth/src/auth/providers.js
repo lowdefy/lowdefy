@@ -74,6 +74,7 @@ import workos from 'next-auth/providers/workos';
 import yandex from 'next-auth/providers/yandex';
 import zoho from 'next-auth/providers/zoho';
 import zoom from 'next-auth/providers/zoom';
+import OpenIDConnectProvider from './OpenIDConnectProvider.js';
 
 const FortyTwoProvider = forty_two_school.default;
 const AppleProvider = apple.default;
@@ -171,6 +172,7 @@ export {
   NetlifyProvider,
   OktaProvider,
   OneLoginProvider,
+  OpenIDConnectProvider,
   OssoProvider,
   OsuProvider,
   PatreonProvider,

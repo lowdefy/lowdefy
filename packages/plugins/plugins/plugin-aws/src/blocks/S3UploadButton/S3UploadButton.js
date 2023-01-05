@@ -60,6 +60,7 @@ const getCustomRequest =
 
       const { url, fields } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
       const { bucket, key } = fields;
+      const meta = { bucket, key, filename: name, size, type, uid };
 
       setS3Parameters((prevState) => {
         const ret = { ...prevState };
@@ -84,12 +85,22 @@ const getCustomRequest =
           onProgress({ percent: (event.loaded / event.total) * 80 + 20 });
         }
       };
-      xhr.addEventListener('error', onError);
-      xhr.addEventListener('load', onSuccess);
+      xhr.addEventListener('error', async (event) => {
+        await methods.triggerEvent({ name: 'onError', event: { meta, event } });
+        onError(event);
+      });
+      xhr.addEventListener('load', async (event) => {
+        await methods.triggerEvent({ name: 'onSuccess', event: { meta, event } });
+        onSuccess(event);
+      });
+      xhr.addEventListener('loadend', async (event) => {
+        await methods.triggerEvent({ name: 'onDone', event: { meta, event } });
+      });
       xhr.open('post', url);
       xhr.send(formData);
     } catch (error) {
       console.error(error);
+      await methods.triggerEvent({ name: 'onError', event: { meta, event } });
       onError(error);
     }
   };

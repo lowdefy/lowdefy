@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* **build:** Remove validateConfig theme config default. ([8b0c02b](https://github.com/lowdefy/lowdefy/commit/8b0c02b1dbba05ca8c5a56bc7b5c927a6db5cf0e))
+
+
+### Features
+
+* Add support for user defined style files ([d33049b](https://github.com/lowdefy/lowdefy/commit/d33049b1b95f6bc84c9b91c2d15b92601210615e))
+* **plugin-aws:** Make s3 blocks available for use. ([26c4d15](https://github.com/lowdefy/lowdefy/commit/26c4d15c3cfa0220b2c783592f36ebdb5e32c334))
+* Remove support for config.theme.lessVariables ([53a6931](https://github.com/lowdefy/lowdefy/commit/53a693146d1299cff45c81dcefa1315d530b7d98))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 

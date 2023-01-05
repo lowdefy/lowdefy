@@ -23,31 +23,7 @@ test('validateConfig no config defined', () => {
   const components = {};
   const result = validateConfig({ components, context });
   expect(result).toEqual({
-    config: {
-      theme: {},
-    },
-  });
-});
-
-test('validate config theme', () => {
-  const components = {
-    config: {
-      theme: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
-      },
-    },
-  };
-  const result = validateConfig({ components, context });
-  expect(result).toEqual({
-    config: {
-      theme: {
-        lessVariables: {
-          'primary-color': '#FF00FF',
-        },
-      },
-    },
+    config: {},
   });
 });
 
@@ -68,7 +44,6 @@ test('validateConfig config error when basePath does not start with "/".', () =>
   expect(result).toEqual({
     config: {
       basePath: '/base',
-      theme: {},
     },
   });
   components = {
