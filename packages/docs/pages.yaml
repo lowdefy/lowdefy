@@ -1,15 +1,12 @@
 - _ref: introduction.yaml
 - _ref: tutorial/tutorial-start.yaml
-# - _ref: tutorial/tutorial-create-page.yaml
-# - _ref: tutorial/tutorial-create-page-config.yaml
-# - _ref: tutorial/tutorial-add-blocks.yaml
-# - _ref: tutorial/tutorial-add-blocks-config.yaml
-# - _ref: tutorial/tutorial-actions-operators.yaml
-# - _ref: tutorial/tutorial-actions-operators-config.yaml
-# - _ref: tutorial/tutorial-requests.yaml
-# - _ref: tutorial/tutorial-requests-config.yaml
-# - _ref: tutorial/tutorial-deploy.yaml
-# - _ref: tutorial/next-steps.yaml
+- _ref: tutorial/tutorial-create-page.yaml
+- _ref: tutorial/tutorial-add-blocks.yaml
+- _ref: tutorial/tutorial-actions-operators.yaml
+- _ref: tutorial/tutorial-requests-api.yaml
+- _ref: tutorial/tutorial-requests-sql.yaml
+- _ref: tutorial/tutorial-display-data-page.yaml
+- _ref: tutorial/tutorial-next-steps.yaml
 
 # - _ref:
 #     path: howto/generate-csv.yaml.njk
