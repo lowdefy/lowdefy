@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* Add next config todo note ([1b9e7b9](https://github.com/lowdefy/lowdefy/commit/1b9e7b979198dcdfd9ddb2d5b5a896d0df7a7611))
+
+
+### Features
+
+* Add output standalone config to next config for docker deployments ([ac662fe](https://github.com/lowdefy/lowdefy/commit/ac662fefbeae43e01ab63c2f7b81dab51179a6ad))
+* Remove support for config.theme.lessVariables ([53a6931](https://github.com/lowdefy/lowdefy/commit/53a693146d1299cff45c81dcefa1315d530b7d98))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/server

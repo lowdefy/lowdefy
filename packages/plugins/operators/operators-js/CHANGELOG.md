@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Bug Fixes
+
+* **operators-js:** Add null as valid type to string operator methods. ([2d9903b](https://github.com/lowdefy/lowdefy/commit/2d9903b97359fe4609d33676f0d3bac3357f06b9))
+* **operators-js:** Set operators-js tests to use UTC timezone ([8bc1341](https://github.com/lowdefy/lowdefy/commit/8bc1341cd0318b00143036e54daf5d959e928477))
+* **operators-js:** Update _string tests. ([62890b1](https://github.com/lowdefy/lowdefy/commit/62890b1b96f77913e7b352b65f3b43e48224818e))
+* **operators-js:** Updated parse and UTC in date operator ([b890455](https://github.com/lowdefy/lowdefy/commit/b8904559fccd15a1851051a1e3d8284b28f84553))
+
+
+### Features
+
+* **operators-js:** Updated date operator with more methods and tests ([d19cf2e](https://github.com/lowdefy/lowdefy/commit/d19cf2eccc2d425e5825e88744b3c7359a9fc923))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/operators-js
