@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import input from './input.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('input calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const input = (await import('./input.js')).default;
   input({
     arrayIndices: [0],
     input: { input: true },

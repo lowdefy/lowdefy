@@ -13,14 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import get from './get.js';
 
-jest.mock('@lowdefy/operators', () => ({
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('_get calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const get = (await import('./get.js')).default;
+
   get({
     arrayIndices: [0],
     location: 'location',
@@ -45,7 +48,8 @@ test('_get calls getFromObject', async () => {
   ]);
 });
 
-test('_get returns null if from is null', () => {
+test('_get returns null if from is null', async () => {
+  const get = (await import('./get.js')).default;
   const input = {
     arrayIndices: [0],
     location: 'location',
@@ -57,7 +61,8 @@ test('_get returns null if from is null', () => {
   expect(get(input)).toBe(null);
 });
 
-test('_get returns default value if from is null', () => {
+test('_get returns default value if from is null', async () => {
+  const get = (await import('./get.js')).default;
   const input = {
     arrayIndices: [0],
     location: 'location',
@@ -70,7 +75,9 @@ test('_get returns default value if from is null', () => {
   expect(get(input)).toBe('default');
 });
 
-test('_get throws if params is not a object', () => {
+test('_get throws if params is not a object', async () => {
+  const get = (await import('./get.js')).default;
+
   const input = {
     arrayIndices: [0],
     location: 'location',
@@ -81,7 +88,9 @@ test('_get throws if params is not a object', () => {
   );
 });
 
-test('_get throws if from is not a object, array or null', () => {
+test('_get throws if from is not a object, array or null', async () => {
+  const get = (await import('./get.js')).default;
+
   const input = {
     arrayIndices: [0],
     location: 'location',

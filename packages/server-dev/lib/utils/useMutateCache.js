@@ -17,18 +17,9 @@
 import { useSWRConfig } from 'swr';
 
 function useMutateCache(basePath) {
-  const { cache, mutate } = useSWRConfig();
-  return () => {
-    const keys = [`${basePath}/api/root`];
-
-    for (const key of cache.keys()) {
-      if (key.startsWith(`${basePath}/api/page`)) {
-        keys.push(key);
-      }
-    }
-    const mutations = keys.map((key) => mutate(key));
-    return Promise.all(mutations);
-  };
+  const { mutate } = useSWRConfig();
+  return () =>
+    mutate((key) => key.startsWith(`${basePath}/api/page`) || key === `${basePath}/api/root`);
 }
 
 export default useMutateCache;

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import url_query from './url_query.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
@@ -24,6 +24,7 @@ const globals = { window: { location: { search: '?some=value' } } };
 
 test('url_query calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const url_query = (await import('./url_query.js')).default;
   url_query({
     arrayIndices: [0],
     globals,

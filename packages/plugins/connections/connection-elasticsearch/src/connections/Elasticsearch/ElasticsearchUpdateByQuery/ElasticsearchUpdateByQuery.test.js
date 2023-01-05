@@ -14,17 +14,12 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import ElasticsearchUpdateByQuery from './ElasticsearchUpdateByQuery.js';
-
-const { checkRead, checkWrite } = ElasticsearchUpdateByQuery.meta;
-const schema = ElasticsearchUpdateByQuery.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.updateByQuery = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -33,7 +28,9 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const schema = ElasticsearchUpdateByQuery.schema;
   const request = {
     query: {
       match_all: {},
@@ -42,20 +39,28 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, no query', () => {
+test('valid request schema, no query', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const schema = ElasticsearchUpdateByQuery.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('checkRead should be false', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const { checkRead } = ElasticsearchUpdateByQuery.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const { checkWrite } = ElasticsearchUpdateByQuery.meta;
   expect(checkWrite).toBe(true);
 });
 
 test('ElasticsearchUpdateByQuery', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
   const responseData = {
     body: {
       took: 147,
