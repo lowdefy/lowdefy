@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
+            A Lowdefy app is written as YAML or JSON files, which are combined together using the [`_ref`](/_ref) operator when the app is built into a configuration object that describes the app. This object has different sections that describe different parts of the Lowdefy app.
 
       - id: yaml_understanding_alert
         type: Alert
