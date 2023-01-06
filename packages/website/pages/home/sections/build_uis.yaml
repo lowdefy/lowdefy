@@ -1,0 +1,53 @@
+id: build_uis_box
+type: Box
+layout:
+  contentGutter: 16
+properties:
+  style:
+    padding: 48px 15% 48px 15%
+blocks:
+  - id: build_uis_box
+    type: Box
+    layout:
+      span: 12
+    blocks:
+      - id: build_uis_content
+        type: Html
+        properties:
+          html: |
+            <hr style="margin-left:0;">
+            <h2>
+              Build great UIs with ease
+            </h2>
+            <h4>
+              Lowdefy provides you all the blocks you need to get started fast. Easily assemble custom web apps that fit your exact needs.
+            </h4>
+            <ul>
+              <li><h4> Build UIs with YAML that is easy to read and write. </h4></li>
+              <li><h4>  Dynamic UIs with simple state management. </h4></li>
+              <li><h4>  Mobile friendly and responsive layouts out of the box. </h4></li>
+              <li><h4>  Make custom YAML nunjucks templates which enable reusability. </h4></li>
+            </ul>
+
+      - id: visit_docs
+        type: Button
+        properties:
+          title: Visit the docs to experience more blocks in action →
+          type: link
+          size: large
+        events:
+          onClick:
+            - id: link
+              type: Link
+              params:
+                url: https://docs.lowdefy.com/Button
+
+  - id: lowdefy_gif
+    type: Html
+    layout:
+      span: 12
+    properties:
+      html: |
+        <p align="center">
+          <img alt="Lowdefy"  src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" data-canonical-src="https://user-images.githubusercontent.com/7165064/121780045-d0021200-cb9e-11eb-84f9-ff67c8255ec6.gif" width="90%" />
+        </p>
