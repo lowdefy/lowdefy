@@ -14,3 +14,4 @@ blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/build_internal.yaml
   - _ref: pages/home/sections/build_uis.yaml
+  - _ref: pages/home/sections/examples.yaml

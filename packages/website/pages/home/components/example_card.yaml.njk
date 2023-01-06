@@ -1,0 +1,33 @@
+id: {{ id }}
+type: Card
+layout:
+  span: 6
+properties:
+  style:
+    minHeight: 400
+blocks:
+  - id: title
+    type: Html
+    properties:
+      html: |
+        <a href="{{ view}}" >
+          <img style="width: 100%;" src="{{ image }}" alt="{{alt}}"/>
+        </a>
+        <h3>
+          {{ example }}
+        </h3>
+        <p>
+          {{ desc }}
+        </p>
+
+  - id: git_button
+    type: Button
+    properties:
+      title: View on GitHub
+      icon: AiOutlineGithub
+    events:
+      onClick:
+        - id: link
+          type: Link
+          params:
+            url: {{ git }}
