@@ -17,3 +17,4 @@ blocks:
   - _ref: pages/home/sections/examples.yaml
   - _ref: pages/home/sections/give_it_a_try.yaml
   - _ref: pages/home/sections/connect.yaml
+  - _ref: pages/home/sections/open_source.yaml
