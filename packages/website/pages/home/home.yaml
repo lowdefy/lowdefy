@@ -16,3 +16,4 @@ blocks:
   - _ref: pages/home/sections/build_uis.yaml
   - _ref: pages/home/sections/examples.yaml
   - _ref: pages/home/sections/give_it_a_try.yaml
+  - _ref: pages/home/sections/connect.yaml

@@ -1,0 +1,27 @@
+id: connect_box
+type: Box
+properties:
+  style:
+    padding: 48px 15% 48px 15%
+blocks:
+  - id: connect_content
+    type: Html
+    layout:
+      span: 12
+    properties:
+      html: |
+        <hr style="margin-left:0;">
+        <h2>
+          Connect to your data and apps
+        </h2>
+        <h4>
+          Make API calls to existing services or read and write from your databases. Create web apps, internal tools, admin consoles, BI dashboards, and more.
+        </h4>
+        <ul>
+          <li><h4> Build dynamic queries using variables and logic operators. </h4></li>
+          <li><h4> Access a shared state between client and server. </h4></li>
+          <li><h4> Securely use secrets like passwords and API keys. </h4></li>
+        </ul>
+        <h4> We are continuously creating more connectors, add the ones you need to <a href='https://github.com/lowdefy/lowdefy/discussions/309'> the voting board </a>. Custom connectors are coming soon. </h4>
+
+  ## TODO: Add buttons collage for implemented connections using a custom button component (to allow images in place of icons)
