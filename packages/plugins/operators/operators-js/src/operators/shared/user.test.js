@@ -14,20 +14,16 @@
   limitations under the License.
 */
 
-import user from './user.js';
-jest.mock('@lowdefy/operators', () => ({
+import { jest } from '@jest/globals';
+
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
-const input = {
-  arrayIndices: [0],
-  location: 'location',
-  params: 'params',
-  user: { name: 'first name' },
-};
-
 test('user calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const user = (await import('./user.js')).default;
+
   user({
     arrayIndices: [0],
     location: 'location',

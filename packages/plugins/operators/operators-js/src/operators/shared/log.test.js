@@ -15,6 +15,7 @@
 */
 
 /* eslint-disable max-classes-per-file */
+import { jest } from '@jest/globals';
 import _log from './log.js';
 
 const location = 'location';

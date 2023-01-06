@@ -14,17 +14,12 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import ElasticsearchDeleteByQuery from './ElasticsearchDeleteByQuery.js';
-
-const { checkRead, checkWrite } = ElasticsearchDeleteByQuery.meta;
-const schema = ElasticsearchDeleteByQuery.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.deleteByQuery = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -33,7 +28,9 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+  const schema = ElasticsearchDeleteByQuery.schema;
   const request = {
     query: {
       match_all: {},
@@ -42,20 +39,29 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, no query', () => {
+test('valid request schema, no query', async () => {
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+  const schema = ElasticsearchDeleteByQuery.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('checkRead should be false', async () => {
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+  const { checkRead } = ElasticsearchDeleteByQuery.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+  const { checkWrite } = ElasticsearchDeleteByQuery.meta;
   expect(checkWrite).toBe(true);
 });
 
 test('ElasticsearchDeleteByQuery', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+
   const responseData = {
     body: {
       took: 147,

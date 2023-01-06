@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import createCachedPromises from './cachedPromises.js';
 import wait from './wait.js';
 

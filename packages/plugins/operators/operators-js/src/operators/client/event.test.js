@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import event from './event.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('event calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const event = (await import('./event.js')).default;
   event({
     arrayIndices: [0],
     event: { event: true },

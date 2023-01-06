@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import ElasticsearchDelete from './ElasticsearchDelete.js';
-
-const { checkRead, checkWrite } = ElasticsearchDelete.meta;
-const schema = ElasticsearchDelete.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.delete = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -32,13 +28,17 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  const schema = ElasticsearchDelete.schema;
   const request = {
     id: '42',
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
-test('valid request schema, numeric ID', () => {
+test('valid request schema, numeric ID', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  const schema = ElasticsearchDelete.schema;
   const request = {
     id: 42,
   };
@@ -46,6 +46,8 @@ test('valid request schema, numeric ID', () => {
 });
 
 test('request no ID', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  const schema = ElasticsearchDelete.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'ElasticsearchDelete request should have required property "id".'
@@ -53,14 +55,20 @@ test('request no ID', async () => {
 });
 
 test('checkRead should be false', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  const { checkRead } = ElasticsearchDelete.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  const { checkWrite } = ElasticsearchDelete.meta;
   expect(checkWrite).toBe(true);
 });
 
 test('ElasticsearchDelete', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
   const responseData = {
     body: {
       _index: 'test',
