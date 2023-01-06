@@ -49,7 +49,7 @@ _ref:
               params:
                 filename: profiles.csv
                 data:
-                  - Username: booker12 # an array of data, usually a reference
+                  - Username: booker12 # an array of data, usually a request
                     Identifier: 9012
                     FirstName: Rachel
                     LastName: Booker
@@ -76,7 +76,7 @@ _ref:
                   - LastName
       ```
 
-      ###### Generate a CSV using a reference:
+      ###### Generate a CSV using a request:
       ```yaml
       - id: generate_csv
         type: Button
@@ -95,7 +95,7 @@ _ref:
               params:
                 filename: profiles.csv
                 data:
-                  _request: get_data # an array of data, from a reference
+                  _request: get_data # an array of data, from a request
                 fields:
                   - Username # an array of field definitions
                   - Identifier
