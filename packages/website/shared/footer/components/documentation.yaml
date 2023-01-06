@@ -2,15 +2,18 @@ id: documentation_box
 type: Box
 layout:
   span: 8
+properties:
+  style:
+    paddingLeft: 50%
 blocks:
   - id: documentation
     type: Html
     properties:
       html: |
-        <a href="https://docs.lowdefy.com/introduction" >
-          Documentation
-        </a>
-        <ul>
+        <ul style="list-style: none;">
+          <a href="https://docs.lowdefy.com/introduction" >
+            Documentation
+          </a>
           <li>
             <a href="https://docs.lowdefy.com/tutorial-start" style='color: black'>
                 Quick Start

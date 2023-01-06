@@ -2,6 +2,7 @@ id: subscribe_box
 type: Box
 layout:
   span: 8
+  contentGutter: 8
 style:
   textAlign: center
 blocks:
@@ -17,7 +18,7 @@ blocks:
   - id: email
     type: TextInput
     layout:
-      span: 14
+      flex: 1 1 auto
     properties:
       placeholder: Enter your email
       label:
@@ -26,7 +27,7 @@ blocks:
   - id: subscribe
     type: Button
     layout:
-      span: 10
+      flex: 0 1 auto
     properties:
       title: Subscribe
       style:

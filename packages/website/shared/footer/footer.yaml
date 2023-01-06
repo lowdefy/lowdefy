@@ -2,7 +2,7 @@ id: footer_box
 type: Box
 properties:
   style:
-    padding: 48px 15% 0px 15%
+    padding: 48px 20% 0px 20%
 blocks:
   - _ref: shared/footer/components/connect.yaml
   - _ref: shared/footer/components/subscribe.yaml

@@ -1,12 +1,12 @@
 id: copyright_box
 type: Box
-style:
-  textAlign: center
+properties:
+  style:
+    paddingTop: 48px
+    textAlign: center
 blocks:
   - id: copyright
     type: Html
-    # style:
-    #   fontSize: 10px
     properties:
       html:
         _nunjucks:
