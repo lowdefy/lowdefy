@@ -42,18 +42,14 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
     "clean": "rm -rf .lowdefy",
-    "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-alpha.37"
   },
   "devDependencies": {
-    "@jest/globals": "28.1.0",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.194",
-    "@swc/jest": "0.2.21",
-    "jest": "28.1.0"
+    "@swc/core": "1.2.194"
   },
   "publishConfig": {
     "access": "public"
