@@ -1,26 +1,12 @@
 - _ref: introduction.yaml
 - _ref: tutorial/tutorial-start.yaml
-# - _ref: tutorial/tutorial-create-page.yaml
-# - _ref: tutorial/tutorial-create-page-config.yaml
-# - _ref: tutorial/tutorial-add-blocks.yaml
-# - _ref: tutorial/tutorial-add-blocks-config.yaml
-# - _ref: tutorial/tutorial-actions-operators.yaml
-# - _ref: tutorial/tutorial-actions-operators-config.yaml
-# - _ref: tutorial/tutorial-requests.yaml
-# - _ref: tutorial/tutorial-requests-config.yaml
-# - _ref: tutorial/tutorial-deploy.yaml
-# - _ref: tutorial/next-steps.yaml
-
-# - _ref:
-#     path: howto/generate-csv.yaml.njk
-#     vars:
-#       version:
-#         _ref: version.yaml
-# - _ref:
-#     path: howto/generate-pdf.yaml.njk
-#     vars:
-#       version:
-#         _ref: version.yaml
+- _ref: tutorial/tutorial-create-page.yaml
+- _ref: tutorial/tutorial-add-blocks.yaml
+- _ref: tutorial/tutorial-actions-operators.yaml
+- _ref: tutorial/tutorial-requests-api.yaml
+- _ref: tutorial/tutorial-requests-sql.yaml
+- _ref: tutorial/tutorial-display-data-page.yaml
+- _ref: tutorial/tutorial-next-steps.yaml
 
 - _ref: concepts/overview.yaml
 - _ref: concepts/cli.yaml
@@ -142,10 +128,12 @@
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/DisplayMessage.yaml
+- _ref: actions/DownloadCsv.yaml
 - _ref: actions/Fetch.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
+- _ref: actions/PdfMake.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml

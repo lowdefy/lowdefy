@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
+
+
+### Features
+
+* **plugin-next-auth:** Add OpenIDConnectProvider. ([abbc62a](https://github.com/lowdefy/lowdefy/commit/abbc62aebbfa00596e941bcf1d0f3f71522bdca0))
+* **plugin-next-auth:** Update OpenIDConnectProvider. ([c5fdeb7](https://github.com/lowdefy/lowdefy/commit/c5fdeb7fa7df882f9cedcc07f80af8743471a1b3))
+
+
+
+
+
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/plugin-next-auth

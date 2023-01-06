@@ -15,6 +15,8 @@
 */
 
 /* eslint-disable max-classes-per-file */
+
+import { jest } from '@jest/globals';
 import WebParser from './webParser.js';
 
 console.error = () => {};

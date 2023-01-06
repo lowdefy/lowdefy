@@ -121,9 +121,7 @@ test('axios error', async () => {
 });
 
 test('other error', async () => {
-  await expect(AxiosHttp({ request: { url: true } })).rejects.toThrow(
-    'The "url" argument must be of type string. Received type boolean (true)'
-  );
+  await expect(AxiosHttp({ request: { url: true } })).rejects.toThrow('Invalid URL');
 });
 
 // TODO: postman response has changed. Improve tests.

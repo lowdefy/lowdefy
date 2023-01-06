@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-alpha.37",
+  "version": "4.0.0-rc.0",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -39,7 +39,7 @@
     "app:server:next-dev": "pnpm app:cli:build && pnpm -r --filter='@lowdefy/server' dev",
     "app:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../../app && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start",
     "docs:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../docs --server-directory ../server",
-    "docs:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../docs --dev-directory ../server-dev",
+    "docs:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../docs --dev-directory ../server-dev --log-level=debug",
     "docs:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../docs --server-directory ../server",
     "docs:server-dev": "pnpm -r --filter='@lowdefy/server-dev' start --config-directory ../docs",
     "docs:server:next-dev": "pnpm docs:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",
@@ -59,17 +59,17 @@
     "web:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../website && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start"
   },
   "devDependencies": {
-    "eslint": "8.16.0",
-    "eslint-config-prettier": "8.5.0",
+    "eslint": "8.31.0",
+    "eslint-config-prettier": "8.6.0",
     "eslint-import-resolver-node": "0.3.6",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "6.5.1",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.30.0",
-    "eslint-plugin-react-hooks": "4.5.0",
-    "lerna": "5.5.1",
-    "prettier": "2.6.2",
-    "turbo": "1.2.14"
+    "eslint-plugin-jsx-a11y": "6.6.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "7.31.11",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "lerna": "6.3.0",
+    "prettier": "2.8.1",
+    "turbo": "1.6.3"
   },
   "packageManager": "pnpm@7.18.1"
 }

@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetAppendMany from './GoogleSheetAppendMany.js';
-
-const { checkRead, checkWrite } = GoogleSheetAppendMany.meta;
-const schema = GoogleSheetAppendMany.schema;
 
 const mockAddRows = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  addRows: mockAddRows,
-}));
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      addRows: mockAddRows,
+    }),
+  };
+});
 
 const mockAddRowsDefaultImp = (rows) => rows.map((row) => ({ ...row, _sheet: {} }));
 
 test('googleSheetAppendMany, one row', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await GoogleSheetAppendMany({
     request: {
@@ -57,6 +59,7 @@ test('googleSheetAppendMany, one row', async () => {
 });
 
 test('googleSheetAppendMany, two rows', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await GoogleSheetAppendMany({
     request: {
@@ -96,6 +99,7 @@ test('googleSheetAppendMany, two rows', async () => {
 });
 
 test('googleSheetAppendMany, rows empty array', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await GoogleSheetAppendMany({
     request: {
@@ -117,6 +121,7 @@ test('googleSheetAppendMany, rows empty array', async () => {
 });
 
 test('googleSheetAppendMany, transform types', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await GoogleSheetAppendMany({
     request: {
@@ -161,6 +166,7 @@ test('googleSheetAppendMany, transform types', async () => {
 });
 
 test('googleSheetAppendMany, one row, raw true', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
   mockAddRows.mockImplementation(mockAddRowsDefaultImp);
   const res = await GoogleSheetAppendMany({
     request: {
@@ -192,7 +198,9 @@ test('googleSheetAppendMany, one row, raw true', async () => {
   `);
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {
     rows: [
       {
@@ -203,7 +211,9 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, all options', () => {
+test('valid request schema, all options', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {
     rows: [
       {
@@ -217,14 +227,18 @@ test('valid request schema, all options', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request properties should be an object.'
   );
 });
 
-test('rows is not an array', () => {
+test('rows is not an array', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {
     rows: true,
   };
@@ -233,7 +247,9 @@ test('rows is not an array', () => {
   );
 });
 
-test('rows is not an array of objects', () => {
+test('rows is not an array of objects', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {
     rows: [1, 2, 3],
   };
@@ -243,14 +259,18 @@ test('rows is not an array of objects', () => {
   );
 });
 
-test('rows is missing', () => {
+test('rows is missing', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendMany request should have required property "rows".'
   );
 });
 
-test('raw is not a boolean', () => {
+test('raw is not a boolean', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const schema = GoogleSheetAppendMany.schema;
   const request = {
     rows: [
       {
@@ -267,9 +287,13 @@ test('raw is not a boolean', () => {
 });
 
 test('checkRead should be false', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const { checkRead } = GoogleSheetAppendMany.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const GoogleSheetAppendMany = (await import('./GoogleSheetAppendMany.js')).default;
+  const { checkWrite } = GoogleSheetAppendMany.meta;
   expect(checkWrite).toBe(true);
 });

@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import StripeRequest from './StripeRequest.js';
-
-const { checkRead, checkWrite } = StripeRequest.meta;
-const schema = StripeRequest.schema;
 
 const connection = {
   secretKey: 'foo',
 };
 
-jest.mock('stripe', () => {
+jest.unstable_mockModule('stripe', () => {
   return {
-    __esModule: true,
     default: function () {
       return {
         customers: {
@@ -40,19 +36,18 @@ jest.mock('stripe', () => {
   };
 });
 
-afterEach(() => {
-  jest.resetAllMocks();
-  jest.restoreAllMocks();
-});
-
-test('resource missing', () => {
+test('resource missing', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'StripeRequest should contain a resource to call.'
   );
 });
 
-test('multiple resources', () => {
+test('multiple resources', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {},
     customers: {},
@@ -62,7 +57,9 @@ test('multiple resources', () => {
   );
 });
 
-test('invalid resource type', () => {
+test('invalid resource type', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: 'foo',
   };
@@ -71,7 +68,9 @@ test('invalid resource type', () => {
   );
 });
 
-test('invalid method type', () => {
+test('invalid method type', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {
       foo: 'bar',
@@ -83,7 +82,9 @@ test('invalid method type', () => {
   );
 });
 
-test('multiple methods', () => {
+test('multiple methods', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {
       foo: [],
@@ -96,7 +97,9 @@ test('multiple methods', () => {
   );
 });
 
-test('invalid sub-resource type', () => {
+test('invalid sub-resource type', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     foo: {
       bar: {
@@ -110,7 +113,9 @@ test('invalid sub-resource type', () => {
   );
 });
 
-test('multiple sub-resource methods', () => {
+test('multiple sub-resource methods', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     foo: {
       bar: {
@@ -125,7 +130,9 @@ test('multiple sub-resource methods', () => {
   );
 });
 
-test('valid request for resource method', () => {
+test('valid request for resource method', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {
       foo: [],
@@ -135,7 +142,9 @@ test('valid request for resource method', () => {
   return expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request for resource method without arguments', () => {
+test('valid request for resource method without arguments', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {
       foo: null,
@@ -145,7 +154,9 @@ test('valid request for resource method without arguments', () => {
   return expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request for resource method with arguments', () => {
+test('valid request for resource method with arguments', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     accounts: {
       foo: ['bar', 42, true, { test: true }],
@@ -155,7 +166,9 @@ test('valid request for resource method with arguments', () => {
   return expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request for sub-resource method', () => {
+test('valid request for sub-resource method', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     foo: {
       bar: {
@@ -167,7 +180,9 @@ test('valid request for sub-resource method', () => {
   return expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request for sub-resource method without arguments', () => {
+test('valid request for sub-resource method without arguments', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     foo: {
       bar: {
@@ -179,7 +194,9 @@ test('valid request for sub-resource method without arguments', () => {
   return expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request for sub-resource method with arguments', () => {
+test('valid request for sub-resource method with arguments', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const schema = StripeRequest.schema;
   const request = {
     foo: {
       bar: {
@@ -192,6 +209,7 @@ test('valid request for sub-resource method with arguments', () => {
 });
 
 test('valid request for missing resource', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
   const request = {
     foo: {
       bar: [],
@@ -204,6 +222,7 @@ test('valid request for missing resource', async () => {
 });
 
 test('valid request for missing resource method', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
   const request = {
     customers: {
       foo: [],
@@ -216,6 +235,7 @@ test('valid request for missing resource method', async () => {
 });
 
 test('valid request for missing resource method', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
   const request = {
     customers: {
       missing: [],
@@ -228,6 +248,7 @@ test('valid request for missing resource method', async () => {
 });
 
 test('valid request', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
   const request = {
     customers: {
       list: ['foo', 42, { bar: true }],
@@ -240,9 +261,13 @@ test('valid request', async () => {
 });
 
 test('checkRead should be false', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const { checkRead } = StripeRequest.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be false', async () => {
+  const StripeRequest = (await import('./StripeRequest.js')).default;
+  const { checkWrite } = StripeRequest.meta;
   expect(checkWrite).toBe(false);
 });
