@@ -1,0 +1,9 @@
+id: home
+type: Header
+layout:
+  contentGutter: 16
+
+properties:
+  title: Lowdefy - Build internal tools with YAML
+
+blocks: []

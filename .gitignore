@@ -13,6 +13,7 @@ packages/server/build/**
 packages/server-dev/build/**
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
+!packages/website/lowdefy.yaml
 packages/cli/server/**
 
 .DS_Store
