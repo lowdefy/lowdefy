@@ -5,5 +5,10 @@ layout:
 
 properties:
   title: Lowdefy - Build internal tools with YAML
+  style:
+    backgroundColor: white
+    padding: 0px
+    line-height: 1.25em
 
-blocks: []
+blocks:
+  - _ref: shared/header/header.yaml
