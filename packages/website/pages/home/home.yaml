@@ -20,3 +20,4 @@ blocks:
   - _ref: pages/home/sections/open_source.yaml
   - _ref: pages/home/sections/create_faster.yaml
   ## TODO: Add section about custom plugins
+  - _ref: pages/home/sections/create_app.yaml
