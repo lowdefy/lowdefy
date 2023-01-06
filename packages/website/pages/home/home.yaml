@@ -21,3 +21,4 @@ blocks:
   - _ref: pages/home/sections/create_faster.yaml
   ## TODO: Add section about custom plugins
   - _ref: pages/home/sections/create_app.yaml
+  - _ref: shared/footer/footer.yaml

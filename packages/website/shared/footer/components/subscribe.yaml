@@ -1,0 +1,33 @@
+id: subscribe_box
+type: Box
+layout:
+  span: 8
+style:
+  textAlign: center
+blocks:
+  - id: title
+    type: Html
+    properties:
+      html: |
+        <h3>
+          Subscribe to our newsletter
+        </h3>
+        <p> Receive the latest Lowdefy updates in your inbox. </p>
+
+  - id: email
+    type: TextInput
+    layout:
+      span: 14
+    properties:
+      placeholder: Enter your email
+      label:
+        disabled: true
+
+  - id: subscribe
+    type: Button
+    layout:
+      span: 10
+    properties:
+      title: Subscribe
+      style:
+        background-image: 'linear-gradient(#1890ff, #667eea)'

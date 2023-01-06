@@ -1,0 +1,38 @@
+id: connect_box
+type: Box
+layout:
+  span: 8
+blocks:
+  - id: connect
+    type: Html
+    properties:
+      html: |
+        <a href="/" >
+          <img src='images/logo.svg' alt="Lowdefy" width='126'/>
+        </a>
+        <p> Build internal tools with YAML </p>
+        <p> hello@lowdefy.com </p>
+        <a href="https://twitter.com/lowdefy">
+          <img src='images/twitter.svg' alt="twitter" width='32'/>
+        </a>
+        <a
+          href="https://github.com/lowdefy/lowdefy/discussions"
+          aria-label="github discussions"
+        >
+          <img src='images/discussions.svg' alt="discussions" width='32' />
+        </a>
+        <a href="https://discord.gg/WmcJgXt">
+          <img src='images/discord.svg' alt="discord" width='32' />
+        </a>
+        <a
+          href="https://github.com/lowdefy/lowdefy"
+          aria-label="github"
+        >
+          <img src='images/github.svg' alt="github" width='32' />
+        </a>
+        <a
+          href="https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg"
+          aria-label="youtube"
+        >
+          <img src='images/youtube.svg' alt="youtube" width='32' />
+        </a>

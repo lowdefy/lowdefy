@@ -1,0 +1,16 @@
+id: copyright_box
+type: Box
+style:
+  textAlign: center
+blocks:
+  - id: copyright
+    type: Html
+    # style:
+    #   fontSize: 10px
+    properties:
+      html:
+        _nunjucks:
+          template: <p> © {{ date | date('YYYY') }} Lowdefy, Inc. - Give. Easy. Value. </p>
+          on:
+            date:
+              _date: now
