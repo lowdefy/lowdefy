@@ -21,7 +21,7 @@ export default {
     minHeight: '100vh',
   },
   properties: {
-    status: 404,
+    status: 'info',
     title: '404',
     subTitle: 'Sorry, the page you are visiting does not exist.',
   },
