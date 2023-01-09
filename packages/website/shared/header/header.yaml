@@ -1,64 +1,64 @@
-id: header
-type: Box
-properties:
-  style:
-    padding: 16px 2% 16px 2%
+id: affix_header
+type: Affix
 blocks:
-  - id: logo
-    type: Img
-    layout:
-      flex: 0 0 auto
-    properties:
-      src: /logo-light-theme.png
-      width: 156
-
-  - id: links
-    type: Menu
-    layout:
-      flex: 1 1 auto
+  - id: header
+    type: Header
     properties:
       theme: light
-      mode: horizontal
       style:
-        border: 0
-      links:
-        - id: community
-          type: MenuLink
-          url: https://github.com/lowdefy/lowdefy/discussions
-          properties:
-            title: Community
-        - id: docs
-          type: MenuLink
-          url: https://docs.lowdefy.com/
-          properties:
-            title: Docs
-
-  - id: github_button
-    type: Button
-    layout:
-      flex: 0 1 auto
-    properties:
-      title: Star on Github
-      icon: AiOutlineGithub
-      type: link
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: https://github.com/lowdefy/lowdefy
-
-  - id: get_started_button
-    type: Button
-    layout:
-      flex: 0 1 auto
-    properties:
-      title: Get Started
-      style:
-        background-image: 'linear-gradient(#1890ff, #667eea)'
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: https://docs.lowdefy.com/tutorial-start
+        _if:
+          test:
+            _ref: shared/mobile.yaml
+          then:
+            padding: 0 15px
+    blocks:
+      - id: logo
+        type: Img
+        layout:
+          flex: 0 0 auto
+        properties:
+          src: /logo-light-theme.png
+          width: 156
+      - id: desktop_menu
+        type: Box
+        layout:
+          flex: 1 1 auto
+        visible:
+          _not:
+            _ref: shared/mobile.yaml
+        blocks:
+          - _ref: shared/header/menu.yaml
+          - _ref: shared/header/cta_buttons.yaml
+      - id: mobile_menu
+        type: Box
+        layout:
+          flex: 1 1 auto
+        visible:
+          _ref: shared/mobile.yaml
+        blocks:
+          - id: spacer
+            type: Box
+            layout:
+              flex: 1 1 auto
+          - id: mobile_menu_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              icon: AiOutlineMenu
+              hideTitle: true
+              ghost: true
+            events:
+              onClick:
+                - id: open_menu
+                  type: CallMethod
+                  params:
+                    blockId: mobile_menu_drawer
+                    method: toggleOpen
+          - id: mobile_menu_drawer
+            type: Drawer
+            properties:
+              width: 100%
+            blocks:
+              - _ref: shared/header/menu.yaml
+              - _ref: shared/header/cta_buttons.yaml

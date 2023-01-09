@@ -1,0 +1,25 @@
+id: links
+type: Menu
+layout:
+  flex: 1 1 auto
+properties:
+  theme: light
+  mode:
+    _if:
+      test:
+        _ref: shared/mobile.yaml
+      then: vertical
+      else: horizontal
+  style:
+    border: 0
+  links:
+    - id: community
+      type: MenuLink
+      url: https://github.com/lowdefy/lowdefy/discussions
+      properties:
+        title: Community
+    - id: docs
+      type: MenuLink
+      url: https://docs.lowdefy.com/
+      properties:
+        title: Docs
