@@ -165,6 +165,16 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: protected-pages
+          type: MenuLink
+          pageId: protected-pages
+          properties:
+            title: Protected Pages
+        - id: roles
+          type: MenuLink
+          pageId: roles
+          properties:
+            title: Roles
 
     - id: blocks_input
       type: MenuGroup
