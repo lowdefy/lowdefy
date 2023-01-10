@@ -206,4 +206,6 @@
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml
 
+- _ref: migration/v3-to-v4.yaml
+
 - _ref: 404.yaml
