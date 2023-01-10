@@ -24,10 +24,10 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            In order to add custom styling to a Lowdefy app, a less file named `styles.less` can be added in the public folder.
+            In order to add custom styling to a Lowdefy app, a [`less`](https://lesscss.org/) file named `styles.less` can be added in the [public folder](/hosting-files).
             This file allows the default styling in Lowdefy to be overwritten, but also allows for extra custom styling.
 
-            Any valid css can we added within the `styles.less` file. Less variables can also be declared.
+            Any valid css or less styles can we added within the `styles.less` file. For example, less variables can also be declared.
 
             ```Less
             // styles.less
@@ -56,7 +56,7 @@ _ref:
             @import 'other.css';
             ```
 
-            Lowdefy makes use of [Ant Design](https://4x.ant.design/docs/react/introduce) for most of it's components. Ant Design uses theme variables which can be overwritten in the `styles.less` file. The list of Ant theme variables can be found [here](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less). Custom themes can be created by overwriting these variables, see more about this [here](https://4x.ant.design/docs/react/customize-theme).
+            Lowdefy makes use of [Ant Design](https://4x.ant.design/docs/react/introduce) for most of it's components. Ant Design uses theme variables which can be overwritten in the `styles.less` file. The list of Ant theme variables can be found [here](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less).
 
             Below is an example of how the `primary-color` theme variable can be overwritten.
 
@@ -65,12 +65,21 @@ _ref:
 
             @primary-color: #2ac8bb;
             ```
-
-            Existing Ant themes can also be applied by importing them in the `styles.less` file. For example, dark mode can be applied by importing the following:
+         
+            Custom themes can be created by overwriting these variables, see more about this [here](https://4x.ant.design/docs/react/customize-theme). 
+            
+            Existing Ant themes can be applied by importing them in the `styles.less` file. For example, dark mode can be applied by importing the following:
 
             ```Less
             // styles.less
 
-            @import 'antd/dist/antd.dark.less';
+            @import 'antd/dist/antd.compact.less';
+            ```
+            
+            Or compact mode can be applied by importing:
+            
+             ```Less
+            // styles.less
+
             @import 'antd/dist/antd.compact.less';
             ```
