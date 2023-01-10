@@ -71,6 +71,6 @@ _ref:
             ```Less
             // styles.less
 
-            @import '~antd/dist/antd.dark.less';
-            @import '~antd/dist/antd.compact.less';
+            @import 'antd/dist/antd.dark.less';
+            @import 'antd/dist/antd.compact.less';
             ```
