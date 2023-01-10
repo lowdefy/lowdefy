@@ -31,8 +31,8 @@
 - _ref: users/protected-pages.yaml
 - _ref: users/roles.yaml
 # - _ref: users/openid-connect.yaml
+- _ref: users/user-object.yaml
 # - _ref: users/login-and-logout.yaml
-# - _ref: users/user-object.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml

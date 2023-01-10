@@ -175,6 +175,11 @@
           pageId: roles
           properties:
             title: Roles
+        - id: user-object
+          type: MenuLink
+          pageId: user-object
+          properties:
+            title: User Object
 
     - id: blocks_input
       type: MenuGroup

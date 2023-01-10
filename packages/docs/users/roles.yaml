@@ -43,8 +43,6 @@ _ref:
 
                 The pages that are protected by roles are configured in the `auth.roles` section in the Lowdefy configuration. This should be an object, where the keys are the role names, and the values are an array of pageIds that are protected by that role.
 
-                #### Examples
-
                 ###### Protect pages using roles:
                 ```yaml
                 lowdefy: {{ version }}
