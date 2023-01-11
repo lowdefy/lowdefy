@@ -24,28 +24,26 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            ##### TODO: This page needs to be updated.
-
             The Lowdefy CLI is used to develop a Lowdefy app locally, and to build Lowdefy apps for deployment.
 
-            We recommend running the CLI using `npx`, to always use the latest version:
+            We recommend running the CLI using `pnpx`, to always use the latest version:
 
             ```
-            npx lowdefy@latest <command>
+            pnpx lowdefy@4 <command>
             ```
 
             or, to use a specific version:
 
             ```
-            npx lowdefy@version <command>
+            pnpx lowdefy@version <command>
             ```
 
-            Alternative, you can install the CLI globally or to a npm project (with a `package.json` file) via npm or yarn.
+            Alternative, you can install the CLI globally or to a Javascript project (with a `package.json` file) via pnpm.
 
             To install the CLI globally run:
 
             ```
-            npm install lowdefy -g
+            pnpm add -g lowdefy
             ```
 
             The CLI can then be run using `lowdefy` as the executable name:
@@ -58,71 +56,79 @@ _ref:
 
             ## build
 
-            The `build` command runs a Lowdefy build. The options are:
+            The `build` command runs a Lowdefy build. This builds a production Lowdefy app in the server directory, which can then be started using the `lowdefy start` command. The options are:
 
-            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
-            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
-            - `--output-directory <output-directory>`: Change the directory to which build artifacts are saved. The default is `<config-directory>/.lowdefy/build`.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--no-next-build`: Do not build the Next.js server, and only build the Lowdefy config. Used in some deployment scripts where the Next.js build is done as a separate step.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
 
-            ## build-netlify
-            The `build-netlify` command creates a production build for the [Netlify](https://www.netlify.com) web hosting service. It is designed to run as the Netlify build command.
-
-            We recommend setting the build command to `npx lowdefy@latest build-netlify`. The Netlify publish directory should be set to `.lowdefy/publish`, and the functions directory set to `.lowdefy/functions`.
-
-            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory (The config directory should rather be configured in the Netlify build settings).
-            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
-            - `--disable-telemetry`: Disable telemetry.
-            - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
-
-            ## clean-cache
-
-            The Lowdefy CLI caches block metadata, and build and server scripts in the `.lowdefy/cache` directory. These cached files can be removed using the `clean-cache` command.
-
-            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
-            - `--disable-telemetry`: Disable telemetry.
 
             ## dev
 
-            The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory.
+            The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory. The `dev` command should not be used to serve a production app, the `build` and `start` commands should be used instead.
 
-            - `--config-directory <config-directory>`: Change config directory. The default is the current working directory.
-            - `--blocks-server-url <blocks-server-url>`: The URL from where Lowdefy blocks will be served. See below for more information.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--no-open`: Do not open a new tab in the default browser.
             - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
-            - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes.
-            - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
+            - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
+            - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
+
+            ## init
+
+            The `init` command initializes a Lowdefy application. It creates the `lowdefy.yaml` and `.gitignore` in the working directory.
+
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            ## start
+
+            The `start` command starts a Lowdefy production server. To start a Lowdefy server, tha app should first be built using the `build` command.
+
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
+            - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
 
             #### Examples
 
 
             Run the dev server, watching a relative directory for file changes:
             ```txt
-            npx lowdefy@latest dev --watch ../other-project
+            pnpx lowdefy@4 dev --watch ../other-project
             ```
 
             Run the dev server, ignoring the public directory:
             ```txt
-            npx lowdefy@latest dev --watch-ignore public/**
+            pnpx lowdefy@4 dev --watch-ignore public/**
             ```
+
+
 
             # Configuration
 
             All the CLI options can either be set as command line options, or the `cli` config object in your `lowdefy.yaml` file. Options set as command line options take precedence over options set in the `lowdefy.yaml` file. The config in the `lowdefy.yaml` cannot be referenced using the `_ref` operator, but need to be set in the file itself.
 
             Options set in the `lowdefy.yaml` should be defined in camelCase. The options that can be set are:
-            - `blocksServerUrl: string`: The URL from where Lowdefy blocks will be served. See below for more information.
+            - `devDirectory: string`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `disableTelemetry: boolean`: Disable telemetry.
-            - `outputDirectory: string`: Change the directory to which build artifacts are saved. The default is `<config-directory>/.lowdefy/build`.
-            - `refResolver: string`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `logLevel: enum`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+            - `noOpen`: Do not open a new tab in the default browser.
             - `port: number`: Change the port the server is hosted at. The default is `3000`.
+            - `refResolver: string`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `serverDirectory: string`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
             - `watch: string[]`: A list of paths to files or directories that should be watched for changes.
             - `watchIgnore: string[]`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported.
 
             The `--config-directory` option cannot be set from the `lowdefy.yaml` file.
-
 
             # Telemetry
 
@@ -144,27 +150,8 @@ _ref:
             - The Lowdefy version of your app.
             - A random local app id (stored locally in your project folder at `.lowdefy/cli.json`).
             - The CLI command used.
-            - If the CLI is being used in the Netlify CI environment (when using the `build-netlify` command).
             - Your IP address.
             - Error messages and stack traces for any errors.
-
-            # Blocks Server
-
-            The Lowdefy default blocks are not included in the Lowdefy build output, but are served from a CDN, and imported into the app using webpack module federation. All the default Lowdefy blocks are hosted at:
-
-            ```yaml
-            https://blocks-cdn.lowdefy.com/v{LOWDEFY_VERSION}/
-            ```
-
-            If you wish to host your own blocks instead, this url can be configured using the `--blocks-server-url` CLI option. This URL should serve the build artifacts of the Lowdefy default block packages (located in the `dist` directory). Each blocks package should be served under a path that corresponds to the package name. For example, `@lowdefy/blocks-basic` should be served under `{BLOCK_SERVER_URL}/blocks-basic/`. The required blocks packages and server paths are:
-
-              - `@lowdefy/blocks-basic` to be hosted at `{BLOCK_SERVER_URL}/blocks-basic/`.
-              - `@lowdefy/blocks-antd` to be hosted at `{BLOCK_SERVER_URL}/blocks-antd/`.
-              - `@lowdefy/blocks-color-selectors` to be hosted at `{BLOCK_SERVER_URL}/blocks-color-selectors/`.
-              - `@lowdefy/blocks-markdown` to be hosted at `{BLOCK_SERVER_URL}/blocks-markdown/`.
-              - `@lowdefy/blocks-echarts` to be hosted at `{BLOCK_SERVER_URL}/blocks-echarts/`.
-
-            If you wish to run the CLI dev server, the `@lowdefy/renderer` package build artifacts (located in the `dist` directory) should also be served from `{BLOCK_SERVER_URL}/renderer/`.
 
       - _ref:
           path: templates/navigation_buttons.yaml

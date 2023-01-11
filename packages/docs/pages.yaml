@@ -9,7 +9,6 @@
 - _ref: tutorial/tutorial-next-steps.yaml
 
 - _ref: concepts/overview.yaml
-- _ref: concepts/cli.yaml
 - _ref: concepts/lowdefy-schema.yaml
 - _ref: concepts/menus.yaml
 - _ref: concepts/references-and-templates.yaml
@@ -24,6 +23,7 @@
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-code.yaml
 - _ref: concepts/custom-styling.yaml
+- _ref: concepts/cli.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
