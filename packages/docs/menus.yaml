@@ -138,6 +138,11 @@
           pageId: custom-code
           properties:
             title: Custom Code
+        - id: custom-styling
+          type: MenuLink
+          pageId: custom-styling
+          properties:
+            title: Custom Styling
     - id: deployment
       type: MenuGroup
       properties:
@@ -718,6 +723,17 @@
         - id: _yaml
           type: MenuLink
           pageId: _yaml
+    - id: migration
+      type: MenuGroup
+      properties:
+        title: Migration
+        icon: RiArrowLeftRightLine
+      links:
+        - id: v3-to-v4
+          type: MenuLink
+          pageId: v3-to-v4
+          properties:
+            title: V3 to V4
     - id: versions
       type: MenuGroup
       properties:
