@@ -4,7 +4,6 @@ layout:
   contentGutter: 16
 properties:
   style:
-    padding: 48px 15% 48px 15%
     textAlign: center
     background-image: 'linear-gradient(#1890ff, #667eea)'
 blocks:

@@ -1,8 +1,5 @@
 id: create_faster_box
 type: Box
-properties:
-  style:
-    padding: 48px 15% 48px 15%
 blocks:
   - id: create_faster_intro
     type: Html

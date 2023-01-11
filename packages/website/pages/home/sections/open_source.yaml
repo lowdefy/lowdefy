@@ -4,7 +4,6 @@ properties:
   style:
     textAlign: center
     backgroundImage: 'linear-gradient(#1890ff, #667eea)'
-    padding: 48px 15% 48px 15%
 blocks:
   - id: image
     type: Img

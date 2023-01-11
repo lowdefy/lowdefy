@@ -19,5 +19,9 @@ license: Apache-2.0
 cli:
   disableTelemetry: true
 
+plugins:
+  - name: '@lowdefy/website'
+    version: 'workspace:*'
+
 pages:
   - _ref: pages/home/home.yaml

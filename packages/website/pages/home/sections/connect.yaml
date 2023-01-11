@@ -1,27 +1,139 @@
 id: connect_box
 type: Box
-properties:
-  style:
-    padding: 48px 15% 48px 15%
+style:
+  maxWidth: 1200
+  margin: 30px auto
+layout:
+  contentAlign: middle
 blocks:
-  - id: connect_content
-    type: Html
+  - id: connections_box
+    type: Box
+    style:
+      padding: 40px 20px
     layout:
       span: 12
-    properties:
-      html: |
-        <hr style="margin-left:0;">
-        <h2>
-          Connect to your data and apps
-        </h2>
-        <h4>
-          Make API calls to existing services or read and write from your databases. Create web apps, internal tools, admin consoles, BI dashboards, and more.
-        </h4>
-        <ul>
-          <li><h4> Build dynamic queries using variables and logic operators. </h4></li>
-          <li><h4> Access a shared state between client and server. </h4></li>
-          <li><h4> Securely use secrets like passwords and API keys. </h4></li>
-        </ul>
-        <h4> We are continuously creating more connectors, add the ones you need to <a href='https://github.com/lowdefy/lowdefy/discussions/309'> the voting board </a>. Custom connectors are coming soon. </h4>
+      contentGutter: 16
+      contentJustify: center
+    blocks:
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/AWSS3
+            title:
+              _ref: pages/home/components/connections/AWSS3.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/MongoDB
+            title:
+              _ref: pages/home/components/connections/MongoDB.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/PostgreSQL
+            title:
+              _ref: pages/home/components/connections/PostgreSQL.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/AxiosHttp
+            title:
+              _ref: pages/home/components/connections/AxiosHttp.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/MSSQL
+            title:
+              _ref: pages/home/components/connections/MSSQL.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/GoogleSheets
+            title:
+              _ref: pages/home/components/connections/GoogleSheets.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/Elasticsearch
+            title:
+              _ref: pages/home/components/connections/Elasticsearch.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/SendGridMail
+            title:
+              _ref: pages/home/components/connections/Sendgrid.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/MySQL
+            title:
+              _ref: pages/home/components/connections/MySQL.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/Stripe
+            title:
+              _ref: pages/home/components/connections/Stripe.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/MariaDB
+            title:
+              _ref: pages/home/components/connections/MariaDB.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/AmazonRedshift
+            title:
+              _ref: pages/home/components/connections/AWSRedshift.html
+      - _ref:
+          path: pages/home/components/connection.yaml
+          vars:
+            link: https://docs.lowdefy.com/SQLite
+            title:
+              _ref: pages/home/components/connections/SQLite.html
 
-  ## TODO: Add buttons collage for implemented connections using a custom button component (to allow images in place of icons)
+  - id: connections_box
+    type: Box
+    style:
+      padding: 40px 20px
+    layout:
+      span: 12
+      contentGutter: 16
+      contentJustify: center
+    blocks:
+      - id: connect_content
+        type: Html
+        properties:
+          html: |
+            <hr style="margin-left:0;">
+            <h2>
+              Connect to your data and APIs
+            </h2>
+            <p>
+              Make API calls to existing services or read and write from your databases. Create web apps, internal tools, admin consoles, BI dashboards, CRUD apps and more.
+            </p>
+            <ul>
+              <li>Build dynamic queries using variables and logic operators.</li>
+              <li>Execute server side code on endpoints secured by authentication and role based autorization.</li>
+              <li>Load secrets like passwords and API keys as environment variables.</li>
+            </ul>
+            <p>We are continuously creating more connectors, but if we do not already have it you can create powerfull custom connectors with ease.</p>
+      - id: custom_connection
+        type: Button
+        style:
+          marginBottom: 20px
+        properties:
+          title: Write a custom connection as a Lowdefy plugin →
+          type: link
+          size: large
+          style:
+            whiteSpace: normal
+            textAlign: left
+        events:
+          onClick:
+            - id: link
+              type: Link
+              params:
+                url: https://docs.lowdefy.com/plugins

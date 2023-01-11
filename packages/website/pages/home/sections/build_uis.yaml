@@ -1,15 +1,17 @@
-id: build_uis_box
+id: width_box
 type: Box
+style:
+  maxWidth: 1200
+  margin: 30px auto
 layout:
-  contentGutter: 16
-properties:
-  style:
-    padding: 48px 15% 48px 15%
+  contentAlign: middle
 blocks:
   - id: build_uis_box
     type: Box
     layout:
       span: 12
+    style:
+      padding: 0 20px
     blocks:
       - id: build_uis_content
         type: Html
@@ -19,22 +21,28 @@ blocks:
             <h2>
               Build great UIs with ease
             </h2>
-            <h4>
-              Lowdefy provides you all the blocks you need to get started fast. Easily assemble custom web apps that fit your exact needs.
-            </h4>
+            <p>
+              Lowdefy provides you all the blocks you need to easily assemble custom web apps. For example this website and our docs is built with just Lowdefy.
+            </p>
             <ul>
-              <li><h4> Build UIs with YAML that is easy to read and write. </h4></li>
-              <li><h4>  Dynamic UIs with simple state management. </h4></li>
-              <li><h4>  Mobile friendly and responsive layouts out of the box. </h4></li>
-              <li><h4>  Make custom YAML nunjucks templates which enable reusability. </h4></li>
+              <li>Build UIs with YAML easy to read, write, review and use source control like git.</li>
+              <li>Dynamic UIs with effortless state management.</li>
+              <li>Mobile friendly and responsive layouts out of the box.</li>
+              <li>Define custom YAML templates which enable reusability.</li>
             </ul>
 
       - id: visit_docs
         type: Button
+        style:
+          marginBottom: 20px
         properties:
           title: Visit the docs to experience more blocks in action →
           type: link
           size: large
+          style:
+            maxWidth: 100%
+            whiteSpace: normal
+            textAlign: left
         events:
           onClick:
             - id: link
