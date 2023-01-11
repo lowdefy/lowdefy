@@ -149,6 +149,7 @@
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
+- _ref: operators/_build.yaml
 - _ref: operators/_change_case.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml

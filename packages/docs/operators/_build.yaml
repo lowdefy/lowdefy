@@ -1,0 +1,111 @@
+# Copyright 2020-2022 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _build
+    pageTitle: _build
+    filePath: operators/_build.yaml
+    description: |
+      The `_build` evaluates at build time.
+      Do this for this and this and this reason.
+    methods:
+      - name: env
+        types: |
+          ```
+          (key: string): any
+          (all: boolean): any
+          ```
+        description: |
+          The `_build.env` method reads from your environment variables.
+        examples: |
+          ###### Read environment from environment variables:
+          With the following development and production environment variables, we can use the `_build.env` method to determine which environment we are in.
+
+          `Development environment .env`
+          ```
+          MY_ENVIRONMENT="Development"
+          ```
+          `Production environment`
+          ```
+          MY_ENVIRONMENT="Production"
+          ```
+
+          ```yaml
+          _build.env: MY_ENVIRONMENT
+          ```
+
+          This will return "Development" in the development environment and "Production" in the production environment.
+
+      - name: '[operator]'
+        description: |
+          The `_build` operator can be used to evaluate normal operators at build time.
+          Here is a list of operators we can use during build:
+          - [_and](/_and)
+          - [_args](/_args)
+          - [_array](/_array)
+          - [_divide](/_divide)
+          - [_eq](/_eq)
+          - [_function](/_function)
+          - [_get](/_get)
+          - [_gt](/_gt)
+          - [_sum](/_sum)
+        examples: |
+          ###### Loop over a static list to at build time:
+          Let's say  we have a static list of fruit and their sales in a file called `fruit_sales.yaml`. We can map over this list at build time to return a list of the fruit and their total sales.
+
+          `fruit_sales.yaml`
+          ```yaml
+          - name: Apples
+            sales:
+              - 10
+              - 20
+              - 15
+              - 25
+          - name: Bananas
+            sales:
+              - 5
+              - 20
+              - 25
+              - 17
+          - name: Oranges
+            sales:
+              - 21
+              - 12
+              - 31
+              - 40
+          ```
+          ```yaml
+          _build.array.map:
+            on:
+              _ref: fruit_sales.yaml
+            callback:
+              _build.function:
+                name:
+                  __build.args: 0.name
+                total_sales:
+                  __build.sum:
+                    __build.args: 0.sales
+          ```
+          Returns:
+            ```
+              - name: Apples
+                total_sales: 70
+              - name: Bananas
+                total_sales: 67
+              - name: Oranges
+                total_sales: 104
+            ```

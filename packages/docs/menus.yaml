@@ -550,6 +550,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _build
+          type: MenuLink
+          pageId: _build
         - id: _change_case
           type: MenuLink
           pageId: _change_case
