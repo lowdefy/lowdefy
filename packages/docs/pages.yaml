@@ -23,6 +23,7 @@
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-code.yaml
+- _ref: concepts/custom-styling.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
@@ -204,5 +205,7 @@
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml
+
+- _ref: migration/v3-to-v4.yaml
 
 - _ref: 404.yaml
