@@ -36,18 +36,18 @@ _ref:
 
           `Development environment .env`
           ```
-          MY_ENVIRONMENT="Development"
+          MY_ENVIRONMENT="development"
           ```
           `Production environment`
           ```
-          MY_ENVIRONMENT="Production"
+          MY_ENVIRONMENT="production"
           ```
 
           ```yaml
           _build.env: MY_ENVIRONMENT
           ```
 
-          This will return "Development" in the development environment and "Production" in the production environment.
+          This will return "development" in the development environment and "production" in the production environment.
 
       - name: '[operator]'
         description: |
