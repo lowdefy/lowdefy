@@ -19,6 +19,7 @@ _ref:
     pageId: _eq
     pageTitle: _eq
     filePath: operators/_eq.yaml
+    build: true
     types: |
       ```
       ([value1: any, value2: any]): boolean

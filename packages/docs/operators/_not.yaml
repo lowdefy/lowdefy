@@ -19,6 +19,7 @@ _ref:
     pageId: _not
     pageTitle: _not
     filePath: operators/_not.yaml
+    build: true
     types: |
       ```
       (value: any): boolean

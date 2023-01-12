@@ -19,6 +19,7 @@ _ref:
     pageId: _if
     pageTitle: _if
     filePath: operators/_if.yaml
+    build: true
     types: |
       ```
       (arguments: {test: boolean, then: any, else: any}): any

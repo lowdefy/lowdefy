@@ -19,6 +19,7 @@ _ref:
     pageId: _object
     pageTitle: _object
     filePath: operators/_object.yaml
+    build: true
     description: |
       The `_object` operator can be used to run javascript [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) methods.
     methods:
