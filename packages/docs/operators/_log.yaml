@@ -19,6 +19,7 @@ _ref:
     pageId: _log
     pageTitle: _log
     filePath: operators/_log.yaml
+    build: true
     types: |
       ```
       (value: any): any

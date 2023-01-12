@@ -19,6 +19,7 @@ _ref:
     pageId: _operator
     pageTitle: _operator
     filePath: operators/_operator.yaml
+    build: true
     types: |
       ```
       (arguments: {operator: string, params: any): any

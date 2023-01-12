@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _intl
     pageTitle: _intl
+    build: true
     description: |
       The `_intl` operator converts date objects to strings, using a specified format.
     methods:

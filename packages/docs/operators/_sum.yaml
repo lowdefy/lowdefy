@@ -19,6 +19,7 @@ _ref:
     pageId: _sum
     pageTitle: _sum
     filePath: operators/_sum.yaml
+    build: true
     types: |
       ```
       (values: any[]): number

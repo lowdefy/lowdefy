@@ -19,6 +19,7 @@ _ref:
     pageId: _string
     pageTitle: _string
     filePath: operators/_string.yaml
+    build: true
     description: |
       The `_string` operator can be used to run javascript [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) methods.
     methods:

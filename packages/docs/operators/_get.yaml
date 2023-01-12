@@ -19,6 +19,7 @@ _ref:
     pageId: _get
     pageTitle: _get
     filePath: operators/_get.yaml
+    build: true
     types: |
       ```
       (arguments: {

@@ -19,6 +19,7 @@ _ref:
     pageId: _date
     pageTitle: _date
     filePath: operators/_date.yaml
+    build: true
     types: |
       ```
       (dateString: string): date
