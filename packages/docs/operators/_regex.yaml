@@ -19,6 +19,7 @@ _ref:
     pageId: _regex
     pageTitle: _regex
     filePath: operators/_regex.yaml
+    build: true
     types: |
       ```
       (pattern: string): boolean

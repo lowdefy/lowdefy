@@ -19,6 +19,7 @@ _ref:
     pageId: _math
     pageTitle: _math
     filePath: operators/_math.yaml
+    build: true
     description: |
       The `_math` operator can be used to run javascript [`Math`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math) methods.
 

@@ -19,6 +19,7 @@ _ref:
     pageId: _type
     pageTitle: _type
     filePath: operators/_type.yaml
+    build: true
     types: |
       ```
       (type: enum): boolean

@@ -19,6 +19,7 @@ _ref:
     pageId: _base64
     pageTitle: _base64
     filePath: operators/_base64.yaml
+    build: true
     description: |
       The `_base64` operator converts strings to and from [base64](https://en.wikipedia.org/wiki/Base64) format.
     methods:

@@ -20,6 +20,7 @@ _ref:
     pageTitle: _hash
     filePath: operators/_hash.yaml
     env: Server Only
+    build: true
     description: |
       The `_hash` operator generates hashes using various algorithms.
     methods:

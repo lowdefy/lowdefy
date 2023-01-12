@@ -19,6 +19,7 @@ _ref:
     pageId: _switch
     pageTitle: _switch
     filePath: operators/_switch.yaml
+    build: true
     types: |
       ```
       (arguments: {branches: {if: boolean, then: any}[], default: any}): any

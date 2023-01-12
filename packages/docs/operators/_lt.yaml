@@ -19,6 +19,7 @@ _ref:
     pageId: _lt
     pageTitle: _lt
     filePath: operators/_lt.yaml
+    build: true
     types: |
       ```
       ([value1: any, value2: any]): boolean

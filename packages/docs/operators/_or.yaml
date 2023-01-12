@@ -19,6 +19,7 @@ _ref:
     pageId: _or
     pageTitle: _or
     filePath: operators/_or.yaml
+    build: true
     types: |
       ```
       (values: any[]): boolean
