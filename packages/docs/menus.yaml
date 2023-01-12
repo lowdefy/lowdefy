@@ -68,11 +68,6 @@
           pageId: overview
           properties:
             title: Overview
-        - id: cli
-          type: MenuLink
-          pageId: cli
-          properties:
-            title: The CLI
         - id: lowdefy-schema
           type: MenuLink
           pageId: lowdefy-schema
@@ -143,6 +138,11 @@
           pageId: custom-styling
           properties:
             title: Custom Styling
+        - id: cli
+          type: MenuLink
+          pageId: cli
+          properties:
+            title: The CLI
     - id: deployment
       type: MenuGroup
       properties:
