@@ -19,6 +19,7 @@ _ref:
     pageId: _json
     pageTitle: _json
     filePath: operators/_json.yaml
+    build: true
     description: |
       The `_json` parses and writes JSON strings.
     methods:
