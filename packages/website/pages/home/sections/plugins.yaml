@@ -4,7 +4,7 @@ style:
   textAlign: center
   backgroundImage: 'linear-gradient(#1890ff, #667eea)'
 blocks:
-  - id: cta_box
+  - id: hero_box
     type: Box
     style:
       maxWidth: 700
@@ -16,15 +16,15 @@ blocks:
         properties:
           html: |
             <h2 style="color: white">
-              Run Lowdefy v4
+              Install custom plugins from npm
             </h2>
       - id: code_button
         type: Button
         properties:
           title: $ pnpx lowdefy@4 init && pnpx lowdefy@4 dev
           type: link
-          color: white
           style:
+            background-color: white
             color: black
             maxWidth: 100%
             whiteSpace: normal
@@ -50,14 +50,13 @@ blocks:
           style:
             color: white
             fontSize: 0.8em
-            paddingTop: 4px
           content:
             _state: button_extra
 
       - id: getting_started_link
         type: Button
         style:
-          margin: 20px 0
+          marginTop: 30
         properties:
           style:
             color: white

@@ -1,6 +1,5 @@
 id: connection_mongodb
 type: Button
-style:
 layout:
   flex: 0 1 auto
 properties:

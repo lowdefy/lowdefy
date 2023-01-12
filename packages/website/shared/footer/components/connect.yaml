@@ -10,7 +10,7 @@ blocks:
         <a href="/" >
           <img src='images/logo.svg' alt="Lowdefy" width='126'/>
         </a>
-        <p> Build internal tools with YAML </p>
+        <p> Build web apps with YAML </p>
         <p> hello@lowdefy.com </p>
         <a href="https://twitter.com/lowdefy">
           <img src='images/twitter.svg' alt="twitter" width='32'/>
