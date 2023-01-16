@@ -15,7 +15,6 @@
 */
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
-import copyPluginsFolder from '../../utils/copyPluginsFolder.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
 import readDotEnv from '../../utils/readDotEnv.js';
@@ -27,7 +26,6 @@ async function build({ context }) {
   readDotEnv(context);
   const directory = context.directories.server;
   await getServer({ context, packageName: '@lowdefy/server', directory });
-  await copyPluginsFolder({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
   await runLowdefyBuild({ context, directory });
