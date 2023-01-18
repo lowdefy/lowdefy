@@ -83,6 +83,11 @@
           pageId: references-and-templates
           properties:
             title: References and Templates
+        - id: page-and-app-state
+          type: MenuLink
+          pageId: page-and-app-state
+          properties:
+            title: Page and App State
         - id: context-and-state
           type: MenuLink
           pageId: context-and-state
