@@ -15,7 +15,7 @@
 */
 
 import cleanDirectory from './cleanDirectory.js';
-import copyDirectory from './copyDirectory.js';
+import copyFileOrDirectory from './copyFileOrDirectory.js';
 import getConfigFromEnv from './getConfigFromEnv.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
@@ -25,7 +25,7 @@ import writeFile from './writeFile.js';
 
 export {
   cleanDirectory,
-  copyDirectory,
+  copyFileOrDirectory,
   getConfigFromEnv,
   getFileExtension,
   getFileSubExtension,

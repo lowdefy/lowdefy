@@ -15,21 +15,13 @@
 */
 
 import path from 'path';
-import fs from 'fs';
-import { cleanDirectory, copyDirectory } from '@lowdefy/node-utils';
+import { copyFileOrDirectory } from '@lowdefy/node-utils';
 
-async function copyPluginsFolder({ context, directory }) {
-  if (context.directories.config === directory) return;
-  if (!fs.existsSync(path.join(context.directories.config, 'plugins'))) return;
-
-  await cleanDirectory(path.join(directory, 'plugins'));
-  await copyDirectory(
-    path.join(context.directories.config, 'plugins'),
-    path.join(directory, 'plugins'),
-    {
-      filter: (path) => !path.includes('node_modules'),
-    }
+async function resetServerPackageJson({ directory }) {
+  await copyFileOrDirectory(
+    path.join(directory, 'package.original.json'),
+    path.join(directory, 'package.json')
   );
 }
 
-export default copyPluginsFolder;
+export default resetServerPackageJson;
