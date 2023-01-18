@@ -31,10 +31,12 @@
     "pages/*",
     "public/*",
     "next.config.js",
+    "package.original.json",
     ".eslintrc.yaml",
     ".npmrc"
   ],
   "scripts": {
+    "build": "cp package.json package.original.json || copy package.json package.original.json",
     "start": "node manager/run.mjs",
     "lint": "next lint",
     "next": "next"

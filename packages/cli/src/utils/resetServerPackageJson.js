@@ -14,21 +14,14 @@
   limitations under the License.
 */
 
-import build from '@lowdefy/build';
-import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+import path from 'path';
+import { copyFileOrDirectory } from '@lowdefy/node-utils';
 
-function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    await build({
-      customTypesMap,
-      directories,
-      logger,
-      refResolver: options.refResolver,
-      stage: 'dev',
-    });
-    logger.info({ print: 'log' }, 'Built config.');
-  };
+async function resetServerPackageJson({ directory }) {
+  await copyFileOrDirectory(
+    path.join(directory, 'package.original.json'),
+    path.join(directory, 'package.json')
+  );
 }
 
-export default lowdefyBuild;
+export default resetServerPackageJson;

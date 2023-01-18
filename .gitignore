@@ -31,4 +31,7 @@ app/**
 packages/server-dev/plugins/**
 packages/server/plugins/**
 
+packages/server/package.original.json
+packages/server-dev/package.original.json
+
 lerna-debug.log
