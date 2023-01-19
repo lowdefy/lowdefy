@@ -618,9 +618,6 @@
         - id: _json
           type: MenuLink
           pageId: _json
-        - id: _list_contexts
-          type: MenuLink
-          pageId: _list_contexts
         - id: _location
           type: MenuLink
           pageId: _location

@@ -208,8 +208,8 @@ _ref:
             - Operators used in action `params` are evaluated right before the action is executed.
             - The [`_actions`](/_actions) operator is available for sequential actions to use the values returned from preceding actions in the chain.
             - Actions have a `skip` field that can be used to skip action execution.
-            - The `onInit` event is triggered the first time a context is mounted and keeps the page in loading until all actions have finished.
-            - The `onInitAsync` event is triggered the first time a context is mounted and does not keep the page in loading.
+            - The `onInit` event is triggered the first time a page is mounted and keeps the page in loading until all actions have finished.
+            - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
             - The `onMount` events is triggered the every time a block is mounted and keeps the block in loading until all actions have finished.
             - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
 

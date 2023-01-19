@@ -182,7 +182,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Context and State
-            previous_page_id: context-and-state
+            previous_page_title: Page and App State
+            previous_page_id: page-and-app-state
             next_page_title: Layout
             next_page_id: layout
