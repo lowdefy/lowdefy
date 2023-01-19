@@ -1019,3 +1019,109 @@ test('drop showValidation on RootBlocks.resetValidation()', async () => {
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
 });
+
+test('dynamic required on input to return validation error when required evaluates to true on RootBlock.validate(match)', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { is_required: true },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        required: {
+          _state: 'is_required',
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { text } = context._internal.RootBlocks.map;
+  expect(context.state).toEqual({
+    text: null,
+    is_required: true,
+  });
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
+    {
+      blockId: 'text',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+  text.setValue('a');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  text.setValue('');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
+    {
+      blockId: 'text',
+      validation: { errors: ['This field is required'], status: 'error', warnings: [] },
+    },
+  ]);
+  context._internal.State.set('is_required', false);
+  text.setValue('');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+});
+
+test('dynamic required on input to return validation error when required evaluates to a message on RootBlock.validate(match)', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { is_required_message: 'Custom Message' },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        required: {
+          _state: 'is_required_message',
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { text } = context._internal.RootBlocks.map;
+  expect(context.state).toEqual({
+    text: null,
+    is_required_message: 'Custom Message',
+  });
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
+    {
+      blockId: 'text',
+      validation: { errors: ['Custom Message'], status: 'error', warnings: [] },
+    },
+  ]);
+  text.setValue('a');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  text.setValue('');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([
+    {
+      blockId: 'text',
+      validation: { errors: ['Custom Message'], status: 'error', warnings: [] },
+    },
+  ]);
+  context._internal.State.set('is_required_message', false);
+  text.setValue('');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  text.setValue('a');
+  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+});
