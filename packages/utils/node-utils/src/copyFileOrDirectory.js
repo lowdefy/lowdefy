@@ -16,8 +16,8 @@
 
 import fsExtra from 'fs-extra';
 
-async function copyDirectory(dirPathFrom, dirPathTo, options) {
+async function copyFileOrDirectory(dirPathFrom, dirPathTo, options) {
   await fsExtra.copy(dirPathFrom, dirPathTo, options);
 }
 
-export default copyDirectory;
+export default copyFileOrDirectory;
