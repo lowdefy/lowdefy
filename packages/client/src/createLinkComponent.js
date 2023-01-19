@@ -22,6 +22,7 @@ const createLinkComponent = (lowdefy, Link) => {
     ariaLabel,
     children,
     className,
+    href,
     id,
     onClick = () => {},
     newTab,
@@ -35,7 +36,7 @@ const createLinkComponent = (lowdefy, Link) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
-        href={`${url}${query ? `?${query}` : ''}`}
+        href={href || `${url}${query ? `?${query}` : ''}`}
         rel={rel || (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
         onClick={async (...params) => {
