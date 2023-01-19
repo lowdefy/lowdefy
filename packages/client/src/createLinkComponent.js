@@ -11,8 +11,8 @@ const createLinkComponent = (lowdefy, Link) => {
       rel={rel}
       aria-label={ariaLabel || 'back'}
       onClick={(...params) => {
-        onClick(...params);
         lowdefy._internal.router.back();
+        onClick(...params);
       }}
     >
       {type.isFunction(children) ? children(id) : children}
@@ -38,7 +38,10 @@ const createLinkComponent = (lowdefy, Link) => {
         href={`${url}${query ? `?${query}` : ''}`}
         rel={rel || (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
-        onClick={onClick}
+        onClick={async (...params) => {
+          await onClick(...params);
+          return true;
+        }}
       >
         {type.isFunction(children) ? children(pageId || url || id) : children}
       </a>
@@ -72,7 +75,10 @@ const createLinkComponent = (lowdefy, Link) => {
           }`}
           rel={rel || 'noopener noreferrer'}
           target="_blank"
-          onClick={onClick}
+          onClick={async (...params) => {
+            await onClick(...params);
+            return true;
+          }}
         >
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
@@ -86,8 +92,8 @@ const createLinkComponent = (lowdefy, Link) => {
           className={className}
           rel={rel}
           onClick={(...params) => {
+            setInput();
             onClick(...params);
-            setInput;
           }}
         >
           {type.isFunction(children) ? children(pageId || url || id) : children}
