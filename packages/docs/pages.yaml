@@ -13,7 +13,6 @@
 - _ref: concepts/menus.yaml
 - _ref: concepts/references-and-templates.yaml
 - _ref: concepts/page-and-app-state.yaml
-- _ref: concepts/context-and-state.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout.yaml
 - _ref: concepts/connections-and-requests.yaml

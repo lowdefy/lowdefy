@@ -88,11 +88,6 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
-        - id: context-and-state
-          type: MenuLink
-          pageId: context-and-state
-          properties:
-            title: Context and State
         - id: blocks
           type: MenuLink
           pageId: blocks
