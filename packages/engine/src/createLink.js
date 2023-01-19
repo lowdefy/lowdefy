@@ -56,9 +56,7 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
       });
     }
     if (type.isString(props.href)) {
-      return newOriginLink({
-        ...props,
-      });
+      return newOriginLink(props);
     }
     if (type.isString(props.url)) {
       const protocol = props.url.includes(':') ? '' : 'https://';
