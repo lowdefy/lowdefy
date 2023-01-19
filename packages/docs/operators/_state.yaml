@@ -32,7 +32,7 @@ _ref:
       }): any
       ```
     description: |
-      The `_state` operator gets a value from the [`state`](/context-and-state) object. The `state` is a data object specific to the context it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [`context`](/context-and-state) the operator is used in, but a different context can be specified.
+      The `_state` operator gets a value from the [`state`](/page-and-app-state) object. The `state` is a data object specific to the context it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [page](/page-and-app-state) the operator is used in.
 
     arguments: |
       ###### string

@@ -32,7 +32,7 @@ _ref:
       }): any
       ```
     description: |
-      The `_global` operator gets a value from the [`global`](/context-and-state) object. The `global` object is a shared data object that can be accessed from any `context` in the app.
+      The `_global` operator gets a value from the [`global`](/page-and-app-state) object. The `global` object is a shared data object that can be accessed from any `context` in the app.
 
     arguments: |
       ###### string
