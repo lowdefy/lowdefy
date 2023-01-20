@@ -79,7 +79,7 @@ _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: init
-            command: 'pnpx lowdefy@latest init'
+            command: 'pnpx lowdefy@4 init'
 
       - id: body_init
         type: MarkdownWithCode
@@ -101,7 +101,7 @@ _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: dev
-            command: 'pnpx lowdefy@latest dev'
+            command: 'pnpx lowdefy@4 dev'
 
       - id: body_open_browser
         type: MarkdownWithCode
@@ -249,9 +249,9 @@ _ref:
 
             The Lowdefy CLI helps you develop a Lowdefy app.
 
-            We used the `pnpx lowdefy@latest init` command to initialize a new project. This created all the essential files.
+            We used the `pnpx lowdefy@4 init` command to initialize a new project. This created all the essential files.
 
-            We also used the `pnpx lowdefy@latest dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
+            We also used the `pnpx lowdefy@4 dev` command to start a development server. The development server runs a Lowdefy app locally on your computer, which can be accessed at http://localhost:3000. The development server watches your configuration files, and if any of them changes it "builds" (compiles the configuration together for the server to serve) the configuration again and refreshes the browser to show the changes.
 
             ### Up next
 

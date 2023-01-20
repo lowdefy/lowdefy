@@ -19,6 +19,7 @@ _ref:
     pageId: _args
     pageTitle: _args
     filePath: operators/_args.yaml
+    build: true
     types: |
       ```
       (key: string): any

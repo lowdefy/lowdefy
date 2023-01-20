@@ -58,7 +58,9 @@ _ref:
 
             Besides the client and server environment, app build time is considered a third environment where special operator logic applies.
 
-            The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split a app into multiple files, and to reuse configuration. See [`_ref`](/_ref) for more details.
+            The `_ref` and `_var` operators do not work like other operators. They are evaluated while an app is being built, and can thus be used anywhere in the app configuration. They are used to split an app into multiple files, and to reuse configuration. See [`_ref`](/_ref) for more details.
+
+            Some operators can be evaluated at build time by using the [`_build`](/_build) operator. This is useful for once-off calculations when an app is built, for example looping over a list in a reference JSON file to calculate a value at build time instead of using normal operators which re-evaluate whenever the app state changes. It can also be used to read an environment variable.
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

@@ -19,6 +19,7 @@ _ref:
     pageId: _function
     pageTitle: _function
     filePath: operators/_function.yaml
+    build: true
     types: |
       ```
       (definition: any): function

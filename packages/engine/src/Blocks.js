@@ -342,7 +342,9 @@ class Blocks {
             : 'This field is required',
         };
         const validation =
-          block.required === false ? block.validate : [requiredValidation, ...block.validate];
+          block.requiredEval.output === false
+            ? block.validate
+            : [requiredValidation, ...block.validate];
         block.validationEval = {
           output: {
             status: null,
