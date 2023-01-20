@@ -170,6 +170,11 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: login-and-logout
+          type: MenuLink
+          pageId: login-and-logout
+          properties:
+            title: Login and Logout
         - id: protected-pages
           type: MenuLink
           pageId: protected-pages
@@ -185,6 +190,10 @@
           pageId: user-object
           properties:
             title: User Object
+        - id: auth-configuration
+          type: MenuLink
+          properties:
+            title: Configuration
 
     - id: blocks_input
       type: MenuGroup

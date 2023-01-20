@@ -16,7 +16,7 @@ _ref:
   path: templates/general.yaml.njk
   vars:
     pageId: user-object
-    pageTitle: User object
+    pageTitle: User Object
     section: User Authentication
     filePath: concepts/user-object.yaml
     content:
@@ -105,7 +105,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Protected pages
-            previous_page_id: protected-pages
-            next_page_title: Roles
-            next_page_id: roles
+            previous_page_title: Roles
+            previous_page_id: roles
+            next_page_title: Auth Configuration
+            next_page_id: auth-configuration

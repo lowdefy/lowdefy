@@ -65,5 +65,5 @@ _ref:
           vars:
             previous_page_title: Protected Pages
             previous_page_id: protected-pages
-            # next_page_title: Provider configuration
-            # next_page_id: openid-provider-configuration
+            next_page_title: User Object
+            next_page_id: user-object
