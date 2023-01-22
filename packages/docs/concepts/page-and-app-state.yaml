@@ -29,13 +29,15 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, the `media` and the `user` objects. Then there are page specific objects like the `state`, the `urlQuery` and the `input` objects. A user can use [`connections and requests`](/connections-and-requests) to connect to external data sources.
+                A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, `media` and `user` objects. Then there are page specific objects like the `state`, `urlQuery` and `input` objects.
 
                 ## State
 
-                Every [`input` category block](/blocks) inside the page will have a value in the `state` object, with their `id` as the key in the `state` object, unless the block is not visible, in which case the input value is removed from the state object.
+                Each page in a Lowdefy app has a `state` object which serves as the general data store for that page.
 
-                A `state` object is unique to a page and every `input` block maintains a value in it's parent `state` object. The [`_state`](/_state) operator can be used to read from `state` and the [`SetState`](/SetState) action can be used to modify the value of a `state` object in the same page from which `SetState` is called.
+                Every [`input` category block](/blocks) inside the page will have a value in the `state` object, with their `id` as the key in the `state` object. If the block is not visible the input value is removed from the state object.
+
+                The [`_state`](/_state) operator can be used to read from `state` and the [`SetState`](/SetState) action can be used to modify or add new values in `state` object in the same page from which `SetState` is called.
 
                 > See [`operators`](/operators) and [`events-and-actions`](/events-and-actions) for more details.
 
@@ -152,10 +154,10 @@ _ref:
                         html:
                           _global: key ## Returns `New Value`
                 ```
-                ## Url query
-                The `urlQuery` object is used to access variables set in the url. Url query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action and read using the [`_url_query`](/_url_query) operator. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onMount`](/events-and-actions) event.
+                ## URL query
+                The `urlQuery` object is used to access variables set in the URL. URL query parameters can be set using the `urlQuery` field in the [`Link`](/Link) action and read using the [`_url_query`](/_url_query) operator. It can be useful to create sharable links containing some additional information other than the page route. For example setting a document id in the url so that the document can be retrieved when the link is opened during the page [`onMount`](/events-and-actions) event.
 
-                > Note that any variables set to `urlQuery` will be publicly visible.
+                > Note that any variables set to `urlQuery` will be visible to users of the app.
 
                 ### Example using `urlQuery` and `Link`
 
@@ -190,9 +192,9 @@ _ref:
 
                 ## Input
 
-                The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. Variables set to the `input` object are not written to the url, so they are not visible publicly but also cannot be used to share the data in a link since a `input` object is only consistent between one page and the next to which it links. A `input` object is set to the `input` field of the [`Link`](/Link) action when linking from one page to the next and can be read using the [`_input`](/_input) operator.
+                The `input` object is unique to a page, and works similar to the `urlQuery` object. The `input` object is used to pass information between page transitions. Variables set to the `input` object are not written to the URL, so they are not visible to app users but also cannot be used to share the data in a link since a `input` object is only consistent between one page and the next to which it links. A `input` object is set using the `input` param of the [`Link`](/Link) action or the `input` property of an [`Anchor`](/Anchor) block when linking from a page to another page in the app and can be read using the [`_input`](/_input) operator.
 
-                > Note `input` cannot be passed between pages when using the `newTab: true` parameter in the [`Link`](/Link) action.
+                > Note `input` cannot be passed between pages when using the `newTab: true` param in the [`Link`](/Link) action.
 
                 ### Example of setting and reading `input`
 
@@ -209,7 +211,7 @@ _ref:
                         params:
                           pageId: second-page
                           input:
-                            document-id: SUPERSECRET456
+                            document-id: 1234
                 ```
 
                 `second-page.yaml`
@@ -222,11 +224,11 @@ _ref:
                       type: SetState
                       params:
                         myDocId:
-                          _input: document-id ## Returns 'SUPERSECRET456'
+                          _input: document-id ## Returns '1234'
                 ```
                 ## Media
 
-                The `media` object contains some information about the client screen size, for example, and can be accessed using the [`_media`](/_media) operator. This can be used to add additional responsive logic to a page.
+                The `media` object contains some information about the client screen size, and can be accessed using the [`_media`](/_media) operator. This can be used to add additional responsive logic to a page.
 
                 Here is an example showing how to read the screen size of a smartphone:
                 ```yaml
@@ -239,8 +241,7 @@ _ref:
 
                 ## User
 
-                #TODO: Sam should please fix this paragraph when updating the auth docs
-                The `user` object contains the data in the user idToken if OpenID Connect authentication is configured and a user is logged in. The `user` data can be accessed using the [`_user`](/_user) operator.
+                If authentication is configured and a user is logged in, data about the user can be accessed using the [`_user`](/_user) operator. See [User Authentication](/users-introduction) for more details.
 
                 This example shows how to read a logged-in user's username and id:
                 ```yaml
