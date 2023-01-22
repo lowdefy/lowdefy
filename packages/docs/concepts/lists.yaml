@@ -10,7 +10,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            List category blocks render multiple [`content areas`](/layout), based on data in the [`state`](/context-and-state) object.
+            List category blocks render multiple [`content areas`](/layout), based on data in the [`state`](/page-and-app-state) object.
 
             Since the content area might contain input blocks, the block has an array value in state, with it's `block id` as key. For each item in the array, an content area (or set of content areas is rendered). Multiple list blocks can be nested.
 
