@@ -297,5 +297,5 @@ _ref:
           vars:
             previous_page_title: The CLI
             previous_page_id: cli
-            next_page_title: Context and State
-            next_page_id: context-and-state
+            next_page_title: Page and App State
+            next_page_id: page-and-app-state

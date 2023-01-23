@@ -28,7 +28,6 @@ _ref:
         all?: boolean,
         key?: string,
         default?: any,
-        contextId?: string
       }): any
       ```
     description: |
@@ -51,7 +50,7 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `urlQuery` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `urlQuery` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `urlQuery`. By default, `null` is returned if a value is not found.
-        - `contextId: string`: The id of a `context`. Setting this will get the value from the `urlQuery` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator. Cannot be used in `connections` or `requests`.
+
     examples: |
       ###### Get the value of `my_key` from `urlQuery`:
       ```yaml
@@ -110,11 +109,3 @@ _ref:
       _url_query: my_array.$.value
       ```
       Returns: `0` when used from the first block (0th index) in a list.
-
-      ###### Get a value from another `context`:
-      ```yaml
-      _url_query:
-        key: my_key
-        contextId: 'pageId:contextId:{}'
-      ```
-      Returns: The value of `my_key` in `urlQuery` in context `contextId` on page `pageId`.
