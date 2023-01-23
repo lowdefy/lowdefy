@@ -18,7 +18,7 @@ _ref:
     pageId: login-and-logout
     pageTitle: Login and Logout
     section: User Authentication
-    filePath: concepts/login-and-logout.yaml
+    filePath: users/login-and-logout.yaml
     content:
       - id: introduction
         type: MarkdownWithCode

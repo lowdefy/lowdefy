@@ -18,7 +18,7 @@ _ref:
     pageId: protected-pages
     pageTitle: Protected pages
     section: User Authentication
-    filePath: concepts/protected-pages.yaml
+    filePath: users/protected-pages.yaml
     content:
       - id: introduction
         type: MarkdownWithCode

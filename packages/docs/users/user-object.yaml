@@ -18,7 +18,7 @@ _ref:
     pageId: user-object
     pageTitle: User Object
     section: User Authentication
-    filePath: concepts/user-object.yaml
+    filePath: users/user-object.yaml
     content:
       - id: user_object
         type: MarkdownWithCode

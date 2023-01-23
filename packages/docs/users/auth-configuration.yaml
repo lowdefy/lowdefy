@@ -18,7 +18,7 @@ _ref:
     pageId: auth-configuration
     pageTitle: Auth Configuration
     section: User Authentication
-    filePath: concepts/auth-configuration.yaml
+    filePath: users/auth-configuration.yaml
     content:
       - id: auth_configuration
         type: MarkdownWithCode

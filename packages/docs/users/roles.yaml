@@ -18,7 +18,7 @@ _ref:
     pageId: roles
     pageTitle: Roles
     section: User Authentication
-    filePath: concepts/roles.yaml
+    filePath: users/roles.yaml
     content:
       - id: introduction
         type: MarkdownWithCode

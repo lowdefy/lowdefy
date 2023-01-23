@@ -18,7 +18,7 @@ _ref:
     pageId: users-introduction
     pageTitle: Introduction
     section: User Authentication
-    filePath: concepts/users-introduction.yaml
+    filePath: users/users-introduction.yaml
     content:
       - id: introduction
         type: Markdown
@@ -52,12 +52,12 @@ _ref:
 
             ## \_user operator
 
-            The `_user` operator can be used to access data in the user object received from the identity provider. The OpenId Connect standard claims (fields like `name` or `email`) are mapped to the user object by default and addition fields can be configured using the `userFields` configuration option.
+            The `_user` operator can be used to access data in the user object received from the identity provider. The OpenID Connect standard claims (fields like `name` or `email`) are mapped to the user object by default and addition fields can be configured using the `userFields` configuration option.
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: Overview
             previous_page_id: overview
-            next_page_title: Protected Pages
-            next_page_id: protected-pages
+            next_page_title: Providers
+            next_page_id: auth-providers

@@ -31,6 +31,7 @@
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "start": "pnpm app:server",
     "test": "pnpm -r --filter='!@lowdefy/blocks-*' --filter='!@lowdefy/plugin-aws' test",
+    "update-packages": "pnpm up -i -r --latest",
     "app:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../../app --server-directory ../server",
     "app:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../../app --dev-directory ../server-dev",
     "app:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../../app --server-directory ../server",
