@@ -17,6 +17,16 @@
 import axios from 'axios';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+  if (getMajorVersion(lowdefyVersion) === '4') {
+    print.warn(`
+---------------------------------------------------
+  You are attempting to run a version ${lowdefyVersion} app with the version 3 CLI.
+  Please make use of the version 4 Lowdefy CLI to run this app.
+  To do this, run 'pnpx lowdefy@4'.
+---------------------------------------------------`);
+    return;
+  }
+
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -42,6 +52,10 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   } catch (error) {
     print.warn('Failed to check for latest Lowdefy version.');
   }
+}
+
+function getMajorVersion(version) {
+  return version.split('.')[0];
 }
 
 export default checkForUpdatedVersions;
