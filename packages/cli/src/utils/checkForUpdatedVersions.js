@@ -17,11 +17,26 @@
 import axios from 'axios';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+  if (lowdefyVersion === 'local') {
+    return;
+  }
   if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
     print.warn(`
 ---------------------------------------------------
   You are using an experimental version of Lowdefy.
   Features may change at any time.
+---------------------------------------------------`);
+    return;
+  }
+  if (getMajorVersion(lowdefyVersion) === '3') {
+    print.warn(`
+---------------------------------------------------
+  You are attempting to run a version 3 app with the version 4 cli.
+  Please update your app to version 4 using the migration guide.
+  View the migration guide here:
+    https://docs.lowdefy.com/v3-to-v4
+  Alternatively, run the app with the version 3 cli.
+  To do this, run 'npx lowdefy@3'.
 ---------------------------------------------------`);
     return;
   }
@@ -35,7 +50,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 -------------------------------------------------------------
   You are not using the latest version of the Lowdefy CLI.
   Please update to version ${latestVersion}.
-  To always use the latest version, run 'npx lowdefy@latest'.
+  To always use the latest version, run 'pnpx lowdefy@4'.
 -------------------------------------------------------------`);
     }
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
@@ -54,6 +69,10 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 
 function isExperimentalVersion(version) {
   return version.includes('alpha') || version.includes('beta') || version.includes('rc');
+}
+
+function getMajorVersion(version) {
+  return version.split('.')[0];
 }
 
 export default checkForUpdatedVersions;
