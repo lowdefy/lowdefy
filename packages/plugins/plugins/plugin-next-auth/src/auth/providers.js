@@ -32,7 +32,6 @@ import cognito from 'next-auth/providers/cognito';
 import coinbase from 'next-auth/providers/coinbase';
 import discord from 'next-auth/providers/discord';
 import dropbox from 'next-auth/providers/dropbox';
-import duendeids6 from 'next-auth/providers/duende-identity-server6';
 import eveonline from 'next-auth/providers/eveonline';
 import facebook from 'next-auth/providers/facebook';
 import faceit from 'next-auth/providers/faceit';
@@ -42,6 +41,7 @@ import fusionauth from 'next-auth/providers/fusionauth';
 import github from 'next-auth/providers/github';
 import gitlab from 'next-auth/providers/gitlab';
 import google from 'next-auth/providers/google';
+import hubspot from 'next-auth/providers/hubspot';
 import instagram from 'next-auth/providers/instagram';
 import kakao from 'next-auth/providers/kakao';
 import keycloak from 'next-auth/providers/keycloak';
@@ -57,12 +57,14 @@ import onelogin from 'next-auth/providers/onelogin';
 import osso from 'next-auth/providers/osso';
 import osu from 'next-auth/providers/osu';
 import patreon from 'next-auth/providers/patreon';
+import pinterest from 'next-auth/providers/pinterest';
 import pipedrive from 'next-auth/providers/pipedrive';
 import reddit from 'next-auth/providers/reddit';
 import salesforce from 'next-auth/providers/salesforce';
 import slack from 'next-auth/providers/slack';
 import spotify from 'next-auth/providers/spotify';
 import strava from 'next-auth/providers/strava';
+import todoist from 'next-auth/providers/todoist';
 import trakt from 'next-auth/providers/trakt';
 import twitch from 'next-auth/providers/twitch';
 import twitter from 'next-auth/providers/twitter';
@@ -72,6 +74,7 @@ import wikimedia from 'next-auth/providers/wikimedia';
 import wordpress from 'next-auth/providers/wordpress';
 import workos from 'next-auth/providers/workos';
 import yandex from 'next-auth/providers/yandex';
+import zitadel from 'next-auth/providers/zitadel';
 import zoho from 'next-auth/providers/zoho';
 import zoom from 'next-auth/providers/zoom';
 import OpenIDConnectProvider from './OpenIDConnectProvider.js';
@@ -91,7 +94,6 @@ const CognitoProvider = cognito.default;
 const CoinbaseProvider = coinbase.default;
 const DiscordProvider = discord.default;
 const DropboxProvider = dropbox.default;
-const DuendeIDS6Provider = duendeids6.default;
 const EVEOnlineProvider = eveonline.default;
 const FacebookProvider = facebook.default;
 const FaceItProvider = faceit.default;
@@ -101,6 +103,7 @@ const FusionAuthProvider = fusionauth.default;
 const GitHubProvider = github.default;
 const GitlabProvider = gitlab.default;
 const GoogleProvider = google.default;
+const HubspotProvider = hubspot.default;
 const InstagramProvider = instagram.default;
 const KakaoProvider = kakao.default;
 const KeycloakProvider = keycloak.default;
@@ -116,12 +119,14 @@ const OneLoginProvider = onelogin.default;
 const OssoProvider = osso.default;
 const OsuProvider = osu.default;
 const PatreonProvider = patreon.default;
+const PinterestProvider = pinterest.default;
 const PipedriveProvider = pipedrive.default;
 const RedditProvider = reddit.default;
 const SalesforceProvider = salesforce.default;
 const SlackProvider = slack.default;
 const SpotifyProvider = spotify.default;
 const StravaProvider = strava.default;
+const TodoistProvider = todoist.default;
 const TraktProvider = trakt.default;
 const TwitchProvider = twitch.default;
 const TwitterProvider = twitter.default;
@@ -131,6 +136,7 @@ const WikimediaProvider = wikimedia.default;
 const WordpressProvider = wordpress.default;
 const WorkOSProvider = workos.default;
 const YandexProvider = yandex.default;
+const ZitadelProvider = zitadel.default;
 const ZohoProvider = zoho.default;
 const ZoomProvider = zoom.default;
 
@@ -150,7 +156,6 @@ export {
   CoinbaseProvider,
   DiscordProvider,
   DropboxProvider,
-  DuendeIDS6Provider,
   EVEOnlineProvider,
   FacebookProvider,
   FaceItProvider,
@@ -160,6 +165,7 @@ export {
   GitHubProvider,
   GitlabProvider,
   GoogleProvider,
+  HubspotProvider,
   InstagramProvider,
   KakaoProvider,
   KeycloakProvider,
@@ -176,12 +182,14 @@ export {
   OssoProvider,
   OsuProvider,
   PatreonProvider,
+  PinterestProvider,
   PipedriveProvider,
   RedditProvider,
   SalesforceProvider,
   SlackProvider,
   SpotifyProvider,
   StravaProvider,
+  TodoistProvider,
   TraktProvider,
   TwitchProvider,
   TwitterProvider,
@@ -191,6 +199,7 @@ export {
   WordpressProvider,
   WorkOSProvider,
   YandexProvider,
+  ZitadelProvider,
   ZohoProvider,
   ZoomProvider,
 };
