@@ -194,6 +194,15 @@
           type: MenuLink
           properties:
             title: Configuration
+        - id: auth_provider_reference
+          type: MenuGroup
+          properties:
+            title: Provider Reference
+          links:
+            - id: next-auth-providers
+              type: MenuLink
+              properties:
+                title: Next Auth Providers
 
     - id: blocks_input
       type: MenuGroup

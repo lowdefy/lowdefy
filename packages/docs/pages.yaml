@@ -35,6 +35,8 @@
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml
 
+- _ref: users/reference/next-auth-providers.yaml
+
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
 - _ref: blocks/input/CheckboxSelector.yaml
