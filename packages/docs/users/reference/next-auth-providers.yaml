@@ -20,7 +20,7 @@ _ref:
     section: User Authentication
     filePath: users/reference/next-auth-providers.yaml
     content:
-      - id: introduction
+      - id: content
         type: MarkdownWithCode
         properties:
           content:
@@ -29,7 +29,11 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                All Next-Auth preconfigured OAuth providers can used in a Lowdefy app. The providers are mapped through directly, so the Next-Auth documentation can be used as reference. They usually only need a few configuration properties to be used. Since these properties include secrets, the [`_secret`](/_secret) operator should be used to configure these properties.
+                All Next-Auth preconfigured OAuth providers can used in a Lowdefy app. The provider properties are mapped through directly, so the Next-Auth documentation can be used as reference. They usually only need a few configuration properties to be used. Since these properties include secrets, the [`_secret`](/_secret) operator should be used to configure these properties.
+
+                For most OAuth providers, a callback URL must be configured with the provider for security reasons. This URL is the URL to which the user will be redirected to complete the login flow. This URL should be set to `<app-domain>/api/auth/callback/<providerId>` where the `providerId` is the Lowdefy providerId.
+
+                > This is not the same as the callback URL specified in the Login action, which is where the user is redirected by the Lowdefy app once login is complete.
 
                 The providers that can be used are:
 
@@ -112,7 +116,7 @@ _ref:
                         _secret: AUTH0_ISSUER
                 ```
 
-                In Auth0, the callback URL should be configured to `<app-domain>/api/auth/callback/auth0`.
+                In Auth0, the callback URL should be configured to `https://example.com/api/auth/callback/auth0` for production and `http://localhost:3000/api/auth/callback/auth0` for development.
 
                 ###### GitHub configuration:
 

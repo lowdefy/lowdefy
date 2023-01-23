@@ -201,8 +201,12 @@
           links:
             - id: next-auth-providers
               type: MenuLink
+              pageId: next-auth-providers
               properties:
                 title: Next Auth Providers
+            - id: OpenIDConnectProvider
+              type: MenuLink
+              pageId: OpenIDConnectProvider
 
     - id: blocks_input
       type: MenuGroup

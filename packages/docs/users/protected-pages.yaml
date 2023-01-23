@@ -20,7 +20,7 @@ _ref:
     section: User Authentication
     filePath: users/protected-pages.yaml
     content:
-      - id: introduction
+      - id: content
         type: MarkdownWithCode
         properties:
           content:

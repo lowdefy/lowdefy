@@ -20,7 +20,7 @@ _ref:
     section: User Authentication
     filePath: users/login-and-logout.yaml
     content:
-      - id: introduction
+      - id: content
         type: MarkdownWithCode
         properties:
           content: |
