@@ -15,10 +15,28 @@
 */
 
 import axios from 'axios';
+import semver from 'semver';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   if (lowdefyVersion === 'local') {
     return;
+  }
+  if (!semver.valid(lowdefyVersion)) {
+    throw new Error(`
+---------------------------------------------------
+  Version ${lowdefyVersion} is not a valid version.
+---------------------------------------------------`);
+  }
+  if (semver.major(lowdefyVersion) === 3) {
+    throw new Error(`
+---------------------------------------------------
+  You are attempting to run a version 3 app with the version 4 CLI.
+  Please update your app to version 4 using the migration guide.
+  View the migration guide here:
+    https://docs.lowdefy.com/v3-to-v4
+  Alternatively, run the app with the version 3 CLI.
+  To do this, run 'npx lowdefy@3'.
+---------------------------------------------------`);
   }
   if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
     print.warn(`
@@ -28,18 +46,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 ---------------------------------------------------`);
     return;
   }
-  if (getMajorVersion(lowdefyVersion) === '3') {
-    print.warn(`
----------------------------------------------------
-  You are attempting to run a version 3 app with the version 4 cli.
-  Please update your app to version 4 using the migration guide.
-  View the migration guide here:
-    https://docs.lowdefy.com/v3-to-v4
-  Alternatively, run the app with the version 3 cli.
-  To do this, run 'npx lowdefy@3'.
----------------------------------------------------`);
-    return;
-  }
+
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -69,10 +76,6 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 
 function isExperimentalVersion(version) {
   return version.includes('alpha') || version.includes('beta') || version.includes('rc');
-}
-
-function getMajorVersion(version) {
-  return version.split('.')[0];
 }
 
 export default checkForUpdatedVersions;
