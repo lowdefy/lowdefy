@@ -15,8 +15,7 @@
 */
 
 import axios from 'axios';
-
-const semver = require('semver');
+import semver from 'semver';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   if (!semver.valid(lowdefyVersion)) {
@@ -43,7 +42,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 -------------------------------------------------------------
   You are using an outdated Lowdefy CLI.
   Please update to version ${latestVersion}.
-  To always use the latest version, run 'npx lowdefy@latest'.
+  To use the latest version, run 'pnpx lowdefy@${semver.major(latestVersion)}'.
 -------------------------------------------------------------`);
     }
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
