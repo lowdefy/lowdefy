@@ -29,6 +29,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 ---------------------------------------------------
   You are attempting to run a version ${lowdefyVersion} app with the version 3 CLI.
   Please update your Lowdefy CLI version.
+  To do this, run 'pnpx lowdefy@${semver.major(lowdefyVersion)}'.
 ---------------------------------------------------`);
   }
 
