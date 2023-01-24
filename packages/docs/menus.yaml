@@ -192,6 +192,7 @@
             title: User Object
         - id: auth-configuration
           type: MenuLink
+          pageId: auth-configuration
           properties:
             title: Configuration
         - id: auth_provider_reference
@@ -207,6 +208,14 @@
             - id: OpenIDConnectProvider
               type: MenuLink
               pageId: OpenIDConnectProvider
+        - id: auth_callback_reference
+          type: MenuGroup
+          properties:
+            title: Callback Reference
+          links:
+            - id: Auth0LogoutCallback
+              type: MenuLink
+              pageId: Auth0LogoutCallback
 
     - id: blocks_input
       type: MenuGroup

@@ -37,6 +37,7 @@
 
 - _ref: users/reference/next-auth-providers.yaml
 - _ref: users/reference/OpenIDConnectProvider.yaml
+- _ref: users/reference/Auth0LogoutCallback.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
