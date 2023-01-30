@@ -31,6 +31,9 @@ app/**
 packages/server-dev/plugins/**
 packages/server/plugins/**
 
+packages/server-dev/public/**
+packages/server/public/**
+
 packages/server/package.original.json
 packages/server-dev/package.original.json
 
