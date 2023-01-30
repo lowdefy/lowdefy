@@ -167,6 +167,7 @@ importers:
       dotenv: 16.0.3
       jest: 28.1.0
       ora: 6.1.2
+      semver: 7.3.8
       uuid: 9.0.0
       yaml: 2.2.1
     dependencies:
@@ -178,6 +179,7 @@ importers:
       decompress-targz: 4.1.1
       dotenv: 16.0.3
       ora: 6.1.2
+      semver: 7.3.8
       uuid: 9.0.0
       yaml: 2.2.1
     devDependencies:
