@@ -1,0 +1,32 @@
+id: create_app_box
+type: Box
+layout:
+  contentGutter: 16
+properties:
+  style:
+    textAlign: center
+    background-image: 'linear-gradient(#1890ff, #667eea)'
+blocks:
+  - id: create_app_title
+    type: Html
+    properties:
+      html: |
+        <h2 style="color: white">
+          Want to create a Lowdefy app?
+        </h2>
+        <h3> Follow our easy getting started tutorial. </h3>
+
+  - id: get_started
+    type: Button
+    properties:
+      title: Get Started
+      icon: IoFlashOutline
+      style:
+        backgroundColor: white
+      type: link
+    events:
+      onClick:
+        - id: link
+          type: Link
+          params:
+            url: https://docs.lowdefy.com/tutorial-start

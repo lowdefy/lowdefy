@@ -1,0 +1,64 @@
+id: affix_header
+type: Affix
+blocks:
+  - id: header
+    type: Header
+    properties:
+      theme: light
+      style:
+        _if:
+          test:
+            _ref: shared/mobile.yaml
+          then:
+            padding: 0 15px
+    blocks:
+      - id: logo
+        type: Img
+        layout:
+          flex: 0 0 auto
+        properties:
+          src: /logo-light-theme.png
+          width: 156
+      - id: desktop_menu
+        type: Box
+        layout:
+          flex: 1 1 auto
+        visible:
+          _not:
+            _ref: shared/mobile.yaml
+        blocks:
+          - _ref: shared/header/menu.yaml
+          - _ref: shared/header/cta_buttons.yaml
+      - id: mobile_menu
+        type: Box
+        layout:
+          flex: 1 1 auto
+        visible:
+          _ref: shared/mobile.yaml
+        blocks:
+          - id: spacer
+            type: Box
+            layout:
+              flex: 1 1 auto
+          - id: mobile_menu_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              icon: AiOutlineMenu
+              hideTitle: true
+              ghost: true
+            events:
+              onClick:
+                - id: open_menu
+                  type: CallMethod
+                  params:
+                    blockId: mobile_menu_drawer
+                    method: toggleOpen
+          - id: mobile_menu_drawer
+            type: Drawer
+            properties:
+              width: 100%
+            blocks:
+              - _ref: shared/header/menu.yaml
+              - _ref: shared/header/cta_buttons.yaml

@@ -1,0 +1,43 @@
+id: cat_buttons
+type: Box
+layout:
+  flex: 0 1 auto
+blocks:
+  - id: github_button
+    type: Button
+    layout:
+      flex: 0 1 auto
+    properties:
+      title: Star on Github
+      icon: AiOutlineGithub
+      type: link
+    events:
+      onClick:
+        - id: link
+          type: Link
+          params:
+            url: https://github.com/lowdefy/lowdefy
+
+  - id: get_started_button
+    type: Button
+    layout:
+      flex: 0 1 auto
+    properties:
+      title: Get Started
+      shape: round
+      style:
+        _if:
+          test:
+            _ref: shared/mobile.yaml
+          then:
+            background-image: 'linear-gradient(#1890ff, #667eea)'
+            width: 300px
+            marginTop: 10px
+          else:
+            background-image: 'linear-gradient(#1890ff, #667eea)'
+    events:
+      onClick:
+        - id: link
+          type: Link
+          params:
+            url: https://docs.lowdefy.com/tutorial-start

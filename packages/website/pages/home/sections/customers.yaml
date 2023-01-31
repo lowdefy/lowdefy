@@ -1,0 +1,129 @@
+id: customers
+type: Box
+style:
+  textAlign: center
+  backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+blocks:
+  - id: customers_box
+    type: Box
+    style:
+      maxWidth: 700
+      margin: 60px auto
+      textAlign: center
+    blocks:
+      - id: brands
+        type: Html
+        style:
+          padding: 0px 20px 40px 20px
+          maxWidth: 600
+          margin: auto
+        properties:
+          html: |
+            <h4 style="color: white;">Some enterprise customers utilizing Lowdefy to rapidly build powerful business apps.</h4>
+
+      - id: brands_box
+        type: Box
+        blocks:
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="margin-top: -16px; height: 52px; filter: grayscale(100%);"
+                  src="/images/customers/logo-ingrain.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="height: 32px; filter: grayscale(100%) contrast(180%);"
+                  src="/images/customers/logo-bwe.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="height: 32px; filter: invert(100%) grayscale(100%) contrast(5000%);"
+                  src="/images/customers/logo-rtt.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="height: 32px; filter: invert(100%) grayscale(100%) contrast(1000%);"
+                  src="/images/customers/logo-avis.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="padding-top: 6px; height: 32px; filter: invert(100%) grayscale(100%);"
+                  src="/images/customers/logo-lexus.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="height: 42px; filter: invert(100%) grayscale(100%) contrast(1000%);"
+                  src="/images/customers/logo-mrmsupport.png"
+                />
+          - id: brands
+            type: Html
+            style:
+              margin: 12
+            layout:
+              flex: 1 0 auto
+            properties:
+              html: |
+                <img
+                  style="height: 42px; filter: invert(100%) grayscale(100%);"
+                  src="/images/customers/logo-courierit.png"
+                />
+
+      - id: contact_us_button
+        type: Button
+        style:
+          marginTop: 40px
+        properties:
+          title: Contact us to see how we can help
+          type: link
+          color: white
+          style:
+            color: black
+            maxWidth: 100%
+            whiteSpace: normal
+        events:
+          onClick:
+            - id: link_contact_us
+              type: Link
+              params:
+                pageId: contact-us

@@ -174,7 +174,7 @@ _ref:
 
             The first blocks on a page, usually a [`container`](/container) type block, can define `onInit` and `onInitAsync` events. All blocks have `onMount` and `onMountAsync` events, that can be used to initialize the page or blocks.
 
-            The `onInit` event is triggered the first time a page is loaded. This event blocks page render, in other words, the page __will__ remain in a loading state, rendering only the progress bar, until all the actions have completed execution. It can be used to set up [`state`](/context-and-state). Actions that take a long time to execute, like `Request`, should be used sparingly here for a better user experience.
+            The `onInit` event is triggered the first time a page is loaded. This event blocks page render, in other words, the page __will__ remain in a loading state, rendering only the progress bar, until all the actions have completed execution. It can be used to set up [`state`](/page-and-app-state). Actions that take a long time to execute, like `Request`, should be used sparingly here for a better user experience.
 
             The `onInitAsync` event is triggered the first time a page loaded, but does not block page render. In other words, the page __will not__ remain in a loading state until all the actions have completed execution. This is a good place to execute non-blocking tasks or requests that might take longer to execute.
 
@@ -208,8 +208,8 @@ _ref:
             - Operators used in action `params` are evaluated right before the action is executed.
             - The [`_actions`](/_actions) operator is available for sequential actions to use the values returned from preceding actions in the chain.
             - Actions have a `skip` field that can be used to skip action execution.
-            - The `onInit` event is triggered the first time a context is mounted and keeps the page in loading until all actions have finished.
-            - The `onInitAsync` event is triggered the first time a context is mounted and does not keep the page in loading.
+            - The `onInit` event is triggered the first time a page is mounted and keeps the page in loading until all actions have finished.
+            - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
             - The `onMount` events is triggered the every time a block is mounted and keeps the block in loading until all actions have finished.
             - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
 

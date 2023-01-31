@@ -1,0 +1,69 @@
+
+@min768: ~"(min-width: 768px)";
+@min992: ~"(min-width: 992px)";
+
+h1 {
+  font-weight: bold;
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
+
+  @media @min768 {
+    font-size: 2.25rem; /* 36px */
+    line-height: 2.5rem; /* 40px */
+  }
+  @media @min992 {
+    font-size: 3rem; /* 48px */
+    line-height: 1;
+  }
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+
+  @media @min768 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem; /* 36px */
+  }
+  @media @min992 {
+    font-size: 2.25rem; /* 36px */
+    line-height: 2.5rem; /* 40px */
+  }
+}
+
+h3 {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+
+  @media @min768 {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
+  }
+
+  @media @min992 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
+  }
+}
+
+h4 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem; /* 24px */
+
+  @media @min768 {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.75rem; /* 28px */
+  }
+  @media @min992 {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.75rem; /* 28px */
+  }
+}
+
+hr {
+  height: 2px;
+  width:30%;
+  background-color:#1890ff;
+  border-width: 0;
+}
