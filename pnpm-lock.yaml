@@ -1306,7 +1306,6 @@ importers:
       '@lowdefy/operators-uuid': 4.0.0-rc.0
       '@lowdefy/operators-yaml': 4.0.0-rc.0
       '@lowdefy/plugin-next-auth': 4.0.0-rc.0
-      '@lowdefy/website': workspace:*
       '@next/eslint-plugin-next': 12.1.6
       chokidar: 3.5.3
       dotenv: 16.0.3
@@ -1350,7 +1349,6 @@ importers:
       '@lowdefy/operators-uuid': link:../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml': link:../plugins/operators/operators-yaml
       '@lowdefy/plugin-next-auth': link:../plugins/plugins/plugin-next-auth
-      '@lowdefy/website': link:../website
       chokidar: 3.5.3
       dotenv: 16.0.3
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
