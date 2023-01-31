@@ -15,8 +15,25 @@
 */
 
 import axios from 'axios';
+import semver from 'semver';
 
-async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+async function checkForUpdatedVersions({ cliVersion, command, lowdefyVersion, print }) {
+  if (!semver.valid(lowdefyVersion)) {
+    throw new Error(`
+---------------------------------------------------
+  Version ${lowdefyVersion} is not a valid version.
+---------------------------------------------------`);
+  }
+  if (semver.major(lowdefyVersion) > 3) {
+    throw new Error(`
+---------------------------------------------------
+  You are attempting to run a version ${lowdefyVersion}
+  app with the version 3 CLI.
+  Please update your Lowdefy CLI version, or
+  run 'pnpx lowdefy@${semver.major(lowdefyVersion)} ${command}'.
+---------------------------------------------------`);
+  }
+
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -27,7 +44,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 -------------------------------------------------------------
   You are using an outdated Lowdefy CLI.
   Please update to version ${latestVersion}.
-  To always use the latest version, run 'npx lowdefy@latest'.
+  To use the latest version, run 'pnpx lowdefy@${semver.major(latestVersion)}'.
 -------------------------------------------------------------`);
     }
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {
