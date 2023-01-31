@@ -17,7 +17,7 @@
 import axios from 'axios';
 import semver from 'semver';
 
-async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+async function checkForUpdatedVersions({ cliVersion, command, lowdefyVersion, print }) {
   if (!semver.valid(lowdefyVersion)) {
     throw new Error(`
 ---------------------------------------------------
@@ -27,9 +27,10 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
   if (semver.major(lowdefyVersion) > 3) {
     throw new Error(`
 ---------------------------------------------------
-  You are attempting to run a version ${lowdefyVersion} app with the version 3 CLI.
-  Please update your Lowdefy CLI version.
-  To do this, run 'pnpx lowdefy@${semver.major(lowdefyVersion)}'.
+  You are attempting to run a version ${lowdefyVersion}
+  app with the version 3 CLI.
+  Please update your Lowdefy CLI version, or
+  run 'pnpx lowdefy@${semver.major(lowdefyVersion)} ${command}'.
 ---------------------------------------------------`);
   }
 
