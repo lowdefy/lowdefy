@@ -31,7 +31,7 @@ _ref:
       }): any
       ```
     description: |
-      The `_media` operator gets a value from the [`media`](/context-and-state) object. It can only be used on the web-client (Not in `requests` or `connections`). `media` is a data object that contains information about the current screen size of a users browser window. It contains the following data:
+      The `_media` operator gets a value from the [`media`](/page-and-app-state) object. It can only be used on the web-client (Not in `requests` or `connections`). `media` is a data object that contains information about the current screen size of a users browser window. It contains the following data:
 
 
       - `width: number`: The width of the window in pixels.

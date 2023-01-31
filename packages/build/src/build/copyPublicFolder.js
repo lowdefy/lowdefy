@@ -16,16 +16,24 @@
 
 import path from 'path';
 import fs from 'fs';
-import { copyFileOrDirectory } from '@lowdefy/node-utils';
+import { cleanDirectory, copyFileOrDirectory } from '@lowdefy/node-utils';
 
 async function copyPublicFolder({ context }) {
   if (context.directories.config === context.directories.server) return;
-  if (!fs.existsSync(path.resolve(context.directories.config, 'public'))) return;
+
+  await cleanDirectory(path.resolve(context.directories.server, 'public'));
 
   await copyFileOrDirectory(
-    path.resolve(context.directories.config, 'public'),
+    path.resolve(context.directories.server, 'public_default'),
     path.resolve(context.directories.server, 'public')
   );
+
+  if (fs.existsSync(path.resolve(context.directories.config, 'public'))) {
+    await copyFileOrDirectory(
+      path.resolve(context.directories.config, 'public'),
+      path.resolve(context.directories.server, 'public')
+    );
+  }
 }
 
 export default copyPublicFolder;

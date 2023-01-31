@@ -100,7 +100,7 @@ _ref:
               template: |
                 The schema for a Lowdefy request is:
 
-                - `id: string`: __Required__ - A identifier for the request. It must be unique within the context the request is defined in.
+                - `id: string`: __Required__ - A identifier for the request. It must be unique within the page the request is defined in.
                 - `type: string`: __Required__ - The request type to be used. It must be a type supported by the connection type.
                 - `payload: object`: The operators to be used inside of the request. __Operators are evaluated on the client__.
                 - `connectionId: string`: __Required__ - The `id` of the connection that should be used.

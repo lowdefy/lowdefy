@@ -255,7 +255,7 @@ _ref:
 
             We used the [`_eq`](/_eq) operator to check the ticket type is equal to 'Complaint'.
 
-            To get the value of the `ticket_type` input, we use the [`_state`](/_state) operator. This get a value from the page's [`state`](/context-and-state). The page `state` is an object to temporary store page data. All inputs automatically write their values to `state` under the object key of the block `id`, and you can also set values to the page `state` by using the [`SetState`](/SetState) action.
+            To get the value of the `ticket_type` input, we use the [`_state`](/_state) operator. This get a value from the page's [`state`](/page-and-app-state). The page `state` is an object to temporary store page data. All inputs automatically write their values to `state` under the object key of the block `id`, and you can also set values to the page `state` by using the [`SetState`](/SetState) action.
 
             ## Validation rules
 

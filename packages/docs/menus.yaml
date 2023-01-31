@@ -83,11 +83,11 @@
           pageId: references-and-templates
           properties:
             title: References and Templates
-        - id: context-and-state
+        - id: page-and-app-state
           type: MenuLink
-          pageId: context-and-state
+          pageId: page-and-app-state
           properties:
-            title: Context and State
+            title: Page and App State
         - id: blocks
           type: MenuLink
           pageId: blocks
@@ -618,9 +618,6 @@
         - id: _json
           type: MenuLink
           pageId: _json
-        - id: _list_contexts
-          type: MenuLink
-          pageId: _list_contexts
         - id: _location
           type: MenuLink
           pageId: _location
