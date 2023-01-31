@@ -4,13 +4,16 @@ import { type } from '@lowdefy/helpers';
 
 const createLinkComponent = (lowdefy, Link) => {
   const { window } = lowdefy._internal.globals;
-  const backLink = ({ ariaLabel, children, className, id, rel }) => (
+  const backLink = ({ ariaLabel, children, className, id, onClick = () => {}, rel }) => (
     <a
       id={id}
-      onClick={() => lowdefy._internal.router.back()}
       className={className}
       rel={rel}
       aria-label={ariaLabel || 'back'}
+      onClick={(...params) => {
+        lowdefy._internal.router.back();
+        onClick(...params);
+      }}
     >
       {type.isFunction(children) ? children(id) : children}
     </a>
@@ -19,7 +22,9 @@ const createLinkComponent = (lowdefy, Link) => {
     ariaLabel,
     children,
     className,
+    href,
     id,
+    onClick = () => {},
     newTab,
     pageId,
     query,
@@ -31,9 +36,13 @@ const createLinkComponent = (lowdefy, Link) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
-        href={`${url}${query ? `?${query}` : ''}`}
+        href={href || `${url}${query ? `?${query}` : ''}`}
         rel={rel || (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
+        onClick={async (...params) => {
+          await onClick(...params);
+          return true;
+        }}
       >
         {type.isFunction(children) ? children(pageId || url || id) : children}
       </a>
@@ -45,6 +54,7 @@ const createLinkComponent = (lowdefy, Link) => {
     className,
     id,
     newTab,
+    onClick = () => {},
     pageId,
     pathname,
     query,
@@ -66,6 +76,10 @@ const createLinkComponent = (lowdefy, Link) => {
           }`}
           rel={rel || 'noopener noreferrer'}
           target="_blank"
+          onClick={async (...params) => {
+            await onClick(...params);
+            return true;
+          }}
         >
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
@@ -73,14 +87,23 @@ const createLinkComponent = (lowdefy, Link) => {
     }
     return (
       <Link href={{ pathname, query }} replace={replace} scroll={scroll}>
-        <a id={id} aria-label={ariaLabel} className={className} rel={rel} onClick={setInput}>
+        <a
+          id={id}
+          aria-label={ariaLabel}
+          className={className}
+          rel={rel}
+          onClick={(...params) => {
+            setInput();
+            onClick(...params);
+          }}
+        >
           {type.isFunction(children) ? children(pageId || url || id) : children}
         </a>
       </Link>
     );
   };
-  const noLink = ({ className, children, id }) => (
-    <span id={id} className={className}>
+  const noLink = ({ className, children, id, onClick = () => {} }) => (
+    <span id={id} className={className} onClick={onClick}>
       {type.isFunction(children) ? children(id) : children}
     </span>
   );

@@ -46,6 +46,10 @@
         "type": "string",
         "description": "When the link is clicked, route to the provided Lowdefy page."
       },
+      "href": {
+        "type": "string",
+        "description": "The href to link to when the anchor link is clicked."
+      },
       "url": {
         "type": "string",
         "description": "External url to link to when the anchor link is clicked."
