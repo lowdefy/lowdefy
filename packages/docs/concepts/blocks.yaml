@@ -37,9 +37,9 @@ _ref:
 
                 All Lowdefy blocks are categorized according to their primary function:
                 - `display` - Display page elements.
-                - `input` - Modify a value in [`state`](/context-and-state).
+                - `input` - Modify a value in [`state`](/page-and-app-state).
                 - `container` - Render other blocks into [`content areas`](/layout).
-                - `list` - Render `content areas` and blocks for each element in the data array represented in [`state`](/context-and-state).
+                - `list` - Render `content areas` and blocks for each element in the data array represented in [`state`](/page-and-app-state).
 
                 When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas` and `blocks` fields.
 
@@ -80,7 +80,7 @@ _ref:
 
                 ## Input block validation
 
-                All `input` block types maintain a value in the page [`state`](/context-and-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path, for example, `id: "a.b.c"` will produce a value `{"a": {"b": {"c": null }}}` in the page `state`.
+                All `input` block types maintain a value in the page [`state`](/page-and-app-state). This value is set to the field name matching the block `id`. Nested fields can be created by using _dot notation_ in the `id` to specify the field path, for example, `id: "a.b.c"` will produce a value `{"a": {"b": {"c": null }}}` in the page `state`.
 
                 Client side field validation can be applied by setting the `required` and / or `validate` block fields. Field validation is first evaluated when the [`Validate`](/Validate) action is invoked on a page.
 
@@ -166,7 +166,7 @@ _ref:
                   - All user interfaces in Lowdefy are assembled out of blocks, which are React components.
                   #### Block types
                   - There are four block categories: `display`, `input`, `container` and `list`.
-                  - Operators re-evaluate on every [`state`](/context-and-state) update or when request calls complete. This allows blocks to _live update_.
+                  - Operators re-evaluate on every [`state`](/page-and-app-state) update or when request calls complete. This allows blocks to _live update_.
                   - Lowdefy has built in default block types, however this can be overwritten or extended with custom blocks by defining [`plugins`](/plugins) on the Lowdefy config root.
                   - `input` blocks maintain a value in `state` matching the block `id` key. _Dot notation_ applies to specify nested fields.
                   #### Block validation
@@ -182,7 +182,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Context and State
-            previous_page_id: context-and-state
+            previous_page_title: Page and App State
+            previous_page_id: page-and-app-state
             next_page_title: Layout
             next_page_id: layout

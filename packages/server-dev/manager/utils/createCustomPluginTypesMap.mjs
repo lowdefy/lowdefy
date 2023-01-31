@@ -30,7 +30,7 @@ async function getPluginDefinitions({ directories }) {
   return get(lowdefy, 'plugins', { default: [] });
 }
 
-async function createCustomPluginTypesMap({ directories }) {
+async function createCustomPluginTypesMap({ directories, logger }) {
   const customTypesMap = {
     actions: {},
     auth: {
@@ -56,7 +56,14 @@ async function createCustomPluginTypesMap({ directories }) {
   const pluginDefinitions = await getPluginDefinitions({ directories });
 
   for (const plugin of pluginDefinitions) {
-    const { default: types } = await import(`${plugin.name}/types`);
+    let types;
+    try {
+      types = (await import(`${plugin.name}/types`)).default;
+    } catch (e) {
+      logger.error(`Failed to import plugin "${plugin.name}".`);
+      logger.info('If the plugin was added while the server was running, restart the server.');
+      throw new Error(`Failed to import plugin "${plugin.name}".`);
+    }
     createPluginTypesMap({
       packageTypes: types,
       typesMap: customTypesMap,

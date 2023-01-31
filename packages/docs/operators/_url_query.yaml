@@ -28,15 +28,14 @@ _ref:
         all?: boolean,
         key?: string,
         default?: any,
-        contextId?: string
       }): any
       ```
     description: |
-      The `_url_query` operator gets a value from the [`urlQuery`](/context-and-state) object. The `urlQuery` is a data object that is set as the [`https://en.wikipedia.org/wiki/Query_string`] of the app URL. It can be set when linking to a new page using the [`Link`](/link) action, and can be used to set data like a `id` when switching to a new page. Unlike `input`, the `urlQuery` is visible to the user, and can be modified by the user.
+      The `_url_query` operator gets a value from the [`urlQuery`](/page-and-app-state) object. The `urlQuery` is a data object that is set as the [`https://en.wikipedia.org/wiki/Query_string`] of the app URL. It can be set when linking to a new page using the [`Link`](/link) action, and can be used to set data like a `id` when switching to a new page. Unlike `input`, the `urlQuery` is visible to the user, and can be modified by the user.
 
       > __DO NOT__ set any private or personal information to `urlQuery`; all data set to `urlQuery` are accessible publicly. Setting a `id` that can be guessed, like an incremental `id`, can lead to security issues, since users can easily guess and access data for other `ids`.
 
-      If the page is reloaded, the `urlQuery` is not lost. By using `urlQuery`, you can make links containing data that can be shared by users. By default, `_url_query` accesses the `url_query` object from the [`context`](/context-and-state) the operator is used in, but a different context can be specified.
+      If the page is reloaded, the `urlQuery` is not lost. By using `urlQuery`, you can make links containing data that can be shared by users. By default, `_url_query` accesses the `url_query` object from the [page](/page-and-app-state) the operator is used in.
 
       `urlQuery` objects are serialized to JSON, allowing nested objects or arrays to be specified.
 
@@ -51,7 +50,7 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `urlQuery` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `urlQuery` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `urlQuery`. By default, `null` is returned if a value is not found.
-        - `contextId: string`: The id of a `context`. Setting this will get the value from the `urlQuery` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator. Cannot be used in `connections` or `requests`.
+
     examples: |
       ###### Get the value of `my_key` from `urlQuery`:
       ```yaml
@@ -110,11 +109,3 @@ _ref:
       _url_query: my_array.$.value
       ```
       Returns: `0` when used from the first block (0th index) in a list.
-
-      ###### Get a value from another `context`:
-      ```yaml
-      _url_query:
-        key: my_key
-        contextId: 'pageId:contextId:{}'
-      ```
-      Returns: The value of `my_key` in `urlQuery` in context `contextId` on page `pageId`.

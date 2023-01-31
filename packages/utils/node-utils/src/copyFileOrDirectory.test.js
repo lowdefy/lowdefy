@@ -16,11 +16,11 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import copyDirectory from './copyDirectory.js';
+import copyFileOrDirectory from './copyFileOrDirectory.js';
 
-test('copyDirectory', async () => {
-  const dirPathFrom = path.resolve(process.cwd(), 'test/copyDirectory/From/');
-  const dirPathTo = path.resolve(process.cwd(), 'test/copyDirectory/To/');
+test('copy directory', async () => {
+  const dirPathFrom = path.resolve(process.cwd(), 'test/copyDirectory/from/');
+  const dirPathTo = path.resolve(process.cwd(), 'test/copyDirectory/to/');
   const filePathFrom = path.resolve(dirPathFrom, 'copyDirectory.txt');
   const filePathTo = path.resolve(dirPathTo, 'copyDirectory.txt');
 
@@ -29,6 +29,21 @@ test('copyDirectory', async () => {
   });
   fs.writeFileSync(filePathFrom, 'copyDirectory');
 
-  await copyDirectory(dirPathFrom, dirPathTo);
+  await copyFileOrDirectory(dirPathFrom, dirPathTo);
+  expect(fs.existsSync(filePathTo)).toBe(true);
+});
+
+test('copy file', async () => {
+  const dirPathFrom = path.resolve(process.cwd(), 'test/copyFile/from/');
+  const dirPathTo = path.resolve(process.cwd(), 'test/copyFile/to/');
+  const filePathFrom = path.resolve(dirPathFrom, 'copyFile.txt');
+  const filePathTo = path.resolve(dirPathTo, 'copyFile.txt');
+
+  fs.mkdirSync(dirPathFrom, {
+    recursive: true,
+  });
+  fs.writeFileSync(filePathFrom, 'copyFile');
+
+  await copyFileOrDirectory(filePathFrom, filePathTo);
   expect(fs.existsSync(filePathTo)).toBe(true);
 });
