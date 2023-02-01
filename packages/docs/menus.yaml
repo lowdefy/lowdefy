@@ -208,6 +208,14 @@
             - id: OpenIDConnectProvider
               type: MenuLink
               pageId: OpenIDConnectProvider
+        - id: auth_adapter_reference
+          type: MenuGroup
+          properties:
+            title: Adapter Reference
+          links:
+            - id: MongoDBAdapter
+              type: MenuLink
+              pageId: MongoDBAdapter
         - id: auth_callback_reference
           type: MenuGroup
           properties:
