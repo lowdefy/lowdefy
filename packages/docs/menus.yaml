@@ -159,6 +159,11 @@
           pageId: node-server
           properties:
             title: Node.js
+        - id: vercel
+          type: MenuLink
+          pageId: vercel
+          properties:
+            title: Vercel
     - id: users_group
       type: MenuGroup
       properties:
