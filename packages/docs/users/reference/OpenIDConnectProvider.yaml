@@ -35,14 +35,14 @@ _ref:
 
                 ###### object
                   - `wellKnown: string`
-                  - `authorization: string | object`
+                  - `authorization: string | object`: The default is `{ params: { scope: 'openid email profile' } }`.
                   - `token: string | object`
                   - `userinfo: string | object`
                   - `version: string`
-                  - `checks: string | string[]`
+                  - `checks: string | string[]`: The default is `['pkce', 'state']`
                   - `clientId: string`
                   - `clientSecret: string`
-                  - `idToken: boolean`
+                  - `idToken: boolean`: The default is `true`.
                   - `region: string`
                   - `issuer: string`
                   - `allowDangerousEmailAccountLinking: boolean`

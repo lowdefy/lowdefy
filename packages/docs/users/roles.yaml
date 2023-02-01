@@ -20,7 +20,7 @@ _ref:
     section: User Authentication
     filePath: users/roles.yaml
     content:
-      - id: introduction
+      - id: content
         type: MarkdownWithCode
         properties:
           content:
@@ -29,9 +29,9 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                Roles can be used to limit user access to certain pages. Only users with the role will be able to see the page, and the page will be filtered from menus if the user does not have the role.
+                Roles can be used to limit user access to certain pages. Only users with a role linked to the page will be able to see that page, and the page will be filtered from menus if the user does not have the role.
 
-                Roles can be read from the `roles` field on the user object. It should be an array of strings which are the role names. If the provider returns a `roles` field on the user profile then this will be used, otherwise the `auth.userFields` configuration must be used to map another field to the `roles` field on the user object. Custom auth callback plugins can also be used to add a roles field to the user object.
+                Roles can be read from the `roles` field on the user object. It should be an array of strings which are the role names. If the provider returns a `roles` field on the user profile then this will be used, otherwise the `auth.userFields` configuration can be used to map another field to the `roles` field on the user object. Custom auth callback plugins can also be used to add a roles field to the user object.
 
                 ######  Setting user roles to the `my_roles` field returned from provider:
                 ```yaml

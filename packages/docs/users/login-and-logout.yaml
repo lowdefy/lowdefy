@@ -28,9 +28,9 @@ _ref:
 
             ## Login
 
-            The `Login` action is used to start the user login flow. If only one provider is configured, or the `Login` action is called with a `providerId`, the `Login` action requests the Provider's authorization URL from the Lowdefy server, and redirects the user to this URL. Otherwise, the action redirects the user to a page where the user can choose which provider to use to sign in.
+            The `Login` action is used to start the user login flow. If only one OAuth provider is configured, or the `Login` action is called with a `providerId`, the `Login` action requests the Provider's authorization URL from the Lowdefy server, and redirects the user to this URL. Otherwise, the action redirects the user to a page where the user can choose which provider to use to sign in.
 
-            The authorization url usually hosts a page where the user can input their credentials. After the user has logged in successfully, the user is redirected to the `api/auth/callback/[provider_id]` route in the Lowdefy app, where the rest of the authorization code flow is completed.
+            The authorization url usually hosts a page where the user can input their credentials. After the user has logged in successfully, the user is redirected to the `/api/auth/callback/<provider_id>` route in the Lowdefy app, where the rest of the authorization code flow is completed. This URL usually needs to be configured in the identity provider's settings.
 
             The `callbackUrl` parameters of the Login action specify where the user is redirected after login is complete. If `callbackUrl` parameters not set, the user will return to the page from which the action was called.
 
@@ -61,7 +61,8 @@ _ref:
                     _eq:
                       - _user: sub
                       - null
-                  params: page1
+                  params:
+                    pageId: page1
                 # Call the Login action to log the user in.
                 - id: login
                   type: Login
@@ -108,7 +109,7 @@ _ref:
             type: Button
             events:
               onClick:
-                - id: login
+                - id: signup
                   type: Login
                   params:
                     authUrl
@@ -120,7 +121,7 @@ _ref:
 
             When the `Logout` action is called, the user data and authorization cookies are cleared by the app.
 
-            The `callbackUrl` parameters of the Logout action specify where the user is redirected after logout is complete. If `callbackUrl` parameters not set, the user will return to the page from which the action was called.
+            The `callbackUrl` parameters of the Logout action specify where the user is redirected after logout is complete. If `callbackUrl` parameters are not set, the user will return to the page from which the action was called.
 
             The parameters are:
             - `callbackUrl: object`:

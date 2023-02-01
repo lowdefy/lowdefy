@@ -65,19 +65,19 @@ _ref:
 
             @primary-color: #2ac8bb;
             ```
-         
-            Custom themes can be created by overwriting these variables, see more about this [here](https://4x.ant.design/docs/react/customize-theme). 
-            
+
+            Custom themes can be created by overwriting these variables, see more about this [here](https://4x.ant.design/docs/react/customize-theme).
+
             Existing Ant themes can be applied by importing them in the `styles.less` file. For example, dark mode can be applied by importing the following:
 
             ```Less
             // styles.less
 
-            @import 'antd/dist/antd.compact.less';
+            @import 'antd/dist/antd.dark.less';
             ```
-            
+
             Or compact mode can be applied by importing:
-            
+
              ```Less
             // styles.less
 
