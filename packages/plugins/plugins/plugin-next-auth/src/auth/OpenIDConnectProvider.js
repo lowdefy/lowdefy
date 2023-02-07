@@ -22,12 +22,6 @@ function OpenIDConnectProvider(properties) {
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['pkce', 'state'],
     idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        ...profile,
-      };
-    },
     ...properties,
   };
 }

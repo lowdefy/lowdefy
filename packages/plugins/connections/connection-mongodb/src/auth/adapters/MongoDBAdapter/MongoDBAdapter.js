@@ -30,9 +30,9 @@ Default collections are:
 // TODO: Docs: MongoDB database name should be in databaseUri
 
 function MongoDBAdapter({ properties }) {
-  const { databaseUri, mongoDBClientOptions, collections } = properties;
+  const { databaseUri, mongoDBClientOptions, options } = properties;
   const clientPromise = new MongoClient(databaseUri, mongoDBClientOptions).connect();
-  return NextAuthMongoDBAdapter(clientPromise, collections);
+  return NextAuthMongoDBAdapter(clientPromise, options);
 }
 
 export default MongoDBAdapter;

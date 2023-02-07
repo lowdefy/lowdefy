@@ -175,6 +175,60 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: login-and-logout
+          type: MenuLink
+          pageId: login-and-logout
+          properties:
+            title: Login and Logout
+        - id: protected-pages
+          type: MenuLink
+          pageId: protected-pages
+          properties:
+            title: Protected Pages
+        - id: roles
+          type: MenuLink
+          pageId: roles
+          properties:
+            title: Roles
+        - id: user-object
+          type: MenuLink
+          pageId: user-object
+          properties:
+            title: User Object
+        - id: auth-configuration
+          type: MenuLink
+          pageId: auth-configuration
+          properties:
+            title: Configuration
+        - id: auth_provider_reference
+          type: MenuGroup
+          properties:
+            title: Provider Reference
+          links:
+            - id: next-auth-providers
+              type: MenuLink
+              pageId: next-auth-providers
+              properties:
+                title: Next Auth Providers
+            - id: OpenIDConnectProvider
+              type: MenuLink
+              pageId: OpenIDConnectProvider
+        - id: auth_adapter_reference
+          type: MenuGroup
+          properties:
+            title: Adapter Reference
+          links:
+            - id: MongoDBAdapter
+              type: MenuLink
+              pageId: MongoDBAdapter
+        - id: auth_callback_reference
+          type: MenuGroup
+          properties:
+            title: Callback Reference
+          links:
+            - id: Auth0LogoutCallback
+              type: MenuLink
+              pageId: Auth0LogoutCallback
 
     - id: blocks_input
       type: MenuGroup

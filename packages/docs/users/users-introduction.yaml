@@ -18,65 +18,46 @@ _ref:
     pageId: users-introduction
     pageTitle: Introduction
     section: User Authentication
-    filePath: concepts/users-introduction.yaml
+    filePath: users/users-introduction.yaml
     content:
       - id: introduction
         type: Markdown
         properties:
           content: |
-            ##### TODO: This page needs to be updated.
+            Lowdefy uses the [Next-Auth](https://next-auth.js.org) package to implement user authentication. Next-Auth has built in support for many sign-in services, and can be extended using Lowdefy [plugins](/plugins). User authentication can be stateless using JSON Web Tokens (JWT) or can use database sessions.
 
-      #       To add user authentication and authorization to a Lowdefy app, you need to do the following:
-      #       - Configure an OpenID Connect provider
-      #       - Configure which pages should be public and protected (only available to logged in users).
-      #       - Add the `Login` and `Logout` actions to your app, to allow users to log in and out.
+            User authorization is done at the page level. Pages can be set as public or private, and role-based-access control can be used to restrict access to pages based on a user's roles. Authorisation checks are done on the Lowdefy server when executing requests, respecting the same authorization rules as the page the request is defined on.
 
-      #       Optionally, you can also:
-      #       - Use role based authorization to make certain pages available only to users with the correct roles.
+            The authentication system consists of the following components:
 
-      #       An example app implementing OpenID Connect can be found [here](https://github.com/lowdefy/lowdefy-example-openid-connect).
+            ## Providers
 
-      # - id: jwt_session_warning
-      #   type: Alert
-      #   properties:
-      #     type: warning
-      #     icon: AiFillWarning
-      #     message: Stateful JSON Web Tokens are used for authentication
-      #     description: Lowdefy uses stateful JSON Web Tokens for user authentication, since the Lowdefy server is stateless and does not maintain a database of user sessions. This means that once a token is issued, it is valid until the token expires. Any changes to the user's access will only reflect after the token has expired, and the user obtains (or fails to obtain) a new token from the OpenID Connect provider. We recommend making sure tokens have a relatively short expiry time (the default is 4 hours), and evaluating if the security provided by this system is appropriate for your use case.
+            Providers configure the identity provider used to authenticate the user. These are typically OAuth based identity providers like Google or Auth0. All the default providers in the Next-Auth package can be used, and additional providers can be added as plugins. Multiple providers can be configured, but at least one should be configured to have a working authentication system.
 
-      # - id: auth_config
-      #   type: MarkdownWithCode
-      #   properties:
-      #     content: |
-      #       Most authorization and authentication settings are configured in the `config.auth` object in the Lowdefy configuration. The following config can be set:
-      #       ```yaml
-      #       lowdefy: 3.23.2
-      #       config:
-      #         auth:
-      #           openId:
-      #             # The url the user should be redirected to after logout.
-      #             logoutRedirectUri: [string]
-      #             # Field in the user idToken that contains the roles array.
-      #             rolesField: [string]
-      #             # The OpenID Connect scope to request. The default is 'openid profile email'.
-      #             scope: [string]
-      #           jwt:
-      #             # The length of time a user token should be valid.
-      #             expiresIn: [string | number]
-      #           pages:
-      #             # Either set all pages as protected, or list specific protected pages.
-      #             protected: [boolean | string[]]
-      #             # Either set all pages as public, or list specific public pages.
-      #             public: [boolean | string[]]
-      #           roles:
-      #             # Restrict pages to only users with a certain role.
-      #             {roleName}: string[]
-      #       ```
+            ## Adapters
 
-      # - _ref:
-      #     path: templates/navigation_buttons.yaml
-      #     vars:
-      #       previous_page_title: Overview
-      #       previous_page_id: overview
-      #       next_page_title: OpenID Connect
-      #       next_page_id: openid-connect
+            Adapters configure the connection to the database if a database is used, allowing for database sessions. This is optional, and JSON Web Tokens will be used if no adapter is configured.
+
+            ## Callbacks
+
+            Callbacks are functions that are executed during certain actions of the authentication process. They are blocking - if an error is thrown they stop the action, so they can be used for access control checks. A few default callbacks are provided, but a custom plugin will likely need to be written.
+
+            ## Events
+
+            Events are functions that are executed after certain actions of the authentication process. They are not blocking to authentication, and are best used for audit logs/ reporting or other side effects.
+
+            ## Login and Logout actions
+
+            The Login and Logout actions are used to start the login and logout processes.
+
+            ## \_user operator
+
+            The `_user` operator can be used to access data in the user object received from the identity provider. The OpenID Connect standard claims (fields like `name` or `email`) are mapped to the user object by default and addition fields can be configured using the `userFields` configuration option.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Overview
+            previous_page_id: overview
+            next_page_title: Providers
+            next_page_id: auth-providers
