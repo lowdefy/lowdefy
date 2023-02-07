@@ -27,6 +27,7 @@
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
+- _ref: deployment/vercel.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/login-and-logout.yaml
