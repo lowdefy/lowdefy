@@ -32,7 +32,7 @@
   ],
   "exports": "./dist/index.js",
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --delete-dir-on-start --copy-files",
     "clean": "rm -rf dist && rm -rf .lowdefy",
     "start": "node ./dist/index.js",
     "prepublishOnly": "pnpm build",
