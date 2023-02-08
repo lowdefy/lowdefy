@@ -29,9 +29,6 @@ async function initDocker({ context }) {
   );
   await writeFile(path.join(context.directories.config, '.dockerignore'), dockerignore);
   context.print.log(`Created '.dockerignore'.`);
-  // const readMe = await readFile('./README.md');
-  // await writeFile(path.join(context.directories.config, 'deploy/README.md'), readMe);
-  // context.print.log(`Created 'README.md'.`);
 
   await context.sendTelemetry();
   context.print.succeed(`Docker deployment initialized.`);
