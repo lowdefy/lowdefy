@@ -20,6 +20,7 @@ import { Command, Option } from 'commander';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import init from './commands/init/init.js';
+import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import start from './commands/start/start.js';
 import runCommand from './utils/runCommand.js';
@@ -108,6 +109,15 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: init }));
+
+program
+  .command('init-docker')
+  .description('Initialize Dockerfile.')
+  .usage(`[options]`)
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .action(runCommand({ cliVersion, handler: initDocker }));
 
 program
   .command('init-vercel')
