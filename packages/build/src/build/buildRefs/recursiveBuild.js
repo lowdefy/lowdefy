@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import evaluateBuildOperators from './evaluateBuildOperators.js';
+import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
@@ -63,7 +64,10 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       refDef: parsedRefDef,
     });
 
-    parsedFiles[newRefDef.id] = evaluatedOperators;
+    parsedFiles[newRefDef.id] = getKey({
+      input: evaluatedOperators,
+      refDef: parsedRefDef,
+    });
   }
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
