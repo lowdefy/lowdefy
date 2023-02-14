@@ -71,7 +71,7 @@ class WebParser {
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,
-          user: user ?? {},
+          user,
         });
         return res;
       } catch (e) {
