@@ -26,7 +26,7 @@ async function init({ context }) {
   if (fileExists) {
     throw new Error('Cannot initialize a Lowdefy project, a "lowdefy.yaml" file already exists');
   }
-  context.print.log(`Initializing Lowdefy project`);
+  context.print.log(`Initializing Lowdefy project.`);
   await writeFile(lowdefyFilePath, lowdefyFile({ version: context.cliVersion }));
   context.print.log(`Created 'lowdefy.yaml'.`);
   await writeFile(

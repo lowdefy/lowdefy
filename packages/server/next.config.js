@@ -1,7 +1,6 @@
 const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
-// TODO: Trace env and args from cli that is required on the server.
 module.exports = withLess({
   basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
   reactStrictMode: true,
@@ -22,11 +21,7 @@ module.exports = withLess({
   },
   poweredByHeader: false,
   // productionBrowserSourceMaps: true
-  experimental: {
-    // TODO: Convert from experimental.outputStandalone to output: 'standalone' when upgrading to Next 13
-    outputStandalone: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' || false,
-    // concurrentFeatures: true,
-  },
+  output: process.env.LOWDEFY_BUILD_OUTPUT_STANDALONE === '1' ? 'standalone' : undefined,
   outputFileTracing: true,
   eslint: {
     ignoreDuringBuilds: true,
