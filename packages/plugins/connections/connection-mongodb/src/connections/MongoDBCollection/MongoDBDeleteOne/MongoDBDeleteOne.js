@@ -25,17 +25,18 @@ async function MongodbDeleteOne({ blockId, connection, pageId, request, requestI
   let response;
   try {
     if (logCollection) {
-      response = await collection.findOneAndDelete(filter, options);
+      const { value, ...responseWithoutValue } = await collection.findOneAndDelete(filter, options);
+      response = responseWithoutValue;
       await logCollection.insertOne({
         args: { filter, options },
         blockId,
         pageId,
         payload,
         requestId,
-        before: response,
+        before: value,
         timestamp: new Date(),
         type: 'MongoDBDeleteOne',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     } else {
       response = await collection.deleteOne(filter, options);
@@ -45,8 +46,7 @@ async function MongodbDeleteOne({ blockId, connection, pageId, request, requestI
     throw error;
   }
   await client.close();
-  const { acknowledged, deletedCount } = serialize(response);
-  return { acknowledged, deletedCount };
+  return serialize(response);
 }
 
 MongodbDeleteOne.schema = schema;

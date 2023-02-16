@@ -35,7 +35,7 @@ async function MongodbInsertOne({ blockId, connection, pageId, request, requestI
         response,
         timestamp: new Date(),
         type: 'MongoDBInsertOne',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {

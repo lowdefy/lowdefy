@@ -35,7 +35,7 @@ async function MongodbInsertMany({ blockId, connection, pageId, request, request
         response,
         timestamp: new Date(),
         type: 'MongoDBInsertMany',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {
