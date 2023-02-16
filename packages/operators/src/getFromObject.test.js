@@ -94,6 +94,18 @@ test('get a field from an object, key as param, not found returns null', () => {
   expect(res).toEqual(null);
 });
 
+test('get from null', () => {
+  const params = 'string';
+  const res = getFromObject({
+    params,
+    object: null,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual(null);
+});
+
 test('If key is null, null is returned', () => {
   const params = { key: null };
   const res = getFromObject({
@@ -140,6 +152,18 @@ test('get an entire object, params all', () => {
     location,
   });
   expect(res).toEqual(defaultObject);
+});
+
+test('get an entire object, object is null', () => {
+  const params = true;
+  const res = getFromObject({
+    params,
+    object: null,
+    arrayIndices: defaultArrayIndices,
+    operator,
+    location,
+  });
+  expect(res).toEqual(null);
 });
 
 test('copy results', () => {
