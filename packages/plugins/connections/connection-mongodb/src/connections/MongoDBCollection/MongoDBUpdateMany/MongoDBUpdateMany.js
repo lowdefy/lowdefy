@@ -35,7 +35,7 @@ async function MongodbUpdateMany({ blockId, connection, pageId, request, request
         response,
         timestamp: new Date(),
         type: 'MongoDBUpdateMany',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {

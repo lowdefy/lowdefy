@@ -34,8 +34,8 @@ async function MongodbDeleteMany({ blockId, connection, pageId, request, request
         requestId,
         response,
         timestamp: new Date(),
-        type: 'MongoDBInsertMany',
-        user: connection.changeLog?.user,
+        type: 'MongoDBDeleteMany',
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {
