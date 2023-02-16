@@ -231,3 +231,10 @@ _ref:
                   path: pages/page1.yaml
                   transformer: transformers/addFooter.js
             ```
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Page and App State
+            previous_page_id: page-and-app-state
+            next_page_title: Menus
+            next_page_id: menus

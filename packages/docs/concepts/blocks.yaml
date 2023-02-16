@@ -41,15 +41,15 @@ _ref:
                 - `container` - Render other blocks into [`content areas`](/layout).
                 - `list` - Render `content areas` and blocks for each element in the data array represented in [`state`](/page-and-app-state).
 
-                When `state` updates or a requests call completes, the Lowdefy engine reevaluates all operators and rerenders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas` and `blocks` fields.
+                When `state` updates or a requests call completes, the Lowdefy engine re-evaluates all operators and re-renders blocks for which the operator evaluation is different from the previous render result. The result is _live updates_ to all blocks on a page. Operators can be used to build _live update_ logic into all block fields, except for the `id`, `type`, `areas` and `blocks` fields.
 
                 The schema for a Lowdefy block is:
 
-                - `id: string`: __Required__ - A identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in `state`. Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
+                - `id: string`: An identifier for a block. For `Input` blocks the block `id` sets the field key which the block will modify in `state`. Field _dot-notation_ can be used to express fields which are nested in objects or arrays.
                 - `type: string`: __Required__ - This is the block type identifier and defines what block to use. The block type used must either be a default block type or can defined in the app's [`plugins`](/plugins) configuration.
                 - `properties: object`: All the settings passed to a block component. __Operators are evaluated__.
-                - `areas: object`: Used to set the content areas and content layout settings for `container` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
                 - `blocks: array`: A array of blocks to render to the default `content` area for `container` and `list` blocks. See [layout](/layout) for more details on how to use the `blocks` array.
+                - `areas: object`: Used to set the content areas and content layout settings for `container` and `list` blocks. See [layout](/layout) for more details on how to use `areas`.
                 - `events: object`: Used to define [`actions`](/events-and-actions) that run when the block triggers an [`event`](/events-and-actions).
                 - `layout: object`: Used to define the [layout](/layout) settings for a block. __Operators are evaluated__.
                 - `skeleton: object`: Used to overwrite a block's default loading behavior by rendering a skeleton. Any block types from [`@lowdefy/blocks-basic`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-basic/src/blocks) and [`@lowdefy/blocks-loaders`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-loaders/src/blocks) can be used in the skeleton definition, including sub-blocks. __Operators are evaluated__.
@@ -61,7 +61,7 @@ _ref:
 
                 ## Block types
 
-                Lowdefy has a list of default block types as defined in the Lowdefy docs. Most of the default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) React component library, but are not limited to Ant Design since blocks are just React components. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
+                Lowdefy has a set of default block types as defined in the Lowdefy docs. Most of the default Lowdefy blocks aim to cover a very generic implementation of the [Ant Design](https://ant.design/components/overview/) React component library, but some addition component libraries are also included. To use all the default block types, you can simply use the block `type` key, such as [`Button`](/Button), [`TextInput`](/TextInput), or [`Box`](/Box).
 
                 ###### Default block type config example:
                 ```yaml
@@ -71,9 +71,9 @@ _ref:
                     type: PageHeaderMenu
                     blocks:
                       - id: basic_chart
-                        type: Button
+                        type: EChart
                         properties:
-                          # ... Button details
+                          # ... EChart properties
                 ```
 
                 However, the default types can be overwritten or additional types can be defined as required. This is done by defining additional [`plugins`](/plugins).
@@ -101,7 +101,7 @@ _ref:
                 The `validate` field takes an `array` of test `objects` to evaluate before passing the field validation. This list of tests are evaluated sequentially, so the first test that fails will be used as the feedback message to the user.
 
                 The schema for the validation test `objects`:
-                - `pass: boolean`: __Required__ - The test that validates if this item passes or not. This is usually written as operators which evaluates to `true` or `false`. __Operators are evaluated__.
+                - `pass: boolean`: __Required__ - The test that validates if this item passes or not. This is usually written with operators which evaluate to `true` or `false`. __Operators are evaluated__.
                 - `message: string`: __Required__ - The feedback message to the user if this validation tests fails. __Operators are evaluated__.
                 - `status: enum`: The feedback type to present to the user. Option are `error` and `warning`. Default is `error`. __Operators are evaluated__.
 
@@ -135,9 +135,9 @@ _ref:
 
                 ## Block loading
 
-                Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks loading active. By default, some blocks will change behavior while it is in loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container or list block, will result in rendering all child blocks with loading active.
+                Blocks will only start rendering when the `onInit` event has completed its actions. The `onMount` event on blocks will render blocks with loading active. By default, some blocks will change behavior while they are loading. For example, input blocks will be disabled during loading. The loading behavior of blocks can be controlled using the `loading` block property. Setting `loading` to `true` on a container or list block, will result in rendering all child blocks with loading active.
 
-                Often it is useful to render a skeleton of blocks instead of the blocks' default loading behavior. When block definitions are provided to the `skeleton` property on a block, this `skeleton` definition will be rendered when loading is active. Any block types from [`@lowdefy/blocks-basic`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-basic/src/blocks) and [`@lowdefy/blocks-loaders`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-loaders/src/blocks) can be used as the skeleton definition, including sub-blocks.
+                Often it is useful to render a skeleton of blocks instead of the blocks' default loading behavior. When block definitions are provided to the `skeleton` property on a block, this `skeleton` definition will be rendered when loading is active. Any block types from [`@lowdefy/blocks-basic`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-basic/src/blocks) and [`@lowdefy/blocks-loaders`](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks/blocks-loaders/src/blocks) can be used as the skeleton definition. Skeleton blocks are not real blocks, they do not have values in state or events, but they can contain other skeleton blocks as children.
 
                 ##### Block `loading` and `skeleton` example:
 
@@ -182,7 +182,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Page and App State
-            previous_page_id: page-and-app-state
-            next_page_title: Layout
-            next_page_id: layout
+            previous_page_title: Lowdefy App Schema
+            previous_page_id: lowdefy-schema
+            next_page_title: Events and Actions
+            next_page_id: events-and-actions

@@ -73,36 +73,11 @@
           pageId: lowdefy-schema
           properties:
             title: Lowdefy App Schema
-        - id: menus
-          type: MenuLink
-          pageId: menus
-          properties:
-            title: Menus
-        - id: references-and-templates
-          type: MenuLink
-          pageId: references-and-templates
-          properties:
-            title: References and Templates
-        - id: page-and-app-state
-          type: MenuLink
-          pageId: page-and-app-state
-          properties:
-            title: Page and App State
         - id: blocks
           type: MenuLink
           pageId: blocks
           properties:
             title: Blocks
-        - id: layout
-          type: MenuLink
-          pageId: layout
-          properties:
-            title: Layout
-        - id: connections-and-requests
-          type: MenuLink
-          pageId: connections-and-requests
-          properties:
-            title: Connections and Requests
         - id: events-and-actions
           type: MenuLink
           pageId: events-and-actions
@@ -113,6 +88,31 @@
           pageId: operators
           properties:
             title: Operators
+        - id: connections-and-requests
+          type: MenuLink
+          pageId: connections-and-requests
+          properties:
+            title: Connections and Requests
+        - id: page-and-app-state
+          type: MenuLink
+          pageId: page-and-app-state
+          properties:
+            title: Page and App State
+        - id: references-and-templates
+          type: MenuLink
+          pageId: references-and-templates
+          properties:
+            title: References and Templates
+        - id: menus
+          type: MenuLink
+          pageId: menus
+          properties:
+            title: Menus
+        - id: layout
+          type: MenuLink
+          pageId: layout
+          properties:
+            title: Layout
         - id: secrets
           type: MenuLink
           pageId: secrets
@@ -128,16 +128,16 @@
           pageId: hosting-files
           properties:
             title: Hosting Files
-        - id: custom-code
-          type: MenuLink
-          pageId: custom-code
-          properties:
-            title: Custom Code
         - id: custom-styling
           type: MenuLink
           pageId: custom-styling
           properties:
             title: Custom Styling
+        - id: custom-html
+          type: MenuLink
+          pageId: custom-html
+          properties:
+            title: Custom HTML
         - id: cli
           type: MenuLink
           pageId: cli
@@ -542,9 +542,6 @@
         title: Actions
         icon: AiOutlineThunderbolt
       links:
-        - id: Break
-          type: MenuLink
-          pageId: Break
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
@@ -587,6 +584,9 @@
         - id: SetState
           type: MenuLink
           pageId: SetState
+        - id: Throw
+          type: MenuLink
+          pageId: Throw
         - id: Validate
           type: MenuLink
           pageId: Validate

@@ -15,16 +15,16 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: custom-code
-    pageTitle: Custom Code
+    pageId: custom-html
+    pageTitle: Custom HTML
     section: Concepts
-    filePath: concepts/custom-code.yaml
+    filePath: concepts/custom-html.yaml
     content:
       - id: warning
         type: Alert
         properties:
           message: |
-            SECURITY WARNING: Custom code executes JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Since Lowdefy doesn't validate your custom code, make sure that you only load trusted code.
+            SECURITY WARNING: Custom HTML can execute JavaScript inside your Lowdefy app. Insecure code can expose your app or data. Since Lowdefy doesn't validate your custom code, make sure that you only load trusted code.
           type: warning
       - id: md1
         type: MarkdownWithCode
@@ -72,5 +72,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Lists
-            previous_page_id: lists
+            previous_page_title: Custom Styling
+            previous_page_id: custom-styling
+            next_page_title: The CLI
+            next_page_id: cli

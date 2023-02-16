@@ -42,10 +42,10 @@ _ref:
             - `lowdefy: string`: __Required__ - The Lowdefy version number that the app uses. This is required and cannot be a reference to another file.
             - `name: string`: A name for the application.
             - `version: string`: The version number of the app that you are building. This is optional and allows you indicate the version of your app.
-            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's license if you are licensing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can optionally use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
+            - `license: string`: A [SPDX license ID](https://spdx.org/licenses/). You can use this to indicate the project's license if you are licensing your project under a specific software license. If you wish to indicate to others that you do not grant the right to use your project, you can use `UNLICENSED` for this field. How you share your Lowdefy config is up to you.
             - `cli: object`: An object with configuration for the CLI.
             - `config: object`: An object with app configuration like the home page pageId.
-            - `auth: object` An object with auth configuration such as providers and an adapter.
+            - `auth: object` An object with authentication and authorization configuration.
             - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
             - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
             - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
@@ -116,150 +116,166 @@ _ref:
             [TODO]: <> (# TODO: Below will change once we add the head configuration option on pages. Discuss that here.)
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
-
-            Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title to our card, by making use of the card block's title property. We can also add a paragraph block to our card so that it won't be so empty.
-
-            ###### lowdefy.yaml
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
-
-            pages:
-              - id: page1
-                type: PageHeaderMenu
+      - id: pages_example_collapse
+        type: Collapse
+        properties:
+          panels:
+            - title: Pages example
+              key: example
+        areas:
+          example:
+            blocks:
+              - id: pages_example
+                type: MarkdownWithCode
                 properties:
-                  title: Page 1
-                blocks:
-                  - id: content_card
-                    type: Card
-                    properties:
-                      title: Title
-                    blocks:
-                      - id: paragraph
-                        type: Paragraph
-                        properties:
-                          content: This is a paragraph on Page 1.
-            ```
+                  content: |
+                    Let's have a look at how to define a page and it's blocks. We can start with a simple page a card block on it. We can add a title to our card, by making use of the card block's title property. We can also add a paragraph block to our card so that it won't be so empty.
 
-            Let's add another card to our page and give it some blocks which will allow us to get input from the user.
+                    ###### lowdefy.yaml
+                    ```yaml
+                    lowdefy: LOWDEFY_VERSION
 
-            ###### lowdefy.yaml
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
+                    pages:
+                      - id: page1
+                        type: PageHeaderMenu
+                        properties:
+                          title: Page 1
+                        blocks:
+                          - id: content_card
+                            type: Card
+                            properties:
+                              title: Title
+                            blocks:
+                              - id: paragraph
+                                type: Paragraph
+                                properties:
+                                  content: This is a paragraph on Page 1.
+                    ```
 
-            pages:
-              - id: page1
-                type: PageHeaderMenu
-                properties:
-                  title: Page 1
-                blocks:
-                  - id: content_card
-                    type: Card
-                    properties:
-                      title: Title
-                    blocks:
-                      - id: paragraph
-                        type: Paragraph
-                        properties:
-                          content: This is a paragraph on Page 1.
-                  - id: input_card
-                    type: Card
-                    blocks:
-                      - id: text_input
-                        type: TextInput
-                        properties:
-                          label:
-                            title: Please Enter Your Name
-                      - id: radio_selector
-                        type: RadioSelector
-                        properties:
-                          label:
-                            title: How Are You Feeling?
-                            colon: false
-                          options:
-                            - label: Meh
-                              value: 1
-                              disabled: false
-                            - label: Okay
-                              value: 2
-                              disabled: false
-                            - label: Good
-                              value: 3
-                              disabled: false
-                            - label: Great
-                              value: 4
-                              disabled: false
-                            - label: Amazing Now That I'm Using Lowdefy
-                              value: 5
-                              disabled: false
-            ```
+                    Let's add another card to our page and give it some blocks which will allow us to get input from the user.
 
-            In order to build our page further, we will need to add more blocks. Let's leave this page as is and add another page, with it's own card block containing a title block and a paragraph block.
+                    ###### lowdefy.yaml
+                    ```yaml
+                    lowdefy: LOWDEFY_VERSION
 
-            ###### lowdefy.yaml
-            ```yaml
-            lowdefy: LOWDEFY_VERSION
+                    pages:
+                      - id: page1
+                        type: PageHeaderMenu
+                        properties:
+                          title: Page 1
+                        blocks:
+                          - id: content_card
+                            type: Card
+                            properties:
+                              title: Title
+                            blocks:
+                              - id: paragraph
+                                type: Paragraph
+                                properties:
+                                  content: This is a paragraph on Page 1.
+                          - id: input_card
+                            type: Card
+                            blocks:
+                              - id: text_input
+                                type: TextInput
+                                properties:
+                                  label:
+                                    title: Please Enter Your Name
+                              - id: radio_selector
+                                type: RadioSelector
+                                properties:
+                                  label:
+                                    title: How Are You Feeling?
+                                    colon: false
+                                  options:
+                                    - label: Meh
+                                      value: 1
+                                      disabled: false
+                                    - label: Okay
+                                      value: 2
+                                      disabled: false
+                                    - label: Good
+                                      value: 3
+                                      disabled: false
+                                    - label: Great
+                                      value: 4
+                                      disabled: false
+                                    - label: Amazing Now That I'm Using Lowdefy
+                                      value: 5
+                                      disabled: false
+                    ```
 
-            pages:
-              - id: page1
-                type: PageHeaderMenu
-                properties:
-                  title: Page 1
-                blocks:
-                  - id: content_card
-                    type: Card
-                    properties:
-                      title: Title
-                    blocks:
-                      - id: paragraph
-                        type: Paragraph
-                        properties:
-                          content: This is a paragraph on Page 1.
-                  - id: input_card
-                    type: Card
-                    blocks:
-                      - id: text_input
-                        type: TextInput
-                        properties:
-                          label:
-                            title: Please Enter Your Name
-                      - id: radio_selector
-                        type: RadioSelector
-                        properties:
-                          label:
-                            title: How Are You Feeling?
-                            colon: false
-                          options:
-                            - label: Meh
-                              value: 1
-                              disabled: false
-                            - label: Okay
-                              value: 2
-                              disabled: false
-                            - label: Good
-                              value: 3
-                              disabled: false
-                            - label: Great
-                              value: 4
-                              disabled: false
-                            - label: Amazing Now That I'm Using Lowdefy
-                              value: 5
-                              disabled: false
-              - id: page2
-                type: PageHeaderMenu
-                properties:
-                  title: Page 2
-                blocks:
-                  - id: content_card
-                    type: Card
-                    properties:
-                      title: Title
-                    blocks:
-                      - id: paragraph
-                        type: Paragraph
-                        properties:
-                          content: This is a paragraph on Page 2.
-            ```
+                    In order to build our page further, we will need to add more blocks. Let's leave this page as is and add another page, with it's own card block containing a title block and a paragraph block.
 
+                    ###### lowdefy.yaml
+                    ```yaml
+                    lowdefy: LOWDEFY_VERSION
+
+                    pages:
+                      - id: page1
+                        type: PageHeaderMenu
+                        properties:
+                          title: Page 1
+                        blocks:
+                          - id: content_card
+                            type: Card
+                            properties:
+                              title: Title
+                            blocks:
+                              - id: paragraph
+                                type: Paragraph
+                                properties:
+                                  content: This is a paragraph on Page 1.
+                          - id: input_card
+                            type: Card
+                            blocks:
+                              - id: text_input
+                                type: TextInput
+                                properties:
+                                  label:
+                                    title: Please Enter Your Name
+                              - id: radio_selector
+                                type: RadioSelector
+                                properties:
+                                  label:
+                                    title: How Are You Feeling?
+                                    colon: false
+                                  options:
+                                    - label: Meh
+                                      value: 1
+                                      disabled: false
+                                    - label: Okay
+                                      value: 2
+                                      disabled: false
+                                    - label: Good
+                                      value: 3
+                                      disabled: false
+                                    - label: Great
+                                      value: 4
+                                      disabled: false
+                                    - label: Amazing Now That I'm Using Lowdefy
+                                      value: 5
+                                      disabled: false
+                      - id: page2
+                        type: PageHeaderMenu
+                        properties:
+                          title: Page 2
+                        blocks:
+                          - id: content_card
+                            type: Card
+                            properties:
+                              title: Title
+                            blocks:
+                              - id: paragraph
+                                type: Paragraph
+                                properties:
+                                  content: This is a paragraph on Page 2.
+                    ```
+
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
             In order to keep files neat and generally easier to read and understand, we suggest making use of references and templating.
 
             ## References and templates
@@ -290,12 +306,10 @@ _ref:
 
             Major version updates may include major breaking changes or architecture changes. You might need to make more changes to your configuration to be compatible with the new version. We don't intend to release major versions regularly, and try to minimize breaking changes.
 
-            As the project grows, we will release a long term support (LTS) version, that will continue to receive patches, but won't have any breaking changes.
-
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
             previous_page_title: The CLI
             previous_page_id: cli
-            next_page_title: Page and App State
-            next_page_id: page-and-app-state
+            next_page_title: Blocks
+            next_page_id: blocks

@@ -26,7 +26,7 @@ _ref:
           content: |
             Blocks can define _events_ which the block can trigger when something happens on the page, like a button being clicked, an input's value being modified or a page being loaded. Some examples are `onClick` on a [`Button`](/Button) or `onMount` on a [`PageHeaderMenu`](/PageHeaderMenu) block.
 
-            All blocks implements `onMount` and `onMountAsync` events. These are useful for triggering actions when a block is mounted. For the `onMount` event, the block only mounts when the event action chain is completed, however, for the `onMountAsync` event, the block will mount as soon as possible while the event actions completes execution.
+            All blocks implement `onMount` and `onMountAsync` events. These are useful for triggering actions when a block is mounted. For the `onMount` event, the block only mounts when the event action chain is completed, however, for the `onMountAsync` event, the block will mount as soon as possible while the event actions completes execution.
 
             _Actions_ are tasks that can be executed, like calling a request, linking to a new page or changing a value in state. An array of actions can be defined for an event on a block. If that event gets triggered, those actions will execute sequentially.
 
@@ -216,7 +216,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Connections and Requests
-            previous_page_id: connections-and-requests
+            previous_page_title: Blocks
+            previous_page_id: blocks
             next_page_title: Operators
             next_page_id: operators
