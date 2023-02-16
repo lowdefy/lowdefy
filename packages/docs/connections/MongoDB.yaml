@@ -58,13 +58,18 @@ _ref:
 
             >Since the connection URI contains authentication secrets, it should be stored using the [`_secret`](operators/secret.md) operator.
 
+            When using MongoDBUpdateOne and MongoDBDeleteOne requests, take note that the responses differ if the connection has a log collection.
+
             #### Properties
             - `databaseUri: string`: __Required__ - Connection uri string for the MongoDb deployment. Should be stored using the [_secret](operators/secret.md) operator.
             - `databaseName: string`: Default: Database specified in connection string - The name of the database in the MongoDB deployment.
-            - `collection: string`: __Required__ -  The name of the MongoDB collection.
+            - `collection: string`: __Required__ - The name of the MongoDB collection.
             - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
             - `options: object`: See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
+            - `logCollection: object`: Optional log collection for logging changes.
+              - `collection: string`: __Required__ - The name of the MongoDB log collection.
+              - `meta: object`: Optional attributes object for user and other information.
 
             #### Examples
 
@@ -78,6 +83,22 @@ _ref:
                     _secret: MONGODB_URI
                   collection: my_collection_name
                   write: true
+            ```
+            ###### MongoDB collection with reads, writes and a log collection:
+            ```yaml
+            connections:
+              - id: my_collection
+                type: MongoDBCollection
+                properties:
+                  databaseUri:
+                    _secret: MONGODB_URI
+                  collection: my_collection_name
+                  write: true
+                  changeLog:
+                    collection: log_collection_name
+                    meta:
+                      user:
+                        _user: true
             ```
             Environment variables:
             ```
@@ -199,6 +220,7 @@ _ref:
             ### MongoDBDeleteOne
 
             The `MongoDBDeleteOne` request deletes a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to delete. It will delete the first document that matches the filter.
+            > MongoDBDeleteOne response differs when the connection has a log collection. When a log collection is set on the connection, a findOneAndDelete operation is performed compared to the standard deleteOne operation.
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
@@ -514,6 +536,7 @@ _ref:
             ### MongoDBUpdateOne
 
             The `MongoDBUpdateOne` request updates a single document in the collection specified in the connectionId. It requires a filter, which is written in the query syntax, to select a document to update. It will update the first document that matches the filter. If the `upsert` option is set to true, it will insert a new document if no document is found to update.
+            > MongoDBUpdateOne response differs when the connection has a log collection. When a log collection is set on the connection, a findOneAndUpdate operation is performed compared to the standard updateOne operation.
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
