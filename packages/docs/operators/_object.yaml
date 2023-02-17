@@ -122,7 +122,7 @@ _ref:
           (obj: object): any[]
           ```
         description: |
-          The `_object.entries` method returns an array with and array of key-values pairs of all the fields in an object.
+          The `_object.entries` method returns an array with an array of key-values pairs of all the fields in an object.
         arguments: |
           ###### object
           The object to get entries from.
