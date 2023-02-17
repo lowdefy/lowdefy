@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.1...v4.0.0-rc.2) (2023-02-17)
+
+**Note:** Version bump only for package @lowdefy/node-utils
+
+
+
+
+
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency fs-extra to v11.1.0 (major version) ([0f388d7](https://github.com/lowdefy/lowdefy/commit/0f388d7a977fb524467af8a8f6bc328076d7f47e))
+* Fix jest testsfor  es modules in operators and utils packages ([e239727](https://github.com/lowdefy/lowdefy/commit/e239727d1e9b74cd8945037cee462f8ec4afcdb3))
+* Rename copyDirectory util to copyFileOrDirectory. ([b7d3884](https://github.com/lowdefy/lowdefy/commit/b7d38844c8e29cafa0d29852d034e391b8dfdf9d))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package @lowdefy/node-utils

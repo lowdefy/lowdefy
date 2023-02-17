@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 */
 
 /* eslint-disable max-classes-per-file */
+import { jest } from '@jest/globals';
 import _log from './log.js';
 
 const location = 'location';

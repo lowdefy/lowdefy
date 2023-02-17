@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,12 +22,6 @@ function OpenIDConnectProvider(properties) {
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['pkce', 'state'],
     idToken: true,
-    profile(profile) {
-      return {
-        id: profile.sub,
-        ...profile,
-      };
-    },
     ...properties,
   };
 }

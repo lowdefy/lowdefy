@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetUpdateOne from './GoogleSheetUpdateOne.js';
-
-const { checkRead, checkWrite } = GoogleSheetUpdateOne.meta;
-const schema = GoogleSheetUpdateOne.schema;
 
 const mockGetRows = jest.fn();
 const mockAddRow = jest.fn();
 
 const mockSave = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  addRow: mockAddRow,
-  getRows: mockGetRows,
-}));
+
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      addRow: mockAddRow,
+      getRows: mockGetRows,
+    }),
+  };
+});
 
 const mockAddRowDefaultImp = (row) => ({ ...row, _sheet: {} });
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
@@ -81,6 +83,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 };
 
 test('googleSheetUpdateOne, match one', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetUpdateOne({
     request: {
@@ -117,6 +120,7 @@ test('googleSheetUpdateOne, match one', async () => {
 });
 
 test('googleSheetUpdateOne, match one, raw true', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetUpdateOne({
     request: {
@@ -156,6 +160,7 @@ test('googleSheetUpdateOne, match one, raw true', async () => {
 });
 
 test('googleSheetUpdateOne, match nothing', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetUpdateOne({
     request: {
@@ -174,6 +179,7 @@ test('googleSheetUpdateOne, match nothing', async () => {
 });
 
 test('googleSheetUpdateOne, match nothing, upsert true', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
   const res = await GoogleSheetUpdateOne({
@@ -210,6 +216,7 @@ test('googleSheetUpdateOne, match nothing, upsert true', async () => {
 });
 
 test('googleSheetUpdateOne, match more than one', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetUpdateOne({
     request: {
@@ -245,7 +252,9 @@ test('googleSheetUpdateOne, match more than one', async () => {
   `);
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     filter: { id: '1' },
     update: {
@@ -255,14 +264,18 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetUpdateOne request properties should be an object.'
   );
 });
 
-test('filter is not an object', () => {
+test('filter is not an object', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     filter: 'filter',
     update: {
@@ -274,7 +287,9 @@ test('filter is not an object', () => {
   );
 });
 
-test('update is not an object', () => {
+test('update is not an object', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     filter: { id: '1' },
     update: 'update',
@@ -284,7 +299,9 @@ test('update is not an object', () => {
   );
 });
 
-test('filter is missing', () => {
+test('filter is missing', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     update: {
       name: 'New',
@@ -295,7 +312,9 @@ test('filter is missing', () => {
   );
 });
 
-test('update is missing', () => {
+test('update is missing', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     filter: { id: '1' },
   };
@@ -304,7 +323,9 @@ test('update is missing', () => {
   );
 });
 
-test('options.raw is not a boolean', () => {
+test('options.raw is not a boolean', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const schema = GoogleSheetUpdateOne.schema;
   const request = {
     filter: 'filter',
     update: {
@@ -320,9 +341,13 @@ test('options.raw is not a boolean', () => {
 });
 
 test('checkRead should be false', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const { checkRead } = GoogleSheetUpdateOne.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const GoogleSheetUpdateOne = (await import('./GoogleSheetUpdateOne.js')).default;
+  const { checkWrite } = GoogleSheetUpdateOne.meta;
   expect(checkWrite).toBe(true);
 });

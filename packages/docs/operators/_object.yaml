@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ _ref:
     pageId: _object
     pageTitle: _object
     filePath: operators/_object.yaml
+    build: true
     description: |
       The `_object` operator can be used to run javascript [`Object`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) methods.
     methods:
@@ -102,17 +103,66 @@ _ref:
           ###### Set a value to a object key:
           ```yaml
           _object.defineProperty:
-            - firstName: Rachel
+            on:
+              firstName: Rachel
               series: Friends
-            - lastName
-            - descriptor:
-                value: Green
+            key: lastName
+            descriptor:
+              value: Green
           ```
           Returns:
           ```yaml
           firstName: Rachel
           lastName: Green
           series: Friends
+          ```
+      - name: entries
+        types: |
+          ```
+          (obj: object): any[]
+          ```
+        description: |
+          The `_object.entries` method returns an array with an array of key-values pairs of all the fields in an object.
+        arguments: |
+          ###### object
+          The object to get entries from.
+        examples: |
+          ###### Get the entries of an object:
+          ```yaml
+          _object.entries:
+            firstName: Monica
+            lastName: Geller
+          ```
+          Returns:
+          ```yaml
+          - - firstName
+            - Monica
+          - - lastName
+            - Geller
+          ```
+      - name: fromEntries
+        types: |
+          ```
+          (array: any[][]): object
+          ```
+        description: |
+          The `_object.fromEntries` method creates an object from an array of key-value pairs.
+        arguments: |
+          ###### array
+          The array of key-value pairs.
+        examples: |
+          ###### Get the entries of an object:
+          ```yaml
+          _object.fromEntries:
+            - - firstName
+              - Monica
+            - - lastName
+              - Geller
+          ```
+          Returns:
+          ```yaml
+          firstName: Monica
+          lastName: Geller
           ```
       - name: keys
         types: |
@@ -155,10 +205,10 @@ _ref:
           (obj: object): any[]
           ```
         description: |
-          The `_object.keys` method returns an array with the values of all the fields in an object.
+          The `_object.values` method returns an array with the values of all the fields in an object.
         arguments: |
           ###### object
-          The object to get keys from.
+          The object to get values from.
         examples: |
           ###### Get the values of an object:
           ```yaml

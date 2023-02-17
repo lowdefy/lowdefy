@@ -2,6 +2,7 @@ name: Test Pull Requests
 
 on:
   pull_request:
+  merge_group:
 
 jobs:
   test:
@@ -12,7 +13,7 @@ jobs:
         os:
           - ubuntu-latest
           - windows-latest
-        node: [14, 16, 18]
+        node: [16, 18]
     steps:
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2

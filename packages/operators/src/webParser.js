@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ class WebParser {
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,
-          user: user ?? {},
+          user,
         });
         return res;
       } catch (e) {

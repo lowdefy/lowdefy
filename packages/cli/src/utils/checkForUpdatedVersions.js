@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,8 +15,29 @@
 */
 
 import axios from 'axios';
+import semver from 'semver';
 
 async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+  if (lowdefyVersion === 'local') {
+    return;
+  }
+  if (!semver.valid(lowdefyVersion)) {
+    throw new Error(`
+---------------------------------------------------
+  Version ${lowdefyVersion} is not a valid version.
+---------------------------------------------------`);
+  }
+  if (semver.major(lowdefyVersion) === 3) {
+    throw new Error(`
+---------------------------------------------------
+  You are attempting to run a version 3 app with the version 4 CLI.
+  Please update your app to version 4 using the migration guide.
+  View the migration guide here:
+    https://docs.lowdefy.com/v3-to-v4
+  Alternatively, run the app with the version 3 CLI.
+  To do this, run 'npx lowdefy@3'.
+---------------------------------------------------`);
+  }
   if (isExperimentalVersion(cliVersion) || isExperimentalVersion(lowdefyVersion)) {
     print.warn(`
 ---------------------------------------------------
@@ -25,6 +46,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 ---------------------------------------------------`);
     return;
   }
+
   const registryUrl = 'https://registry.npmjs.org/lowdefy';
   try {
     const packageInfo = await axios.get(registryUrl);
@@ -35,7 +57,7 @@ async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
 -------------------------------------------------------------
   You are not using the latest version of the Lowdefy CLI.
   Please update to version ${latestVersion}.
-  To always use the latest version, run 'npx lowdefy@latest'.
+  To always use the latest version, run 'pnpx lowdefy@4'.
 -------------------------------------------------------------`);
     }
     if (lowdefyVersion && lowdefyVersion !== latestVersion) {

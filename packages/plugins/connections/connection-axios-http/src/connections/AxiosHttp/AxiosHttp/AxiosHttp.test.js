@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -121,9 +121,7 @@ test('axios error', async () => {
 });
 
 test('other error', async () => {
-  await expect(AxiosHttp({ request: { url: true } })).rejects.toThrow(
-    'The "url" argument must be of type string. Received type boolean (true)'
-  );
+  await expect(AxiosHttp({ request: { url: true } })).rejects.toThrow('Invalid URL');
 });
 
 // TODO: postman response has changed. Improve tests.

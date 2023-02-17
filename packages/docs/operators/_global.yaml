@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,11 +28,10 @@ _ref:
         all?: boolean,
         key?: string,
         default?: any,
-        contextId?: string
       }): any
       ```
     description: |
-      The `_global` operator gets a value from the [`global`](/context-and-state) object. The `global` object is a shared data object that can be accessed from any `context` in the app.
+      The `_global` operator gets a value from the [`global`](/page-and-app-state) object. The `global` object is a shared data object that can be accessed from any page in the app.
 
     arguments: |
       ###### string
@@ -45,7 +44,6 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `global` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `global` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `global`. By default, `null` is returned if a value is not found.
-        - `contextId: string`: The id of a `context`. Setting this will get the value from the `context` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator.  The value of `global` is the same for all `contexts`. Cannot be used in `connections` or `requests`.
 
     examples: |
       ###### Get the value of `my_key` from `global`:

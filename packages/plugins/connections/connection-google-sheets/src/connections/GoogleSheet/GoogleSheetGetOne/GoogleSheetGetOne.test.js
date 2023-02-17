@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -13,17 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetGetOne from './GoogleSheetGetOne.js';
-
-const { checkRead, checkWrite } = GoogleSheetGetOne.meta;
-const schema = GoogleSheetGetOne.schema;
 
 const mockGetRows = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  getRows: mockGetRows,
-}));
+
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      getRows: mockGetRows,
+    }),
+  };
+});
 
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
   const rows = [
@@ -72,6 +73,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 };
 
 test('googleSheetGetOne, first row is returned', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({ request: {}, connection: {} });
   expect(res).toEqual({
@@ -86,12 +88,16 @@ test('googleSheetGetOne, first row is returned', async () => {
 });
 
 test('googleSheetGetOne, empty rows returned', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(() => []);
   const res = await GoogleSheetGetOne({ request: {}, connection: {} });
   expect(res).toEqual(null);
 });
 
 test('googleSheetGetOne, limit', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual({
@@ -106,6 +112,8 @@ test('googleSheetGetOne, limit', async () => {
 });
 
 test('googleSheetGetOne, skip', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual({
@@ -120,6 +128,8 @@ test('googleSheetGetOne, skip', async () => {
 });
 
 test('googleSheetGetOne, skip and limit', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({
     request: { options: { skip: 2, limit: 1 } },
@@ -137,6 +147,8 @@ test('googleSheetGetOne, skip and limit', async () => {
 });
 
 test('googleSheetGetOne, filter', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({ request: { filter: { name: 'Tim' } }, connection: {} });
   expect(res).toEqual({
@@ -151,6 +163,8 @@ test('googleSheetGetOne, filter', async () => {
 });
 
 test('googleSheetGetOne, limit before filter', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({
     request: { filter: { name: 'Tim' }, options: { limit: 2 } },
@@ -160,6 +174,8 @@ test('googleSheetGetOne, limit before filter', async () => {
 });
 
 test('googleSheetGetOne, skip before filter', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({
     request: { filter: { married: 'TRUE' }, options: { skip: 2 } },
@@ -177,12 +193,16 @@ test('googleSheetGetOne, skip before filter', async () => {
 });
 
 test('googleSheetGetOne, filter filters all', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({ request: { filter: { name: 'Nobody' } }, connection: {} });
   expect(res).toEqual(null);
 });
 
 test('googleSheetGetOne, filter _rowNumber', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({
     request: { filter: { _rowNumber: { $gt: 3 } } },
@@ -200,6 +220,8 @@ test('googleSheetGetOne, filter _rowNumber', async () => {
 });
 
 test('googleSheetGetOne, columnTypes', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetOne({
     request: {},
@@ -223,12 +245,16 @@ test('googleSheetGetOne, columnTypes', async () => {
   });
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, all properties', () => {
+test('valid request schema, all properties', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = {
     options: {
       limit: 100,
@@ -238,14 +264,18 @@ test('valid request schema, all properties', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetGetOne request properties should be an object.'
   );
 });
 
-test('limit is not a number', () => {
+test('limit is not a number', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = {
     options: {
       limit: true,
@@ -256,7 +286,9 @@ test('limit is not a number', () => {
   );
 });
 
-test('skip is not a number', () => {
+test('skip is not a number', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = {
     options: {
       skip: true,
@@ -267,7 +299,9 @@ test('skip is not a number', () => {
   );
 });
 
-test('filter is not an object', () => {
+test('filter is not an object', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const schema = GoogleSheetGetOne.schema;
   const request = {
     filter: true,
   };
@@ -277,9 +311,13 @@ test('filter is not an object', () => {
 });
 
 test('checkRead should be true', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const { checkRead } = GoogleSheetGetOne.meta;
   expect(checkRead).toBe(true);
 });
 
 test('checkWrite should be false', async () => {
+  const GoogleSheetGetOne = (await import('./GoogleSheetGetOne.js')).default;
+  const { checkWrite } = GoogleSheetGetOne.meta;
   expect(checkWrite).toBe(false);
 });

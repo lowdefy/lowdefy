@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/lowdefy",
-  "version": "4.0.0-rc.0",
+  "version": "4.0.0-rc.2",
   "license": "Apache-2.0",
   "private": true,
   "description": "Lowdefy monorepo",
@@ -31,6 +31,7 @@
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "start": "pnpm app:server",
     "test": "pnpm -r --filter='!@lowdefy/blocks-*' --filter='!@lowdefy/plugin-aws' test",
+    "update-packages": "pnpm up -i -r --latest",
     "app:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../../app --server-directory ../server",
     "app:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../../app --dev-directory ../server-dev",
     "app:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../../app --server-directory ../server",
@@ -50,20 +51,26 @@
     "env:server-dev:next-dev": "pnpm -r --filter=lowdefy start build --server-directory ../server-dev && pnpm -r --filter='@lowdefy/server-dev' next dev",
     "env:server-dev": "pnpm -r --filter='@lowdefy/server-dev' start",
     "env:server:next-dev": "pnpm env:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",
-    "env:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start"
+    "env:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start",
+    "web:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../website --server-directory ../server",
+    "web:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../website --dev-directory ../server-dev",
+    "web:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../website --server-directory ../server",
+    "web:server-dev": "pnpm -r --filter='@lowdefy/server-dev' start --config-directory ../website",
+    "web:server:next-dev": "pnpm website:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",
+    "web:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../website && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start"
   },
   "devDependencies": {
-    "eslint": "8.16.0",
-    "eslint-config-prettier": "8.5.0",
+    "eslint": "8.31.0",
+    "eslint-config-prettier": "8.6.0",
     "eslint-import-resolver-node": "0.3.6",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-jsx-a11y": "6.5.1",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-react": "7.30.0",
-    "eslint-plugin-react-hooks": "4.5.0",
-    "lerna": "5.5.1",
-    "prettier": "2.6.2",
-    "turbo": "1.2.14"
+    "eslint-plugin-jsx-a11y": "6.6.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-react": "7.31.11",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "lerna": "6.3.0",
+    "prettier": "2.8.1",
+    "turbo": "1.6.3"
   },
   "packageManager": "pnpm@7.18.1"
 }

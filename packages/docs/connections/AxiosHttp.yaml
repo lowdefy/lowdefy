@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ _ref:
             - `baseURL: string`: `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
             - `headers: object`: An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
             - `params: object`: An object with URL parameters to be sent with the request.
-            - `data: string | object`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
+            - `data: string | object | array`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object, array or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
             - `auth: object`: Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
               - `username: string`
               - `password: string`

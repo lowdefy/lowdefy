@@ -1,0 +1,54 @@
+id: open_source_box
+type: Box
+properties:
+  style:
+    textAlign: center
+    backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+blocks:
+  - id: image
+    type: Img
+    layout:
+      span: 12
+    properties:
+      src: ./images/opensource.png
+      style:
+        width: '70%'
+
+  - id: box
+    type: Box
+    layout:
+      span: 12
+      contentGutter: 16
+    style:
+      textAlign: right
+    blocks:
+      - id: github
+        type: Button
+        properties:
+          title: Github Repo
+          icon: AiOutlineGithub
+          style:
+            background-color: white
+          type: link
+          shape: round
+          size: large
+        events:
+          onClick:
+            - id: link
+              type: Link
+              params:
+                url: https://github.com/lowdefy/lowdefy
+
+      - id: open_source_content
+        type: Html
+        properties:
+          html: |
+            <h2 style="color: white">
+              Lowdefy is an open-source framework
+            </h2>
+            <h3>
+              Build future proof apps on a open framework with no lock-in.
+            </h3>
+            <h4 style="color: white"> Host your app where you want, in cloud or on premise.</h4>
+            <h4 style="color: white"> You do not depend on us, run and manage your own apps. </h4>
+            <h4 style="color: white"> No need to share your keys or passwords with anyone. </h4>

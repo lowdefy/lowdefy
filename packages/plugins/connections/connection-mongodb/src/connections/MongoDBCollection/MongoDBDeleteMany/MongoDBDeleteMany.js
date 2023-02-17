@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ async function MongodbDeleteMany({ blockId, connection, pageId, request, request
         requestId,
         response,
         timestamp: new Date(),
-        type: 'MongoDBInsertMany',
-        user: connection.changeLog?.user,
+        type: 'MongoDBDeleteMany',
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {

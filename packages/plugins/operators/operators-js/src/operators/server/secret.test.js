@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import secret from './secret.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
@@ -24,6 +24,7 @@ console.error = () => {};
 
 test('secret calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const secret = (await import('./secret.js')).default;
   secret({
     arrayIndices: [0],
     location: 'location',
@@ -46,6 +47,7 @@ test('secret calls getFromObject', async () => {
 
 test('secret default value', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const secret = (await import('./secret.js')).default;
   secret({
     arrayIndices: [0],
     location: 'location',
@@ -63,7 +65,9 @@ test('secret default value', async () => {
   ]);
 });
 
-test('secret get all is not allowed', () => {
+test('secret get all is not allowed', async () => {
+  const secret = (await import('./secret.js')).default;
+
   expect(() => secret({ params: true })).toThrowErrorMatchingInlineSnapshot(
     `"Operator Error: Getting all secrets is not allowed. Received: true at undefined."`
   );
@@ -76,6 +80,7 @@ test('secret get all is not allowed', () => {
 });
 
 test('secret OpenID Connect and JSON web token secrets are filtered out', async () => {
+  const secret = (await import('./secret.js')).default;
   const lowdefyOperators = await import('@lowdefy/operators');
   secret({
     arrayIndices: [0],

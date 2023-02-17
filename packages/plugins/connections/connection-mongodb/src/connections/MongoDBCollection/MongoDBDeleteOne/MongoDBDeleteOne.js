@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,17 +25,18 @@ async function MongodbDeleteOne({ blockId, connection, pageId, request, requestI
   let response;
   try {
     if (logCollection) {
-      response = await collection.findOneAndDelete(filter, options);
+      const { value, ...responseWithoutValue } = await collection.findOneAndDelete(filter, options);
+      response = responseWithoutValue;
       await logCollection.insertOne({
         args: { filter, options },
         blockId,
         pageId,
         payload,
         requestId,
-        before: response,
+        before: value,
         timestamp: new Date(),
         type: 'MongoDBDeleteOne',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     } else {
       response = await collection.deleteOne(filter, options);
@@ -45,8 +46,7 @@ async function MongodbDeleteOne({ blockId, connection, pageId, request, requestI
     throw error;
   }
   await client.close();
-  const { acknowledged, deletedCount } = serialize(response);
-  return { acknowledged, deletedCount };
+  return serialize(response);
 }
 
 MongodbDeleteOne.schema = schema;

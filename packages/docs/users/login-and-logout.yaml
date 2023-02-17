@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ _ref:
     pageId: login-and-logout
     pageTitle: Login and Logout
     section: User Authentication
-    filePath: concepts/login-and-logout.yaml
+    filePath: users/login-and-logout.yaml
     content:
-      - id: introduction
+      - id: content
         type: MarkdownWithCode
         properties:
           content: |
@@ -28,15 +28,21 @@ _ref:
 
             ## Login
 
-            The `Login` action requests the OpenID provider's authorization URL from the Lowdefy server. The user is redirected to this URL, which normally hosts a login page. If the user is already logged in at the provider, the provider might redirect the user back without requiring a password again.
+            The `Login` action is used to start the user login flow. If only one OAuth provider is configured, or the `Login` action is called with a `providerId`, the `Login` action requests the Provider's authorization URL from the Lowdefy server, and redirects the user to this URL. Otherwise, the action redirects the user to a page where the user can choose which provider to use to sign in.
 
-            After the user has logged in successfully, the user is redirected to the `auth/openid-callback` route in the Lowdefy app, where the rest of the OpenID authorization code flow is completed.
+            The authorization url usually hosts a page where the user can input their credentials. After the user has logged in successfully, the user is redirected to the `/api/auth/callback/<provider_id>` route in the Lowdefy app, where the rest of the authorization code flow is completed. This URL usually needs to be configured in the identity provider's settings.
 
-            The parameters of the Login action specify where the user is redirected after login is complete. If the pageId is not set, the user is redirected to the homepage. The parameters are:
-            - `authUrlQueryParams: object`: Query parameters to set for the authorization URL.
-            - `pageId: string`: The pageId of the page to redirect to after the login flow is complete
-            - `input: object`: The input to set for the page the user is redirected to after login.
-            - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+            The `callbackUrl` parameters of the Login action specify where the user is redirected after login is complete. If `callbackUrl` parameters not set, the user will return to the page from which the action was called.
+
+            The parameters are:
+            - `authUrl: object`:
+              - `urlQuery: object`: Query parameters to set for the authorization URL.
+            - `callbackUrl: object`:
+              - `home: boolean`: Redirect to the home page after the login flow is complete.
+              - `pageId: string`: The pageId of the page to redirect to after the login flow is complete.
+              - `url: string`: The URL to redirect to after the login flow is complete.
+              - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+            - `providerId: string`: The ID of the provider that should be used for login. If not set and only one provider is configured the configured provider will be used. Else the user will be redirected to a sign in page where they can choose a provider.
 
             The `Login` action can be used to update the `user` object, for example to update the user profile after it has been edited, or to make sure the user token is still valid before editing or creating a record in a database.
 
@@ -55,7 +61,8 @@ _ref:
                     _eq:
                       - _user: sub
                       - null
-                  params: page1
+                  params:
+                    pageId: page1
                 # Call the Login action to log the user in.
                 - id: login
                   type: Login
@@ -65,7 +72,8 @@ _ref:
                       - null
                   params:
                     # Redirect to "page1" after login is complete.
-                    pageId: page1
+                    callbackUrl:
+                      pageId: page1
             ```
 
             ###### A set of login and logout buttons:
@@ -95,70 +103,54 @@ _ref:
                       type: Logout
             ```
 
-            ###### A signup button that uses authUrlQueryParams to request the signup screen:
+            ###### A signup button that uses `authUrl.urlQuery` to request the signup screen:
             ```yaml
             id: Signup
             type: Button
             events:
               onClick:
-                - id: login
+                - id: signup
                   type: Login
                   params:
-                    authUrlQueryParams:
-                      screen_hint: signup
+                    authUrl
+                      urlQuery:
+                        screen_hint: signup
             ```
 
             ## Logout
 
-            When the `Logout` action is called, the user data and authorization cookie are cleared by the app. The `Logout` action does not take any parameters. The user is then redirected to the URL configured in `logoutRedirectUri`, or the app homepage if this is not configured.
+            When the `Logout` action is called, the user data and authorization cookies are cleared by the app.
 
-            Some OpenID Connect providers provide a URL that the user can be directed to to logout the user from the the provider. These urls normally have a query parameter that specifies where the provider should redirect the user after they have logged out the user. These redirect URLs are normally configured with the provider.
+            The `callbackUrl` parameters of the Logout action specify where the user is redirected after logout is complete. If `callbackUrl` parameters are not set, the user will return to the page from which the action was called.
 
-            The logoutRedirectUri can be a [Nunjucks](https://mozilla.github.io/nunjucks/) template string, with the following template variables:
-            - `client_id`: The OpenID Connect client ID in `LOWDEFY_SECRET_OPENID_CLIENT_ID`
-            - `host`: The app host URL. This url includes the URL prefix (`https://` or `http://` if running a development server), and is URI encoded. It is intended to be used as a query parameter.
-            - `id_token_hint`: The user idToken.
-            - `openid_domain`: The OpenID Connect client ID in `LOWDEFY_SECRET_OPENID_DOMAIN`.
+            The parameters are:
+            - `callbackUrl: object`:
+              - `home: boolean`: Redirect to the home page after the login flow is complete.
+              - `pageId: string`: The pageId of the page to redirect to after the login flow is complete.
+              - `url: string`: The URL to redirect to after the login flow is complete.
+              - `urlQuery: object`: The urlQuery to set for the page the user is redirected to after login.
+            - `redirect: boolean`: If set to `false` the user session will be cleared, but the page will not be reloaded.
+
 
             #### Examples
 
             ###### Redirect to the `logged-out` page in the app after logout:
             ```yaml
-            config:
-              auth:
-                openId:
-                  logoutRedirectUri: '/logged-out'
-            ```
-
-            ###### Redirect to the Auth0 logout URL and return to the `logged-out` page in the app after logout:
-            ```yaml
-            lowdefy: 3.23.2
-            config:
-              auth:
-                openId:
-                  # Line breaks added for clarity
-                  logoutRedirectUri: "{{ openid_domain }}/v2/logout?\
-                    returnTo={{ host }}/logged-out&\
-                    client_id={{ client_id }}"
-            ```
-
-            ###### Redirect to the Keycloak logout URL and return to the `logged-out` page in the app after logout:
-            ```yaml
-            lowdefy: 3.23.2
-            config:
-              auth:
-                openId:
-                  # Line breaks added for clarity
-                  logoutRedirectUri: "{{ openid_domain }}/protocol/openid-connect/logout?\
-                    post_logout_redirect_uri={{ host }}/logged-out&\
-                    client_id={{ client_id }}&\
-                    id_token_hint={{ id_token_hint }}"
+            id: Logout
+            type: Button
+            events:
+              onClick:
+                - id: logout
+                  type: Logout
+                  params:
+                    callbackUrl:
+                      pageId: logged-out
             ```
 
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: OpenID Connect
-            previous_page_id: openid-connect
+            previous_page_title: Providers
+            previous_page_id: auth-providers
             next_page_title: Protected pages
             next_page_id: protected-pages

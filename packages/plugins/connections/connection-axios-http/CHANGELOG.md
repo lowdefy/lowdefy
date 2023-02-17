@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.1...v4.0.0-rc.2) (2023-02-17)
+
+**Note:** Version bump only for package @lowdefy/connection-axios-http
+
+
+
+
+
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* Allow axios data property to be an array ([9b83af5](https://github.com/lowdefy/lowdefy/commit/9b83af5e0fa0600ff39b1c317fbce7e5be2a17a0)), closes [#1158](https://github.com/lowdefy/lowdefy/issues/1158)
+* **deps:** Update axios to v1.2.2 (major version) ([18d725e](https://github.com/lowdefy/lowdefy/commit/18d725e9ff8b2d049ecd7182c1241553950e8d4f))
+* **tests:** Fix jest mocks for es modules in connections. ([e3fadb2](https://github.com/lowdefy/lowdefy/commit/e3fadb2e4fe3bb4948b5f12a752f9356f20e8eb7))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package @lowdefy/connection-axios-http

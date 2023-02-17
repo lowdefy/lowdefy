@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,18 +30,14 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            ##### TODO: This page needs to be updated.
+            Lowdefy runs as Next.Js app. It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` of all pages. This can be useful for executing third party code such as Google Analytics, Intercom, etc. However, if the goal is to extend the functionality of your Lowdefy app with custom blocks, operators, actions or requests, use [plugins](/plugins).
 
-            Lowdefy runs as a single page web app (SPA). It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` to of the default `index.html` page.
-
-            The content loaded into the `head` and `body` tag can be any valid HTML. Third party code can be imported, for example Google Analytics, Intercom, etc. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can easily be hosted from the [Lowdefy public folder](/hosting-files).
-
-            > __Warning__: Lowdefy implements the [Ant design](https://ant.design/) UI component framework for app layout and most blocks, thus the default Ant Design CSS is loaded for all Lowdefy apps. Take caution not to unintentionally overwrite existing style settings and classes which can result in a degraded user experience.
+            The content loaded into the `head` and `body` tag can be any valid HTML. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can also be hosted from the [Lowdefy public folder](/hosting-files).
 
             ## Schema to load custom code
 
-            - `app.html.appendHead: string`: Any valid HTML content can be loaded just before the `</head>` tag of the Lowdefy app `index.html` file.
-            - `app.html.appendBody: string`: Any valid HTML content can be loaded just before the `</body>` tag of the Lowdefy app `index.html` file.
+            - `app.html.appendHead: string`: Any valid HTML content can be loaded just before the `</head>` tag of the page.
+            - `app.html.appendBody: string`: Any valid HTML content can be loaded just before the `</body>` tag of the page.
 
             Most often it is convenient to abstract this HTML out to a separate file using the [`_ref`](/_ref) operator.
 

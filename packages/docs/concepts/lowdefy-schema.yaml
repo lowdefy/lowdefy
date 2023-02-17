@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            A Lowdefy app is written as YAML files, which are combined together using the `_ref` operator when the app is built, into a configuration object that describes the entire app. This object has different sections that describe different parts of the app.
+            A Lowdefy app is written as YAML or JSON files, which are combined together using the [`_ref`](/_ref) operator when the app is built into a configuration object that describes the app. This object has different sections that describe different parts of the Lowdefy app.
 
       - id: yaml_understanding_alert
         type: Alert
@@ -297,5 +297,5 @@ _ref:
           vars:
             previous_page_title: The CLI
             previous_page_id: cli
-            next_page_title: Context and State
-            next_page_id: context-and-state
+            next_page_title: Page and App State
+            next_page_id: page-and-app-state

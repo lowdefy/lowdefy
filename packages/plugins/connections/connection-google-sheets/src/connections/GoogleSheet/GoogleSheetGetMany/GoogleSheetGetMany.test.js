@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetGetMany from './GoogleSheetGetMany.js';
-
-const { checkRead, checkWrite } = GoogleSheetGetMany.meta;
-const schema = GoogleSheetGetMany.schema;
 
 const mockGetRows = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  getRows: mockGetRows,
-}));
+
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      getRows: mockGetRows,
+    }),
+  };
+});
 
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
   const rows = [
@@ -72,6 +74,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 };
 
 test('googleSheetGetMany, all rows', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({ request: {}, connection: {} });
   expect(res).toEqual([
@@ -115,12 +118,14 @@ test('googleSheetGetMany, all rows', async () => {
 });
 
 test('googleSheetGetMany, empty rows returned', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(() => []);
   const res = await GoogleSheetGetMany({ request: {}, connection: {} });
   expect(res).toEqual([]);
 });
 
 test('googleSheetGetMany, limit', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({ request: { options: { limit: 2 } }, connection: {} });
   expect(res).toEqual([
@@ -146,6 +151,7 @@ test('googleSheetGetMany, limit', async () => {
 });
 
 test('googleSheetGetMany, skip', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({ request: { options: { skip: 2 } }, connection: {} });
   expect(res).toEqual([
@@ -171,6 +177,7 @@ test('googleSheetGetMany, skip', async () => {
 });
 
 test('googleSheetGetMany, skip and limit', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({
     request: { options: { skip: 2, limit: 1 } },
@@ -190,6 +197,7 @@ test('googleSheetGetMany, skip and limit', async () => {
 });
 
 test('googleSheetGetMany, filter', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({ request: { filter: { name: 'Tim' } }, connection: {} });
   expect(res).toEqual([
@@ -206,12 +214,14 @@ test('googleSheetGetMany, filter', async () => {
 });
 
 test('googleSheetGetMany, filter filters all', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({ request: { filter: { name: 'Nobody' } }, connection: {} });
   expect(res).toEqual([]);
 });
 
 test('googleSheetGetMany, filter _rowNumber', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({
     request: { filter: { _rowNumber: { $gt: 3 } } },
@@ -240,6 +250,7 @@ test('googleSheetGetMany, filter _rowNumber', async () => {
 });
 
 test('googleSheetGetMany, pipeline count', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({
     request: { pipeline: [{ $group: { _id: 0, count: { $sum: 1 } } }] },
@@ -254,6 +265,7 @@ test('googleSheetGetMany, pipeline count', async () => {
 });
 
 test('googleSheetGetMany, columnTypes', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetGetMany({
     request: {},
@@ -306,12 +318,16 @@ test('googleSheetGetMany, columnTypes', async () => {
   ]);
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, all properties', () => {
+test('valid request schema, all properties', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {
     filter: { id: 1 },
     pipeline: [{ $addFields: { a: 1 } }],
@@ -323,14 +339,18 @@ test('valid request schema, all properties', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetGetMany request properties should be an object.'
   );
 });
 
-test('limit is not a number', () => {
+test('limit is not a number', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {
     options: {
       limit: true,
@@ -341,7 +361,9 @@ test('limit is not a number', () => {
   );
 });
 
-test('skip is not a number', () => {
+test('skip is not a number', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {
     options: {
       skip: true,
@@ -352,7 +374,9 @@ test('skip is not a number', () => {
   );
 });
 
-test('filter is not an object', () => {
+test('filter is not an object', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {
     filter: true,
   };
@@ -361,7 +385,9 @@ test('filter is not an object', () => {
   );
 });
 
-test('pipeline is not an array', () => {
+test('pipeline is not an array', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const schema = GoogleSheetGetMany.schema;
   const request = {
     pipeline: true,
   };
@@ -371,9 +397,13 @@ test('pipeline is not an array', () => {
 });
 
 test('checkRead should be true', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const { checkRead } = GoogleSheetGetMany.meta;
   expect(checkRead).toBe(true);
 });
 
 test('checkWrite should be false', async () => {
+  const GoogleSheetGetMany = (await import('./GoogleSheetGetMany.js')).default;
+  const { checkWrite } = GoogleSheetGetMany.meta;
   expect(checkWrite).toBe(false);
 });

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -813,7 +813,7 @@ field:
     });
   });
 
-  test('buildRefs get key from referenced yaml file', async () => {
+  test('buildRefs get key from referenced json file', async () => {
     const files = [
       {
         path: 'lowdefy.yaml',
@@ -876,6 +876,149 @@ field:
     const res = await buildRefs({ context });
     expect(res).toEqual({
       field: null,
+    });
+  });
+
+  test('buildRefs get key from chained referenced files', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    key: targetField`,
+      },
+      {
+        path: 'target.yaml',
+        content: '_ref: shared.yaml',
+      },
+      {
+        path: 'shared.yaml',
+        content: 'targetField: value',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'value',
+    });
+  });
+
+  test('buildRefs get key from referenced file with build operators', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    key: targetField`,
+      },
+      {
+        path: 'target.yaml',
+        content: `
+        _build.object.assign:
+          - field1: value1
+            field2: value2
+          - targetField: value
+            `,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'value',
+    });
+  });
+
+  test('buildRefs get key from chained referenced files with build operators', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    key: field1`,
+      },
+      {
+        path: 'target.yaml',
+        content: `
+        _build.object.assign:
+          - _ref: defaults.yaml
+          - field1: newValue
+            field3: value3
+            `,
+      },
+      {
+        path: 'defaults.yaml',
+        content: `
+field1: value1
+field2: value2`,
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'newValue',
+    });
+  });
+  // This test fails until issue #1488 is fixed
+  //   test('buildRefs get key, built using operators, from referenced file', async () => {
+  //     const files = [
+  //       {
+  //         path: 'lowdefy.yaml',
+  //         content: `
+  // field:
+  //   _ref:
+  //     path: target.yaml
+  //     key:
+  //       _build.string.concat:
+  //         - target
+  //         - Field`,
+  //       },
+  //       {
+  //         path: 'target.yaml',
+  //         content: 'targetField: value',
+  //       },
+  //     ];
+  //     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  //     const res = await buildRefs({ context });
+  //     expect(res).toEqual({
+  //       field: 'value',
+  //     });
+  //   });
+  test('buildRefs get _var key', async () => {
+    const files = [
+      {
+        path: 'lowdefy.yaml',
+        content: `
+field:
+  _ref:
+    path: target.yaml
+    vars:
+      field: targetField
+    `,
+      },
+      {
+        path: 'target.yaml',
+        content: `
+_ref:
+    path: target2.yaml
+    key:
+      _var: field
+    `,
+      },
+      {
+        path: 'target2.yaml',
+        content: 'targetField: value',
+      },
+    ];
+    mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+    const res = await buildRefs({ context });
+    expect(res).toEqual({
+      field: 'value',
     });
   });
 });

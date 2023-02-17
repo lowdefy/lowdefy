@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ export default {
     minHeight: '100vh',
   },
   properties: {
-    status: 404,
+    status: 'info',
     title: '404',
     subTitle: 'Sorry, the page you are visiting does not exist.',
   },

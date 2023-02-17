@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetDeleteOne from './GoogleSheetDeleteOne.js';
-
-const { checkRead, checkWrite } = GoogleSheetDeleteOne.meta;
-const schema = GoogleSheetDeleteOne.schema;
 
 const mockGetRows = jest.fn();
 const mockDelete = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  getRows: mockGetRows,
-}));
+
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      getRows: mockGetRows,
+    }),
+  };
+});
 
 const mockGetRowsDefaultImp = ({ limit, offset }) => {
   const rows = [
@@ -77,6 +79,7 @@ const mockGetRowsDefaultImp = ({ limit, offset }) => {
 };
 
 test('googleSheetDeleteMany, match one', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetDeleteOne({
     request: {
@@ -101,6 +104,7 @@ test('googleSheetDeleteMany, match one', async () => {
 });
 
 test('googleSheetDeleteMany, match nothing', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetDeleteOne({
     request: {
@@ -115,6 +119,7 @@ test('googleSheetDeleteMany, match nothing', async () => {
 });
 
 test('googleSheetDeleteMany, match more than one', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
   mockGetRows.mockImplementation(mockGetRowsDefaultImp);
   const res = await GoogleSheetDeleteOne({
     request: {
@@ -138,21 +143,27 @@ test('googleSheetDeleteMany, match more than one', async () => {
   expect(mockDelete).toHaveBeenCalledTimes(1);
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = {
     filter: { id: '1' },
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request properties should be an object.'
   );
 });
 
-test('filter is not an object', () => {
+test('filter is not an object', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = {
     filter: true,
   };
@@ -161,14 +172,18 @@ test('filter is not an object', () => {
   );
 });
 
-test('filter is missing', () => {
+test('filter is missing', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetDeleteOne request should have required property "filter".'
   );
 });
 
-test('limit is not a number', () => {
+test('limit is not a number', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = {
     options: {
       limit: true,
@@ -179,7 +194,9 @@ test('limit is not a number', () => {
   );
 });
 
-test('skip is not a number', () => {
+test('skip is not a number', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const schema = GoogleSheetDeleteOne.schema;
   const request = {
     options: {
       skip: true,
@@ -191,9 +208,13 @@ test('skip is not a number', () => {
 });
 
 test('checkRead should be false', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const { checkRead } = GoogleSheetDeleteOne.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const GoogleSheetDeleteOne = (await import('./GoogleSheetDeleteOne.js')).default;
+  const { checkWrite } = GoogleSheetDeleteOne.meta;
   expect(checkWrite).toBe(true);
 });

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,9 +21,12 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
     if (props.disabled === true) {
       return disabledLink(props);
     }
-    if ([!props.pageId, !props.back, !props.home, !props.url].filter((v) => !v).length > 1) {
+    if (
+      [!props.pageId, !props.back, !props.home, !props.href, !props.url].filter((v) => !v).length >
+      1
+    ) {
       throw Error(
-        `Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'pageId' or 'url' can be defined.`
+        `Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'href', 'pageId' or 'url' can be defined.`
       );
     }
     if (props.back === true) {
@@ -51,6 +54,9 @@ function createLink({ backLink, disabledLink, lowdefy, newOriginLink, noLink, sa
           lowdefy.inputs[`page:${props.pageId}`] = props.input ?? {};
         },
       });
+    }
+    if (type.isString(props.href)) {
+      return newOriginLink(props);
     }
     if (type.isString(props.url)) {
       const protocol = props.url.includes(':') ? '' : 'https://';

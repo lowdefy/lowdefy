@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ test('updateOne', async () => {
   };
   const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     modifiedCount: 1,
     upsertedId: null,
     upsertedCount: 0,
@@ -64,6 +65,7 @@ test('updateOne upsert', async () => {
   };
   const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     modifiedCount: 0,
     upsertedId: 'updateOne_upsert',
     upsertedCount: 1,
@@ -85,6 +87,7 @@ test('updateOne upsert false', async () => {
   };
   const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     modifiedCount: 0,
     upsertedId: null,
     upsertedCount: 0,
@@ -105,6 +108,7 @@ test('updateOne upsert default false', async () => {
   };
   const res = await MongoDBUpdateOne({ request, connection });
   expect(res).toEqual({
+    acknowledged: true,
     modifiedCount: 0,
     upsertedId: null,
     upsertedCount: 0,

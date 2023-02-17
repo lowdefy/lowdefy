@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,6 +58,13 @@ page:
           properties:
             content:
               _var: description
+        {% if build %}
+        - id: build_operator
+          type: Markdown
+          properties:
+            content: |
+              > This operator can be used as a [`_build`](/_build) operator method.
+        {% endif %}
         {% if arguments %}
         - id: arguments_title
           type: Markdown

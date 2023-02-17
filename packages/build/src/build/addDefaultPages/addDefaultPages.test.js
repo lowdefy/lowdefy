@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ test('addDefaultPages, no pages array', () => {
           minHeight: '100vh',
         },
         properties: {
-          status: 404,
+          status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },
@@ -89,7 +89,7 @@ test('addDefaultPages, empty pages array', () => {
           minHeight: '100vh',
         },
         properties: {
-          status: 404,
+          status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },
@@ -139,7 +139,7 @@ test('addDefaultPages, pages without 404 page', () => {
           minHeight: '100vh',
         },
         properties: {
-          status: 404,
+          status: 'info',
           subTitle: 'Sorry, the page you are visiting does not exist.',
           title: '404',
         },

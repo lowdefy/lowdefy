@@ -8,23 +8,11 @@
 - _ref: tutorial/tutorial-display-data-page.yaml
 - _ref: tutorial/tutorial-next-steps.yaml
 
-# - _ref:
-#     path: howto/generate-csv.yaml.njk
-#     vars:
-#       version:
-#         _ref: version.yaml
-# - _ref:
-#     path: howto/generate-pdf.yaml.njk
-#     vars:
-#       version:
-#         _ref: version.yaml
-
 - _ref: concepts/overview.yaml
-- _ref: concepts/cli.yaml
 - _ref: concepts/lowdefy-schema.yaml
 - _ref: concepts/menus.yaml
 - _ref: concepts/references-and-templates.yaml
-- _ref: concepts/context-and-state.yaml
+- _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
 - _ref: concepts/layout.yaml
 - _ref: concepts/connections-and-requests.yaml
@@ -34,16 +22,24 @@
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-code.yaml
+- _ref: concepts/custom-styling.yaml
+- _ref: concepts/cli.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
+- _ref: deployment/vercel.yaml
 
 - _ref: users/users-introduction.yaml
-# - _ref: users/openid-connect.yaml
-# - _ref: users/login-and-logout.yaml
-# - _ref: users/protected-pages.yaml
-# - _ref: users/user-object.yaml
-# - _ref: users/roles.yaml
+- _ref: users/login-and-logout.yaml
+- _ref: users/protected-pages.yaml
+- _ref: users/roles.yaml
+- _ref: users/user-object.yaml
+- _ref: users/auth-configuration.yaml
+
+- _ref: users/reference/next-auth-providers.yaml
+- _ref: users/reference/OpenIDConnectProvider.yaml
+- _ref: users/reference/MongoDBAdapter.yaml
+- _ref: users/reference/Auth0LogoutCallback.yaml
 
 - _ref: blocks/input/AutoComplete.yaml
 - _ref: blocks/input/ButtonSelector.yaml
@@ -139,10 +135,12 @@
 
 - _ref: actions/CallMethod.yaml
 - _ref: actions/DisplayMessage.yaml
+- _ref: actions/DownloadCsv.yaml
 - _ref: actions/Fetch.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
+- _ref: actions/PdfMake.yaml
 - _ref: actions/Request.yaml
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
@@ -158,6 +156,7 @@
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
+- _ref: operators/_build.yaml
 - _ref: operators/_change_case.yaml
 - _ref: operators/_date.yaml
 - _ref: operators/_diff.yaml
@@ -178,7 +177,6 @@
 - _ref: operators/_intl.yaml
 # - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
-- _ref: operators/_list_contexts.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
 - _ref: operators/_lt.yaml
@@ -213,5 +211,7 @@
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml
+
+- _ref: migration/v3-to-v4.yaml
 
 - _ref: 404.yaml

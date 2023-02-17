@@ -57,22 +57,6 @@
           pageId: tutorial-next-steps
           properties:
             title: Next steps
-    # - id: howto
-    #   type: MenuGroup
-    #   properties:
-    #     title: How To
-    #     icon: AiOutlineQuestion
-    #   links:
-    #     - id: generate-csv
-    #       type: MenuLink
-    #       pageId: generate-csv-files-from-data
-    #       properties:
-    #         title: Generate CSVs
-    #     - id: generate-pdf
-    #       type: MenuLink
-    #       pageId: generate-pdf-document-from-data
-    #       properties:
-    #         title: Generate PDFs
     - id: concepts
       type: MenuGroup
       properties:
@@ -84,11 +68,6 @@
           pageId: overview
           properties:
             title: Overview
-        - id: cli
-          type: MenuLink
-          pageId: cli
-          properties:
-            title: The CLI
         - id: lowdefy-schema
           type: MenuLink
           pageId: lowdefy-schema
@@ -104,11 +83,11 @@
           pageId: references-and-templates
           properties:
             title: References and Templates
-        - id: context-and-state
+        - id: page-and-app-state
           type: MenuLink
-          pageId: context-and-state
+          pageId: page-and-app-state
           properties:
-            title: Context and State
+            title: Page and App State
         - id: blocks
           type: MenuLink
           pageId: blocks
@@ -154,6 +133,16 @@
           pageId: custom-code
           properties:
             title: Custom Code
+        - id: custom-styling
+          type: MenuLink
+          pageId: custom-styling
+          properties:
+            title: Custom Styling
+        - id: cli
+          type: MenuLink
+          pageId: cli
+          properties:
+            title: The CLI
     - id: deployment
       type: MenuGroup
       properties:
@@ -170,6 +159,11 @@
           pageId: node-server
           properties:
             title: Node.js
+        - id: vercel
+          type: MenuLink
+          pageId: vercel
+          properties:
+            title: Vercel
     - id: users_group
       type: MenuGroup
       properties:
@@ -181,6 +175,60 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: login-and-logout
+          type: MenuLink
+          pageId: login-and-logout
+          properties:
+            title: Login and Logout
+        - id: protected-pages
+          type: MenuLink
+          pageId: protected-pages
+          properties:
+            title: Protected Pages
+        - id: roles
+          type: MenuLink
+          pageId: roles
+          properties:
+            title: Roles
+        - id: user-object
+          type: MenuLink
+          pageId: user-object
+          properties:
+            title: User Object
+        - id: auth-configuration
+          type: MenuLink
+          pageId: auth-configuration
+          properties:
+            title: Configuration
+        - id: auth_provider_reference
+          type: MenuGroup
+          properties:
+            title: Provider Reference
+          links:
+            - id: next-auth-providers
+              type: MenuLink
+              pageId: next-auth-providers
+              properties:
+                title: Next Auth Providers
+            - id: OpenIDConnectProvider
+              type: MenuLink
+              pageId: OpenIDConnectProvider
+        - id: auth_adapter_reference
+          type: MenuGroup
+          properties:
+            title: Adapter Reference
+          links:
+            - id: MongoDBAdapter
+              type: MenuLink
+              pageId: MongoDBAdapter
+        - id: auth_callback_reference
+          type: MenuGroup
+          properties:
+            title: Callback Reference
+          links:
+            - id: Auth0LogoutCallback
+              type: MenuLink
+              pageId: Auth0LogoutCallback
 
     - id: blocks_input
       type: MenuGroup
@@ -503,6 +551,9 @@
         - id: DisplayMessage
           type: MenuLink
           pageId: DisplayMessage
+        - id: DownloadCsv
+          type: MenuLink
+          pageId: DownloadCsv
         - id: Fetch
           type: MenuLink
           pageId: Fetch
@@ -515,6 +566,9 @@
         - id: Logout
           type: MenuLink
           pageId: Logout
+        - id: PdfMake
+          type: MenuLink
+          pageId: PdfMake
         - id: Request
           type: MenuLink
           pageId: Request
@@ -560,6 +614,9 @@
         - id: _base64
           type: MenuLink
           pageId: _base64
+        - id: _build
+          type: MenuLink
+          pageId: _build
         - id: _change_case
           type: MenuLink
           pageId: _change_case
@@ -620,9 +677,6 @@
         - id: _json
           type: MenuLink
           pageId: _json
-        - id: _list_contexts
-          type: MenuLink
-          pageId: _list_contexts
         - id: _location
           type: MenuLink
           pageId: _location
@@ -725,6 +779,17 @@
         - id: _yaml
           type: MenuLink
           pageId: _yaml
+    - id: migration
+      type: MenuGroup
+      properties:
+        title: Migration
+        icon: RiArrowLeftRightLine
+      links:
+        - id: v3-to-v4
+          type: MenuLink
+          pageId: v3-to-v4
+          properties:
+            title: V3 to V4
     - id: versions
       type: MenuGroup
       properties:

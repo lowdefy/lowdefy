@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 import cleanDirectory from './cleanDirectory.js';
-import copyDirectory from './copyDirectory.js';
+import copyFileOrDirectory from './copyFileOrDirectory.js';
 import getConfigFromEnv from './getConfigFromEnv.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
@@ -25,7 +25,7 @@ import writeFile from './writeFile.js';
 
 export {
   cleanDirectory,
-  copyDirectory,
+  copyFileOrDirectory,
   getConfigFromEnv,
   getFileExtension,
   getFileSubExtension,

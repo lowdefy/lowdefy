@@ -1,0 +1,57 @@
+id: hero
+type: Box
+blocks:
+  - id: hero_box
+    type: Box
+    style:
+      maxWidth: 700
+      margin: 60px auto
+      textAlign: center
+    blocks:
+      - id: hero_content
+        type: Html
+        style:
+          textAlign: center
+          padding: 20px
+        properties:
+          html: |
+            <h1 style="color:#1890ff;">
+              Build web apps with YAML
+            </h1>
+            <h4>
+              An open-source, extendable low-code framework to build web apps, admin panels, dashboards, internal tools, and CRUD apps with ease.
+            </h4>
+
+      - id: watch_button
+        type: Button
+        properties:
+          title: Watch 3 Min Video
+          icon: AiOutlinePlayCircle
+          shape: round
+          size: large
+          style:
+            backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+        events:
+          onClick:
+            - id: OpenModal
+              type: CallMethod
+              params:
+                blockId: watch_modal
+                method: toggleOpen
+
+      - id: watch_modal
+        type: Modal
+        layout:
+          contentGutter: 16
+        properties:
+          width: 900
+          footer: false
+        blocks:
+          - id: iframe
+            type: DangerousHtml
+            properties:
+              DOMPurifyOptions:
+                ADD_TAGS:
+                  - iframe
+              html: |
+                <iframe width="840" height="493" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ async function init({ context }) {
   if (fileExists) {
     throw new Error('Cannot initialize a Lowdefy project, a "lowdefy.yaml" file already exists');
   }
-  context.print.log(`Initializing Lowdefy project`);
+  context.print.log(`Initializing Lowdefy project.`);
   await writeFile(lowdefyFilePath, lowdefyFile({ version: context.cliVersion }));
   context.print.log(`Created 'lowdefy.yaml'.`);
   await writeFile(

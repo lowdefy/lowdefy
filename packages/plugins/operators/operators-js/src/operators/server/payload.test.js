@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import payload from './payload.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
 test('payload calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const payload = (await import('./payload.js')).default;
   payload({
     location: 'location',
     params: 'params',

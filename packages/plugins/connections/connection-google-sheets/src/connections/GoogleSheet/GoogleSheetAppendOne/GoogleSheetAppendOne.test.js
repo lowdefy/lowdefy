@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import GoogleSheetAppendOne from './GoogleSheetAppendOne.js';
-
-const { checkRead, checkWrite } = GoogleSheetAppendOne.meta;
-const schema = GoogleSheetAppendOne.schema;
 
 const mockAddRow = jest.fn();
-jest.mock('../getSheet', () => () => ({
-  addRow: mockAddRow,
-}));
+
+jest.unstable_mockModule('../getSheet', () => {
+  return {
+    default: () => ({
+      addRow: mockAddRow,
+    }),
+  };
+});
 
 const mockAddRowDefaultImp = (row) => ({ ...row, _sheet: {} });
 
 test('googleSheetAppendOne', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
   const res = await GoogleSheetAppendOne({
     request: {
@@ -64,6 +67,7 @@ test('googleSheetAppendOne', async () => {
 });
 
 test('googleSheetAppendOne, transform types', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
   const res = await GoogleSheetAppendOne({
     request: {
@@ -113,6 +117,7 @@ test('googleSheetAppendOne, transform types', async () => {
 });
 
 test('googleSheetAppendOne, raw true', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
   mockAddRow.mockImplementation(mockAddRowDefaultImp);
   const res = await GoogleSheetAppendOne({
     request: {
@@ -151,7 +156,9 @@ test('googleSheetAppendOne, raw true', async () => {
   `);
 });
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = {
     row: {
       name: 'name',
@@ -160,7 +167,9 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid request schema, all options', () => {
+test('valid request schema, all options', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = {
     row: {
       name: 'name',
@@ -172,14 +181,18 @@ test('valid request schema, all options', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request properties is not an object', () => {
+test('request properties is not an object', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = 'request';
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request properties should be an object.'
   );
 });
 
-test('row is not an object', () => {
+test('row is not an object', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = {
     row: true,
   };
@@ -188,14 +201,18 @@ test('row is not an object', () => {
   );
 });
 
-test('row is missing', () => {
+test('row is missing', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'GoogleSheetAppendOne request should have required property "row".'
   );
 });
 
-test('raw is not a boolean', () => {
+test('raw is not a boolean', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const schema = GoogleSheetAppendOne.schema;
   const request = {
     row: {
       name: 'name',
@@ -210,9 +227,13 @@ test('raw is not a boolean', () => {
 });
 
 test('checkRead should be false', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const { checkRead } = GoogleSheetAppendOne.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be true', async () => {
+  const GoogleSheetAppendOne = (await import('./GoogleSheetAppendOne.js')).default;
+  const { checkWrite } = GoogleSheetAppendOne.meta;
   expect(checkWrite).toBe(true);
 });

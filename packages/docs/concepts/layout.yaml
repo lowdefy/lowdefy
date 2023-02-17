@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Containers blocks are used to arrange blocks on a page. Blocks of category `container`, `context` and `list` all function as container blocks. Container blocks have content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
+            Containers blocks are used to arrange blocks on a page. Blocks of category `container` and `list` all function as container blocks. Container blocks have content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
 
             Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column grid system, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
 
@@ -36,7 +36,7 @@ _ref:
 
             To place blocks in the primary content area of a container, the block definitions for those blocks can be placed inside the `blocks` array of the container block.
 
-            > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a [`Box`](/Box), a [`Card`](/Card), a [`PageHeaderMenu`](/PageHeaderMenu) or any other container or context block. The `Block` blocks could be any type of block, including other container blocks.
+            > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a [`Box`](/Box), a [`Card`](/Card), a [`PageHeaderMenu`](/PageHeaderMenu) or any other container block. The `Block` blocks could be any type of block, including other container blocks.
 
 
             ###### Two blocks in the primary content area (`content`) of a container:

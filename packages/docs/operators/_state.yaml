@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,11 +28,10 @@ _ref:
         all?: boolean,
         key?: string,
         default?: any,
-        contextId?: string
       }): any
       ```
     description: |
-      The `_state` operator gets a value from the [`state`](/context-and-state) object. The `state` is a data object specific to the context it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [`context`](/context-and-state) the operator is used in, but a different context can be specified.
+      The `_state` operator gets a value from the [`state`](/page-and-app-state) object. The `state` is a data object specific to the page it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [page](/page-and-app-state) the operator is used in.
 
     arguments: |
       ###### string
@@ -45,7 +44,6 @@ _ref:
         - `all: boolean`: If `all` is set to `true`, the entire `state` object is returned. One of `all` or `key` are required.
         - `key: string`: The value of the key in the `state` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
         - `default: any`: A value to return if the `key` is not found in `state`. By default, `null` is returned if a value is not found.
-        - `contextId: string`: The id of a `context`. Setting this will get the value from the `state` of the specified context. A list of `contexts` that exist are returned by the [`_list_contexts`](/_list_contexts) operator. Cannot be used in `connections` or `requests`.
     examples: |
       ###### Get the value of `my_key` from `state`:
       ```yaml
@@ -104,11 +102,3 @@ _ref:
       _state: my_array.$.value
       ```
       Returns: `0` when used from the first block (0th index) in a list.
-
-      ###### Get a value from another `context`:
-      ```yaml
-      _state:
-        key: my_key
-        contextId: 'pageId:contextId:{}'
-      ```
-      Returns: The value of `my_key` in `state` in context `contextId` on page `pageId`.

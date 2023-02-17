@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ Default collections are:
 // TODO: Docs: MongoDB database name should be in databaseUri
 
 function MongoDBAdapter({ properties }) {
-  const { databaseUri, mongoDBClientOptions, collections } = properties;
+  const { databaseUri, mongoDBClientOptions, options } = properties;
   const clientPromise = new MongoClient(databaseUri, mongoDBClientOptions).connect();
-  return NextAuthMongoDBAdapter(clientPromise, collections);
+  return NextAuthMongoDBAdapter(clientPromise, options);
 }
 
 export default MongoDBAdapter;

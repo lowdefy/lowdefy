@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -539,6 +539,6 @@ test('createLink, link with more than one parameter is invalid.', () => {
     sameOriginLink: mockSameOriginLink,
   });
   expect(() => link({ back: true, home: true })).toThrowErrorMatchingInlineSnapshot(
-    `"Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'pageId' or 'url' can be defined."`
+    `"Invalid Link: To avoid ambiguity, only one of 'back', 'home', 'href', 'pageId' or 'url' can be defined."`
   );
 });

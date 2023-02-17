@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -68,4 +68,22 @@ test('url is not a string', () => {
   expect(() => validate({ schema, data: connection })).toThrow(
     'AxiosHttp property "url" should be a string.'
   );
+});
+
+test('data is a string', () => {
+  const connection = {
+    method: 'post',
+    url: 'https://example.com/api',
+    data: 'value',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('data is an array', () => {
+  const connection = {
+    method: 'post',
+    url: 'https://example.com/api',
+    data: [{ key: 'value' }],
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 /* eslint-disable no-param-reassign */
 
-import { get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
 import YAML from 'yaml';
@@ -38,10 +38,6 @@ function parseRefContent({ content, refDef }) {
     if (ext === 'json') {
       content = JSON5.parse(content);
     }
-  }
-
-  if (refDef.key) {
-    content = get(content, refDef.key, { default: null });
   }
 
   return content;

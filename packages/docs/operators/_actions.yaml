@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,53 +71,4 @@ _ref:
             params:
               did_not_fetch_data:
                 _actions: get_fresh_data.skipped
-      ```
-
-      ##### Setting a returned [`JsAction`](/JsAction) response to `state`:
-      First register a custom JavaScript action: `getNormalizedEigenvector`
-      ```yaml
-      # file: lowdefy.yaml
-      lowdefy: '3.23.2'
-      app:
-        html:
-          appendHead: |
-            <script type="text/javascript">
-              const getNormalizedEigenvector = (context, ...args) => {
-                const vectorLength = Math.sqrt(args.reduce((acc, curVal) => Math.pow(curVal, 2) + acc), 0);
-                return args.map(val => val / vectorLength );
-              }
-              window.lowdefy.registerJsAction('getNormalizedEigenvector', getNormalizedEigenvector);
-            </script>
-      ```
-      Then, calculate the vector and update state.
-      ```yaml
-      # onClick event on a block.
-      id: calculate
-      type: Button
-      events:
-        onClick:
-          - id: get_normalized_eigenvector
-            type: JsAction # TODO:
-            params:
-              name: getNormalizedEigenvector
-              args:
-                - 1
-                - 5
-                - -12
-                - 7
-                - 4
-          - id: update_state
-            type: SetState
-            params:
-              normal_eigenvector:
-                _actions: get_normalized_eigenvector.response
-      ```
-      In this example, state will now be equal to:
-      ```yaml
-      normal_eigenvector:
-        - 0.06523280730534423
-        - 0.3261640365267211
-        - -0.7827936876641306
-        - 0.45662965113740955
-        - 0.2609312292213769
       ```

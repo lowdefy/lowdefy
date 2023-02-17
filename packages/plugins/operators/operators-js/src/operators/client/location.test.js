@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import location from './location.js';
+import { jest } from '@jest/globals';
 
-jest.mock('@lowdefy/operators', () => ({
+jest.unstable_mockModule('@lowdefy/operators', () => ({
   getFromObject: jest.fn(),
 }));
 
@@ -50,6 +50,7 @@ const input = {
 
 test('location calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
+  const location = (await import('./location.js')).default;
   location({ ...input, globals });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
@@ -77,19 +78,22 @@ test('location calls getFromObject', async () => {
   ]);
 });
 
-test('_location throw on no window', () => {
+test('_location throw on no window', async () => {
+  const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals: {} })).toThrow(
     'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
   );
 });
 
-test('_location throw on no location', () => {
+test('_location throw on no location', async () => {
+  const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals: { window: {} } })).toThrow(
     'Operator Error: Browser window.location not available for _location. Received: "origin" at location.'
   );
 });
 
-test('_location throw invalid param', () => {
+test('_location throw invalid param', async () => {
+  const location = (await import('./location.js')).default;
   expect(() => location({ ...input, globals, params: 'invalid' })).toThrow(
     'Operator Error: _location only returns values for basePath, hash, homePageId, host, hostname, href, origin, pageId, pathname, port, protocol, search. Received: "invalid" at location.'
   );

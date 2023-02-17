@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import Redis from './Redis.js';
 
-const { checkRead, checkWrite } = Redis.meta;
-const schema = Redis.schema;
-
-jest.mock('redis', () => {
+jest.unstable_mockModule('redis', () => {
   return {
     createClient: jest.fn(),
   };
@@ -33,6 +30,7 @@ beforeAll(async () => {
 });
 
 test('redis command with connection as an object', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -67,6 +65,7 @@ test('redis command with connection as an object', async () => {
 });
 
 test('redis command with connection as a string', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -95,6 +94,7 @@ test('redis command with connection as a string', async () => {
 });
 
 test('connection error', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn((event, cb) => {
       if (event === 'error') {
@@ -125,6 +125,7 @@ test('connection error', async () => {
 });
 
 test('invalid command', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -151,6 +152,7 @@ test('invalid command', async () => {
 });
 
 test('invalid parameters type', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -180,6 +182,7 @@ test('invalid parameters type', async () => {
 });
 
 test('invalid parameters number', async () => {
+  const Redis = (await import('./Redis.js')).default;
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -207,7 +210,9 @@ test('invalid parameters number', async () => {
   await expect(Redis({ request, connection })).rejects.toThrow('SET error');
 });
 
-test('valid request schema, with url', () => {
+test('valid request schema, with url', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const schema = Redis.schema;
   const request = {
     command: 'set',
     parameters: ['key', 10],
@@ -215,7 +220,9 @@ test('valid request schema, with url', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('command is not a string', () => {
+test('command is not a string', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const schema = Redis.schema;
   const request = {
     command: true,
     parameters: ['key', 'value'],
@@ -225,7 +232,9 @@ test('command is not a string', () => {
   );
 });
 
-test('parameters is not an array', () => {
+test('parameters is not an array', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const schema = Redis.schema;
   const request = {
     command: 'set',
     parameters: 'string',
@@ -236,9 +245,13 @@ test('parameters is not an array', () => {
 });
 
 test('checkRead should be false', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const { checkRead } = Redis.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be false', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const { checkWrite } = Redis.meta;
   expect(checkWrite).toBe(false);
 });

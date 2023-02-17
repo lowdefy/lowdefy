@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,16 +16,24 @@
 
 import path from 'path';
 import fs from 'fs';
-import { copyDirectory } from '@lowdefy/node-utils';
+import { cleanDirectory, copyFileOrDirectory } from '@lowdefy/node-utils';
 
 async function copyPublicFolder({ context }) {
   if (context.directories.config === context.directories.server) return;
-  if (!fs.existsSync(path.resolve(context.directories.config, 'public'))) return;
 
-  await copyDirectory(
-    path.resolve(context.directories.config, 'public'),
+  await cleanDirectory(path.resolve(context.directories.server, 'public'));
+
+  await copyFileOrDirectory(
+    path.resolve(context.directories.server, 'public_default'),
     path.resolve(context.directories.server, 'public')
   );
+
+  if (fs.existsSync(path.resolve(context.directories.config, 'public'))) {
+    await copyFileOrDirectory(
+      path.resolve(context.directories.config, 'public'),
+      path.resolve(context.directories.server, 'public')
+    );
+  }
 }
 
 export default copyPublicFolder;

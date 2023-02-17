@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ async function MongodbInsertOne({ blockId, connection, pageId, request, requestI
         response,
         timestamp: new Date(),
         type: 'MongoDBInsertOne',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     }
   } catch (error) {

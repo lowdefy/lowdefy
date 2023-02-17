@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
   limitations under the License.
 */
 
-import { Client } from '@elastic/elasticsearch';
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-
-import ElasticsearchSearch from './ElasticsearchSearch.js';
-
-const { checkRead, checkWrite } = ElasticsearchSearch.meta;
-const schema = ElasticsearchSearch.schema;
 
 const mockElasticsearchClient = jest.fn(() => mockElasticsearchClient);
 mockElasticsearchClient.search = jest.fn(() => mockElasticsearchClient);
-jest.mock('@elastic/elasticsearch', () => ({
+
+jest.unstable_mockModule('@elastic/elasticsearch', () => ({
   Client: jest.fn().mockImplementation(() => mockElasticsearchClient),
 }));
 
@@ -33,7 +29,9 @@ const connection = {
   index: 'test',
 };
 
-test('valid request schema', () => {
+test('valid request schema', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const schema = ElasticsearchSearch.schema;
   const request = {
     size: 42,
     human: true,
@@ -66,12 +64,17 @@ test('valid request schema', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('valid empty request schema', () => {
+test('valid empty request schema', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const schema = ElasticsearchSearch.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
 test('ElasticsearchSearch with match_all query', async () => {
+  const { Client } = await import('@elastic/elasticsearch');
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+
   const responseData = {
     body: {
       took: 1234,
@@ -274,6 +277,7 @@ test('ElasticsearchSearch with match_all query', async () => {
 });
 
 test('ElasticsearchSearch exposes total results', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
     body: {
       took: 1234,
@@ -358,6 +362,7 @@ test('ElasticsearchSearch exposes total results', async () => {
 });
 
 test('ElasticsearchSearch exposes total results over 10k as Infinity', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
     body: {
       took: 1234,
@@ -442,6 +447,7 @@ test('ElasticsearchSearch exposes total results over 10k as Infinity', async () 
 });
 
 test('ElasticsearchSearch exposes maximum score', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
     body: {
       took: 1234,
@@ -526,6 +532,7 @@ test('ElasticsearchSearch exposes maximum score', async () => {
 });
 
 test('ElasticsearchSearch exposes aggregations', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
     body: {
       took: 1234,
@@ -616,6 +623,7 @@ test('ElasticsearchSearch exposes aggregations', async () => {
 });
 
 test('ElasticsearchSearch exposes original response body', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
     body: {
       took: 1234,
@@ -700,9 +708,13 @@ test('ElasticsearchSearch exposes original response body', async () => {
 });
 
 test('checkRead should be true', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const { checkRead } = ElasticsearchSearch.meta;
   expect(checkRead).toBe(true);
 });
 
 test('checkWrite should be false', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const { checkWrite } = ElasticsearchSearch.meta;
   expect(checkWrite).toBe(false);
 });

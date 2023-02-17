@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Lowdefy, Inc
+# Copyright 2020-2023 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ _ref:
   vars:
     pageId: _intl
     pageTitle: _intl
+    build: true
     description: |
       The `_intl` operator converts date objects to strings, using a specified format.
     methods:

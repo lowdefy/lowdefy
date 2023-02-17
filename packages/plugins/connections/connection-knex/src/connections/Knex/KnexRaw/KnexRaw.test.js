@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,22 +14,20 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
-import knex from 'knex';
-import KnexRaw from './KnexRaw.js';
-
-const { checkRead, checkWrite } = KnexRaw.meta;
-const schema = KnexRaw.schema;
 
 const mockRaw = jest.fn(() => {
   return Promise.resolve({ rows: [{ name: 'name' }], _types: 'types' });
 });
 
-jest.mock('knex', () =>
-  jest.fn(() => ({
-    raw: mockRaw,
-  }))
-);
+jest.unstable_mockModule('knex', () => {
+  return {
+    default: jest.fn(() => ({
+      raw: mockRaw,
+    })),
+  };
+});
 
 const request = {
   query: 'SELECT * FROM "table" WHERE "name" = :name',
@@ -41,6 +39,8 @@ const connection = {
 };
 
 test('knexRaw', async () => {
+  const knex = (await import('knex')).default;
+  const KnexRaw = (await import('./KnexRaw.js')).default;
   const res = await KnexRaw({ request, connection });
   expect(knex.mock.calls).toEqual([
     [
@@ -67,7 +67,9 @@ test('knexRaw', async () => {
   });
 });
 
-test('valid request', () => {
+test('valid request', async () => {
+  const KnexRaw = (await import('./KnexRaw.js')).default;
+  const schema = KnexRaw.schema;
   let request = {
     query: 'SELECT * FROM "table"',
   };
@@ -84,7 +86,9 @@ test('valid request', () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('query missing', () => {
+test('query missing', async () => {
+  const KnexRaw = (await import('./KnexRaw.js')).default;
+  const schema = KnexRaw.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
     'KnexRaw request should have required property "query".'
@@ -92,9 +96,13 @@ test('query missing', () => {
 });
 
 test('checkRead should be false', async () => {
+  const KnexRaw = (await import('./KnexRaw.js')).default;
+  const { checkRead } = KnexRaw.meta;
   expect(checkRead).toBe(false);
 });
 
 test('checkWrite should be false', async () => {
+  const KnexRaw = (await import('./KnexRaw.js')).default;
+  const { checkWrite } = KnexRaw.meta;
   expect(checkWrite).toBe(false);
 });

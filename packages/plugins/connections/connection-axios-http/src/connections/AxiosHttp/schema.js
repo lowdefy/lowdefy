@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -59,12 +59,8 @@ export default {
       },
     },
     data: {
-      type: ['string', 'object'],
       description:
-        "The data to be sent as the request body. Only applicable for request methods 'put', 'post', and 'patch'. Can be an object or a string in the format 'Country=USA&City=New York'.",
-      errorMessage: {
-        type: 'AxiosHttp property "data" should be an object or string.',
-      },
+        "The data to be sent as the request body. Only applicable for request methods 'put', 'post', and 'patch'. Can be an object, array or a string in the format 'Country=USA&City=New York'.",
     },
     timeout: {
       type: 'number',

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2022 Lowdefy, Inc
+  Copyright 2020-2023 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,19 +25,24 @@ async function MongodbUpdateOne({ blockId, connection, pageId, request, requestI
   let response;
   try {
     if (logCollection) {
-      response = await collection.findOneAndUpdate(filter, update, options);
-      const after = await collection.findOne({ _id: response._id });
+      const { value, ...responseWithoutValue } = await collection.findOneAndUpdate(
+        filter,
+        update,
+        options
+      );
+      response = responseWithoutValue;
+      const after = await collection.findOne({ _id: value._id });
       await logCollection.insertOne({
         args: { filter, update, options },
         blockId,
         pageId,
         payload,
         requestId,
-        before: response,
+        before: value,
         after,
         timestamp: new Date(),
         type: 'MongoDBUpdateOne',
-        user: connection.changeLog?.user,
+        meta: connection.changeLog?.meta,
       });
     } else {
       response = await collection.updateOne(filter, update, options);
@@ -47,8 +52,7 @@ async function MongodbUpdateOne({ blockId, connection, pageId, request, requestI
     throw error;
   }
   await client.close();
-  const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
-  return { modifiedCount, upsertedId, upsertedCount, matchedCount };
+  return serialize(response);
 }
 
 MongodbUpdateOne.schema = schema;
