@@ -29,7 +29,7 @@
     "lib/*",
     "lowdefy/*",
     "pages/*",
-    "public/*",
+    "public_default/*",
     "next.config.js",
     "package.original.json",
     ".eslintrc.yaml",
