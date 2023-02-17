@@ -845,14 +845,14 @@ importers:
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24
       jest: 28.1.0
-      knex: 2.3.0
+      knex: 2.4.0
       mssql: 9.0.1
       mysql: 2.18.1
       pg: 8.8.0
       sqlite3: 5.1.4
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
-      knex: 2.3.0_r2xbi4zbllusb5q2fougkvkh6i
+      knex: 2.4.0_r2xbi4zbllusb5q2fougkvkh6i
       mssql: 9.0.1
       mysql: 2.18.1
       pg: 8.8.0
@@ -10225,8 +10225,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /knex/2.3.0_r2xbi4zbllusb5q2fougkvkh6i:
-    resolution: {integrity: sha512-WMizPaq9wRMkfnwKXKXgBZeZFOSHGdtoSz5SaLAVNs3WRDfawt9O89T4XyH52PETxjV8/kRk0Yf+8WBEP/zbYw==}
+  /knex/2.4.0_r2xbi4zbllusb5q2fougkvkh6i:
+    resolution: {integrity: sha512-i0GWwqYp1Hs2yvc2rlDO6nzzkLhwdyOZKRdsMTB8ZxOs2IXQyL5rBjSbS1krowCh6V65T4X9CJaKtuIfkaPGSA==}
     engines: {node: '>=12'}
     hasBin: true
     peerDependencies:
