@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* **build:** Clean public folder before copying over folders. ([cd84268](https://github.com/lowdefy/lowdefy/commit/cd842683538a023cb83c93f76a36c4cb119240dc))
+* **build:** Evaluate build operators before getting key from refDef. ([a9d873c](https://github.com/lowdefy/lowdefy/commit/a9d873c6b2e65ca538489e90bd92b1ed5d7945c4))
+* **build:** More generic default 404. ([592a901](https://github.com/lowdefy/lowdefy/commit/592a9019c80e060d5beba9828a655748996ab2d6))
+* **deps:** Dependencies minor version updates ([e50ec30](https://github.com/lowdefy/lowdefy/commit/e50ec30a8bf7dcd38d3ca4cbf68907935939f088))
+* **deps:** Update dep uuid major version to 9.0.0 ([a88b974](https://github.com/lowdefy/lowdefy/commit/a88b97420098895905a784031673131581731558))
+* **deps:** Update minor versions of util packages. ([2d7a2a5](https://github.com/lowdefy/lowdefy/commit/2d7a2a55c88f0ee33eff49e5ff541f6296ec4337))
+* **deps:** Update patch versions of dependencies ([9edaef7](https://github.com/lowdefy/lowdefy/commit/9edaef7e1aa940ff8aa795e60c25fb6369244ca9))
+* **deps:** Update react-icon and add support for new icon packs ([ae9cbf2](https://github.com/lowdefy/lowdefy/commit/ae9cbf23a331ce2945d9e2ff34a53210121c9134))
+* Reset server package.json to original version on CLI start. ([6fac2aa](https://github.com/lowdefy/lowdefy/commit/6fac2aabc8a8e4d95e6ad0922ff3b82f73427a30))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 

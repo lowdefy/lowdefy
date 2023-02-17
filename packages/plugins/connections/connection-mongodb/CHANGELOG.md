@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* Add MongoDBAdapter docs. ([c609b25](https://github.com/lowdefy/lowdefy/commit/c609b25311af8b5df250fc27b56f2fbbe6e80d49))
+* **connection-mongodb:** Fix responses, fix after and update user to meta ([485c0b7](https://github.com/lowdefy/lowdefy/commit/485c0b7c11418544d3f51eceab7e75273a65fb8e))
+* **connection-mongodb:** Update MongoDBUpdateOne test ([1de6f7a](https://github.com/lowdefy/lowdefy/commit/1de6f7a0fa6a1fa384d2f85a2f8a90274ff35cac))
+* **deps:** Dependencies minor version updates ([e50ec30](https://github.com/lowdefy/lowdefy/commit/e50ec30a8bf7dcd38d3ca4cbf68907935939f088))
+* **deps:** Update connection driver minor versions. ([bbd43c1](https://github.com/lowdefy/lowdefy/commit/bbd43c139efbb8559c279c1eea635512dbdc026c))
+
+
+### Features
+
+* Update dependency next-auth and add new providers. ([ca72d8c](https://github.com/lowdefy/lowdefy/commit/ca72d8c87b50651c701ea619a5e061210adf3e53))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package @lowdefy/connection-mongodb

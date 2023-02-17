@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* **engine:** Fix validation when using a dynamic approach to setting required. ([14ae1db](https://github.com/lowdefy/lowdefy/commit/14ae1db166f4abe972f084f8d9646a925020b8bc))
+* **engine:** Remove unnecessary props spreading. ([7ebf2ce](https://github.com/lowdefy/lowdefy/commit/7ebf2ced7cb99c68450cad633c31dd3f4f9032aa))
+* **engine:** Update createLink error message test. ([d434d9e](https://github.com/lowdefy/lowdefy/commit/d434d9ee448cc101eab406201986d7ceddce8c76))
+* **engine:** Update Link to allow use of href. ([d00344a](https://github.com/lowdefy/lowdefy/commit/d00344adf2c36291878abb87b725893327853012))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package @lowdefy/engine

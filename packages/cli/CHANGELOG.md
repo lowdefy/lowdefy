@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* **cli:** Use semver to validate version. ([13e5c45](https://github.com/lowdefy/lowdefy/commit/13e5c454bac5a82abbc1fff1f3553d7b51125e88))
+* **cli:** Warn if user is running v3 app. ([4b62d09](https://github.com/lowdefy/lowdefy/commit/4b62d09a6df731574fd210e30dd907de9525fc3c))
+* **deps:** Update axios to v1.2.2 (major version) ([18d725e](https://github.com/lowdefy/lowdefy/commit/18d725e9ff8b2d049ecd7182c1241553950e8d4f))
+* **deps:** Update dep ora to v6.1.2 ([98afaed](https://github.com/lowdefy/lowdefy/commit/98afaedde508c42e5e573157bc78fe683cda4280))
+* **deps:** Update dep uuid major version to 9.0.0 ([a88b974](https://github.com/lowdefy/lowdefy/commit/a88b97420098895905a784031673131581731558))
+* **deps:** Update minor versions of util packages. ([2d7a2a5](https://github.com/lowdefy/lowdefy/commit/2d7a2a55c88f0ee33eff49e5ff541f6296ec4337))
+* **deps:** Update patch versions of dependencies ([9edaef7](https://github.com/lowdefy/lowdefy/commit/9edaef7e1aa940ff8aa795e60c25fb6369244ca9))
+* Remove copy plugins folder functionality ([6c5e35f](https://github.com/lowdefy/lowdefy/commit/6c5e35f68d2c179f980107193fd279272d9edc08))
+* Reset server package.json to original version on CLI start. ([6fac2aa](https://github.com/lowdefy/lowdefy/commit/6fac2aabc8a8e4d95e6ad0922ff3b82f73427a30))
+
+
+### Features
+
+* Add init-docker CLI command and docker docs ([d27975b](https://github.com/lowdefy/lowdefy/commit/d27975b52373b5bded837bb6d5202fe06ab8630d))
+* Add init-vercel CLI command and Vercel deployment docs. ([408e21a](https://github.com/lowdefy/lowdefy/commit/408e21a1af4052af2fb16c335378977f70e0451b))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package lowdefy

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* **deps:** Update connection driver minor versions. ([bbd43c1](https://github.com/lowdefy/lowdefy/commit/bbd43c139efbb8559c279c1eea635512dbdc026c))
+* **deps:** Update dependency antd to v4.24.7 ([1348a48](https://github.com/lowdefy/lowdefy/commit/1348a48f361168fa7eaa6b9c6dfa6f513dc139f4))
+* **deps:** Update emotion css dependencies. ([7cc5588](https://github.com/lowdefy/lowdefy/commit/7cc5588d5936e7514f2e2a3400ce18f98d92586d))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 

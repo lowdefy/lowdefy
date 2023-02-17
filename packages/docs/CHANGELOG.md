@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* Add MongoDBAdapter docs. ([c609b25](https://github.com/lowdefy/lowdefy/commit/c609b25311af8b5df250fc27b56f2fbbe6e80d49))
+* Allow axios data property to be an array ([9b83af5](https://github.com/lowdefy/lowdefy/commit/9b83af5e0fa0600ff39b1c317fbce7e5be2a17a0)), closes [#1158](https://github.com/lowdefy/lowdefy/issues/1158)
+* Auth docs fixes ([0e7a013](https://github.com/lowdefy/lowdefy/commit/0e7a0133a78904be54de79327dd7eca327bf4ce5))
+* **docs:** Changed reference to request in DownloadCsv examples ([c81dc42](https://github.com/lowdefy/lowdefy/commit/c81dc42900ad7ddfee9922542022dbfe06451520))
+* **docs:** Cleanup _js references. ([f236a46](https://github.com/lowdefy/lowdefy/commit/f236a466c2a8d433893897b0f38184046f14bc48))
+* **docs:** Fix _object operator docs. ([8d1e10f](https://github.com/lowdefy/lowdefy/commit/8d1e10feb58e0e8638c89115466950ae43f7db84)), closes [#1339](https://github.com/lowdefy/lowdefy/issues/1339)
+* **docs:** Fix syntax on Custom Styling Ant theme import example. ([b356f09](https://github.com/lowdefy/lowdefy/commit/b356f09779e3ad78e6e85035db59fbbfc9737c7b))
+* **docs:** Fix typo ([fe9cba1](https://github.com/lowdefy/lowdefy/commit/fe9cba12056c502eaac33edeed0714afd4b8b360))
+* **docs:** Make environment variables lowercase. ([bafc31d](https://github.com/lowdefy/lowdefy/commit/bafc31d6dde5558f5ef0025955a7cb9b326f3f06))
+* **docs:** Minor fixes to requests and connections. ([f321396](https://github.com/lowdefy/lowdefy/commit/f321396e2a95f015ba31eb963a88639c712dbfa4))
+* **docs:** Page and App State docs wording fixes. ([6de0792](https://github.com/lowdefy/lowdefy/commit/6de07926700a712d3a3d607e7f421ccf853f9849))
+* **docs:** Update block docs. ([44a838f](https://github.com/lowdefy/lowdefy/commit/44a838f254cd99607a3813a2b3d4c44838ff1542))
+* **docs:** Update custom code section. ([3d29cd6](https://github.com/lowdefy/lowdefy/commit/3d29cd688813ec58a7ca02c8d72af61032675e6e))
+* **docs:** Update MongoDB docs with log collection info ([8e302b9](https://github.com/lowdefy/lowdefy/commit/8e302b9783052bf98af7e52fc5b51672f55efb42))
+* Fix auth doc page paths ([e4bbdaf](https://github.com/lowdefy/lowdefy/commit/e4bbdafbc08e0c3e72c6933dd65e330e1bd1d341))
+* Updates to page and app state docs. ([79ca911](https://github.com/lowdefy/lowdefy/commit/79ca91189fc2d9fb11e311c803b929b68709fdd4))
+
+
+### Features
+
+* Add auth configuration docs. ([8ec89ce](https://github.com/lowdefy/lowdefy/commit/8ec89ce66e2265ee4d95dc676f8ed066feef3404))
+* Add Auth0LogoutCallback documentation. ([3fd174d](https://github.com/lowdefy/lowdefy/commit/3fd174d47ff69bc6b6a1e6329f4b0359f9771cb4))
+* Add init-docker CLI command and docker docs ([d27975b](https://github.com/lowdefy/lowdefy/commit/d27975b52373b5bded837bb6d5202fe06ab8630d))
+* Add init-vercel CLI command and Vercel deployment docs. ([408e21a](https://github.com/lowdefy/lowdefy/commit/408e21a1af4052af2fb16c335378977f70e0451b))
+* Add next auth default provider docs. ([9c06de0](https://github.com/lowdefy/lowdefy/commit/9c06de019d03b18273c72cd5c80d7ee6bc05d4a3))
+* Add OpenIDConnectProvider docs ([200182f](https://github.com/lowdefy/lowdefy/commit/200182fb1d123ea6ede2a60ef975dde4ce37db56))
+* Add user object docs. ([6c8ed5f](https://github.com/lowdefy/lowdefy/commit/6c8ed5fcdb3c5c5e23194416834a0e81097f8cc1))
+* **docs:** Add build note to all build operator pages. ([cff4233](https://github.com/lowdefy/lowdefy/commit/cff4233fb73a172cdde423bd124ae4f57b5d2f73)), closes [TECHMRM/lowdefy#46](https://github.com/TECHMRM/lowdefy/issues/46)
+* **docs:** Add Custom Styling Concept page. ([1aad894](https://github.com/lowdefy/lowdefy/commit/1aad894956ca70425712e01cb56546075d7dbbc9))
+* **docs:** Add Page and App State concept page. ([52dce71](https://github.com/lowdefy/lowdefy/commit/52dce71496bcdd05e677d575a2fcd328c177f3c4))
+* **docs:** Add v3 to v4 migration guide page to the docs. ([d7f6128](https://github.com/lowdefy/lowdefy/commit/d7f6128f831ff6b33bb5ced3a5a5594ae28327fe))
+* **docs:** Added DownloadCsv and PdfMake docs ([72f8a83](https://github.com/lowdefy/lowdefy/commit/72f8a83d8cbb1efaece083be6011fc86178fdea8))
+* **docs:** Create build operator docs. ([2ea77e3](https://github.com/lowdefy/lowdefy/commit/2ea77e3eadf5bc6066b20ad6e56db20c7e6d1fce))
+* **docs:** Remove all context references in docs. ([b316753](https://github.com/lowdefy/lowdefy/commit/b3167531b5db35c45a1265e7c0cc72ea7a466dbc))
+* **docs:** Remove old context and state page. ([4392222](https://github.com/lowdefy/lowdefy/commit/439222255a2cf4fd499852bb9a957612849772ab))
+* **docs:** Update _build descriptions and examples. ([31236ae](https://github.com/lowdefy/lowdefy/commit/31236ae7fe48fdbe7db90bbd9f3c53bb39af52d4))
+* **docs:** Update build operator concept description. ([e6f8caa](https://github.com/lowdefy/lowdefy/commit/e6f8caaf27896782e0f67750b7cb0b0a5a4f48b1))
+* **docs:** Update context-and-state page references. ([aeab7ea](https://github.com/lowdefy/lowdefy/commit/aeab7ea6cf44381133c4db3de29efce7f1d51a57))
+* **docs:** User docs intro, protected pages and roles sections ([4a59107](https://github.com/lowdefy/lowdefy/commit/4a5910727accf23826e161ae9eda05368c904310))
+* Update CLI docs ([28ac5c5](https://github.com/lowdefy/lowdefy/commit/28ac5c58acfb3933a32df1a3fe0012db1f7bb7df))
+* Updates to login and logout documentation ([4236023](https://github.com/lowdefy/lowdefy/commit/4236023102e227806ebaa8eb9175f2ceecb5965f))
+
+
+
+
+
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 
