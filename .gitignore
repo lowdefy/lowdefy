@@ -38,4 +38,6 @@ packages/server/public/**
 packages/server/package.original.json
 packages/server-dev/package.original.json
 
+packages/docs/public/sitemap.xml
+
 lerna-debug.log

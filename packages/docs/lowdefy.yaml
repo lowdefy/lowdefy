@@ -18,6 +18,8 @@ license: Apache-2.0
 
 cli:
   disableTelemetry: true
+  watchIgnore:
+    - public/sitemap.xml
 
 plugins:
   - name: '@lowdefy/docs'
@@ -63,6 +65,4 @@ menus:
 pages:
   _ref:
     path: pages.yaml
-    # Commented out because it loops
-    # Use to generate new sitemap if pages are added
-    # transformer: templates/generateSitemap.js
+    transformer: templates/generateSitemap.js

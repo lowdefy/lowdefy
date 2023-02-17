@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/website",
-  "version": "4.0.0-alpha.37",
+  "version": "4.0.0-rc.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,8 +46,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "4.0.0-rc.0",
-    "@lowdefy/helpers": "4.0.0-rc.0",
+    "@lowdefy/block-utils": "4.0.0-rc.2",
+    "@lowdefy/helpers": "4.0.0-rc.2",
     "antd": "4.24.7",
     "react": "18.2.0",
     "react-dom": "18.2.0"
