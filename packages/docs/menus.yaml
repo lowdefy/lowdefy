@@ -635,9 +635,6 @@
         - id: _event
           type: MenuLink
           pageId: _event
-        - id: _format
-          type: MenuLink
-          pageId: _format
         - id: _function
           type: MenuLink
           pageId: _function

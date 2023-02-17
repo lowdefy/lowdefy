@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
 function transformer(pages) {
-  const fs = require('fs');
   const sitemapStart = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `;
@@ -35,7 +38,11 @@ function transformer(pages) {
 
   const sitemap = pages.reduce(addPage, sitemapStart).concat(sitemapEnd);
 
-  fs.writeFileSync('public/sitemap.xml', sitemap);
+  fs.writeFileSync(
+    path.join(dirname(fileURLToPath(import.meta.url)), '../public/sitemap.xml'),
+    sitemap
+  );
+
   return pages;
 }
 export default transformer;
