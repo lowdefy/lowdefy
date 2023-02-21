@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/website",
-  "version": "4.0.0-rc.2",
+  "version": "4.0.0-rc.3",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -45,7 +45,6 @@
     "clean": "rm -rf .lowdefy",
     "prepublishOnly": "pnpm build"
   },
-  "dependencies": {},
   "devDependencies": {
     "@swc/cli": "0.1.57",
     "@swc/core": "1.2.194"
