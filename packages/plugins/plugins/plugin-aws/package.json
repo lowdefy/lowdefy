@@ -48,7 +48,7 @@
     "@lowdefy/block-utils": "4.0.0-rc.3",
     "@lowdefy/blocks-antd": "4.0.0-rc.3",
     "@lowdefy/helpers": "4.0.0-rc.3",
-    "antd": "4.24.5",
+    "antd": "4.22.5",
     "aws-sdk": "2.1286.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
