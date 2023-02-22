@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.3...v4.0.0-rc.4) (2023-02-21)
+
+
+### Bug Fixes
+
+* **deps:** Downgrade dependency antd to v4.22.5 ([ec0d911](https://github.com/lowdefy/lowdefy/commit/ec0d911f40282a8445cea0de2268373aadd02bd4))
+
+
+
+
+
+# [4.0.0-rc.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.2...v4.0.0-rc.3) (2023-02-21)
+
+
+### Bug Fixes
+
+* **deps:** Downgrade dependency antd to v4.24.5 ([8602e71](https://github.com/lowdefy/lowdefy/commit/8602e719bda786c84086dd13a73287cefea7812a))
+
+
+
+
+
 # [4.0.0-rc.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.1...v4.0.0-rc.2) (2023-02-17)
 
 **Note:** Version bump only for package @lowdefy/plugin-aws
