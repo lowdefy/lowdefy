@@ -32,6 +32,7 @@ const MAP_DEFAULTS = {
 };
 
 const MAP_PROPS = {
+  zoom: null,
   center: {
     lat: 0,
     lng: 0,
@@ -78,8 +79,14 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     (properties.markers ?? []).map((marker) => {
       bounds.extend(marker.position);
     });
-    if (!properties.map?.center && !properties.map?.zoom) {
+    (properties.markerClusterers ?? []).map((markerClusterer) => {
+      (markerClusterer.markers ?? []).map((marker) => {
+        bounds.extend(marker.position);
+      });
+    });
+    if (!properties.map?.center && !properties.map?.zoom && MAP_PROPS.zoom === null) {
       map.fitBounds(bounds);
+      MAP_PROPS.zoom = map.getZoom();
     }
   }
 
@@ -91,13 +98,17 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     MAP_PROPS.center = properties.map.center;
   }
 
+  if (properties.map?.zoom && properties.map.zoom !== MAP_PROPS.zoom) {
+    MAP_PROPS.zoom = properties.map.zoom;
+  }
+
   return (
     <GoogleMap
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
       id={blockId}
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
       center={MAP_PROPS.center}
-      zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
+      zoom={MAP_PROPS.zoom}
       onLoad={(newMap, event) => {
         setMap(newMap);
         setBounds(new window.google.maps.LatLngBounds());
