@@ -34,7 +34,7 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
 
 ### Events
 
-- `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map is changed. returns `_event`
+- `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
 object:
   - `bounds`:
     - `east`: latitudinal coordinate
@@ -45,7 +45,7 @@ object:
     - `lat`: latitudinal coordinate
     - `lng`: longitudinal coordinate
   - `zoom`: zoom level
-- `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed. returns `_event`
+- `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
 object:
   - `bounds`:
     - `east`: latitudinal coordinate
