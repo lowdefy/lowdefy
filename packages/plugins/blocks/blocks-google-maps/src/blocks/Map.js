@@ -16,7 +16,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker, MarkerClusterer, InfoWindow } from '@react-google-maps/api';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -56,6 +56,18 @@ const Map = ({ blockId, children, content, methods, properties }) => {
         map.setZoom(args.zoom);
       }
     });
+
+    methods.registerMethod('getBounds', () => {
+      return map.getBounds();
+    });
+
+    methods.registerMethod('getCenter', () => {
+      return map.getCenter();
+    });
+
+    methods.registerMethod('getZoom', () => {
+      return map.getZoom();
+    });
   }, [bounds, map]);
 
   // by default, fit infoWindow and markers to bounds
@@ -94,6 +106,18 @@ const Map = ({ blockId, children, content, methods, properties }) => {
           event,
         });
       }}
+      onBoundsChanged={() => {
+        methods.triggerEvent({
+          name: 'onBoundsChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
+        });
+      }}
+      onCenterChanged={() => {
+        methods.triggerEvent({
+          name: 'onCenterChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
+        });
+      }}
       onClick={(event) => {
         methods.triggerEvent({
           name: 'onClick',
@@ -101,8 +125,12 @@ const Map = ({ blockId, children, content, methods, properties }) => {
         });
       }}
       onZoomChanged={() => {
+        if (map) {
+          MAP_PROPS.zoom = map.getZoom();
+        }
         methods.triggerEvent({
           name: 'onZoomChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
         });
       }}
     >
@@ -117,6 +145,34 @@ const Map = ({ blockId, children, content, methods, properties }) => {
             });
           }}
         />
+      ))}
+      {(properties.markerClusterers ?? []).map((markerClusterer, i) => (
+        <MarkerClusterer
+          key={i}
+          {...markerClusterer.options}
+          onClick={(event) => {
+            methods.triggerEvent({
+              name: 'onClusterClick',
+              event,
+            });
+          }}
+        >
+          {(clusterer) =>
+            markerClusterer?.markers.map((marker, i) => (
+              <Marker
+                {...marker}
+                key={i}
+                clusterer={clusterer} // https://react-google-maps-api-docs.netlify.app/#markerclusterer
+                onClick={(event) => {
+                  methods.triggerEvent({
+                    name: 'onMarkerClick',
+                    event,
+                  });
+                }}
+              />
+            ))
+          }
+        </MarkerClusterer>
       ))}
       {properties.infoWindow?.visible === true && (
         <InfoWindow
