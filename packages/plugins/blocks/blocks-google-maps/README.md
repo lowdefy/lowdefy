@@ -385,7 +385,7 @@ object:
           _build.env: GOOGLE_MAPS_API_KEY
       blocks:
         - id: google_maps_7
-          type: GoogleMapsHeatmap
+          type: GoogleMaps
           properties:
             map:
               disableDefaultUI: true
