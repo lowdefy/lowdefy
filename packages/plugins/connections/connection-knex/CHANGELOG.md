@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency knex to v2.4.2 ([e4b4942](https://github.com/lowdefy/lowdefy/commit/e4b4942a20f15f4b66c447253b01e0c39e283007))
+
+
+
+
+
 # [4.0.0-rc.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.3...v4.0.0-rc.4) (2023-02-21)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
