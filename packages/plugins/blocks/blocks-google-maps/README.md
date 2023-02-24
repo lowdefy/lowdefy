@@ -7,6 +7,7 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
 - [Map](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)
 - [Heatmap](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions)
 - [Markers](https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions)
+- [Marker Clusterers](https://developers.google.com/maps/documentation/javascript/marker-clustering)
 
 ### Properties
 
@@ -22,12 +23,39 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
 - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
   - `position: { lat: number, lng: number }`: Position of marker on map.
   - `label: string`: Label displayed on marker.
+- `markerClusterers: markerClustererOptions[]`: A list of MarkerClusterers with marker clusterer options.
+  - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+    - `position: { lat: number, lng: number }`: Position of marker on map.
+    - `label: string`: Label displayed on marker.
+  - `options: markerClustererOptions`: All other [marker clusterer options](https://react-google-maps-api-docs.netlify.app/#markerclusterer).
 - `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
   - `position: { lat: number, lng: number }`: Position of infoWindow on map.
   - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
 
 ### Events
 
+- `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+- `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
 - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
   - `domEvent`: event object
   - `latLng`:
@@ -36,7 +64,9 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
   - `pixel`:
     - `x`: x position on map block
     - `y`: y position on map block
-- `onClickMarker`: Trigger onClickMarker actions when a marker is clicked, returns `_event` object:
+- `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
+- `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
+object:
   - `domEvent`: event object
   - `latLng`:
     - `lat`: latitudinal coordinate
@@ -44,13 +74,26 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
   - `pixel`:
     - `x`: x position on map block
     - `y`: y position on map block
-- `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed.
+- `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
 
 ### Methods
 
 - `fitBounds`: Fit map to given bounds.
   - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
   - `zoom: number`: Map zoom level.
+- `getBounds`: Returns the bounds of the map.
+- `getCenter`: Returns the center of the map.
+- `getZoom`: Returns the zoom of the map.
 
 ## Examples
 
@@ -328,6 +371,126 @@ To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/pa
               center:
                 lat: -35.344
                 lng: 31.036
+    ```
+
+7. Add a marker clusterer:
+
+    ```yaml
+    - id: google_maps_script_7
+      type: GoogleMapsScript
+      properties:
+        libraries:
+          - visualization
+        apiKey:
+          _build.env: GOOGLE_MAPS_API_KEY
+      blocks:
+        - id: google_maps_7
+          type: GoogleMaps
+          properties:
+            map:
+              disableDefaultUI: true
+            markerClusterers:
+              - markers:
+                  - position:
+                      lat: 34.091158
+                      lng: -118.2795188
+                  - position:
+                      lat: 34.0771192
+                      lng: -118.2587199
+                  - position:
+                      lat: 34.083527
+                      lng: -118.370157
+                  - position:
+                      lat: 34.0951843
+                      lng: -118.283107
+                  - position:
+                      lat: 34.1033401
+                      lng: -118.2875469
+                  - position:
+                      lat: 34.035798
+                      lng: -118.251288
+                  - position:
+                      lat: 34.0776068
+                      lng: -118.2646526
+                  - position:
+                      lat: 34.0919263
+                      lng: -118.2820544
+                  - position:
+                      lat: 34.0568525
+                      lng: -118.3646369
+                  - position:
+                      lat: 34.0285781
+                      lng: -118.4115541
+                  - position:
+                      lat: 34.017339
+                      lng: -118.278469
+                  - position:
+                      lat: 34.0764288
+                      lng: -118.3661624
+                  - position:
+                      lat: 33.9925942
+                      lng: -118.4232475
+                  - position:
+                      lat: 34.0764345
+                      lng: -118.3730332
+                  - position:
+                      lat: 34.093981
+                      lng: -118.327638
+                  - position:
+                      lat: 34.056385
+                      lng: -118.2508724
+                  - position:
+                      lat: 34.107701
+                      lng: -118.2667943
+                  - position:
+                      lat: 34.0450139
+                      lng: -118.2388682
+                  - position:
+                      lat: 34.1031997
+                      lng: -118.2586152
+                  - position:
+                      lat: 34.0828183
+                      lng: -118.3241586
+                options:
+                  averageCenter: true
+                  zoomOnClick: false
+                  minimumClusterSize: 3
+                  maxZoom: 13
+    ```
+
+8. Call method getZoom:
+
+    ```yaml
+    - id: google_maps_script_8
+      type: GoogleMapsScript
+      properties:
+        apiKey:
+          _build.env: GOOGLE_MAPS_API_KEY
+      blocks:
+        - id: google_maps_8
+          type: GoogleMaps
+          properties:
+            map:
+              options:
+                panControl: true
+                zoomControl: true
+                fullscreenControl: true
+              zoom: 14
+              center:
+                lat: -25.344
+                lng: 131.036
+          events:
+            onClick:
+              - id: get_zoom
+                type: CallMethod
+                params:
+                  blockId: google_maps_8
+                  method: getZoom
+              - id: get_zoom_result
+                type: SetState
+                params:
+                  zoom:
+                    _actions: get_zoom.response
     ```
 <!--
 7. Trigger fitBounds using the onLoad event:
