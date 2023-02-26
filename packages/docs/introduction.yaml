@@ -47,7 +47,7 @@ _ref:
 
             > You need Node v16 or newer and pnpm installed to run Lowdefy. For more details see [the tutorial](/tutorial-start).
 
-            ## Why creating web apps using a YAML schema?
+            ## Why create web apps using a YAML schema?
 
             The Lowdefy schema is a simple definition of a web app which primarily makes use of block, action, operator and request definitions.
 
@@ -71,7 +71,7 @@ _ref:
 
             Currently, we also provide Custom Software as a Service for larger customers, as well as support plans for those who need some extra help.
 
-            We've been bootstrapping the project by deploying Lowdefy apps for businesses. We've built ticketing systems, call center solutions, advanced CRMs, custom MRPs, surveys and BI dashboard solutions and more for startup to enterprise customers. If you are looking for a Custom Software as a Service partner, please [reach out to us](/contact).
+            We've been bootstrapping the project by deploying Lowdefy apps for businesses. We've built ticketing systems, call center solutions, advanced CRMs, custom MRPs, surveys and BI dashboard solutions and more for startup to enterprise customers. If you are looking for a Custom Software as a Service partner, please [reach out to us](http://lowdefy.com/contact-us).
 
             ## Tutorial
 
@@ -99,12 +99,3 @@ _ref:
               type: ScrollTo
               params:
                 top: 0
-# Message was renamed to DisplayMessage
-
-# The following actions need to be added:
-# Login
-# Logout
-# Fetch
-# ResetValidation
-# Break
-# Wait

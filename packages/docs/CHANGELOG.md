@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
+
+
+### Bug Fixes
+
+* **docs:** Polish concepts pages ([9cfce96](https://github.com/lowdefy/lowdefy/commit/9cfce96f23f0304aa9ef4a38744a82323621e670))
+* Fix docs generate sitemap transformer ([9cf4c1d](https://github.com/lowdefy/lowdefy/commit/9cf4c1d130f8c99d2eda420c68e0847bd76e6926))
+
+
+
+
+
 # [4.0.0-rc.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.3...v4.0.0-rc.4) (2023-02-21)
 
 **Note:** Version bump only for package @lowdefy/docs

@@ -21,7 +21,7 @@
 - _ref: concepts/secrets.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
-- _ref: concepts/custom-code.yaml
+- _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/cli.yaml
 
@@ -163,7 +163,6 @@
 - _ref: operators/_divide.yaml
 - _ref: operators/_eq.yaml
 - _ref: operators/_event.yaml
-# - _ref: operators/_format.yaml
 - _ref: operators/_function.yaml
 - _ref: operators/_get.yaml
 - _ref: operators/_global.yaml

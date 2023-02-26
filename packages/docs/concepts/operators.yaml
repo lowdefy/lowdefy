@@ -65,5 +65,5 @@ _ref:
           vars:
             previous_page_title: Events and Actions
             previous_page_id: events-and-actions
-            next_page_title: Secrets
-            next_page_id: secrets
+            next_page_title: Connections and Requests
+            next_page_id: connections-and-requests

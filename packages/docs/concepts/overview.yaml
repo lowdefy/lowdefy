@@ -31,8 +31,8 @@ _ref:
             The Lowdefy schema abstracts app definitions into 5 categories:
             - [**Blocks**](/blocks): The building blocks of the UI, the client-side React component to render. Blocks are usually stateless since all app state is managed by the Lowdefy engine.
             - [**Operators**](/operators): The application logic is defined using operator functions, which can be used both server-side and client-side. These are synchronous methods, which are continuously evaluated every time the app state changes.
-            - [**Actions**](/actions): Asynchronous client-side methods triggered by events, such as clicking a button or initializing the page state. These methods usually apply an action like setting state, using the ([SetState](/SetState)) action, or calling a request, using the [Request]/Request action.
-            - [**Connections and Requests**](connections-and-requests): Asynchronous server-side methods, which allow a Lowdefy app to make server requests to other services like APIs or databases. Requests are evoked by the [Request]/Request action, and are only called after all user authentication and authorization checks have passed. Requests consume a payload from the client, and have access to server-side secrets like passwords and API keys.
+            - [**Actions**](/events-and-actions): Asynchronous client-side methods triggered by events, such as clicking a button or initializing the page state. These methods usually apply an action like setting state, using the ([SetState](/SetState)) action, or calling a request, using the [Request]/Request action.
+            - [**Connections and Requests**](connections-and-requests): Server-side methods, which allow a Lowdefy app to make server requests to other services like APIs or databases. Requests are evoked by the [Request]/(/Request) action, and are only called after all user authentication and authorization checks have passed. Requests consume a payload from the client, and have access to server-side secrets like passwords and API keys.
             - [**Auth Providers and Adapters**](/authentication): Lowdefy implements [NextAuth.js](https://next-auth.js.org) for authentication. NextAuth allows for the configuration of a wide range of authentication providers and adapters, which can be configured in Lowdefy apps.
 
             The diagram below provides an overview of the Lowdefy app schematic:
@@ -47,5 +47,5 @@ _ref:
           vars:
             previous_page_title: Tutorial
             previous_page_id: tutorial-start
-            next_page_title: The CLI
-            next_page_id: cli
+            next_page_title: Lowdefy App Schema
+            next_page_id: lowdefy-schema

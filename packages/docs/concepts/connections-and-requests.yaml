@@ -43,10 +43,10 @@ _ref:
                   _ref: version.yaml
               template: |
                 To implement requests, the following steps are required:
-                - define a connection.
-                - define a request.
-                - call the request using a [Request](/Request) action.
-                - use returned data by making use of the [_request](/_request) operator.
+                - Define a connection.
+                - Define a request.
+                - Call the request using a [Request](/Request) action.
+                - Use returned data by making use of the [_request](/_request) operator.
 
                 ## Connections
 
@@ -113,7 +113,7 @@ _ref:
                 requests:
                   - id: request1
                     type: RequestType1
-                    connectionId: connectionId1 # NOTE: connection with id: connectionId1 must be defined
+                    connectionId: connectionId1 # Connection with id: connectionId1 must be defined
                     payload:
                       field:
                         _state: field
@@ -121,7 +121,7 @@ _ref:
                       # ...
                   - id: request2
                     type: RequestType2
-                    connectionId: connectionId2 # NOTE: connection with id: connectionId2 must be defined
+                    connectionId: connectionId2 # Connection with id: connectionId2 must be defined
                     properties:
                       # ...
                 properties:
@@ -463,7 +463,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Layout
-            previous_page_id: layout
-            next_page_title: Events and Actions
-            next_page_id: events-and-actions
+            previous_page_title: Operators
+            previous_page_id: operators
+            next_page_title: Page and App State
+            next_page_id: page-and-app-state

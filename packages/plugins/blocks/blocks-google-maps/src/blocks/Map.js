@@ -16,7 +16,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker, MarkerClusterer, InfoWindow } from '@react-google-maps/api';
 
 const STYLE_DEFAULTS = {
   width: '100%',
@@ -32,6 +32,7 @@ const MAP_DEFAULTS = {
 };
 
 const MAP_PROPS = {
+  zoom: null,
   center: {
     lat: 0,
     lng: 0,
@@ -56,6 +57,18 @@ const Map = ({ blockId, children, content, methods, properties }) => {
         map.setZoom(args.zoom);
       }
     });
+
+    methods.registerMethod('getBounds', () => {
+      return map.getBounds();
+    });
+
+    methods.registerMethod('getCenter', () => {
+      return map.getCenter();
+    });
+
+    methods.registerMethod('getZoom', () => {
+      return map.getZoom();
+    });
   }, [bounds, map]);
 
   // by default, fit infoWindow and markers to bounds
@@ -66,8 +79,14 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     (properties.markers ?? []).map((marker) => {
       bounds.extend(marker.position);
     });
-    if (!properties.map?.center && !properties.map?.zoom) {
+    (properties.markerClusterers ?? []).map((markerClusterer) => {
+      (markerClusterer.markers ?? []).map((marker) => {
+        bounds.extend(marker.position);
+      });
+    });
+    if (!properties.map?.center && !properties.map?.zoom && MAP_PROPS.zoom === null) {
       map.fitBounds(bounds);
+      MAP_PROPS.zoom = map.getZoom();
     }
   }
 
@@ -79,19 +98,35 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     MAP_PROPS.center = properties.map.center;
   }
 
+  if (properties.map?.zoom && properties.map.zoom !== MAP_PROPS.zoom) {
+    MAP_PROPS.zoom = properties.map.zoom;
+  }
+
   return (
     <GoogleMap
       {...properties.map} // https://react-google-maps-api-docs.netlify.app/#googlemap
       id={blockId}
       mapContainerClassName={methods.makeCssClass([STYLE_DEFAULTS, properties.style])}
       center={MAP_PROPS.center}
-      zoom={properties.map?.zoom ?? MAP_DEFAULTS.zoom}
+      zoom={MAP_PROPS.zoom}
       onLoad={(newMap, event) => {
         setMap(newMap);
         setBounds(new window.google.maps.LatLngBounds());
         methods.triggerEvent({
           name: 'onLoad',
           event,
+        });
+      }}
+      onBoundsChanged={() => {
+        methods.triggerEvent({
+          name: 'onBoundsChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
+        });
+      }}
+      onCenterChanged={() => {
+        methods.triggerEvent({
+          name: 'onCenterChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
         });
       }}
       onClick={(event) => {
@@ -101,8 +136,12 @@ const Map = ({ blockId, children, content, methods, properties }) => {
         });
       }}
       onZoomChanged={() => {
+        if (map) {
+          MAP_PROPS.zoom = map.getZoom();
+        }
         methods.triggerEvent({
           name: 'onZoomChanged',
+          event: { center: map?.getCenter(), bounds: map?.getBounds(), zoom: map?.getZoom() },
         });
       }}
     >
@@ -117,6 +156,34 @@ const Map = ({ blockId, children, content, methods, properties }) => {
             });
           }}
         />
+      ))}
+      {(properties.markerClusterers ?? []).map((markerClusterer, i) => (
+        <MarkerClusterer
+          key={i}
+          {...markerClusterer.options}
+          onClick={(event) => {
+            methods.triggerEvent({
+              name: 'onClusterClick',
+              event,
+            });
+          }}
+        >
+          {(clusterer) =>
+            markerClusterer?.markers.map((marker, i) => (
+              <Marker
+                {...marker}
+                key={i}
+                clusterer={clusterer} // https://react-google-maps-api-docs.netlify.app/#markerclusterer
+                onClick={(event) => {
+                  methods.triggerEvent({
+                    name: 'onMarkerClick',
+                    event,
+                  });
+                }}
+              />
+            ))
+          }
+        </MarkerClusterer>
       ))}
       {properties.infoWindow?.visible === true && (
         <InfoWindow
