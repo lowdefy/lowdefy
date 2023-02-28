@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
+
+
+### Bug Fixes
+
+* **blocks-google-maps:** Fix typo in readme. ([4b9582d](https://github.com/lowdefy/lowdefy/commit/4b9582dad8c7f110b6f7ffa896bb70d07488461e))
+* **blocks-google-maps:** Fix zoom not working when defaulting to use fitbounds. ([d272512](https://github.com/lowdefy/lowdefy/commit/d272512536be3a82f3578bb0ae36a584024e563b))
+
+
+### Features
+
+* **blocks-google-maps:** Add ability to add Marker Clusterers to map. ([3b19b49](https://github.com/lowdefy/lowdefy/commit/3b19b496296ae2f1abdc4c1f604006c54d8a2568))
+* **blocks-google-maps:** Add examples and descriptions of marker clusterers and new methods. ([8d5cf5f](https://github.com/lowdefy/lowdefy/commit/8d5cf5f99bca908f2c120989c083812ef1224c24))
+* **blocks-google-maps:** Update google maps block schema. ([b6b6997](https://github.com/lowdefy/lowdefy/commit/b6b69971074526f21e581efa91e5e6542c02f15e))
+
+
+
+
+
 # [4.0.0-rc.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.3...v4.0.0-rc.4) (2023-02-21)
 
 **Note:** Version bump only for package @lowdefy/blocks-google-maps
