@@ -30,7 +30,7 @@ _ref:
 
             ## Configuring the SQLite Connection and Request
 
-            We will be saving the data from our form in a SQLite database, using the [`SQLite`](/SQLite) connection. To do this, we will first need to set up an SQLite database as described in the following steps:
+            We will be saving the data from our form in a SQLite database, using the [`Knex`](/SQLite) connection. To do this, we will first need to set up an SQLite database as described in the following steps:
 
             #### 6.1. Setting up the SQLite database
 
@@ -46,7 +46,7 @@ _ref:
       - id: table_download
         type: DangerousMarkdown
         properties:
-          html: |
+          content: |
             The database used in this tutorial can be downloaded <a href="/tutorial/tutorial_db.sqlite" download>here</a>.
 
       - id: body_sqlite_steps

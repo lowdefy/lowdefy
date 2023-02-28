@@ -89,7 +89,7 @@ _ref:
             ```
 
             A red asterisk should appear next to each input field, looking like this:
-      - id: example1
+      - id: example_1
         type: TextInput
         required: true
         properties:
@@ -136,7 +136,7 @@ _ref:
             Now if we click the submit button and all our inputs aren't complete, a message pops up saying we have validation errors on the page. All the fields that have not been completed are highlighted in red.
 
             The result should look and work like this. The examples in this tutorial are live versions of the tutorial app, so you can verify that they work like your own app.
-      - id: example2
+      - id: example_2
         type: PageHeaderMenu
         properties:
           style:
@@ -154,12 +154,12 @@ _ref:
                 properties:
                   content: Log a ticket
                   level: 3
-              - id: ticket_title
+              - id: example_2.ticket_title
                 type: TextInput
                 required: true
                 properties:
                   title: Title
-              - id: ticket_type
+              - id: example_2.ticket_type
                 type: ButtonSelector
                 required: true
                 properties:
@@ -168,7 +168,7 @@ _ref:
                     - Suggestion
                     - Complaint
                     - Question
-              - id: ticket_description
+              - id: example_2.ticket_description
                 type: TextArea
                 properties:
                   title: Description
@@ -198,6 +198,8 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
+                      params:
+                        regex: ^example_2\.
       - id: body_visible
         type: MarkdownWithCode
         properties:
@@ -309,22 +311,15 @@ _ref:
 
             Your final new ticket page should look and work like this:
 
-      - id: example3
+      - id: example_3
         type: PageHeaderMenu
         properties:
           style:
             minHeight: 300px
           menu:
             links: []
-        events:
-          onInit:
-            - id: init
-              type: SetState
-              params:
-                example3_number_of_attendees: 2 - 3
-                example3_ticket_type: Bug report
         blocks:
-          - id: example3_content_card
+          - id: example_3_content_card
             type: Card
             layout:
               contentGutter: 16
@@ -340,7 +335,7 @@ _ref:
                 required: true
                 properties:
                   title: Title
-              - id: ticket_type
+              - id: example_3.ticket_type
                 type: ButtonSelector
                 required: true
                 properties:
@@ -349,15 +344,15 @@ _ref:
                     - Suggestion
                     - Complaint
                     - Question
-              - id: ticket_description
+              - id: example_3.ticket_description
                 type: TextArea
                 properties:
                   title: Description
-              - id: purchase_in_last_month
+              - id: example_3.purchase_in_last_month
                 type: ButtonSelector
                 visible: # Test if block should be visible to the user
                   _eq: # Equals operator
-                    - _state: ticket_type # Get the ticket_type value from state.
+                    - _state: example_3.ticket_type # Get the ticket_type value from state.
                     - Complaint
                 validate:
                   # Show a warning that shows before validate is called
@@ -366,7 +361,7 @@ _ref:
                     message: If you have had the product for over a month, we may not be able to replace it.
                     pass:
                       _eq:
-                        - _state: confirm_restart
+                        - _state: example_3.purchase_in_last_month
                         - Yes
                 properties:
                   title: Did you purchase this product within the last month?
@@ -401,6 +396,8 @@ _ref:
                   onClick:
                     - id: validate
                       type: Validate
+                      params:
+                        regex: ^example_3\.
       - id: body_up_next
         type: MarkdownWithCode
         properties:
