@@ -21,6 +21,7 @@
 - _ref: concepts/secrets.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
+- _ref: concepts/plugins.yaml
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/cli.yaml

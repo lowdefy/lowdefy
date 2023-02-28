@@ -128,6 +128,11 @@
           pageId: hosting-files
           properties:
             title: Hosting Files
+        - id: plugins
+          type: MenuLink
+          pageId: plugins
+          properties:
+            title: Plugins
         - id: custom-styling
           type: MenuLink
           pageId: custom-styling
