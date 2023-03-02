@@ -14,22 +14,15 @@
 
 - id: default
   type: Spinner
-  description: Default
-- id: height100
+- id: sizedefault
   type: Spinner
-  description: |
-    height: 100
   properties:
-    height: 100
-- id: styleheight
+    size: default
+- id: sizesmall
   type: Spinner
-  style:
-    height: 500
-  description: |
-    style height: 500
-- id: shaded
-  type: Spinner
-  description: |
-    shaded: true
   properties:
-    shaded: true
+    size: small
+- id: sizelarge
+  type: Spinner
+  properties:
+    size: large

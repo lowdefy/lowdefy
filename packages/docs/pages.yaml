@@ -108,7 +108,7 @@
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Span.yaml
-# - _ref: blocks/container/Spin.yaml # TODO:
+- _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml
 - _ref: blocks/container/Tooltip.yaml
 

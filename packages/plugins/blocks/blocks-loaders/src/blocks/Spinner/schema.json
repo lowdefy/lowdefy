@@ -6,21 +6,15 @@
     "properties": {
       "style": {
         "type": "object",
-        "description": "Css style object to apply to the skeleton.",
+        "description": "Css style object to apply to the icon.",
         "docs": {
           "displayType": "yaml"
         }
       },
       "size": {
         "type": "string",
-        "default": "medium",
-        "description": "Size of the logo spinner.",
+        "description": "Size of the icon spinner.",
         "enum": ["small", "medium", "large"]
-      },
-      "height": {
-        "type": ["string", "number"],
-        "default": "100%",
-        "description": "Height of the container."
       }
     }
   },
