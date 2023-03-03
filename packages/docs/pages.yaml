@@ -174,7 +174,6 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
-# - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
