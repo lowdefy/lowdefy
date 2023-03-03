@@ -444,9 +444,9 @@
         - id: Span
           type: MenuLink
           pageId: Span
-        # - id: Spin
-        #   type: MenuLink
-        #   pageId: Spin
+        - id: Spinner
+          type: MenuLink
+          pageId: Spinner
         - id: Tabs
           type: MenuLink
           pageId: Tabs
