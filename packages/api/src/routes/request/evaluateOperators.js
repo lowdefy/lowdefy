@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { ServerParser } from '@lowdefy/operators';
 
 import { RequestError } from '../../context/errors.js';
 
@@ -22,7 +22,7 @@ function evaluateOperators(
   { operators, secrets, user },
   { connectionConfig, payload, requestConfig }
 ) {
-  const operatorsParser = new NodeParser({
+  const operatorsParser = new ServerParser({
     operators,
     payload,
     secrets,

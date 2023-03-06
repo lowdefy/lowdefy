@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 
 async function evaluateBuildOperators({ context, input, refDef }) {
-  const operatorsParser = new NodeParser({
-    build: true, // TODO
+  const operatorsParser = new BuildParser({
     env: process.env,
     operators,
   });

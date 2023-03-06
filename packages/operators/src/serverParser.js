@@ -24,7 +24,7 @@ class NodeParser {
     this.secrets = secrets;
     this.user = user;
     this.parse = this.parse.bind(this);
-    this.verbose;
+    this.verbose = verbose;
   }
 
   // TODO: Look at logging here
@@ -41,7 +41,11 @@ class NodeParser {
     }
     const errors = [];
     const reviver = (_, value) => {
-      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+      if (!type.isObject(value)) return value;
+      // TODO: pass _k_ in errors.
+      // const _k_ = value._k_;
+      delete value._k_;
+      if (Object.keys(value).length !== 1) return value;
 
       const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;

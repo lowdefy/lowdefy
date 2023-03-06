@@ -17,7 +17,7 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals';
 
-import NodeParser from './nodeParser.js';
+import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
 
@@ -46,7 +46,7 @@ const user = {
 };
 
 test('parse input undefined', () => {
-  const parser = new NodeParser({ operators, payload });
+  const parser = new ServerParser({ operators, payload });
   const res = parser.parse({});
   expect(res.output).toEqual();
   expect(res.errors).toEqual([]);
@@ -55,14 +55,14 @@ test('parse input undefined', () => {
 test('parse args not array', () => {
   const input = {};
   const args = 'not an array';
-  const parser = new NodeParser({ operators, payload });
+  const parser = new ServerParser({ operators, payload });
   expect(() => parser.parse({ args, input })).toThrow('Operator parser args must be an array.');
 });
 
 test('parse location not string', () => {
   const input = {};
   const location = [];
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   expect(() => parser.parse({ args, input, location })).toThrow(
     'Operator parser location must be a string.'
   );
@@ -70,7 +70,7 @@ test('parse location not string', () => {
 
 test('operator returns value', () => {
   const input = { a: { _test: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
@@ -103,7 +103,7 @@ test('operator returns value', () => {
           "params": Object {
             "params": true,
           },
-          "parser": NodeParser {
+          "parser": ServerParser {
             "env": undefined,
             "operators": Object {
               "_error": [MockFunction],
@@ -148,7 +148,7 @@ test('operator returns value', () => {
 
 test('operator should be object with 1 key', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -157,7 +157,7 @@ test('operator should be object with 1 key', () => {
 test('operatorPrefix invalid', () => {
   const input = { a: { _test: { params: true }, x: 1 } };
   const operatorPrefix = 'invalid';
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location, operatorPrefix });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -165,7 +165,7 @@ test('operatorPrefix invalid', () => {
 
 test('undefined operator', () => {
   const input = { a: { _id: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual(input);
   expect(res.errors).toEqual([]);
@@ -173,7 +173,7 @@ test('undefined operator', () => {
 
 test('operator errors', () => {
   const input = { a: { _error: { params: true } } };
-  const parser = new NodeParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toEqual([new Error('Test error.')]);

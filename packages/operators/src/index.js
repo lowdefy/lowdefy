@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
+import BuildParser from './buildParser.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
-import NodeParser from './nodeParser.js';
+import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
 import WebParser from './webParser.js';
 
-export { getFromArray, getFromObject, NodeParser, runClass, runInstance, WebParser };
+export { BuildParser, getFromArray, getFromObject, ServerParser, runClass, runInstance, WebParser };
