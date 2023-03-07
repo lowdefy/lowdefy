@@ -17,15 +17,9 @@
 import axios from 'axios';
 import semver from 'semver';
 
-async function validateVersion({ cliVersion, command, lowdefyVersion, print }) {
-  if (['init'].includes(command)) {
+async function validateVersion({ cliVersion, lowdefyVersion, print, requiresLowdefyYaml }) {
+  if (!requiresLowdefyYaml) {
     return;
-  }
-  if (!lowdefyVersion) {
-    throw new Error(`
----------------------------------------------------
-  Please specify a Lowdefy version.
----------------------------------------------------`);
   }
   if (lowdefyVersion === 'local') {
     return;
