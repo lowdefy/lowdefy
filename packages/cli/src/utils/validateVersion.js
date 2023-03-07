@@ -18,7 +18,7 @@ import axios from 'axios';
 import semver from 'semver';
 
 async function validateVersion({ cliVersion, command, lowdefyVersion, print }) {
-  if (!['init'].includes(command)) {
+  if (['init'].includes(command)) {
     return;
   }
   if (!lowdefyVersion) {
