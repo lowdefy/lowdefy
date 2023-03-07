@@ -17,7 +17,16 @@
 import axios from 'axios';
 import semver from 'semver';
 
-async function checkForUpdatedVersions({ cliVersion, lowdefyVersion, print }) {
+async function validateVersion({ cliVersion, command, lowdefyVersion, print }) {
+  if (!['init'].includes(command)) {
+    return;
+  }
+  if (!lowdefyVersion) {
+    throw new Error(`
+---------------------------------------------------
+  Please specify a Lowdefy version.
+---------------------------------------------------`);
+  }
   if (lowdefyVersion === 'local') {
     return;
   }
@@ -78,4 +87,4 @@ function isExperimentalVersion(version) {
   return version.includes('alpha') || version.includes('beta') || version.includes('rc');
 }
 
-export default checkForUpdatedVersions;
+export default validateVersion;

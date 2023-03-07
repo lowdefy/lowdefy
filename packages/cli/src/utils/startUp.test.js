@@ -33,7 +33,7 @@ jest.unstable_mockModule('./createPrint.js', () => ({
 }));
 jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 jest.unstable_mockModule('./getSendTelemetry.js', () => ({ default: () => 'sendTelemetry' }));
-jest.unstable_mockModule('./checkForUpdatedVersions.js', () => ({
+jest.unstable_mockModule('./validateVersion.js', () => ({
   default: jest.fn(),
 }));
 
@@ -43,7 +43,7 @@ const command = {
 
 test('startUp, options empty', async () => {
   const startUp = (await import('./startUp.js')).default;
-  const checkForUpdatedVersions = (await import('./checkForUpdatedVersions.js')).default;
+  const validateVersion = (await import('./validateVersion.js')).default;
   const context = { cliVersion: 'cliVersion' };
   await startUp({ context, options: {}, command });
   const print = context.print;
@@ -66,7 +66,7 @@ test('startUp, options empty', async () => {
     print,
     sendTelemetry: 'sendTelemetry',
   });
-  expect(checkForUpdatedVersions).toHaveBeenCalledTimes(1);
+  expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print).toMatchInlineSnapshot(`
   Object {
     "error": [MockFunction],
@@ -89,7 +89,7 @@ test('startUp, options empty', async () => {
 
 test('startUp, options undefined', async () => {
   const startUp = (await import('./startUp.js')).default;
-  const checkForUpdatedVersions = (await import('./checkForUpdatedVersions.js')).default;
+  const validateVersion = (await import('./validateVersion.js')).default;
   const context = { cliVersion: 'cliVersion' };
   await startUp({ context, command });
   const print = context.print;
@@ -112,7 +112,7 @@ test('startUp, options undefined', async () => {
     print,
     sendTelemetry: 'sendTelemetry',
   });
-  expect(checkForUpdatedVersions).toHaveBeenCalledTimes(1);
+  expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print).toMatchInlineSnapshot(`
     Object {
       "error": [MockFunction],
@@ -164,7 +164,7 @@ test('startUp, options configDirectory', async () => {
 
 test('startUp, no lowdefyVersion returned', async () => {
   const startUp = (await import('./startUp.js')).default;
-  const checkForUpdatedVersions = (await import('./checkForUpdatedVersions.js')).default;
+  const validateVersion = (await import('./validateVersion.js')).default;
   const getLowdefyYaml = (await import('./getLowdefyYaml.js')).default;
   getLowdefyYaml.mockImplementationOnce(() => ({ cliConfig: {} }));
   const context = { cliVersion: 'cliVersion' };
@@ -189,6 +189,6 @@ test('startUp, no lowdefyVersion returned', async () => {
     print,
     sendTelemetry: 'sendTelemetry',
   });
-  expect(checkForUpdatedVersions).toHaveBeenCalledTimes(1);
+  expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print.log.mock.calls).toEqual([["Running 'lowdefy test'."]]);
 });

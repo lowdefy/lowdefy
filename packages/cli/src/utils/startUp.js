@@ -17,7 +17,7 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import checkForUpdatedVersions from './checkForUpdatedVersions.js';
+import validateVersion from './validateVersion.js';
 import checkPnpmIsInstalled from './checkPnpmIsInstalled.js';
 import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
@@ -45,7 +45,7 @@ async function startUp({ context, options = {}, command }) {
 
   context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   checkPnpmIsInstalled(context);
-  await checkForUpdatedVersions(context);
+  await validateVersion(context);
 
   context.sendTelemetry = getSendTelemetry(context);
 
