@@ -17,7 +17,7 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import checkForUpdatedVersions from './checkForUpdatedVersions';
+import validateVersion from './validateVersion';
 import getCliJson from './getCliJson';
 import getDirectories from './getDirectories';
 import getLowdefyYaml from './getLowdefyYaml';
@@ -47,7 +47,7 @@ async function startUp({ context, options = {}, command }) {
   context.cacheDirectory = cacheDirectory;
   context.outputDirectory = outputDirectory;
 
-  await checkForUpdatedVersions(context);
+  await validateVersion(context);
 
   context.sendTelemetry = getSendTelemetry(context);
 

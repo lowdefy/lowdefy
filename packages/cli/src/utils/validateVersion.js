@@ -17,7 +17,16 @@
 import axios from 'axios';
 import semver from 'semver';
 
-async function checkForUpdatedVersions({ cliVersion, command, lowdefyVersion, print }) {
+async function validateVersion({ cliVersion, command, lowdefyVersion, print }) {
+  if (['init'].includes(command)) {
+    return;
+  }
+  if (!lowdefyVersion) {
+    throw new Error(`
+---------------------------------------------------
+  Please specify a Lowdefy version.
+---------------------------------------------------`);
+  }
   if (!semver.valid(lowdefyVersion)) {
     throw new Error(`
 ---------------------------------------------------
@@ -61,4 +70,4 @@ async function checkForUpdatedVersions({ cliVersion, command, lowdefyVersion, pr
   }
 }
 
-export default checkForUpdatedVersions;
+export default validateVersion;

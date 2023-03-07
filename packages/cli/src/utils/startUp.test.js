@@ -16,7 +16,7 @@
 
 import path from 'path';
 import startUp from './startUp';
-import checkForUpdatedVersions from './checkForUpdatedVersions';
+import validateVersion from './validateVersion';
 import createPrint from './print';
 // eslint-disable-next-line no-unused-vars
 import getLowdefyYaml from './getLowdefyYaml';
@@ -43,7 +43,7 @@ jest.mock('./print', () => {
 });
 jest.mock('../../package.json', () => ({ version: 'cliVersion' }));
 jest.mock('./getSendTelemetry', () => () => 'sendTelemetry');
-jest.mock('./checkForUpdatedVersions', () => jest.fn(() => 'checkForUpdatedVersions'));
+jest.mock('./validateVersion', () => jest.fn(() => 'validateVersion'));
 
 const print = createPrint();
 
@@ -68,7 +68,7 @@ test('startUp, options empty', async () => {
     print,
     sendTelemetry: 'sendTelemetry',
   });
-  expect(checkForUpdatedVersions).toHaveBeenCalledTimes(1);
+  expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print.log.mock.calls).toEqual([
     ["Running 'lowdefy test'. Lowdefy app version lowdefyVersion."],
   ]);
@@ -189,6 +189,6 @@ test('startUp, no lowdefyVersion returned', async () => {
     print,
     sendTelemetry: 'sendTelemetry',
   });
-  expect(checkForUpdatedVersions).toHaveBeenCalledTimes(1);
+  expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print.log.mock.calls).toEqual([["Running 'lowdefy test'."]]);
 });
