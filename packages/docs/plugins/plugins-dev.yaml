@@ -12,14 +12,16 @@ _ref:
           content: |
             To develop plugins and publish plugins to npm or to use unpublished, project-specific plugins, we recommend using a pnpm monorepo with the plugin packages and a Lowdefy app, as demonstrated in [this example](https://github.com/lowdefy/lowdefy-example-plugins). The [Lowdefy default plugin packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins) can also be used as examples.
 
+            > In this documentation the collection of blocks, connections, actions, etc. will be referred to as _types_, not to be confused with Typescript types.
+
             A plugin package needs to include the following:
 
             - A `package.json` file which declares the package and exports the plugin types.
             - A `types.js` file which exports the plugin type names.
-            - A file that exports all the types as named exports.
+            - Files that export all the types as named exports.
             - The code for the types exposed by the plugin package.
 
-            #### package.json
+            ### package.json
 
             Lowdefy only supports [ECMAScript modules](https://nodejs.org/api/esm.html#introduction) in plugin packages, CommonJS modules are not supported. To configure a package to ECMAScript modules, the `type` field in the `package.json` file should be set to `"module"`.
 
@@ -31,6 +33,7 @@ _ref:
               "version": "1.0.0",
               "type": "module",
               "exports": {
+                "./actions": "./src/actions.js",
                 "./auth/callbacks": "./src/auth/callbacks.js",
                 "./auth/events": "./src/auth/events.js",
                 "./auth/providers": "./src/auth/providers.js",
@@ -45,13 +48,15 @@ _ref:
             }
             ```
 
+            The `./types` entry point is required, and the other entry points are only required if the package exports the corresponding types.
+
             You can change your folder structure in your package, but then you need to change the `exports` config in the `package.json` file to match your file structure.
 
             ##### Compiling React for blocks
 
             To develop a block plugin, the React code needs to compiled before it can be used in the Lowdefy app. The [Lowdefy plugin example](https://github.com/lowdefy/lowdefy-example-plugins) has an example of this configured using SWC.
 
-            #### types.js
+            ### types.js
 
             The `types.js` file declares the different types provided by the plugin package. This is used by Lowdefy build to map plugin types used in the Lowdefy config to plugin packages.
 
@@ -114,4 +119,30 @@ _ref:
             };
             ```
 
-            #### Named export files
+            ### Named export files
+
+            A file that exports the plugin types as named exports is needed for each kind of plugin-types. This is so that the Lowdefy server can import these directly to allow for tree shaking to reduce bundle size by excluding unused code. In the default configuration these file names correspond to the package entry point paths, for example, the files are named `actions.js`, `blocks.js`, and `operators/client.js`, but different file names and folder structures can be configured.
+
+            ###### Example `actions.js` file
+            ```js
+            export { default as MyAction } from './actions/MyAction.js';
+            ```
+
+            In the Lowdefy server, the types will be imported as:
+            ```js
+            import { MyAction as MyAction } from 'my-plugin-package/actions';
+            ```
+
+            ### Plugin code
+
+            Most types are written as standard Javascript function, and blocks are written as React components. The function names should be in _CapitalCase_, except for operators which should be written in _snake_case_ and start with a underscore.
+
+            Lowdefy uses a object destructing to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Plugins Introduction
+            previous_page_id: plugins-introduction
+            next_page_title: Actions
+            next_page_id: plugins-actions

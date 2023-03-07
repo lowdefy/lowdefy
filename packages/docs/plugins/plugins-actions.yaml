@@ -3,21 +3,23 @@ _ref:
   vars:
     pageId: plugins-actions
     pageTitle: Action Plugins
-    section: Concepts
-    filePath: concepts/plugins-actions.yaml
+    section: Plugins
+    filePath: plugins/plugins-actions.yaml
     content:
       - id: md1
         type: MarkdownWithCode
         properties:
           content: |
-            Actions are functions that are triggered by events in a Lowdefy app. The Lowdefy engine provides a context object to the action with the following parameters:
+            Actions are functions that are triggered by events in a Lowdefy app. Actions can be `async` functions. The response returned by the action can be read using the `_actions` operator. If a promise is returned, the promise will be awaited before the next action is run.
+
+            The Lowdefy engine provides a context object to the action with the following parameters:
 
             - `globals: object`: Commonly used Javascript global objects. These are passed to the action for easier testing.
               - `document: object`: The browser [`window.document`](https://developer.mozilla.org/en-US/docs/Web/API/Document/Document) global variable.
               - `fetch: function`: The global [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/fetch) Javascript method.
               - `window: object`: The browser [`window`](https://developer.mozilla.org/en-US/docs/Web/API/Window) global variable.
             - `methods: object`:
-              - `callMethod: function`: Call the CallMethod action..
+              - `callMethod: function`: Call the CallMethod action.
               - `displayMessage: function`: Call the DisplayMessage action.
               - `getActions: function`: Get data from previous actions in the action chain.
               - `getBlockId: function`: Get the blockId of the block that triggered the event.
@@ -40,4 +42,47 @@ _ref:
               - `validate: function`: Call the Validate action.
             - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the action. No validation is performed on this object.
 
-            The parameters
+            #### Examples
+
+            ###### The Lowdefy SetState action:
+            ```js
+            function SetState({ methods: { setState }, params }) {
+              setState(params);
+            }
+
+            export default SetState;
+            ```
+
+            ###### The Lowdefy Fetch action:
+            ```js
+            async function Fetch({ globals, params }) {
+              const { fetch } = globals;
+              const { url, options, responseFunction } = params;
+              const res = await fetch(url, options);
+              if (responseFunction) {
+                return res[responseFunction]();
+              }
+              return res;
+            }
+
+            export default Fetch;
+            ```
+
+            ###### An action that shows the user confetti using the js-confetti:
+            ```js
+            import JSConfetti from 'js-confetti';
+
+            async function Confetti({ params }) {
+              const jsConfetti = new JSConfetti();
+              const { emojis, confettiRadius = 3, confettiNumber = 50, emojiSize = 10 } = params;
+              jsConfetti.addConfetti({
+                emojis,
+                confettiRadius,
+                confettiNumber,
+                emojiSize,
+              });
+              return;
+            }
+
+            export default Confetti;
+            ```

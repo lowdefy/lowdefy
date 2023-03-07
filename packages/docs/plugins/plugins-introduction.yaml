@@ -3,8 +3,8 @@ _ref:
   vars:
     pageId: plugins-introduction
     pageTitle: Plugins
-    section: Concepts
-    filePath: concepts/plugins-introduction.yaml
+    section: Plugins
+    filePath: plugins/plugins-introduction.yaml
     content:
       - id: md1
         type: MarkdownWithCode
@@ -29,3 +29,11 @@ _ref:
               - name: local-plugin
                 version: workspace:*
             ```
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Overview
+            previous_page_id: overview
+            next_page_title: Developing Plugins
+            next_page_id: plugins-dev
