@@ -87,7 +87,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Plugins
-            previous_page_id: plugins
+            previous_page_title: Hosting Files
+            previous_page_id: hosting-files
             next_page_title: Custom HTML
             next_page_id: custom-html

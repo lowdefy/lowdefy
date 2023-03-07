@@ -46,5 +46,5 @@ _ref:
           vars:
             previous_page_title: Lists
             previous_page_id: lists
-            next_page_title: Plugins
-            next_page_id: plugins
+            next_page_title: Custom Styling
+            next_page_id: custom-styling

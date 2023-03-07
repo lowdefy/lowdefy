@@ -1,0 +1,43 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: plugins-actions
+    pageTitle: Action Plugins
+    section: Concepts
+    filePath: concepts/plugins-actions.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Actions are functions that are triggered by events in a Lowdefy app. The Lowdefy engine provides a context object to the action with the following parameters:
+
+            - `globals: object`: Commonly used Javascript global objects. These are passed to the action for easier testing.
+              - `document: object`: The browser [`window.document`](https://developer.mozilla.org/en-US/docs/Web/API/Document/Document) global variable.
+              - `fetch: function`: The global [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/fetch) Javascript method.
+              - `window: object`: The browser [`window`](https://developer.mozilla.org/en-US/docs/Web/API/Window) global variable.
+            - `methods: object`:
+              - `callMethod: function`: Call the CallMethod action..
+              - `displayMessage: function`: Call the DisplayMessage action.
+              - `getActions: function`: Get data from previous actions in the action chain.
+              - `getBlockId: function`: Get the blockId of the block that triggered the event.
+              - `getEvent: function`: Get event data from the event that triggered the action.
+              - `getGlobal: function`: Get data from the Lowdefy global object.
+              - `getInput: function`: Get data from the Lowdefy input object.
+              - `getPageId: function`: Get the pageId of the block that the action is defined on.
+              - `getRequestDetails: function`: Get data from Lowdefy requests.
+              - `getState: function`: Get data from the Lowdefy state object.
+              - `getUrlQuery: function`: Get data from the Lowdefy urlQuery object.
+              - `getUser: function`: Get data from the Lowdefy user object.
+              - `link: function`: Call the Link action.
+              - `login: function`: Call the Login action.
+              - `logout: function`: Call the Logout action.
+              - `request: function`: Call the Request action.
+              - `reset: function`: Call the Reset action.
+              - `resetValidation: function`: Call the ResetValidation action.
+              - `setGlobal: function`: Call the SetGlobal action.
+              - `setState: function`: Call the SetGlobal action.
+              - `validate: function`: Call the Validate action.
+            - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the action. No validation is performed on this object.
+
+            The parameters
