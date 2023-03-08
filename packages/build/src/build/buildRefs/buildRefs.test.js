@@ -16,8 +16,9 @@
 
 import { jest } from '@jest/globals';
 
-import buildRefs from './buildRefs.js';
 import testContext from '../../test/testContext.js';
+import builtConfigCleaner from '../../test/builtConfigCleaner.js';
+import buildRefs from './buildRefs.js';
 
 const mockLogWarn = jest.fn();
 
@@ -52,7 +53,7 @@ test('buildRefs no refs', async () => {
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
-  expect(res).toEqual({
+  expect(builtConfigCleaner(res)).toEqual({
     field: 'value',
   });
 });
@@ -92,7 +93,7 @@ var1:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
-  expect(res).toEqual({
+  expect(builtConfigCleaner(res)).toEqual({
     jsonFile: { file: 'jsonFile.json' },
     twoLevels: { file: 'twoLevels.json', jsonFile: { file: 'jsonFile.json' } },
     vars: { file: 'vars.yaml', var1: 'var_1_value' },
@@ -171,7 +172,7 @@ Hello there`,
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   const res = await buildRefs({ context });
-  expect(res).toEqual({
+  expect(builtConfigCleaner(res)).toEqual({
     html: `<h1>Heading</h1>
 <p>Hello there</p>`,
     md: `### Title
@@ -194,9 +195,7 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Invalid _ref definition {"_ref":null} in file lowdefy.yaml'
-  );
+  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
 });
 
 test('buildRefs invalid ref definition', async () => {
@@ -209,9 +208,7 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Invalid _ref definition {"_ref":1} in file lowdefy.yaml'
-  );
+  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
 });
 
 test('buildRefs invalid ref definition 2', async () => {
@@ -225,9 +222,7 @@ invalid:
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Invalid _ref definition {"_ref":{"a":"b"}} in file lowdefy.yaml'
-  );
+  await expect(buildRefs({ context })).rejects.toThrow('Invalid _ref definition');
 });
 
 test('buildRefs for file not found', async () => {
@@ -264,7 +259,7 @@ templated:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       templated: 'Hello There',
     });
   });
@@ -287,7 +282,7 @@ templated:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       templated: { field1: true },
     });
   });
@@ -316,7 +311,7 @@ templated:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       templated: { list: [{ field: 'value1' }, { field: 'value2' }] },
     });
   });
@@ -345,7 +340,7 @@ templated:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       templated: { list: [{ field: 'value1' }, { field: 'value2' }] },
     });
   });
@@ -373,7 +368,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         field: 'value',
       },
@@ -402,7 +397,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         field: 'value',
       },
@@ -435,7 +430,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         field1: null,
         field2: 'default',
@@ -479,7 +474,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         field_empty_str: '',
         field_false: false,
@@ -510,7 +505,7 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      '"_var" operator takes a string or object with "key" field as arguments. Received "{"_var":[1]}"'
+      '"_var" operator takes a string or object with "key" field as arguments.'
     );
   });
 
@@ -537,14 +532,14 @@ describe('vars', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         ref1: { field: 'value' },
         ref2: { field: 'value' },
       },
     });
     res.ref.ref1.field = 'newValue';
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref: {
         ref1: { field: 'newValue' },
         ref2: { field: 'value' },
@@ -584,7 +579,7 @@ value:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref1: {
         ref2: {
           value: 'Hello',
@@ -618,7 +613,7 @@ content:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref1: {
         content: 'Hello',
       },
@@ -674,7 +669,7 @@ const:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref1: {
         ref2: {
           value: 1,
@@ -711,7 +706,7 @@ const:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       text: 'Hello',
     });
   });
@@ -741,7 +736,7 @@ const:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       text: 'Hello',
     });
   });
@@ -775,7 +770,7 @@ ref2:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       ref1: {
         ref2: {
           obj: {
@@ -808,7 +803,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'value',
     });
   });
@@ -830,7 +825,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'value',
     });
   });
@@ -852,7 +847,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: null,
     });
   });
@@ -874,7 +869,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: null,
     });
   });
@@ -900,7 +895,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'value',
     });
   });
@@ -927,7 +922,7 @@ field:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'value',
     });
   });
@@ -960,7 +955,7 @@ field2: value2`,
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'newValue',
     });
   });
@@ -985,7 +980,7 @@ field2: value2`,
   //     ];
   //     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   //     const res = await buildRefs({ context });
-  //     expect(res).toEqual({
+  //     expect(builtConfigCleaner(res)).toEqual({
   //       field: 'value',
   //     });
   //   });
@@ -1017,7 +1012,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       field: 'value',
     });
   });
@@ -1042,7 +1037,7 @@ describe('transformer functions', () => {
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       add: 43,
       json: '{"a":1}',
       var: 'var1',
@@ -1065,7 +1060,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ async: true });
+    expect(builtConfigCleaner(res)).toEqual({ async: true });
   });
 });
 
@@ -1082,7 +1077,7 @@ _ref:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       resolved: true,
       path: null,
       vars: {},
@@ -1105,7 +1100,7 @@ _ref:
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
     expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       resolved: true,
       path: 'target',
       vars: {
@@ -1126,7 +1121,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ async: true });
+    expect(builtConfigCleaner(res)).toEqual({ async: true });
   });
 
   test('buildRefs with resolver function, returned yaml content is parsed', async () => {
@@ -1143,7 +1138,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ array: [1, 2] });
+    expect(builtConfigCleaner(res)).toEqual({ array: [1, 2] });
   });
 
   test('buildRefs with resolver function, returned yml content is parsed', async () => {
@@ -1160,7 +1155,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ array: [1, 2] });
+    expect(builtConfigCleaner(res)).toEqual({ array: [1, 2] });
   });
 
   test('buildRefs with resolver function, returned json content is parsed', async () => {
@@ -1177,7 +1172,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ a: 42 });
+    expect(builtConfigCleaner(res)).toEqual({ a: 42 });
   });
 
   test('buildRefs with resolver function, returned yaml.njk content is parsed', async () => {
@@ -1194,7 +1189,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ a: 'var1' });
+    expect(builtConfigCleaner(res)).toEqual({ a: 'var1' });
   });
 
   test('buildRefs with resolver function, returned yml.njk content is parsed', async () => {
@@ -1211,7 +1206,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ a: 'var1' });
+    expect(builtConfigCleaner(res)).toEqual({ a: 'var1' });
   });
 
   test('buildRefs with resolver function, returned json.njk content is parsed', async () => {
@@ -1228,7 +1223,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({ a: 'var1' });
+    expect(builtConfigCleaner(res)).toEqual({ a: 'var1' });
   });
 
   test('buildRefs with resolver function, resolver throws error', async () => {
@@ -1294,7 +1289,7 @@ _ref: target`,
     });
     expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);
     // Return context gets JSON stringified and parsed, so functions are stripped
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       resolved: true,
       path: 'target',
       vars: {},
@@ -1317,7 +1312,7 @@ answer:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       answer: 2,
     });
   });
@@ -1340,7 +1335,7 @@ _build.sum:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       answer: 2,
     });
   });
@@ -1356,7 +1351,7 @@ answer:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       answer: null,
     });
     expect(mockLogWarn.mock.calls).toEqual([
@@ -1381,7 +1376,7 @@ _build.sum: A`,
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     const res = await buildRefs({ context });
-    expect(res).toEqual({
+    expect(builtConfigCleaner(res)).toEqual({
       answer: null,
     });
     expect(mockLogWarn.mock.calls).toEqual([

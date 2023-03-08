@@ -13,18 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import builtConfigCleaner from '../builtConfigCleaner.js';
 
-function add(a, b) {
-  return a + b;
-}
+import { type } from '@lowdefy/helpers';
 
-function transformer(obj, vars) {
-  return {
-    json: JSON.stringify(builtConfigCleaner(obj)),
-    add: add(obj.a, 42),
-    var: vars.var1,
-  };
-}
+const reviver = (_, value) => {
+  if (!type.isObject(value)) return value;
+  delete value._r_;
+  return value;
+};
 
-export default transformer;
+const builtConfigCleaner = (config) => JSON.parse(JSON.stringify(config), reviver);
+
+export default builtConfigCleaner;
