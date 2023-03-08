@@ -68,8 +68,8 @@ test('parse location not string', () => {
   );
 });
 
-test('operator returns value', () => {
-  const input = { a: { _test: { params: true } } };
+test('operator returns value and removes _k_', () => {
+  const input = { a: { _test: { params: true, _k_: 'c' }, _k_: 'b' }, _k_: 'a' };
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: 'test' });
@@ -128,6 +128,7 @@ test('operator returns value', () => {
             "user": Object {
               "user": true,
             },
+            "verbose": undefined,
           },
           "payload": Object {
             "payload": true,
@@ -171,7 +172,7 @@ test('undefined operator', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('operator errors', () => {
+test('operator errors with verbose', () => {
   const input = { a: { _error: { params: true } } };
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });

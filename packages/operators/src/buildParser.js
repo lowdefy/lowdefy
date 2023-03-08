@@ -16,7 +16,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-class ServerParser {
+class BuildParser {
   constructor({ env, payload, secrets, user, operators, verbose }) {
     this.env = env;
     this.operators = operators;
@@ -82,4 +82,4 @@ class ServerParser {
   }
 }
 
-export default ServerParser;
+export default BuildParser;
