@@ -66,6 +66,7 @@ test('startUp, options empty', async () => {
     options: { cliConfig: true },
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
@@ -88,6 +89,7 @@ test('startUp, options undefined', async () => {
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    requiresLowdefyYaml: true,
     print,
     sendTelemetry: 'sendTelemetry',
   });
@@ -110,6 +112,7 @@ test('startUp, options baseDirectory', async () => {
       baseDirectory: './baseDirectory',
     },
     outputDirectory: path.resolve(process.cwd(), 'baseDirectory/.lowdefy/build'),
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -132,6 +135,7 @@ test('startUp, options outputDirectory', async () => {
       outputDirectory: './outputDirectory',
     },
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -166,6 +170,7 @@ test('startUp, options baseDirectory and outputDirectory', async () => {
       outputDirectory: './outputDirectory',
     },
     outputDirectory: path.resolve(process.cwd(), 'outputDirectory'),
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
     print,
   });
@@ -187,8 +192,67 @@ test('startUp, no lowdefyVersion returned', async () => {
     options: {},
     outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print.log.mock.calls).toEqual([["Running 'lowdefy test'."]]);
+});
+
+test('startUp, requiresLowdefyYaml false with command "init"', async () => {
+  getLowdefyYaml.mockImplementationOnce(() => ({ cliConfig: {} }));
+  const context = {};
+  await startUp({
+    context,
+    options: {},
+    command: {
+      name: () => 'init',
+    },
+  });
+  expect(context).toEqual({
+    appId: 'appId',
+    baseDirectory: path.resolve(process.cwd()),
+    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliConfig: {},
+    cliVersion: 'cliVersion',
+    command: 'init',
+    commandLineOptions: {},
+    lowdefyVersion: undefined,
+    options: {},
+    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    print,
+    requiresLowdefyYaml: false,
+    sendTelemetry: 'sendTelemetry',
+  });
+  expect(validateVersion).toHaveBeenCalledTimes(1);
+  expect(print.log.mock.calls).toEqual([["Running 'lowdefy init'."]]);
+});
+
+test('startUp, requiresLowdefyYaml false with command "clean-cache"', async () => {
+  getLowdefyYaml.mockImplementationOnce(() => ({ cliConfig: {} }));
+  const context = {};
+  await startUp({
+    context,
+    options: {},
+    command: {
+      name: () => 'clean-cache',
+    },
+  });
+  expect(context).toEqual({
+    appId: 'appId',
+    baseDirectory: path.resolve(process.cwd()),
+    cacheDirectory: path.resolve(process.cwd(), './.lowdefy/.cache'),
+    cliConfig: {},
+    cliVersion: 'cliVersion',
+    command: 'clean-cache',
+    commandLineOptions: {},
+    lowdefyVersion: undefined,
+    options: {},
+    outputDirectory: path.resolve(process.cwd(), './.lowdefy/build'),
+    print,
+    requiresLowdefyYaml: false,
+    sendTelemetry: 'sendTelemetry',
+  });
+  expect(validateVersion).toHaveBeenCalledTimes(1);
+  expect(print.log.mock.calls).toEqual([["Running 'lowdefy clean-cache'."]]);
 });
