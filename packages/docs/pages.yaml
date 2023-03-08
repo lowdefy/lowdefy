@@ -108,7 +108,7 @@
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Span.yaml
-# - _ref: blocks/container/Spin.yaml # TODO:
+- _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml
 - _ref: blocks/container/Tooltip.yaml
 
@@ -174,7 +174,6 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
-# - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml

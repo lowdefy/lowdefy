@@ -157,13 +157,12 @@ pages:
               type: numericColumn
               valueFormatter:
                 _function:
-                  __format.intlNumberFormat:
+                  __intl.number_format:
                     on:
                       __args: 0.value
-                    params:
-                      options:
-                        style: 'currency'
-                        currency: 'EUR'
+                    options:
+                      style: 'currency'
+                      currency: 'EUR'
 ```
 
 ### AgGridAlpine onRowClick Example
