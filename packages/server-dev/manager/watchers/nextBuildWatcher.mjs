@@ -17,6 +17,7 @@
 import crypto from 'crypto';
 import path from 'path';
 import { readFile } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 const hashes = {};
@@ -41,7 +42,16 @@ const watchedFiles = [
 ];
 
 async function sha1(filePath) {
-  const content = await readFile(filePath);
+  let content = await readFile(filePath);
+  if (filePath.endsWith('.json')) {
+    content = JSON.stringify(
+      JSON.parse(content, (_, value) => {
+        if (!type.isObject(value)) return value;
+        delete value._k_;
+        return value;
+      })
+    );
+  }
   return crypto
     .createHash('sha1')
     .update(content || '')
