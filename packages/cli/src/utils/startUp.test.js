@@ -64,6 +64,7 @@ test('startUp, options empty', async () => {
     options: { cliConfig: true },
     pnpmCmd: context.pnpmCmd,
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
@@ -110,6 +111,7 @@ test('startUp, options undefined', async () => {
     options: { cliConfig: true },
     pnpmCmd: context.pnpmCmd,
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
@@ -158,6 +160,7 @@ test('startUp, options configDirectory', async () => {
     },
     pnpmCmd: context.pnpmCmd,
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
 });
@@ -187,8 +190,47 @@ test('startUp, no lowdefyVersion returned', async () => {
     options: {},
     pnpmCmd: context.pnpmCmd,
     print,
+    requiresLowdefyYaml: true,
     sendTelemetry: 'sendTelemetry',
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(print.log.mock.calls).toEqual([["Running 'lowdefy test'."]]);
+});
+
+test('startUp, requiresLowdefyYaml false with command "init"', async () => {
+  const startUp = (await import('./startUp.js')).default;
+  const validateVersion = (await import('./validateVersion.js')).default;
+  const getLowdefyYaml = (await import('./getLowdefyYaml.js')).default;
+  getLowdefyYaml.mockImplementationOnce(() => ({ cliConfig: {} }));
+  const context = { cliVersion: 'cliVersion' };
+  await startUp({
+    context,
+    options: {},
+    command: {
+      name: () => 'init',
+    },
+  });
+  const print = context.print;
+  expect(context).toEqual({
+    appId: 'appId',
+    configDirectory: path.resolve(process.cwd()),
+    cliConfig: {},
+    cliVersion: 'cliVersion',
+    command: 'init',
+    commandLineOptions: {},
+    directories: {
+      build: path.resolve(process.cwd(), './.lowdefy/server/build'),
+      config: path.resolve(process.cwd()),
+      dev: path.resolve(process.cwd(), './.lowdefy/dev'),
+      server: path.resolve(process.cwd(), './.lowdefy/server'),
+    },
+    lowdefyVersion: undefined,
+    options: {},
+    pnpmCmd: context.pnpmCmd,
+    print,
+    requiresLowdefyYaml: false,
+    sendTelemetry: 'sendTelemetry',
+  });
+  expect(validateVersion).toHaveBeenCalledTimes(1);
+  expect(print.log.mock.calls).toEqual([["Running 'lowdefy init'."]]);
 });
