@@ -187,6 +187,11 @@
           pageId: plugins-actions
           properties:
             title: Actions
+        - id: plugins-operators
+          type: MenuLink
+          pageId: plugins-operators
+          properties:
+            title: Operators
 
     - id: users_group
       type: MenuGroup

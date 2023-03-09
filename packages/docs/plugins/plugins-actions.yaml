@@ -86,3 +86,10 @@ _ref:
 
             export default Confetti;
             ```
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Developing Plugins
+            previous_page_id: plugins-dev
+            next_page_title: Operators
+            next_page_id: plugins-operators
