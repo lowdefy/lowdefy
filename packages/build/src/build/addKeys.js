@@ -25,7 +25,12 @@ function recAddKeys(object, key, keyMap, parentId) {
     _r_: object._r_,
     _k_parent: parentId,
   };
-  object._k_ = id;
+  Object.defineProperty(object, '_k_', {
+    value: id,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
   delete object._r_;
   Object.keys(object).forEach((nextKey) => {
     if (type.isObject(object[nextKey])) {

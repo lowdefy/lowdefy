@@ -28,14 +28,13 @@ beforeEach(() => {
 });
 
 test('writeMaps', async () => {
-  const components = {};
   context.keyMap = {
     key: 'value',
   };
   context.refMap = {
     ref: 'value',
   };
-  await writeMaps({ components, context });
+  await writeMaps({ context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'keyMap.json',
@@ -50,4 +49,20 @@ test('writeMaps', async () => {
 }`,
     ],
   ]);
+});
+
+test('keyMap is not an object', async () => {
+  const context = {
+    keyMap: 'keyMap',
+    refMap: {},
+  };
+  await expect(writeMaps({ context })).rejects.toThrow('keyMap is not an object.');
+});
+
+test('refMap is not an object', async () => {
+  const context = {
+    refMap: 'refMap',
+    keyMap: {},
+  };
+  await expect(writeMaps({ context })).rejects.toThrow('refMap is not an object.');
 });

@@ -9,9 +9,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         async: {
           type: 'boolean',
           errorMessage: {
@@ -46,9 +43,6 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        _r_: {
-          type: 'string',
-        },
         html: {
           type: 'object',
           errorMessage: {
@@ -78,9 +72,6 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
-        _r_: {
-          type: 'string',
-        },
         advanced: {
           type: 'object',
           properties: {
@@ -121,9 +112,6 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            _r_: {
-              type: 'string',
-            },
             signIn: {
               type: 'string',
               default: '/auth/signin',
@@ -219,9 +207,6 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
-            _r_: {
-              type: 'string',
-            },
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -253,7 +238,7 @@ export default {
             roles: {
               type: 'object',
               patternProperties: {
-                '^(?!_r_$).*$': {
+                '^.*$': {
                   type: 'array',
                   items: {
                     type: 'string',
@@ -275,9 +260,6 @@ export default {
             type: 'object',
             required: ['id', 'type'],
             properties: {
-              _r_: {
-                type: 'string',
-              },
               id: {
                 type: 'string',
                 errorMessage: {
@@ -319,9 +301,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -397,7 +376,7 @@ export default {
         events: {
           type: 'object',
           patternProperties: {
-            '^(?!_r_$).*$': {
+            '^.*$': {
               anyOf: [
                 {
                   type: 'array',
@@ -409,9 +388,6 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
-                    _r_: {
-                      type: 'string',
-                    },
                     try: {
                       type: 'array',
                       items: {
@@ -428,9 +404,6 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
-                        _r_: {
-                          type: 'string',
-                        },
                         immediate: {
                           type: 'boolean',
                           errorMessage: {
@@ -457,7 +430,7 @@ export default {
         areas: {
           type: 'object',
           patternProperties: {
-            '^(?!_r_$).*$': {
+            '^.*$': {
               type: 'object',
               properties: {
                 blocks: {
@@ -493,9 +466,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -528,9 +498,6 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -565,9 +532,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -619,9 +583,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -666,9 +627,6 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         name: {
           type: 'string',
           errorMessage: {
@@ -701,9 +659,6 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        _r_: {
-          type: 'string',
-        },
         id: {
           type: 'string',
           errorMessage: {
@@ -748,9 +703,6 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
-    _r_: {
-      type: 'string',
-    },
     name: {
       type: 'string',
       errorMessage: {
@@ -794,9 +746,6 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        _r_: {
-          type: 'string',
-        },
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',

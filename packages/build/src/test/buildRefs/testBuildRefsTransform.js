@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import builtConfigCleaner from '../builtConfigCleaner.js';
 
 function add(a, b) {
   return a + b;
@@ -21,7 +20,7 @@ function add(a, b) {
 
 function transformer(obj, vars) {
   return {
-    json: JSON.stringify(builtConfigCleaner(obj)),
+    json: JSON.stringify(obj),
     add: add(obj.a, 42),
     var: vars.var1,
   };

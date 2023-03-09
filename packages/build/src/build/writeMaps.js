@@ -13,10 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer, type } from '@lowdefy/helpers';
 
 async function writeMaps({ context }) {
-  await context.writeBuildArtifact('keyMap.json', JSON.stringify(context.keyMap, null, 2));
-  await context.writeBuildArtifact('refMap.json', JSON.stringify(context.refMap, null, 2));
+  if (!type.isObject(context.keyMap)) {
+    throw new Error('keyMap is not an object.');
+  }
+  if (!type.isObject(context.refMap)) {
+    throw new Error('refMap is not an object.');
+  }
+  await context.writeBuildArtifact(
+    'keyMap.json',
+    serializer.serializeToString(context.keyMap, { space: 2 })
+  );
+  await context.writeBuildArtifact(
+    'refMap.json',
+    serializer.serializeToString(context.refMap, { space: 2 })
+  );
 }
 
 export default writeMaps;

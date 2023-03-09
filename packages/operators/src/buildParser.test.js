@@ -68,11 +68,11 @@ test('parse location not string', () => {
   );
 });
 
-test('operator returns value and maintains _r_', () => {
-  const input = { a: { _test: { params: true, _r_: 'c' }, _r_: 'b' }, _r_: 'a' };
+test('operator returns value', () => {
+  const input = { a: { _test: { params: true } } };
   const parser = new BuildParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual({ a: 'test', _r_: 'a' });
+  expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -101,7 +101,6 @@ test('operator returns value and maintains _r_', () => {
             },
           },
           "params": Object {
-            "_r_": "c",
             "params": true,
           },
           "parser": BuildParser {

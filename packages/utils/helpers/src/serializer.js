@@ -45,6 +45,22 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         newValue[k] = dateReplacer(newValue[k]);
       }
     });
+    if (newValue._r_) {
+      Object.defineProperty(newValue, '_r_', {
+        value: newValue._r_,
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+    }
+    if (newValue._k_) {
+      Object.defineProperty(newValue, '_k_', {
+        value: newValue._k_,
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+    }
     return newValue;
   }
   if (type.isArray(newValue)) {
@@ -63,23 +79,41 @@ const makeReviver = (customReviver) => (key, value) => {
   if (customReviver) {
     newValue = customReviver(key, value);
   }
-  if (type.isObject(newValue) && !type.isUndefined(newValue._error)) {
-    const error = new Error(newValue._error.message);
-    error.name = newValue._error.name;
-    return error;
-  }
-  if (type.isObject(newValue) && !type.isUndefined(newValue._date)) {
-    if (type.isInt(newValue._date)) {
-      return new Date(newValue._date);
+  if (type.isObject(newValue)) {
+    if (!type.isUndefined(newValue._error)) {
+      const error = new Error(newValue._error.message);
+      error.name = newValue._error.name;
+      return error;
     }
-    if (newValue._date === 'now') {
-      return newValue;
+    if (!type.isUndefined(newValue._date)) {
+      if (type.isInt(newValue._date)) {
+        return new Date(newValue._date);
+      }
+      if (newValue._date === 'now') {
+        return newValue;
+      }
+      const result = new Date(newValue._date);
+      if (!type.isDate(result)) {
+        return newValue;
+      }
+      return result;
     }
-    const result = new Date(newValue._date);
-    if (!type.isDate(result)) {
-      return newValue;
+    if (newValue._r_) {
+      Object.defineProperty(newValue, '_r_', {
+        value: newValue._r_,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
     }
-    return result;
+    if (newValue._k_) {
+      Object.defineProperty(newValue, '_k_', {
+        value: newValue._k_,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
   }
   return newValue;
 };

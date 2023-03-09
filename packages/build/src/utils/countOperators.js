@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 function countOperators(obj, { counter }) {
   function getOperatorsReviver(_, value) {
-    if (type.isObject(value) && Object.keys(value).filter((key) => key !== '_r_').length === 1) {
+    if (type.isObject(value) && Object.keys(value).length === 1) {
       const key = Object.keys(value)[0];
       const [op] = key.split('.');
       const operator = op.replace(/^(_+)/gm, '_');

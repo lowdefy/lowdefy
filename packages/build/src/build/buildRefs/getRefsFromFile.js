@@ -20,7 +20,6 @@ function getRefsFromFile(fileContent, parentRefDefId, refMap) {
   const foundRefs = [];
   const reviver = (key, value) => {
     if (type.isObject(value)) {
-      value._r_ = parentRefDefId;
       if (!type.isUndefined(value._ref)) {
         const def = makeRefDefinition(value._ref, parentRefDefId, refMap);
         foundRefs.push(def);

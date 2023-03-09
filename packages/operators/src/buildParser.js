@@ -43,10 +43,9 @@ class BuildParser {
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
       // TODO: pass _r_ in errors. Build does not have _k_.
-      // eslint-disable-next-line no-unused-vars
-      const { _r_, ...object } = value;
-      if (Object.keys(object).length !== 1) return value;
-      const key = Object.keys(object)[0];
+      if (type.isString(value._r_)) return value;
+      if (Object.keys(value).length !== 1) return value;
+      const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;

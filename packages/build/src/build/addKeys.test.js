@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { serializer } from '@lowdefy/helpers';
 import testContext from '../test/testContext.js';
 
 const context = testContext();
@@ -94,7 +95,7 @@ test('mutate keyMap and components', async () => {
       key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
     },
   });
-  expect(components).toEqual({
+  expect(JSON.parse(serializer.serializeToString(components))).toEqual({
     _k_: '1',
     pages: [
       {
