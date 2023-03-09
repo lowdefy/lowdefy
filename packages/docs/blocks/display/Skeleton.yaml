@@ -17,11 +17,20 @@ _ref:
   vars:
     block_type: Skeleton
     category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Skeleton/schema.json
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/Skeleton/schema.json
     filePath: blocks/display/Skeleton.yaml
     description_content: |
       Skeleton block to use as a loading place holder.
 
     examples:
       - title: Basic skeleton
-        properties: '{}'
+        block:
+          id: basic_skeleton_example
+          type: Card
+          loading: true
+          skeleton:
+            type: Card
+            blocks:
+              - type: Skeleton
+                properties:
+                  height: 100

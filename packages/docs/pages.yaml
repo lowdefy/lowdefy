@@ -57,7 +57,8 @@
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
-# - _ref: blocks/input/S3UploadButton.yaml # TODO: Add with @lowdefy/plugin-aws
+- _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
@@ -84,7 +85,7 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
-# - _ref: blocks/display/Skeleton.yaml # TODO:
+- _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Title.yaml
 
@@ -100,11 +101,11 @@
 - _ref: blocks/container/Drawer.yaml
 - _ref: blocks/container/Label.yaml
 - _ref: blocks/container/Modal.yaml
-- _ref: blocks/container/PageHCF.yaml
-- _ref: blocks/container/PageHCSF.yaml
+# - _ref: blocks/container/PageHCF.yaml
+# - _ref: blocks/container/PageHCSF.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
-- _ref: blocks/container/PageHSCF.yaml
-- _ref: blocks/container/PageSHCF.yaml
+# - _ref: blocks/container/PageHSCF.yaml
+# - _ref: blocks/container/PageSHCF.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Span.yaml

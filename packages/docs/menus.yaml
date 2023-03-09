@@ -284,9 +284,12 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
-        # - id: S3UploadButton
-        #   type: MenuLink
-        #   pageId: S3UploadButton
+        - id: S3UploadButton
+          type: MenuLink
+          pageId: S3UploadButton
+        - id: S3UploadPhoto
+          type: MenuLink
+          pageId: S3UploadPhoto
         - id: Selector
           type: MenuLink
           pageId: Selector
@@ -374,9 +377,9 @@
         - id: Progress
           type: MenuLink
           pageId: Progress
-        # - id: Skeleton
-        #   type: MenuLink
-        #   pageId: Skeleton
+        - id: Skeleton
+          type: MenuLink
+          pageId: Skeleton
         - id: Statistic
           type: MenuLink
           pageId: Statistic
@@ -420,21 +423,21 @@
         - id: Modal
           type: MenuLink
           pageId: Modal
-        - id: PageHCF
-          type: MenuLink
-          pageId: PageHCF
-        - id: PageHCSF
-          type: MenuLink
-          pageId: PageHCSF
+        # - id: PageHCF
+        #   type: MenuLink
+        #   pageId: PageHCF
+        # - id: PageHCSF
+        #   type: MenuLink
+        #   pageId: PageHCSF
         - id: PageHeaderMenu
           type: MenuLink
           pageId: PageHeaderMenu
-        - id: PageHSCF
-          type: MenuLink
-          pageId: PageHSCF
-        - id: PageSHCF
-          type: MenuLink
-          pageId: PageSHCF
+        # - id: PageHSCF
+        #   type: MenuLink
+        #   pageId: PageHSCF
+        # - id: PageSHCF
+        #   type: MenuLink
+        #   pageId: PageSHCF
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu
@@ -466,6 +469,9 @@
         - id: List
           type: MenuLink
           pageId: List
+        # - id: TimelineList
+        #   type: MenuLink
+        #   pageId: TimelineList
     - id: connections
       type: MenuGroup
       properties:
