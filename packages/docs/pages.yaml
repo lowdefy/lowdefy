@@ -86,6 +86,10 @@
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
 - _ref: blocks/display/Skeleton.yaml
+- _ref: blocks/display/SkeletonAvatar.yaml
+- _ref: blocks/display/SkeletonButton.yaml
+- _ref: blocks/display/SkeletonInput.yaml
+- _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Title.yaml
 

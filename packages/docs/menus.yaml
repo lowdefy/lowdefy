@@ -380,6 +380,18 @@
         - id: Skeleton
           type: MenuLink
           pageId: Skeleton
+        - id: SkeletonAvatar
+          type: MenuLink
+          pageId: SkeletonAvatar
+        - id: SkeletonButton
+          type: MenuLink
+          pageId: SkeletonButton
+        - id: SkeletonInput
+          type: MenuLink
+          pageId: SkeletonInput
+        - id: SkeletonParagraph
+          type: MenuLink
+          pageId: SkeletonParagraph
         - id: Statistic
           type: MenuLink
           pageId: Statistic
