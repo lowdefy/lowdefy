@@ -1,0 +1,148 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/generic_block.yaml.njk
+  vars:
+    block_type: GoogleMaps
+    category: container
+    pageTitle: GoogleMaps
+    filePath: blocks/container/GoogleMaps.yaml
+    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMaps/GoogleMaps.json
+    description_content: |
+      This is a Lowdefy blocks wrapper for this the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview).
+
+      To use this block, define a [@googlemaps/react-wrapper](https://www.npmjs.com/package/@googlemaps/react-wrapper). It currently implements:
+
+      - [Map](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)
+      - [Heatmap](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions)
+      - [Markers](https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions)
+      - [Marker Clusterers](https://developers.google.com/maps/documentation/javascript/marker-clustering)
+
+      ### Properties
+
+      - `apiKey: string`: Your Google Maps API key.
+      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
+      - `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+        - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
+        - `zoom: number`: Map zoom level.
+        - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+      - `heatmap: heatmapOptions`: Add a heatmap layer, see more [heatmap options](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions). This will automatically load the `visualization` library, which must be added to the list of libraries in the `libraries` property of the `GoogleMapsScript` block.
+        - `data: { lat: number, lng: number, weight: number } []`: A list of heatmap data points.
+      - `style: cssObject`: A style object applied to the map element.
+      - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+        - `position: { lat: number, lng: number }`: Position of marker on map.
+        - `label: string`: Label displayed on marker.
+      - `markerClusterers: markerClustererOptions[]`: A list of MarkerClusterers with marker clusterer options.
+        - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+          - `position: { lat: number, lng: number }`: Position of marker on map.
+          - `label: string`: Label displayed on marker.
+        - `options: markerClustererOptions`: All other [marker clusterer options](https://react-google-maps-api-docs.netlify.app/#markerclusterer).
+      - `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
+        - `position: { lat: number, lng: number }`: Position of infoWindow on map.
+        - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
+
+      ### Events
+
+      - `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+      - `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+      - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
+        - `domEvent`: event object
+        - `latLng`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `pixel`:
+          - `x`: x position on map block
+          - `y`: y position on map block
+      - `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
+      - `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
+      object:
+        - `domEvent`: event object
+        - `latLng`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `pixel`:
+          - `x`: x position on map block
+          - `y`: y position on map block
+      - `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+
+      ### Methods
+
+      - `fitBounds`: Fit map to given bounds.
+        - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
+        - `zoom: number`: Map zoom level.
+      - `getBounds`: Returns the bounds of the map.
+      - `getCenter`: Returns the center of the map.
+      - `getZoom`: Returns the zoom of the map.
+
+    examples:
+      - title: Add markers
+        block:
+          id: google_maps_script_1
+          type: GoogleMapsScript
+          properties:
+            apiKey:
+              _build.env: GOOGLE_MAPS_API_KEY
+          blocks:
+            - id: google_maps_1
+              type: GoogleMaps
+              properties:
+                map:
+                  options:
+                    panControl: true
+                    zoomControl: true
+                    fullscreenControl: true
+                  zoom: 14
+                  center:
+                    lat: -25.344
+                    lng: 131.036
+                markers:
+                  - position:
+                      lat: -25.344
+                      lng: 131.036
+                    label: One
+                  - position:
+                      lat: -25.348
+                      lng: 131.038
+                    label: Two
