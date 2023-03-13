@@ -198,7 +198,7 @@ _ref:
 
             The `ChromeColorSelector`, `CircleColorSelector`, `CompactColorSelector`, `GithubColorSelector`, `SliderColorSelector`, `SwatchesColorSelector`, and `TwitterColorSelector` have been replaced by the [`ColorSelector`](/ColorSelector) block.
 
-            The `color` properties in blocks like [`MobileMenu`](/MobileMenu), [`PageHeaderMenu`](/PageHeaderMenu), [`PageSiderMenu`](/PageSiderMenu), [`PageHCF`](/PageHCF), [`PageHCSF`](/PageHCSF), [`PageHSCF`](/PageHSCF), and [`PageSHCF`](/PageSHCF) have been removed. Use Ant Design theme less variables instead.
+            The `color` properties in blocks like [`MobileMenu`](/MobileMenu), [`PageHeaderMenu`](/PageHeaderMenu), [`PageSiderMenu`](/PageSiderMenu) have been removed. Use Ant Design theme less variables instead.
 
             The [`_var`](/_var) operator `name` param has been renamed to `key` to be more consistent with other getter operators.
 
@@ -315,6 +315,10 @@ _ref:
             The `Context` type block was removed, as it was a `Box` block that also created a context. The `Context` block can be replaced by a `Box`.
 
             If the `Context` block is no longer necessary it can also be removed:
+
+            ## Other removed blocks
+
+            In version 4 the `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` blocks have been removed. Instead you can now use the `Header`, `Content`, `Sider` and `Footer` blocks. See more about this [layout](https://4x.ant.design/components/layout/).
 
             ###### Version 3:
 
