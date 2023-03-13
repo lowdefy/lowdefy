@@ -39,6 +39,7 @@ The block types are hosted at:
   - `selected: object[]`: List of selected row objects.
 - `onFilterChanged`: Trigger event when the filter changes and pass the following to `_event`:
   - `rows: object[]`: List of row objects matched by the filter.
+  - `filter: object`: An object of objects where each key is the row being filtered.
 - `onRowClick`: Trigger event when a row is clicked and pass the following to `_event`:
   - `index: number`: Data index of the clicked row as per provided data array.
   - `row: object`: Row data object.
@@ -49,8 +50,11 @@ The block types are hosted at:
   - `row: object`: Row data object.
   - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
   - `selected: object[]`: List of selected row objects.
-- `onSelectionChanged`: Triggered when the selected rows is changed and pass the following to `_event`:
+- `onSelectionChanged`: Triggered when the selected rows are changed and pass the following to `_event`:
   - `selected: object[]`: List of selected row objects.
+- `onSortChanged`: Trigger event when the filter changes and pass the following to `_event`:
+  - `rows: object[]`: List of row objects matched by the filter.
+  - `sort: object[]`: List of rows which are being sorted.
 
 ##### Input Blocks
 

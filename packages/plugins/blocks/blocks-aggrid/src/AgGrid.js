@@ -31,6 +31,7 @@ class AgGrid extends React.Component {
     this.onRowSelected = this.onRowSelected.bind(this);
     this.onSelectionChanged = this.onSelectionChanged.bind(this);
     this.onFilterChanged = this.onFilterChanged.bind(this);
+    this.onSortChanged = this.onSortChanged.bind(this);
   }
 
   // see https://stackoverflow.com/questions/55182118/ag-grid-resize-detail-height-when-data-changes
@@ -117,7 +118,22 @@ class AgGrid extends React.Component {
     if (this.props.events.onFilterChanged) {
       this.props.methods.triggerEvent({
         name: 'onFilterChanged',
-        event: { rows: event.api.rowModel.rowsToDisplay.map((row) => row.data) },
+        event: {
+          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
+          filter: this.gridApi.getFilterModel(),
+        },
+      });
+    }
+  }
+
+  onSortChanged(event) {
+    if (this.props.events.onSortChanged) {
+      this.props.methods.triggerEvent({
+        name: 'onSortChanged',
+        event: {
+          rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
+          sort: event.columnApi.getColumnState().filter((col) => Boolean(col.sort)),
+        },
       });
     }
   }
@@ -130,6 +146,7 @@ class AgGrid extends React.Component {
     return (
       <AgGridReact
         onFilterChanged={this.onFilterChanged}
+        onSortChanged={this.onSortChanged}
         onSelectionChanged={this.onSelectionChanged}
         onRowSelected={this.onRowSelected}
         onRowClicked={this.onRowClick}
