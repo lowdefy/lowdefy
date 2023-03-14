@@ -110,7 +110,7 @@
             title: Menus
         - id: layout
           type: MenuLink
-          pageId: layout
+          pageId: layout-overview
           properties:
             title: Layout
         - id: secrets

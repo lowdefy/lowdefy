@@ -14,7 +14,7 @@
 - _ref: concepts/references-and-templates.yaml
 - _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
-- _ref: concepts/layout.yaml
+- _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
