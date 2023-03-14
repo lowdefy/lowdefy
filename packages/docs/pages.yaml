@@ -65,6 +65,7 @@
 - _ref: blocks/input/TitleInput.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
+- _ref: blocks/display/AgGrid.yaml
 - _ref: blocks/display/Anchor.yaml
 - _ref: blocks/display/Avatar.yaml
 - _ref: blocks/display/Breadcrumb.yaml

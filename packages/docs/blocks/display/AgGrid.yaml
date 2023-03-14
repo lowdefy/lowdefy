@@ -1,0 +1,252 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/generic_block.yaml.njk
+  vars:
+    block_type: AgGrid
+    category: display
+    pageTitle: AgGrid
+    filePath: blocks/display/AgGrid.yaml
+    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/AgGridAlpine.json
+    description_content: |
+      This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
+      The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
+
+      It currently implements:
+      - [AgGridAlpine](https://www.ag-grid.com/example?theme=ag-theme-alpine)
+      - [AgGridAlpineDark](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
+      - [AgGridBalham](https://www.ag-grid.com/example?theme=ag-theme-balham)
+      - [AgGridBalhamDark](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
+      - [AgGridMaterial](https://www.ag-grid.com/example?theme=ag-theme-material)
+
+      See the [Ag-Grid docs](https://www.ag-grid.com/documentation/react/getting-started/) for the table settings API.
+      Here are a couple of basic properties.
+
+      ### Properties
+      - `rowData: array`: The list of data to display on the table.
+      - `defaultColDef: columnProperties`: Column properties which get applied to all columns. See all [column properties](https://www.ag-grid.com/javascript-data-grid/column-properties/)
+      - `columnDefs: columnProperties[]`: A list of properties for each column.
+        - `field: string`: The field of the row object to get the cell's data from. Deep references into a row object is supported via dot notation, i.e 'address.firstLine'.
+        - `headerName: string`: The name to render in the column header. If not specified and field is specified, the field name will be used as the header name.
+        - `filter: boolean`: Filter component to use for this column. Set to true to use the default filter.
+        - `sortable: boolean`: Set to true to allow sorting on this column. Default: false.
+        - `resizable: boolean`: Set to true to allow this column should be resized. Default: false.
+        - `cellStyle: cssObject`: An object of css values returning an object of css values for a particular cell.
+        - `width: number`: Initial width in pixels for the cell.
+      ### Events
+      - `onCellClick`: Trigger event when a cell is clicked and pass the following to `_event`:
+        - `cell: object`: Cell data object.
+        - `colId: string`: Column id of the clicked cell.
+        - `index: number`: Data index of the clicked row as per provided data array.
+        - `row: object`: Row data object.
+        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+        - `selected: object[]`: List of selected row objects.
+      - `onFilterChanged`: Trigger event when the filter changes and pass the following to `_event`:
+        - `rows: object[]`: List of row objects matched by the filter.
+        - `filter: object`: An object of objects where each key is the row being filtered.
+      - `onRowClick`: Trigger event when a row is clicked and pass the following to `_event`:
+        - `index: number`: Data index of the clicked row as per provided data array.
+        - `row: object`: Row data object.
+        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+        - `selected: object[]`: List of selected row objects.
+      - `onRowSelected`: Trigger event when a row is selected and pass the following to `_event`:
+        - `index: number`: Data index of the clicked row as per provided data array.
+        - `row: object`: Row data object.
+        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+        - `selected: object[]`: List of selected row objects.
+      - `onSelectionChanged`: Triggered when the selected rows are changed and pass the following to `_event`:
+        - `selected: object[]`: List of selected row objects.
+      - `onSortChanged`: Trigger event when the filter changes and pass the following to `_event`:
+        - `rows: object[]`: List of row objects matched by the filter.
+        - `sort: object[]`: List of rows which are being sorted.
+      ### Methods
+      - `exportDataAsCsv`: When called, table data will be downloaded in csv format.
+      - `sizeColumnsToFit`: When called, size table column widths to fit all columns to table width.
+      - `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`.
+            - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns.
+            - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
+      - `setFilterModel`: When called, apply filter model to table. See https://www.ag-grid.com/javascript-data-grid/filter-api/ for model details.
+      - `setQuickFilter`: When called, pass a quick filter text into the grid for filtering. See https://www.ag-grid.com/javascript-data-grid/filter-quick/ for details.
+    examples:
+      - title: Basic example
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              - title: One
+                year: 2010
+                viewerReviews: 30
+              - title: Two
+                year: 2011
+                viewerReviews: 20
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 350
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Viewer Reviews
+                field: viewerReviews
+                width: 160
+                type: numericColumn
+      - title: 'valueFormatter with `_function`'
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              - title: One
+                year: 2010
+                total: 300.21
+              - title: Two
+                year: 2011
+                total: 1230.9495
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 200
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Total
+                field: total
+                width: 160
+                type: numericColumn
+                valueFormatter:
+                  _function:
+                    __intl.numberFormat:
+                      on:
+                        __args: 0.value
+                      options:
+                        style: 'currency'
+                        currency: 'EUR'
+      - title: 'onRowClick'
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              - title: One
+                year: 2010
+                viewerReviews: 30
+              - title: Two
+                year: 2011
+                viewerReviews: 20
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 350
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Viewer Reviews
+                field: viewerReviews
+                width: 160
+                type: numericColumn
+          events:
+            onRowClick:
+              - id: set_selected
+                type: SetState
+                params:
+                  selected_row: # Update 'selected' in state with the event data.
+                    _event: row
+        extra:
+          id: selection
+          type: MarkdownWithCode
+          properties:
+            content:
+              _nunjucks:
+                template: |
+                  ```yaml
+                    {{ selection | safe | indent(2) }}
+                  ```
+                on:
+                  selection:
+                    _yaml.stringify:
+                      - _state: selected_row
+              # _if: # Show the event data in a title, or call to action.
+              #   test:
+              #     _eq:
+              #       - _state: selected_row
+              #       - null
+              #   then: 'Click to select a row.'
+              #   else:
+              #     _string.concat:
+              #       - 'Title: '
+              #       - _state: selected_row.title
+              #       - ', Year: '
+              #       - _state: selected_row.year
+      - title: 'onCellClick'
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              - title: One
+                year: 2010
+                viewerReviews: 30
+              - title: Two
+                year: 2011
+                viewerReviews: 20
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 350
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Viewer Reviews
+                field: viewerReviews
+                width: 160
+                type: numericColumn
+          events:
+            onCellClick:
+              - id: set_selected
+                type: SetState
+                params:
+                  selected_cell: # Update 'selected_cell' in state with the event cell data.
+                    _event: cell
+        extra:
+          id: selection
+          type: MarkdownWithCode
+          properties:
+            content:
+              _nunjucks:
+                template: |
+                  ```yaml
+                    {{ selection | safe | indent(2) }}
+                  ```
+                on:
+                  selection:
+                    _yaml.stringify:
+                      - _state: selected_cell
