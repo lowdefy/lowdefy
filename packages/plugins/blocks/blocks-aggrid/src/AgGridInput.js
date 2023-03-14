@@ -39,12 +39,24 @@ class AgGridInput extends React.Component {
   componentDidUpdate() {
     if (this.gridApi) {
       this.gridApi.resetRowHeights();
+      if (this.props.loading) {
+        this.gridApi.showLoadingOverlay();
+      }
+      if (!this.props.loading) {
+        this.gridApi.hideOverlay();
+      }
     }
   }
 
   onGridReady(params) {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    if (this.props.loading) {
+      this.gridApi.showLoadingOverlay();
+    }
+    if (!this.props.loading) {
+      this.gridApi.hideOverlay();
+    }
     this.props.methods.registerMethod('exportDataAsCsv', (args) =>
       this.gridApi.exportDataAsCsv(args)
     );
