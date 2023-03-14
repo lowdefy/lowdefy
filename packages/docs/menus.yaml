@@ -542,6 +542,9 @@
         - id: Fetch
           type: MenuLink
           pageId: Fetch
+        - id: GeolocationCurrentPosition
+          type: MenuLink
+          pageId: GeolocationCurrentPosition
         - id: Link
           type: MenuLink
           pageId: Link
