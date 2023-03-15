@@ -15,29 +15,18 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Skeleton
+    block_type: SkeletonButton
     category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/Skeleton/schema.json
-    filePath: blocks/display/Skeleton.yaml
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/schema.json
+    filePath: blocks/display/SkeletonButton.yaml
     description_content: |
-      The `Skeleton` block can be used as a regular block or as a loading skeleton for another block.
+      The `SkeletonButton` block can be used as a loading skeleton for a `Button` block.
 
     examples:
-      - title: Basic skeleton
+      - title: Basic skeleton button
         block:
           id: basic_skeleton_example
-          type: Skeleton
+          type: SkeletonButton
           properties:
-            height: 100
+            size: small
             width: 100
-      - title: Loading skeleton for a card
-        block:
-          id: loading_skeleton_card_example
-          type: Card
-          loading: true
-          skeleton:
-            type: Card
-            blocks:
-              - type: Skeleton
-                properties:
-                  height: 100

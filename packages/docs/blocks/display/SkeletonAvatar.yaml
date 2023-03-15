@@ -15,29 +15,18 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: Skeleton
+    block_type: SkeletonAvatar
     category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/Skeleton/schema.json
-    filePath: blocks/display/Skeleton.yaml
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.json
+    filePath: blocks/display/SkeletonAvatar.yaml
     description_content: |
-      The `Skeleton` block can be used as a regular block or as a loading skeleton for another block.
+      The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.
 
     examples:
-      - title: Basic skeleton
+      - title: Basic skeleton avatar
         block:
-          id: basic_skeleton_example
-          type: Skeleton
+          id: basic_skeleton_avatar_example
+          type: SkeletonAvatar
           properties:
-            height: 100
-            width: 100
-      - title: Loading skeleton for a card
-        block:
-          id: loading_skeleton_card_example
-          type: Card
-          loading: true
-          skeleton:
-            type: Card
-            blocks:
-              - type: Skeleton
-                properties:
-                  height: 100
+            shape: square
+            size: large

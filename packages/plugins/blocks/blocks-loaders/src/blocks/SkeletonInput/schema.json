@@ -24,31 +24,33 @@
         "description": "Size of the skeleton.",
         "enum": ["small", "medium", "large"]
       },
-      "shape": {
-        "type": "string",
-        "default": "round",
-        "description": "Size of the skeleton.",
-        "enum": ["square", "round"]
-      },
-      "height": {
-        "type": ["number", "string"],
-        "description": "Height of the skeleton."
-      },
       "width": {
         "type": ["number", "string"],
-        "description": "Width of the skeleton."
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
       },
       "labelHeight": {
         "type": ["number", "string"],
-        "description": "Height of the skeleton."
+        "description": "Height of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
       },
       "labelWidth": {
         "type": ["number", "string"],
-        "description": "Width of the skeleton."
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
       },
       "inputHeight": {
         "type": ["number", "string"],
-        "description": "Height of the skeleton."
+        "description": "Height of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
       }
     }
   },
