@@ -22,7 +22,7 @@ import setupWatcher from '../utils/setupWatcher.mjs';
 
 const hashes = {};
 
-const watchedFiles = [
+const trackedFiles = [
   'build/app.json',
   'build/auth.json',
   'build/config.json',
@@ -62,17 +62,16 @@ async function nextBuildWatcher(context) {
   // Initialize hashes so that app does not rebuild the first time
   // Lowdefy build is run.
   await Promise.all(
-    watchedFiles.map(async (filePath) => {
-      const fullPath = path.resolve(context.directories.server, filePath);
-      hashes[fullPath] = await sha1(fullPath);
+    trackedFiles.map(async (filePath) => {
+      hashes[filePath] = await sha1(filePath);
     })
   );
 
-  const callback = async (filePaths) => {
+  const callback = async () => {
     let install = false;
     let build = false;
     await Promise.all(
-      filePaths.flat().map(async (filePath) => {
+      trackedFiles.map(async (filePath) => {
         const hash = await sha1(filePath);
         if (hashes[filePath] === hash) {
           return;
@@ -84,7 +83,6 @@ async function nextBuildWatcher(context) {
         hashes[filePath] = hash;
       })
     );
-
     if (!build) {
       context.logger.info({ print: 'succeed' }, 'Reloaded app.');
       return;
@@ -92,6 +90,7 @@ async function nextBuildWatcher(context) {
 
     context.shutdownServer();
     if (install) {
+      context.logger.warn('Plugin dependencies have changed. Updating "package.json".');
       await context.installPlugins();
     }
     await context.nextBuild();
@@ -102,7 +101,7 @@ async function nextBuildWatcher(context) {
     callback,
     context,
     watchDotfiles: true,
-    watchPaths: watchedFiles.map((filePath) => path.join(context.directories.server, filePath)),
+    watchPaths: [path.join(context.directories.server, 'package.json')],
   });
 }
 
