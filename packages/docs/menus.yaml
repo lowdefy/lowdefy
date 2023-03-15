@@ -110,7 +110,7 @@
             title: Menus
         - id: layout
           type: MenuLink
-          pageId: layout
+          pageId: layout-overview
           properties:
             title: Layout
         - id: secrets
@@ -426,12 +426,24 @@
         - id: ConfirmModal
           type: MenuLink
           pageId: ConfirmModal
+        - id: Content
+          type: MenuLink
+          pageId: Content
         - id: Drawer
           type: MenuLink
           pageId: Drawer
+        - id: Footer
+          type: MenuLink
+          pageId: Footer
+        - id: Header
+          type: MenuLink
+          pageId: Header
         - id: Label
           type: MenuLink
           pageId: Label
+        - id: Layout
+          type: MenuLink
+          pageId: Layout
         - id: Modal
           type: MenuLink
           pageId: Modal
@@ -444,6 +456,9 @@
         - id: Result
           type: MenuLink
           pageId: Result
+        - id: Sider
+          type: MenuLink
+          pageId: Sider
         - id: Span
           type: MenuLink
           pageId: Span

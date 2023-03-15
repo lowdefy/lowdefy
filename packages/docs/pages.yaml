@@ -14,7 +14,7 @@
 - _ref: concepts/references-and-templates.yaml
 - _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
-- _ref: concepts/layout.yaml
+- _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
@@ -101,13 +101,18 @@
 - _ref: blocks/container/Collapse.yaml
 - _ref: blocks/container/Comment.yaml
 - _ref: blocks/container/ConfirmModal.yaml
+- _ref: blocks/container/Content.yaml
 - _ref: blocks/container/Descriptions.yaml
 - _ref: blocks/container/Drawer.yaml
+- _ref: blocks/container/Footer.yaml
+- _ref: blocks/container/Header.yaml
 - _ref: blocks/container/Label.yaml
+- _ref: blocks/container/Layout.yaml
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Result.yaml
+- _ref: blocks/container/Sider.yaml
 - _ref: blocks/container/Span.yaml
 - _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml

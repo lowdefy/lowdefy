@@ -14,7 +14,7 @@
       "theme": {
         "type": "string",
         "enum": ["light", "dark"],
-        "default": "light",
+        "default": "dark",
         "description": "Page theme."
       }
     }
