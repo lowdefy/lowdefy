@@ -56,7 +56,7 @@ _ref:
             - `id: string`: An identifier for a block.
             - `type: string`: __Required__ - This is the block type identifier and defines which block will render.
             - `properties: object`: The settings passed to a block component.
-            - `layout`: Control how the block will be rendered in the page flow, or in other words, how the block is placed in relation to other blocks. See [layout](/layout) for more details.
+            - `layout`: Control how the block will be rendered in the page flow, or in other words, how the block is placed in relation to other blocks. See [layout](/layout-overview) for more details.
             - `blocks: array`: An array of blocks to render within this block.
 
             Find the more detailed block schema [here](/blocks).
