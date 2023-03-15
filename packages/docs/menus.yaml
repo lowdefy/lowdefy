@@ -435,21 +435,9 @@
         - id: Modal
           type: MenuLink
           pageId: Modal
-        # - id: PageHCF
-        #   type: MenuLink
-        #   pageId: PageHCF
-        # - id: PageHCSF
-        #   type: MenuLink
-        #   pageId: PageHCSF
         - id: PageHeaderMenu
           type: MenuLink
           pageId: PageHeaderMenu
-        # - id: PageHSCF
-        #   type: MenuLink
-        #   pageId: PageHSCF
-        # - id: PageSHCF
-        #   type: MenuLink
-        #   pageId: PageSHCF
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu
