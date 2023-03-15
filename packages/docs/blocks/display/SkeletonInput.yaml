@@ -15,15 +15,21 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: PageHSCF
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHSCF/schema.json
-    filePath: blocks/container/PageHSCF.yaml
+    block_type: SkeletonInput
+    category: display
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/schema.json
+    filePath: blocks/display/SkeletonInput.yaml
     description_content: |
-      Page HSCF provides a minimal layout structure for a page container with a header, sider, content, and footer arrangement.
+      The `SkeletonInput` block can be used as a loading skeleton for `Input` blocks.
 
-    areas:
-      - content
-      - footer
-      - header
-      - sider
+    examples:
+      - title: Basic skeleton input
+        block:
+          id: basic_skeleton_input_example
+          type: SkeletonInput
+          properties:
+            inputHeight: 100
+            labelHeight: 50
+            labelWidth: 50
+            size: large
+            width: 100

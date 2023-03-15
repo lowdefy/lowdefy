@@ -4,26 +4,6 @@
     "type": "object",
     "required": ["s3PostPolicyRequestId"],
     "properties": {
-      "accept": {
-        "type": "string",
-        "description": "File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept."
-      },
-      "button": {
-        "type": "object",
-        "description": "Button block properties.",
-        "default": {
-          "icon": "UploadOutlined",
-          "title": "Upload",
-          "type": "default"
-        },
-        "docs": {
-          "displayType": "button"
-        }
-      },
-      "disabled": {
-        "type": "boolean",
-        "description": "Disable the file input."
-      },
       "s3PostPolicyRequestId": {
         "type": "string",
         "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",

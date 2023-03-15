@@ -15,14 +15,12 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: PageHCF
+    block_type: Content
     category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageHCF/schema.json
-    filePath: blocks/container/PageHCF.yaml
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Content/schema.json
+    filePath: blocks/container/Content.yaml
     description_content: |
-      Page HCF provides a minimal layout structure for a page container with a header, content and footer area.
+      The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
 
     areas:
       - content
-      - footer
-      - header

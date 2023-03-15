@@ -15,15 +15,18 @@
 _ref:
   path: templates/blocks/template.yaml.njk
   vars:
-    block_type: PageSHCF
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PageSHCF/schema.json
-    filePath: blocks/container/PageSHCF.yaml
+    block_type: SkeletonAvatar
+    category: display
+    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.json
+    filePath: blocks/display/SkeletonAvatar.yaml
     description_content: |
-      Page SHCF provides a minimal layout structure for a page container with a sider, header, content, and footer arrangement.
+      The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.
 
-    areas:
-      - content
-      - footer
-      - header
-      - sider
+    examples:
+      - title: Basic skeleton avatar
+        block:
+          id: basic_skeleton_avatar_example
+          type: SkeletonAvatar
+          properties:
+            shape: square
+            size: large
