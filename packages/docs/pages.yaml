@@ -57,7 +57,8 @@
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
-# - _ref: blocks/input/S3UploadButton.yaml # TODO: Add with @lowdefy/plugin-aws
+- _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
@@ -84,7 +85,11 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
-# - _ref: blocks/display/Skeleton.yaml # TODO:
+- _ref: blocks/display/Skeleton.yaml
+- _ref: blocks/display/SkeletonAvatar.yaml
+- _ref: blocks/display/SkeletonButton.yaml
+- _ref: blocks/display/SkeletonInput.yaml
+- _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Title.yaml
 
