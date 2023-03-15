@@ -19,13 +19,13 @@ import { get, type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
-async function getLowdefyYaml({ configDirectory, command }) {
+async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
   let lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
-    if (!['init'].includes(command)) {
+    if (requiresLowdefyYaml) {
       throw new Error(
         `Could not find "lowdefy.yaml" file in specified config directory ${configDirectory}.`
       );
