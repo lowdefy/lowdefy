@@ -81,10 +81,13 @@ class AgGrid extends React.Component {
   onRowClick(event) {
     if (this.props.events.onRowClick) {
       this.props.methods.triggerEvent({
-        event: { row: event.data, selected: this.gridApi.getSelectedRows() },
-        index: parseInt(event.node.id),
         name: 'onRowClick',
-        rowIndex: event.rowIndex,
+        event: {
+          row: event.data,
+          selected: this.gridApi.getSelectedRows(),
+          index: parseInt(event.node.id),
+          rowIndex: event.rowIndex,
+        },
       });
     }
   }
@@ -109,10 +112,13 @@ class AgGrid extends React.Component {
     if (!event.node.selected) return; // see https://stackoverflow.com/a/63265775/2453657
     if (this.props.events.onRowSelected) {
       this.props.methods.triggerEvent({
-        event: { row: event.data, selected: this.gridApi.getSelectedRows() },
-        index: parseInt(event.node.id),
         name: 'onRowSelected',
-        rowIndex: event.rowIndex,
+        event: {
+          index: parseInt(event.node.id),
+          row: event.data,
+          rowIndex: event.rowIndex,
+          selected: this.gridApi.getSelectedRows(),
+        },
       });
     }
   }

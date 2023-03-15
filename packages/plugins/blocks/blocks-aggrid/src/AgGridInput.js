@@ -86,8 +86,8 @@ class AgGridInput extends React.Component {
         event: {
           row: event.data,
           selected: this.gridApi.getSelectedRows(),
-          rowIndex: event.rowIndex,
           index: parseInt(event.node.id),
+          rowIndex: event.rowIndex,
         },
       });
     }
@@ -113,10 +113,13 @@ class AgGridInput extends React.Component {
     if (!event.node.selected) return; // see https://stackoverflow.com/a/63265775/2453657
     if (this.props.events.onRowSelected) {
       this.props.methods.triggerEvent({
-        event: { row: event.data, selected: this.gridApi.getSelectedRows() },
-        index: parseInt(event.node.id),
+        event: {
+          row: event.data,
+          selected: this.gridApi.getSelectedRows(),
+          index: parseInt(event.node.id),
+          rowIndex: event.rowIndex,
+        },
         name: 'onRowSelected',
-        rowIndex: event.rowIndex,
       });
     }
   }
