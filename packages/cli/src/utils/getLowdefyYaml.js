@@ -19,13 +19,13 @@ import { get, type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 import YAML from 'js-yaml';
 
-async function getLowdefyYaml({ baseDirectory, command }) {
+async function getLowdefyYaml({ baseDirectory, requiresLowdefyYaml }) {
   let lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yaml'));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.resolve(baseDirectory, 'lowdefy.yml'));
   }
   if (!lowdefyYaml) {
-    if (!['init', 'clean-cache'].includes(command)) {
+    if (requiresLowdefyYaml) {
       throw new Error(
         `Could not find "lowdefy.yaml" file in specified base directory ${baseDirectory}.`
       );
