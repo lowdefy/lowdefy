@@ -19,22 +19,23 @@ _ref:
     category: display
     pageTitle: AgGrid
     filePath: blocks/display/AgGrid.yaml
-    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/AgGridAlpine.json
+    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/schema.json
     description_content: |
       This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
       The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
 
       It currently implements:
-      - [AgGridAlpine](https://www.ag-grid.com/example?theme=ag-theme-alpine)
-      - [AgGridAlpineDark](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
-      - [AgGridBalham](https://www.ag-grid.com/example?theme=ag-theme-balham)
-      - [AgGridBalhamDark](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
-      - [AgGridMaterial](https://www.ag-grid.com/example?theme=ag-theme-material)
+      - [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
+      - [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
+      - [`AgGridBalham`](https://www.ag-grid.com/example?theme=ag-theme-balham)
+      - [`AgGridBalhamDark`](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
+      - [`AgGridMaterial`](https://www.ag-grid.com/example?theme=ag-theme-material)
 
       See the [Ag-Grid docs](https://www.ag-grid.com/documentation/react/getting-started/) for the table settings API.
       Here are a couple of basic properties.
 
       ### Properties
+      - `height: number`: Specify table height explicitly, in pixel.
       - `rowData: array`: The list of data to display on the table.
       - `defaultColDef: columnProperties`: Column properties which get applied to all columns. See all [column properties](https://www.ag-grid.com/javascript-data-grid/column-properties/)
       - `columnDefs: columnProperties[]`: A list of properties for each column.
@@ -43,8 +44,10 @@ _ref:
         - `filter: boolean`: Filter component to use for this column. Set to true to use the default filter.
         - `sortable: boolean`: Set to true to allow sorting on this column. Default: false.
         - `resizable: boolean`: Set to true to allow this column should be resized. Default: false.
-        - `cellStyle: cssObject`: An object of css values returning an object of css values for a particular cell.
         - `width: number`: Initial width in pixels for the cell.
+        - `cellStyle: cssObject`: An object of css values returning an object of css values for a particular cell.
+        - `cellRenderer: function`: Provide your own cell Renderer function (using the `_function` operator) for this column's cells.
+        - `valueFormatter: function`: A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.
       ### Events
       - `onCellClick`: Trigger event when a cell is clicked and pass the following to `_event`:
         - `cell: object`: Cell data object.
@@ -68,7 +71,7 @@ _ref:
         - `selected: object[]`: List of selected row objects.
       - `onSelectionChanged`: Triggered when the selected rows are changed and pass the following to `_event`:
         - `selected: object[]`: List of selected row objects.
-      - `onSortChanged`: Trigger event when the filter changes and pass the following to `_event`:
+      - `onSortChanged`: Trigger event when the sort changes and pass the following to `_event`:
         - `rows: object[]`: List of row objects matched by the filter.
         - `sort: object[]`: List of rows which are being sorted.
       ### Methods
@@ -107,6 +110,41 @@ _ref:
                 field: viewerReviews
                 width: 160
                 type: numericColumn
+      - title: 'Format dates with cellRenderer'
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              - title: One
+                year: 2010
+                date:
+                  _date: 2010-03-14
+              - title: Two
+                year: 2011
+                date:
+                  _date: 2011-04-01
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 200
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Date
+                field: date
+                width: 160
+                type: dateColumn
+                cellRenderer:
+                  _function:
+                    __moment.format:
+                      on:
+                        __args: 0.data.date
+                      format: 'D MMM YYYY'
       - title: 'valueFormatter with `_function`'
         block:
           id: my_table
@@ -175,7 +213,7 @@ _ref:
                 type: SetState
                 params:
                   selected_row: # Update 'selected' in state with the event data.
-                    _event: row
+                    _event: true
         extra:
           id: selection
           type: MarkdownWithCode
@@ -190,18 +228,6 @@ _ref:
                   selection:
                     _yaml.stringify:
                       - _state: selected_row
-              # _if: # Show the event data in a title, or call to action.
-              #   test:
-              #     _eq:
-              #       - _state: selected_row
-              #       - null
-              #   then: 'Click to select a row.'
-              #   else:
-              #     _string.concat:
-              #       - 'Title: '
-              #       - _state: selected_row.title
-              #       - ', Year: '
-              #       - _state: selected_row.year
       - title: 'onCellClick'
         block:
           id: my_table
@@ -235,7 +261,7 @@ _ref:
                 type: SetState
                 params:
                   selected_cell: # Update 'selected_cell' in state with the event cell data.
-                    _event: cell
+                    _event: true
         extra:
           id: selection
           type: MarkdownWithCode
