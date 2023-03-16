@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { ServerParser } from '@lowdefy/operators';
 
 import _args from './args.js';
 import _array from './array.js';
@@ -34,7 +34,7 @@ const location = 'location';
 
 const operatorPrefix = '_';
 
-const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
+const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
 
 describe('_array.concat', () => {
   const methodName = 'concat';

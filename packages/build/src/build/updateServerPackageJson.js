@@ -49,12 +49,7 @@ async function updateServerPackageJson({ components, context }) {
 
   const newPackageJsonContent = JSON.stringify(packageJson, null, 2).concat('\n');
 
-  // Only write package.json if it has changed since dev server will
-  // be watching the file to trigger reinstalls
-  if (newPackageJsonContent !== packageJsonContent) {
-    context.logger.warn('Plugin dependencies have changed. Updating "package.json".');
-    await writeFile(filePath, newPackageJsonContent);
-  }
+  await writeFile(filePath, newPackageJsonContent);
 }
 
 export default updateServerPackageJson;

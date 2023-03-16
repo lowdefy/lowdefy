@@ -15,16 +15,22 @@
 */
 
 import { get } from '@lowdefy/helpers';
-import { v1 as uuid } from 'uuid';
 
 import getRefPath from './getRefPath.js';
+import makeId from '../../utils/makeId.js';
 
-function makeRefDefinition(refDefinition) {
+function makeRefDefinition(refDefinition, parent, refMap) {
+  const id = makeId();
+  const refDef = {
+    parent,
+  };
+  refMap[id] = refDef;
   return {
-    id: uuid(),
+    ...refDef,
+    id,
+    key: get(refDefinition, 'key'),
     original: refDefinition,
     path: getRefPath(refDefinition),
-    key: get(refDefinition, 'key'),
     resolver: get(refDefinition, 'resolver'),
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),

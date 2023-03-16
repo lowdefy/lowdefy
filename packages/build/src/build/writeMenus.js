@@ -14,13 +14,16 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, serializer } from '@lowdefy/helpers';
 
 async function writeMenus({ components, context }) {
   if (!type.isArray(components.menus)) {
     throw new Error('Menus is not an array.');
   }
-  await context.writeBuildArtifact('menus.json', JSON.stringify(components.menus, null, 2));
+  await context.writeBuildArtifact(
+    'menus.json',
+    serializer.serializeToString(components.menus, { space: 2 })
+  );
 }
 
 export default writeMenus;

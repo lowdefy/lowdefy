@@ -13,13 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { serializer } from '@lowdefy/helpers';
 
-async function writeConfig({ components, context }) {
-  await context.writeBuildArtifact(
-    'config.json',
-    serializer.serializeToString(components.config ?? {}, { space: 2 })
-  );
+let id_counter = 0;
+
+function makeId() {
+  id_counter++;
+  return id_counter.toString(36);
 }
 
-export default writeConfig;
+export default makeId;
