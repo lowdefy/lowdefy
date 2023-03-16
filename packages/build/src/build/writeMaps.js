@@ -13,13 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
-async function writeConfig({ components, context }) {
+async function writeMaps({ context }) {
+  if (!type.isObject(context.keyMap)) {
+    throw new Error('keyMap is not an object.');
+  }
+  if (!type.isObject(context.refMap)) {
+    throw new Error('refMap is not an object.');
+  }
   await context.writeBuildArtifact(
-    'config.json',
-    serializer.serializeToString(components.config ?? {}, { space: 2 })
+    'keyMap.json',
+    serializer.serializeToString(context.keyMap, { space: 0 })
+  );
+  await context.writeBuildArtifact(
+    'refMap.json',
+    serializer.serializeToString(context.refMap, { space: 0 })
   );
 }
 
-export default writeConfig;
+export default writeMaps;

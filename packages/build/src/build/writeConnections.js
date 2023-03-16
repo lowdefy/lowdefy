@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, serializer } from '@lowdefy/helpers';
 
 async function writeConnections({ components, context }) {
   if (type.isNone(components.connections)) return;
@@ -24,7 +24,7 @@ async function writeConnections({ components, context }) {
   const writePromises = components.connections.map(async (connection) => {
     await context.writeBuildArtifact(
       `connections/${connection.connectionId}.json`,
-      JSON.stringify(connection, null, 2)
+      serializer.serializeToString(connection, { space: 2 })
     );
   });
   return Promise.all(writePromises);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { ServerParser } from '@lowdefy/operators';
 import _nunjucks from './nunjucks.js';
 
 const operators = {
@@ -31,7 +31,7 @@ console.error = () => {};
 
 test('_nunjucks string template', () => {
   const input = { _nunjucks: 'String with {{ string }} embedded' };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with Some String embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -39,7 +39,7 @@ test('_nunjucks string template', () => {
 
 test('_nunjucks null', () => {
   const input = { _nunjucks: null };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -49,7 +49,7 @@ test('_nunjucks { template: , on: }', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: { string: 'test' } },
   };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -57,7 +57,7 @@ test('_nunjucks { template: , on: }', () => {
 
 test('_nunjucks template not a string', () => {
   const input = { _nunjucks: ['String with {{ string }} embedded'] };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -67,7 +67,7 @@ test('_nunjucks params on template not a string', () => {
   const input = {
     _nunjucks: { template: ['String with {{ string }} embedded'], on: { string: 'test' } },
   };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -77,7 +77,7 @@ test('_nunjucks on not a object', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: [{ string: 'test' }] },
   };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -87,7 +87,7 @@ test('_nunjucks on null', () => {
   const input = {
     _nunjucks: { template: 'String with {{ string }} embedded', on: null },
   };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
   expect(res.errors).toMatchInlineSnapshot(`Array []`);
@@ -95,7 +95,7 @@ test('_nunjucks on null', () => {
 
 test('_nunjucks invalid template', () => {
   const input = { _nunjucks: 'String with {{ string  embedded' };
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`

@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import { serializer } from '@lowdefy/helpers';
 
 import Block from './block/Block.js';
 import Context from './Context.js';
@@ -27,13 +28,14 @@ import initLowdefyContext from './initLowdefyContext.js';
 const Client = ({
   auth,
   Components,
-  config,
+  config: rawConfig,
   resetContext = { reset: false, setReset: () => undefined },
   router,
   stage,
   types,
   window,
 }) => {
+  const config = serializer.deserialize(rawConfig);
   const lowdefy = initLowdefyContext({
     auth,
     Components,

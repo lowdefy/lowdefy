@@ -13,6 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { type } from '@lowdefy/helpers';
+
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
@@ -20,14 +22,17 @@ import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
 
-async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
+async function recursiveBuild({ context, refDef, count, referencedFrom }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
-  if (count > 40) {
+  if (count > 10000) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
-
-  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(fileContent);
+  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
+    fileContent,
+    refDef.id,
+    context.refMap
+  );
 
   const parsedFiles = {};
 
@@ -43,8 +48,8 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       parsedFiles,
       refDef,
     });
-
-    const parsedFile = await recursiveParseFile({
+    context.refMap[parsedRefDef.id].path = parsedRefDef.path;
+    const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,
       count: count + 1,
@@ -64,10 +69,22 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
       refDef: parsedRefDef,
     });
 
-    parsedFiles[newRefDef.id] = getKey({
+    const withRefKey = getKey({
       input: evaluatedOperators,
       refDef: parsedRefDef,
     });
+
+    const reviver = (_, value) => {
+      if (!type.isObject(value)) return value;
+      Object.defineProperty(value, '_r_', {
+        value: refDef.id,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+      return value;
+    };
+    parsedFiles[newRefDef.id] = JSON.parse(JSON.stringify(withRefKey), reviver);
   }
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
@@ -76,4 +93,4 @@ async function recursiveParseFile({ context, refDef, count, referencedFrom }) {
   });
 }
 
-export default recursiveParseFile;
+export default recursiveBuild;
