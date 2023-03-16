@@ -57,7 +57,7 @@
     "@lowdefy/operators-js": "4.0.0-rc.5",
     "@lowdefy/plugin-next-auth": "4.0.0-rc.5",
     "next": "12.3.1",
-    "next-auth": "4.18.8",
+    "next-auth": "4.20.1",
     "process": "0.11.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
