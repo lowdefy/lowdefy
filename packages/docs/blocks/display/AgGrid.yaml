@@ -24,7 +24,7 @@ _ref:
       This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
       The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
 
-      It currently implements:
+      Availible ag-grid theme specific block types:
       - [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
       - [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
       - [`AgGridBalham`](https://www.ag-grid.com/example?theme=ag-theme-balham)
