@@ -13,7 +13,7 @@ Block types for supported [Ag-Grid themes](https://www.ag-grid.com/documentation
 
 ### Block types
 
-The block types are hosted at:
+The availible ag-gird block types are:
 
 - [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
 - [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
