@@ -90,7 +90,7 @@ async function nextBuildWatcher(context) {
 
     context.shutdownServer();
     if (install) {
-      context.logger.warn('Plugin dependencies have changed. Updating "package.json".');
+      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
     }
     await context.nextBuild();
