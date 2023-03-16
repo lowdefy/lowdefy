@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 import { authOptions } from '../../pages/api/auth/[...nextauth].js';
 import authJson from '../../build/auth.json';
 
-async function getServerSession({ req, res }) {
+function getServerSession({ req, res }) {
   if (authJson.configured === true) {
-    return await unstable_getServerSession(req, res, authOptions);
+    return getNextAuthServerSession(req, res, authOptions);
   }
   return undefined;
 }
