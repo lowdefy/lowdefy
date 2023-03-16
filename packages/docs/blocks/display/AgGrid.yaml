@@ -145,7 +145,7 @@ _ref:
                       on:
                         __args: 0.data.date
                       format: 'D MMM YYYY'
-      - title: 'valueFormatter with `_function`'
+      - title: 'Format currency with valueFormatter'
         block:
           id: my_table
           type: AgGridAlpine
@@ -276,3 +276,152 @@ _ref:
                   selection:
                     _yaml.stringify:
                       - _state: selected_cell
+      - title: 'Server-side filter and sort'
+        description: |
+          This example shows how you can filter your table data server-side by making use of AgGrid's built in filter and sort functionality and calling the `onFilterChanged` and `onSortChanged` events. In this example we use dummy data, but you would pass in `_request: table_request` to `properties.rowData`.
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            rowData:
+              ## We use dummy data for demo purposes. We would usually read the table data from the request
+              # _request: table_request
+              - title: One
+                year: 2010
+                viewerReviews: 30
+              - title: Two
+                year: 2011
+                viewerReviews: 20
+            defaultColDef:
+              sortable: true
+              resizable: true
+              filter: true
+              ## Simplify the table filter
+              filterParams:
+                suppressAndOrCondition: true
+                filterOptions:
+                  - contains
+            columnDefs:
+              - headerName: Title
+                field: title
+                width: 350
+              - headerName: Year
+                field: year
+                width: 100
+              - headerName: Viewer Reviews
+                field: viewerReviews
+                width: 160
+                type: numericColumn
+          events:
+            onSortChanged:
+              - id: set_table_sort
+                type: SetState
+                params:
+                  table.sort:
+                    _event: sort
+              - id: refetch
+                type: Request
+                messages:
+                  error: false
+                params: table_request
+            onFilterChanged:
+              - id: set_table_filter
+                type: SetState
+                params:
+                  table.filter:
+                    _event: filter
+              - id: refetch
+                type: Request
+                messages:
+                  error: false
+                params: table_request
+
+        extra:
+          id: example_config
+          type: MarkdownWithCode
+          properties:
+            content:
+              _nunjucks:
+                on:
+                  sort:
+                    _yaml.stringify:
+                      - _state: table.sort
+                  filter:
+                    _yaml.stringify:
+                      - _state: table.filter
+                template: |
+                  onSortChanged response (only `sort`, not `rows`):
+                  ```yaml
+                  {{ sort | safe }}
+                  ```
+                  onFilterChanged response filter (only `filter`, not `rows`):
+                  ```yaml
+                  {{ filter | safe }}
+                  ```
+                  Table request:
+                  ```yaml
+                  id: table_request
+                  type: MongoDBAggregation
+                  connectionId: table_connection
+                  payload:
+                    table:
+                      _state: table
+                  properties:
+                    pipeline:
+                      - $match:
+                          $expr:
+                            $and:
+                              _if:
+                                test:
+                                  _eq:
+                                    - _if_none:
+                                        - _payload: table.filter
+                                        - null
+                                    - null
+                                then:
+                                  - true ## If a filter is not applied to the table.
+                                else:
+                                  _array.map:
+                                    - _object.entries:
+                                        _payload: table.filter
+                                    - _function:
+                                        $regexMatch:
+                                          input:
+                                            __string.concat:
+                                              - '$'
+                                              - __args: '0.0'
+                                          regex:
+                                            __args: '0.1.filter'
+                                          options: 'i'
+                      - $sort:
+                          _if:
+                            test:
+                              _eq:
+                                - _array.length:
+                                    _if_none:
+                                      - _payload: table.sort
+                                      - []
+                                - 0
+                            then:
+                              year: 1 ## If a sort is not applied to the table, default to this.
+                            else:
+                              _object.fromEntries:
+                                _array.map:
+                                  - _array.sort:
+                                      - _if_none:
+                                          - _payload: table.sort
+                                          - []
+                                      - _function:
+                                          __subtract:
+                                            - __args: 0.sortIndex
+                                            - __args: 1.sortIndex
+                                  - _function:
+                                      - __args: 0.colId
+                                      - __if:
+                                          test:
+                                            __eq:
+                                              - __args: 0.sort
+                                              - 'asc'
+                                          then: 1
+                                          else: -1
+                  ```
