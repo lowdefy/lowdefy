@@ -847,14 +847,14 @@ importers:
       mssql: 9.0.1
       mysql: 2.18.1
       pg: 8.8.0
-      sqlite3: 5.1.4
+      sqlite3: 5.1.5
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
-      knex: 2.4.2_r2xbi4zbllusb5q2fougkvkh6i
+      knex: 2.4.2_uccjs4qmmdajx4zlefsqxyrmte
       mssql: 9.0.1
       mysql: 2.18.1
       pg: 8.8.0
-      sqlite3: 5.1.4
+      sqlite3: 5.1.5
     devDependencies:
       '@jest/globals': 28.1.0
       '@lowdefy/ajv': link:../../../utils/ajv
@@ -10207,7 +10207,7 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /knex/2.4.2_r2xbi4zbllusb5q2fougkvkh6i:
+  /knex/2.4.2_uccjs4qmmdajx4zlefsqxyrmte:
     resolution: {integrity: sha512-tMI1M7a+xwHhPxjbl/H9K1kHX+VncEYcvCx5K00M16bWvpYPKAZd6QrCu68PtHAdIZNQPWZn0GVhqVBEthGWCg==}
     engines: {node: '>=12'}
     hasBin: true
@@ -10249,7 +10249,7 @@ packages:
       pg-connection-string: 2.5.0
       rechoir: 0.8.0
       resolve-from: 5.0.0
-      sqlite3: 5.1.4
+      sqlite3: 5.1.5
       tarn: 3.0.2
       tildify: 2.0.0
     transitivePeerDependencies:
@@ -14038,8 +14038,8 @@ packages:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: false
 
-  /sqlite3/5.1.4:
-    resolution: {integrity: sha512-i0UlWAzPlzX3B5XP2cYuhWQJsTtlMD6obOa1PgeEQ4DHEXUuyJkgv50I3isqZAP5oFc2T8OFvakmDh2W6I+YpA==}
+  /sqlite3/5.1.5:
+    resolution: {integrity: sha512-7sP16i4wI+yKnGOO2q2ijze7EjQ9US+Vw7DYYwxfFtqNZDGgBcEw0oeDaDvUTq66uJOzVd/z6MkIg+c9erSJKg==}
     requiresBuild: true
     peerDependenciesMeta:
       node-gyp:

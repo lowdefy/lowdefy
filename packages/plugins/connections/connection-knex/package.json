@@ -46,7 +46,7 @@
     "mssql": "9.0.1",
     "mysql": "2.18.1",
     "pg": "8.8.0",
-    "sqlite3": "5.1.4"
+    "sqlite3": "5.1.5"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
