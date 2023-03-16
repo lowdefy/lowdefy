@@ -40,7 +40,12 @@ class WebParser {
     const { basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
-      if (!type.isObject(value) || Object.keys(value).length !== 1) return value;
+      if (!type.isObject(value)) return value;
+      // TODO: pass _k_ in errors.
+      // const _k_ = value._k_;
+      delete value._k_;
+
+      if (Object.keys(value).length !== 1) return value;
 
       const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;
@@ -58,10 +63,10 @@ class WebParser {
           eventLog: this.context.eventLog,
           globals: _internal.globals,
           home,
-          input: inputs ? inputs[this.context.id] : {},
+          input: inputs[this.context.id],
           location: applyArrayIndices(arrayIndices, location),
-          lowdefyGlobal: lowdefyGlobal ?? {},
-          menus: menus ?? [],
+          lowdefyGlobal: lowdefyGlobal,
+          menus: menus,
           methodName,
           operatorPrefix,
           operators: this.operators,

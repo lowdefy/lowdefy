@@ -31,14 +31,14 @@
       "theme": {
         "type": "string",
         "enum": ["light", "dark"],
-        "default": "light",
+        "default": "dark",
         "description": "Color theme of the sidebar"
       },
       "style": {
         "type": "object",
         "description": "Css style object to apply to sider.",
         "docs": {
-          "displayType": "style"
+          "displayType": "yaml"
         }
       },
       "width": {

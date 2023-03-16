@@ -499,3 +499,56 @@ test('deserializeFromString revive _error to Error', () => {
     a: new Error('Test error'),
   });
 });
+test('deserialize with _k_ and _r_ values', () => {
+  let object = {
+    x: 1,
+    _k_: 'a',
+  };
+  let res = serializer.deserialize(object);
+  expect(res).toEqual({
+    x: 1,
+  });
+  expect(res._k_).toEqual('a');
+  expect(Object.keys(res)).toEqual(['x']);
+  object = {
+    x: 1,
+    _r_: 'a',
+  };
+  res = serializer.deserialize(object);
+  expect(res).toEqual({
+    x: 1,
+  });
+  expect(res._r_).toEqual('a');
+  expect(Object.keys(res)).toEqual(['x']);
+});
+
+test('serialize with _k_ and _r_ values', () => {
+  let object = {
+    x: 1,
+  };
+  Object.defineProperty(object, '_k_', {
+    value: 'a',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  let res = serializer.serialize(object);
+  expect(res).toEqual({
+    x: 1,
+    _k_: 'a',
+  });
+  object = {
+    x: 1,
+  };
+  Object.defineProperty(object, '_r_', {
+    value: 'a',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  res = serializer.serialize(object);
+  expect(res).toEqual({
+    x: 1,
+    _r_: 'a',
+  });
+});

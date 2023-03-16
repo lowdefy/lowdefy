@@ -13,9 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
 
 async function writeAuth({ components, context }) {
-  await context.writeBuildArtifact('auth.json', JSON.stringify(components.auth || {}, null, 2));
+  await context.writeBuildArtifact(
+    'auth.json',
+    serializer.serializeToString(components.auth ?? {}, { space: 2 })
+  );
 }
 
 export default writeAuth;

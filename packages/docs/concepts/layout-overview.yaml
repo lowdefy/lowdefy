@@ -15,7 +15,7 @@
 _ref:
   path: templates/general.yaml.njk
   vars:
-    pageId: layout
+    pageId: layout-overview
     pageTitle: Layout
     section: Concepts
     filePath: concepts/layout.yaml

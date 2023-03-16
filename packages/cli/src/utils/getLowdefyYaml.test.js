@@ -36,7 +36,7 @@ test('get version from yaml file', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ configDirectory });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
 });
 
@@ -53,6 +53,7 @@ test('get version from yaml file, config dir specified', async () => {
   });
   const config = await getLowdefyYaml({
     configDirectory: path.resolve(process.cwd(), './configDir'),
+    requiresLowdefyYaml: true,
   });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
 });
@@ -71,7 +72,7 @@ test('could not find lowdefy.yaml in cwd', async () => {
     lowdefy: 1.0.0
     `;
   });
-  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
     'Could not find "lowdefy.yaml" file in specified config directory'
   );
 });
@@ -91,7 +92,10 @@ test('could not find lowdefy.yaml in config dir', async () => {
     `;
   });
   await expect(
-    getLowdefyYaml({ configDirectory: path.resolve(process.cwd(), './configDir') })
+    getLowdefyYaml({
+      configDirectory: path.resolve(process.cwd(), './configDir'),
+      requiresLowdefyYaml: true,
+    })
   ).rejects.toThrow('Could not find "lowdefy.yaml" file in specified config directory');
 });
 
@@ -108,7 +112,7 @@ test('lowdefy.yaml is invalid yaml', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
     'Could not parse "lowdefy.yaml" file. Received error '
   );
 });
@@ -126,7 +130,7 @@ test('No version specified', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
     'No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.'
   );
 });
@@ -142,7 +146,7 @@ test('Version is not a string', async () => {
     }
     return null;
   });
-  await expect(getLowdefyYaml({ configDirectory })).rejects.toThrow(
+  await expect(getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true })).rejects.toThrow(
     'Version number specified in "lowdefy.yaml" file should be a string. Received 1.'
   );
 });
@@ -162,7 +166,7 @@ test('get cliConfig', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ configDirectory });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({
     lowdefyVersion: '1.0.0',
     cliConfig: { disableTelemetry: true, watch: ['a'] },
@@ -185,7 +189,7 @@ test('get plugins', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ configDirectory });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({
     lowdefyVersion: '1.0.0',
     cliConfig: {},
@@ -193,11 +197,11 @@ test('get plugins', async () => {
   });
 });
 
-test('could not find lowdefy.yaml in config dir, command is "init" or "clean-cache"', async () => {
+test('could not find lowdefy.yaml in config dir, command is "init" or "clean-cache", , requiresLowdefyYaml is false', async () => {
   const { readFile } = await import('@lowdefy/node-utils');
   const { default: getLowdefyYaml } = await import('./getLowdefyYaml.js');
   readFile.mockImplementation(() => null);
-  const config = await getLowdefyYaml({ command: 'init', configDirectory });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: false });
   expect(config).toEqual({
     cliConfig: {},
   });
@@ -214,6 +218,6 @@ test('support yml extension', async () => {
     }
     return null;
   });
-  const config = await getLowdefyYaml({ configDirectory });
+  const config = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   expect(config).toEqual({ lowdefyVersion: '1.0.0', cliConfig: {}, plugins: [] });
 });
