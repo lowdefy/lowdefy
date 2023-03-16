@@ -14,18 +14,10 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
 import { serializer } from '@lowdefy/helpers';
 import testContext from '../test/testContext.js';
 
 const context = testContext();
-
-jest.unstable_mockModule('uuid', () => {
-  let i = 0;
-  return {
-    v4: () => `${i++}`,
-  };
-});
 
 test('mutate keyMap and components', async () => {
   const addKeys = (await import('./addKeys.js')).default;
@@ -54,60 +46,60 @@ test('mutate keyMap and components', async () => {
   };
   addKeys({ components, context });
   expect(context.keyMap).toEqual({
-    1: {
-      _k_parent: '0',
+    2: {
+      _k_parent: '1',
       _r_: '1',
       key: 'root',
     },
-    2: {
-      _k_parent: '1',
+    3: {
+      _k_parent: '2',
       _r_: '2',
       key: 'root.pages[0:A:Box]',
     },
-    3: {
-      _k_parent: '2',
+    4: {
+      _k_parent: '3',
       _r_: '3',
       key: 'root.pages[0:A:Box].blocks[0:A1:Button]',
     },
-    4: {
-      _k_parent: '2',
+    5: {
+      _k_parent: '3',
       _r_: '7',
       key: 'root.pages[0:A:Box].blocks[1:A2:Button]',
     },
-    5: {
-      _k_parent: '1',
+    6: {
+      _k_parent: '2',
       _r_: '5',
       key: 'root.pages[1:B:Box]',
     },
-    6: {
-      _k_parent: '5',
+    7: {
+      _k_parent: '6',
       _r_: '4',
       key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
     },
-    7: {
-      _k_parent: '5',
+    8: {
+      _k_parent: '6',
       _r_: '6',
       key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
     },
-    8: {
-      _k_parent: '7',
+    9: {
+      _k_parent: '8',
       _r_: '10',
       key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
     },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
-    _k_: '1',
+    _k_: '2',
     pages: [
       {
-        _k_: '2',
+        _k_: '3',
         blocks: [
           {
-            _k_: '3',
+            _k_: '4',
             id: 'A1',
             type: 'Button',
           },
           {
-            _k_: '4',
+            _k_: '5',
             id: 'A2',
             type: 'Button',
           },
@@ -116,19 +108,19 @@ test('mutate keyMap and components', async () => {
         type: 'Box',
       },
       {
-        _k_: '5',
+        _k_: '6',
         blocks: [
           {
-            _k_: '6',
+            _k_: '7',
             id: 'B1',
             type: 'Button',
           },
           {
-            _k_: '7',
+            _k_: '8',
             id: 'B2',
             type: 'Button',
             properties: {
-              _k_: '8',
+              _k_: '9',
               title: 'X',
             },
           },

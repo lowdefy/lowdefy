@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import makeId from '../utils/makeId.js';
 
 function recAddKeys(object, key, keyMap, parentId) {
-  const id = makeId(keyMap);
+  const id = makeId();
   keyMap[id] = {
     key,
     _r_: object._r_,
@@ -61,7 +61,7 @@ function recAddKeys(object, key, keyMap, parentId) {
 }
 
 function addKeys({ components, context }) {
-  const id = makeId(context.keyMap);
+  const id = makeId();
   recAddKeys(components, 'root', context.keyMap, id);
 }
 

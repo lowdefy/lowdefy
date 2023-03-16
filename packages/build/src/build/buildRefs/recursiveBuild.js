@@ -48,7 +48,7 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
       parsedFiles,
       refDef,
     });
-
+    context.refMap[parsedRefDef.id].path = parsedRefDef.path;
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,

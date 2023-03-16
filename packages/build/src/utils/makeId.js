@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import { v4 as uuid } from 'uuid';
+let id_counter = 0;
 
-function makeId(map, length = 6) {
-  let id;
-  do {
-    id = uuid().replaceAll('-', '').slice(0, length);
-  } while (map[id]);
-  return id;
+function makeId() {
+  id_counter++;
+  return id_counter.toString(36);
 }
 
 export default makeId;

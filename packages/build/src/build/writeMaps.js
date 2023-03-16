@@ -24,11 +24,11 @@ async function writeMaps({ context }) {
   }
   await context.writeBuildArtifact(
     'keyMap.json',
-    serializer.serializeToString(context.keyMap, { space: 2 })
+    serializer.serializeToString(context.keyMap, { space: 0 })
   );
   await context.writeBuildArtifact(
     'refMap.json',
-    serializer.serializeToString(context.refMap, { space: 2 })
+    serializer.serializeToString(context.refMap, { space: 0 })
   );
 }
 

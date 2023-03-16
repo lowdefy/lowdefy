@@ -20,19 +20,19 @@ import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
 function makeRefDefinition(refDefinition, parent, refMap) {
-  const id = makeId(refMap);
+  const id = makeId();
   const refDef = {
     parent,
-    path: getRefPath(refDefinition),
   };
   refMap[id] = refDef;
   return {
     ...refDef,
     id,
     key: get(refDefinition, 'key'),
-    transformer: get(refDefinition, 'transformer'),
-    resolver: get(refDefinition, 'resolver'),
     original: refDefinition,
+    path: getRefPath(refDefinition),
+    resolver: get(refDefinition, 'resolver'),
+    transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),
   };
 }
