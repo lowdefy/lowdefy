@@ -110,7 +110,7 @@
             title: Menus
         - id: layout
           type: MenuLink
-          pageId: layout
+          pageId: layout-overview
           properties:
             title: Layout
         - id: secrets
@@ -284,9 +284,12 @@
         - id: RatingSlider
           type: MenuLink
           pageId: RatingSlider
-        # - id: S3UploadButton
-        #   type: MenuLink
-        #   pageId: S3UploadButton
+        - id: S3UploadButton
+          type: MenuLink
+          pageId: S3UploadButton
+        - id: S3UploadPhoto
+          type: MenuLink
+          pageId: S3UploadPhoto
         - id: Selector
           type: MenuLink
           pageId: Selector
@@ -311,6 +314,9 @@
         title: Display Blocks
         icon: AiOutlinePicture
       links:
+        - id: AgGrid
+          type: MenuLink
+          pageId: AgGrid
         - id: Alert
           type: MenuLink
           pageId: Alert
@@ -374,9 +380,21 @@
         - id: Progress
           type: MenuLink
           pageId: Progress
-        # - id: Skeleton
-        #   type: MenuLink
-        #   pageId: Skeleton
+        - id: Skeleton
+          type: MenuLink
+          pageId: Skeleton
+        - id: SkeletonAvatar
+          type: MenuLink
+          pageId: SkeletonAvatar
+        - id: SkeletonButton
+          type: MenuLink
+          pageId: SkeletonButton
+        - id: SkeletonInput
+          type: MenuLink
+          pageId: SkeletonInput
+        - id: SkeletonParagraph
+          type: MenuLink
+          pageId: SkeletonParagraph
         - id: Statistic
           type: MenuLink
           pageId: Statistic
@@ -411,12 +429,24 @@
         - id: ConfirmModal
           type: MenuLink
           pageId: ConfirmModal
+        - id: Content
+          type: MenuLink
+          pageId: Content
         - id: Drawer
           type: MenuLink
           pageId: Drawer
+        - id: Footer
+          type: MenuLink
+          pageId: Footer
+        - id: Header
+          type: MenuLink
+          pageId: Header
         - id: Label
           type: MenuLink
           pageId: Label
+        - id: Layout
+          type: MenuLink
+          pageId: Layout
         - id: Modal
           type: MenuLink
           pageId: Modal
@@ -429,6 +459,9 @@
         - id: Result
           type: MenuLink
           pageId: Result
+        - id: Sider
+          type: MenuLink
+          pageId: Sider
         - id: Span
           type: MenuLink
           pageId: Span
@@ -454,6 +487,9 @@
         - id: List
           type: MenuLink
           pageId: List
+        # - id: TimelineList
+        #   type: MenuLink
+        #   pageId: TimelineList
     - id: connections
       type: MenuGroup
       properties:

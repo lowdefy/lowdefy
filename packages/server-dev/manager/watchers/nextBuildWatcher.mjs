@@ -17,11 +17,12 @@
 import crypto from 'crypto';
 import path from 'path';
 import { readFile } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
 const hashes = {};
 
-const watchedFiles = [
+const trackedFiles = [
   'build/app.json',
   'build/auth.json',
   'build/config.json',
@@ -41,7 +42,16 @@ const watchedFiles = [
 ];
 
 async function sha1(filePath) {
-  const content = await readFile(filePath);
+  let content = await readFile(filePath);
+  if (filePath.endsWith('.json')) {
+    content = JSON.stringify(
+      JSON.parse(content, (_, value) => {
+        if (!type.isObject(value)) return value;
+        delete value._k_;
+        return value;
+      })
+    );
+  }
   return crypto
     .createHash('sha1')
     .update(content || '')
@@ -52,17 +62,16 @@ async function nextBuildWatcher(context) {
   // Initialize hashes so that app does not rebuild the first time
   // Lowdefy build is run.
   await Promise.all(
-    watchedFiles.map(async (filePath) => {
-      const fullPath = path.resolve(context.directories.server, filePath);
-      hashes[fullPath] = await sha1(fullPath);
+    trackedFiles.map(async (filePath) => {
+      hashes[filePath] = await sha1(filePath);
     })
   );
 
-  const callback = async (filePaths) => {
+  const callback = async () => {
     let install = false;
     let build = false;
     await Promise.all(
-      filePaths.flat().map(async (filePath) => {
+      trackedFiles.map(async (filePath) => {
         const hash = await sha1(filePath);
         if (hashes[filePath] === hash) {
           return;
@@ -74,7 +83,6 @@ async function nextBuildWatcher(context) {
         hashes[filePath] = hash;
       })
     );
-
     if (!build) {
       context.logger.info({ print: 'succeed' }, 'Reloaded app.');
       return;
@@ -82,6 +90,7 @@ async function nextBuildWatcher(context) {
 
     context.shutdownServer();
     if (install) {
+      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
       await context.installPlugins();
     }
     await context.nextBuild();
@@ -92,7 +101,7 @@ async function nextBuildWatcher(context) {
     callback,
     context,
     watchDotfiles: true,
-    watchPaths: watchedFiles.map((filePath) => path.join(context.directories.server, filePath)),
+    watchPaths: [path.join(context.directories.server, 'package.json')],
   });
 }
 

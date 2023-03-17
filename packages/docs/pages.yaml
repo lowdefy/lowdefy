@@ -14,7 +14,7 @@
 - _ref: concepts/references-and-templates.yaml
 - _ref: concepts/page-and-app-state.yaml
 - _ref: concepts/blocks.yaml
-- _ref: concepts/layout.yaml
+- _ref: concepts/layout-overview.yaml
 - _ref: concepts/connections-and-requests.yaml
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
@@ -57,7 +57,8 @@
 - _ref: blocks/input/PasswordInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
-# - _ref: blocks/input/S3UploadButton.yaml # TODO: Add with @lowdefy/plugin-aws
+- _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
@@ -65,6 +66,7 @@
 - _ref: blocks/input/TitleInput.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
+- _ref: blocks/display/AgGrid.yaml
 - _ref: blocks/display/Anchor.yaml
 - _ref: blocks/display/Avatar.yaml
 - _ref: blocks/display/Breadcrumb.yaml
@@ -84,7 +86,11 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
-# - _ref: blocks/display/Skeleton.yaml # TODO:
+- _ref: blocks/display/Skeleton.yaml
+- _ref: blocks/display/SkeletonAvatar.yaml
+- _ref: blocks/display/SkeletonButton.yaml
+- _ref: blocks/display/SkeletonInput.yaml
+- _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Title.yaml
 
@@ -96,13 +102,18 @@
 - _ref: blocks/container/Collapse.yaml
 - _ref: blocks/container/Comment.yaml
 - _ref: blocks/container/ConfirmModal.yaml
+- _ref: blocks/container/Content.yaml
 - _ref: blocks/container/Descriptions.yaml
 - _ref: blocks/container/Drawer.yaml
+- _ref: blocks/container/Footer.yaml
+- _ref: blocks/container/Header.yaml
 - _ref: blocks/container/Label.yaml
+- _ref: blocks/container/Layout.yaml
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
 - _ref: blocks/container/Result.yaml
+- _ref: blocks/container/Sider.yaml
 - _ref: blocks/container/Span.yaml
 - _ref: blocks/container/Spinner.yaml
 - _ref: blocks/container/Tabs.yaml

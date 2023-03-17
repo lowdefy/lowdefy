@@ -17,19 +17,12 @@
         "description": "Size of the skeleton.",
         "enum": ["small", "medium", "large"]
       },
-      "shape": {
-        "type": "string",
-        "default": "round",
-        "description": "Size of the skeleton.",
-        "enum": ["square", "round"]
-      },
-      "height": {
-        "type": ["number", "string"],
-        "description": "Height of the skeleton."
-      },
       "width": {
         "type": ["number", "string"],
-        "description": "Width of the skeleton."
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
       }
     }
   },

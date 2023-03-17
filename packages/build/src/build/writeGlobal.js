@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, serializer } from '@lowdefy/helpers';
 
 async function writeGlobal({ components, context }) {
   if (type.isNone(components.global)) {
@@ -23,7 +23,10 @@ async function writeGlobal({ components, context }) {
   if (!type.isObject(components.global)) {
     throw new Error('Global is not an object.');
   }
-  await context.writeBuildArtifact('global.json', JSON.stringify(components.global, null, 2));
+  await context.writeBuildArtifact(
+    'global.json',
+    serializer.serializeToString(components.global, { space: 2 })
+  );
 }
 
 export default writeGlobal;
