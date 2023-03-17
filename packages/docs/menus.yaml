@@ -278,6 +278,9 @@
         - id: PasswordInput
           type: MenuLink
           pageId: PasswordInput
+        - id: PhoneNumberInput
+          type: MenuLink
+          pageId: PhoneNumberInput
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
