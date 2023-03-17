@@ -106,6 +106,8 @@
 - _ref: blocks/container/Drawer.yaml
 - _ref: blocks/container/Footer.yaml
 - _ref: blocks/container/GoogleMaps.yaml
+- _ref: blocks/container/GoogleMapsHeatmap.yaml
+- _ref: blocks/container/GoogleMapsScript.yaml
 - _ref: blocks/container/Header.yaml
 - _ref: blocks/container/Label.yaml
 - _ref: blocks/container/Layout.yaml
