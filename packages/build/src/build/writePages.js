@@ -13,11 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
 
 async function writePage({ page, context }) {
   await context.writeBuildArtifact(
     `pages/${page.pageId}/${page.pageId}.json`,
-    JSON.stringify(page, null, 2)
+    serializer.serializeToString(page ?? {}, { space: 2 })
   );
 }
 

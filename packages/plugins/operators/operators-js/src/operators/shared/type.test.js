@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { ServerParser } from '@lowdefy/operators';
 import _type from './type.js';
 import _date from './date.js';
 
@@ -103,9 +103,9 @@ test('_type none', () => {
   expect(_type({ params: { type: 'none' }, location, state })).toEqual(true);
 });
 
-test('_type date with on packed date pass and calls NodeParser', () => {
+test('_type date with on packed date pass and calls ServerParser', () => {
   const input = { _type: { type: 'date', on: { _date: Date.now() } } };
-  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual(true);
 });

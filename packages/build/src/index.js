@@ -20,6 +20,7 @@ import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
+import addKeys from './build/addKeys.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildImports from './build/buildImports/buildImports.js';
@@ -39,6 +40,7 @@ import writePluginImports from './build/writePluginImports/writePluginImports.js
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writeRequests from './build/writeRequests.js';
@@ -55,6 +57,7 @@ async function build(options) {
   buildConnections({ components, context });
   buildPages({ components, context });
   buildMenu({ components, context });
+  addKeys({ components, context });
   buildTypes({ components, context });
   buildImports({ components, context });
   await cleanBuildDirectory({ context });
@@ -65,6 +68,7 @@ async function build(options) {
   await writePages({ components, context });
   await writeConfig({ components, context });
   await writeGlobal({ components, context });
+  await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
   await writePluginImports({ components, context });

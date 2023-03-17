@@ -13,13 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
 
 async function writeRequestsOnPage({ page, context }) {
   return Promise.all(
     page.requests.map(async (request) => {
       await context.writeBuildArtifact(
         `pages/${page.pageId}/requests/${request.requestId}.json`,
-        JSON.stringify(request, null, 2)
+        serializer.serializeToString(request ?? {}, { space: 2 })
       );
       delete request.properties;
       delete request.type;

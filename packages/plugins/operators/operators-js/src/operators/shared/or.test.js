@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser, WebParser } from '@lowdefy/operators';
+import { ServerParser, WebParser } from '@lowdefy/operators';
 import _or from './or.js';
 
 const operators = {
@@ -49,9 +49,9 @@ test('_or errors', () => {
   );
 });
 
-test('_or evaluated in NodeParser', () => {
+test('_or evaluated in ServerParser', () => {
   const input = { a: { _or: [true, false] } };
-  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });

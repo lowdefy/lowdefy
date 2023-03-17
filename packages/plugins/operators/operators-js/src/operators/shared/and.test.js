@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser, WebParser } from '@lowdefy/operators';
+import { ServerParser, WebParser } from '@lowdefy/operators';
 import _and from './and.js';
 
 const operators = {
@@ -49,9 +49,9 @@ test('_and errors', () => {
   );
 });
 
-test('_and evaluated in NodeParser', () => {
+test('_and evaluated in ServerParser', () => {
   const input = { a: { _and: [true, true] } };
-  const parser = new NodeParser({ operators, payload: {}, secrets: {}, user: {} });
+  const parser = new ServerParser({ operators, payload: {}, secrets: {}, user: {} });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
 });

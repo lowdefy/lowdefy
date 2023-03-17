@@ -48,6 +48,8 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     },
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),
+    refMap: {},
+    keyMap: {},
   };
 
   context.logger = {
