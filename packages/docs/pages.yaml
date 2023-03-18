@@ -55,6 +55,7 @@
 - _ref: blocks/input/Pagination.yaml
 - _ref: blocks/input/ParagraphInput.yaml
 - _ref: blocks/input/PasswordInput.yaml
+- _ref: blocks/input/PhoneNumberInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
