@@ -21,7 +21,7 @@ _ref:
     filePath: blocks/container/GoogleMapsScript.yaml
     schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript/GoogleMapsScript.json
     description_content: |
-      This is a Lowdefy blocks wrapper for the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview). It is used to specify the api key and libraries to be used for the [`GoogleMaps`](./GoogleMaps) and [`GoogleMapsHeatmap`](./GoogleMapsHeatmap) blocks.
+      This is a Lowdefy blocks wrapper for the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview). It is used to specify the api key and libraries to be used for the [`GoogleMaps`](./GoogleMaps) and [`GoogleMapsHeatmap`](./GoogleMapsHeatmap) blocks, and wraps these blocks as a parent container. Only one `GoogleMapsScript` blocks should be used on a page.v
 
       ### Properties
 
