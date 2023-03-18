@@ -314,6 +314,9 @@
         title: Display Blocks
         icon: AiOutlinePicture
       links:
+        - id: AgGrid
+          type: MenuLink
+          pageId: AgGrid
         - id: Alert
           type: MenuLink
           pageId: Alert
