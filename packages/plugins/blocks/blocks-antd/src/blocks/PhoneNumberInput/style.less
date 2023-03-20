@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
-import { authOptions } from '../../pages/api/auth/[...nextauth].js';
-import authJson from '../../build/auth.json';
+@import 'antd/lib/input/style/index.less';
+@import '../Label/style.less';
 
-function getServerSession({ req, res }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
+.ldf-phone-number-input {
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
-  return undefined;
-}
 
-export default getServerSession;
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}

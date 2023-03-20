@@ -875,13 +875,13 @@ importers:
       jest: 28.1.0
       jest-environment-node: 28.1.0
       mongodb: 4.13.0
-      next-auth: 4.18.8
+      next-auth: 4.20.1
       react: 18.2.0
       react-dom: 18.2.0
       saslprep: 1.0.3
     dependencies:
       '@lowdefy/helpers': link:../../../utils/helpers
-      '@next-auth/mongodb-adapter': 1.1.1_ckpck52kcb65gf4nrith6z32oe
+      '@next-auth/mongodb-adapter': 1.1.1_w776xreis2xmthgxhdokgcsixm
       mongodb: 4.13.0
       saslprep: 1.0.3
     devDependencies:
@@ -892,7 +892,7 @@ importers:
       '@swc/jest': 0.2.24_@swc+core@1.3.24
       jest: 28.1.0
       jest-environment-node: 28.1.0
-      next-auth: 4.18.8_biqbaboplfbrettd7655fr4n2y
+      next-auth: 4.20.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
 
@@ -1210,11 +1210,11 @@ importers:
       '@swc/core': 1.3.24
       '@swc/jest': 0.2.24
       jest: 28.1.0
-      next-auth: 4.18.8
+      next-auth: 4.20.1
       react: 18.2.0
       react-dom: 18.2.0
     dependencies:
-      next-auth: 4.18.8_biqbaboplfbrettd7655fr4n2y
+      next-auth: 4.20.1_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@swc/cli': 0.1.59_@swc+core@1.3.24
       '@swc/core': 1.3.24
@@ -1241,7 +1241,7 @@ importers:
       less: 4.1.3
       less-loader: 11.1.0
       next: 12.3.1
-      next-auth: 4.18.8
+      next-auth: 4.20.1
       next-with-less: 2.0.5
       process: 0.11.10
       react: 18.2.0
@@ -1263,7 +1263,7 @@ importers:
       '@lowdefy/operators-js': link:../plugins/operators/operators-js
       '@lowdefy/plugin-next-auth': link:../plugins/plugins/plugin-next-auth
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
-      next-auth: 4.18.8_azq6kxkn3od7qdylwkyksrwopy
+      next-auth: 4.20.1_azq6kxkn3od7qdylwkyksrwopy
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -1310,7 +1310,7 @@ importers:
       less: 4.1.3
       less-loader: 11.1.0
       next: 12.3.1
-      next-auth: 4.18.8
+      next-auth: 4.20.1
       next-with-less: 2.0.5
       opener: 1.5.2
       pino: 8.8.0
@@ -1350,7 +1350,7 @@ importers:
       chokidar: 3.5.3
       dotenv: 16.0.3
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
-      next-auth: 4.18.8_azq6kxkn3od7qdylwkyksrwopy
+      next-auth: 4.20.1_azq6kxkn3od7qdylwkyksrwopy
       opener: 1.5.2
       pino: 8.8.0
       process: 0.11.10
@@ -4128,14 +4128,14 @@ packages:
       - supports-color
     dev: false
 
-  /@next-auth/mongodb-adapter/1.1.1_ckpck52kcb65gf4nrith6z32oe:
+  /@next-auth/mongodb-adapter/1.1.1_w776xreis2xmthgxhdokgcsixm:
     resolution: {integrity: sha512-X5O4U4l2M8nyp/B3qF5GOr/JJw2ShKgWfTZRa80Y5CUzTPPmf09ggL5v5UwCmz9l2RIv2GUxO8hK4qrcaZvDRw==}
     peerDependencies:
       mongodb: ^4.1.1
       next-auth: ^4
     dependencies:
       mongodb: 4.13.0
-      next-auth: 4.18.8_biqbaboplfbrettd7655fr4n2y
+      next-auth: 4.20.1_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@next/env/12.3.1:
@@ -5971,7 +5971,7 @@ packages:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
-      '@babel/runtime': 7.20.7
+      '@babel/runtime': 7.20.13
       cosmiconfig: 7.1.0
       resolve: 1.22.1
     dev: false
@@ -9969,8 +9969,8 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: false
 
-  /jose/4.11.2:
-    resolution: {integrity: sha512-njj0VL2TsIxCtgzhO+9RRobBvws4oYyCM8TpvoUQwl/MbIM3NFJRR9+e6x0sS5xXaP1t6OCBkaBME98OV9zU5A==}
+  /jose/4.13.1:
+    resolution: {integrity: sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ==}
 
   /js-md4/0.3.2:
     resolution: {integrity: sha512-/GDnfQYsltsjRswQhN9fhv3EMw2sCpUdrdxyWDOUK7eyD++r3gRhzgiQgc/x4MAv2i1iuQ4lxO5mvqM3vj4bwA==}
@@ -11397,9 +11397,8 @@ packages:
       - supports-color
     dev: true
 
-  /next-auth/4.18.8_azq6kxkn3od7qdylwkyksrwopy:
-    resolution: {integrity: sha512-USP8ihmvB7iCGtkS0+toe2QPrzdbZfkydQZX56JOI9Ft5n/BardOXh3D4wQ2An+vpq/jDKojGlgfv21wVElW7A==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
+  /next-auth/4.20.1_azq6kxkn3od7qdylwkyksrwopy:
+    resolution: {integrity: sha512-ZcTUN4qzzZ/zJYgOW0hMXccpheWtAol8QOMdMts+LYRcsPGsqf2hEityyaKyECQVw1cWInb9dF3wYwI5GZdEmQ==}
     peerDependencies:
       next: ^12.2.5 || ^13
       nodemailer: ^6.6.5
@@ -11412,10 +11411,10 @@ packages:
       '@babel/runtime': 7.20.13
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
-      jose: 4.11.2
+      jose: 4.13.1
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       oauth: 0.9.15
-      openid-client: 5.3.2
+      openid-client: 5.4.0
       preact: 10.11.3
       preact-render-to-string: 5.2.6_preact@10.11.3
       react: 18.2.0
@@ -11423,9 +11422,8 @@ packages:
       uuid: 8.3.2
     dev: false
 
-  /next-auth/4.18.8_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-USP8ihmvB7iCGtkS0+toe2QPrzdbZfkydQZX56JOI9Ft5n/BardOXh3D4wQ2An+vpq/jDKojGlgfv21wVElW7A==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0}
+  /next-auth/4.20.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-ZcTUN4qzzZ/zJYgOW0hMXccpheWtAol8QOMdMts+LYRcsPGsqf2hEityyaKyECQVw1cWInb9dF3wYwI5GZdEmQ==}
     peerDependencies:
       next: ^12.2.5 || ^13
       nodemailer: ^6.6.5
@@ -11438,9 +11436,9 @@ packages:
       '@babel/runtime': 7.20.13
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
-      jose: 4.11.2
+      jose: 4.13.1
       oauth: 0.9.15
-      openid-client: 5.3.2
+      openid-client: 5.4.0
       preact: 10.11.3
       preact-render-to-string: 5.2.6_preact@10.11.3
       react: 18.2.0
@@ -11955,10 +11953,10 @@ packages:
     hasBin: true
     dev: false
 
-  /openid-client/5.3.2:
-    resolution: {integrity: sha512-nXXt+cna0XHOw+WqjMZOmuXw/YZEMwfWD2lD7tCsFtsBjMQGVXA+NZABA3upYBET1suhIsmfd7GnxG4jCAnvYQ==}
+  /openid-client/5.4.0:
+    resolution: {integrity: sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ==}
     dependencies:
-      jose: 4.11.2
+      jose: 4.13.1
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1

@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
-import { authOptions } from '../../pages/api/auth/[...nextauth].js';
-import authJson from '../../build/auth.json';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-function getServerSession({ req, res }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
-  }
-  return undefined;
-}
+import Block from './PhoneNumberInput.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
+import validationsExamples from '../../validationExamples.js';
 
-export default getServerSession;
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
+
+runRenderTests({ Block, examples, schema, testConfig, validationsExamples });
+runBlockSchemaTests({ examples, schema });

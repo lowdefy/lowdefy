@@ -220,11 +220,11 @@ object:
 
     ```yaml
     - id: google_maps_script_4
-        type: GoogleMapsScript
-        properties:
-          apiKey:
-            _build.env: GOOGLE_MAPS_API_KEY
-        blocks:
+      type: GoogleMapsScript
+      properties:
+        apiKey:
+          _build.env: GOOGLE_MAPS_API_KEY
+      blocks:
         - id: google_maps_4
             type: GoogleMaps
             properties:
