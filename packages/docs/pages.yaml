@@ -55,6 +55,7 @@
 - _ref: blocks/input/Pagination.yaml
 - _ref: blocks/input/ParagraphInput.yaml
 - _ref: blocks/input/PasswordInput.yaml
+- _ref: blocks/input/PhoneNumberInput.yaml
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
@@ -106,6 +107,9 @@
 - _ref: blocks/container/Descriptions.yaml
 - _ref: blocks/container/Drawer.yaml
 - _ref: blocks/container/Footer.yaml
+- _ref: blocks/container/GoogleMaps.yaml
+- _ref: blocks/container/GoogleMapsHeatmap.yaml
+- _ref: blocks/container/GoogleMapsScript.yaml
 - _ref: blocks/container/Header.yaml
 - _ref: blocks/container/Label.yaml
 - _ref: blocks/container/Layout.yaml

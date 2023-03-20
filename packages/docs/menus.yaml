@@ -278,6 +278,9 @@
         - id: PasswordInput
           type: MenuLink
           pageId: PasswordInput
+        - id: PhoneNumberInput
+          type: MenuLink
+          pageId: PhoneNumberInput
         - id: RadioSelector
           type: MenuLink
           pageId: RadioSelector
@@ -438,6 +441,15 @@
         - id: Footer
           type: MenuLink
           pageId: Footer
+        - id: GoogleMaps
+          type: MenuLink
+          pageId: GoogleMaps
+        - id: GoogleMapsHeatmap
+          type: MenuLink
+          pageId: GoogleMapsHeatmap
+        - id: GoogleMapsScript
+          type: MenuLink
+          pageId: GoogleMapsScript
         - id: Header
           type: MenuLink
           pageId: Header
