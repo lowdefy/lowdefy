@@ -55,6 +55,17 @@ _ref:
           content:
             _var: params
       {% endif %}
+      {% if response %}
+      - id: params_title
+        type: Markdown
+        properties:
+          content: '#### Response'
+      - id: response
+        type: MarkdownWithCode
+        properties:
+          content:
+            _var: response
+      {% endif %}
       {% if examples %}
       - id: examples_title
         type: Markdown

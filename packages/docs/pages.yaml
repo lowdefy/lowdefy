@@ -148,6 +148,7 @@
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
 - _ref: actions/Fetch.yaml
+- _ref: actions/GeolocationCurrentPosition.yaml
 - _ref: actions/Link.yaml
 - _ref: actions/Login.yaml
 - _ref: actions/Logout.yaml
