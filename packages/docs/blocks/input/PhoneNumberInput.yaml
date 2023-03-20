@@ -33,12 +33,12 @@ _ref:
           type: PhoneNumberInput
           properties:
             allowedRegions:
-              - '+27'
-              - '+93'
+              - 'ZA'
+              - 'UA'
       - title: Phone number input with default region and flags disabled
         block:
-          id: deafult_region
+          id: default_region
           type: PhoneNumberInput
           properties:
-            defaultRegion: '+213'
+            defaultRegion: 'US'
             showFlags: false

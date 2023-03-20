@@ -11,7 +11,7 @@
       },
       "allowedRegions": {
         "type": "array",
-        "description": "List of allowed region dial codes. If allowedRegions is [] or null, the default list of all regions is used.",
+        "description": "List of allowed ISO 3166-1 alpha-2 region codes. If allowedRegions is [] or null, the default list of all regions is used.",
         "items": {
           "type": "string"
         }

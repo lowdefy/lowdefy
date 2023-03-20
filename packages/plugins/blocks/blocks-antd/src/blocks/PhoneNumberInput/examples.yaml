@@ -17,9 +17,9 @@
   type: PhoneNumberInput
   properties:
     allowedRegions:
-      - '+27'
-      - '+93'
+      - 'ZA'
+      - 'UA'
 - id: properties.defaultRegion
   type: PhoneNumberInput
   properties:
-    defaultRegion: '+213'
+    defaultRegion: 'US'
