@@ -34,6 +34,7 @@ _ref:
         - `maximumAge: number`: The maximum age in milliseconds of a possible cached position that is acceptable to return. The default is 0.
         - `timeout: number`: The maximum length of time in milliseconds the device is allowed to take to return a position. The default is infinity.
     response: |
+      ##### Successful:
       ###### object
         - `coords: object`: A GeolocationCoordinates object instance.
             - `accuracy: float`: The accuracy of the latitude and longitude properties, expressed in meters.
@@ -44,6 +45,13 @@ _ref:
             - `longitude: float`: The position's longitude in decimal degrees.
             - `speed: float`: The velocity of the device in meters per second.
         - `timestamp: number`: A Unix time in milliseconds.
+
+      ##### Error:
+        Note that this error response does not break the action chain. The possible errors can be viewed [here](https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError).
+      ###### object
+        - `code: number`: The error code associated with the error.
+        - `error: string`: The constant associated with the error code.
+        - `message: string`: A string describing the details of the error.
     examples: |
       ###### Get geolocation with specified params:
       ```yaml
