@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/nunjucks",
-  "version": "4.0.0-rc.5",
+  "version": "4.0.0-rc.6",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.5",
+    "@lowdefy/helpers": "4.0.0-rc.6",
     "moment": "2.29.4"
   },
   "devDependencies": {

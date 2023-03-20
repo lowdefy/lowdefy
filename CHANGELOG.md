@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **actions-core:** Update GeolocationCurrentPosition error handling. ([bfc2498](https://github.com/lowdefy/lowdefy/commit/bfc249856082290cd567ec44c49cbc27f9681eef))
+* **blocks-ag-grid:** Update ag-grid README.md ([f1ee1dc](https://github.com/lowdefy/lowdefy/commit/f1ee1dce278247a4c43766162acfff95c2191696))
+* **blocks-aggrid:** onRowClick and onRowSelected events. ([17a9df5](https://github.com/lowdefy/lowdefy/commit/17a9df54a2558112b2f00942ccbcb841a32efc06))
+* **blocks-antd:** Update Header and Sider blocks schemas ([6786cdb](https://github.com/lowdefy/lowdefy/commit/6786cdb899a69f2d117aef23bc63942ac4574dee))
+* **blocks-antd:** Update PhoneNumberInput ([2cdfe2c](https://github.com/lowdefy/lowdefy/commit/2cdfe2cfa710b08eefeca9773f9aebd73b4b899e))
+* **blocks-google-maps:** Fix example in README. ([67e7e22](https://github.com/lowdefy/lowdefy/commit/67e7e22a2419e85bb09bc6444486ef13c6caaf14))
+* **blocks-loaders:** Remove IconSpinner and update Spinner ([daa5696](https://github.com/lowdefy/lowdefy/commit/daa5696f3e53b4ed8590248ec948248cd16c1055))
+* **blocks-loaders:** Update Skeleton blocks schemas ([12914da](https://github.com/lowdefy/lowdefy/commit/12914daa92922d72365c30e408c233da0eb16744))
+* **build:** Fix tests. ([68313eb](https://github.com/lowdefy/lowdefy/commit/68313eb489f6fe3d47100c1325c99d90b133065f))
+* Change backlinks for layout to layout-overview ([0852011](https://github.com/lowdefy/lowdefy/commit/08520113d6d9a7824a95e0b7a43cb73e19fbe769))
+* **cli:** Add requiresLowdefyYaml to context. ([f3c6584](https://github.com/lowdefy/lowdefy/commit/f3c658489f7a0164ef00bed8422ef21ba2d61d6f))
+* **cli:** Fix command is init condition in validateVersion. ([b3e25b7](https://github.com/lowdefy/lowdefy/commit/b3e25b7b97cd265d93e123ebb1e5bc8228a329a8))
+* **cli:** Fix undefined version error when calling lowdefy init. ([a589cd5](https://github.com/lowdefy/lowdefy/commit/a589cd596acb1ed444322dceff2407b1714fe112))
+* **cli:** Update tests. ([743f440](https://github.com/lowdefy/lowdefy/commit/743f440732fa08a5718afffd1e4ead070bb366f0))
+* **deps:** update dependency next-auth to v4.20.1 [security] ([bcf12a3](https://github.com/lowdefy/lowdefy/commit/bcf12a37ae4fa921abcd6f943e14ace2fd0c5eb8))
+* **deps:** update dependency next-auth to v4.20.1 [security] ([7e408a2](https://github.com/lowdefy/lowdefy/commit/7e408a2095e73dca79b9777217aec37e11d4cba3))
+* **deps:** update dependency sqlite3 to v5.1.5 [security] ([cbc8b05](https://github.com/lowdefy/lowdefy/commit/cbc8b0580d71b9a8917e27e6b6f711dfdbaed402))
+* **docs:** Additional details on GoogleMapsScript.yaml ([f3296fd](https://github.com/lowdefy/lowdefy/commit/f3296fd0010b18dbb269f6acc7e310c4b79c5b42))
+* **docs:** AgGrid docs typo. ([62f5937](https://github.com/lowdefy/lowdefy/commit/62f59376aadca524b15e357e160564f435d2e25e))
+* **docs:** Fix monorepo docker deploy docs. ([c7a75e6](https://github.com/lowdefy/lowdefy/commit/c7a75e6351ee3448c63270400e1d2897a29d9163))
+* **docs:** Only call telemetry on prod. ([5ac37b8](https://github.com/lowdefy/lowdefy/commit/5ac37b87608108f2be4587e29a9d3aac373b9f2c))
+* **docs:** Rename layout in concepts to layout-overview ([621d1bd](https://github.com/lowdefy/lowdefy/commit/621d1bdf5bf58f1fa00269daa54b258ff0b9f55a))
+* **docs:** Update AgGrid docs. ([9eeab3e](https://github.com/lowdefy/lowdefy/commit/9eeab3ed1f90c22bcdb3fbce46f8d874121f8e0c))
+* **docs:** Update GoogleMaps blocks docs. Split into GoogleMaps, GoogleMapsHeatmap, GoogleMapsScript. ([262f5a4](https://github.com/lowdefy/lowdefy/commit/262f5a4392ecc3288f802b41cb0a854a01e991d9))
+* **docs:** Update schema_definition usage. ([86f6c67](https://github.com/lowdefy/lowdefy/commit/86f6c67258cb2ae48b765f848dd00d2e6d74e8d1))
+* **operator:** fix operator tests. ([9d3acff](https://github.com/lowdefy/lowdefy/commit/9d3acfffa19153a4537ff76851e2383f441db7f9))
+* **operators:** Remove _r_ on build operators. ([68ce4f5](https://github.com/lowdefy/lowdefy/commit/68ce4f56969de3b5dede537867eda1a9f825bdc9))
+* **plugin-aws:** Update S3UploadPhoto schema ([f1acc17](https://github.com/lowdefy/lowdefy/commit/f1acc17e4275bc8bc677836f24ece0b067193a29))
+* Rename depreciated unstable_getServerSession. ([7dcb0c6](https://github.com/lowdefy/lowdefy/commit/7dcb0c665969bafdf03e082389c9101d00146636))
+* **server-dev:** Update reinstall dependencies warning message ([86f4b9f](https://github.com/lowdefy/lowdefy/commit/86f4b9fa0dadac468a97b9aa4169a7ae62a71fc9))
+* Update PhoneNumberInput examples ([ae52024](https://github.com/lowdefy/lowdefy/commit/ae52024395ed5de697b796f5d9dce6943d3fb753))
+
+
+### Features
+
+* **blocks-aggrid:** Add onSortChanged method. ([aa262fb](https://github.com/lowdefy/lowdefy/commit/aa262fb72243c0339ab7dc7563932cd6c5465d36))
+* **blocks-aggrid:** Implement loading in AgGrid and AgGridInput. ([80db126](https://github.com/lowdefy/lowdefy/commit/80db126ac9122d4203a283bb6116521716f9a404))
+* **blocks-aggrid:** Pass loading through to blocks. ([79d2a6c](https://github.com/lowdefy/lowdefy/commit/79d2a6c15e2fb27be7315d83984a49a615f24a66))
+* **blocks-aggrid:** Update all blocks schema.json file. ([70cf5d1](https://github.com/lowdefy/lowdefy/commit/70cf5d1ce7a8055f128a09aed411118e3817c083))
+* **blocks-antd:** Add PhoneNumberInput block. ([9ef0339](https://github.com/lowdefy/lowdefy/commit/9ef033913aa9726995cb9c3cd1e66cc6311413ba))
+* **blocks-antd:** Add tests for PhoneNumberInput. ([eab2338](https://github.com/lowdefy/lowdefy/commit/eab23383d6e3460a68236c50b79e7bee180c6267))
+* **build:** change makeId to incremental counter. ([69ac158](https://github.com/lowdefy/lowdefy/commit/69ac1584d435954e327dfdf6db590af24fad5d4f))
+* deserialize client config. ([1f82002](https://github.com/lowdefy/lowdefy/commit/1f820025445567c5f1f0f146c3a84941a5eece24))
+* **docs:** Add AgGrid display block. ([107866b](https://github.com/lowdefy/lowdefy/commit/107866b54a0cb1b5e676cd8b05ea2b36bf544085))
+* **docs:** Add AgGrid server-side filter and sort example ([1dff161](https://github.com/lowdefy/lowdefy/commit/1dff161e58ff636d1e98a1ecacf3cb500764e933))
+* **docs:** Add GeolocationCurrentPosition action to the docs. ([bdd75c0](https://github.com/lowdefy/lowdefy/commit/bdd75c09efa566fcf4887249787ce5858888a8a8))
+* **docs:** Add GoogleMaps block to docs. ([eab438a](https://github.com/lowdefy/lowdefy/commit/eab438a0fa7f52eecd220f2c70ad69192be3ece4))
+* **docs:** Add Header, Content, Sider, Footer, Layout blocks docs ([d7798b0](https://github.com/lowdefy/lowdefy/commit/d7798b0927da9602c9f680dc7e38a731b113cea7))
+* **docs:** Add more GoogleMaps examples. ([7109d65](https://github.com/lowdefy/lowdefy/commit/7109d65aad73f292a4d377605d2b94cc3c08b5e8))
+* **docs:** Add PhoneNumberInput block to the docs. ([b7d539e](https://github.com/lowdefy/lowdefy/commit/b7d539ea34826d52be167314dd8c1b64585d3a30))
+* **docs:** Add Skeleton blocks docs ([a96a985](https://github.com/lowdefy/lowdefy/commit/a96a98574fdeae8f80b9998c9a8563f76b8902bd))
+* **docs:** Finalise AgGrid docs and update README. ([0024b34](https://github.com/lowdefy/lowdefy/commit/0024b34d33e4e645d252dea42d895c3751a87202))
+* **docs:** Update GeolocationCurrentPosition action docs. ([5af8c1c](https://github.com/lowdefy/lowdefy/commit/5af8c1c5081672ef55145a43f8ad97720700f48c))
+* **helpers:** Add additional serializer tests. ([76b4384](https://github.com/lowdefy/lowdefy/commit/76b4384492779a4dcc1a04bd61becd8895603262))
+* Make refMap and keyMap. ([6ebcc73](https://github.com/lowdefy/lowdefy/commit/6ebcc73b89c8c7906ab45ad49e9294b0229e2b12))
+* Rename nodeParser to serverParser and buildParser. ([0b61e5e](https://github.com/lowdefy/lowdefy/commit/0b61e5e5710084cc19bba4eb6de95c3a53beb4b9))
+* **server-dev:** Add building config spinner. ([45fd3f3](https://github.com/lowdefy/lowdefy/commit/45fd3f39ef7d46163b16618a2712c33b1f78c8ac))
+* **server-dev:** Ignore _k_ on rebuild check. ([32d89b1](https://github.com/lowdefy/lowdefy/commit/32d89b14755400b1858d8d1d8a1da2e5f32d9658))
+* **server-dev:** Only watch package.json. ([cbb1bc6](https://github.com/lowdefy/lowdefy/commit/cbb1bc6ce930c8c1de9e7e5790c46e2d21ff21c7))
+* Use _k_ and _r_ as non-ennumerables. ([60a83b8](https://github.com/lowdefy/lowdefy/commit/60a83b81111f4f5b01fc2dbd9ded0b2496cee7a7))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 

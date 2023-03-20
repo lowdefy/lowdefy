@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency next-auth to v4.20.1 [security] ([bcf12a3](https://github.com/lowdefy/lowdefy/commit/bcf12a37ae4fa921abcd6f943e14ace2fd0c5eb8))
+* **deps:** update dependency next-auth to v4.20.1 [security] ([7e408a2](https://github.com/lowdefy/lowdefy/commit/7e408a2095e73dca79b9777217aec37e11d4cba3))
+* Rename depreciated unstable_getServerSession. ([7dcb0c6](https://github.com/lowdefy/lowdefy/commit/7dcb0c665969bafdf03e082389c9101d00146636))
+* **server-dev:** Update reinstall dependencies warning message ([86f4b9f](https://github.com/lowdefy/lowdefy/commit/86f4b9fa0dadac468a97b9aa4169a7ae62a71fc9))
+
+
+### Features
+
+* **server-dev:** Add building config spinner. ([45fd3f3](https://github.com/lowdefy/lowdefy/commit/45fd3f39ef7d46163b16618a2712c33b1f78c8ac))
+* **server-dev:** Ignore _k_ on rebuild check. ([32d89b1](https://github.com/lowdefy/lowdefy/commit/32d89b14755400b1858d8d1d8a1da2e5f32d9658))
+* **server-dev:** Only watch package.json. ([cbb1bc6](https://github.com/lowdefy/lowdefy/commit/cbb1bc6ce930c8c1de9e7e5790c46e2d21ff21c7))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/server-dev

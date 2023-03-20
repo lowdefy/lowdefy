@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **blocks-ag-grid:** Update ag-grid README.md ([f1ee1dc](https://github.com/lowdefy/lowdefy/commit/f1ee1dce278247a4c43766162acfff95c2191696))
+* **blocks-aggrid:** onRowClick and onRowSelected events. ([17a9df5](https://github.com/lowdefy/lowdefy/commit/17a9df54a2558112b2f00942ccbcb841a32efc06))
+
+
+### Features
+
+* **blocks-aggrid:** Add onSortChanged method. ([aa262fb](https://github.com/lowdefy/lowdefy/commit/aa262fb72243c0339ab7dc7563932cd6c5465d36))
+* **blocks-aggrid:** Implement loading in AgGrid and AgGridInput. ([80db126](https://github.com/lowdefy/lowdefy/commit/80db126ac9122d4203a283bb6116521716f9a404))
+* **blocks-aggrid:** Pass loading through to blocks. ([79d2a6c](https://github.com/lowdefy/lowdefy/commit/79d2a6c15e2fb27be7315d83984a49a615f24a66))
+* **blocks-aggrid:** Update all blocks schema.json file. ([70cf5d1](https://github.com/lowdefy/lowdefy/commit/70cf5d1ce7a8055f128a09aed411118e3817c083))
+* **docs:** Finalise AgGrid docs and update README. ([0024b34](https://github.com/lowdefy/lowdefy/commit/0024b34d33e4e645d252dea42d895c3751a87202))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/blocks-aggrid
