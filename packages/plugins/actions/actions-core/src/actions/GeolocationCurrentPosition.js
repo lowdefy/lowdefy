@@ -14,6 +14,12 @@
   limitations under the License.
 */
 
+const codes = {
+  1: 'PERMISSION_DENIED',
+  2: 'POSITION_UNAVAILABLE',
+  3: 'TIMEOUT',
+};
+
 async function GeolocationCurrentPosition({ globals, params }) {
   try {
     const position = await new Promise((resolve, reject) => {
@@ -32,7 +38,12 @@ async function GeolocationCurrentPosition({ globals, params }) {
       timestamp: position.timestamp,
     };
   } catch (error) {
-    return null;
+    // eslint-disable-next-line no-undef
+    if (error.constructor.name === 'GeolocationPositionError') {
+      return { code: error.code, error: codes[error.code], message: error.message };
+    }
+
+    throw error;
   }
 }
 
