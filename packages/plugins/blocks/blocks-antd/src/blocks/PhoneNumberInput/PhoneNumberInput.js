@@ -30,7 +30,7 @@ function getAllowedRegions({ allowedRegions, regions }) {
     return regions;
   }
 
-  return regions.filter((region) => allowedRegions.includes(region.dial_code));
+  return regions.filter((region) => allowedRegions.includes(region.code));
 }
 
 function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions }) {
@@ -38,7 +38,7 @@ function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions })
     return getValueIndex(allowedRegions[0], uniqueValueOptions);
   }
 
-  const index = allowedRegions.findIndex((region) => region.dial_code === defaultRegion);
+  const index = allowedRegions.findIndex((region) => region.code === defaultRegion);
 
   if (index === -1) {
     return getValueIndex(allowedRegions[0], uniqueValueOptions);
@@ -86,7 +86,7 @@ function AddOnSelect({
         methods.triggerEvent({ name: 'onCodeChange' });
         methods.triggerEvent({ name: 'onChange' });
       }}
-      optionFilterProp="filterstring"
+      optionFilterProp="filterString"
       optionLabelProp="label"
       placeholder={'Select item'}
       showArrow={properties.showArrow}
@@ -95,20 +95,20 @@ function AddOnSelect({
       value={getValueIndex(value?.region, uniqueValueOptions)}
     >
       {uniqueValueOptions.map((opt, i) => {
-        const display_label =
+        const displayLabel =
           properties.showFlags === false
             ? `${opt.value.name} ${opt.value.dial_code}`
             : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
         return (
           <Option
             className={methods.makeCssClass([properties.optionsStyle])}
-            filterstring={display_label}
+            filterString={displayLabel}
             id={`${blockId}_${i}`}
             key={`${i}`}
             value={`${i}`}
             label={opt.label}
           >
-            {display_label}
+            {displayLabel}
           </Option>
         );
       })}
