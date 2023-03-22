@@ -68,7 +68,7 @@ function AddOnSelect({
       disabled={properties.disabled || loading}
       dropdownMatchSelectWidth={false}
       filterOption={(input, option) =>
-        option.filterstring.toLowerCase().indexOf(input.toLowerCase()) >= 0
+        option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0
       }
       mode="single"
       notFoundContent={'Not found'}
