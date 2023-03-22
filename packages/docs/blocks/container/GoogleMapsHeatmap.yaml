@@ -1,0 +1,186 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/generic_block.yaml.njk
+  vars:
+    block_type: GoogleMapsHeatmap
+    category: container
+    pageTitle: GoogleMapsHeatmap
+    filePath: blocks/container/GoogleMapsHeatmap.yaml
+    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsHeatmap/GoogleMapsHeatmap.json
+    description_content: |
+      This is a Lowdefy block which implements [Heatmap](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions) from the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview).
+
+      In order to use this block, it must be wrapped in a [`GoogleMapsScript`](./GoogleMapsScript) block with the visualization library specified.
+
+      ### Properties
+
+      - `apiKey: string`: Your Google Maps API key.
+      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
+      - `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+        - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
+        - `zoom: number`: Map zoom level.
+        - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+      - `heatmap: heatmapOptions`: Add a heatmap layer, see more [heatmap options](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions). This will automatically load the `visualization` library, which must be added to the list of libraries in the `libraries` property of the `GoogleMapsScript` block.
+        - `data: { lat: number, lng: number, weight: number } []`: A list of heatmap data points.
+      - `style: cssObject`: A style object applied to the map element.
+      - `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
+        - `position: { lat: number, lng: number }`: Position of infoWindow on map.
+        - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
+
+      ### Events
+
+      - `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+      - `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+      - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
+        - `domEvent`: event object
+        - `latLng`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `pixel`:
+          - `x`: x position on map block
+          - `y`: y position on map block
+      - `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
+      - `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
+      object:
+        - `domEvent`: event object
+        - `latLng`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `pixel`:
+          - `x`: x position on map block
+          - `y`: y position on map block
+      - `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
+      object:
+        - `bounds`:
+          - `east`: latitudinal coordinate
+          - `north`: longitudinal coordinate
+          - `south`: longitudinal coordinate
+          - `west`: latitudinal coordinate
+        - `center`:
+          - `lat`: latitudinal coordinate
+          - `lng`: longitudinal coordinate
+        - `zoom`: zoom level
+
+      ### Methods
+
+      - `fitBounds`: Fit map to given bounds.
+        - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
+        - `zoom: number`: Map zoom level.
+      - `getBounds`: Returns the bounds of the map.
+      - `getCenter`: Returns the center of the map.
+      - `getZoom`: Returns the zoom of the map.
+
+    examples:
+      - title: Add a heatmap
+        block:
+          id: google_maps_script
+          type: GoogleMapsScript
+          properties:
+            libraries:
+              - visualization
+            apiKey:
+              _build.env: GOOGLE_MAPS_API_KEY
+          blocks:
+            - id: google_maps
+              type: GoogleMapsHeatmap
+              properties:
+                map:
+                  disableDefaultUI: true
+                heatmap:
+                  data:
+                    - lat: 34.091158
+                      lng: -118.2795188
+                      weight: 1
+                    - lat: 34.0771192
+                      lng: -118.2587199
+                      weight: 2
+                    - lat: 34.083527
+                      lng: -118.370157
+                      weight: 1
+                    - lat: 34.0951843
+                      lng: -118.283107
+                      weight: 2
+                    - lat: 34.1033401
+                      lng: -118.2875469
+                      weight: 4
+                    - lat: 34.035798
+                      lng: -118.251288
+                      weight: 2
+                    - lat: 34.0776068
+                      lng: -118.2646526
+                      weight: 3
+                    - lat: 34.0919263
+                      lng: -118.2820544
+                      weight: 3
+                    - lat: 34.0568525
+                      lng: -118.3646369
+                      weight: 3
+                    - lat: 34.0285781
+                      lng: -118.4115541
+                      weight: 0
+                    - lat: 34.017339
+                      lng: -118.278469
+                      weight: 0
+                    - lat: 34.0764288
+                      lng: -118.3661624
+                      weight: 4
+                    - lat: 33.9925942
+                      lng: -118.4232475
+                      weight: 4
+                    - lat: 34.0764345
+                      lng: -118.3730332
+                      weight: 3
+                    - lat: 34.093981
+                      lng: -118.327638
+                      weight: 0
+                    - lat: 34.056385
+                      lng: -118.2508724
+                      weight: 1
+                    - lat: 34.107701
+                      lng: -118.2667943
+                      weight: 4
+                    - lat: 34.0450139
+                      lng: -118.2388682
+                      weight: 4
+                    - lat: 34.1031997
+                      lng: -118.2586152
+                      weight: 1
+                    - lat: 34.0828183
+                      lng: -118.3241586
+                      weight: 1
+                  options:
+                    radius: 20
+                    opacity: 1

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Features
+
+* **helpers:** Add additional serializer tests. ([76b4384](https://github.com/lowdefy/lowdefy/commit/76b4384492779a4dcc1a04bd61becd8895603262))
+* Use _k_ and _r_ as non-ennumerables. ([60a83b8](https://github.com/lowdefy/lowdefy/commit/60a83b81111f4f5b01fc2dbd9ded0b2496cee7a7))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/helpers

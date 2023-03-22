@@ -13,9 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
 
 async function writeConfig({ components, context }) {
-  await context.writeBuildArtifact('config.json', JSON.stringify(components.config || {}, null, 2));
+  await context.writeBuildArtifact(
+    'config.json',
+    serializer.serializeToString(components.config ?? {}, { space: 2 })
+  );
 }
 
 export default writeConfig;

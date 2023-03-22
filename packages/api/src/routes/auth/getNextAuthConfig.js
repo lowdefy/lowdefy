@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { NodeParser } from '@lowdefy/operators';
+import { ServerParser } from '@lowdefy/operators';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
@@ -31,7 +31,7 @@ function getNextAuthConfig(context, { authJson, plugins }) {
   const secrets = getSecretsFromEnv();
 
   // TODO: Add logger
-  const operatorsParser = new NodeParser({
+  const operatorsParser = new ServerParser({
     operators: { _secret },
     payload: {},
     secrets,

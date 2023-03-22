@@ -26,8 +26,10 @@ import defaultTypesMap from './defaultTypesMap.js';
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
   const context = {
     directories,
+    keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),
+    refMap: {},
     refResolver,
     stage,
     typeCounters: {

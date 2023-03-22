@@ -1,0 +1,1464 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: layout-overview
+    pageTitle: Layout
+    section: Concepts
+    filePath: concepts/layout.yaml
+    content:
+      - id: markdown_intro
+        type: Markdown
+        properties:
+          content: |
+            Containers blocks are used to arrange blocks on a page. Blocks of category `container` and `list` all function as container blocks. Container blocks have content areas into which a list of blocks are rendered. `List` category blocks can render container areas for each element in the data array.
+
+            Blocks on a page can be arranged using a __span__ or __flex__ layout. Blocks in __span__ layout are placed in a 24 column grid system, whereas __flex__ blocks dynamically grows or shrink to fit content into a row depending on content size and screen size.
+
+            Under the hood, Lowdefy layouts are based on the [Ant Design Grid System](https://ant.design/components/grid/). The content areas are implemented as a row, and blocks are implemented as a column.
+
+            # Content areas
+
+            Each container has content areas - these are areas where nested blocks can be placed. All container blocks have a primary content area. This area is called `content`. Container blocks might have other content areas, like `header`, `footer`, or `title`. These content areas are implemented specifically by the block.
+
+            To place blocks in the primary content area of a container, the block definitions for those blocks can be placed inside the `blocks` array of the container block.
+
+            > In the following examples, blocks of type `Container` will represent a generic container block, and blocks of type `Block` will represent a generic block. The `Container` block might be a [`Box`](/Box), a [`Card`](/Card), a [`PageHeaderMenu`](/PageHeaderMenu) or any other container block. The `Block` blocks could be any type of block, including other container blocks.
+
+
+            ###### Two blocks in the primary content area (`content`) of a container:
+            ```yaml
+            - id: container
+              type: Container
+              blocks:
+                - id: block1
+                  type: Block
+                - id: block2
+                  type: Block
+
+      - id: ex_content_c1
+        type: Box
+        style:
+          background: '#d9d9d9'
+          padding: 16px
+          marginTop: 16px
+        areas:
+          content:
+            style:
+              border: '1px dashed #eb2f96'
+            blocks:
+              - id: ex_content_b1
+                type: Html
+                style:
+                  textAlign: center
+                properties:
+                  html: |
+                    <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+              - id: ex_content_b2
+                type: Html
+                style:
+                  textAlign: center
+                properties:
+                  html: |
+                    <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+
+      - id: markdown_areas
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            To place blocks in other content areas, the block definitions can be placed in the `blocks` array of the specific area in the `areas` object:
+
+            > Note the blocks are placed under `areas.[areaName].blocks`
+
+
+            ###### Blocks in the `header`, `content` and `footer` areas:
+            ```yaml
+            - id: container
+              type: Container
+              areas:
+                header:
+                  blocks:
+                    - id: block1
+                      type: Block
+                content:
+                  blocks:
+                    - id: block2
+                      type: Block
+                footer:
+                  blocks:
+                    - id: block3
+                      type: Block
+      - id: ex_areas_c1
+        type: Box
+        style:
+          background: '#d9d9d9'
+          padding: 16px
+          marginTop: 16px
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: ex_areas_area1
+            type: Box
+            areas:
+              content:
+                style:
+                  border: '1px dashed #eb2f96'
+                blocks:
+                  - id: ex_areas_b1
+                    type: Html
+                    style:
+                      textAlign: center
+                    properties:
+                      html: |
+                        <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+          - id: ex_areas_area2
+            type: Box
+            areas:
+              content:
+                style:
+                  border: '1px dashed #eb2f96'
+                  height: 250
+                blocks:
+                  - id: ex_areas_b2
+                    type: Html
+                    style:
+                      textAlign: center
+                    properties:
+                      html: |
+                        <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+          - id: ex_areas_area3
+            type: Box
+            areas:
+              content:
+                style:
+                  border: '1px dashed #eb2f96'
+                blocks:
+                  - id: ex_areas_b3
+                    type: Html
+                    style:
+                      textAlign: center
+                    properties:
+                      html: |
+                        <div style="background: #69c0ff; font-size: 16px; font-weight: 500;">Block 3</div>
+
+      - id: markdown_overwrite
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            Placing blocks both in the `blocks` array, as well as under the `areas.content.blocks` array is an anti-pattern, and in this case the blocks under `blocks` will overwrite those under `areas.content.blocks`.
+
+            ###### Anti-pattern: Blocks in the `blocks` and `areas.content.blocks`:
+            ```yaml
+            - id: container
+              type: Container
+              blocks:
+                - id: block1
+                  type: Block
+              areas:
+                content:
+                  blocks:
+                    - id: block2
+                      type: Block
+
+      - id: ex_overwrite_c1
+        type: Box
+        style:
+          background: '#d9d9d9'
+          padding: 16px
+          marginTop: 16px
+        areas:
+          content:
+            style:
+              border: '1px dashed #eb2f96'
+            blocks:
+              - id: ex_areas_b1
+                type: Html
+                style:
+                  textAlign: center
+                properties:
+                  html: |
+                    <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+
+      - id: markdown_grid_layout
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            # Layouts using span
+
+            Each content area has 24 columns. Blocks have a `span` property, which determines how many columns the block occupies. Blocks are laid out horizontally, until the sum of the spans is more than 24, then the last block block is wrapped to the next row.
+
+            By default a block is given a span of 24. This is what makes blocks lay out vertically below each other.
+
+            > Blocks are also given a default span of 24 for mobile layouts, even if another span is given, to provide a good default mobile experience. Read more about responsive layouts below.
+
+            ###### Block spans example:
+            ```
+            - id: container
+              type: Container
+              blocks:
+                - id: block1
+                  type: Block # Default span of 24
+                - id: block2
+                  type: Block
+                  layout:
+                    span: 16 # Two thirds of the area
+                - id: block3
+                  type: Block
+                  layout:
+                    span: 8 # Remaining one third of the area
+                - id: block4
+                  type: Block
+                  layout:
+                    span: 12
+                - id: block5
+                  type: Block
+                  layout:
+                    span: 18 # Sum would be over 24, so wraps to the next row
+            ```
+      - id: ex_grid_layout_c1
+        type: Box
+        style:
+          background: '#d9d9d9'
+          padding: 16px
+          marginTop: 16px
+        areas:
+          content:
+            style:
+              border: '1px dashed #eb2f96'
+            blocks:
+              - id: ex_grid_layout_b1
+                type: Html
+                style:
+                  textAlign: center
+                properties:
+                  html: |
+                    <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+              - id: ex_grid_layout_b2
+                type: Html
+                style:
+                  textAlign: center
+                layout:
+                  span: 16
+                properties:
+                  html: |
+                    <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+              - id: ex_grid_layout_b3
+                type: Html
+                style:
+                  textAlign: center
+                layout:
+                  span: 8
+                properties:
+                  html: |
+                    <div style="background: #69c0ff; font-size: 16px; font-weight: 500;">Block 3</div>
+              - id: ex_grid_layout_b4
+                type: Html
+                style:
+                  textAlign: center
+                layout:
+                  span: 12
+                properties:
+                  html: |
+                    <div style="background: #91d5ff; font-size: 16px; font-weight: 500;">Block 4</div>
+              - id: ex_grid_layout_b5
+                type: Html
+                style:
+                  textAlign: center
+                layout:
+                  span: 18
+                properties:
+                  html: |
+                    <div style="background: #bae7ff; font-size: 16px; font-weight: 500;">Block 5</div>
+
+      - id: markdown_flex_layout
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            # Layouts using flex
+
+            Blocks can also be laid out using [CSS flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. These properties are `grow` (`flex-grow`), `shrink` (`flex-shrink`), `size` (`flex-basis`) and `flex` (`flex`). If any of these properties are set, the default span of 24 or any span set in the configuration is not applied. If one of `grow`, `shrink`, or `size` are set, the other properties take their default values. The `flex` property overwrites the `grow`, `shrink`, and `size` properties.
+
+      - id: markdown_block_properties
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            # Block layout properties
+
+            The `layout` object on blocks can be used to control how a block is placed in the layout. The `layout` properties that can be defined are:
+
+            - `align`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
+            - `flex`: _String_ - Set the [`flex`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex) CSS property. This overwrites the `grow`, `shrink`, and `size` properties.
+            - `grow`: _Number_ - Set the [`flex-grow`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default 0.
+            - `order`: _Number_ - Change the order blocks are rendered in. By default blocks are rendered in the order they appear in the blocks array.
+            - `offset`: _Number_ - Number of grid cells to shift the block to the right.
+            - `pull`: _Number_ - Shift the block this number of cells to the left. This will make it overlap above with previous blocks.
+            - `push`: _Number_ - Shift the block this number of cells to the right. This will make it overlap under with the following blocks.
+            - `shrink`: _Number_ - Set the [`flex-shrink`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink) CSS property. Default 1.
+            - `size`: _String_ | _Number_ - Set the [`flex-basis`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis) CSS property. Default `auto`.
+            - `span`: _Number_ - Number of grid cells the block should occupy.
+
+            ### Responsive layouts
+      - id: video_responsive
+        type: DangerousHtml
+        style:
+          marginTop: 16px
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+          html: |
+            <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/3912ece430ee48dbbc87a9f87dba027e" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+      - id: markdown_block_properties_responsive
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            All the settings defined in the Block `layout` and `style` properties can be defined for the various responsive breakpoints. Breakpoints apply to all window width sizes smaller than the breakpoint width, where the smallest breakpoint setting takes precedence.
+
+            The responsive breakpoints are:
+
+              - `xs`: window width less than 576px
+              - `sm`: window width greater than 576px
+              - `md`: window width greater than 768px
+              - `lg`: window width greater than 992px
+              - `xl`: window width greater than 1200px
+              - `xxl`: window width greater than  1600px
+
+            The responsive layout settings are applied to the `layout` object. For example making a block half container width and full container width for devices like tablets or smaller:
+            ```yaml
+            id: responsive_block
+            type: Box
+            layout:
+              span: 12
+              md:
+                span: 24
+            ```
+
+            The same can be done for the `style` object, for example, making reducing padding on xs and sm devices:
+            ```yaml
+            id: responsive_block
+            type: Box
+            style:
+              padding: 64
+              sm:
+                padding: 32
+            ```
+
+            The responsive breakpoint settings applies to all properties in `layout` and `style` objects on blocks.
+
+            ### Block layout properties usage examples:
+      - id: usage_examples_collapse
+        type: Collapse
+        properties:
+          panels:
+            - title: Align example
+              key: align
+            - title: Order example
+              key: order
+            - title: Offset example
+              key: offset
+            - title: Pull example
+              key: pull
+            - title: Push example
+              key: push
+        areas:
+          align:
+            blocks:
+              - id: markdown_align_examples
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```
+                    - id: container
+                      type: Container
+                      blocks:
+                        - id: block1
+                          type: Block
+                          layout:
+                            span: 6
+                        - id: block2
+                          type: Block
+                          layout:
+                            align: top
+                            span: 6
+                        - id: block3
+                          type: Block
+                          layout:
+                            align: middle
+                            span: 6
+                        - id: block4
+                          type: Block
+                          layout:
+                            align: bottom
+                            span: 6
+                    ```
+
+              - id: ex_align_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                areas:
+                  content:
+                    style:
+                      border: '1px dashed #eb2f96'
+                      height: 100
+                    blocks:
+                      - id: ex_align_b1
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout: # Default align value is `top`.
+                          span: 6
+                        properties:
+                          html: |
+                            <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+                      - id: ex_align_b2
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          align: top
+                          span: 6
+                        properties:
+                          html: |
+                            <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+                      - id: ex_align_b3
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          align: middle
+                          span: 6
+                        properties:
+                          html: |
+                            <div style="background: #69c0ff; font-size: 16px; font-weight: 500;">Block 3</div>
+                      - id: ex_align_b4
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          align: bottom
+                          span: 6
+                        properties:
+                          html: |
+                            <div style="background: #91d5ff; font-size: 16px; font-weight: 500;">Block 4</div>
+          order:
+            blocks:
+              - id: markdown_order_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```
+                    - id: container
+                      type: Container
+                      blocks:
+                        - id: block1
+                          type: Block
+                          layout:
+                            order: 1
+                        - id: block2
+                          type: Block
+                    ```
+              - id: ex_order_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                areas:
+                  content:
+                    style:
+                      border: '1px dashed #eb2f96'
+                    blocks:
+                      - id: ex_order_b1
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          order: 1
+                        properties:
+                          html: |
+                            <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+                      - id: ex_order_b2
+                        type: Html
+                        style:
+                          textAlign: center
+                        properties:
+                          html: |
+                            <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+          offset:
+            blocks:
+              - id: markdown_offset_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```
+                    - id: container
+                      type: Container
+                      blocks:
+                        - id: block1
+                          type: Block
+                          layout:
+                            offset: 4
+                        - id: block2
+                          type: Block
+                          layout:
+                            offset: 4
+                            span: 10
+                    ```
+              - id: ex_offset_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                areas:
+                  content:
+                    style:
+                      border: '1px dashed #eb2f96'
+                    blocks:
+                      - id: ex_offset_b1
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          offset: 4
+                        properties:
+                          html: |
+                            <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+                      - id: ex_offset_b2
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          offset: 4
+                          span: 16
+                        properties:
+                          html: |
+                            <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+          pull:
+            blocks:
+              - id: markdown_pull_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```
+                    - id: container
+                      type: Container
+                      blocks:
+                        - id: block1
+                          type: Block
+                          layout:
+                            span: 12
+                        - id: block2
+                          type: Block
+                          style:
+                            opacity: 0.5
+                          layout:
+                            pull: 3
+                            span: 12
+                    ```
+              - id: ex_pull_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                areas:
+                  content:
+                    style:
+                      border: '1px dashed #eb2f96'
+                    blocks:
+                      - id: ex_pull_b1
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          span: 12
+                        properties:
+                          html: |
+                            <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+                      - id: ex_pull_b2
+                        type: Html
+                        style:
+                          textAlign: center
+                          opacity: 0.5
+                        layout:
+                          pull: 3
+                          span: 12
+                        properties:
+                          html: |
+                            <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+          push:
+            blocks:
+              - id: markdown_push_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```
+                    - id: container
+                      type: Container
+                      blocks:
+                        - id: block1
+                          type: Block
+                          layout:
+                            push: 3
+                            span: 12
+                        - id: block2
+                          type: Block
+                          style:
+                            opacity: 0.5
+                          layout:
+                            span: 12
+                    ```
+              - id: ex_push_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                areas:
+                  content:
+                    style:
+                      border: '1px dashed #eb2f96'
+                    blocks:
+                      - id: ex_push_b1
+                        type: Html
+                        style:
+                          textAlign: center
+                        layout:
+                          push: 3
+                          span: 12
+                        properties:
+                          html: |
+                            <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 1</div>
+                      - id: ex_push_b2
+                        type: Html
+                        style:
+                          textAlign: center
+                          opacity: 0.5
+                        layout:
+                          span: 12
+                        properties:
+                          html: |
+                            <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+      - id: markdown_area_properties
+        type: Markdown
+        style:
+          marginTop: 16px
+        properties:
+          content: |
+            # Area layout properties
+
+            Properties can be set on each area to control how blocks are layed out inside that area. These properties are set under the `areaName` key:
+
+            The properties that can be set are:
+              - `align`: _Enum_ - Align blocks vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
+              - `direction`: _Enum_ - Set the [`flex-direction`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction) CSS property for the area. Options are `row`, `row-reverse`, `column`, and and `column-reverse`. Default `row`.
+              - `gutter`: _Number_ | _Array_  - Create gutter (space) between blocks placed in the area. If an array, the first element is the horizontal gutter, and the second is the vertical gutter.
+              - `justify`: _Enum_ - Justify blocks horizontally inside the area. Options are `start`, `end`, `center`, `space-around`, and `space-between`. Default `start`.
+              - `overflow`: _Enum_ - Set the [`overflow`](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow) CSS property for the area. Options are `visible`, `hidden`, `scroll`, and `space-between`. Default `visible`.
+              - `wrap`: _Enum_ - Set the [`flex-wrap`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap) CSS property for the area. Options are `wrap`, `nowrap`, and `wrap-reverse`. Default `wrap`.
+
+            ### Area layout properties examples:
+
+      - id: area_layout_usage_examples_collapse
+        type: Collapse
+        properties:
+          panels:
+            - title: Align example
+              key: align
+            - title: Direction example
+              key: direction
+            - title: Gutter example
+              key: gutter
+            - title: Justify example
+              key: justify
+        areas:
+          align:
+            blocks:
+              - id: markdown_align_layout_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: container
+                      type: Container
+                      areas:
+                        area1:
+                          align: top
+                          blocks:
+                            - id: block1
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block2
+                              type: Block
+                              layout:
+                                span: 12
+                        area2:
+                          align: middle
+                          blocks:
+                            - id: block3
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block4
+                              type: Block
+                              layout:
+                                span: 12
+                        area3:
+                          align: bottom
+                          blocks:
+                            - id: block5
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block6
+                              type: Block
+                              layout:
+                                span: 12
+              - id: ex_area_align_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                layout:
+                  contentGutter: 16
+                blocks:
+                  - id: ex_area_align_area1_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 1 - `align: top`'
+                  - id: ex_area_align_area1
+                    type: Box
+                    areas:
+                      content:
+                        align: top
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_align_b1
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; height: 70px;">Block 1</div>
+                          - id: ex_area_align_b2
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 2</div>
+                  - id: ex_area_align_area2_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 2 - `align: middle`'
+                  - id: ex_area_align_area2
+                    type: Box
+                    areas:
+                      content:
+                        align: middle
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_align_b3
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; height: 70px;">Block 3</div>
+                          - id: ex_area_align_b4
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 4</div>
+                  - id: ex_area_align_area3_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 3 - `align: bottom`'
+                  - id: ex_area_align_area3
+                    type: Box
+                    areas:
+                      content:
+                        align: bottom
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_align_b5
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; height: 70px;">Block 5</div>
+                          - id: ex_area_align_b6
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 6</div>
+          direction:
+            blocks:
+              - id: markdown_direction_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: container
+                      type: Container
+                      areas:
+                        area1:
+                          direction: row
+                          blocks:
+                            - id: block1
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block2
+                              type: Block
+                              layout:
+                                size: auto
+                        area2:
+                          direction: row-reverse
+                          blocks:
+                            - id: block3
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block4
+                              type: Block
+                              layout:
+                                size: auto
+                        area3:
+                          direction: column
+                          blocks:
+                            - id: block5
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block6
+                              type: Block
+                              layout:
+                                size: auto
+                        area4:
+                          direction: column-reverse
+                          blocks:
+                            - id: block7
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block8
+                              type: Block
+                              layout:
+                                size: auto
+              - id: ex_area_direction_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                layout:
+                  contentGutter: 16
+                blocks:
+                  - id: ex_area_direction_area1_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 1 - `direction: row`'
+                  - id: ex_area_direction_area1
+                    type: Box
+                    areas:
+                      content:
+                        direction: row
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_direction_b1
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 1</div>
+                          - id: ex_area_direction_b2
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 2</div>
+                  - id: ex_area_direction_area2_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 2 - `direction: row-reverse`'
+                  - id: ex_area_direction_area2
+                    type: Box
+                    areas:
+                      content:
+                        direction: row-reverse
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_direction_b3
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 3</div>
+                          - id: ex_area_direction_b4
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 4</div>
+                  - id: ex_area_direction_area3_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 3 - `direction: column`'
+                  - id: ex_area_direction_area3
+                    type: Box
+                    areas:
+                      content:
+                        direction: column
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_direction_b5
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 5</div>
+                          - id: ex_area_direction_b6
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 6</div>
+                  - id: ex_area_direction_area4_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 4  - `direction: column-reverse`'
+                  - id: ex_area_direction_area4
+                    type: Box
+                    areas:
+                      content:
+                        direction: column-reverse
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_direction_b7
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500;">Block 7</div>
+                          - id: ex_area_direction_b8
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500;">Block 8</div>
+          gutter:
+            blocks:
+              - id: markdown_gutter_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: container
+                      type: Container
+                      areas:
+                        area1:
+                          gutter: 16
+                          blocks:
+                            - id: block1
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block2
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block3
+                              type: Block
+
+                        area2:
+                          gutter: [8, 32]
+                          blocks:
+                            - id: block4
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block5
+                              type: Block
+                              layout:
+                                span: 12
+                            - id: block6
+                              type: Block
+
+              - id: ex_area_gutter_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                layout:
+                  contentGutter: 16
+                blocks:
+                  - id: ex_area_gutter_area1_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 1 - `gutter: 16`'
+                  - id: ex_area_gutter_area1
+                    type: Box
+                    areas:
+                      content:
+                        gutter: 16
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_gutter_b1
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 1</div>
+                          - id: ex_area_gutter_b2
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 2</div>
+                          - id: ex_area_gutter_b3
+                            type: Html
+                            style:
+                              textAlign: center
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 3</div>
+                  - id: ex_area_gutter_area2_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 2 - `gutter: [8, 32]`'
+                  - id: ex_area_gutter_area2
+                    type: Box
+                    areas:
+                      content:
+                        gutter: [8, 32]
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_gutter_b4
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 4</div>
+                          - id: ex_area_gutter_b5
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              span: 12
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 5</div>
+                          - id: ex_area_gutter_b6
+                            type: Html
+                            style:
+                              textAlign: center
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 6</div>
+          justify:
+            blocks:
+              - id: markdown_justify_example
+                type: Markdown
+                style:
+                  marginTop: 16px
+                properties:
+                  content: |
+                    ```yaml
+                    - id: container
+                      type: Container
+                      areas:
+                        area1:
+                          justify: start
+                          blocks:
+                            - id: block1
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block2
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block3
+                              type: Block
+                              layout:
+                                size: auto
+                        area2:
+                          justify: end
+                          blocks:
+                            - id: block4
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block5
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block6
+                              type: Block
+                              layout:
+                                size: auto
+                        area3:
+                          justify: center
+                          blocks:
+                            - id: block7
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block8
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block9
+                              type: Block
+                              layout:
+                                size: auto
+                        area4:
+                          justify: space-around
+                          blocks:
+                            - id: block10
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block11
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block12
+                              type: Block
+                              layout:
+                                size: auto
+                        area5:
+                          justify: space-between
+                          blocks:
+                            - id: block13
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block14
+                              type: Block
+                              layout:
+                                size: auto
+                            - id: block15
+                              type: Block
+                              layout:
+                                size: auto
+              - id: ex_area_justify_c1
+                type: Box
+                style:
+                  background: '#d9d9d9'
+                  padding: 16px
+                  marginTop: 16px
+                layout:
+                  contentGutter: 16
+                blocks:
+                  - id: ex_area_justify_area1_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 1 - `justify: start`'
+                  - id: ex_area_justify_area1
+                    type: Box
+                    areas:
+                      content:
+                        justify: start
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_justify_b1
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 1</div>
+                          - id: ex_area_justify_b2
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 2</div>
+                          - id: ex_area_justify_b3
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 3</div>
+                  - id: ex_area_justify_area2_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 2 - `justify: end`'
+                  - id: ex_area_justify_area2
+                    type: Box
+                    areas:
+                      content:
+                        justify: end
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_justify_b4
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 4</div>
+                          - id: ex_area_justify_b5
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 5</div>
+                          - id: ex_area_justify_b6
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 6</div>
+                  - id: ex_area_justify_area3_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 3 - `justify: center`'
+                  - id: ex_area_justify_area3
+                    type: Box
+                    areas:
+                      content:
+                        justify: center
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_justify_b7
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 7</div>
+                          - id: ex_area_justify_b8
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 8</div>
+                          - id: ex_area_justify_b9
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 9</div>
+                  - id: ex_area_justify_area4_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 4 - `justify: space-around`'
+                  - id: ex_area_justify_area4
+                    type: Box
+                    areas:
+                      content:
+                        justify: space-around
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_justify_b10
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 10</div>
+                          - id: ex_area_justify_b11
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 11</div>
+                          - id: ex_area_justify_b12
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 12</div>
+                  - id: ex_area_justify_area5_title
+                    type: Markdown
+                    properties:
+                      content: '##### Area 5 - `justify: space-between`'
+                  - id: ex_area_justify_area5
+                    type: Box
+                    areas:
+                      content:
+                        justify: space-between
+                        style:
+                          border: '1px dashed #eb2f96'
+                        blocks:
+                          - id: ex_area_justify_b13
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #1890ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 13</div>
+                          - id: ex_area_justify_b14
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #40a9ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 14</div>
+                          - id: ex_area_justify_b15
+                            type: Html
+                            style:
+                              textAlign: center
+                            layout:
+                              size: auto
+                            properties:
+                              html: |
+                                <div style="background: #69c0ff; font-size: 16px; font-weight: 500; padding-left: 8px; padding-right: 8px">Block 15</div>
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Menus
+            previous_page_id: menus
+            next_page_title: Secrets
+            next_page_id: secrets

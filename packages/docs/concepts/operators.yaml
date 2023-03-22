@@ -40,8 +40,6 @@ _ref:
 
             ##### Client only operators:
             - [_actions](/_actions)
-            - [_format](/_format)
-            - [_js](/_js)
             - [_media](/_media)
             - [_menu](/_menu)
             - [_request](/_request)
