@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **build:** Fix tests. ([68313eb](https://github.com/lowdefy/lowdefy/commit/68313eb489f6fe3d47100c1325c99d90b133065f))
+
+
+### Features
+
+* **build:** change makeId to incremental counter. ([69ac158](https://github.com/lowdefy/lowdefy/commit/69ac1584d435954e327dfdf6db590af24fad5d4f))
+* Make refMap and keyMap. ([6ebcc73](https://github.com/lowdefy/lowdefy/commit/6ebcc73b89c8c7906ab45ad49e9294b0229e2b12))
+* Rename nodeParser to serverParser and buildParser. ([0b61e5e](https://github.com/lowdefy/lowdefy/commit/0b61e5e5710084cc19bba4eb6de95c3a53beb4b9))
+* **server-dev:** Only watch package.json. ([cbb1bc6](https://github.com/lowdefy/lowdefy/commit/cbb1bc6ce930c8c1de9e7e5790c46e2d21ff21c7))
+* Use _k_ and _r_ as non-ennumerables. ([60a83b8](https://github.com/lowdefy/lowdefy/commit/60a83b81111f4f5b01fc2dbd9ded0b2496cee7a7))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/build

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Update Header and Sider blocks schemas ([6786cdb](https://github.com/lowdefy/lowdefy/commit/6786cdb899a69f2d117aef23bc63942ac4574dee))
+* **blocks-antd:** Update PhoneNumberInput ([2cdfe2c](https://github.com/lowdefy/lowdefy/commit/2cdfe2cfa710b08eefeca9773f9aebd73b4b899e))
+* Update PhoneNumberInput examples ([ae52024](https://github.com/lowdefy/lowdefy/commit/ae52024395ed5de697b796f5d9dce6943d3fb753))
+
+
+### Features
+
+* **blocks-antd:** Add PhoneNumberInput block. ([9ef0339](https://github.com/lowdefy/lowdefy/commit/9ef033913aa9726995cb9c3cd1e66cc6311413ba))
+* **blocks-antd:** Add tests for PhoneNumberInput. ([eab2338](https://github.com/lowdefy/lowdefy/commit/eab23383d6e3460a68236c50b79e7bee180c6267))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/blocks-antd
