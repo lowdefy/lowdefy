@@ -57,6 +57,7 @@ _ref:
 
             COPY --from=builder --chown=lowdefy:nodejs /lowdefy/.lowdefy/server/public ./public
             COPY --from=builder --chown=lowdefy:nodejs /lowdefy/.lowdefy/server/.next/standalone ./
+            COPY --from=builder --chown=lowdefy:nodejs /lowdefy/.lowdefy/server/.next/static ./.next/static
 
             USER lowdefy
 
@@ -94,7 +95,7 @@ _ref:
 
             Docker compose can also be used. Add a `docker-compose.yaml` file:
 
-            ```
+            ```yaml
             version: "3.9"
             services:
               lowdefy:
@@ -113,6 +114,27 @@ _ref:
 
             ```
             docker compose up
+            ```
+
+            ### Secrets and Environment Variables
+
+            When running you app in production we recommend using your hosting provider's preferred method for setting environment variables and secrets. This can often be configured using their admin interface, and secrets are usually encrypted.
+
+            When running locally, you can use the `--env-file` Docker CLI option to load a `.env` file into your container:
+            ```
+            docker run -p 3000:3000 --env-file ./.env <tag>
+            ```
+
+            If using Docker compose:
+
+            ```yaml
+            version: "3.9"
+            services:
+              lowdefy:
+                build: .
+                ports:
+                  - "3000:3000"
+                env_file: ./.env # Path to env file
             ```
 
             ### Config files or plugins outside the config directory
@@ -138,6 +160,8 @@ _ref:
             # TODO: Change config-directory (./app) as appropriate here
             RUN pnpx lowdefy@4 build --config-directory ./app --log-level=debug
 
+            RUN pnpm --filter=@lowdefy/server --prod deploy ./deploy
+
             FROM node:18-alpine AS runner
 
             ENV NODE_ENV production
@@ -145,23 +169,15 @@ _ref:
 
             WORKDIR /lowdefy
 
-            # Enable pnpm using corepack
-            RUN corepack enable
-
             RUN addgroup --system --gid 1001 nodejs
             RUN adduser --system --uid 1001 lowdefy
 
-            # TODO: Change from-directory (/lowdefy/app/.lowdefy/server/public) as appropriate here
+            # TODO: Change from-directory (/lowdefy/app/.lowdefy/server/*) as appropriate here
             COPY --from=builder --chown=lowdefy:nodejs /lowdefy/app/.lowdefy/server/public ./public
-            # TODO: Change from-directory (/lowdefy/app/.lowdefy/server/.next/standalone) as appropriate here
             COPY --from=builder --chown=lowdefy:nodejs /lowdefy/app/.lowdefy/server/.next/standalone ./
+            COPY --from=builder --chown=lowdefy:nodejs /lowdefy/app/.lowdefy/server/.next/static ./.next/static
 
-            # Install production dependencies again because pnpm symlinks cause issues in monorepos
-            COPY ./.npmrc .
-
-            RUN pnpm install --prod
-
-            USER lowdefy
+            COPY --from=builder --chown=lowdefy:nodejs /lowdefy/deploy/node_modules ./node_modules
 
             EXPOSE 3000
 

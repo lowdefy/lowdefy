@@ -76,6 +76,24 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
 
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
+  if (type.isObject(newValue)) {
+    if (newValue._r_) {
+      Object.defineProperty(newValue, '_r_', {
+        value: newValue._r_,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+    if (newValue._k_) {
+      Object.defineProperty(newValue, '_k_', {
+        value: newValue._k_,
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+  }
   if (customReviver) {
     newValue = customReviver(key, value);
   }
@@ -97,22 +115,6 @@ const makeReviver = (customReviver) => (key, value) => {
         return newValue;
       }
       return result;
-    }
-    if (newValue._r_) {
-      Object.defineProperty(newValue, '_r_', {
-        value: newValue._r_,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue._k_) {
-      Object.defineProperty(newValue, '_k_', {
-        value: newValue._k_,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
     }
   }
   return newValue;

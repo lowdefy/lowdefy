@@ -552,3 +552,26 @@ test('serialize with _k_ and _r_ values', () => {
     _r_: 'a',
   });
 });
+
+test('deserialize with _k_ and _r_ value first', () => {
+  let object = {
+    y: { _date: 'now', _k_: 'b' },
+    _k_: 'a',
+  };
+  let res = serializer.deserialize(object);
+  expect(res).toEqual({
+    y: {
+      _date: 'now',
+    },
+  });
+  object = {
+    y: { _date: 'now', _r_: 'b' },
+    _r_: 'a',
+  };
+  res = serializer.deserialize(object);
+  expect(res).toEqual({
+    y: {
+      _date: 'now',
+    },
+  });
+});
