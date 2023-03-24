@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Fix search on PhoneNumberInput block. ([6c97b69](https://github.com/lowdefy/lowdefy/commit/6c97b69064cc41e0bde0e6ba7f4730de135eeec7))
+
+
+
+
+
 # [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
 
 

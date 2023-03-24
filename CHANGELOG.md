@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Fix search on PhoneNumberInput block. ([6c97b69](https://github.com/lowdefy/lowdefy/commit/6c97b69064cc41e0bde0e6ba7f4730de135eeec7))
+* **docs:** Update docker docs ([d8b6e46](https://github.com/lowdefy/lowdefy/commit/d8b6e4600259ccf52c1b7d4eecf74b8e76d7724b))
+* **serializer:** Add test case. ([41b79cd](https://github.com/lowdefy/lowdefy/commit/41b79cdfa4c0fad797ccb4dae91688b6d6c4e86b))
+* **serializer:** Make _k_ enumerable first. ([427f5b9](https://github.com/lowdefy/lowdefy/commit/427f5b908fdd64de5cc3848a16687f28637aa53c))
+
+
+
+
+
 # [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
 
 
