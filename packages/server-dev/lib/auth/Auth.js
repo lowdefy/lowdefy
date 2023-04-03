@@ -24,7 +24,7 @@ import authConfig from '../../build/auth.json';
 function Auth({ children, session }) {
   if (authConfig.configured === true) {
     return (
-      <AuthConfigured session={session} authConfig={authConfig}>
+      <AuthConfigured serverSession={session} authConfig={authConfig}>
         {(auth) => children(auth)}
       </AuthConfigured>
     );
