@@ -15,14 +15,23 @@
 */
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
 function Session({ children }) {
+  const wasAuthenticated = useRef(false);
   const { data: session, status } = useSession();
   // If session is passed to SessionProvider from getServerSideProps
   // we won't have a loading state here.
   // But 404 uses getStaticProps so we have this for 404.
+
+  useEffect(() => {
+    if (wasAuthenticated.current && status === 'unauthenticated') {
+      window.location.reload();
+    }
+    wasAuthenticated.current = wasAuthenticated.current || status === 'authenticated';
+  }, [status]);
+
   if (status === 'loading') {
     return '';
   }
