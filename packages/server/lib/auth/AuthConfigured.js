@@ -18,6 +18,8 @@
 import React, { useEffect, useRef } from 'react';
 import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
+import lowdefyConfig from '../../build/config.json';
+
 function Session({ children }) {
   const wasAuthenticated = useRef(false);
   const { data: session, status } = useSession();
@@ -40,9 +42,12 @@ function Session({ children }) {
 
 function AuthConfigured({ authConfig, children, serverSession }) {
   const auth = { signIn, signOut, authConfig };
-
+  let basePath = process.env.LOWDEFY_BASE_PATH ?? lowdefyConfig.basePath;
+  if (basePath) {
+    basePath = `${basePath}/api/auth`;
+  }
   return (
-    <SessionProvider session={serverSession}>
+    <SessionProvider session={serverSession} basePath={basePath}>
       <Session>
         {(session) => {
           auth.session = session;
