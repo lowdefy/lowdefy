@@ -23,17 +23,17 @@ import lowdefyConfig from '../../build/config.json';
 function Session({ children }) {
   const wasAuthenticated = useRef(false);
   const { data: session, status } = useSession();
-  // If session is passed to SessionProvider from getServerSideProps
-  // we won't have a loading state here.
-  // But 404 uses getStaticProps so we have this for 404.
+  wasAuthenticated.current = wasAuthenticated.current || status === 'authenticated';
 
   useEffect(() => {
     if (wasAuthenticated.current && status === 'unauthenticated') {
       window.location.reload();
     }
-    wasAuthenticated.current = wasAuthenticated.current || status === 'authenticated';
   }, [status]);
 
+  // If session is passed to SessionProvider from getServerSideProps
+  // we won't have a loading state here.
+  // But 404 uses getStaticProps so we have this for 404.
   if (status === 'loading') {
     return '';
   }
