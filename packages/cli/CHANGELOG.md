@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+**Note:** Version bump only for package lowdefy
+
+
+
+
+
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **cli:** Add requiresLowdefyYaml to context. ([f3c6584](https://github.com/lowdefy/lowdefy/commit/f3c658489f7a0164ef00bed8422ef21ba2d61d6f))
+* **cli:** Fix command is init condition in validateVersion. ([b3e25b7](https://github.com/lowdefy/lowdefy/commit/b3e25b7b97cd265d93e123ebb1e5bc8228a329a8))
+* **cli:** Fix undefined version error when calling lowdefy init. ([a589cd5](https://github.com/lowdefy/lowdefy/commit/a589cd596acb1ed444322dceff2407b1714fe112))
+* **cli:** Update tests. ([743f440](https://github.com/lowdefy/lowdefy/commit/743f440732fa08a5718afffd1e4ead070bb366f0))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package lowdefy

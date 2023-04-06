@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-uuid",
-  "version": "4.0.0-rc.5",
+  "version": "4.0.0-rc.7",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,8 +42,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.5",
-    "@lowdefy/operators": "4.0.0-rc.5",
+    "@lowdefy/helpers": "4.0.0-rc.7",
+    "@lowdefy/operators": "4.0.0-rc.7",
     "uuid": "9.0.0"
   },
   "devDependencies": {

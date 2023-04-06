@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+**Note:** Version bump only for package @lowdefy/blocks-google-maps
+
+
+
+
+
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **blocks-google-maps:** Fix example in README. ([67e7e22](https://github.com/lowdefy/lowdefy/commit/67e7e22a2419e85bb09bc6444486ef13c6caaf14))
+* **docs:** Update GoogleMaps blocks docs. Split into GoogleMaps, GoogleMapsHeatmap, GoogleMapsScript. ([262f5a4](https://github.com/lowdefy/lowdefy/commit/262f5a4392ecc3288f802b41cb0a854a01e991d9))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 

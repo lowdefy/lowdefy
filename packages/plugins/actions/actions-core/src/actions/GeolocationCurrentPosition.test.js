@@ -20,6 +20,13 @@ import GeolocationCurrentPosition from './GeolocationCurrentPosition.js';
 
 const mockGetCurrentPosition = jest.fn();
 
+class GeolocationPositionError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
+
 const getCurrentPositionSuccessImp = async (success, error, options) => {
   await wait(10);
   success({
@@ -34,11 +41,6 @@ const getCurrentPositionSuccessImp = async (success, error, options) => {
     },
     timestamp: 123,
   });
-};
-
-const getCurrentPositionErrorImp = async (success, error) => {
-  await wait(10);
-  error(new Error('Test error.'));
 };
 
 const globals = {
@@ -96,17 +98,25 @@ test('GeolocationCurrentPosition no geolocation on window.navigator', async () =
     },
   };
 
-  const res = await GeolocationCurrentPosition({ globals, params });
-
-  expect(res).toEqual(null);
+  await expect(GeolocationCurrentPosition({ globals, params })).rejects.toThrow(
+    'Cannot read properties of undefined'
+  );
 });
 
 test('GeolocationCurrentPosition fail to get geolocation', async () => {
-  mockGetCurrentPosition.mockImplementationOnce(getCurrentPositionErrorImp);
+  const permissionDeniedErrorImp = async (success, error) => {
+    await wait(10);
+    error(new GeolocationPositionError('Permission denied.', 1));
+  };
+  mockGetCurrentPosition.mockImplementationOnce(permissionDeniedErrorImp);
 
   const res = await GeolocationCurrentPosition({ globals, params });
 
-  expect(res).toEqual(null);
+  expect(res).toEqual({
+    code: 1,
+    error: 'PERMISSION_DENIED',
+    message: 'Permission denied.',
+  });
   expect(mockGetCurrentPosition.mock.calls).toMatchInlineSnapshot(`
     Array [
       Array [
@@ -120,4 +130,36 @@ test('GeolocationCurrentPosition fail to get geolocation', async () => {
       ],
     ]
   `);
+});
+
+test('GeolocationCurrentPosition fail to get geolocation', async () => {
+  const permissionDeniedErrorImp = async (success, error) => {
+    await wait(10);
+    error(new GeolocationPositionError('Position unavailable.', 2));
+  };
+  mockGetCurrentPosition.mockImplementationOnce(permissionDeniedErrorImp);
+
+  const res = await GeolocationCurrentPosition({ globals, params });
+
+  expect(res).toEqual({
+    code: 2,
+    error: 'POSITION_UNAVAILABLE',
+    message: 'Position unavailable.',
+  });
+});
+
+test('GeolocationCurrentPosition fail to get geolocation', async () => {
+  const permissionDeniedErrorImp = async (success, error) => {
+    await wait(10);
+    error(new GeolocationPositionError('Get position timeout.', 3));
+  };
+  mockGetCurrentPosition.mockImplementationOnce(permissionDeniedErrorImp);
+
+  const res = await GeolocationCurrentPosition({ globals, params });
+
+  expect(res).toEqual({
+    code: 3,
+    error: 'TIMEOUT',
+    message: 'Get position timeout.',
+  });
 });

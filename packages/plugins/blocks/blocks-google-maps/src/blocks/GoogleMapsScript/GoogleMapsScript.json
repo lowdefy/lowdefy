@@ -24,23 +24,5 @@
         }
       }
     }
-  },
-  "events": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "onClick": {
-        "type": "array",
-        "description": "Trigger actions when the map is clicked."
-      },
-      "onMarkerClick": {
-        "type": "array",
-        "description": "Trigger actions when marker is clicked."
-      },
-      "onZoomChanged": {
-        "type": "array",
-        "description": "Trigger actions when the zoom on the map is changed."
-      }
-    }
   }
 }

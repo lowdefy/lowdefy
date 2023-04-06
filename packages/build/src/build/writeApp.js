@@ -13,9 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { serializer } from '@lowdefy/helpers';
 
 async function writeApp({ components, context }) {
-  await context.writeBuildArtifact('app.json', JSON.stringify(components.app || {}, null, 2));
+  await context.writeBuildArtifact(
+    'app.json',
+    serializer.serializeToString(components.app ?? {}, { space: 2 })
+  );
 }
 
 export default writeApp;

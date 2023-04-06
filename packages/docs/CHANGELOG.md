@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+
+### Bug Fixes
+
+* **docs:** Update docker docs ([d8b6e46](https://github.com/lowdefy/lowdefy/commit/d8b6e4600259ccf52c1b7d4eecf74b8e76d7724b))
+
+
+
+
+
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Update PhoneNumberInput ([2cdfe2c](https://github.com/lowdefy/lowdefy/commit/2cdfe2cfa710b08eefeca9773f9aebd73b4b899e))
+* **blocks-loaders:** Remove IconSpinner and update Spinner ([daa5696](https://github.com/lowdefy/lowdefy/commit/daa5696f3e53b4ed8590248ec948248cd16c1055))
+* Change backlinks for layout to layout-overview ([0852011](https://github.com/lowdefy/lowdefy/commit/08520113d6d9a7824a95e0b7a43cb73e19fbe769))
+* **docs:** Additional details on GoogleMapsScript.yaml ([f3296fd](https://github.com/lowdefy/lowdefy/commit/f3296fd0010b18dbb269f6acc7e310c4b79c5b42))
+* **docs:** AgGrid docs typo. ([62f5937](https://github.com/lowdefy/lowdefy/commit/62f59376aadca524b15e357e160564f435d2e25e))
+* **docs:** Fix monorepo docker deploy docs. ([c7a75e6](https://github.com/lowdefy/lowdefy/commit/c7a75e6351ee3448c63270400e1d2897a29d9163))
+* **docs:** Only call telemetry on prod. ([5ac37b8](https://github.com/lowdefy/lowdefy/commit/5ac37b87608108f2be4587e29a9d3aac373b9f2c))
+* **docs:** Rename layout in concepts to layout-overview ([621d1bd](https://github.com/lowdefy/lowdefy/commit/621d1bdf5bf58f1fa00269daa54b258ff0b9f55a))
+* **docs:** Update AgGrid docs. ([9eeab3e](https://github.com/lowdefy/lowdefy/commit/9eeab3ed1f90c22bcdb3fbce46f8d874121f8e0c))
+* **docs:** Update GoogleMaps blocks docs. Split into GoogleMaps, GoogleMapsHeatmap, GoogleMapsScript. ([262f5a4](https://github.com/lowdefy/lowdefy/commit/262f5a4392ecc3288f802b41cb0a854a01e991d9))
+* **docs:** Update schema_definition usage. ([86f6c67](https://github.com/lowdefy/lowdefy/commit/86f6c67258cb2ae48b765f848dd00d2e6d74e8d1))
+
+
+### Features
+
+* **docs:** Add AgGrid display block. ([107866b](https://github.com/lowdefy/lowdefy/commit/107866b54a0cb1b5e676cd8b05ea2b36bf544085))
+* **docs:** Add AgGrid server-side filter and sort example ([1dff161](https://github.com/lowdefy/lowdefy/commit/1dff161e58ff636d1e98a1ecacf3cb500764e933))
+* **docs:** Add GeolocationCurrentPosition action to the docs. ([bdd75c0](https://github.com/lowdefy/lowdefy/commit/bdd75c09efa566fcf4887249787ce5858888a8a8))
+* **docs:** Add GoogleMaps block to docs. ([eab438a](https://github.com/lowdefy/lowdefy/commit/eab438a0fa7f52eecd220f2c70ad69192be3ece4))
+* **docs:** Add Header, Content, Sider, Footer, Layout blocks docs ([d7798b0](https://github.com/lowdefy/lowdefy/commit/d7798b0927da9602c9f680dc7e38a731b113cea7))
+* **docs:** Add more GoogleMaps examples. ([7109d65](https://github.com/lowdefy/lowdefy/commit/7109d65aad73f292a4d377605d2b94cc3c08b5e8))
+* **docs:** Add PhoneNumberInput block to the docs. ([b7d539e](https://github.com/lowdefy/lowdefy/commit/b7d539ea34826d52be167314dd8c1b64585d3a30))
+* **docs:** Add Skeleton blocks docs ([a96a985](https://github.com/lowdefy/lowdefy/commit/a96a98574fdeae8f80b9998c9a8563f76b8902bd))
+* **docs:** Finalise AgGrid docs and update README. ([0024b34](https://github.com/lowdefy/lowdefy/commit/0024b34d33e4e645d252dea42d895c3751a87202))
+* **docs:** Update GeolocationCurrentPosition action docs. ([5af8c1c](https://github.com/lowdefy/lowdefy/commit/5af8c1c5081672ef55145a43f8ad97720700f48c))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 

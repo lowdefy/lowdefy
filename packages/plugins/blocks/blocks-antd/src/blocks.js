@@ -48,16 +48,13 @@ export { default as MonthSelector } from './blocks/MonthSelector/MonthSelector.j
 export { default as MultipleSelector } from './blocks/MultipleSelector/MultipleSelector.js';
 export { default as Notification } from './blocks/Notification/Notification.js';
 export { default as NumberInput } from './blocks/NumberInput/NumberInput.js';
-export { default as PageHCF } from './blocks/PageHCF/PageHCF.js';
-export { default as PageHCSF } from './blocks/PageHCSF/PageHCSF.js';
 export { default as PageHeaderMenu } from './blocks/PageHeaderMenu/PageHeaderMenu.js';
-export { default as PageHSCF } from './blocks/PageHSCF/PageHSCF.js';
-export { default as PageSHCF } from './blocks/PageSHCF/PageSHCF.js';
 export { default as PageSiderMenu } from './blocks/PageSiderMenu/PageSiderMenu.js';
 export { default as Pagination } from './blocks/Pagination/Pagination.js';
 export { default as Paragraph } from './blocks/Paragraph/Paragraph.js';
 export { default as ParagraphInput } from './blocks/ParagraphInput/ParagraphInput.js';
 export { default as PasswordInput } from './blocks/PasswordInput/PasswordInput.js';
+export { default as PhoneNumberInput } from './blocks/PhoneNumberInput/PhoneNumberInput.js';
 export { default as Progress } from './blocks/Progress/Progress.js';
 export { default as RadioSelector } from './blocks/RadioSelector/RadioSelector.js';
 export { default as RatingSlider } from './blocks/RatingSlider/RatingSlider.js';

@@ -19,7 +19,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 
 import AgGrid from '../../AgGrid.js';
 
-const AgGridBalhamDark = ({ blockId, events, methods, properties }) => (
+const AgGridBalhamDark = ({ blockId, events, loading, methods, properties }) => (
   <div
     id={blockId}
     className={`ag-theme-balham-dark ${methods.makeCssClass({
@@ -28,7 +28,7 @@ const AgGridBalhamDark = ({ blockId, events, methods, properties }) => (
       ...properties.style,
     })}`}
   >
-    <AgGrid events={events} properties={properties} methods={methods} />
+    <AgGrid events={events} loading={loading} methods={methods} properties={properties} />
   </div>
 );
 

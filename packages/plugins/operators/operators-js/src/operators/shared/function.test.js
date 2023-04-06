@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { NodeParser, WebParser } from '@lowdefy/operators';
+import { ServerParser, WebParser } from '@lowdefy/operators';
 import _function from './function.js';
 import _args from './args.js';
 import _payload from '../server/payload.js';
@@ -79,32 +79,32 @@ console.error = () => {};
 
 // TODO: Test cases with different operatorPrefix
 
-test('NodeParser, _function that gets from payload', () => {
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+test('ServerParser, _function that gets from payload', () => {
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: 'string' };
   const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
 
-test('NodeParser, nested function call', () => {
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+test('ServerParser, nested function call', () => {
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const params = { ___payload: 'string' };
   const fn = _function({ location, params, parser, operatorPrefix: '__' });
   expect(fn).toBeInstanceOf(Function);
   expect(fn()).toEqual('Some String');
 });
 
-test('NodeParser, _function gives args as an array', () => {
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+test('ServerParser, _function gives args as an array', () => {
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const params = { __args: true };
   const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn('a')).toEqual(['a']);
   expect(fn('a', { b: true })).toEqual(['a', { b: true }]);
 });
 
-test('NodeParser, _function throws on parser errors', () => {
-  const parser = new NodeParser({ operators, payload, secrets: {}, user: {} });
+test('ServerParser, _function throws on parser errors', () => {
+  const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const params = { __payload: [] };
   const fn = _function({ location, params, parser, operatorPrefix: '_' });
   expect(fn).toThrow(

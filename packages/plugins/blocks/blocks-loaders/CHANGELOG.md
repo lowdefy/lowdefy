@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
+
+**Note:** Version bump only for package @lowdefy/blocks-loaders
+
+
+
+
+
+# [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
+
+
+### Bug Fixes
+
+* **blocks-loaders:** Remove IconSpinner and update Spinner ([daa5696](https://github.com/lowdefy/lowdefy/commit/daa5696f3e53b4ed8590248ec948248cd16c1055))
+* **blocks-loaders:** Update Skeleton blocks schemas ([12914da](https://github.com/lowdefy/lowdefy/commit/12914daa92922d72365c30e408c233da0eb16744))
+
+
+
+
+
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
 **Note:** Version bump only for package @lowdefy/blocks-loaders
