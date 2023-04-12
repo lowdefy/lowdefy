@@ -42,7 +42,7 @@ function Session({ children }) {
 
 function AuthConfigured({ authConfig, children, serverSession }) {
   const auth = { signIn, signOut, authConfig };
-  let basePath = process.env.LOWDEFY_BASE_PATH ?? lowdefyConfig.basePath;
+  let basePath = lowdefyConfig.basePath;
   if (basePath) {
     basePath = `${basePath}/api/auth`;
   }
