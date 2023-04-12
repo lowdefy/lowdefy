@@ -31,7 +31,7 @@ _ref:
             - `lowdefyGlobal: `: The Lowdefy global data object.
             - `menus: array`: The app menus.
             - `methodName: string`: The name of the method if the operator is called a with a method (as `_operator.methodName`).
-            - `operators: object`: An object with all the operator functions used on the server.
+            - `operators: object`: An object with all the operator functions used on the client.
             - `pageId: string`: The pageId of the page the operator is evaluated on.
             - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the operator. No validation is performed on this object.
             - `requests: object`: The requests data object.

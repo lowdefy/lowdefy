@@ -1,0 +1,52 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: plugins-connections
+    pageTitle: Connection and Request Plugins
+    section: Plugins
+    filePath: plugins/plugins-connections.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Connections and requests are used integrate with other services like API's or databases.
+
+            Connections configure the settings to the external service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Lowdefy does not execute any code for the connection, it is merely a convenient object to hold configuration that is shared by multiple requests.
+
+            Each connection type can list a number request types that can use that connection. Requests are functions that are executed by the Lowdefy server. They receive the request properties as well as the connection properties for the configured connectionId.
+
+
+            Request parameters:
+            - `connection: object`: The connection `properties` defined by the user in the Lowdefy configuration. Operators are evaluated before the properties are passed to the request.
+            - `pageId: string`: The pageId from which the request was called.
+            - `payload: object`: The payload data object passed to the request.
+            - `request: object`: The request `properties` defined by the user in the Lowdefy configuration. Operators are evaluated before the properties are passed to the request.
+            - `requestId: object`: The requestId of the request.
+
+            #### Schema Validation
+
+            #### Examples
+
+            ###### The basic version of the AxiosHttp request:
+            ```js
+            import axios from 'axios';
+            import { mergeObjects } from '@lowdefy/helpers';
+
+            import schema from '../schema.js';
+
+            async function AxiosHttp({ request, connection }) {
+              const config = mergeObjects([connection, request]);
+              const res = await axios(config);
+              const { status, statusText, headers, method, path, data } = res;
+              return { status, statusText, headers, method, path, data };
+            }
+
+            AxiosHttp.schema = schema;
+            AxiosHttp.meta = {
+              checkRead: false,
+              checkWrite: false,
+            };
+
+            export default AxiosHttp;
+            ```

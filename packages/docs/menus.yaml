@@ -187,6 +187,11 @@
           pageId: plugins-actions
           properties:
             title: Actions
+        - id: plugins-connections
+          type: MenuLink
+          pageId: plugins-connections
+          properties:
+            title: Connections
         - id: plugins-operators
           type: MenuLink
           pageId: plugins-operators

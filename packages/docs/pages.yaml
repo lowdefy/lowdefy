@@ -32,6 +32,7 @@
 - _ref: plugins/plugins-introduction.yaml
 - _ref: plugins/plugins-dev.yaml
 - _ref: plugins/plugins-actions.yaml
+- _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
 
 - _ref: users/users-introduction.yaml

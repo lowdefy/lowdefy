@@ -135,7 +135,7 @@ _ref:
 
             ### Plugin code
 
-            Most types are written as standard Javascript function, and blocks are written as React components. The function names should be in _CapitalCase_, except for operators which should be written in _snake_case_ and start with a underscore.
+            Most types are written as standard Javascript functions, and blocks are written as React components. The function names should be in _CapitalCase_, except for operators which should be written in _snake_case_ and start with a underscore.
 
             Lowdefy uses a object destructing to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
 

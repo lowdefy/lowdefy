@@ -68,7 +68,7 @@ _ref:
             export default Fetch;
             ```
 
-            ###### An action that shows the user confetti using the js-confetti:
+            ###### An action that shows the user confetti using the js-confetti package:
             ```js
             import JSConfetti from 'js-confetti';
 
@@ -81,7 +81,6 @@ _ref:
                 confettiNumber,
                 emojiSize,
               });
-              return;
             }
 
             export default Confetti;
