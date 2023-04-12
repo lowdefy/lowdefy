@@ -36,6 +36,11 @@ export const authOptions = getNextAuthConfig(
 
 export default async function auth(req, res) {
   if (authJson.configured === true) {
+    // Required for emails in corporate networks, see:
+    // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
+    if (req.method === 'HEAD') {
+      return res.status(200).end();
+    }
     return await NextAuth(req, res, authOptions);
   }
 

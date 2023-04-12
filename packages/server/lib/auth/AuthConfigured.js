@@ -15,11 +15,22 @@
 */
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
+import lowdefyConfig from '../../build/config.json';
+
 function Session({ children }) {
+  const wasAuthenticated = useRef(false);
   const { data: session, status } = useSession();
+  wasAuthenticated.current = wasAuthenticated.current || status === 'authenticated';
+
+  useEffect(() => {
+    if (wasAuthenticated.current && status === 'unauthenticated') {
+      window.location.reload();
+    }
+  }, [status]);
+
   // If session is passed to SessionProvider from getServerSideProps
   // we won't have a loading state here.
   // But 404 uses getStaticProps so we have this for 404.
@@ -31,9 +42,12 @@ function Session({ children }) {
 
 function AuthConfigured({ authConfig, children, serverSession }) {
   const auth = { signIn, signOut, authConfig };
-
+  let basePath = lowdefyConfig.basePath;
+  if (basePath) {
+    basePath = `${basePath}/api/auth`;
+  }
   return (
-    <SessionProvider session={serverSession}>
+    <SessionProvider session={serverSession} basePath={basePath}>
       <Session>
         {(session) => {
           auth.session = session;

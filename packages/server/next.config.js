@@ -2,7 +2,7 @@ const withLess = require('next-with-less');
 const lowdefyConfig = require('./build/config.json');
 
 module.exports = withLess({
-  basePath: process.env.LOWDEFY_BASE_PATH || lowdefyConfig.basePath,
+  basePath: lowdefyConfig.basePath,
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
