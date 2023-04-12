@@ -356,7 +356,16 @@ _ref:
 
                 ## Server Configuration
 
-                The `LOWDEFY_SERVER_BASE_PATH` environment variable configuration option has been removed. To configure a base path, use the `config.basePath` configuration option. The `_build.env` operator can be used to set the base path using an environment variable:
+                The `LOWDEFY_SERVER_BASE_PATH` environment variable configuration option has been removed. To configure a base path, use the `config.basePath` configuration option.
+
+                ``yaml
+                lowdefy: {{ version }}
+
+                config:
+                  basePath: /foo
+                ```
+
+                The `_build.env` operator can be used to set the base path using an environment variable:
                 ```yaml
                 lowdefy: {{ version }}
 
@@ -365,6 +374,6 @@ _ref:
                     _build.env: LOWDEFY_BASE_PATH
                 ```
 
-                The `LOWDEFY_SERVER_PUBLIC_DIRECTORY` and `LOWDEFY_SERVER_PUBLIC_DIRECTORY` are no longer supported because configuration is bundled with the server at build time.
+                The `LOWDEFY_SERVER_PUBLIC_DIRECTORY` and `LOWDEFY_SERVER_BUILD_DIRECTORY` are no longer supported because configuration is bundled with the server at build time.
 
                 The `LOWDEFY_SERVER_PORT` environment variable has been replaced by the `PORT` environment variable.
