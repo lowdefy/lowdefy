@@ -16,16 +16,20 @@
 
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+
 import appJson from '../build/app.json';
+import lowdefyConfig from '../build/config.json';
+
+const basePath = lowdefyConfig.basePath ?? '';
 
 class LowdefyDocument extends Document {
   render() {
     return (
       <Html>
         <Head>
-          <link rel="manifest" href="/manifest.webmanifest" />
-          <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href={`${basePath}/manifest.webmanifest`} />
+          <link rel="icon" type="image/svg+xml" href={`${basePath}/icon.svg`} />
+          <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <script
             dangerouslySetInnerHTML={{
