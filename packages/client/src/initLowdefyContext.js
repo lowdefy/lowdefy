@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import callRequest from './callRequest.js';
-import createIcon from './createIcon.js';
 import createAuthMethods from './auth/createAuthMethods.js';
+import createCallRequest from './createCallRequest.js';
+import createIcon from './createIcon.js';
 import createLinkComponent from './createLinkComponent.js';
 import setupLink from './setupLink.js';
 
 const lowdefy = {
   _internal: {
-    callRequest,
     components: {},
     updaters: {},
     displayMessage: ({ content }) => {
@@ -58,6 +57,7 @@ function initLowdefyContext({ auth, Components, config, router, stage, types, wi
     window,
   };
   lowdefy._internal.router = router;
+  lowdefy._internal.callRequest = createCallRequest(lowdefy);
   lowdefy._internal.link = setupLink(lowdefy);
   lowdefy._internal.updateBlock = (blockId) =>
     lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();

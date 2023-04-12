@@ -16,12 +16,15 @@
 
 import request from './request.js';
 
-function callRequest({ pageId, payload, requestId }) {
-  return request({
-    url: `/api/request/${pageId}/${requestId}`,
-    method: 'POST',
-    body: { payload },
-  });
+function createCallRequest({ basePath }) {
+  function callRequest({ pageId, payload, requestId }) {
+    return request({
+      url: `${basePath}/api/request/${pageId}/${requestId}`,
+      method: 'POST',
+      body: { payload },
+    });
+  }
+  return callRequest;
 }
 
-export default callRequest;
+export default createCallRequest;
