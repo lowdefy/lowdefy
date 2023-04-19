@@ -321,10 +321,6 @@ _ref:
 
                 If the `Context` block is no longer necessary it can also be removed:
 
-                ## Other removed blocks
-
-                In version 4 the `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` blocks have been removed. Instead you can now use the `Header`, `Content`, `Sider` and `Footer` blocks. See more about this [layout](https://4x.ant.design/components/layout/).
-
                 ###### Version 3:
 
                 ```yaml
@@ -352,6 +348,47 @@ _ref:
                   status: 404
                   title: '404'
                   subTitle: Sorry, the page you are visiting does not exist.
+                ```
+
+                ## Other removed blocks
+
+                In version 4 the `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` blocks have been removed. Instead you can now use the `Layout`, `Header`, `Content`, `Sider` and `Footer` blocks. See more about this [layout](https://4x.ant.design/components/layout/).
+
+                ###### Layout, Header-Content-Footer example:
+
+                ```yaml
+                id: layout
+                type: Layout
+                style:
+                  textAlign: center
+                blocks:
+                  - id: header
+                    type: Header
+                    blocks:
+                      - id: Title
+                        type: Title
+                        properties:
+                          content: Header
+                        style:
+                          backgroundColor: red
+                  - id: content
+                    type: Content
+                    blocks:
+                      - id: Title
+                        type: Title
+                        style:
+                          backgroundColor: green
+                        properties:
+                          content: Content
+                  - id: footer
+                    type: Footer
+                    blocks:
+                      - id: Title
+                        type: Title
+                        style:
+                          backgroundColor: blue
+                        properties:
+                          content: Footer
                 ```
 
                 ## Server Configuration
