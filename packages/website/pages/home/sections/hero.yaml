@@ -1,29 +1,72 @@
 id: hero
 type: Box
+style:
+  maxWidth: 90%
+  margin: 60px auto
 blocks:
   - id: hero_box
     type: Box
+    layout:
+      span: 12
+      contentGutter: 8
+      align: middle
     style:
-      maxWidth: 700
-      margin: 60px auto
-      textAlign: center
+      padding: 20px
     blocks:
       - id: hero_content
         type: Html
-        style:
-          textAlign: center
-          padding: 20px
         properties:
           html: |
             <h1 style="color:#1890ff;">
-              Build web apps with YAML
+              The easiest config webstack
             </h1>
-            <h4>
-              An open-source, extendable low-code framework to build web apps, admin panels, dashboards, internal tools, and CRUD apps with ease.
-            </h4>
+            <ul>
+              <li><h5>Build web UIs and connect to databases and APIs</h5></li>
+              <li><h5>Extend app functionality with npm plugins</h5></li>
+              <li><h5>Host your apps anywhere you host Next.js</h5></li>
+              <li><h5>Open-source and built on top of Next.js and Auth.js</h5></li>
+            </ul>
+            <p> Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
+      - id: button
+        type: Button
+        layout:
+          flex: 0 1 auto
+        properties:
+          title: Get Started
+          shape: round
+          style:
+            backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+      - id: button
+        type: Button
+        layout:
+          flex: 0 1 auto
+        properties:
+          title: Book an Expert
+          ghost: true
+          shape: round
 
+  - id: watch_box
+    type: Box
+    style:
+      height: 100%
+      padding: 20px
+    layout:
+      span: 12
+      align: middle
+    blocks:
+      - id: image
+        type: Img
+        properties:
+          src: /images/placeholder-image.jpeg
+          width: 100%
       - id: watch_button
         type: Button
+        style:
+          position: absolute
+          top: 50%
+          left: 50%
+          -ms-transform: translate(-50%, -50%)
+          transform: translate(-50%, -50%)
         properties:
           title: Watch 3 Min Video
           icon: AiOutlinePlayCircle
@@ -39,19 +82,19 @@ blocks:
                 blockId: watch_modal
                 method: toggleOpen
 
-      - id: watch_modal
-        type: Modal
-        layout:
-          contentGutter: 16
+  - id: watch_modal
+    type: Modal
+    layout:
+      contentGutter: 16
+    properties:
+      width: 900
+      footer: false
+    blocks:
+      - id: iframe
+        type: DangerousHtml
         properties:
-          width: 900
-          footer: false
-        blocks:
-          - id: iframe
-            type: DangerousHtml
-            properties:
-              DOMPurifyOptions:
-                ADD_TAGS:
-                  - iframe
-              html: |
-                <iframe width="840" height="493" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+          html: |
+            <iframe width="840" height="493" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
