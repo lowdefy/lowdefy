@@ -8,13 +8,13 @@ properties:
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/hero.yaml
-  - _ref: pages/home/sections/cta_top.yaml
+  - _ref: pages/home/sections/customers.yaml
   - _ref: pages/home/sections/build_uis.yaml
   - _ref: pages/home/sections/connect.yaml
-  - _ref: pages/home/sections/plugins.yaml
-  - _ref: pages/home/sections/create_faster.yaml
   - _ref: pages/home/sections/open_source.yaml
+  - _ref: pages/home/sections/plugins.yaml
+  - _ref: pages/home/sections/enterprise_features.yaml
+  - _ref: pages/home/sections/cta_top.yaml
   - _ref: pages/home/sections/examples.yaml
-  - _ref: pages/home/sections/customers.yaml
   - _ref: pages/home/sections/create_app.yaml
   - _ref: shared/footer/footer.yaml

@@ -1,0 +1,33 @@
+id: {{ section }}_info_box
+type: Box
+layout:
+  _var:
+    key: layout
+    default:
+      span: 12
+      contentGutter: 8
+blocks:
+  - id: {{ section }}_icon
+    type: Icon
+    properties:
+      _var: icon
+  - id: {{ section }}_info
+    type: Html
+    properties:
+      html: |
+        <h3>{{ title }}</h3>
+        <p>{{ info }}</p>
+  - id: {{ section }}_link
+    type: Button
+    style:
+      marginBottom: 20px
+    properties:
+      title: {{ link.title }}
+      type: link
+      size: large
+      icon: AiOutlineArrowRight
+      style:
+        maxWidth: 100%
+        whiteSpace: normal
+        textAlign: left
+      href: {{ link.href }}
