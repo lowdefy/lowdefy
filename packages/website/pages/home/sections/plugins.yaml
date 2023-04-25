@@ -1,71 +1,100 @@
-id: cta_top
+id: width_box
 type: Box
+layout:
+  contentAlign: middle
+  contentGutter: 16
 style:
+  maxWidth: 80%
+  margin: 60px auto
   textAlign: center
-  backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+  borderColor: '#1890ff'
+  borderStyle: solid
+  borderWidth: 2px
+  padding: 16
 blocks:
-  - id: hero_box
+  - id: info_left
     type: Box
-    style:
-      maxWidth: 700
-      margin: 60px auto
-      textAlign: center
+    layout:
+      span: 12
     blocks:
-      - id: title
+      - id: image
+        type: Img
+        properties:
+          src: ./images/plugins_placeholder.png
+
+      - id: info
         type: Html
         properties:
           html: |
-            <h2 style="color: white">
-              Install custom plugins from npm
+            <h2 style="color:#1890ff;">
+              Extend Everything with Plugins
             </h2>
-      - id: code_button
-        type: Button
-        properties:
-          title: $ pnpx lowdefy@4 init && pnpx lowdefy@4 dev
-          type: link
-          style:
-            background-color: white
-            color: black
-            maxWidth: 100%
-            whiteSpace: normal
-        events:
-          onMount:
-            - id: set_extra
-              type: SetState
-              params:
-                button_extra: Click to copy
-          onClick:
-            - id: copy
-              type: CopyToClipboard
-              params:
-                copy: pnpx lowdefy@4 init && pnpx lowdefy@4 dev
-            - id: set_extra
-              type: SetState
-              params:
-                button_extra: Copied. Paste in terminal console and run 🚀
+            <p>
+              Blocks, Connections, Operators, Actions, Auth Providers and Adapters can all be extended with plugins, making Lowdefy the most flexible low-code web stack.
+            </p>
 
-      - id: copy_text
-        type: Paragraph
-        properties:
-          style:
-            color: white
-            fontSize: 0.8em
-          content:
-            _state: button_extra
-
-      - id: getting_started_link
+      - id: plugin_docs_link
         type: Button
         style:
           marginTop: 30
         properties:
-          style:
-            color: white
-          title: See our getting started tutorial →
+          title: Visit our docs to learn more
           size: large
           type: link
-        events:
-          onClick:
-            - id: link
-              type: Link
-              params:
-                url: https://docs.lowdefy.com/tutorial-start
+          href: https://docs.lowdefy.com/plugins
+
+  - id: info_left
+    type: Box
+    layout:
+      span: 12
+    blocks:
+      - id: images_box
+        type: Box
+        layout:
+          order: 1
+          contentAlign: middle
+        style:
+          padding: 16
+        blocks:
+          - id: image
+            type: Img
+            layout:
+              flex: 1 1 auto
+            properties:
+              src: ./images/react.png
+              width: 50px
+
+          - id: image
+            type: Img
+            layout:
+              flex: 1 1 auto
+            properties:
+              src: ./images/js.png
+              width: 50px
+
+          - id: image
+            type: Img
+            layout:
+              flex: 1 1 auto
+            properties:
+              src: ./images/npm.png
+              width: 50px
+
+          - id: image
+            type: Img
+            layout:
+              flex: 1 1 auto
+            properties:
+              src: ./images/lowdefy.png
+              width: 50px
+
+      - id: title
+        type: Html
+        properties:
+          html: |
+            <p>
+              Lowdefy's plugin system is powered by NPM. This allows developers to bundle modules using their preferred packages.
+            </p>
+            <p>
+              Unpublished plugins can be added to your repository, allowing for easy use of project specific code.
+            </p>
