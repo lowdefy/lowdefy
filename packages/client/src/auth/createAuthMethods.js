@@ -47,14 +47,14 @@ function createAuthMethods({ lowdefy, auth }) {
       providerId = auth.authConfig.providers[0].id;
     }
 
-    auth.signIn(
+    return auth.signIn(
       providerId,
       { ...rest, callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
       authUrl?.urlQuery
     );
   }
   function logout({ callbackUrl, redirect } = {}) {
-    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
+    return auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
   }
   return {
     login,
