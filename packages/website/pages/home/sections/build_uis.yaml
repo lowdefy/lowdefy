@@ -1,7 +1,7 @@
 id: width_box
 type: Box
 style:
-  maxWidth: 1200
+  maxWidth: 90%
   margin: 30px auto
 layout:
   contentAlign: middle
@@ -19,16 +19,16 @@ blocks:
           html: |
             <hr style="margin-left:0;">
             <h2>
-              Build great UIs with ease
+              Build web UIs by writing easy config
             </h2>
             <p>
-              Lowdefy provides you all the blocks you need to easily assemble custom web apps. For example this website and our docs is built with just Lowdefy.
+              Lowdefy config is easy to read, write, copy, paste or template. Just like code, but simpler.
             </p>
             <ul>
-              <li>Build UIs with YAML easy to read, write, review and use source control like git.</li>
+              <li>+70 Blocks and +150 logic operators to get started fast.</li>
               <li>Dynamic UIs with effortless state management.</li>
-              <li>Mobile friendly and responsive layouts out of the box.</li>
-              <li>Define custom YAML templates which enable reusability.</li>
+              <li>Responsive layouts out of the box.</li>
+              <li>Extend with custom React components.</li>
             </ul>
 
       - id: visit_docs
@@ -36,19 +36,14 @@ blocks:
         style:
           marginBottom: 20px
         properties:
-          title: Visit the docs to experience more blocks in action →
+          title: Visit the docs to experience more blocks in action
           type: link
           size: large
           style:
             maxWidth: 100%
             whiteSpace: normal
             textAlign: left
-        events:
-          onClick:
-            - id: link
-              type: Link
-              params:
-                url: https://docs.lowdefy.com/Button
+          href: https://docs.lowdefy.com/Button
 
   - id: lowdefy_gif
     type: Html
