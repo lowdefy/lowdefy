@@ -1,54 +1,134 @@
-id: open_source_box
+id: background_box
 type: Box
 properties:
   style:
-    textAlign: center
     backgroundImage: 'linear-gradient(#1890ff, #667eea)'
 blocks:
-  - id: image
-    type: Img
-    layout:
-      span: 12
-    properties:
-      src: ./images/opensource.png
-      style:
-        width: '70%'
-
-  - id: box
+  - id: open_source_box
     type: Box
-    layout:
-      span: 12
-      contentGutter: 16
     style:
-      textAlign: right
+      maxWidth: 90%
+      margin: 60px auto
+      textAlign: center
+    layout:
+      contentAlign: middle
+      contentGutter: 8
     blocks:
-      - id: github
-        type: Button
+      - id: image
+        type: Img
+        layout:
+          span: 12
+          order: 1
         properties:
-          title: Github Repo
-          icon: AiOutlineGithub
+          src: ./images/opensource.png
           style:
-            background-color: white
-          type: link
-          shape: round
-          size: large
-        events:
-          onClick:
-            - id: link
-              type: Link
-              params:
-                url: https://github.com/lowdefy/lowdefy
+            width: '60%'
 
-      - id: open_source_content
-        type: Html
-        properties:
-          html: |
-            <h2 style="color: white">
-              Lowdefy is an open-source framework
-            </h2>
-            <h3>
-              Build future proof apps on a open framework with no lock-in.
-            </h3>
-            <h4 style="color: white"> Host your app where you want, in cloud or on premise.</h4>
-            <h4 style="color: white"> You do not depend on us, run and manage your own apps. </h4>
-            <h4 style="color: white"> No need to share your keys or passwords with anyone. </h4>
+      - id: info_box
+        type: Box
+        layout:
+          span: 12
+          contentGutter: 16
+        style:
+          textAlign: right
+        blocks:
+          - id: open_source_content
+            type: Html
+            properties:
+              html: |
+                <h3 style="color: white">
+                  Lowdefy is an open-source framework
+                </h3>
+                <h5>
+                  Build future proof apps that you can host anywhere with no lock-in.
+                </h5>
+
+          - id: stats_box
+            type: Box
+            style:
+              textAlign: center
+            blocks:
+              - id: github_stars_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white; padding-bottom: 0">
+                      2.1K+
+                    </h3>
+                    <p style="color: white; padding-top: 0">
+                      Github Stars
+                    </p>
+
+              - id: apps_created_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white">
+                      19K+
+                    </h3>
+                    <p style="color: white">
+                      Apps Created
+                    </p>
+
+              - id: weekly_downloads_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white">
+                      950+
+                    </h3>
+                    <p style="color: white">
+                      Weekly Downloads
+                    </p>
+
+          - id: buttons_box
+            type: Box
+            layout:
+              contentGutter: 8
+            blocks:
+              - id: github
+                type: Button
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  title: |
+                    <p style="margin-bottom:0;"> Star us on Github <br>
+                    2.1K+ Stars </p>
+                  icon:
+                    name: AiOutlineGithub
+                    size: 30
+                  style:
+                    backgroundColor: transparent
+                    borderColor: white
+                    height: auto
+                    width: 170px
+                    textAlign: right
+                    borderRadius: 8px
+                  href: https://github.com/lowdefy/lowdefy
+
+              - id: discord
+                type: Button
+                layout:
+                  flex: 0 0 auto
+                properties:
+                  title: |
+                    <p style="margin-bottom:0; color:#7289D7"> Join our Discord <br>
+                    210+ Members </p>
+                  icon:
+                    name: FaDiscord
+                    size: 30
+                    color: '#7289D7'
+                  type: ghost
+                  color: white
+                  style:
+                    height: auto
+                    width: 170px
+                    textAlign: right
+                    borderRadius: 8px
+                  href: https://discord.gg/WmcJgXt
