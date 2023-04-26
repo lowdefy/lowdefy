@@ -24,3 +24,39 @@ _ref:
 
     areas:
       - content
+
+    examples:
+      - title: Layout, Header-Content-Footer
+        block:
+          id: layout_example
+          type: Layout
+          style:
+            textAlign: center
+          blocks:
+            - id: header
+              type: Header
+              blocks:
+                - id: Title
+                  type: Title
+                  properties:
+                    content: Header
+                  style:
+                    backgroundColor: red
+            - id: content
+              type: Content
+              blocks:
+                - id: Title
+                  type: Title
+                  style:
+                    backgroundColor: green
+                  properties:
+                    content: Content
+            - id: footer
+              type: Footer
+              blocks:
+                - id: Title
+                  type: Title
+                  style:
+                    backgroundColor: blue
+                  properties:
+                    content: Footer
