@@ -30,7 +30,7 @@ blocks:
           vars:
             icon:
               name: BsFillCloudArrowUpFill
-              size: 20
+              size: 40
               color: '#1890ff'
             section: deploy
             title: Deploy Anywhere
@@ -43,7 +43,7 @@ blocks:
           vars:
             icon:
               name: AiFillLock
-              size: 20
+              size: 40
               color: '#1890ff'
             section: secure
             title: Secured with Auth.js
@@ -56,7 +56,7 @@ blocks:
           vars:
             icon:
               name: FiCheckCircle
-              size: 20
+              size: 40
               color: '#1890ff'
             section: git_control
             title: Git Control for Humans
@@ -69,7 +69,7 @@ blocks:
           vars:
             icon:
               name: MdPeopleAlt
-              size: 20
+              size: 40
               color: '#1890ff'
             section: user_roles
             title: Public, Authed and Roles

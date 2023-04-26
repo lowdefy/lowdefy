@@ -1,0 +1,70 @@
+id: testimonials_background_box
+type: Box
+properties:
+  style:
+    backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+blocks:
+  - id: testimonials_box
+    type: Box
+    layout:
+      contentGutter: 8
+    style:
+      maxWidth: 90%
+      margin: 60px auto
+    blocks:
+      - id: testimonials_intro
+        type: Html
+        style:
+          textAlign: center
+        properties:
+          html: |
+            <h2 style="color:white">
+              Loved by Developers
+            </h2>
+
+      - id: carousel
+        type: Carousel
+        layout:
+          justifyContent: center
+        properties:
+          autoplay: true
+          dots: false
+          slides:
+            - key: slide_one
+            - key: slide_two
+        areas:
+          slide_one:
+            blocks:
+              - id: vrilcod_testimonials
+                type: Html
+                style:
+                  maxWidth: 80%
+                  marginLeft: 10%
+                properties:
+                  html: |
+                    <p style="color:white">
+                      I've considered a lot of low-code tools before and for me - as a "normal" programmer - YAML files all around, was a quite strange approach in the beginning. But I've to say, that I am really convinced by Lowdefy's architecture now, because for me it's not so important to avoid keyboard entry in general (UI is nice to start, but can be annoying for repeating tasks or revision).
+                    </p>
+                    <p style="color:white">
+                      I think most important is to avoid ever repeating coding work for simple CRUD applications. And I think there is no tool outside, which gives you the opportunity to create an app with less configuration than Lowdefy. To summarize: less typing and reusability are the most important factors for me.
+                    </p>
+                    <p>
+                      <b>vrilcod</b>, Github
+                    </p>
+          slide_two:
+            blocks:
+              - id: nair19OP_testimonials
+                type: Html
+                style:
+                  maxWidth: 80%
+                  marginLeft: 10%
+                properties:
+                  html: |
+                    <p style="color:white">
+                      Would also like to appreciate the efforts you guys have put in to build a beautiful product like this!
+                      It has definitely made life much easier for a lot of us. The platform is top notch and I have already been recommending it to many colleagues.
+                      Hope word reaches far and wide about it  !
+                    </p>
+                    <p>
+                      <b>nair19OP</b>, Discord
+                    </p>
