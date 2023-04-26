@@ -100,6 +100,7 @@
 - _ref: blocks/container/Badge.yaml
 - _ref: blocks/container/Box.yaml
 - _ref: blocks/container/Card.yaml
+- _ref: blocks/container/Carousel.yaml
 - _ref: blocks/container/Collapse.yaml
 - _ref: blocks/container/Comment.yaml
 - _ref: blocks/container/ConfirmModal.yaml
