@@ -11,19 +11,64 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/maintainability)](https://codeclimate.com/github/lowdefy/lowdefy/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/test_coverage)](https://codeclimate.com/github/lowdefy/lowdefy/test_coverage)
 [![Codecov](https://codecov.io/gh/lowdefy/lowdefy/branch/main/graph/badge.svg?token=U2AEEH9K1W)](https://codecov.io/gh/lowdefy/lowdefy)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/alerts/)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/lowdefy/lowdefy.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lowdefy/lowdefy/context:javascript)
 
-Lowdefy is an open-source (Apache-2.0) low-code framework that lets you build web apps with YAML or JSON configuration files. It is great for building admin panels, BI dashboards, workflows, and CRUD apps.
+# Lowdefy 🫶 The Easiest Config Webstack on top of Next.js
 
-## Advantages of writing internal tools in YAML or JSON
+Lowdefy is an open-source web framework that enables you to:
 
-- All apps use the same structured config schema, this makes it easy to debug large apps or pick up where others left off.
-- Nothing is hidden in a GUI. This allows you to do basic essential stuff, like copy, paste, find, replace, review changes etc. which makes developing apps more productive.
-- App config is just data, thus you can even develop scripts to create and manage your apps.
-- YAML files work with your favorite developer and source control tools.
+- 🎨 Build web UIs and connect to databases and APIs.
+- 🔌 Extend app functionality with npm plugins.
+- ⚛️ Built on top of [Next.js](https://nextjs.org/) and [Auth.js](https://authjs.dev/).
+- 🌐 Host your apps anywhere you host Next.js.
 
-## How Lowdefy apps work 👉 https://docs.lowdefy.com
+Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
+
+### 🛠 Build Web UIs with Easy Config
+
+Lowdefy config is easy to read, write, copy, paste, or template. It's just like code, but simpler.
+
+- Over 70 Blocks and 150 logic operators for a quick start.
+- Dynamic UIs with simple state management.
+- Responsive layouts out of the box.
+- Extend with custom React components.
+
+### 📡 Connect to Your Data and APIs
+
+Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
+
+- Build dynamic queries using variables and logic operators.
+- Execute requests from both authenticated and public pages.
+- Secure secrets for passwords and API keys.
+- Build custom connections with any npm modules.
+
+### 🔓 Open-Source Framework with No Lock-In
+
+Lowdefy is an open-source framework that allows you to build future-proof apps, host them anywhere, and avoid vendor lock-in.
+
+## 🔧 Extend Everything with NPM Plugins
+
+> Lowdefy's [Blocks](https://docs.lowdefy.com/blocks), [Requests](https://docs.lowdefy.com/connections-and-requests), [Operators](https://docs.lowdefy.com/operators), [Actions](https://docs.lowdefy.com/events-and-actions), Auth Providers, and Adapters can all be extended with plugins, making it the most flexible low-code web stack.
+> Powered by NPM, Lowdefy's plugin system allows developers to bundle modules using their preferred packages. Even unpublished plugins can be added to your repository, enabling easy use of project-specific code. See the [plugin docs](https://docs.lowdefy.com/plugins) and [the plugin project example](https://github.com/lowdefy/lowdefy-example-plugins) for more details.
+
+### 💼 Built for Developers and Enterprise-Ready
+
+#### 🌍 Deploy Anywhere
+
+Lowdefy runs as a Next.js app in production, so you can deploy it anywhere that supports Next.js deployment. Deploy with [Vercel](https://vercel.com), [Docker](https://docs.lowdefy.com/docker), or anything that runs Next.js apps.
+
+#### 🔒 Secured with Auth.js
+
+Authentication is built on top of Auth.js, providing the full flexibility and security from one of the most popular open-source auth layers. SSO, SAML, 2FA, no problem. Google, Okta, Auth0, and more - bring your own provider.
+
+#### 👩‍💻👨‍💻 Git Control for Humans
+
+Lowdefy's minimal config is designed to be easy to read, write, and understand, making it simple to copy, paste, review changes, or pick up where others left off. Defining apps using a structured schema speeds up development in teams of any size.
+
+#### 🔑 Public, Authenticated, and Role-Based Access
+
+Lowdefy supports building multi-page apps with both public and private pages, serving a wide range of use cases. Role-based access control (RBAC) allows for easy implementation of secure, granular access control where needed.
+
+### How Lowdefy Apps Work 👉 https://docs.lowdefy.com
 
 Lowdefy apps are built using:
 
@@ -34,61 +79,17 @@ Lowdefy apps are built using:
 
 We are working on expanding the list of connections, and you can vote for the ones you need [here](https://github.com/lowdefy/lowdefy/discussions/309).
 
-## Lowdefy apps are self-hosted
-
-Our goal is to make it easy to run Lowdefy apps anywhere. Lowdefy app servers are also stateless which makes it easy to run apps in serverless environments. Currently you can host Lowdefy apps:
-
-- As a [Docker container](https://docs.lowdefy.com/docker).
-- On [AWS Lambda](https://docs.lowdefy.com/aws-lambda) using Serverless.
-- On [Netlify](https://docs.lowdefy.com/netlify) using Netlify functions.
-
 ## Quick start
 
 Run:
 
 ```bash
-npx lowdefy@latest init && npx lowdefy@latest dev
+pnpx lowdefy@latest init && pnpx lowdefy@latest dev
 ```
 
 This will create a file called `lowdefy.yaml` in the current working directory that contains the configuration for a Lowdefy app (as well as a `.gitignore`) and launch a local development server at http://localhost:3000. Make changes in the `lowdefy.yaml` file to see them reflect in the app.
 
-## Examples
-
-##### CRUD example
-
-This example shows patterns to implement a data admin app which allows users to view, create new, edit and delete data records.
-
-- [Example demo.](https://example-crud.lowdefy.com)
-- [App source code.](https://github.com/lowdefy/lowdefy-example-crud)
-
-##### Survey example
-
-This is a simple customer survey example built with Lowdefy. With this example we demonstrate how simple it is to define a public webform and thank you page in Lowdefy.
-
-- [Example demo.](https://example-survey.lowdefy.com)
-- [App source code.](https://github.com/lowdefy/lowdefy-example-survey)
-
-##### Case management (ticketing) system example
-
-This example focuses on building a rich UI for a hypothetical case management app, in a customer relations setting.
-
-- [Example demo.](https://example-case-management.lowdefy.com)
-- [App source code.](https://github.com/lowdefy/lowdefy-example-case-management)
-
-##### Movies reporting example
-
-This example demonstrates useful patterns for building a BI report/dashboard pages in Lowdefy. It connects to a MongoDB database with the Atlas Movies sample dataset pre-loaded.
-
-- [Example demo.](https://example-reporting.lowdefy.com)
-- [App source code.](https://github.com/lowdefy/lowdefy-example-reporting)
-
-## Other Lowdefy packages and resources
-
-- [@lowdefy/blocks-aggrid](https://github.com/lowdefy/blocks-aggrid): Lowdefy blocks to render [Ag-Grid](https://www.ag-grid.com/) tables.
-- [@lowdefy/blocks-amcharts](https://github.com/lowdefy/blocks-amcharts): Lowdefy blocks to render [AmCharts v4](https://www.amcharts.com/).
-- Lowdefy [Kubernetes examples](https://github.com/vaddisrinivas/lowdefy-example-k8s).
-
-## More Lowdefy links
+### 🔗 More Lowdefy Links
 
 - Getting started with Lowdefy - https://docs.lowdefy.com/tutorial-start
 - Lowdefy website - https://lowdefy.com
@@ -96,30 +97,42 @@ This example demonstrates useful patterns for building a BI report/dashboard pag
 - Join the Lowdefy Discord - https://discord.gg/WmcJgXt
 - Bug reports and feature requests - https://github.com/lowdefy/lowdefy/issues
 
-## Changelog
+### ⛹️‍♀️ Contributing
 
-All changes to this project are documented in [CHANGELOG.md](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md).
+#### Lowdefy Plugins
 
-## Contributing
+The simplest way to contribute to Lowdefy is by creating custom plugins like Blocks, Actions, Requests, Operators, or Auth Adapters and Providers, and publishing them to NPM for the community's benefit.
+
+Easily add and develop plugins in any Lowdefy project; refer to [the plugins project example](https://github.com/lowdefy/lowdefy-example-plugins) for a pnpm monorepo setup to jumpstart local plugin development.
+
+When publishing your plugin to NPM, include `lowdefy` in the name for easy discovery, and share it on our [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) to inform the community.
+
+#### Lowdefy Platform Development
 
 Run Lowdefy servers locally by adding your Lowdefy config to the `app/..` folder. Use one of the following scripts to the server:
 
-- `yarn start`: Starts the production server.
-- `yarn start:dev`: Starts the production server in next development mode, useful for debugging Lowdefy code changes.
-- `yarn start:server-dev`: Starts the development server in next production mode, useful for developing your Lowdefy config locally.
+- `pnpm app:cli:dev`: Starts the development server with the config provided in the `app` folder, useful for developing locally.
+- `pnpm app:cli:build`: Creates a production build of your lowdefy app for the config config provided in the `app` folder.
+- `pnpm app:cli:start`: Starts the production server of your lowdefy app built using the `build` command output.
 
-> `yarn install` and `yarn build` should be executed manually during development, this allows you to build only the package you are working on. Server needs to be restarted after package rebuild.
+> See the project `package.json` scripts for more predefined scripts.
 
 Please also see [CONTRIBUTING.md](https://github.com/lowdefy/lowdefy/blob/main/CONTRIBUTING.md).
 
-## Security
+### ☕️ Changelog
+
+Convert a v3 app to V4 - [See the v4 conversion notes.](https://docs.lowdefy.com/v3-to-v4)
+
+All changes to this project are documented in [CHANGELOG.md](https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md).
+
+### 🔐 Security
 
 If you discover a vulnerability, please follow the guide in [SECURITY.md](https://github.com/lowdefy/lowdefy/blob/main/SECURITY.md) to disclose this to us responsibly.
 
-## Code of conduct
+### 🤝 Code of Conduct
 
 In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to follow the [Contributor Covenant](https://www.contributor-covenant.org) code of conduct. See [CODE_OF_CONDUCT.md](https://github.com/lowdefy/lowdefy/blob/main/CODE_OF_CONDUCT.md) for more.
 
-## Licence
+### ⚖️ Licence
 
 [Apache-2.0](https://github.com/lowdefy/lowdefy/blob/main/LICENSE)
