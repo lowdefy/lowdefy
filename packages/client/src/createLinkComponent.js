@@ -71,7 +71,7 @@ const createLinkComponent = (lowdefy, Link) => {
           id={id}
           aria-label={ariaLabel}
           className={className}
-          href={`${window.location.origin}${lowdefy._internal.router.basePath}${pathname}${
+          href={`${window.location.origin}${lowdefy.basePath}${pathname}${
             query ? `?${query}` : ''
           }`}
           rel={rel || 'noopener noreferrer'}
