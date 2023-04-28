@@ -59,9 +59,7 @@ function createAuthMethods({ lowdefy, auth }) {
   }
 
   async function updateSession() {
-    console.log('updateSession');
     const session = await auth.getSession();
-    console.log('session', session);
     lowdefy.user = session?.user ?? null;
   }
 
