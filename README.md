@@ -20,12 +20,13 @@ Lowdefy is an open-source web framework that enables you to:
 - 🔌 Extend app functionality with npm plugins.
 - ⚛️ Built on top of [Next.js](https://nextjs.org/) and [Auth.js](https://authjs.dev/).
 - 🌐 Host your apps anywhere you host Next.js.
+- ✂️ Only code your business logic.
 
-Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
+Create internal tools, web apps, admin panels, BI dashboards, web sites and CRUD apps with simple YAML or JSON config.
 
 ### 🛠 Build Web UIs with Easy Config
 
-Lowdefy config is easy to read, write, copy, paste, or template. It's just like code, but simpler.
+Lowdefy config is easy to read, write, copy, paste, or template. Config when you can, but code when you need to.
 
 - Over 70 Blocks and 150 logic operators for a quick start.
 - Dynamic UIs with simple state management.
@@ -43,11 +44,11 @@ Make API calls and read and write to your databases with minimal config. Build w
 
 ### 🔓 Open-Source Framework with No Lock-In
 
-Lowdefy is an open-source framework that allows you to build future-proof apps, host them anywhere, and avoid vendor lock-in.
+Lowdefy is an open-source framework built on top of Next.js. Lowdefy allows you to build future-proof apps, host them anywhere, and avoid vendor lock-in.
 
 ## 🔧 Extend Everything with NPM Plugins
 
-> Lowdefy's [Blocks](https://docs.lowdefy.com/blocks), [Requests](https://docs.lowdefy.com/connections-and-requests), [Operators](https://docs.lowdefy.com/operators), [Actions](https://docs.lowdefy.com/events-and-actions), Auth Providers, and Adapters can all be extended with plugins, making it the most flexible low-code web stack.
+> Lowdefy's [Blocks](https://docs.lowdefy.com/blocks), [Requests](https://docs.lowdefy.com/connections-and-requests), [Operators](https://docs.lowdefy.com/operators), [Actions](https://docs.lowdefy.com/events-and-actions), Auth Providers, and Adapters can all be extended with plugins, making it the most flexible config web stack.
 > Powered by NPM, Lowdefy's plugin system allows developers to bundle modules using their preferred packages. Even unpublished plugins can be added to your repository, enabling easy use of project-specific code. See the [plugin docs](https://docs.lowdefy.com/plugins) and [the plugin project example](https://github.com/lowdefy/lowdefy-example-plugins) for more details.
 
 ### 💼 Built for Developers and Enterprise-Ready
