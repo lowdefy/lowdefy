@@ -13,21 +13,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable react/jsx-props-no-spreading */
 
-function authNotConfigured() {
-  throw new Error('Auth not configured.');
-}
-
-function AuthNotConfigured({ authConfig, children }) {
-  const auth = {
-    authConfig,
-    getSession: authNotConfigured,
-    signIn: authNotConfigured,
-    signOut: authNotConfigured,
+function createUpdateSession({ context }) {
+  return function updateSession() {
+    return context._internal.lowdefy._internal.auth.updateSession();
   };
-
-  return children(auth);
 }
 
-export default AuthNotConfigured;
+export default createUpdateSession;

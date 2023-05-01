@@ -53,12 +53,20 @@ function createAuthMethods({ lowdefy, auth }) {
       authUrl?.urlQuery
     );
   }
+
   function logout({ callbackUrl, redirect } = {}) {
     return auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
   }
+
+  async function updateSession() {
+    const session = await auth.getSession();
+    lowdefy.user = session?.user ?? null;
+  }
+
   return {
     login,
     logout,
+    updateSession,
   };
 }
 

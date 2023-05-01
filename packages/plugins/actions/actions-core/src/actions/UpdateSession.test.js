@@ -13,21 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable react/jsx-props-no-spreading */
 
-function authNotConfigured() {
-  throw new Error('Auth not configured.');
-}
+import { jest } from '@jest/globals';
+import UpdateSession from './UpdateSession.js';
 
-function AuthNotConfigured({ authConfig, children }) {
-  const auth = {
-    authConfig,
-    getSession: authNotConfigured,
-    signIn: authNotConfigured,
-    signOut: authNotConfigured,
-  };
+const mockUpdateSession = jest.fn();
+const methods = { updateSession: mockUpdateSession };
 
-  return children(auth);
-}
-
-export default AuthNotConfigured;
+test('UpdateSession action invocation', async () => {
+  await UpdateSession({ methods });
+  expect(mockUpdateSession.mock.calls).toEqual([[]]);
+});

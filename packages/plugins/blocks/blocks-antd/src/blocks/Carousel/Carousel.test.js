@@ -13,21 +13,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-/* eslint-disable react/jsx-props-no-spreading */
 
-function authNotConfigured() {
-  throw new Error('Auth not configured.');
-}
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-function AuthNotConfigured({ authConfig, children }) {
-  const auth = {
-    authConfig,
-    getSession: authNotConfigured,
-    signIn: authNotConfigured,
-    signOut: authNotConfigured,
-  };
+import Block from './Carousel.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-  return children(auth);
-}
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
 
-export default AuthNotConfigured;
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });
