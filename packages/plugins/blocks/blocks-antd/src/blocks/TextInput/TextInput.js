@@ -59,12 +59,12 @@ const TextInput = ({
               onChange={(event) => {
                 var input = event.target.value;
 
-                if (properties.regex) {
+                if (properties.replaceInput) {
                   const regex = new RegExp(
-                    properties.regex.pattern,
-                    properties.regex.flags || 'gm'
+                    properties.replaceInput.pattern,
+                    properties.replaceInput.flags ?? 'gm'
                   );
-                  input = input.replace(regex, '');
+                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
                 }
 
                 methods.setValue(input);
