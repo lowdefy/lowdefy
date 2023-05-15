@@ -48,7 +48,7 @@
     "@swc/jest": "0.2.24",
     "clean-webpack-plugin": "4.0.0",
     "jest": "28.1.0",
-    "nunjucks": "3.2.3",
+    "nunjucks": "3.2.4",
     "swc-loader": "0.2.3",
     "webpack": "5.76.0",
     "webpack-cli": "5.0.1"
