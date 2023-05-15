@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.7",
     "@lowdefy/operators": "4.0.0-rc.7",
-    "yaml": "2.2.1"
+    "yaml": "2.2.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
