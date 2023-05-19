@@ -70,7 +70,7 @@
     "less-loader": "11.1.0",
     "next-with-less": "2.0.5",
     "webpack": "5.76.0",
-    "yaml": "2.2.1",
+    "yaml": "2.2.2",
     "yargs": "17.6.2"
   },
   "packageManager": "pnpm@7.11.0",

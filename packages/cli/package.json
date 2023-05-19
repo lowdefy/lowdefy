@@ -49,7 +49,7 @@
     "ora": "6.1.2",
     "semver": "7.3.8",
     "uuid": "9.0.0",
-    "yaml": "2.2.1"
+    "yaml": "2.2.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.0",
