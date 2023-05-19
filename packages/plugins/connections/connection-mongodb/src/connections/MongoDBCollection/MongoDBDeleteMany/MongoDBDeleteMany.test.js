@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteMany from './MongoDBDeleteMany.js';
+import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBDeleteMany.meta;
@@ -24,6 +25,7 @@ const schema = MongoDBDeleteMany.schema;
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'deleteMany';
+const logCollection = 'logCollection';
 const documents = [
   { _id: 'deleteMany' },
   { _id: 'deleteMany_1' },
@@ -32,6 +34,13 @@ const documents = [
   { _id: 'deleteMany_4', f: 'deleteMany' },
   { _id: 'deleteMany_5', f: 'deleteMany' },
   { _id: 'deleteMany_6', f: 'deleteMany' },
+  { _id: 'deleteMany_log' },
+  { _id: 'deleteMany_1_log' },
+  { _id: 'deleteMany_2_log' },
+  { _id: 'deleteMany_3_log' },
+  { _id: 'deleteMany_4_log', f: 'deleteMany_log' },
+  { _id: 'deleteMany_5_log', f: 'deleteMany_log' },
+  { _id: 'deleteMany_6_log', f: 'deleteMany_log' },
 ];
 
 beforeAll(() => {
@@ -55,6 +64,43 @@ test('deleteMany - Single Document', async () => {
   });
 });
 
+test('deleteMany logCollection - Single Document', async () => {
+  const request = {
+    filter: { _id: 'deleteMany_log' },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBDeleteMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_log',
+    connection,
+  });
+  expect(res).toEqual({
+    acknowledged: true,
+    deletedCount: 1,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'deleteMany_log',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_log',
+    type: 'MongoDBDeleteMany',
+    meta: { meta: true },
+  });
+});
+
 test('deleteMany - Multiple Documents', async () => {
   const request = {
     filter: { _id: { $in: ['deleteMany_1', 'deleteMany_2', 'deleteMany_3'] } },
@@ -72,6 +118,43 @@ test('deleteMany - Multiple Documents', async () => {
   });
 });
 
+test('deleteMany logCollection - Multiple Documents', async () => {
+  const request = {
+    filter: { _id: { $in: ['deleteMany_1_log', 'deleteMany_2_log', 'deleteMany_3_log'] } },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBDeleteMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_multiple',
+    connection,
+  });
+  expect(res).toEqual({
+    acknowledged: true,
+    deletedCount: 3,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'deleteMany_multiple',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_multiple',
+    type: 'MongoDBDeleteMany',
+    meta: { meta: true },
+  });
+});
+
 test('deleteMany - Multiple Documents one field', async () => {
   const request = {
     filter: { f: 'deleteMany' },
@@ -86,6 +169,43 @@ test('deleteMany - Multiple Documents one field', async () => {
   expect(res).toEqual({
     acknowledged: true,
     deletedCount: 3,
+  });
+});
+
+test('deleteMany logCollection - Multiple Documents one field', async () => {
+  const request = {
+    filter: { f: 'deleteMany_log' },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBDeleteMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_multiple_one_field',
+    connection,
+  });
+  expect(res).toEqual({
+    acknowledged: true,
+    deletedCount: 3,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'deleteMany_multiple_one_field',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'deleteMany_multiple_one_field',
+    type: 'MongoDBDeleteMany',
+    meta: { meta: true },
   });
 });
 
