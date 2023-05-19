@@ -39,7 +39,7 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   return undefined;
 }
 
-function createAuthMethods({ lowdefy, auth }) {
+function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
   function login({ authUrl, callbackUrl, providerId, ...rest } = {}) {

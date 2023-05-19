@@ -31,7 +31,7 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 
-const App = ({ auth }) => {
+const App = ({ auth, lowdefy }) => {
   const router = useRouter();
   const { data: rootConfig } = useRootConfig(router.basePath);
 
@@ -41,7 +41,7 @@ const App = ({ auth }) => {
     return '';
   }
   return (
-    <Reload basePath={router.basePath}>
+    <Reload basePath={router.basePath} lowdefy={lowdefy}>
       {(resetContext) => (
         <Page
           auth={auth}
@@ -49,6 +49,7 @@ const App = ({ auth }) => {
           config={{
             rootConfig,
           }}
+          lowdefy={lowdefy}
           pageId={pageId}
           resetContext={resetContext}
           router={router}
