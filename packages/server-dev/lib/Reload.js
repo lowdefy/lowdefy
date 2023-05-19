@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react';
 import useMutateCache from './utils/useMutateCache.js';
 import waitForRestartedServer from './utils/waitForRestartedServer.js';
 
-const Reload = ({ children, basePath }) => {
+const Reload = ({ children, basePath, lowdefy }) => {
   const [reset, setReset] = useState(false);
   const [restarting, setRestarting] = useState(false);
   const mutateCache = useMutateCache(basePath);
@@ -31,6 +31,9 @@ const Reload = ({ children, basePath }) => {
       // TODO: We need to pass a flag when a rebuild will happen so that client does not trigger render.
       setTimeout(async () => {
         await mutateCache();
+        if (lowdefy._internal?.initialised) {
+          lowdefy._internal.initialised = false;
+        }
         setReset(true);
         console.log('Reloaded config.');
       }, 600);
