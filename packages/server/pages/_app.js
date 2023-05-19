@@ -15,7 +15,7 @@
 */
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import Auth from '../lib/auth/Auth.js';
@@ -24,9 +24,17 @@ import Auth from '../lib/auth/Auth.js';
 import '../build/plugins/styles.less';
 
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
+  const lowdefyRef = useRef({});
   return (
     <Auth session={session}>
-      {(auth) => <Component auth={auth} rootConfig={rootConfig} pageConfig={pageConfig} />}
+      {(auth) => (
+        <Component
+          auth={auth}
+          lowdefy={lowdefyRef.current}
+          rootConfig={rootConfig}
+          pageConfig={pageConfig}
+        />
+      )}
     </Auth>
   );
 }

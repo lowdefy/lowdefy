@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import request from './request.js';
+import { jest } from '@jest/globals';
+import UpdateSession from './UpdateSession.js';
 
-function callRequest({ pageId, payload, requestId }) {
-  return request({
-    url: `/api/request/${pageId}/${requestId}`,
-    method: 'POST',
-    body: { payload },
-  });
-}
+const mockUpdateSession = jest.fn();
+const methods = { updateSession: mockUpdateSession };
 
-export default callRequest;
+test('UpdateSession action invocation', async () => {
+  await UpdateSession({ methods });
+  expect(mockUpdateSession.mock.calls).toEqual([[]]);
+});

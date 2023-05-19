@@ -423,6 +423,9 @@
         - id: Card
           type: MenuLink
           pageId: Card
+        - id: Carousel
+          type: MenuLink
+          pageId: Carousel
         - id: Collapse
           type: MenuLink
           pageId: Collapse

@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-function getConfigFromEnv() {
-  return {
-    buildDirectory: process.env.LOWDEFY_SERVER_BUILD_DIRECTORY,
-    logLevel: process.env.LOWDEFY_SERVER_LOG_LEVEL,
-    publicDirectory: process.env.LOWDEFY_SERVER_PUBLIC_DIRECTORY,
-    port: process.env.LOWDEFY_SERVER_PORT && parseInt(process.env.LOWDEFY_SERVER_PORT),
-    basePath: process.env.LOWDEFY_BASE_PATH,
-  };
+import { MongoClient } from 'mongodb';
+
+async function findLogCollectionRecordTestMongoDb({ logCollection, requestId }) {
+  const client = new MongoClient(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  await client.connect();
+  const db = client.db();
+  const logged = await db.collection(logCollection).findOne({ requestId });
+  await client.close();
+  return logged;
 }
 
-export default getConfigFromEnv;
+export default findLogCollectionRecordTestMongoDb;

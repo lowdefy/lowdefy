@@ -26,7 +26,7 @@ import blocks from '../build/plugins/blocks.js';
 import icons from '../build/plugins/icons.js';
 import operators from '../build/plugins/operators/client.js';
 
-const Page = ({ auth, pageConfig, rootConfig }) => {
+const Page = ({ auth, lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
   return (
     <Client
@@ -36,6 +36,7 @@ const Page = ({ auth, pageConfig, rootConfig }) => {
         pageConfig,
         rootConfig,
       }}
+      lowdefy={lowdefy}
       router={router}
       types={{
         actions,

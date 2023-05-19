@@ -16,7 +16,6 @@
 
 import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
-import getConfigFromEnv from './getConfigFromEnv.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import spawnProcess from './spawnProcess.js';
@@ -26,7 +25,6 @@ import writeFile from './writeFile.js';
 export {
   cleanDirectory,
   copyFileOrDirectory,
-  getConfigFromEnv,
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,

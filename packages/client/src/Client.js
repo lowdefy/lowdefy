@@ -29,6 +29,7 @@ const Client = ({
   auth,
   Components,
   config: rawConfig,
+  lowdefy,
   resetContext = { reset: false, setReset: () => undefined },
   router,
   stage,
@@ -36,10 +37,11 @@ const Client = ({
   window,
 }) => {
   const config = serializer.deserialize(rawConfig);
-  const lowdefy = initLowdefyContext({
+  initLowdefyContext({
     auth,
     Components,
     config,
+    lowdefy,
     router,
     stage,
     types,

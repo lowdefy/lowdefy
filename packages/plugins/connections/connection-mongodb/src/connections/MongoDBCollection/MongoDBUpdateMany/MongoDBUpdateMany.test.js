@@ -16,6 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBUpdateMany from './MongoDBUpdateMany.js';
+import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBUpdateMany.meta;
@@ -24,6 +25,7 @@ const schema = MongoDBUpdateMany.schema;
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'updateMany';
+const logCollection = 'logCollection';
 const documents = [
   { _id: 'updateMany', v: 'before' },
   { _id: 'updateMany_1', v: 'before' },
@@ -58,6 +60,46 @@ test('updateMany - Single Document', async () => {
   });
 });
 
+test('updateMany logCollection - Single Document', async () => {
+  const request = {
+    filter: { _id: 'updateMany' },
+    update: { $set: { v: 'afterLog' } },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 1,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 1,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
+  });
+});
+
 test('updateMany - Multiple Documents', async () => {
   const request = {
     filter: { _id: { $in: ['updateMany_1', 'updateMany_2', 'updateMany_3'] } },
@@ -78,6 +120,46 @@ test('updateMany - Multiple Documents', async () => {
   });
 });
 
+test('updateMany logCollection - Multiple Documents', async () => {
+  const request = {
+    filter: { _id: { $in: ['updateMany_1', 'updateMany_2', 'updateMany_3'] } },
+    update: { $set: { v: 'afterLog' } },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_multiple',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 3,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 3,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany_multiple',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_multiple',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
+  });
+});
+
 test('updateMany - Multiple Documents one field', async () => {
   const request = {
     filter: { f: 'updateMany' },
@@ -95,6 +177,46 @@ test('updateMany - Multiple Documents one field', async () => {
     upsertedId: null,
     upsertedCount: 0,
     matchedCount: 3,
+  });
+});
+
+test('updateMany logCollection - Multiple Documents one field', async () => {
+  const request = {
+    filter: { f: 'updateMany' },
+    update: { $set: { v: 'afterLog' } },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_multiple_one_field',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 3,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 3,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany_multiple_one_field',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_multiple_one_field',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
   });
 });
 
@@ -119,6 +241,47 @@ test('updateMany upsert', async () => {
   });
 });
 
+test('updateMany logCollection upsert', async () => {
+  const request = {
+    filter: { _id: 'updateMany_upsert_log' },
+    update: { $set: { v: 'after' } },
+    options: { upsert: true },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_log',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 0,
+    upsertedId: 'updateMany_upsert_log',
+    upsertedCount: 1,
+    matchedCount: 0,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany_upsert_log',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_log',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
+  });
+});
+
 test('updateMany upsert false', async () => {
   const request = {
     filter: { _id: 'updateMany_upsert_false' },
@@ -140,6 +303,47 @@ test('updateMany upsert false', async () => {
   });
 });
 
+test('updateMany logCollection upsert false', async () => {
+  const request = {
+    filter: { _id: 'updateMany_upsert_false_log' },
+    update: { $set: { v: 'after' } },
+    options: { upsert: false },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_false_log',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 0,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 0,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany_upsert_false_log',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_false_log',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
+  });
+});
+
 test('updateMany upsert default false', async () => {
   const request = {
     filter: { _id: 'updateMany_upsert_default_false' },
@@ -157,6 +361,46 @@ test('updateMany upsert default false', async () => {
     upsertedId: null,
     upsertedCount: 0,
     matchedCount: 0,
+  });
+});
+
+test('updateMany logCollection upsert default false', async () => {
+  const request = {
+    filter: { _id: 'updateMany_upsert_default_false_log' },
+    update: { $set: { v: 'after' } },
+  };
+  const connection = {
+    databaseUri,
+    databaseName,
+    collection,
+    changeLog: { collection: logCollection, meta: { meta: true } },
+    write: true,
+  };
+  const res = await MongoDBUpdateMany({
+    request,
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_default_false_log',
+    connection,
+  });
+  expect(res).toEqual({
+    modifiedCount: 0,
+    upsertedId: null,
+    upsertedCount: 0,
+    matchedCount: 0,
+  });
+  const logged = await findLogCollectionRecordTestMongoDb({
+    logCollection,
+    requestId: 'updateMany_upsert_default_false_log',
+  });
+  expect(logged).toMatchObject({
+    blockId: 'blockId',
+    pageId: 'pageId',
+    payload: { payload: true },
+    requestId: 'updateMany_upsert_default_false_log',
+    type: 'MongoDBUpdateMany',
+    meta: { meta: true },
   });
 });
 
