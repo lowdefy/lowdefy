@@ -14,20 +14,13 @@
   limitations under the License.
 */
 
-@import 'antd/lib/input/style/index.less';
-@import 'antd/lib/select/style/index.less';
-@import '../Label/style.less';
+import { jest } from '@jest/globals';
+import UpdateSession from './UpdateSession.js';
 
-.ldf-phone-number-input {
-  /* Chrome, Safari, Edge, Opera */
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+const mockUpdateSession = jest.fn();
+const methods = { updateSession: mockUpdateSession };
 
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-}
+test('UpdateSession action invocation', async () => {
+  await UpdateSession({ methods });
+  expect(mockUpdateSession.mock.calls).toEqual([[]]);
+});

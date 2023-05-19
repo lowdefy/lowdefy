@@ -28,5 +28,6 @@ export { default as ScrollTo } from './actions/ScrollTo.js';
 export { default as SetGlobal } from './actions/SetGlobal.js';
 export { default as SetState } from './actions/SetState.js';
 export { default as Throw } from './actions/Throw.js';
+export { default as UpdateSession } from './actions/UpdateSession.js';
 export { default as Validate } from './actions/Validate.js';
 export { default as Wait } from './actions/Wait.js';

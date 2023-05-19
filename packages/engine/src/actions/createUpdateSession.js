@@ -14,20 +14,10 @@
   limitations under the License.
 */
 
-@import 'antd/lib/input/style/index.less';
-@import 'antd/lib/select/style/index.less';
-@import '../Label/style.less';
-
-.ldf-phone-number-input {
-  /* Chrome, Safari, Edge, Opera */
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
+function createUpdateSession({ context }) {
+  return function updateSession() {
+    return context._internal.lowdefy._internal.auth.updateSession();
+  };
 }
+
+export default createUpdateSession;

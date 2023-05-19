@@ -189,10 +189,18 @@ const PhoneNumberInput = ({
               placeholder={properties.placeholder}
               size={properties.size}
               status={validation.status}
-              type={'number'}
               value={value?.input}
               onChange={(event) => {
-                const input = event.target.value;
+                var input = event.target.value;
+
+                if (properties.replaceInput) {
+                  const regex = new RegExp(
+                    properties.replaceInput.pattern,
+                    properties.replaceInput.flags ?? 'gm'
+                  );
+                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                }
+
                 const region = value.region;
                 const phone_number = `${region.dial_code}${input}`;
 

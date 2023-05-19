@@ -14,20 +14,17 @@
   limitations under the License.
 */
 
-@import 'antd/lib/input/style/index.less';
-@import 'antd/lib/select/style/index.less';
-@import '../Label/style.less';
+import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-.ldf-phone-number-input {
-  /* Chrome, Safari, Edge, Opera */
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+import Block from './Carousel.js';
+import examples from './examples.yaml';
+import schema from './schema.json';
 
-  /* Firefox */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-}
+const testConfig = {
+  validation: true,
+  required: true,
+  values: [],
+};
+
+runRenderTests({ Block, examples, schema, testConfig });
+runBlockSchemaTests({ examples, schema });
