@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
+
+
+### Bug Fixes
+
+* **connection-mongodb:** Handle upsert true on MongoDBUpdateOne ([7611bee](https://github.com/lowdefy/lowdefy/commit/7611bee1899332b6ccca03fada7cec1541d6c902))
+
+
+### Features
+
+* Add helper findLogCollectionRecordTestMongoDb ([bc590c9](https://github.com/lowdefy/lowdefy/commit/bc590c99c241f0fbb046be4e13a710070c96cba5))
+* **connection-mongodb:** Add log collection tests MongoDBDeleteMany ([15a8b22](https://github.com/lowdefy/lowdefy/commit/15a8b2226828a80ab83d5cfe11c355bb3f45d576))
+* **connection-mongodb:** Add log collection tests MongoDBDeleteOne ([5a1334a](https://github.com/lowdefy/lowdefy/commit/5a1334a291c0c1a2263ab0c53cb727efaf6a8693))
+* **connection-mongodb:** Add log collection tests MongoDBInsertMany ([64dc0d2](https://github.com/lowdefy/lowdefy/commit/64dc0d22b8810f2ca23085770cffd61aaacb5c92))
+* **connection-mongodb:** Add log collection tests MongoDBInsertOne ([a882513](https://github.com/lowdefy/lowdefy/commit/a882513a81cafcc355d212bbb9331a18dd3cc809))
+* **connection-mongodb:** Add log collection tests MongoDBUpdateMany ([1b9c64b](https://github.com/lowdefy/lowdefy/commit/1b9c64bb56b7b780ea87b8bc430503386a1bac72))
+* **connection-mongodb:** Add log collection tests MongoDBUpdateOne ([9a66604](https://github.com/lowdefy/lowdefy/commit/9a666042429620ff689ee19cef8b97315a795fc5))
+
+
+
+
+
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 **Note:** Version bump only for package @lowdefy/connection-mongodb
