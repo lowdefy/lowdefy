@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
+
+
+### Bug Fixes
+
+* Fix server configuration migration guide ([53f52f6](https://github.com/lowdefy/lowdefy/commit/53f52f6b150ddbabfef5ab13b9a983173839fc97))
+
+
+### Features
+
+* **actions-core:** Add UpdateSession action. ([c5d6011](https://github.com/lowdefy/lowdefy/commit/c5d601151acbdb791aaf1304ae95b0ccb18b8c03))
+* **blocks-antd:** Add Carousel block to default Lowdefy blocks. ([85972d1](https://github.com/lowdefy/lowdefy/commit/85972d1d8e4f3fbd00ac55e386ef0f9a326bbdaa))
+* **docs:** Add Layout, Header-Content-Footer example to docs and migration guide ([878601e](https://github.com/lowdefy/lowdefy/commit/878601efda3b6190f34151e35daf6882a37ce328))
+* Remove support for setting base path using an environment variable ([ec7052d](https://github.com/lowdefy/lowdefy/commit/ec7052dab152645b4a5ed9098320e46488041034))
+
+
+
+
+
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 

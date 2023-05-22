@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Add regex property to PhoneNumberInput block. ([c1e4080](https://github.com/lowdefy/lowdefy/commit/c1e4080476034704b105421a805e086c162a8e20))
+* **blocks-antd:** Add regex property to TextInput block. ([548e7a9](https://github.com/lowdefy/lowdefy/commit/548e7a925bc440436a51c140249e9f85881327f7))
+* **blocks-antd:** Rename regex property to replaceInput. ([cd811ae](https://github.com/lowdefy/lowdefy/commit/cd811ae6fae47a8384c73f439fd8fab86d0226ac))
+* **blocks-antd:** Update PhoneNumberInput styles.less file to include Select styles. ([8bdd479](https://github.com/lowdefy/lowdefy/commit/8bdd479afdc5afb001c4b8f5485789a94a4aee50))
+
+
+### Features
+
+* **blocks-antd:** Add Carousel block to default Lowdefy blocks. ([85972d1](https://github.com/lowdefy/lowdefy/commit/85972d1d8e4f3fbd00ac55e386ef0f9a326bbdaa))
+
+
+
+
+
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 
