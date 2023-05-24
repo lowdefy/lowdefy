@@ -39,7 +39,7 @@ _ref:
 
                 The 404 page (used to indicate that a requested page cannot be found) is always a public page. A default 404 page will be created if you do not specify one, but if you create a page with pageId `'404'` then that page will be the 404 page.
 
-                #### Examples
+                ## Examples
 
                 ###### List specific public pages:
                 ```yaml

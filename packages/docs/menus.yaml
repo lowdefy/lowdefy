@@ -209,6 +209,11 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: auth-providers
+          type: MenuLink
+          pageId: auth-providers
+          properties:
+            title: Providers
         - id: login-and-logout
           type: MenuLink
           pageId: login-and-logout

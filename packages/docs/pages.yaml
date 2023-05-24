@@ -36,6 +36,7 @@
 - _ref: plugins/plugins-operators.yaml
 
 - _ref: users/users-introduction.yaml
+- _ref: users/auth-providers.yaml
 - _ref: users/login-and-logout.yaml
 - _ref: users/protected-pages.yaml
 - _ref: users/roles.yaml
