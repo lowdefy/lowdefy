@@ -1,3 +1,17 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 _ref:
   path: templates/general.yaml.njk
   vars:
@@ -17,10 +31,8 @@ _ref:
             Client parameters:
             - `actions: object`: The actions data object.
             - `args: array`: If the operator is used inside a `_function` operator, `args` is an array of arguments passed to the function.
-            - `arrayIndices: array`. ??
             - `basePath: string`: The configured app URL basePath.
             - `event: object`: The event data object.
-            - `eventLog: array`:
             - `globals: object`: Commonly used Javascript global objects. These are passed to the operator for easier testing.
               - `document: object`: The browser [`window.document`](https://developer.mozilla.org/en-US/docs/Web/API/Document/Document) global variable.
               - `window: object`: The browser [`window`](https://developer.mozilla.org/en-US/docs/Web/API/Window) global variable.
