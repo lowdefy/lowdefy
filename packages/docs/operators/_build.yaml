@@ -102,7 +102,7 @@ _ref:
               _build.if:
                 test:
                   _build.eq:
-                    - _build.env: VERCEL_ENV
+                    - _build.env: NEXT_PUBLIC_VERCEL_ENV
                     - production
                 then: "https://www.productionsite.com"
                 else: "https://productionsite-git-develop-org.vercel.app"

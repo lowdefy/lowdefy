@@ -70,4 +70,4 @@ _ref:
                         _secret: OPENID_CONNECT_CLIENT_SECRET
                 ```
 
-                where `LOWDEFY_SECRET_OPENID_CONNECT_WELLKNOWN` is set to something like `https://my-provider.com/.well-known/openid-configuration`
+                where `LOWDEFY_SECRET_OPENID_CONNECT_WELLKNOWN` usually has the format `https://my-provider.com/.well-known/openid-configuration`

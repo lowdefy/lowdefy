@@ -23,7 +23,7 @@ _ref:
 
             ### package.json
 
-            Lowdefy only supports [ECMAScript modules](https://nodejs.org/api/esm.html#introduction) in plugin packages, CommonJS modules are not supported. To configure a package to ECMAScript modules, the `type` field in the `package.json` file should be set to `"module"`.
+            Lowdefy plugin packages should be an [ECMAScript module](https://nodejs.org/api/esm.html#introduction). To configure a package as an ECMAScript module, the `type` field in the `package.json` file should be set to `"module"`.
 
             Lowdefy uses the [`exports`](https://nodejs.org/api/packages.html#package-entry-points) package entry points to map to the `types.js` and plugin named export files.
 
@@ -50,7 +50,7 @@ _ref:
 
             The `./types` entry point is required, and the other entry points are only required if the package exports the corresponding types.
 
-            You can change your folder structure in your package, but then you need to change the `exports` config in the `package.json` file to match your file structure.
+            You can change your folder structure in your package, but then you need to change the `exports` entry points in the `package.json` file to match your file structure.
 
             ##### Compiling React for blocks
 
@@ -58,7 +58,7 @@ _ref:
 
             ### types.js
 
-            The `types.js` file declares the different types provided by the plugin package. This is used by Lowdefy build to map plugin types used in the Lowdefy config to plugin packages.
+            The `types.js` file declares the different types provided by the plugin package. This is used by the Lowdefy build process to map plugin types used in the Lowdefy config to plugin packages.
 
             The file should export an object that contains the type names (the names used in the Lowdefy config) for all the different types provided by the package.
 

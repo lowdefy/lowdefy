@@ -112,7 +112,7 @@ _ref:
                 - id: signup
                   type: Login
                   params:
-                    authUrl
+                    authUrl:
                       urlQuery:
                         screen_hint: signup
             ```
