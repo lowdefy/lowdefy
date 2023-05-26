@@ -109,6 +109,27 @@
           }
         }
       },
+      "replaceInput": {
+        "type": "object",
+        "description": "Regex used to sanitize input.",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The regular expression pattern to use to sanitize input."
+          },
+          "flags": {
+            "type": "string",
+            "description": "The regex flags to use. The default value is 'gm'."
+          },
+          "replacement": {
+            "type": "string",
+            "description": "The string used to replace the input that matches the pattern. The default value is ''."
+          }
+        },
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
       "size": {
         "type": "string",
         "enum": ["small", "middle", "large"],

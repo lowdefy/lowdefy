@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
+
+
+### Bug Fixes
+
+* Add 200 response on auth API head requests ([d51e28f](https://github.com/lowdefy/lowdefy/commit/d51e28f99e9051ca7aba90c05fc325074b08469c))
+* Auth methods should return signin promises. ([5dcb778](https://github.com/lowdefy/lowdefy/commit/5dcb7788f54c07f6b5e4f3e9cf3d27537a795bb4))
+* **blocks-antd:** Add regex property to PhoneNumberInput block. ([c1e4080](https://github.com/lowdefy/lowdefy/commit/c1e4080476034704b105421a805e086c162a8e20))
+* **blocks-antd:** Add regex property to TextInput block. ([548e7a9](https://github.com/lowdefy/lowdefy/commit/548e7a925bc440436a51c140249e9f85881327f7))
+* **blocks-antd:** Rename regex property to replaceInput. ([cd811ae](https://github.com/lowdefy/lowdefy/commit/cd811ae6fae47a8384c73f439fd8fab86d0226ac))
+* **blocks-antd:** Update PhoneNumberInput styles.less file to include Select styles. ([8bdd479](https://github.com/lowdefy/lowdefy/commit/8bdd479afdc5afb001c4b8f5485789a94a4aee50))
+* **connection-mongodb:** Handle upsert true on MongoDBUpdateOne ([7611bee](https://github.com/lowdefy/lowdefy/commit/7611bee1899332b6ccca03fada7cec1541d6c902))
+* **deps:** update dependency yaml to v2.2.2 [security] ([8e015fe](https://github.com/lowdefy/lowdefy/commit/8e015fec47a40bc5233f23d8da345720475d1232))
+* Fix basePath on requests. ([a2b4aaf](https://github.com/lowdefy/lowdefy/commit/a2b4aaf19ba6a5ccf213e7d08a2df342794d4420)), closes [#1554](https://github.com/lowdefy/lowdefy/issues/1554)
+* Fix initialisation of lowdefy context object. ([2ed4398](https://github.com/lowdefy/lowdefy/commit/2ed4398d59be5b037e7a4d17f7e5a14398e73973))
+* Fix next auth session provider base path ([715cdf2](https://github.com/lowdefy/lowdefy/commit/715cdf2cc48da88a55055c4af28435aa789f67ea))
+* Fix server configuration migration guide ([53f52f6](https://github.com/lowdefy/lowdefy/commit/53f52f6b150ddbabfef5ab13b9a983173839fc97))
+* Fix web manifest and icons with base path. ([9620a2c](https://github.com/lowdefy/lowdefy/commit/9620a2c80133ebcbaedbe08d66fb1387a3fb38f1))
+* Reload page if auth session expires ([6223783](https://github.com/lowdefy/lowdefy/commit/6223783b84892f8c9469ee740417ccca1004a16b))
+* Server session not passed to session provider ([36f8d5a](https://github.com/lowdefy/lowdefy/commit/36f8d5ae15b0a6aae58fd6b4cab955f91a2d93e7))
+
+
+### Features
+
+* **actions-core:** Add UpdateSession action. ([c5d6011](https://github.com/lowdefy/lowdefy/commit/c5d601151acbdb791aaf1304ae95b0ccb18b8c03))
+* Add helper findLogCollectionRecordTestMongoDb ([bc590c9](https://github.com/lowdefy/lowdefy/commit/bc590c99c241f0fbb046be4e13a710070c96cba5))
+* **blocks-antd:** Add Carousel block to default Lowdefy blocks. ([85972d1](https://github.com/lowdefy/lowdefy/commit/85972d1d8e4f3fbd00ac55e386ef0f9a326bbdaa))
+* **connection-mongodb:** Add log collection tests MongoDBDeleteMany ([15a8b22](https://github.com/lowdefy/lowdefy/commit/15a8b2226828a80ab83d5cfe11c355bb3f45d576))
+* **connection-mongodb:** Add log collection tests MongoDBDeleteOne ([5a1334a](https://github.com/lowdefy/lowdefy/commit/5a1334a291c0c1a2263ab0c53cb727efaf6a8693))
+* **connection-mongodb:** Add log collection tests MongoDBInsertMany ([64dc0d2](https://github.com/lowdefy/lowdefy/commit/64dc0d22b8810f2ca23085770cffd61aaacb5c92))
+* **connection-mongodb:** Add log collection tests MongoDBInsertOne ([a882513](https://github.com/lowdefy/lowdefy/commit/a882513a81cafcc355d212bbb9331a18dd3cc809))
+* **connection-mongodb:** Add log collection tests MongoDBUpdateMany ([1b9c64b](https://github.com/lowdefy/lowdefy/commit/1b9c64bb56b7b780ea87b8bc430503386a1bac72))
+* **connection-mongodb:** Add log collection tests MongoDBUpdateOne ([9a66604](https://github.com/lowdefy/lowdefy/commit/9a666042429620ff689ee19cef8b97315a795fc5))
+* **docs:** Add Layout, Header-Content-Footer example to docs and migration guide ([878601e](https://github.com/lowdefy/lowdefy/commit/878601efda3b6190f34151e35daf6882a37ce328))
+* Remove support for setting base path using an environment variable ([ec7052d](https://github.com/lowdefy/lowdefy/commit/ec7052dab152645b4a5ed9098320e46488041034))
+* Update project readme for v4. ([60f9708](https://github.com/lowdefy/lowdefy/commit/60f9708d2b5292b343dacfe510c9cd33ac8dc874))
+
+
+
+
+
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 

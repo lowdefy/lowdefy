@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import Auth from '../lib/auth/Auth.js';
@@ -23,9 +23,10 @@ import Auth from '../lib/auth/Auth.js';
 import '../build/plugins/styles.less';
 
 function App({ Component }) {
+  const lowdefyRef = useRef({});
   return (
     <Suspense fallback="">
-      <Auth>{(auth) => <Component auth={auth} />}</Auth>
+      <Auth>{(auth) => <Component auth={auth} lowdefy={lowdefyRef.current} />}</Auth>
     </Suspense>
   );
 }

@@ -16,7 +16,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import React, { useEffect, useRef } from 'react';
-import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
+import { getSession, SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
 
 import lowdefyConfig from '../../build/config.json';
 
@@ -41,7 +41,7 @@ function Session({ children }) {
 }
 
 function AuthConfigured({ authConfig, children, serverSession }) {
-  const auth = { signIn, signOut, authConfig };
+  const auth = { authConfig, getSession, signIn, signOut };
   let basePath = lowdefyConfig.basePath;
   if (basePath) {
     basePath = `${basePath}/api/auth`;

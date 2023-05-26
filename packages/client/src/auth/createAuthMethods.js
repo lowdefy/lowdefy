@@ -39,7 +39,7 @@ function getCallbackUrl({ lowdefy, callbackUrl = {} }) {
   return undefined;
 }
 
-function createAuthMethods({ lowdefy, auth }) {
+function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
   function login({ authUrl, callbackUrl, providerId, ...rest } = {}) {
@@ -47,18 +47,26 @@ function createAuthMethods({ lowdefy, auth }) {
       providerId = auth.authConfig.providers[0].id;
     }
 
-    auth.signIn(
+    return auth.signIn(
       providerId,
       { ...rest, callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }) },
       authUrl?.urlQuery
     );
   }
+
   function logout({ callbackUrl, redirect } = {}) {
-    auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
+    return auth.signOut({ callbackUrl: getCallbackUrl({ lowdefy, callbackUrl }), redirect });
   }
+
+  async function updateSession() {
+    const session = await auth.getSession();
+    lowdefy.user = session?.user ?? null;
+  }
+
   return {
     login,
     logout,
+    updateSession,
   };
 }
 

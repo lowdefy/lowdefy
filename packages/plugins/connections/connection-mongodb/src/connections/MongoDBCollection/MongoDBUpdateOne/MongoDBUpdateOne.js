@@ -31,7 +31,9 @@ async function MongodbUpdateOne({ blockId, connection, pageId, request, requestI
         options
       );
       response = responseWithoutValue;
-      const after = await collection.findOne({ _id: value._id });
+      const after = await collection.findOne({
+        _id: value ? value._id : response.lastErrorObject?.upserted,
+      });
       await logCollection.insertOne({
         args: { filter, update, options },
         blockId,
