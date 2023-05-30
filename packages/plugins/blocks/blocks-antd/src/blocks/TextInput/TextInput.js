@@ -57,7 +57,17 @@ const TextInput = ({
               status={validation.status}
               value={value}
               onChange={(event) => {
-                methods.setValue(event.target.value);
+                var input = event.target.value;
+
+                if (properties.replaceInput) {
+                  const regex = new RegExp(
+                    properties.replaceInput.pattern,
+                    properties.replaceInput.flags ?? 'gm'
+                  );
+                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                }
+
+                methods.setValue(input);
                 methods.triggerEvent({ name: 'onChange' });
                 const cStart = event.target.selectionStart;
                 const cEnd = event.target.selectionEnd;

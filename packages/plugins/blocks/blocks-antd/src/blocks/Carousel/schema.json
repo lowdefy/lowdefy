@@ -1,0 +1,183 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "accessibility": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable tabbing and arrow key navigation."
+      },
+      "adaptiveHeight": {
+        "type": "boolean",
+        "default": false,
+        "description": "Adjust the slide's height automatically."
+      },
+      "arrows": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether or not to show arrows."
+      },
+      "autoplaySpeed": {
+        "type": "integer",
+        "default": 3000,
+        "description": "Delay between each auto scroll (in milliseconds)."
+      },
+      "autoplay": {
+        "type": "boolean",
+        "default": false,
+        "description": "Toggles whether or not to scroll automatically."
+      },
+      "centerMode": {
+        "type": "boolean",
+        "default": false,
+        "description": "Center current slide."
+      },
+      "centerPadding": {
+        "type": "string",
+        "default": "50px",
+        "description": "Padding applied to center slide."
+      },
+      "dotPosition": {
+        "type": "string",
+        "enum": ["left", "right", "top", "bottom"],
+        "default": "bottom",
+        "description": "The position of the dots, which can be one of top, bottom, left or right."
+      },
+      "dots": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not to show the dots."
+      },
+      "draggable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Enable scrollable via dragging on desktop"
+      },
+      "easing": {
+        "type": "string",
+        "default": "linear",
+        "description": "Transition interpolation function name."
+      },
+      "effect": {
+        "type": "string",
+        "default": "scrollx",
+        "description": "Transition effect, either scrollx or fade."
+      },
+      "focusOnSelect": {
+        "type": "boolean",
+        "default": false,
+        "description": "Go to slide on click."
+      },
+      "infinite": {
+        "type": "boolean",
+        "default": true,
+        "description": "Infinitely wrap around contents."
+      },
+      "pauseOnDotsHover": {
+        "type": "boolean",
+        "default": false,
+        "description": "Prevents autoplay while hovering on dot."
+      },
+      "pauseOnFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Prevents autoplay while focused on slides."
+      },
+      "pauseOnHover": {
+        "type": "boolean",
+        "default": true,
+        "description": "Prevents autoplay while hovering on track."
+      },
+      "responsive": {
+        "type": "array",
+        "default": [],
+        "description": "Customize based on breakpoints.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "breakpoint": {
+              "type": "integer",
+              "description": "Maximum screen size."
+            },
+            "settings": {
+              "type": "object",
+              "description": "Carousel properties.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
+        }
+      },
+      "rows": {
+        "type": "integer",
+        "default": 1,
+        "description": "Number of rows per slide in the slider, (enables grid mode)."
+      },
+      "rtl": {
+        "type": "boolean",
+        "default": false,
+        "description": "Reverses the slide order."
+      },
+      "slidesPerRow": {
+        "type": "integer",
+        "default": 1,
+        "description": "Number of slides to display in grid mode, this is useful with rows option."
+      },
+      "slidesToScroll": {
+        "type": "integer",
+        "default": 1,
+        "description": "How many slides to scroll at once."
+      },
+      "slidesToShow": {
+        "type": "integer",
+        "default": 1,
+        "description": "How many slides to show in one frame."
+      },
+      "speed": {
+        "type": "integer",
+        "default": 500,
+        "description": "Number of slides to display in grid mode, this is useful with rows option."
+      },
+      "swipeToSlide": {
+        "type": "boolean",
+        "default": false,
+        "description": "Enable drag/swipe irrespective of `slidesToScroll`."
+      },
+      "swipe": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable/disable swiping to change slides."
+      },
+      "vertical": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether or not the slides are shown in a column."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "afterChange": {
+        "type": "array",
+        "description": "Trigger actions after the slide is changed."
+      },
+      "beforeChange": {
+        "type": "array",
+        "description": "Trigger actions before the slide is changed."
+      },
+      "onInit": {
+        "type": "array",
+        "description": "Trigger actions when the carousel is initialized."
+      },
+      "onSwipe": {
+        "type": "array",
+        "description": "Trigger actions when the carousel is swiped."
+      }
+    }
+  }
+}

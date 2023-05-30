@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
+
+
+### Bug Fixes
+
+* Add 200 response on auth API head requests ([d51e28f](https://github.com/lowdefy/lowdefy/commit/d51e28f99e9051ca7aba90c05fc325074b08469c))
+* **deps:** update dependency yaml to v2.2.2 [security] ([8e015fe](https://github.com/lowdefy/lowdefy/commit/8e015fec47a40bc5233f23d8da345720475d1232))
+* Fix initialisation of lowdefy context object. ([2ed4398](https://github.com/lowdefy/lowdefy/commit/2ed4398d59be5b037e7a4d17f7e5a14398e73973))
+* Fix next auth session provider base path ([715cdf2](https://github.com/lowdefy/lowdefy/commit/715cdf2cc48da88a55055c4af28435aa789f67ea))
+* Fix web manifest and icons with base path. ([9620a2c](https://github.com/lowdefy/lowdefy/commit/9620a2c80133ebcbaedbe08d66fb1387a3fb38f1))
+* Reload page if auth session expires ([6223783](https://github.com/lowdefy/lowdefy/commit/6223783b84892f8c9469ee740417ccca1004a16b))
+* Server session not passed to session provider ([36f8d5a](https://github.com/lowdefy/lowdefy/commit/36f8d5ae15b0a6aae58fd6b4cab955f91a2d93e7))
+
+
+### Features
+
+* **actions-core:** Add UpdateSession action. ([c5d6011](https://github.com/lowdefy/lowdefy/commit/c5d601151acbdb791aaf1304ae95b0ccb18b8c03))
+* Remove support for setting base path using an environment variable ([ec7052d](https://github.com/lowdefy/lowdefy/commit/ec7052dab152645b4a5ed9098320e46488041034))
+
+
+
+
+
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 **Note:** Version bump only for package @lowdefy/server

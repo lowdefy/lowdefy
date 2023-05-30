@@ -1,0 +1,117 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: Carousel
+- id: basic_carousel
+  type: Carousel
+  properties:
+    draggable: true
+    slidesToShow: 1
+    slides:
+      - key: slide_one
+      - key: slide_two
+      - key: slide_three
+  areas:
+    slide_one:
+      blocks:
+        - id: side_1
+          type: Card
+          blocks:
+            - id: title_side_1
+              type: Title
+              properties:
+                content: Slide 1
+    slide_two:
+      blocks:
+        - id: side_2
+          type: Card
+          blocks:
+            - id: title_side_2
+              type: Title
+              properties:
+                content: Slide 2
+    slide_three:
+      blocks:
+        - id: side_3
+          type: Card
+          blocks:
+            - id: title_side_3
+              type: Title
+              properties:
+                content: Slide 3
+- id: responsive_carousel
+  type: Carousel
+  properties:
+    autoplay: true
+    draggable: true
+    slidesToShow: 3
+    slides:
+      - key: slide_one
+      - key: slide_two
+      - key: slide_three
+      - key: slide_four
+    responsive:
+      - breakpoint: 1024
+        settings:
+          slidesToShow: 3
+          slidesToScroll: 3
+          infinite: true
+          dots: true
+      - breakpoint: 600
+        settings:
+          slidesToShow: 2
+          slidesToScroll: 2
+          initialSlide: 2
+      - breakpoint: 480
+        settings:
+          slidesToShow: 1
+          slidesToScroll: 1
+  areas:
+    slide_one:
+      blocks:
+        - id: side_1
+          type: Card
+          blocks:
+            - id: title_side_1
+              type: Title
+              properties:
+                content: Slide 1
+    slide_two:
+      blocks:
+        - id: side_2
+          type: Card
+          blocks:
+            - id: title_side_2
+              type: Title
+              properties:
+                content: Slide 2
+    slide_three:
+      blocks:
+        - id: side_3
+          type: Card
+          blocks:
+            - id: title_side_3
+              type: Title
+              properties:
+                content: Slide 3
+    slide_four:
+      blocks:
+        - id: side_4
+          type: Card
+          blocks:
+            - id: title_side_4
+              type: Title
+              properties:
+                content: Slide 4

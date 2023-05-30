@@ -87,7 +87,7 @@ _ref:
             ################ -------- Copy to here ---------- ################
             ```
 
-            Your booking page should something like this:
+            Your new-ticket page should look something like this:
       - id: example1
         type: PageHeaderMenu
         layout:

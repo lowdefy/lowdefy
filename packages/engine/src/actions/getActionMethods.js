@@ -34,6 +34,7 @@ import createReset from './createReset.js';
 import createResetValidation from './createResetValidation.js';
 import createSetGlobal from './createSetGlobal.js';
 import createSetState from './createSetState.js';
+import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
 
 function getActionMethods(props) {
@@ -58,6 +59,7 @@ function getActionMethods(props) {
     resetValidation: createResetValidation(props),
     setGlobal: createSetGlobal(props),
     setState: createSetState(props),
+    updateSession: createUpdateSession(props),
     validate: createValidate(props),
   };
 }

@@ -20,7 +20,7 @@ import Client from '@lowdefy/client';
 import RestartingPage from './RestartingPage.js';
 import usePageConfig from './utils/usePageConfig.js';
 
-const Page = ({ auth, Components, config, pageId, resetContext, router, types }) => {
+const Page = ({ auth, Components, config, lowdefy, pageId, resetContext, router, types }) => {
   const { data: pageConfig } = usePageConfig(pageId, router.basePath);
 
   if (!pageConfig) {
@@ -38,6 +38,7 @@ const Page = ({ auth, Components, config, pageId, resetContext, router, types })
         ...config,
         pageConfig,
       }}
+      lowdefy={lowdefy}
       resetContext={resetContext}
       router={router}
       stage="dev"

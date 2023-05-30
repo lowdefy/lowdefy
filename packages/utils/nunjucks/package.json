@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/nunjucks",
-  "version": "4.0.0-rc.7",
+  "version": "4.0.0-rc.8",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.7",
+    "@lowdefy/helpers": "4.0.0-rc.8",
     "moment": "2.29.4"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "@swc/jest": "0.2.24",
     "clean-webpack-plugin": "4.0.0",
     "jest": "28.1.0",
-    "nunjucks": "3.2.3",
+    "nunjucks": "3.2.4",
     "swc-loader": "0.2.3",
     "webpack": "5.76.0",
     "webpack-cli": "5.0.1"
