@@ -209,6 +209,8 @@ _ref:
 
                 The `_format` operator has been replaced with the [`_intl`](/_intl) and [`_moment`](/_moment) operator, with some minor schema changes.
 
+                The format of dates in the output of the  [`_json.stringify`](/_json) and [`_yaml.stringify`](/_yaml) operators, as well as in URL query parameters has changed from `_date: {iso_date_string}` to `~d: {iso_date_string}`.
+
                 ## Block Loading States
 
                 The page loading states in version 4 have been improved. In general apps should load a lot faster. Blocks will now be a lot less likely to show a loading state and rather render as normal, and render their children. Input blocks will be disabled while in a loading state. This contributes to users seeing useful content sooner, and to less layout shifts once the app finishes loading.
