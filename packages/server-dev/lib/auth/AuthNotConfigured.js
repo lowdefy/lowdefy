@@ -22,6 +22,7 @@ function authNotConfigured() {
 function AuthNotConfigured({ authConfig, children }) {
   const auth = {
     authConfig,
+    getSession: authNotConfigured,
     signIn: authNotConfigured,
     signOut: authNotConfigured,
   };
