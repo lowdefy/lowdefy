@@ -47,7 +47,7 @@ async function sha1(filePath) {
     content = JSON.stringify(
       JSON.parse(content, (_, value) => {
         if (!type.isObject(value)) return value;
-        delete value._k_;
+        delete value['~k'];
         return value;
       })
     );

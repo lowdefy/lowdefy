@@ -42,9 +42,9 @@ class ServerParser {
     const errors = [];
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass _k_ in errors.
-      // const _k_ = value._k_;
-      delete value._k_;
+      // TODO: pass ~k in errors.
+      // const _k = value['~k'];
+      delete value['~k'];
       if (Object.keys(value).length !== 1) return value;
 
       const key = Object.keys(value)[0];

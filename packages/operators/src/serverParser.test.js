@@ -68,8 +68,8 @@ test('parse location not string', () => {
   );
 });
 
-test('operator returns value and removes _k_', () => {
-  const input = { a: { _test: { params: true, _k_: 'c' }, _k_: 'b' }, _k_: 'a' };
+test('operator returns value and removes ~k', () => {
+  const input = { a: { _test: { params: true, '~k': 'c' }, '~k': 'b' }, '~k': 'a' };
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: 'test' });
