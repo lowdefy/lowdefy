@@ -15,7 +15,7 @@
 */
 
 import { ObjectId } from 'mongodb';
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 function replacer(_, value) {
   if (type.isObject(value)) {
@@ -23,10 +23,6 @@ function replacer(_, value) {
       if (value[key] instanceof ObjectId) {
         // eslint-disable-next-line no-param-reassign
         value[key] = { _oid: value[key].toHexString() };
-      }
-      if (type.isDate(value[key])) {
-        // eslint-disable-next-line no-param-reassign
-        value[key] = { _date: value[key].valueOf() };
       }
     });
 
@@ -36,9 +32,6 @@ function replacer(_, value) {
     return value.map((item) => {
       if (item instanceof ObjectId) {
         return { _oid: item.toHexString() };
-      }
-      if (type.isDate(item)) {
-        return { _date: item.valueOf() };
       }
       return item;
     });
@@ -51,23 +44,16 @@ function reviver(key, value) {
     if (value._oid) {
       return ObjectId.createFromHexString(value._oid);
     }
-    if (type.isInt(value._date) || type.isString(value._date)) {
-      return new Date(value._date);
-    }
   }
   return value;
 }
 
 function serialize(obj) {
-  if (type.isUndefined(obj)) return obj;
-  return JSON.parse(JSON.stringify(obj, replacer));
+  return serializer.copy(obj, { replacer });
 }
 
-// need to use replacer here, since objects are already partially deserialised.
-// otherwise dates become strings
 function deserialize(obj) {
-  if (type.isUndefined(obj)) return obj;
-  return JSON.parse(JSON.stringify(obj, replacer), reviver);
+  return serializer.copy(obj, { reviver });
 }
 
 export { serialize, deserialize };
