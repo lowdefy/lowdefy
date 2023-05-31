@@ -352,7 +352,7 @@ test('deserialize inputs', async () => {
   await callRequest(context, {
     blockId: 'contextId',
     payload: {
-      date: { _date: 0 },
+      date: { '~d': 0 },
     },
     pageId: 'pageId',
     requestId: 'requestId',

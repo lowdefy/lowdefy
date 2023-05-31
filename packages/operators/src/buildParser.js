@@ -42,8 +42,8 @@ class BuildParser {
     const errors = [];
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass _r_ in errors. Build does not have _k_.
-      if (type.isString(value._r_)) return value;
+      // TODO: pass ~r in errors. Build does not have ~k.
+      if (type.isString(value['~r'])) return value;
       if (Object.keys(value).length !== 1) return value;
       const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;

@@ -22,16 +22,16 @@ function recAddKeys(object, key, keyMap, parentId) {
   const id = makeId();
   keyMap[id] = {
     key,
-    _r_: object._r_,
-    _k_parent: parentId,
+    '~r': object['~r'],
+    '~k_parent': parentId,
   };
-  Object.defineProperty(object, '_k_', {
+  Object.defineProperty(object, '~k', {
     value: id,
     enumerable: false,
     writable: true,
     configurable: true,
   });
-  delete object._r_;
+  delete object['~r'];
   Object.keys(object).forEach((nextKey) => {
     if (type.isObject(object[nextKey])) {
       recAddKeys(object[nextKey], `${key}.${nextKey}`, keyMap, id);
