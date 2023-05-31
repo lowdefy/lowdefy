@@ -17,7 +17,8 @@
 import React from 'react';
 
 import { AgGridReact } from '@ag-grid-community/react';
-import { AllCommunityModules } from '@ag-grid-community/all-modules';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import { CsvExportModule } from '@ag-grid-community/csv-export';
 
 import processColDefs from './processColDefs.js';
 
@@ -170,7 +171,7 @@ class AgGrid extends React.Component {
         onRowClicked={this.onRowClick}
         onCellClicked={this.onCellClicked}
         onGridReady={this.onGridReady}
-        modules={AllCommunityModules}
+        modules={[ClientSideRowModelModule, CsvExportModule]}
         columnDefs={processColDefs(columnDefs, this.props.methods)}
         {...someProperties}
       />

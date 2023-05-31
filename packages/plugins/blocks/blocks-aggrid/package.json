@@ -49,9 +49,11 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ag-grid-community/all-modules": "27.3.0",
-    "@ag-grid-community/core": "27.3.0",
-    "@ag-grid-community/react": "27.3.0",
+    "@ag-grid-community/client-side-row-model": "29.3.5",
+    "@ag-grid-community/core": "29.3.5",
+    "@ag-grid-community/csv-export": "29.3.5",
+    "@ag-grid-community/react": "29.3.5",
+    "@ag-grid-community/styles": "29.3.5",
     "@lowdefy/block-utils": "4.0.0-rc.8",
     "@lowdefy/helpers": "4.0.0-rc.8",
     "react": "18.2.0",
