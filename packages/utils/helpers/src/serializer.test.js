@@ -16,27 +16,27 @@
 
 import serializer from './serializer.js';
 
-test('serialize convert object js date to _date', () => {
+test('serialize convert object js date to ~d', () => {
   let object = {
     a: new Date(0),
   };
-  expect(serializer.serialize(object)).toEqual({ a: { _date: 0 } });
+  expect(serializer.serialize(object)).toEqual({ a: { '~d': 0 } });
   object = {
     a: { b: { c: new Date(120) } },
   };
-  expect(serializer.serialize(object)).toEqual({ a: { b: { c: { _date: 120 } } } });
+  expect(serializer.serialize(object)).toEqual({ a: { b: { c: { '~d': 120 } } } });
 });
 
-test('serialize convert array js date to _date', () => {
+test('serialize convert array js date to ~d', () => {
   let object = {
     a: [new Date(0)],
   };
-  expect(serializer.serialize(object)).toEqual({ a: [{ _date: 0 }] });
+  expect(serializer.serialize(object)).toEqual({ a: [{ '~d': 0 }] });
   object = {
     a: [{ b: new Date(0), c: [null, new Date(10)], d: [{ e: new Date(20) }] }],
   };
   expect(serializer.serialize(object)).toEqual({
-    a: [{ b: { _date: 0 }, c: [null, { _date: 10 }], d: [{ e: { _date: 20 } }] }],
+    a: [{ b: { '~d': 0 }, c: [null, { '~d': 10 }], d: [{ e: { '~d': 20 } }] }],
   });
 });
 
@@ -50,14 +50,14 @@ test('serialize should not change a string date', () => {
 });
 
 test('serialize a date should return a serialized date', () => {
-  expect(serializer.serialize(new Date(0))).toEqual({ _date: 0 });
+  expect(serializer.serialize(new Date(0))).toEqual({ '~d': 0 });
 });
 
 test('serialize array of dates should return a serialized array', () => {
   expect(serializer.serialize([new Date(0), new Date(1), new Date(2)])).toEqual([
-    { _date: 0 },
-    { _date: 1 },
-    { _date: 2 },
+    { '~d': 0 },
+    { '~d': 1 },
+    { '~d': 2 },
   ]);
 });
 
@@ -72,31 +72,27 @@ test('serialize primitives should pass', () => {
   expect(serializer.serialize(undefined)).toEqual(undefined);
 });
 
-test('serializeToString convert object js date to _date', () => {
+test('serializeToString convert object js date to ~d', () => {
   let object = {
     a: new Date(0),
   };
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(`"{\\"a\\":{\\"_date\\":0}}"`);
+  expect(serializer.serializeToString(object)).toEqual('{"a":{"~d":0}}');
   object = {
     a: { b: { c: new Date(120) } },
   };
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(
-    `"{\\"a\\":{\\"b\\":{\\"c\\":{\\"_date\\":120}}}}"`
-  );
+  expect(serializer.serializeToString(object)).toEqual('{"a":{"b":{"c":{"~d":120}}}}');
 });
 
 test('serializeToString convert array js date to _date', () => {
   let object = {
     a: [new Date(0)],
   };
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(
-    `"{\\"a\\":[{\\"_date\\":0}]}"`
-  );
+  expect(serializer.serializeToString(object)).toEqual('{"a":[{"~d":0}]}');
   object = {
     a: [{ b: new Date(0), c: [null, new Date(10)], d: [{ e: new Date(20) }] }],
   };
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(
-    `"{\\"a\\":[{\\"b\\":{\\"_date\\":0},\\"c\\":[null,{\\"_date\\":10}],\\"d\\":[{\\"e\\":{\\"_date\\":20}}]}]}"`
+  expect(serializer.serializeToString(object)).toEqual(
+    '{"a":[{"b":{"~d":0},"c":[null,{"~d":10}],"d":[{"e":{"~d":20}}]}]}'
   );
 });
 
@@ -104,33 +100,29 @@ test('serializeToString should not change a string date', () => {
   let object = {
     a: '2019-11-18T09:51:30.152Z',
   };
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(
-    `"{\\"a\\":\\"2019-11-18T09:51:30.152Z\\"}"`
-  );
+  expect(serializer.serializeToString(object)).toEqual('{"a":"2019-11-18T09:51:30.152Z"}');
   object = ['2019-11-18T09:51:30.152Z'];
-  expect(serializer.serializeToString(object)).toMatchInlineSnapshot(
-    `"[\\"2019-11-18T09:51:30.152Z\\"]"`
-  );
+  expect(serializer.serializeToString(object)).toEqual('["2019-11-18T09:51:30.152Z"]');
 });
 
 test('serializeToString a date should return a serialized date', () => {
-  expect(serializer.serializeToString(new Date(0))).toMatchInlineSnapshot(`"{ \\"_date\\": 0 }"`);
+  expect(serializer.serializeToString(new Date(0))).toEqual('{ "~d": 0 }');
 });
 
 test('serialize array of dates should return a serialized array', () => {
-  expect(
-    serializer.serializeToString([new Date(0), new Date(1), new Date(2)])
-  ).toMatchInlineSnapshot(`"[{\\"_date\\":0},{\\"_date\\":1},{\\"_date\\":2}]"`);
+  expect(serializer.serializeToString([new Date(0), new Date(1), new Date(2)])).toEqual(
+    '[{"~d":0},{"~d":1},{"~d":2}]'
+  );
 });
 
 test('serializeToString primitives should pass', () => {
-  expect(serializer.serializeToString('a')).toMatchInlineSnapshot(`"\\"a\\""`);
-  expect(serializer.serializeToString(0)).toMatchInlineSnapshot(`"0"`);
-  expect(serializer.serializeToString(1)).toMatchInlineSnapshot(`"1"`);
-  expect(serializer.serializeToString(-0.1)).toMatchInlineSnapshot(`"-0.1"`);
-  expect(serializer.serializeToString(false)).toMatchInlineSnapshot(`"false"`);
-  expect(serializer.serializeToString(true)).toMatchInlineSnapshot(`"true"`);
-  expect(serializer.serializeToString(null)).toMatchInlineSnapshot(`"null"`);
+  expect(serializer.serializeToString('a')).toEqual('"a"');
+  expect(serializer.serializeToString(0)).toEqual('0');
+  expect(serializer.serializeToString(1)).toEqual('1');
+  expect(serializer.serializeToString(-0.1)).toEqual('-0.1');
+  expect(serializer.serializeToString(false)).toEqual('false');
+  expect(serializer.serializeToString(true)).toEqual('true');
+  expect(serializer.serializeToString(null)).toEqual('null');
   expect(serializer.serializeToString(undefined)).toEqual(undefined);
 });
 
@@ -189,26 +181,26 @@ test('serializeToString space option', () => {
 
 test('deserialize convert _date object to js date', () => {
   let object = {
-    a: { _date: 0 },
+    a: { '~d': 0 },
   };
   expect(serializer.deserialize(object)).toEqual({ a: new Date(0) });
   object = {
-    a: { b: { c: { _date: 120 } } },
+    a: { b: { c: { '~d': 120 } } },
   };
   expect(serializer.deserialize(object)).toEqual({ a: { b: { c: new Date(120) } } });
   object = {
-    a: { _date: '1970-01-01T00:00:00.000Z' },
+    a: { '~d': '1970-01-01T00:00:00.000Z' },
   };
   expect(serializer.deserialize(object)).toEqual({ a: new Date(0) });
 });
 
 test('deserialize convert _date in array to js date', () => {
   let object = {
-    a: [{ _date: 0 }],
+    a: [{ '~d': 0 }],
   };
   expect(serializer.deserialize(object)).toEqual({ a: [new Date(0)] });
   object = {
-    a: [{ b: { _date: 0 }, c: [null, { _date: 10 }], d: [{ e: { _date: 20 } }] }],
+    a: [{ b: { '~d': 0 }, c: [null, { '~d': 10 }], d: [{ e: { '~d': 20 } }] }],
   };
   expect(serializer.deserialize(object)).toEqual({
     a: [{ b: new Date(0), c: [null, new Date(10)], d: [{ e: new Date(20) }] }],
@@ -225,17 +217,17 @@ test('deserialize should not change a string date', () => {
 });
 
 test('deserialize a _date date should return a js date', () => {
-  expect(serializer.deserialize({ _date: 0 })).toEqual(new Date(0));
-  expect(serializer.deserialize({ _date: '1970-01-01T00:00:00.000Z' })).toEqual(new Date(0));
+  expect(serializer.deserialize({ '~d': 0 })).toEqual(new Date(0));
+  expect(serializer.deserialize({ '~d': '1970-01-01T00:00:00.000Z' })).toEqual(new Date(0));
 });
 
 test('deserialize array of _date dates should return a js date array', () => {
-  expect(serializer.deserialize([{ _date: 0 }, { _date: 1 }, { _date: 2 }])).toEqual([
+  expect(serializer.deserialize([{ '~d': 0 }, { '~d': 1 }, { '~d': 2 }])).toEqual([
     new Date(0),
     new Date(1),
     new Date(2),
   ]);
-  expect(serializer.deserialize({ a: [{ _date: '1970-01-01T00:00:00.000Z' }] })).toEqual({
+  expect(serializer.deserialize({ a: [{ '~d': '1970-01-01T00:00:00.000Z' }] })).toEqual({
     a: [new Date(0)],
   });
 });
@@ -252,26 +244,26 @@ test('deserialize primitives should pass', () => {
 });
 
 test('deserializeFromString convert object js date to _date', () => {
-  let object = `{ "a":{ "_date":0}}`;
+  let object = `{ "a":{ "~d":0}}`;
   expect(serializer.deserializeFromString(object)).toEqual({
     a: new Date(0),
   });
-  object = `{"a":{"b":{"c":{"_date":120}}}}`;
+  object = `{"a":{"b":{"c":{"~d":120}}}}`;
   expect(serializer.deserializeFromString(object)).toEqual({
     a: { b: { c: new Date(120) } },
   });
-  object = `{ "a":{ "_date":"1970-01-01T00:00:00.000Z"}}`;
+  object = `{ "a":{ "~d":"1970-01-01T00:00:00.000Z"}}`;
   expect(serializer.deserializeFromString(object)).toEqual({
     a: new Date(0),
   });
 });
 
 test('deserializeFromString convert array js date to _date', () => {
-  let object = `{"a":[{"_date":0}]}`;
+  let object = `{"a":[{"~d":0}]}`;
   expect(serializer.deserializeFromString(object)).toEqual({
     a: [new Date(0)],
   });
-  object = `{"a":[{"b":{"_date":0},"c":[null,{"_date":10}],"d":[{"e":{"_date":20}}]}]}`;
+  object = `{"a":[{"b":{"~d":0},"c":[null,{"~d":10}],"d":[{"e":{"~d":20}}]}]}`;
   expect(serializer.deserializeFromString(object)).toEqual({
     a: [{ b: new Date(0), c: [null, new Date(10)], d: [{ e: new Date(20) }] }],
   });
@@ -287,16 +279,16 @@ test('deserializeFromString should not change a string date', () => {
 });
 
 test('deserializeFromString a date should return a serialized date', () => {
-  expect(serializer.deserializeFromString(`{"_date":0}`)).toEqual(new Date(0));
+  expect(serializer.deserializeFromString(`{"~d":0}`)).toEqual(new Date(0));
 });
 
 test('deserializeFromString array of dates should return a serialized array', () => {
-  expect(serializer.deserializeFromString(`[{"_date":0},{"_date":1},{"_date":2}]`)).toEqual([
+  expect(serializer.deserializeFromString(`[{"~d":0},{"~d":1},{"~d":2}]`)).toEqual([
     new Date(0),
     new Date(1),
     new Date(2),
   ]);
-  expect(serializer.deserializeFromString(`[{"_date":"1970-01-01T00:00:00.000Z"}]`)).toEqual([
+  expect(serializer.deserializeFromString(`[{"~d":"1970-01-01T00:00:00.000Z"}]`)).toEqual([
     new Date(0),
   ]);
 });
@@ -310,7 +302,7 @@ test('deserializeFromString primitives should pass', () => {
   expect(serializer.deserializeFromString(`true`)).toEqual(true);
   expect(serializer.deserializeFromString(`null`)).toEqual(null);
   expect(() => {
-    serializer.deserializeFromString(`undefined}`);
+    serializer.deserializeFromString(`undefined`);
   }).toThrow(); // does not work with undefined
 });
 
@@ -365,7 +357,7 @@ test('copy with custom reviver', () => {
 test('deserializeFromString with custom reviver', () => {
   const reviver = (key, value) => (key === 'a' ? 'x' : value);
   expect(
-    serializer.deserializeFromString('{ "a": 1, "b": 2, "c": {"_date": 120 } }', { reviver })
+    serializer.deserializeFromString('{ "a": 1, "b": 2, "c": {"~d": 120 } }', { reviver })
   ).toEqual({
     a: 'x',
     b: 2,
@@ -375,7 +367,7 @@ test('deserializeFromString with custom reviver', () => {
 
 test('deserialize with custom reviver', () => {
   const reviver = (key, value) => (key === 'a' ? 'x' : value);
-  expect(serializer.deserialize({ a: 1, b: 2, c: { _date: 120 } }, { reviver })).toEqual({
+  expect(serializer.deserialize({ a: 1, b: 2, c: { '~d': 120 } }, { reviver })).toEqual({
     a: 'x',
     b: 2,
     c: new Date(120),
@@ -394,7 +386,7 @@ test('copy with custom replacer', () => {
 test('serializeToString with custom replacer', () => {
   const replacer = (key, value) => (key === 'a' ? 'x' : value);
   expect(serializer.serializeToString({ a: 1, b: 2, c: new Date(120) }, { replacer })).toEqual(
-    '{"a":"x","b":2,"c":{"_date":120}}'
+    '{"a":"x","b":2,"c":{"~d":120}}'
   );
 });
 
@@ -403,130 +395,112 @@ test('serialize with custom replacer', () => {
   expect(serializer.serialize({ a: 1, b: 2, c: new Date(120) }, { replacer })).toEqual({
     a: 'x',
     b: 2,
-    c: { _date: 120 },
-  });
-});
-
-test('should not deserialize _date now', () => {
-  expect(serializer.copy({ _date: 'now' })).toEqual({ _date: 'now' });
-  expect(serializer.copy([{ _date: 'now' }])).toEqual([{ _date: 'now' }]);
-  expect(serializer.copy({ a: { _date: 'now' } })).toEqual({ a: { _date: 'now' } });
-
-  expect(serializer.deserialize({ _date: 'now' })).toEqual({ _date: 'now' });
-  expect(serializer.deserialize([{ _date: 'now' }])).toEqual([{ _date: 'now' }]);
-  expect(serializer.deserialize({ a: { _date: 'now' } })).toEqual({ a: { _date: 'now' } });
-
-  expect(serializer.deserializeFromString('{ "_date": "now" }')).toEqual({ _date: 'now' });
-  expect(serializer.deserializeFromString('[{ "_date": "now" }]')).toEqual([{ _date: 'now' }]);
-  expect(serializer.deserializeFromString('{ "a": { "_date": "now" } }')).toEqual({
-    a: { _date: 'now' },
+    c: { '~d': 120 },
   });
 });
 
 test('deserialize should pass invalid date through without error', () => {
-  expect(serializer.copy({ _date: 'invalid' })).toEqual({ _date: 'invalid' });
-  expect(serializer.copy([{ _date: 'invalid' }])).toEqual([{ _date: 'invalid' }]);
-  expect(serializer.copy({ a: { _date: 'invalid' } })).toEqual({ a: { _date: 'invalid' } });
+  expect(serializer.copy({ '~d': 'invalid' })).toEqual({ '~d': 'invalid' });
+  expect(serializer.copy([{ '~d': 'invalid' }])).toEqual([{ '~d': 'invalid' }]);
+  expect(serializer.copy({ a: { '~d': 'invalid' } })).toEqual({ a: { '~d': 'invalid' } });
 
-  expect(serializer.deserialize({ _date: 'invalid' })).toEqual({ _date: 'invalid' });
-  expect(serializer.deserialize([{ _date: 'invalid' }])).toEqual([{ _date: 'invalid' }]);
-  expect(serializer.deserialize({ a: { _date: 'invalid' } })).toEqual({ a: { _date: 'invalid' } });
+  expect(serializer.deserialize({ '~d': 'invalid' })).toEqual({ '~d': 'invalid' });
+  expect(serializer.deserialize([{ '~d': 'invalid' }])).toEqual([{ '~d': 'invalid' }]);
+  expect(serializer.deserialize({ a: { '~d': 'invalid' } })).toEqual({ a: { '~d': 'invalid' } });
 
-  expect(serializer.deserializeFromString('{ "_date": "invalid" }')).toEqual({ _date: 'invalid' });
-  expect(serializer.deserializeFromString('[{ "_date": "invalid" }]')).toEqual([
-    { _date: 'invalid' },
-  ]);
-  expect(serializer.deserializeFromString('{ "a": { "_date": "invalid" } }')).toEqual({
-    a: { _date: 'invalid' },
+  expect(serializer.deserializeFromString('{ "~d": "invalid" }')).toEqual({ '~d': 'invalid' });
+  expect(serializer.deserializeFromString('[{ "~d": "invalid" }]')).toEqual([{ '~d': 'invalid' }]);
+  expect(serializer.deserializeFromString('{ "a": { "~d": "invalid" } }')).toEqual({
+    a: { '~d': 'invalid' },
   });
 });
 
 test('serialize isoStringDates', () => {
   expect(serializer.serialize(new Date(0), { isoStringDates: true })).toEqual({
-    _date: '1970-01-01T00:00:00.000Z',
+    '~d': '1970-01-01T00:00:00.000Z',
   });
   expect(serializer.serialize({ a: new Date(0) }, { isoStringDates: true })).toEqual({
-    a: { _date: '1970-01-01T00:00:00.000Z' },
+    a: { '~d': '1970-01-01T00:00:00.000Z' },
   });
   expect(serializer.serialize({ a: [new Date(0)] }, { isoStringDates: true })).toEqual({
-    a: [{ _date: '1970-01-01T00:00:00.000Z' }],
+    a: [{ '~d': '1970-01-01T00:00:00.000Z' }],
   });
 });
 
 test('serializeToString isoStringDates', () => {
   expect(serializer.serializeToString(new Date(0), { isoStringDates: true })).toEqual(
-    '{ "_date": "1970-01-01T00:00:00.000Z" }'
+    '{ "~d": "1970-01-01T00:00:00.000Z" }'
   );
   expect(serializer.serializeToString({ a: new Date(0) }, { isoStringDates: true })).toEqual(
-    '{"a":{"_date":"1970-01-01T00:00:00.000Z"}}'
+    '{"a":{"~d":"1970-01-01T00:00:00.000Z"}}'
   );
   expect(serializer.serializeToString({ a: [new Date(0)] }, { isoStringDates: true })).toEqual(
-    '{"a":[{"_date":"1970-01-01T00:00:00.000Z"}]}'
+    '{"a":[{"~d":"1970-01-01T00:00:00.000Z"}]}'
   );
 });
 
-test('serialize convert Error to _error', () => {
+test('serialize convert Error to ~e', () => {
   let object = {
     a: new Error('Test error'),
   };
   expect(serializer.serialize(object)).toEqual({
-    a: { _error: { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
+    a: { '~e': { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
   });
 });
 
-test('serializeToString convert Error to _error', () => {
+test('serializeToString convert Error to ~e', () => {
   let object = {
     a: new Error('Test error'),
   };
   expect(serializer.serializeToString(object)).toEqual(
-    '{"a":{"_error":{"name":"Error","message":"Test error","value":"Error: Test error"}}}'
+    '{"a":{"~e":{"name":"Error","message":"Test error","value":"Error: Test error"}}}'
   );
 });
 
-test('deserialize revive _error to Error', () => {
+test('deserialize revive ~e to Error', () => {
   let object = {
-    a: { _error: { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
+    a: { '~e': { message: 'Test error', name: 'Error', value: 'Error: Test error' } },
   };
   expect(serializer.deserialize(object)).toEqual({
     a: new Error('Test error'),
   });
 });
 
-test('deserializeFromString revive _error to Error', () => {
+test('deserializeFromString revive ~e to Error', () => {
   let object =
-    '{"a": {"_error": {"message": "Test error", "name": "Error", "value": "Error: Test error"}}}';
+    '{"a": {"~e": {"message": "Test error", "name": "Error", "value": "Error: Test error"}}}';
   expect(serializer.deserializeFromString(object)).toEqual({
     a: new Error('Test error'),
   });
 });
-test('deserialize with _k_ and _r_ values', () => {
+test('deserialize with ~k and ~r values', () => {
   let object = {
     x: 1,
-    _k_: 'a',
+    '~k': 'a',
   };
   let res = serializer.deserialize(object);
   expect(res).toEqual({
     x: 1,
   });
-  expect(res._k_).toEqual('a');
+  expect(res['~k']).toEqual('a');
   expect(Object.keys(res)).toEqual(['x']);
   object = {
     x: 1,
-    _r_: 'a',
+    '~r': 'a',
   };
   res = serializer.deserialize(object);
   expect(res).toEqual({
     x: 1,
   });
-  expect(res._r_).toEqual('a');
+  expect(res['~r']).toEqual('a');
   expect(Object.keys(res)).toEqual(['x']);
 });
 
-test('serialize with _k_ and _r_ values', () => {
+test('serialize with ~k and ~r values', () => {
   let object = {
     x: 1,
   };
-  Object.defineProperty(object, '_k_', {
+  Object.defineProperty(object, '~k', {
     value: 'a',
     enumerable: false,
     writable: true,
@@ -535,12 +509,12 @@ test('serialize with _k_ and _r_ values', () => {
   let res = serializer.serialize(object);
   expect(res).toEqual({
     x: 1,
-    _k_: 'a',
+    '~k': 'a',
   });
   object = {
     x: 1,
   };
-  Object.defineProperty(object, '_r_', {
+  Object.defineProperty(object, '~r', {
     value: 'a',
     enumerable: false,
     writable: true,
@@ -549,29 +523,25 @@ test('serialize with _k_ and _r_ values', () => {
   res = serializer.serialize(object);
   expect(res).toEqual({
     x: 1,
-    _r_: 'a',
+    '~r': 'a',
   });
 });
 
-test('deserialize with _k_ and _r_ value first', () => {
+test('deserialize with ~k and ~r value first', () => {
   let object = {
-    y: { _date: 'now', _k_: 'b' },
-    _k_: 'a',
+    y: { '~d': 0, '~k': 'b' },
+    '~k': 'a',
   };
   let res = serializer.deserialize(object);
   expect(res).toEqual({
-    y: {
-      _date: 'now',
-    },
+    y: new Date(0),
   });
   object = {
-    y: { _date: 'now', _r_: 'b' },
-    _r_: 'a',
+    y: { '~d': 0, '~r': 'b' },
+    '~r': 'a',
   };
   res = serializer.deserialize(object);
   expect(res).toEqual({
-    y: {
-      _date: 'now',
-    },
+    y: new Date(0),
   });
 });

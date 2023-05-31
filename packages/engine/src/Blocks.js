@@ -237,7 +237,7 @@ class Blocks {
           blockValue = type.isUndefined(block.meta.initValue)
             ? type.enforceType(block.meta.valueType, null)
             : block.meta.initValue;
-          this.context._internal.State.set(block.blockId, block.value);
+          this.context._internal.State.set(block.blockId, blockValue);
         }
         if (block.meta.category === 'list') {
           // load list value into list blocks
