@@ -94,7 +94,7 @@ test('Set block value to null using set state', async () => {
   expect(context.state).toEqual({ textInput: null });
 });
 
-test('v', async () => {
+test('Set nested block value to null using set state', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
