@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
+
+
+### Bug Fixes
+
+* **connection-mongodb:** Use Lowdefy serialiser util to serialise object ids. ([b7d5d71](https://github.com/lowdefy/lowdefy/commit/b7d5d718466c44a3c01d94359540e8e5e9def96b))
+
+
+
+
+
 # [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
 
 

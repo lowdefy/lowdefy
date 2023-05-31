@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
+
+
+### Bug Fixes
+
+* **docs:** Add note to migration guide on serialise breaking changes ([4a27aad](https://github.com/lowdefy/lowdefy/commit/4a27aadfe251ad620cbe44a1e73e65bd015fe283))
+
+
+
+
+
 # [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
 
 
