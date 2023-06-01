@@ -3,7 +3,6 @@
 @min992: ~"(min-width: 992px)";
 
 h1 {
-  font-weight: bold;
   font-size: 1.875rem; /* 30px */
   line-height: 2.25rem; /* 36px */
 
@@ -18,7 +17,6 @@ h1 {
 }
 
 h2 {
-  font-weight: bold;
   font-size: 1.5rem; /* 24px */
   line-height: 2rem; /* 32px */
 
@@ -80,4 +78,21 @@ hr {
   width:30%;
   background-color:#1890ff;
   border-width: 0;
+}
+
+// marquee component
+@keyframes marquee {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.marqueelogo {
+  height: 40px;
+  padding-right: 5.4rem;
+  filter: grayscale(100%) opacity(40%);
 }

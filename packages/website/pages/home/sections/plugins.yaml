@@ -7,30 +7,33 @@ style:
   maxWidth: 80%
   margin: 60px auto
   textAlign: center
-  borderColor: '#1890ff'
-  borderStyle: solid
-  borderWidth: 2px
-  padding: 16
+  background: '#FAFAFA'
+  box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
+  border-radius: 8px
+properties:
+  style:
+    padding: 60px
 blocks:
   - id: info_left
     type: Box
     layout:
       span: 12
     blocks:
-      - id: image
-        type: Img
-        properties:
-          src: ./images/plugins_placeholder.png
-
       - id: info
         type: Html
         properties:
           html: |
-            <h2 style="color:#1890ff;">
-              Extend Everything with Plugins
-            </h2>
+            <h3>
+              Extend <span style="color: #29D3CA">everything</span> with plugins
+            </h3>
             <p>
               Blocks, Connections, Operators, Actions, Auth Providers and Adapters can all be extended with plugins, making Lowdefy the most flexible low-code web stack.
+            </p>
+            <p>
+              Lowdefy's plugin system is powered by NPM. This allows developers to bundle modules using their preferred packages.
+            </p>
+            <p>
+              Unpublished plugins can be added to your repository, allowing for easy use of project specific code.
             </p>
 
       - id: plugin_docs_link
@@ -43,58 +46,11 @@ blocks:
           type: link
           href: https://docs.lowdefy.com/plugins
 
-  - id: info_left
-    type: Box
+  - id: image
+    type: Img
     layout:
       span: 12
-    blocks:
-      - id: images_box
-        type: Box
-        layout:
-          order: 1
-          contentAlign: middle
-        style:
-          padding: 16
-        blocks:
-          - id: image
-            type: Img
-            layout:
-              flex: 1 1 auto
-            properties:
-              src: ./images/react.png
-              width: 50px
-
-          - id: image
-            type: Img
-            layout:
-              flex: 1 1 auto
-            properties:
-              src: ./images/js.png
-              width: 50px
-
-          - id: image
-            type: Img
-            layout:
-              flex: 1 1 auto
-            properties:
-              src: ./images/npm.png
-              width: 50px
-
-          - id: image
-            type: Img
-            layout:
-              flex: 1 1 auto
-            properties:
-              src: ./images/lowdefy.png
-              width: 50px
-
-      - id: title
-        type: Html
-        properties:
-          html: |
-            <p>
-              Lowdefy's plugin system is powered by NPM. This allows developers to bundle modules using their preferred packages.
-            </p>
-            <p>
-              Unpublished plugins can be added to your repository, allowing for easy use of project specific code.
-            </p>
+    properties:
+      src: ./images/06_Web_001.png
+      style:
+        width: '90%'

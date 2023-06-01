@@ -1,3 +1,10 @@
+# Colours:
+# #4484F1
+# background: linear-gradient(180deg, #4484F1 0%, #65E1DA 100%);
+# background: linear-gradient(0deg, #1A1A1A, #1A1A1A),
+# linear-gradient(0deg, #29D3CA, #29D3CA);
+# background: #1965F3;
+
 id: hero
 type: Box
 style:
@@ -17,17 +24,19 @@ blocks:
         type: Html
         properties:
           html: |
-            <h1 style="color:#1890ff;">
-              The easiest config webstack
-            </h1>
+            <h2>
+              The
+              <span style="color:#4484F1;">easiest</span>
+              config webstack
+            </h2>
             <ul>
-              <li><h5>Build web UIs and connect to databases and APIs</h5></li>
-              <li><h5>Extend app functionality with npm plugins</h5></li>
-              <li><h5>Host your apps anywhere you host Next.js</h5></li>
-              <li><h5>Open-source and built on top of Next.js and Auth.js</h5></li>
+              <li>Build web UIs and connect to databases and APIs</li>
+              <li>Extend app functionality with npm plugins</li>
+              <li>Host your apps anywhere you host Next.js</li>
+              <li>Open-source and built on top of Next.js and Auth.js</li>
             </ul>
             <p> Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
-      - id: button
+      - id: get_started_button
         type: Button
         layout:
           flex: 0 1 auto
@@ -35,8 +44,8 @@ blocks:
           title: Get Started
           shape: round
           style:
-            backgroundImage: 'linear-gradient(#1890ff, #667eea)'
-      - id: button
+            background: '#4484F1'
+      - id: expert_button
         type: Button
         layout:
           flex: 0 1 auto
@@ -44,6 +53,23 @@ blocks:
           title: Book an Expert
           ghost: true
           shape: round
+      - id: tutorial_button
+        type: Button
+        layout:
+          flex: 0 1 auto
+        properties:
+          title: Watch Tutorial
+          shape: round
+          style:
+            background: '#1A1A1A'
+            borderColor: '#1A1A1A'
+        events:
+          onClick:
+            - id: OpenModal
+              type: CallMethod
+              params:
+                blockId: watch_modal
+                method: toggleOpen
 
   - id: watch_box
     type: Box
@@ -57,30 +83,8 @@ blocks:
       - id: image
         type: Img
         properties:
-          src: /images/placeholder-image.jpeg
+          src: /images/01_Header_001.png
           width: 100%
-      - id: watch_button
-        type: Button
-        style:
-          position: absolute
-          top: 50%
-          left: 50%
-          -ms-transform: translate(-50%, -50%)
-          transform: translate(-50%, -50%)
-        properties:
-          title: Watch 3 Min Video
-          icon: AiOutlinePlayCircle
-          shape: round
-          size: large
-          style:
-            backgroundImage: 'linear-gradient(#1890ff, #667eea)'
-        events:
-          onClick:
-            - id: OpenModal
-              type: CallMethod
-              params:
-                blockId: watch_modal
-                method: toggleOpen
 
   - id: watch_modal
     type: Modal

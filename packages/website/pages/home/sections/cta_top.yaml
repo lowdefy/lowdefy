@@ -1,69 +1,111 @@
 id: cta_top
 type: Box
+layout:
+  contentGutter: 8
 style:
-  textAlign: center
-  backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+  backgroundColor: '#1965F3'
+  transparent: 0
+  maxWidth: 80%
+  margin: 60px auto
+  z-index: 1000
+  borderRadius: 8px
+properties:
+  style:
+    padding: 10%
 blocks:
-  - id: cta_box
+  - id: title
+    type: Html
+    properties:
+      html: |
+        <h3 style="color: white">
+          Why not give it a try?
+        </h3>
+  - id: code_box
     type: Box
+    blocks:
+      - id: code_box
+        type: Box
+        layout:
+          flex: 0 1 auto
+        blocks:
+          - id: code_button
+            type: Button
+            properties:
+              title: |
+                $ pnpx lowdefy@4 init && pnpx lowdefy@4 dev
+              type: link
+              color: white
+              shape: round
+              size: large
+              block: true
+              style:
+                height: 100% !important
+                color: black
+                width: 100%
+                whiteSpace: normal
+            events:
+              onMount:
+                - id: set_extra
+                  type: SetState
+                  params:
+                    button_extra: Click to copy
+              onClick:
+                - id: copy
+                  type: CopyToClipboard
+                  params:
+                    copy: pnpx lowdefy@4 init && pnpx lowdefy@4 dev
+                - id: set_extra
+                  type: SetState
+                  params:
+                    button_extra: Copied. Paste in terminal console and run 🚀
+
+          - id: copy_text
+            type: Paragraph
+            properties:
+              style:
+                color: white
+                fontSize: 0.8em
+                paddingTop: 4px
+                textAlign: center
+              content:
+                _state: button_extra
+
+  - id: buttons_box
+    type: Box
+    layout:
+      span: 24
     style:
-      maxWidth: 700
-      margin: 60px auto
       textAlign: center
     blocks:
-      - id: title
-        type: Html
-        properties:
-          html: |
-            <h2 style="color: white">
-              Run Lowdefy v4
-            </h2>
-      - id: code_button
-        type: Button
-        properties:
-          title: $ pnpx lowdefy@4 init && pnpx lowdefy@4 dev
-          type: link
-          color: white
-          style:
-            color: black
-            maxWidth: 100%
-            whiteSpace: normal
-        events:
-          onMount:
-            - id: set_extra
-              type: SetState
-              params:
-                button_extra: Click to copy
-          onClick:
-            - id: copy
-              type: CopyToClipboard
-              params:
-                copy: pnpx lowdefy@4 init && pnpx lowdefy@4 dev
-            - id: set_extra
-              type: SetState
-              params:
-                button_extra: Copied. Paste in terminal console and run 🚀
-
-      - id: copy_text
-        type: Paragraph
-        properties:
-          style:
-            color: white
-            fontSize: 0.8em
-            paddingTop: 4px
-          content:
-            _state: button_extra
-
       - id: getting_started_link
         type: Button
-        style:
-          margin: 20px 0
+        layout:
+          flex: 0 1 auto
         properties:
-          style:
-            color: white
-          title: See our getting started tutorial →
+          title: Get Started
           size: large
-          type: link
+          shape: round
+          style:
+            backgroundColor: '#1A1A1A'
+            borderColor: '#1A1A1A'
+        events:
+          onClick:
+            - id: link
+              type: Link
+              params:
+                url: https://docs.lowdefy.com/tutorial-start
+
+      - id: subscribe_button
+        type: Button
+        layout:
+          flex: 0 1 auto
+        properties:
+          title: Subscribe to our newsletter
+          size: large
+          shape: round
+          style:
+            backgroundColor: '#1A1A1A'
+            borderColor: '#1A1A1A'
         events:
           onClick:
             - id: link

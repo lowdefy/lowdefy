@@ -21,10 +21,9 @@ blocks:
         type: Html
         properties:
           html: |
-            <hr style="margin-left:0;">
-            <h2>
-              Connect to your data and APIs
-            </h2>
+            <h3>
+              Connect to your <span style="color:#29D3CA">data and APIs</span>
+            </h3>
             <p>
               Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
             </p>

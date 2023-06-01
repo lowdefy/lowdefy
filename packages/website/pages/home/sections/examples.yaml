@@ -9,17 +9,14 @@ style:
 blocks:
   - id: examples_intro
     type: Html
-    style:
-      textAlign: right
     properties:
       html: |
-        <hr style="margin-right:0;">
-        <h2>
-          Built with Lowdefy
-        </h2>
         <h3>
-          Explore examples and apps from the community.
+          Built with Lowdefy
         </h3>
+        <h5>
+          Explore examples and apps from the community.
+        </h5>
 
   - id: carousel
     type: Carousel

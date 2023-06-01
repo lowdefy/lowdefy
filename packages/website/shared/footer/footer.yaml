@@ -1,10 +1,30 @@
 id: footer_box
 type: Box
+style:
+  maxWidth: 90%
+  margin: -250px auto
+  marginBottom: 24px
 properties:
   style:
-    padding: 48px 20% 0px 20%
+    padding: 0px 5% 16px 5%
+    boxShadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
+    borderRadius: 8px
 blocks:
-  - _ref: shared/footer/components/connect.yaml
-  - _ref: shared/footer/components/subscribe.yaml
+  - id: space_box
+    type: Box
+    style:
+      minHeight: 200px
+  - id: connect
+    type: Html
+    properties:
+      html: |
+        <a href="/" >
+          <img src='images/logo.svg' alt="Lowdefy" width='126'/>
+        </a>
+  - id: block_id
+    type: Divider
   - _ref: shared/footer/components/documentation.yaml
+  - id: block_id
+    type: Divider
   - _ref: shared/footer/components/copyright.yaml
+  - _ref: shared/footer/components/connect.yaml

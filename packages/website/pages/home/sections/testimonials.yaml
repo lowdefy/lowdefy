@@ -2,7 +2,7 @@ id: testimonials_background_box
 type: Box
 properties:
   style:
-    backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+    backgroundColor: '#1965F3'
 blocks:
   - id: testimonials_box
     type: Box
@@ -14,13 +14,11 @@ blocks:
     blocks:
       - id: testimonials_intro
         type: Html
-        style:
-          textAlign: center
         properties:
           html: |
-            <h2 style="color:white">
+            <h3 style="color:white">
               Loved by Developers
-            </h2>
+            </h3>
 
       - id: carousel
         type: Carousel

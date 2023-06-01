@@ -2,14 +2,13 @@ id: background_box
 type: Box
 properties:
   style:
-    backgroundImage: 'linear-gradient(#1890ff, #667eea)'
+    backgroundImage: 'linear-gradient(180deg, #4484F1 0%, #65E1DA 100%)'
 blocks:
   - id: open_source_box
     type: Box
     style:
       maxWidth: 90%
       margin: 60px auto
-      textAlign: center
     layout:
       contentAlign: middle
       contentGutter: 8
@@ -19,8 +18,10 @@ blocks:
         layout:
           span: 12
           order: 1
+        style:
+          textAlign: center
         properties:
-          src: ./images/opensource.png
+          src: ./images/05_OpenSource_001.png
           style:
             width: '60%'
 
@@ -29,24 +30,20 @@ blocks:
         layout:
           span: 12
           contentGutter: 16
-        style:
-          textAlign: right
         blocks:
           - id: open_source_content
             type: Html
             properties:
               html: |
-                <h3 style="color: white">
-                  Lowdefy is an open-source framework
+                <h3>
+                  Lowdefy is an <span style="color:white;">open-source</span> framework
                 </h3>
-                <h5>
+                <p>
                   Build future proof apps that you can host anywhere with no lock-in.
-                </h5>
+                </p>
 
           - id: stats_box
             type: Box
-            style:
-              textAlign: center
             blocks:
               - id: github_stars_stat
                 type: Html
@@ -54,10 +51,10 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white; padding-bottom: 0">
+                    <h3 style="color: white; margin-bottom: 0px">
                       2.1K+
                     </h3>
-                    <p style="color: white; padding-top: 0">
+                    <p style="color: white">
                       Github Stars
                     </p>
 
@@ -67,7 +64,7 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white">
+                    <h3 style="color: white; margin-bottom: 0px">
                       19K+
                     </h3>
                     <p style="color: white">
@@ -80,7 +77,7 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white">
+                    <h3 style="color: white; margin-bottom: 0px">
                       950+
                     </h3>
                     <p style="color: white">
@@ -95,40 +92,24 @@ blocks:
               - id: github
                 type: Button
                 layout:
-                  flex: 1 0 auto
+                  flex: 0 0 auto
                 properties:
-                  title: |
-                    <p style="margin-bottom:0;"> Star us on Github <br>
-                    2.1K+ Stars </p>
-                  icon:
-                    name: AiOutlineGithub
-                    size: 30
+                  title: Star us on Github
+                  icon: AiOutlineGithub
                   style:
-                    backgroundColor: transparent
-                    borderColor: white
-                    height: auto
-                    width: 170px
-                    textAlign: right
-                    borderRadius: 8px
+                    background: '#4484F1'
+                  shape: round
+                  size: large
                   href: https://github.com/lowdefy/lowdefy
 
               - id: discord
                 type: Button
                 layout:
-                  flex: 0 0 auto
+                  flex: 1 0 auto
                 properties:
-                  title: |
-                    <p style="margin-bottom:0; color:#7289D7"> Join our Discord <br>
-                    210+ Members </p>
-                  icon:
-                    name: FaDiscord
-                    size: 30
-                    color: '#7289D7'
+                  title: Join our Discord
+                  icon: FaDiscord
+                  shape: round
+                  size: large
                   type: ghost
-                  color: white
-                  style:
-                    height: auto
-                    width: 170px
-                    textAlign: right
-                    borderRadius: 8px
                   href: https://discord.gg/WmcJgXt

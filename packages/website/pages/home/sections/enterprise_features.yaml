@@ -6,32 +6,32 @@ style:
   maxWidth: 90%
   margin: 60px auto
 blocks:
-  - id: enterprise_features_title
-    type: Html
+  - id: enterprise_features_info
+    type: Box
     layout:
-      span: 6
-    style:
-      textAlign: right
-    properties:
-      html: |
-        <hr style="margin-right:0;">
-        <h2>
-          Built for Developers and Enterprise Ready
-        </h2>
+      span: 8
+      contentGutter: 10
+    blocks:
+      - id: enterprise_features_title
+        type: Html
+        properties:
+          html: |
+            <h3>
+              Built for <span style="color:#1A82E2;">Developers</span> and Enterprise Ready
+            </h3>
 
   - id: enterprise_features_info
     type: Box
     layout:
-      span: 18
+      span: 16
       contentGutter: 16
     blocks:
       - _ref:
           path: pages/home/components/info_box.yaml.njk
           vars:
-            icon:
-              name: BsFillCloudArrowUpFill
-              size: 40
-              color: '#1890ff'
+            image:
+              src: ./images/07_Icon 1_001.png
+              width: 30%
             section: deploy
             title: Deploy Anywhere
             info: In production, Lowdefy runs as a Next.js app so you can deploy Lowdefy anywhere that supports Next.js deployment.  Deploy with Vercel, Docker and more.
@@ -41,10 +41,9 @@ blocks:
       - _ref:
           path: pages/home/components/info_box.yaml.njk
           vars:
-            icon:
-              name: AiFillLock
-              size: 40
-              color: '#1890ff'
+            image:
+              src: ./images/07_Icon 4_001.png
+              width: 30%
             section: secure
             title: Secured with Auth.js
             info: Authentication is built on top of Auth.js, providing the full flexibility and security from one of the most popular open-source auth layers. SSO, SAML, 2FA, no problem. Google, Okta, Auth0 and more - bring your own provider.
@@ -54,10 +53,9 @@ blocks:
       - _ref:
           path: pages/home/components/info_box.yaml.njk
           vars:
-            icon:
-              name: FiCheckCircle
-              size: 40
-              color: '#1890ff'
+            image:
+              src: ./images/07_Icon 2_001.png
+              width: 30%
             section: git_control
             title: Git Control for Humans
             info: Lowdefy minimal config was designed to be easy to read, write and understand. This makes it easy to copy, paste, review changes or pick up where others left off. Defining apps using a structured schema speeds up development in teams big and small.
@@ -67,10 +65,9 @@ blocks:
       - _ref:
           path: pages/home/components/info_box.yaml.njk
           vars:
-            icon:
-              name: MdPeopleAlt
-              size: 40
-              color: '#1890ff'
+            image:
+              src: ./images/07_Icon 3_001.png
+              width: 30%
             section: user_roles
             title: Public, Authed and Roles
             info: Building multipage apps with both public and private pages serves a wide range of use cases. Adding role-based access control (RBAC) to this gives Lowdefy developers the power to easily implement secure granular access control where needed.

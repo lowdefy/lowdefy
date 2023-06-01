@@ -1,9 +1,7 @@
 id: copyright_box
 type: Box
-properties:
-  style:
-    paddingTop: 48px
-    textAlign: center
+layout:
+  span: 16
 blocks:
   - id: copyright
     type: Html
