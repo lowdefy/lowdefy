@@ -52,7 +52,7 @@ _ref:
               - `reset: function`: Call the Reset action.
               - `resetValidation: function`: Call the ResetValidation action.
               - `setGlobal: function`: Call the SetGlobal action.
-              - `setState: function`: Call the SetGlobal action.
+              - `setState: function`: Call the SetState action.
               - `validate: function`: Call the Validate action.
             - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the action. No validation is performed on this object.
 
