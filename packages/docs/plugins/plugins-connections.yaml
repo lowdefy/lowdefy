@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Connections and requests are used integrate with other services like API's or databases.
+            Connections and requests are used to integrate with other services like API's or databases.
 
             Connections configure the settings to the external service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Lowdefy does not execute any code for the connection, it is merely a convenient object to hold configuration that is shared by multiple requests.
 
