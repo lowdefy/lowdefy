@@ -20,9 +20,9 @@ import type from './type.js';
 import stableStringify from './stableStringify.js';
 
 const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
-  let dateReplacer = (date) => ({ _date: date.valueOf() });
+  let dateReplacer = (date) => ({ '~d': date.valueOf() });
   if (isoStringDates) {
-    dateReplacer = (date) => ({ _date: date.toISOString() });
+    dateReplacer = (date) => ({ '~d': date.toISOString() });
   }
   let newValue = value;
   if (customReplacer) {
@@ -30,7 +30,7 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
   }
   if (type.isError(newValue)) {
     return {
-      _error: {
+      '~e': {
         name: newValue.name,
         message: newValue.message,
         value: newValue.toString(),
@@ -45,17 +45,17 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         newValue[k] = dateReplacer(newValue[k]);
       }
     });
-    if (newValue._r_) {
-      Object.defineProperty(newValue, '_r_', {
-        value: newValue._r_,
+    if (newValue['~r']) {
+      Object.defineProperty(newValue, '~r', {
+        value: newValue['~r'],
         enumerable: true,
         writable: true,
         configurable: true,
       });
     }
-    if (newValue._k_) {
-      Object.defineProperty(newValue, '_k_', {
-        value: newValue._k_,
+    if (newValue['~k']) {
+      Object.defineProperty(newValue, '~k', {
+        value: newValue['~k'],
         enumerable: true,
         writable: true,
         configurable: true,
@@ -77,17 +77,17 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
   if (type.isObject(newValue)) {
-    if (newValue._r_) {
-      Object.defineProperty(newValue, '_r_', {
-        value: newValue._r_,
+    if (newValue['~r']) {
+      Object.defineProperty(newValue, '~r', {
+        value: newValue['~r'],
         enumerable: false,
         writable: true,
         configurable: true,
       });
     }
-    if (newValue._k_) {
-      Object.defineProperty(newValue, '_k_', {
-        value: newValue._k_,
+    if (newValue['~k']) {
+      Object.defineProperty(newValue, '~k', {
+        value: newValue['~k'],
         enumerable: false,
         writable: true,
         configurable: true,
@@ -98,19 +98,13 @@ const makeReviver = (customReviver) => (key, value) => {
     newValue = customReviver(key, value);
   }
   if (type.isObject(newValue)) {
-    if (!type.isUndefined(newValue._error)) {
-      const error = new Error(newValue._error.message);
-      error.name = newValue._error.name;
+    if (!type.isUndefined(newValue['~e'])) {
+      const error = new Error(newValue['~e'].message);
+      error.name = newValue['~e'].name;
       return error;
     }
-    if (!type.isUndefined(newValue._date)) {
-      if (type.isInt(newValue._date)) {
-        return new Date(newValue._date);
-      }
-      if (newValue._date === 'now') {
-        return newValue;
-      }
-      const result = new Date(newValue._date);
+    if (!type.isUndefined(newValue['~d'])) {
+      const result = new Date(newValue['~d']);
       if (!type.isDate(result)) {
         return newValue;
       }
@@ -124,9 +118,9 @@ const serialize = (json, options = {}) => {
   if (type.isUndefined(json)) return json;
   if (type.isDate(json)) {
     if (options.isoStringDates) {
-      return { _date: json.toISOString() };
+      return { '~d': json.toISOString() };
     }
-    return { _date: json.valueOf() };
+    return { '~d': json.valueOf() };
   }
   return JSON.parse(JSON.stringify(json, makeReplacer(options.replacer, options.isoStringDates)));
 };
@@ -136,9 +130,9 @@ const serializeToString = (json, options = {}) => {
 
   if (type.isDate(json)) {
     if (options.isoStringDates) {
-      return `{ "_date": "${json.toISOString()}" }`;
+      return `{ "~d": "${json.toISOString()}" }`;
     }
-    return `{ "_date": ${json.valueOf()} }`;
+    return `{ "~d": ${json.valueOf()} }`;
   }
   if (options.stable) {
     return stableStringify(json, {

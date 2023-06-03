@@ -77,7 +77,7 @@ test('_json.parse array', () => {
 test('_json.parse date array', () => {
   expect(
     json({
-      params: '[{ "_date": "1970-01-01T00:00:00.000Z"},{ "_date": "1970-01-01T00:00:00.001Z"}]',
+      params: '[{ "~d": "1970-01-01T00:00:00.000Z"},{ "~d": "1970-01-01T00:00:00.001Z"}]',
       location: 'locationId',
       methodName: 'parse',
     })
@@ -87,7 +87,7 @@ test('_json.parse date array', () => {
 test('_json.parse date as object', () => {
   expect(
     json({
-      params: '{ "_date": "1970-01-01T00:00:00.000Z"}',
+      params: '{ "~d": "1970-01-01T00:00:00.000Z"}',
       location: 'locationId',
       methodName: 'parse',
     })
@@ -97,7 +97,7 @@ test('_json.parse date as object', () => {
 test('_json.parse date in object', () => {
   expect(
     json({
-      params: '{"a": { "_date": "1970-01-01T00:00:00.000Z"} }',
+      params: '{"a": { "~d": "1970-01-01T00:00:00.000Z"} }',
       location: 'locationId',
       methodName: 'parse',
     })
@@ -141,7 +141,7 @@ test('_json.stringify undefined', () => {
 
 test('_json.stringify date', () => {
   expect(json({ params: [new Date(0)], location: 'locationId', methodName: 'stringify' })).toEqual(
-    '{ "_date": "1970-01-01T00:00:00.000Z" }'
+    '{ "~d": "1970-01-01T00:00:00.000Z" }'
   );
 });
 
@@ -166,10 +166,10 @@ test('_json.stringify date array', () => {
   ).toMatchInlineSnapshot(`
     "[
       {
-        \\"_date\\": \\"1970-01-01T00:00:00.000Z\\"
+        \\"~d\\": \\"1970-01-01T00:00:00.000Z\\"
       },
       {
-        \\"_date\\": \\"1970-01-01T00:00:00.001Z\\"
+        \\"~d\\": \\"1970-01-01T00:00:00.001Z\\"
       }
     ]"
   `);
@@ -180,7 +180,7 @@ test('_json.stringify date object', () => {
     .toMatchInlineSnapshot(`
     "{
       \\"a\\": {
-        \\"_date\\": \\"1970-01-01T00:00:00.000Z\\"
+        \\"~d\\": \\"1970-01-01T00:00:00.000Z\\"
       }
     }"
   `);
@@ -205,7 +205,7 @@ test('_json.stringify object params with options', () => {
   ).toMatchInlineSnapshot(`
     "{
       \\"a\\": {
-        \\"_date\\": 101
+        \\"~d\\": 101
       }
     }"
   `);

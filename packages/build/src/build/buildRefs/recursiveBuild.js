@@ -76,7 +76,7 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
 
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      Object.defineProperty(value, '_r_', {
+      Object.defineProperty(value, '~r', {
         value: refDef.id,
         enumerable: false,
         writable: true,
