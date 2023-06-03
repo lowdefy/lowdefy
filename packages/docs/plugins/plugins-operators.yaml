@@ -58,7 +58,7 @@ _ref:
             - `methodName: string`: The name of the method if the operator is called with a method (as `_operator.methodName`).
             - `operators: object`: An object with all the operator functions used on the server.
             - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the operator. No validation is performed on this object.
-            - `payload: object`: The payload object passed to a request.
+            - `payload: object`: The payload object passed to a request. Operators are evaluated on the client before the payload is passed to the server request function.
             - `runtime: string`: The runtime is set to the constant `"node"`.
             - `secrets: object`: The secrets data object.
             - `user: object`: The user data object.
