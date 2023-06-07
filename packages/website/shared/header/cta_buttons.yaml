@@ -3,6 +3,19 @@ type: Box
 layout:
   flex: 0 1 auto
 blocks:
+  - id: discord
+    type: Button
+    layout:
+      flex: 0 1 auto
+    properties:
+      title: Join our Discord
+      icon: FaDiscord
+      style:
+        color: black
+      shape: round
+      type: link
+      href: https://discord.gg/WmcJgXt
+
   - id: github_button
     type: Button
     layout:

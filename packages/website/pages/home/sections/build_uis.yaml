@@ -1,8 +1,8 @@
 id: width_box
 type: Box
 style:
-  maxWidth: 90%
-  margin: 30px auto
+  maxWidth: 1200px
+  margin: 60px auto
 layout:
   contentAlign: middle
 blocks:
@@ -17,17 +17,17 @@ blocks:
         type: Html
         properties:
           html: |
-            <h3>
+            <h2>
               Build <span style="color:#29D3CA">web UIs</span> by writing easy config
-            </h3>
+            </h2>
             <p>
               Lowdefy config is easy to read, write, copy, paste or template. Just like code, but simpler.
             </p>
             <ul>
-              <li>+70 Blocks and +150 logic operators to get started fast.</li>
-              <li>Dynamic UIs with effortless state management.</li>
-              <li>Responsive layouts out of the box.</li>
-              <li>Extend with custom React components.</li>
+              <li><p>+70 Blocks and +150 logic operators to get started fast.</p></li>
+              <li><p>Dynamic UIs with effortless state management.</p></li>
+              <li><p>Responsive layouts out of the box.</p></li>
+              <li><p>Extend with custom React components.</p></li>
             </ul>
 
       - id: visit_docs

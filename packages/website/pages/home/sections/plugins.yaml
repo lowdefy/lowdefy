@@ -4,9 +4,8 @@ layout:
   contentAlign: middle
   contentGutter: 16
 style:
-  maxWidth: 80%
+  maxWidth: 1000px
   margin: 60px auto
-  textAlign: center
   background: '#FAFAFA'
   box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
   border-radius: 8px
@@ -18,14 +17,17 @@ blocks:
     type: Box
     layout:
       span: 12
+    style:
+      padding: 5px
+      textAlign: right
     blocks:
       - id: info
         type: Html
         properties:
           html: |
-            <h3>
+            <h2>
               Extend <span style="color: #29D3CA">everything</span> with plugins
-            </h3>
+            </h2>
             <p>
               Blocks, Connections, Operators, Actions, Auth Providers and Adapters can all be extended with plugins, making Lowdefy the most flexible low-code web stack.
             </p>

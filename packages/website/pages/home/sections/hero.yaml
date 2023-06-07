@@ -1,14 +1,7 @@
-# Colours:
-# #4484F1
-# background: linear-gradient(180deg, #4484F1 0%, #65E1DA 100%);
-# background: linear-gradient(0deg, #1A1A1A, #1A1A1A),
-# linear-gradient(0deg, #29D3CA, #29D3CA);
-# background: #1965F3;
-
 id: hero
 type: Box
 style:
-  maxWidth: 90%
+  maxWidth: 1200px
   margin: 60px auto
 blocks:
   - id: hero_box
@@ -24,16 +17,16 @@ blocks:
         type: Html
         properties:
           html: |
-            <h2>
+            <h1>
               The
               <span style="color:#4484F1;">easiest</span>
               config webstack
-            </h2>
+            </h1>
             <ul>
-              <li>Build web UIs and connect to databases and APIs</li>
-              <li>Extend app functionality with npm plugins</li>
-              <li>Host your apps anywhere you host Next.js</li>
-              <li>Open-source and built on top of Next.js and Auth.js</li>
+              <li><p>Build web UIs and connect to databases and APIs</p></li>
+              <li><p>Extend app functionality with npm plugins</p></li>
+              <li><p>Host your apps anywhere you host Next.js</p></li>
+              <li><p>Open-source and built on top of Next.js and Auth.js</p></li>
             </ul>
             <p> Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
       - id: get_started_button

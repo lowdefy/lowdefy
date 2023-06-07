@@ -1,7 +1,7 @@
 id: footer_box
 type: Box
 style:
-  maxWidth: 90%
+  maxWidth: 1200px
   margin: -250px auto
   marginBottom: 24px
 properties:

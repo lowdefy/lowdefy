@@ -4,7 +4,6 @@ layout:
   contentGutter: 8
   justifyContent: center
 style:
-  maxWidth: 90%
   margin: 60px auto
 blocks:
   - id: examples_intro

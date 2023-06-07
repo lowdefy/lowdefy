@@ -7,8 +7,9 @@ blocks:
   - id: open_source_box
     type: Box
     style:
-      maxWidth: 90%
+      maxWidth: 900px
       margin: 60px auto
+      padding: 40px 20px
     layout:
       contentAlign: middle
       contentGutter: 8
@@ -19,11 +20,11 @@ blocks:
           span: 12
           order: 1
         style:
-          textAlign: center
+          textAlign: right
         properties:
           src: ./images/05_OpenSource_001.png
           style:
-            width: '60%'
+            width: '100%'
 
       - id: info_box
         type: Box
@@ -35,9 +36,9 @@ blocks:
             type: Html
             properties:
               html: |
-                <h3>
+                <h2>
                   Lowdefy is an <span style="color:white;">open-source</span> framework
-                </h3>
+                </h2>
                 <p>
                   Build future proof apps that you can host anywhere with no lock-in.
                 </p>
@@ -111,5 +112,7 @@ blocks:
                   icon: FaDiscord
                   shape: round
                   size: large
+                  style:
+                    borderColor: black
                   type: ghost
                   href: https://discord.gg/WmcJgXt

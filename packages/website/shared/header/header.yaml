@@ -1,5 +1,7 @@
 id: affix_header
 type: Affix
+style:
+  z-index: 20
 blocks:
   - id: header
     type: Header

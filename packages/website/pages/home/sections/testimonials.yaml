@@ -9,7 +9,6 @@ blocks:
     layout:
       contentGutter: 8
     style:
-      maxWidth: 90%
       margin: 60px auto
     blocks:
       - id: testimonials_intro

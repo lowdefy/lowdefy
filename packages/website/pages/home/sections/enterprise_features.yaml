@@ -1,27 +1,31 @@
 id: width_box
 type: Box
-layout:
-  contentGutter: 16
 style:
-  maxWidth: 90%
+  maxWidth: 1200px
   margin: 60px auto
+  padding: 20px
 blocks:
-  - id: enterprise_features_info
+  - id: enterprise_features_left_box
     type: Box
     layout:
       span: 8
-      contentGutter: 10
+    style:
+      padding: 20px
     blocks:
       - id: enterprise_features_title
         type: Html
         properties:
+          style:
+            textAlign: right
           html: |
-            <h3>
+            <h2>
               Built for <span style="color:#1A82E2;">Developers</span> and Enterprise Ready
-            </h3>
+            </h2>
 
   - id: enterprise_features_info
     type: Box
+    style:
+      padding: 20px
     layout:
       span: 16
       contentGutter: 16

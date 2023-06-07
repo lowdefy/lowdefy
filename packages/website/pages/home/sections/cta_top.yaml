@@ -5,13 +5,13 @@ layout:
 style:
   backgroundColor: '#1965F3'
   transparent: 0
-  maxWidth: 80%
+  maxWidth: 1000px
   margin: 60px auto
-  z-index: 1000
+  z-index: 10
   borderRadius: 8px
 properties:
   style:
-    padding: 10%
+    padding: 20px
 blocks:
   - id: title
     type: Html

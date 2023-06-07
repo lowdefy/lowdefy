@@ -1,5 +1,7 @@
 id: customers
 type: Box
+style:
+  margin: 60px auto
 blocks:
   - id: customers_box
     type: Box
@@ -7,11 +9,11 @@ blocks:
       - id: brands
         type: Html
         style:
-          maxWidth: 90%
-          marginLeft: 60px
+          textAlign: center
+          padding: 8px
         properties:
           html: |
-            <h3 style="color:#1A1A1ACC;">Customer apps powered by Lowdefy</h3>
+            <h4 style="color:#D3D3D3;">Customer apps powered by Lowdefy</h4>
 
       - id: marquee
         type: Html

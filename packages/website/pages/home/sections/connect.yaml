@@ -1,8 +1,8 @@
 id: connect_box
 type: Box
 style:
-  maxWidth: 90%
-  margin: 30px auto
+  maxWidth: 1200px
+  margin: 60px auto
 layout:
   contentAlign: middle
   contentJustify: center
@@ -21,17 +21,17 @@ blocks:
         type: Html
         properties:
           html: |
-            <h3>
+            <h2>
               Connect to your <span style="color:#29D3CA">data and APIs</span>
-            </h3>
+            </h2>
             <p>
               Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
             </p>
             <ul>
-              <li>Build dynamic queries using variables and logic operators.</li>
-              <li>Execute requests from both authenticated and public pages.</li>
-              <li>Secure secrets for passwords and API keys.</li>
-              <li>Build custom connections with any npm modules.</li>
+              <li><p>Build dynamic queries using variables and logic operators.</p></li>
+              <li><p>Execute requests from both authenticated and public pages.</p></li>
+              <li><p>Secure secrets for passwords and API keys.</p></li>
+              <li><p>Build custom connections with any npm modules.</p></li>
             </ul>
       - id: custom_connection
         type: Button
