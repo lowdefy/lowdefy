@@ -3,6 +3,64 @@ type: Box
 properties:
   style:
     backgroundColor: '#1965F3'
+events:
+  onMount:
+    - id: set_testimonials
+      type: SetState
+      params:
+        testimonials:
+          - name: <h5>@nair19</h5>
+            avatar: images/plugins_placeholder.png
+            info: |
+              <p style='margin-bottom: 0px'>It has definitely made life much easier for a lot of us. The platform is top notch and I have already been recommending it to many colleagues.
+              <br>Hope word reaches far and wide about it 🙂 !<br>
+              All the best to you guys! This is definitely going to be the next big thing soon.</p>
+
+          - name: "<h5 style='margin-bottom: 0px'>Umut Ozturk</h5>"
+            extra: "<p style='margin-bottom: 0px'><b>Co-Founder at Piblo</b></p>"
+            avatar: images/plugins_placeholder.png
+            link: https://www.linkedin.com/in/umutozzturk/
+            info: |
+              <p style='margin-bottom: 0px'>We're amazed by how Lowdefy takes completely new approach to build applications. Even though visual programming tools help us develop without coding, Lowdefy provides a scalable approach so we can use what we already build easily so we can develop much faster. It's true low-code!</p>
+
+          - name: <h5>Mahdy Arief</h5>
+            avatar: images/plugins_placeholder.png
+            link: https://www.linkedin.com/in/mahdyarief
+            info: |
+              <p style='margin-bottom: 0px'>As a project manager with limited coding knowledge, I've been able to create various financial tracking and academic documentation apps effortlessly. Inputting and manipulating data, using formulas for calculations, and presenting data tables have never been easier. The best part of using Lowdefy is the supportive community.</p>
+
+          - name: <h5>Jon Bennetts</h5>
+            avatar: images/plugins_placeholder.png
+            info: |
+              <p style='margin-bottom: 0px'>Lowdefy has allowed me to quickly test new product ideas without having to write any code, I have even recreated older PHP tools which are now easier to maintain and update. The team are always available to chat if needed and have some big ideas for the future ❤️ </p>
+
+          - name: <h5>Jason McFeetors</h5>
+            avatar: images/plugins_placeholder.png
+            link: https://twitter.com/tephlondude
+            info: |
+              <p style='margin-bottom: 0px'>Didn't get time to tweet this out last night but I was able to create a new JSON-based page in
+              Lowdefy using N8N within the dev environment! Was a lot easier than I expected it to be!</p>
+
+          - name: <h5>Ehan Groenewald</h5>
+            avatar: images/plugins_placeholder.png
+            link: https://www.linkedin.com/in/ehan-groenewald-5941269b/
+            info: |
+              <p style='margin-bottom: 0px'>Lowdefy is the ideal solution for anyone looking to build a web application. Its simplicity and user-friendly interface allowed me to create a functional CRUD apps in just a few hours, something that was previously unthinkable for me. Lowdefy didn't just provide a practical solution; it ignited a spark within me that has propelled me into the world of web development.</p>
+
+          - name: <h5>Cesar Verdes</h5>
+            avatar: images/plugins_placeholder.png
+            link: https://github.com/cverdes
+            info: |
+              <p style='margin-bottom: 0px'>The Lowdefy project code and is really very well written. It's high quality javascript programming.
+              <br>Besides, the tests are excellent and documentation in order to understand the code.<br>
+              Thank you for share your code with the world.</p>
+
+          - name: <h5>@small_petit</h5>
+            avatar: images/plugins_placeholder.png
+            info: |
+              <p style='margin-bottom: 0px'>I discovered lowdefy not long ago, I am now going to convert all my mini projects to lowdefy. Excellent Excellent work guys!! You've brought a great relief to some of us.
+              <br>"I totally agree with you. Does it really need to be so complicated to get UIs on the web…" say and say again by brother.</p>
+
 blocks:
   - id: testimonials_box
     type: Box
@@ -10,58 +68,126 @@ blocks:
       contentGutter: 8
     style:
       margin: 60px auto
+      maxWidth: 1200px
+      padding: 0 20px
     blocks:
       - id: testimonials_intro
         type: Html
         properties:
           html: |
-            <h3 style="color:white">
+            <h2 style="color:white">
               Loved by Developers
-            </h3>
-
-      - id: carousel
-        type: Carousel
-        layout:
-          justifyContent: center
+            </h2>
+      - id: testimonials
+        type: List
         properties:
-          autoplay: true
-          dots: false
-          slides:
-            - key: slide_one
-            - key: slide_two
-        areas:
-          slide_one:
+          style:
+            display: flex
+            flexDirection: column
+            flexWrap: wrap
+            justifyContent: center
+            maxHeight:
+              _if:
+                test:
+                  _ref: shared/mobile.yaml
+                then:
+                else:
+                  _if:
+                    test:
+                      _eq:
+                        - _media: size
+                        - md
+                    then: 1300px
+                    else:
+                      _if:
+                        test:
+                          _eq:
+                            - _media: size
+                            - lg
+                        then: 1200px
+                        else: 1000px
+        blocks:
+          - id: testimonials.$.card
+            type: Box
+            style:
+              display: flex
+              borderRadius: 15
+            properties:
+              style:
+                alignSelf: center
+                width:
+                  _if:
+                    test:
+                      _ref: shared/mobile.yaml
+                    then:
+                    else:
+                      _if:
+                        test:
+                          _eq:
+                            - _media: size
+                            - md
+                        then: 350px
+                        else:
+                          _if:
+                            test:
+                              _eq:
+                                - _media: size
+                                - lg
+                            then: 325px
+                            else: 300px
             blocks:
-              - id: vrilcod_testimonials
-                type: Html
+              - id: testimonials.$.card
+                type: Card
+                layout:
+                  contentGutter: 8
+                  contentAlign: middle
                 style:
-                  maxWidth: 80%
-                  marginLeft: 10%
+                  padding: 8px
                 properties:
-                  html: |
-                    <p style="color:white">
-                      I've considered a lot of low-code tools before and for me - as a "normal" programmer - YAML files all around, was a quite strange approach in the beginning. But I've to say, that I am really convinced by Lowdefy's architecture now, because for me it's not so important to avoid keyboard entry in general (UI is nice to start, but can be annoying for repeating tasks or revision).
-                    </p>
-                    <p style="color:white">
-                      I think most important is to avoid ever repeating coding work for simple CRUD applications. And I think there is no tool outside, which gives you the opportunity to create an app with less configuration than Lowdefy. To summarize: less typing and reusability are the most important factors for me.
-                    </p>
-                    <p>
-                      <b>vrilcod</b>, Github
-                    </p>
-          slide_two:
-            blocks:
-              - id: nair19OP_testimonials
-                type: Html
-                style:
-                  maxWidth: 80%
-                  marginLeft: 10%
-                properties:
-                  html: |
-                    <p style="color:white">
-                      Would also like to appreciate the efforts you guys have put in to build a beautiful product like this!
-                      It has definitely made life much easier for a lot of us. The platform is top notch and I have already been recommending it to many colleagues.
-                      Hope word reaches far and wide about it  !
-                    </p>
-                    <p>
-                      <b>nair19OP</b>, Discord
-                    </p>
+                  style:
+                    borderRadius: 15
+                    overflow: scroll
+                    maxHeight: 400px
+                blocks:
+                  - id: testimonials.$.avatar
+                    type: Img
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      style:
+                        width: 40px
+                        borderRadius: 100%
+                      src:
+                        _state: testimonials.$.avatar
+                  - id: testimonials.$.user.box
+                    type: Box
+                    layout:
+                      flex: 1 1 auto
+                    style:
+                      maxWidth: 190px
+                    events:
+                      onClick:
+                        - id: link
+                          type: Link
+                          skip:
+                            _not:
+                              _state: testimonials.$.link
+                          params:
+                            url:
+                              _state: testimonials.$.link
+                    blocks:
+                      - id: testimonials.$.properties.title
+                        type: Html
+                        properties:
+                          html:
+                            _state: testimonials.$.name
+                      - id: testimonials.$.extra
+                        type: Html
+                        properties:
+                          html:
+                            _state: testimonials.$.extra
+                  - id: testimonials.$.info
+                    type: Html
+                    properties:
+                      html:
+                        _state: testimonials.$.info
