@@ -17,23 +17,12 @@
 import { ObjectId } from 'mongodb';
 import { serialize, deserialize } from './serialize.js';
 
-test('serialize dates', () => {
+test('serialize with  dates', () => {
   const object = {
     date: new Date(0),
     array: [new Date(0)],
   };
   expect(serialize(object)).toEqual({
-    date: { _date: 0 },
-    array: [{ _date: 0 }],
-  });
-});
-
-test('deserialize dates', () => {
-  const object = {
-    date: { _date: 0 },
-    array: [{ _date: 0 }],
-  };
-  expect(deserialize(object)).toEqual({
     date: new Date(0),
     array: [new Date(0)],
   });

@@ -380,9 +380,11 @@ importers:
 
   packages/plugins/blocks/blocks-aggrid:
     specifiers:
-      '@ag-grid-community/all-modules': 27.3.0
-      '@ag-grid-community/core': 27.3.0
-      '@ag-grid-community/react': 27.3.0
+      '@ag-grid-community/client-side-row-model': 29.3.5
+      '@ag-grid-community/core': 29.3.5
+      '@ag-grid-community/csv-export': 29.3.5
+      '@ag-grid-community/react': 29.3.5
+      '@ag-grid-community/styles': 29.3.5
       '@emotion/jest': 11.10.5
       '@lowdefy/block-dev': 4.0.0-rc.8
       '@lowdefy/block-utils': 4.0.0-rc.8
@@ -401,9 +403,11 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
     dependencies:
-      '@ag-grid-community/all-modules': 27.3.0
-      '@ag-grid-community/core': 27.3.0
-      '@ag-grid-community/react': 27.3.0_ynmsds3wz3224xgdrl3ds7i2jm
+      '@ag-grid-community/client-side-row-model': 29.3.5
+      '@ag-grid-community/core': 29.3.5
+      '@ag-grid-community/csv-export': 29.3.5
+      '@ag-grid-community/react': 29.3.5_xvkjijvorcpydikpeyrhvicwou
+      '@ag-grid-community/styles': 29.3.5
       '@lowdefy/block-utils': link:../../../utils/block-utils
       '@lowdefy/helpers': link:../../../utils/helpers
       react: 18.2.0
@@ -1549,49 +1553,37 @@ importers:
 
 packages:
 
-  /@ag-grid-community/all-modules/27.3.0:
-    resolution: {integrity: sha512-yH5jH+sJ6niUR5N4MiyOYDUnldcjCRwpDeL82JyGh7/rsxACH026KcxEO+7Gk22CnSeMwUZidGorU2Dj/Na8rg==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+  /@ag-grid-community/client-side-row-model/29.3.5:
+    resolution: {integrity: sha512-+uA28LTAummyYdZbEDys+cTECPn1Po1f6vX9QZOK9gpZdNzSpGjd3Vc1SKR/2brR6XMGlPeSRsX+FPZmG9uvHQ==}
     dependencies:
-      '@ag-grid-community/client-side-row-model': 27.3.0
-      '@ag-grid-community/core': 27.3.0
-      '@ag-grid-community/csv-export': 27.3.0
-      '@ag-grid-community/infinite-row-model': 27.3.0
+      '@ag-grid-community/core': 29.3.5
     dev: false
 
-  /@ag-grid-community/client-side-row-model/27.3.0:
-    resolution: {integrity: sha512-t6ggg/SvESsGEC75z62rD/zFeo2DZCKFxw5e0qKweHR106CjBUNMlnfXIIG81qOSXUWGnbbWlrijBbKbyt8aTA==}
+  /@ag-grid-community/core/29.3.5:
+    resolution: {integrity: sha512-r86bOCscnKVtaYyKqlN2UCtfbjf4UcmxHfVuXzJ94iN8Jy3iiQVrbQnbNArnjR589Bt/1VR/m+SdAMsOLcdpag==}
+    dev: false
+
+  /@ag-grid-community/csv-export/29.3.5:
+    resolution: {integrity: sha512-8NOAmioHhapqvYdu1QjAzwQH5jihuOlaKk6FpF/8ECvLQePhoIK6rOyhcktOot4ZWo5f8q/4Ph5LGK3oFzdU9g==}
     dependencies:
-      '@ag-grid-community/core': 27.3.0
+      '@ag-grid-community/core': 29.3.5
     dev: false
 
-  /@ag-grid-community/core/27.3.0:
-    resolution: {integrity: sha512-77/bE2KdFlFI/ywEP46aSspXtgBteY/OPQyzU/lWqYrG2wC6cLfPSUB60t9e0FiqElwM/Vdcjz0TAjRwhZOPkw==}
-    dev: false
-
-  /@ag-grid-community/csv-export/27.3.0:
-    resolution: {integrity: sha512-7pR05jEqTdUPAoqEMHxXGh6j0KViGmqLa4uwKmriKzfZOvwlq6umjDmXvPFCRCWfswb9KOqS1iZlGhcWufKApQ==}
-    dependencies:
-      '@ag-grid-community/core': 27.3.0
-    dev: false
-
-  /@ag-grid-community/infinite-row-model/27.3.0:
-    resolution: {integrity: sha512-hUWQ6YdRrNCDAvSn1bbxvnklIqPx8QGXMjmLVfR47+Gp1aoA1i9OxtA39SlzsZnRqDxZE5eKgwb5uy2+C4vKhA==}
-    dependencies:
-      '@ag-grid-community/core': 27.3.0
-    dev: false
-
-  /@ag-grid-community/react/27.3.0_ynmsds3wz3224xgdrl3ds7i2jm:
-    resolution: {integrity: sha512-wRBl4nqijdpVWRgSA4KnN5fZZ9wXBE1RLA2u0apyTHUb9BzFCHEocfJdfd2DVet7ddMc3SWMLKGm26rGT0Myig==}
+  /@ag-grid-community/react/29.3.5_xvkjijvorcpydikpeyrhvicwou:
+    resolution: {integrity: sha512-vetngHiWXptSsWLaXtmr89zaBKEIAUpl+P+QGup27oYiqjTtdZKAgT2lowZZOQ7dFxsjb1OxDOtmOZrZGxuMUw==}
     peerDependencies:
-      '@ag-grid-community/core': ~27.3.0
+      '@ag-grid-community/core': ~29.3.5
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@ag-grid-community/core': 27.3.0
+      '@ag-grid-community/core': 29.3.5
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@ag-grid-community/styles/29.3.5:
+    resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
     dev: false
 
   /@ampproject/remapping/2.2.0:

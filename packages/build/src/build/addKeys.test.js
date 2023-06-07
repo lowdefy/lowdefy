@@ -22,24 +22,24 @@ const context = testContext();
 test('mutate keyMap and components', async () => {
   const addKeys = (await import('./addKeys.js')).default;
   const components = {
-    _r_: '1',
+    '~r': '1',
     pages: [
       {
         id: 'A',
         type: 'Box',
-        _r_: '2',
+        '~r': '2',
         blocks: [
-          { _r_: '3', id: 'A1', type: 'Button' },
-          { _r_: '7', id: 'A2', type: 'Button' },
+          { '~r': '3', id: 'A1', type: 'Button' },
+          { '~r': '7', id: 'A2', type: 'Button' },
         ],
       },
       {
         id: 'B',
         type: 'Box',
-        _r_: '5',
+        '~r': '5',
         blocks: [
-          { _r_: '4', id: 'B1', type: 'Button' },
-          { _r_: '6', id: 'B2', type: 'Button', properties: { _r_: '10', title: 'X' } },
+          { '~r': '4', id: 'B1', type: 'Button' },
+          { '~r': '6', id: 'B2', type: 'Button', properties: { '~r': '10', title: 'X' } },
         ],
       },
     ],
@@ -47,59 +47,59 @@ test('mutate keyMap and components', async () => {
   addKeys({ components, context });
   expect(context.keyMap).toEqual({
     2: {
-      _k_parent: '1',
-      _r_: '1',
+      '~k_parent': '1',
+      '~r': '1',
       key: 'root',
     },
     3: {
-      _k_parent: '2',
-      _r_: '2',
+      '~k_parent': '2',
+      '~r': '2',
       key: 'root.pages[0:A:Box]',
     },
     4: {
-      _k_parent: '3',
-      _r_: '3',
+      '~k_parent': '3',
+      '~r': '3',
       key: 'root.pages[0:A:Box].blocks[0:A1:Button]',
     },
     5: {
-      _k_parent: '3',
-      _r_: '7',
+      '~k_parent': '3',
+      '~r': '7',
       key: 'root.pages[0:A:Box].blocks[1:A2:Button]',
     },
     6: {
-      _k_parent: '2',
-      _r_: '5',
+      '~k_parent': '2',
+      '~r': '5',
       key: 'root.pages[1:B:Box]',
     },
     7: {
-      _k_parent: '6',
-      _r_: '4',
+      '~k_parent': '6',
+      '~r': '4',
       key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
     },
     8: {
-      _k_parent: '6',
-      _r_: '6',
+      '~k_parent': '6',
+      '~r': '6',
       key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
     },
     9: {
-      _k_parent: '8',
-      _r_: '10',
+      '~k_parent': '8',
+      '~r': '10',
       key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
     },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
-    _k_: '2',
+    '~k': '2',
     pages: [
       {
-        _k_: '3',
+        '~k': '3',
         blocks: [
           {
-            _k_: '4',
+            '~k': '4',
             id: 'A1',
             type: 'Button',
           },
           {
-            _k_: '5',
+            '~k': '5',
             id: 'A2',
             type: 'Button',
           },
@@ -108,19 +108,19 @@ test('mutate keyMap and components', async () => {
         type: 'Box',
       },
       {
-        _k_: '6',
+        '~k': '6',
         blocks: [
           {
-            _k_: '7',
+            '~k': '7',
             id: 'B1',
             type: 'Button',
           },
           {
-            _k_: '8',
+            '~k': '8',
             id: 'B2',
             type: 'Button',
             properties: {
-              _k_: '9',
+              '~k': '9',
               title: 'X',
             },
           },
