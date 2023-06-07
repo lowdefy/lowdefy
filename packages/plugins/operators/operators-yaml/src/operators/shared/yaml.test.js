@@ -83,8 +83,8 @@ test('_yaml.parse date array', () => {
   expect(
     yaml({
       params: [
-        `- _date: "1970-01-01T00:00:00.000Z"
-- _date: "1970-01-01T00:00:00.001Z"`,
+        `- ~d: "1970-01-01T00:00:00.000Z"
+- ~d: "1970-01-01T00:00:00.001Z"`,
       ],
       location: 'locationId',
       methodName: 'parse',
@@ -95,7 +95,7 @@ test('_yaml.parse date array', () => {
 test('_yaml.parse date as object', () => {
   expect(
     yaml({
-      params: [`_date: "1970-01-01T00:00:00.000Z"`],
+      params: [`~d: "1970-01-01T00:00:00.000Z"`],
       location: 'locationId',
       methodName: 'parse',
     })
@@ -107,7 +107,7 @@ test('_yaml.parse date object', () => {
     yaml({
       params: [
         `a:
-  _date: "1970-01-01T00:00:00.000Z"`,
+  ~d: "1970-01-01T00:00:00.000Z"`,
       ],
       location: 'locationId',
       methodName: 'parse',
@@ -164,7 +164,7 @@ test('_yaml.stringify undefined', () => {
 test('_yaml.stringify date', () => {
   expect(yaml({ params: [new Date(0)], location: 'locationId', methodName: 'stringify' }))
     .toMatchInlineSnapshot(`
-    "_date: 1970-01-01T00:00:00.000Z
+    "~d: 1970-01-01T00:00:00.000Z
     "
   `);
 });
@@ -183,8 +183,8 @@ test('_yaml.stringify date array', () => {
   expect(
     yaml({ params: [[new Date(0), new Date(1)]], location: 'locationId', methodName: 'stringify' })
   ).toMatchInlineSnapshot(`
-    "- _date: 1970-01-01T00:00:00.000Z
-    - _date: 1970-01-01T00:00:00.001Z
+    "- ~d: 1970-01-01T00:00:00.000Z
+    - ~d: 1970-01-01T00:00:00.001Z
     "
   `);
 });
@@ -193,7 +193,7 @@ test('_yaml.stringify date object', () => {
   expect(yaml({ params: [{ a: new Date(0) }], location: 'locationId', methodName: 'stringify' }))
     .toMatchInlineSnapshot(`
     "a:
-      _date: 1970-01-01T00:00:00.000Z
+      ~d: 1970-01-01T00:00:00.000Z
     "
   `);
 });
@@ -208,9 +208,9 @@ test('_yaml.stringify date object', () => {
 //     })
 //   ).toMatchInlineSnapshot(`
 //     "b:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     a:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     "
 //   `);
 // });
@@ -224,9 +224,9 @@ test('_yaml.stringify date object', () => {
 //     })
 //   ).toMatchInlineSnapshot(`
 //     "b:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     a:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     "
 //   `);
 // });
@@ -240,9 +240,9 @@ test('_yaml.stringify date object', () => {
 //     })
 //   ).toMatchInlineSnapshot(`
 //     "a:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     b:
-//       _date: 1970-01-01T00:00:00.000Z
+//       ~d: 1970-01-01T00:00:00.000Z
 //     "
 //   `);
 // });

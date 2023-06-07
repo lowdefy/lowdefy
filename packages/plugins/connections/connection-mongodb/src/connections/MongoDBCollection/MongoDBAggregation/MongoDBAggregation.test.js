@@ -99,7 +99,7 @@ test('aggregation match dates', async () => {
     pipeline: [
       {
         $match: {
-          date: { $gt: { _date: '2020-01-15' } },
+          date: { $gt: { '~d': '2020-01-15' } },
         },
       },
     ],
@@ -114,11 +114,11 @@ test('aggregation match dates', async () => {
   expect(res).toEqual([
     {
       _id: 2,
-      date: { _date: 1580515200000 },
+      date: new Date('2020-02-01'),
     },
     {
       _id: 3,
-      date: { _date: 1583020800000 },
+      date: new Date('2020-03-01'),
     },
   ]);
 });
