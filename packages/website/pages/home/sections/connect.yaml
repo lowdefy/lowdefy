@@ -28,10 +28,10 @@ blocks:
               Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
             </p>
             <ul>
-              <li><p>Build dynamic queries using variables and logic operators.</p></li>
-              <li><p>Execute requests from both authenticated and public pages.</p></li>
-              <li><p>Secure secrets for passwords and API keys.</p></li>
-              <li><p>Build custom connections with any npm modules.</p></li>
+              <li>Build dynamic queries using variables and logic operators.</li>
+              <li>Execute requests from both authenticated and public pages.</li>
+              <li>Secure secrets for passwords and API keys.</li>
+              <li>Build custom connections with any npm modules.</li>
             </ul>
       - id: custom_connection
         type: Button

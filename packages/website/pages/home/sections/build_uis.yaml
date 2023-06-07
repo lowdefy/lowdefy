@@ -24,10 +24,10 @@ blocks:
               Lowdefy config is easy to read, write, copy, paste or template. Just like code, but simpler.
             </p>
             <ul>
-              <li><p>+70 Blocks and +150 logic operators to get started fast.</p></li>
-              <li><p>Dynamic UIs with effortless state management.</p></li>
-              <li><p>Responsive layouts out of the box.</p></li>
-              <li><p>Extend with custom React components.</p></li>
+              <li>+70 Blocks and +150 logic operators to get started fast.</li>
+              <li>Dynamic UIs with effortless state management.</li>
+              <li>Responsive layouts out of the box.</li>
+              <li>Extend with custom React components.</li>
             </ul>
 
       - id: visit_docs

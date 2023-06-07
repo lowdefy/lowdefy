@@ -1,8 +1,13 @@
+@font-face {
+  font-family: "Geologica";
+  src: url('fonts/Geologica-VariableFont_CRSV,SHRP,slnt,wght.ttf') format('truetype');
+}
 
 @min768: ~"(min-width: 768px)";
 @min992: ~"(min-width: 992px)";
 
 h1 {
+  font-family: Geologica;
   font-size: 1.875rem; /* 30px */
   line-height: 2.25rem; /* 36px */
 
@@ -17,6 +22,7 @@ h1 {
 }
 
 h2 {
+  font-family: Geologica;
   font-size: 1.5rem; /* 24px */
   line-height: 2rem; /* 32px */
 
@@ -31,6 +37,7 @@ h2 {
 }
 
 h3 {
+  font-family: Geologica;
   font-size: 1.125rem; /* 18px */
   line-height: 1.75rem; /* 28px */
 
@@ -46,6 +53,7 @@ h3 {
 }
 
 h4 {
+  font-family: Geologica;
   font-size: 1rem; /* 16px */
   line-height: 1.5rem; /* 24px */
 
@@ -60,6 +68,7 @@ h4 {
 }
 
 h5 {
+  font-family: Geologica;
   font-size: 0.875rem; /* 14px */
   line-height: 1rem; /* 22px */
 
@@ -74,6 +83,13 @@ h5 {
 }
 
 p {
+  font-size: 0.875rem; /* 14px */
+  @media @min992 {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+li {
   font-size: 0.875rem; /* 14px */
   @media @min992 {
     font-size: 1rem; /* 16px */

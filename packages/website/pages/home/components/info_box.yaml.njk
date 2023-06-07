@@ -15,14 +15,15 @@ blocks:
     type: Html
     properties:
       style:
-        minHeight: 200
+        minHeight: 190
       html: |
         <h4>{{ title }}</h4>
         <p>{{ info }}</p>
   - id: {{ section }}_link
     type: Button
     style:
-      padding: 0
+      paddingLeft: 0
+      paddingRight: 0
     properties:
       title: {{ link.title }}
       type: link

@@ -7,7 +7,7 @@ blocks:
   - id: open_source_box
     type: Box
     style:
-      maxWidth: 900px
+      maxWidth: 1100px
       margin: 60px auto
       padding: 40px 20px
     layout:

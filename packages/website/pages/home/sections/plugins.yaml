@@ -26,7 +26,7 @@ blocks:
         properties:
           html: |
             <h2>
-              Extend <span style="color: #29D3CA">everything</span> with plugins
+              Extend <span style="color: #29D3CA">everything</span><br> with NPM plugins
             </h2>
             <p>
               Blocks, Connections, Operators, Actions, Auth Providers and Adapters can all be extended with plugins, making Lowdefy the most flexible low-code web stack.

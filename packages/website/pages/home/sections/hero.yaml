@@ -23,10 +23,10 @@ blocks:
               config webstack
             </h1>
             <ul>
-              <li><p>Build web UIs and connect to databases and APIs</p></li>
-              <li><p>Extend app functionality with npm plugins</p></li>
-              <li><p>Host your apps anywhere you host Next.js</p></li>
-              <li><p>Open-source and built on top of Next.js and Auth.js</p></li>
+              <li>Build web UIs and connect to databases and APIs</li>
+              <li>Extend app functionality with npm plugins</li>
+              <li>Host your apps anywhere you host Next.js</li>
+              <li>Open-source and built on top of Next.js and Auth.js</li>
             </ul>
             <p> Create internal tools, admin panels, BI dashboards, and CRUD apps with simple YAML or JSON config.
       - id: get_started_button

@@ -2,18 +2,28 @@ id: footer_box
 type: Box
 style:
   maxWidth: 1200px
-  margin: -250px auto
-  marginBottom: 24px
+  margin: -200px auto
+  marginBottom:
+    _if:
+      test:
+        _ref: shared/mobile.yaml
+      then: 0
+      else: 24px
 properties:
   style:
-    padding: 0px 5% 16px 5%
+    padding:
+      _if:
+        test:
+          _ref: shared/mobile.yaml
+        then: 0px 10px 16px 10px
+        else: 0px 30px 16px 30px
     boxShadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
     borderRadius: 8px
 blocks:
   - id: space_box
     type: Box
     style:
-      minHeight: 200px
+      minHeight: 150px
   - id: connect
     type: Html
     properties:

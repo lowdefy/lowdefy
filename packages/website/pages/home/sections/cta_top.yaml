@@ -11,7 +11,7 @@ style:
   borderRadius: 8px
 properties:
   style:
-    padding: 20px
+    padding: 60px
 blocks:
   - id: title
     type: Html
