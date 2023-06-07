@@ -1,99 +1,67 @@
 @font-face {
-  font-family: "Geologica";
-  src: url('fonts/Geologica-VariableFont_CRSV,SHRP,slnt,wght.ttf') format('truetype');
+  font-family: "Inter";
+  src: url('fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
 }
 
 @min768: ~"(min-width: 768px)";
 @min992: ~"(min-width: 992px)";
 
-h1 {
-  font-family: Geologica;
-  font-size: 1.875rem; /* 30px */
-  line-height: 2.25rem; /* 36px */
+html {
+  font-size: 103%;
+} /*18px*/
 
-  @media @min768 {
-    font-size: 2.25rem; /* 36px */
-    line-height: 2.5rem; /* 40px */
-  }
-  @media @min992 {
-    font-size: 3rem; /* 48px */
-    line-height: 3.25rem;
-  }
-}
-
-h2 {
-  font-family: Geologica;
-  font-size: 1.5rem; /* 24px */
-  line-height: 2rem; /* 32px */
-
-  @media @min768 {
-    font-size: 1.875rem; /* 30px */
-    line-height: 2.25rem; /* 36px */
-  }
-  @media @min992 {
-    font-size: 2.25rem; /* 36px */
-    line-height: 2.5rem; /* 40px */
-  }
-}
-
-h3 {
-  font-family: Geologica;
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.75rem; /* 28px */
-
-  @media @min768 {
-    font-size: 1.25rem; /* 20px */
-    line-height: 1.75rem; /* 28px */
-  }
-
-  @media @min992 {
-    font-size: 1.5rem; /* 24px */
-    line-height: 2rem; /* 32px */
-  }
-}
-
-h4 {
-  font-family: Geologica;
-  font-size: 1rem; /* 16px */
-  line-height: 1.5rem; /* 24px */
-
-  @media @min768 {
-    font-size: 1.125rem; /* 18px */
-    line-height: 1.75rem; /* 28px */
-  }
-  @media @min992 {
-    font-size: 1.25rem; /* 20px */
-    line-height: 1.75rem; /* 28px */
-  }
-}
-
-h5 {
-  font-family: Geologica;
-  font-size: 0.875rem; /* 14px */
-  line-height: 1rem; /* 22px */
-
-  @media @min768 {
-    font-size: 1rem; /* 16px */
-    line-height: 1.5rem; /* 24px */
-  }
-  @media @min992 {
-    font-size: 1.125rem; /* 18px */
-    line-height: 1.75rem; /* 28px */
-  }
+body {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  line-height: 1.75;
+  font-size: 100%;
 }
 
 p {
-  font-size: 0.875rem; /* 14px */
-  @media @min992 {
-    font-size: 1rem; /* 16px */
-  }
+  margin-bottom: 1rem;
 }
 
-li {
-  font-size: 0.875rem; /* 14px */
-  @media @min992 {
-    font-size: 1rem; /* 16px */
-  }
+h1, h2, h3, h4, h5 {
+  // margin: 3rem 0 1.38rem;
+  font-family: Inter, sans-serif;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 3.052rem;
+}
+
+h2 {
+  font-size: 2.441rem;
+}
+
+h3 {
+  font-size: 1.953rem;
+}
+
+h4 {
+  font-size: 1.563rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+small, .text_small {font-size: 0.8rem;}
+
+ul.checks {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+ul.checks li:before {
+  content: '✓';
+  color: #1890ff;
+  padding-right: 1rem;
 }
 
 hr {

@@ -1,0 +1,10 @@
+_or:
+  - _eq:
+      - _media: size
+      - xs
+  - _eq:
+      - _media: size
+      - sm
+  - _eq:
+      - _media: size
+      - md

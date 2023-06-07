@@ -7,11 +7,13 @@ properties:
   mode:
     _if:
       test:
-        _ref: shared/mobile.yaml
+        _ref: shared/mobile_md.yaml
       then: vertical
       else: horizontal
   style:
     border: 0
+    background: none
+    fontSize: 103%
   links:
     - id: community
       type: MenuLink
@@ -23,3 +25,8 @@ properties:
       url: https://docs.lowdefy.com/
       properties:
         title: Docs
+    - id: expert
+      type: MenuLink
+      url: https://calendly.com/gvw-lowdefy/lowdefy-support
+      properties:
+        title: Book an Expert

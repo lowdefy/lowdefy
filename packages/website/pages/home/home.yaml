@@ -1,10 +1,7 @@
 id: home
 type: Box
-layout:
-  contentGutter: 16
 properties:
-  title: Lowdefy - Build internal tools with YAML
-
+  title: Lowdefy - The Easiest Config Web Stack
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/hero.yaml

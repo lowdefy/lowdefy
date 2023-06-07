@@ -13,7 +13,7 @@ blocks:
           padding: 8px
         properties:
           html: |
-            <h4 style="color:#D3D3D3;">Customer apps powered by Lowdefy</h4>
+            <p style="color:#D3D3D3;">Customer apps powered by Lowdefy</p>
 
       - id: marquee
         type: Html

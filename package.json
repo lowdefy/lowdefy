@@ -53,7 +53,7 @@
     "env:server:next-dev": "pnpm env:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",
     "env:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start",
     "web:cli:build": "pnpm build:turbo && pnpm -r --filter=lowdefy start build --config-directory ../website --server-directory ../server",
-    "web:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../website --dev-directory ../server-dev",
+    "web:cli:dev": "pnpm build:turbo && pnpm -r --filter=lowdefy start dev --config-directory ../website --dev-directory ../server-dev  --log-level=debug",
     "web:cli:start": "pnpm build:turbo && pnpm -r --filter=lowdefy start start --config-directory ../website --server-directory ../server",
     "web:server-dev": "pnpm -r --filter='@lowdefy/server-dev' start --config-directory ../website",
     "web:server:next-dev": "pnpm website:cli:build && pnpm install && pnpm -r --filter='@lowdefy/server' dev",

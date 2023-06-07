@@ -10,10 +10,18 @@ blocks:
     properties:
       title: Join our Discord
       icon: FaDiscord
-      style:
-        color: black
       shape: round
       type: link
+      style:
+        _if:
+          test:
+            _ref: shared/mobile.yaml
+          then:
+            color: black
+            marginTop: 20px
+          else:
+            color: black
+
       href: https://discord.gg/WmcJgXt
 
   - id: github_button
@@ -24,6 +32,12 @@ blocks:
       title: Star on Github
       icon: AiOutlineGithub
       type: link
+      style:
+        _if:
+          test:
+            _ref: shared/mobile.yaml
+          then:
+            marginTop: 20px
     events:
       onClick:
         - id: link
@@ -45,7 +59,7 @@ blocks:
           then:
             background-image: 'linear-gradient(#1890ff, #667eea)'
             width: 300px
-            marginTop: 10px
+            marginTop: 30px
           else:
             background-image: 'linear-gradient(#1890ff, #667eea)'
     events:

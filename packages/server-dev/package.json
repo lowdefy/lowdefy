@@ -66,6 +66,7 @@
     "@lowdefy/operators-uuid": "4.0.0-rc.8",
     "@lowdefy/operators-yaml": "4.0.0-rc.8",
     "@lowdefy/plugin-next-auth": "4.0.0-rc.8",
+    "@lowdefy/website": "workspace:*",
     "chokidar": "3.5.3",
     "dotenv": "16.0.3",
     "next": "12.3.1",

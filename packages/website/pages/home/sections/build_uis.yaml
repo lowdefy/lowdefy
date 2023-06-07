@@ -18,12 +18,12 @@ blocks:
         properties:
           html: |
             <h2>
-              Build <span style="color:#29D3CA">web UIs</span> by writing easy config
+              Build <span style="color:#29D3CA">web UIs</span> with config
             </h2>
             <p>
               Lowdefy config is easy to read, write, copy, paste or template. Just like code, but simpler.
             </p>
-            <ul>
+            <ul class="checks">
               <li>+70 Blocks and +150 logic operators to get started fast.</li>
               <li>Dynamic UIs with effortless state management.</li>
               <li>Responsive layouts out of the box.</li>

@@ -27,7 +27,7 @@ blocks:
             <p>
               Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
             </p>
-            <ul>
+            <ul class="checks">
               <li>Build dynamic queries using variables and logic operators.</li>
               <li>Execute requests from both authenticated and public pages.</li>
               <li>Secure secrets for passwords and API keys.</li>

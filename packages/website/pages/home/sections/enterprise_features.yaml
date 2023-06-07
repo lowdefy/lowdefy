@@ -62,7 +62,7 @@ blocks:
               width: 120px
             section: git_control
             title: Git Control for Humans
-            info: Lowdefy minimal config was designed to be easy to read, write and understand. This makes it easy to copy, paste, review changes or pick up where others left off. Defining apps using a structured schema speeds up development in teams big and small.
+            info: Lowdefy's minimal config was designed to be easy to read, write and understand. This makes it easy to copy, paste, review changes or pick up where others left off. Defining apps using a structured schema speeds up development in teams big and small.
             link:
               title: Read more about the Lowdefy app schema
               href: https://docs.lowdefy.com/lowdefy-schema
