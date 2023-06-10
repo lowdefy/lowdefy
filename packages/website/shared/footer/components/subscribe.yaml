@@ -13,7 +13,7 @@ blocks:
         <h3>
           Subscribe to our newsletter
         </h3>
-        <p> Receive the latest Lowdefy updates in your inbox. </p>
+        <p>Receive the latest Lowdefy updates in your inbox.</p>
 
   - id: email
     type: TextInput
@@ -30,5 +30,3 @@ blocks:
       flex: 0 1 auto
     properties:
       title: Subscribe
-      style:
-        background-image: 'linear-gradient(#1890ff, #667eea)'

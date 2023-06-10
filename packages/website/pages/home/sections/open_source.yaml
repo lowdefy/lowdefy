@@ -2,7 +2,7 @@ id: background_box
 type: Box
 properties:
   style:
-    backgroundImage: 'linear-gradient(180deg, #4484F1 0%, #65E1DA 100%)'
+    backgroundImage: 'linear-gradient(180deg, #1965F3 0%, #65E1DA 100%)'
 blocks:
   - id: open_source_box
     type: Box
@@ -37,7 +37,7 @@ blocks:
             properties:
               html: |
                 <h2>
-                  Lowdefy is an <span style="color:white;">open-source</span> framework
+                  Lowdefy is an <span style="color:white; ">open-source</span> framework
                 </h2>
                 <p>
                   Build future proof apps that you can host anywhere with no lock-in.
@@ -53,7 +53,7 @@ blocks:
                 properties:
                   html: |
                     <h3 style="color: white; margin-bottom: 0px">
-                      2.1K+
+                      2.3K+
                     </h3>
                     <p style="color: white">
                       Github Stars
@@ -66,7 +66,7 @@ blocks:
                 properties:
                   html: |
                     <h3 style="color: white; margin-bottom: 0px">
-                      19K+
+                      24K+
                     </h3>
                     <p style="color: white">
                       Apps Created
@@ -90,25 +90,38 @@ blocks:
             layout:
               contentGutter: 8
             blocks:
+              - id: sponsor
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Sponsor
+                  icon:
+                    name: AiFillHeart
+                  shape: round
+                  color: '#E81E63'
+                  size: large
+                  href: https://opencollective.com/lowdefy-os
               - id: github
                 type: Button
                 layout:
-                  flex: 0 0 auto
+                  flex: 0 1 auto
                 properties:
-                  title: Star us on Github
+                  title: Star on Github
                   icon: AiOutlineGithub
-                  style:
-                    background: '#4484F1'
                   shape: round
                   size: large
+                  style:
+                    borderColor: black
+                  type: ghost
                   href: https://github.com/lowdefy/lowdefy
 
               - id: discord
                 type: Button
                 layout:
-                  flex: 1 0 auto
+                  flex: 0 1 auto
                 properties:
-                  title: Join our Discord
+                  title: Join on Discord
                   icon: FaDiscord
                   shape: round
                   size: large

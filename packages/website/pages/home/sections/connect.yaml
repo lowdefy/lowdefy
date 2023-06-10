@@ -25,7 +25,7 @@ blocks:
               Connect to your <span style="color:#29D3CA">data and APIs</span>
             </h2>
             <p>
-              Make API calls and read and write to your databases with minimal config. Build web apps that connect your data.
+              Make API calls or read and write to your databases with minimal config. Build web apps that connect your data.
             </p>
             <ul class="checks">
               <li>Build dynamic queries using variables and logic operators.</li>

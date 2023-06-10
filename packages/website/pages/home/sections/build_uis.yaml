@@ -21,7 +21,8 @@ blocks:
               Build <span style="color:#29D3CA">web UIs</span> with config
             </h2>
             <p>
-              Lowdefy config is easy to read, write, copy, paste or template. Just like code, but simpler.
+              Lowdefy config is easy to read, write, copy, paste or template. <br/>
+              Just like code, but simpler.
             </p>
             <ul class="checks">
               <li>+70 Blocks and +150 logic operators to get started fast.</li>

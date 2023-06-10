@@ -3,6 +3,8 @@
   src: url('fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
 }
 
+@primary-color: #1990FF;
+
 @min768: ~"(min-width: 768px)";
 @min992: ~"(min-width: 992px)";
 
@@ -61,14 +63,14 @@ ul.checks {
 
 ul.checks li:before {
   content: '✓';
-  color: #1890ff;
+  color: #1990FF;
   padding-right: 1rem;
 }
 
 hr {
   height: 2px;
   width:30%;
-  background-color:#1890ff;
+  background-color:#1990FF;
   border-width: 0;
 }
 
@@ -87,4 +89,18 @@ hr {
   height: 40px;
   padding-right: 5.4rem;
   filter: grayscale(100%) opacity(40%);
+}
+
+.gradient-text {
+  background-color: #1990FF;
+  background-image: linear-gradient(45deg, #1990FF, #65E1DA);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+.gray-text {
+  color: #A3A3A3;
 }

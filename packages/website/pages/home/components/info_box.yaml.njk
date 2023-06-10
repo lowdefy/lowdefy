@@ -21,14 +21,13 @@ blocks:
         <p>{{ info }}</p>
   - id: {{ section }}_link
     type: Button
-    style:
-      paddingLeft: 0
-      paddingRight: 0
     properties:
-      title: {{ link.title }}
+      title: '> {{ link.title }}'
       type: link
       style:
         width: 100%
         whiteSpace: normal
         textAlign: left
+        paddingLeft: 0
+        paddingRight: 0
       href: {{ link.href }}

@@ -15,11 +15,6 @@ properties:
     background: none
     fontSize: 103%
   links:
-    - id: community
-      type: MenuLink
-      url: https://github.com/lowdefy/lowdefy/discussions
-      properties:
-        title: Community
     - id: docs
       type: MenuLink
       url: https://docs.lowdefy.com/
@@ -30,3 +25,11 @@ properties:
       url: https://calendly.com/gvw-lowdefy/lowdefy-support
       properties:
         title: Book an Expert
+    - id: sponsor
+      type: MenuLink
+      url: https://opencollective.com/lowdefy-os
+      properties:
+        title: Sponsor
+        icon:
+          name: AiOutlineHeart
+          color: '#E81E63'
