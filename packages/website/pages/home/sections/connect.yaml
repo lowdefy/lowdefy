@@ -22,7 +22,7 @@ blocks:
         properties:
           html: |
             <h2>
-              Connect to your <span style="color:#29D3CA">data and APIs</span>
+              Connect to your <span style="color:#29D3CA;">data and APIs</span>
             </h2>
             <p>
               Make API calls or read and write to your databases with minimal config. Build web apps that connect your data.

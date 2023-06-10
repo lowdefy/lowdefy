@@ -18,7 +18,7 @@ blocks:
         properties:
           html: |
             <h2>
-              Build <span style="color:#29D3CA">web UIs</span> with config
+              Build <span style="color:#29D3CA;">web UIs</span> with config
             </h2>
             <p>
               Lowdefy config is easy to read, write, copy, paste or template. <br/>

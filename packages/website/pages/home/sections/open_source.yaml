@@ -37,7 +37,7 @@ blocks:
             properties:
               html: |
                 <h2>
-                  Lowdefy is an <span style="color:white; ">open-source</span> framework
+                  Lowdefy is an <br/><span style="color:white; ">open-source</span> framework
                 </h2>
                 <p>
                   Build future proof apps that you can host anywhere with no lock-in.
