@@ -5,13 +5,12 @@
     info: |
       <p >Lowdefy has allowed me to quickly test new product ideas without having to write any code, I have even recreated older PHP tools which are now easier to maintain and update. The team are always available to chat if needed and have some big ideas for the future ❤️ </p>
 
-  - name: Cesar Verdes
-    avatar: /images/profiles/cesar_verdes.webp
-    link: https://github.com/cverdes
-    extra: Web Developer
+  - name: Thatthing
+    link: https://news.ycombinator.com/item?id=26284154
+    extra: Hacker News Member
+    avatar: /images/profiles/hackernews.png
     info: |
-      <p >The Lowdefy project code and is really very well written. It's high quality javascript programming.
-      Thank you for share your code with the world.</p>
+      <p>Nice to see a new approach in lowering the technical bar for building web apps over flow programming. I'd be really interested to see what culture this creates in technical orgnisations. Allows devs to focus on pure-play stuff and integration teams to really hear what operations team needs.</p>
 
 - - name: 'Umut Ozturk'
     extra: 'Co-Founder at Piblo'
@@ -33,7 +32,13 @@
     extra: Technical Team Lead
     info: |
       <p >Didn't get time to tweet this out last night but I was able to create a new JSON-based page in Lowdefy using N8N within the dev environment! Was a lot easier than I expected it to be!</p>
-
+  - name: Cesar Verdes
+    avatar: /images/profiles/cesar_verdes.webp
+    link: https://github.com/cverdes
+    extra: Web Developer
+    info: |
+      <p >The Lowdefy project code and is really very well written. It's high quality javascript programming.
+      Thank you for share your code with the world.</p>
   - name: 'Nair19'
     avatar: images/profiles/nair09.png
     extra: Community member

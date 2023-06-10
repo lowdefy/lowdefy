@@ -123,6 +123,50 @@ blocks:
                                       __build.args: 1.1.extra
                                     link:
                                       __build.args: 1.1.link
+                      - id: testimonials_card
+                        type: Card
+                        visible:
+                          _not:
+                            _not:
+                              __build.args: 1.2.info
+                        properties:
+                          style:
+                            borderRadius: 8
+                        blocks:
+                          - id: testimonials.info
+                            type: Html
+                            properties:
+                              html:
+                                __build.args: 1.2.info
+                          - id: testimonials.avatar
+                            type: Img
+                            layout:
+                              flex: 0 1 auto
+                            properties:
+                              style:
+                                width: 40px
+                                borderRadius: 100%
+                              src:
+                                __build.args: 1.2.avatar
+                          - id: testimonials.name
+                            type: Html
+                            style:
+                              marginLeft: 12px
+                            layout:
+                              flex: 0 1 auto
+                            properties:
+                              html:
+                                _nunjucks:
+                                  template: |
+                                    <a href="{{ link }}">{{ name }}</a><br/>
+                                    <small class="gray-text">{{ extra }}</small>
+                                  on:
+                                    name:
+                                      __build.args: 1.2.name
+                                    extra:
+                                      __build.args: 1.2.extra
+                                    link:
+                                      __build.args: 1.2.link
 
             - []
       - id: html
