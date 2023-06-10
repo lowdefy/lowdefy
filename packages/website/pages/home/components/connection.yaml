@@ -1,14 +1,18 @@
-id: connection_mongodb
+id: connection
 type: Button
 layout:
   flex: 0 1 auto
 properties:
   style:
     boxShadow: 0px 8px 15px rgba(0, 0, 0, 0.1)
+    border: 2px solid
+    borderRadius: 8px
+    borderColor:
+      _var: color
   title:
     _var: title
-  shape: round
   ghost: true
+  size: large
 events:
   onClick:
     - id: connection_link

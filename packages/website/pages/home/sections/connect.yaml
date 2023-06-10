@@ -57,15 +57,26 @@ blocks:
       order: 0
     blocks:
       - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Sparkle-32.svg
+            style:
+              marginTop: -24px
+      - _ref:
           path: pages/home/components/connection.yaml
           vars:
             link: https://docs.lowdefy.com/AWSS3
             title:
               _ref: pages/home/components/connections/AWSS3.html
       - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Switch-28.svg
+      - _ref:
           path: pages/home/components/connection.yaml
           vars:
             link: https://docs.lowdefy.com/MongoDB
+            color: '#65E1DA !important'
             title:
               _ref: pages/home/components/connections/MongoDB.html
       - _ref:
@@ -77,9 +88,17 @@ blocks:
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
+            color: '#65E1DA !important'
             link: https://docs.lowdefy.com/AxiosHttp
             title:
               _ref: pages/home/components/connections/AxiosHttp.html
+      - id: rectangle
+        type: Html
+        layout:
+          flex: 0 1 auto
+        properties:
+          html: |
+            <div style="width: 40px; height: 40px; background: linear-gradient(180deg, #1965F3 0%, #84DDD8 100%); border-radius: 8px;"></div>
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
@@ -87,11 +106,22 @@ blocks:
             title:
               _ref: pages/home/components/connections/MSSQL.html
       - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Cloud-18.svg
+      - _ref:
           path: pages/home/components/connection.yaml
           vars:
             link: https://docs.lowdefy.com/GoogleSheets
             title:
               _ref: pages/home/components/connections/GoogleSheets.html
+      - id: rectangle
+        type: Html
+        layout:
+          flex: 0 1 auto
+        properties:
+          html: |
+            <div style="width: 80px; height: 40px; background: linear-gradient(180deg, #84DDD8 0%, #E6E6EA 100%); border-radius: 8px;"></div>
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
@@ -99,8 +129,13 @@ blocks:
             title:
               _ref: pages/home/components/connections/Elasticsearch.html
       - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Switch-26.svg
+      - _ref:
           path: pages/home/components/connection.yaml
           vars:
+            color: '#65E1DA !important'
             link: https://docs.lowdefy.com/SendGridMail
             title:
               _ref: pages/home/components/connections/Sendgrid.html
@@ -110,12 +145,21 @@ blocks:
             link: https://docs.lowdefy.com/MySQL
             title:
               _ref: pages/home/components/connections/MySQL.html
+
+      - id: rectangle
+        type: Html
+        layout:
+          flex: 0 1 auto
+        properties:
+          html: |
+            <div style="width: 40px; height: 40px; background: linear-gradient(180deg, #1965F3 0%, #84DDD8 100%); border-radius: 8px;"></div>
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
             link: https://docs.lowdefy.com/Stripe
             title:
               _ref: pages/home/components/connections/Stripe.html
+
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
@@ -123,8 +167,13 @@ blocks:
             title:
               _ref: pages/home/components/connections/MariaDB.html
       - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Cloud-19.svg
+      - _ref:
           path: pages/home/components/connection.yaml
           vars:
+            color: '#65E1DA !important'
             link: https://docs.lowdefy.com/AmazonRedshift
             title:
               _ref: pages/home/components/connections/AWSRedshift.html
@@ -134,3 +183,7 @@ blocks:
             link: https://docs.lowdefy.com/SQLite
             title:
               _ref: pages/home/components/connections/SQLite.html
+      - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Sparkle-31.svg
