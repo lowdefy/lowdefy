@@ -3,7 +3,7 @@ type: Box
 layout:
   contentGutter: 8
 style:
-  backgroundColor: '#1965F3'
+  backgroundColor: '#1990FF'
   transparent: 0
   maxWidth: 1000px
   margin: 60px auto

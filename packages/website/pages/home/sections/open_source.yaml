@@ -2,7 +2,7 @@ id: background_box
 type: Box
 properties:
   style:
-    backgroundImage: 'linear-gradient(180deg, #1965F3 0%, #65E1DA 100%)'
+    backgroundImage: 'linear-gradient(180deg, #1990FF 0%, #65E1DA 100%)'
 blocks:
   - id: open_source_box
     type: Box

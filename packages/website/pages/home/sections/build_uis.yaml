@@ -59,3 +59,10 @@ blocks:
         properties:
           src: /images/03_Full_001.png
           width: 90%
+  - id: light_blob
+    type: Html
+    style:
+      zIndex: -1
+    properties:
+      html: |
+        <div class="light-blob" style="width: 40%; height: 400px; right: 0; top: -400px; background: #1990FF;"></div>

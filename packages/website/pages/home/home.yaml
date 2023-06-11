@@ -1,7 +1,7 @@
 id: home
 type: Box
 properties:
-  title: Lowdefy - The Easiest Config Web Stack
+  title: Lowdefy - The Easiest Config Web Stack on Top of Next.js
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/hero.yaml

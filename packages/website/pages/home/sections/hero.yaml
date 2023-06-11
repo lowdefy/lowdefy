@@ -35,7 +35,7 @@ blocks:
           shape: round
           size: large
           style:
-            background: '#1965F3'
+            background: '#1990FF'
 
       - id: code_box
         type: Box
@@ -55,6 +55,8 @@ blocks:
                 whiteSpace: normal
                 boxShadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
                 fontFamily: monospace
+                background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #1990FF, #29D3CA) border-box !important'
+                border: 2px solid transparent !important
             events:
               onMount:
                 - id: set_extra

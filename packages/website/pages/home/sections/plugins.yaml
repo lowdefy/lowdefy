@@ -2,16 +2,15 @@ id: width_box
 type: Box
 layout:
   contentAlign: middle
-  contentGutter: 16
+  contentGutter: 64
 style:
   maxWidth: 1000px
   margin: 60px auto
-  background: '#FAFAFA'
+  padding: 3rem
   box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
-  border-radius: 8px
-properties:
-  style:
-    padding: 60px
+  background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #29D3CA, #1990FF) border-box'
+  border: 3px solid transparent
+  borderRadius: 8px
 blocks:
   - id: info_left
     type: Box

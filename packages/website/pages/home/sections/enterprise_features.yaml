@@ -19,7 +19,7 @@ blocks:
             textAlign: right
           html: |
             <h2>
-              Built for <span style="color:#1A82E2;">Developers</span> and Enterprise Ready
+              Built for <span style="color:#1990FF;">Developers</span> and Enterprise Ready
             </h2>
 
   - id: enterprise_features_info

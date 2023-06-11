@@ -1,7 +1,7 @@
 id: testimonials_background_box
 type: Box
 style:
-  backgroundColor: '#1965F3'
+  backgroundColor: '#1990FF'
   margin: 120px auto
 blocks:
   - id: testimonials_box
@@ -11,6 +11,7 @@ blocks:
     style:
       maxWidth: 1200px
       margin: 60px auto
+      padding: 0 20px
     blocks:
       - id: testimonials_intro
         type: Html
@@ -19,7 +20,7 @@ blocks:
         properties:
           html: |
             <h3 style="color: white;">
-              Helping <span style="color: #29D3CA;">All Kinds</span> of Developers get Stuff on the Web
+              Helping <span style="color: #000;">All Kinds</span> of Developers get Stuff on the Web
             </h3>
       - id: cards
         type: Box
@@ -41,6 +42,8 @@ blocks:
                       span: 6
                       sm:
                         span: 12
+                      xs:
+                        span: 24
                       contentGutter: 12
                     blocks:
                       - id: testimonials_card
