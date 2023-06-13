@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
+
+
+### Bug Fixes
+
+* **connection-mongodb:** Use Lowdefy serialiser util to serialise object ids. ([b7d5d71](https://github.com/lowdefy/lowdefy/commit/b7d5d718466c44a3c01d94359540e8e5e9def96b))
+* **docs:** Add note to migration guide on serialise breaking changes ([4a27aad](https://github.com/lowdefy/lowdefy/commit/4a27aadfe251ad620cbe44a1e73e65bd015fe283))
+* **engine:** Fix setting values of blocks to null using set state. ([58d0cf8](https://github.com/lowdefy/lowdefy/commit/58d0cf8cdebf6536c51ad96ab342be0e681b4298))
+* Update serializer util to not clash with _date operator ([b8cdcb3](https://github.com/lowdefy/lowdefy/commit/b8cdcb3e44a0b1157c111bc7679ac428138c6f97))
+
+
+
+
+
 # [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
 
 
