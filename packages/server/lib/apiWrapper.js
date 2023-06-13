@@ -16,34 +16,44 @@
 import path from 'path';
 import crypto from 'crypto';
 import { createApiContext } from '@lowdefy/api';
+import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
+import connections from '../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
+import operators from '../build/plugins/operators/server.js';
 import config from '../build/config.json';
 
-function requestWrapper(handler) {
-  return async function wrappedHandler(nextContext) {
+function serverSidePropsWrapper(handler) {
+  return async function wrappedHandler(req, res) {
     let logger = console;
     try {
       const traceId = crypto.randomUUID();
       logger = createLogger({ traceId });
-      const session = await getServerSession(nextContext);
+      const session = await getServerSession({ req, res });
       // Important to give absolute path so Next can trace build files
       const context = createApiContext({
-        traceId,
         buildDirectory: path.join(process.cwd(), 'build'),
         config,
+        connections,
         fileCache,
+        headers: req.headers,
         logger,
+        operators,
+        secrets: getSecretsFromEnv(),
         session,
       });
-      const response = await handler(nextContext, context);
+      const response = await handler({ context, req, res });
       return response;
     } catch (error) {
+      // TODO: Improve (logError function)
+      // TODO: Log cause
       logger.error(error);
+      // TODO: What we do here?
+      res.status(500).json({ name: error.name, message: error.message });
     }
   };
 }
 
-export default requestWrapper;
+export default serverSidePropsWrapper;

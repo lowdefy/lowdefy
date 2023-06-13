@@ -14,41 +14,21 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { callRequest, createApiContext } from '@lowdefy/api';
-import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { callRequest } from '@lowdefy/api';
 
-import config from '../../../../build/config.json';
-import connections from '../../../../build/plugins/connections.js';
-import getServerSession from '../../../../lib/auth/getServerSession.js';
-import operators from '../../../../build/plugins/operators/server.js';
-import fileCache from '../../../../lib/fileCache.js';
+import apiWrapper from '../../../../lib/apiWrapper.js';
+import logEvent from '../../../../lib/log/logEvent.js';
 
-export default async function handler(req, res) {
-  // try {
-  //   if (req.method !== 'POST') {
-  //     throw new Error('Only POST requests are supported.');
-  //   }
-  //   const session = await getServerSession({ req, res });
-  //   // Important to give absolute path so Next can trace build files
-  //   const apiContext = createApiContext({
-  //     buildDirectory: path.join(process.cwd(), 'build'),
-  //     config,
-  //     connections,
-  //     fileCache,
-  //     // logger: console,
-  //     logger: { debug: () => {}, warn: () => {} },
-  //     operators,
-  //     secrets: getSecretsFromEnv(),
-  //     session,
-  //   });
+async function handler({ context, req, res }) {
+  if (req.method !== 'POST') {
+    throw new Error('Only POST requests are supported.');
+  }
+  const { blockId, pageId, requestId } = req.query;
+  logEvent({ context, event: 'request', pageId, requestId });
 
-  //   const { blockId, pageId, requestId } = req.query;
-  //   const { payload } = req.body;
-  //   const response = await callRequest(apiContext, { blockId, pageId, payload, requestId });
-  //   res.status(200).json(response);
-  // } catch (error) {
-  //   res.status(500).json({ name: error.name, message: error.message });
-  // }
-  res.status(200).json({});
+  const { payload } = req.body;
+  const response = await callRequest(context, { blockId, pageId, payload, requestId });
+  res.status(200).json(response);
 }
+
+export default apiWrapper(handler);

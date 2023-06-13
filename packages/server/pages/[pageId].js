@@ -16,13 +16,13 @@
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import logPageView from '../lib/log/logPageView.js';
-import requestWrapper from '../lib/requestWrapper.js';
+import logEvent from '../lib/log/logEvent.js';
+import serverSidePropsWrapper from '../lib/serverSidePropsWrapper.js';
 import Page from '../lib/Page.js';
 
-async function getServerSidePropsHandler(nextContext, context) {
+async function getServerSidePropsHandler({ context, nextContext }) {
   const { pageId } = nextContext.params;
-  logPageView({ context, nextContext, pageId });
+  logEvent({ context, event: 'page_view', pageId });
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
@@ -37,6 +37,7 @@ async function getServerSidePropsHandler(nextContext, context) {
       },
     };
   }
+
   return {
     props: {
       pageConfig,
@@ -46,6 +47,6 @@ async function getServerSidePropsHandler(nextContext, context) {
   };
 }
 
-export const getServerSideProps = requestWrapper(getServerSidePropsHandler);
+export const getServerSideProps = serverSidePropsWrapper(getServerSidePropsHandler);
 
 export default Page;

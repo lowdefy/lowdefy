@@ -14,18 +14,20 @@
   limitations under the License.
 */
 
-function logPageView({ context, nextContext, pageId }) {
-  const headers = nextContext.req?.headers;
-  const user = context?.session?.user ?? {};
+function logEvent({ context, event, pageId, requestId }) {
+  const { headers = {}, user = {} } = context;
+
   context.logger.info({
-    event: 'page_view',
-    // TODO: Which of these are on standard as well?
+    event,
+    // TODO:
     // app_id ? build_hash, config_hash
-    // app_name ?
-    // app_version ?
+    // app_name
+    // app_version
     // lowdefy_version
-    // lowdefy trace_id thing (for this user request) request_id log id
-    pageId,
+    // build_hash
+    // config_hash
+    page_id: pageId,
+    request_id: requestId,
     user: {
       id: user.id,
       sub: user.sub,
@@ -56,10 +58,9 @@ function logPageView({ context, nextContext, pageId }) {
       'cf-ipcountry': headers['cf-ipcountry'],
       'cf-visitor': headers['cf-visitor'],
     },
-    // TODO: Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
   });
-
-  // console.log('headers', nextContext.req?.headers);
+  // TODO:
+  // Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
   // console.log('url', nextContext.req?.url);
   // console.log('method', nextContext.req?.method);
   // console.log('hostname', nextContext.req?.hostname);
@@ -69,4 +70,4 @@ function logPageView({ context, nextContext, pageId }) {
   // console.log('nextContext', nextContext);
 }
 
-export default logPageView;
+export default logEvent;
