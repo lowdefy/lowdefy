@@ -25,11 +25,13 @@ import events from '../../../build/plugins/auth/events.js';
 import fileCache from '../../../lib/fileCache.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
+import createLogger from '../../../lib/log/createLogger.js';
+
 export const authOptions = getNextAuthConfig(
   createApiContext({
     config,
     fileCache,
-    logger: console,
+    logger: createLogger(),
   }),
   { authJson, plugins: { adapters, callbacks, events, providers } }
 );

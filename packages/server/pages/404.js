@@ -17,21 +17,22 @@ import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import config from '../build/config.json';
+import createLogger from '../lib/log/createLogger.js';
 import fileCache from '../lib/fileCache.js';
 import Page from '../lib/Page.js';
 
 export async function getStaticProps() {
   // Important to give absolute path so Next can trace build files
-  const apiContext = createApiContext({
+  const context = createApiContext({
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
     fileCache,
-    logger: console,
+    logger: createLogger(), // TODO: pino or console or 🤷‍♂️?
   });
 
   const [rootConfig, pageConfig] = await Promise.all([
-    getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId: '404' }),
+    getRootConfig(context),
+    getPageConfig(context, { pageId: '404' }),
   ]);
 
   return {

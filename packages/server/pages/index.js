@@ -14,26 +14,16 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import config from '../build/config.json';
-import fileCache from '../lib/fileCache.js';
-import getServerSession from '../lib/auth/getServerSession.js';
+import logPageView from '../lib/log/logPageView.js';
+import requestWrapper from '../lib/requestWrapper.js';
 import Page from '../lib/Page.js';
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context);
+async function getServerSidePropsHandler(nextContext, context) {
+  logPageView({ context, nextContext });
 
-  // Important to give absolute path so Next can trace build files
-  const apiContext = createApiContext({
-    buildDirectory: path.join(process.cwd(), 'build'),
-    config,
-    fileCache,
-    logger: console,
-    session,
-  });
-  const rootConfig = await getRootConfig(apiContext);
+  const rootConfig = await getRootConfig(context);
   const { home } = rootConfig;
   if (home.configured === false) {
     return {
@@ -43,7 +33,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const pageConfig = await getPageConfig(apiContext, { pageId: home.pageId });
+  const pageConfig = await getPageConfig(context, { pageId: home.pageId });
   if (!pageConfig) {
     return {
       redirect: {
@@ -56,9 +46,11 @@ export async function getServerSideProps(context) {
     props: {
       pageConfig,
       rootConfig,
-      session,
+      session: context.session,
     },
   };
 }
+
+export const getServerSideProps = requestWrapper(getServerSidePropsHandler);
 
 export default Page;

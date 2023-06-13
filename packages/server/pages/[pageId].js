@@ -14,29 +14,19 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import config from '../build/config.json';
-import fileCache from '../lib/fileCache.js';
-import getServerSession from '../lib/auth/getServerSession.js';
+import logPageView from '../lib/log/logPageView.js';
+import requestWrapper from '../lib/requestWrapper.js';
 import Page from '../lib/Page.js';
 
-export async function getServerSideProps(context) {
-  const { pageId } = context.params;
-  const session = await getServerSession(context);
-  // Important to give absolute path so Next can trace build files
-  const apiContext = createApiContext({
-    buildDirectory: path.join(process.cwd(), 'build'),
-    config,
-    fileCache,
-    logger: console,
-    session,
-  });
+async function getServerSidePropsHandler(nextContext, context) {
+  const { pageId } = nextContext.params;
+  logPageView({ context, nextContext, pageId });
 
   const [rootConfig, pageConfig] = await Promise.all([
-    getRootConfig(apiContext),
-    getPageConfig(apiContext, { pageId }),
+    getRootConfig(context),
+    getPageConfig(context, { pageId }),
   ]);
 
   if (!pageConfig) {
@@ -47,14 +37,15 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
   return {
     props: {
       pageConfig,
       rootConfig,
-      session,
+      session: context.session,
     },
   };
 }
+
+export const getServerSideProps = requestWrapper(getServerSidePropsHandler);
 
 export default Page;

@@ -25,29 +25,30 @@ import operators from '../../../../build/plugins/operators/server.js';
 import fileCache from '../../../../lib/fileCache.js';
 
 export default async function handler(req, res) {
-  try {
-    if (req.method !== 'POST') {
-      throw new Error('Only POST requests are supported.');
-    }
-    const session = await getServerSession({ req, res });
-    // Important to give absolute path so Next can trace build files
-    const apiContext = createApiContext({
-      buildDirectory: path.join(process.cwd(), 'build'),
-      config,
-      connections,
-      fileCache,
-      // logger: console,
-      logger: { debug: () => {} },
-      operators,
-      secrets: getSecretsFromEnv(),
-      session,
-    });
+  // try {
+  //   if (req.method !== 'POST') {
+  //     throw new Error('Only POST requests are supported.');
+  //   }
+  //   const session = await getServerSession({ req, res });
+  //   // Important to give absolute path so Next can trace build files
+  //   const apiContext = createApiContext({
+  //     buildDirectory: path.join(process.cwd(), 'build'),
+  //     config,
+  //     connections,
+  //     fileCache,
+  //     // logger: console,
+  //     logger: { debug: () => {}, warn: () => {} },
+  //     operators,
+  //     secrets: getSecretsFromEnv(),
+  //     session,
+  //   });
 
-    const { blockId, pageId, requestId } = req.query;
-    const { payload } = req.body;
-    const response = await callRequest(apiContext, { blockId, pageId, payload, requestId });
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json({ name: error.name, message: error.message });
-  }
+  //   const { blockId, pageId, requestId } = req.query;
+  //   const { payload } = req.body;
+  //   const response = await callRequest(apiContext, { blockId, pageId, payload, requestId });
+  //   res.status(200).json(response);
+  // } catch (error) {
+  //   res.status(500).json({ name: error.name, message: error.message });
+  // }
+  res.status(200).json({});
 }

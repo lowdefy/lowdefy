@@ -16,6 +16,7 @@
 */
 
 import path from 'path';
+import pino from 'pino';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -40,7 +41,12 @@ async function run() {
   await build({
     customTypesMap,
     directories,
-    logger: console,
+    // TODO: This should probably log for the CLI similar to dev server
+    logger: pino({
+      name: 'lowdefy_build',
+      level: 'info', // TODO:
+      base: { pid: undefined, hostname: undefined },
+    }),
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
   });
 }
