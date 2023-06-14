@@ -15,7 +15,6 @@
 */
 
 import { ServerParser } from '@lowdefy/operators';
-import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import { _secret } from '@lowdefy/operators-js/operators/server';
 
 import createAdapter from './createAdapter.js';
@@ -26,11 +25,10 @@ import createProviders from './createProviders.js';
 const nextAuthConfig = {};
 let initialized = false;
 
-function getNextAuthConfig(context, { authJson, plugins }) {
+function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
+  // TODO: What about different loggers;
   if (initialized) return nextAuthConfig;
-  const secrets = getSecretsFromEnv();
 
-  // TODO: Add logger
   const operatorsParser = new ServerParser({
     operators: { _secret },
     payload: {},
@@ -47,10 +45,10 @@ function getNextAuthConfig(context, { authJson, plugins }) {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.adapter = createAdapter(context, { authConfig, plugins });
-  nextAuthConfig.callbacks = createCallbacks(context, { authConfig, plugins });
-  nextAuthConfig.events = createEvents(context, { authConfig, plugins });
-  nextAuthConfig.providers = createProviders(context, { authConfig, plugins });
+  nextAuthConfig.adapter = createAdapter({ authConfig, plugins });
+  nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
+  nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
+  nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;

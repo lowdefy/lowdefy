@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createLinkAccountEvent(context, { authConfig, plugins }) {
+function createLinkAccountEvent({ authConfig, plugins }) {
   const linkAccountPlugins = createEventPlugins({
     authConfig,
     plugins,

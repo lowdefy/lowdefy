@@ -14,16 +14,22 @@
   limitations under the License.
 */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
+import { getNextAuthConfig } from '@lowdefy/api';
+import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
+import adapters from '../../build/plugins/auth/adapters.js';
 import authJson from '../../build/auth.json';
-import getAuthOptions from './getAuthOptions.js';
+import callbacks from '../../build/plugins/auth/callbacks.js';
+import events from '../../build/plugins/auth/events.js';
+import providers from '../../build/plugins/auth/providers.js';
 
-function getServerSession({ req, res, logger }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, getAuthOptions({ logger }));
-  }
-  return undefined;
+function getAuthOptions({ logger }) {
+  return getNextAuthConfig({
+    authJson,
+    logger,
+    plugins: { adapters, callbacks, events, providers },
+    secrets: getSecretsFromEnv(),
+  });
 }
 
-export default getServerSession;
+export default getAuthOptions;

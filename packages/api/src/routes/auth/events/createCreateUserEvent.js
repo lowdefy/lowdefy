@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createCreateUserEvent(context, { authConfig, plugins }) {
+function createCreateUserEvent({ authConfig, plugins }) {
   const createUserPlugins = createEventPlugins({
     authConfig,
     plugins,

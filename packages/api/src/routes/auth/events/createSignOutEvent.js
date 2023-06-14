@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignOutEvent(context, { authConfig, plugins }) {
+function createSignOutEvent({ authConfig, plugins }) {
   const signInPlugins = createEventPlugins({
     authConfig,
     plugins,

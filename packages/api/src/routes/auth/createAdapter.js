@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function createAdapter(context, { authConfig, plugins }) {
+function createAdapter({ authConfig, plugins }) {
   const adapterConfig = authConfig.adapter;
 
   if (!adapterConfig) {

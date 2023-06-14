@@ -16,7 +16,7 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignInEvent(context, { authConfig, plugins }) {
+function createSignInEvent({ authConfig, plugins }) {
   const signInPlugins = createEventPlugins({
     authConfig,
     plugins,

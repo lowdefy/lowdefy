@@ -14,36 +14,22 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
 import NextAuth from 'next-auth';
-import { createApiContext, getNextAuthConfig } from '@lowdefy/api';
 
-import adapters from '../../../build/plugins/auth/adapters.js';
+import getAuthOptions from './../../../lib/auth/getAuthOptions.js';
 import authJson from '../../../build/auth.json';
-import callbacks from '../../../build/plugins/auth/callbacks.js';
-import config from '../../../build/config.json';
-import events from '../../../build/plugins/auth/events.js';
-import fileCache from '../../../lib/fileCache.js';
-import providers from '../../../build/plugins/auth/providers.js';
-
 import createLogger from '../../../lib/log/createLogger.js';
 
-export const authOptions = getNextAuthConfig(
-  createApiContext({
-    config,
-    fileCache,
-    logger: createLogger(),
-  }),
-  { authJson, plugins: { adapters, callbacks, events, providers } }
-);
-
 export default async function auth(req, res) {
+  const logger = createLogger({ traceId: crypto.randomUUID() });
   if (authJson.configured === true) {
     // Required for emails in corporate networks, see:
     // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
     if (req.method === 'HEAD') {
       return res.status(200).end();
     }
-    return await NextAuth(req, res, authOptions);
+    return await NextAuth(req, res, getAuthOptions({ logger }));
   }
 
   return res.status(404).json({
