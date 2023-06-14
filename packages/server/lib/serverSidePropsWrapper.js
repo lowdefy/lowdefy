@@ -26,16 +26,17 @@ function serverSidePropsWrapper(handler) {
   return async function wrappedHandler(nextContext) {
     let logger = console;
     try {
+      const { req, res } = nextContext;
       const traceId = crypto.randomUUID();
 
       logger = createLogger({ traceId });
-      const session = await getServerSession(nextContext);
+      const session = await getServerSession({ req, res, logger });
       // Important to give absolute path so Next can trace build files
       const context = createApiContext({
         buildDirectory: path.join(process.cwd(), 'build'),
         config,
         fileCache,
-        headers: nextContext.req.headers,
+        headers: req.headers,
         logger,
         session,
       });

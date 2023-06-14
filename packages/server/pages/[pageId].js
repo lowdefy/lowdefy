@@ -22,7 +22,6 @@ import Page from '../lib/Page.js';
 
 async function getServerSidePropsHandler({ context, nextContext }) {
   const { pageId } = nextContext.params;
-  logEvent({ context, event: 'page_view', pageId });
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
@@ -37,7 +36,7 @@ async function getServerSidePropsHandler({ context, nextContext }) {
       },
     };
   }
-
+  logEvent({ context, event: 'page_view', pageId });
   return {
     props: {
       pageConfig,

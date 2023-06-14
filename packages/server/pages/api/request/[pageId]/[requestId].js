@@ -23,10 +23,10 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const { blockId, pageId, requestId } = req.query;
+  const { pageId, requestId } = req.query;
   logEvent({ context, event: 'request', pageId, requestId });
 
-  const { payload } = req.body;
+  const { blockId, payload } = req.body;
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   res.status(200).json(response);
 }

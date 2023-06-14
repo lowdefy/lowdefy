@@ -20,9 +20,8 @@ import logEvent from '../lib/log/logEvent.js';
 import serverSidePropsWrapper from '../lib/serverSidePropsWrapper.js';
 import Page from '../lib/Page.js';
 
+// TODO: What to log in redirects?
 async function getServerSidePropsHandler({ context }) {
-  logEvent({ context, event: 'page_view', pageId: 'TODO:' });
-
   const rootConfig = await getRootConfig(context);
   const { home } = rootConfig;
   if (home.configured === false) {
@@ -42,6 +41,7 @@ async function getServerSidePropsHandler({ context }) {
       },
     };
   }
+  logEvent({ context, event: 'page_view', pageId: home.pageId });
   return {
     props: {
       pageConfig,

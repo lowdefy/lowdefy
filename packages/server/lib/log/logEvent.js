@@ -20,7 +20,6 @@ function logEvent({ context, event, pageId, requestId }) {
   context.logger.info({
     event,
     // TODO:
-    // app_id ? build_hash, config_hash
     // app_name
     // app_version
     // lowdefy_version
@@ -30,6 +29,7 @@ function logEvent({ context, event, pageId, requestId }) {
     request_id: requestId,
     user: {
       id: user.id,
+      roles: user.roles,
       sub: user.sub,
       session_id: user.session_id, // TODO: Implement session id
     },
