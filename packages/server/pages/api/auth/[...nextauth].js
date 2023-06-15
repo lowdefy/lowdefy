@@ -14,25 +14,24 @@
   limitations under the License.
 */
 
-import crypto from 'crypto';
 import NextAuth from 'next-auth';
 
-import getAuthOptions from './../../../lib/auth/getAuthOptions.js';
+import apiWrapper from '../../../lib/apiWrapper.js';
 import authJson from '../../../build/auth.json';
-import createLogger from '../../../lib/log/createLogger.js';
 
-export default async function auth(req, res) {
-  const logger = createLogger({ traceId: crypto.randomUUID() });
+async function handler({ context, req, res }) {
   if (authJson.configured === true) {
     // Required for emails in corporate networks, see:
     // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
     if (req.method === 'HEAD') {
       return res.status(200).end();
     }
-    return await NextAuth(req, res, getAuthOptions({ logger }));
+    return await NextAuth(req, res, context.authOptions);
   }
 
   return res.status(404).json({
     message: 'Auth not configured',
   });
 }
+
+export default apiWrapper(handler);

@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-function logEvent({ context, event, pageId, requestId }) {
+// TODO: Better name needed here maybe?
+function logRequest({ context, metadata = {} }) {
   const { headers = {}, user = {} } = context;
-
   context.logger.info({
-    event,
     // TODO:
     // app_name
     // app_version
     // lowdefy_version
     // build_hash
     // config_hash
-    page_id: pageId,
-    request_id: requestId,
     user: {
       id: user.id,
       roles: user.roles,
@@ -58,6 +55,7 @@ function logEvent({ context, event, pageId, requestId }) {
       'cf-ipcountry': headers['cf-ipcountry'],
       'cf-visitor': headers['cf-visitor'],
     },
+    ...metadata,
   });
   // TODO:
   // Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
@@ -70,4 +68,36 @@ function logEvent({ context, event, pageId, requestId }) {
   // console.log('nextContext', nextContext);
 }
 
-export default logEvent;
+export default logRequest;
+
+/*
+User ID
+Session ID
+Event Type/Action
+Timestamp
+Source IP Address
+User Agent
+Resource ID/Identifier
+Outcome/Status
+Reason
+Details/Additional Information
+Targeted System
+Page URL
+Referrer URL
+IP Address
+
+Response Time
+Error Messages
+Device Information
+Input Data
+Behavioral Metrics
+
+Error Level/Severity
+Error Message
+Error Code
+HTTP Method
+Stack Trace
+Payload/Body
+Application Version
+Environment Information
+*/

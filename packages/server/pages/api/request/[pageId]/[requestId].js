@@ -17,16 +17,15 @@
 import { callRequest } from '@lowdefy/api';
 
 import apiWrapper from '../../../../lib/apiWrapper.js';
-import logEvent from '../../../../lib/log/logEvent.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
   const { pageId, requestId } = req.query;
-  logEvent({ context, event: 'request', pageId, requestId });
-
   const { blockId, payload } = req.body;
+  context.logger.info({ event: 'call_request', pageId, requestId, blockId });
+  context.logger.debug({ payload });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   res.status(200).json(response);
 }

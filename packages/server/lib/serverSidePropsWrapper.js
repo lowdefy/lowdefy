@@ -17,10 +17,12 @@ import path from 'path';
 import crypto from 'crypto';
 import { createApiContext } from '@lowdefy/api';
 
+import config from '../build/config.json';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
-import config from '../build/config.json';
+import logRequest from './log/logRequest.js';
+import getAuthOptions from './auth/getAuthOptions.js';
 
 function serverSidePropsWrapper(handler) {
   return async function wrappedHandler(nextContext) {
@@ -28,11 +30,12 @@ function serverSidePropsWrapper(handler) {
     try {
       const { req, res } = nextContext;
       const traceId = crypto.randomUUID();
-
       logger = createLogger({ traceId });
-      const session = await getServerSession({ req, res, logger });
+      const authOptions = getAuthOptions({ logger });
+      const session = await getServerSession({ authOptions, req, res });
       // Important to give absolute path so Next can trace build files
       const context = createApiContext({
+        authOptions,
         buildDirectory: path.join(process.cwd(), 'build'),
         config,
         fileCache,
@@ -40,7 +43,10 @@ function serverSidePropsWrapper(handler) {
         logger,
         session,
       });
+      logRequest({ context });
+      // Await here so that if handler throws it is caught.
       const response = await handler({ context, nextContext });
+      // TODO: Log response time?
       return response;
     } catch (error) {
       // TODO: Improve

@@ -16,15 +16,15 @@
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import logEvent from '../lib/log/logEvent.js';
 import serverSidePropsWrapper from '../lib/serverSidePropsWrapper.js';
 import Page from '../lib/Page.js';
 
-// TODO: What to log in redirects?
 async function getServerSidePropsHandler({ context }) {
   const rootConfig = await getRootConfig(context);
   const { home } = rootConfig;
+  const { logger } = context;
   if (home.configured === false) {
+    logger.info({ event: 'redirect_to_homepage', pageId: home.pageId });
     return {
       redirect: {
         destination: `/${home.pageId}`,
@@ -34,6 +34,7 @@ async function getServerSidePropsHandler({ context }) {
   }
   const pageConfig = await getPageConfig(context, { pageId: home.pageId });
   if (!pageConfig) {
+    logger.info({ event: 'redirect_page_not_found', pageId: home.pageId });
     return {
       redirect: {
         destination: '/404',
@@ -41,7 +42,7 @@ async function getServerSidePropsHandler({ context }) {
       },
     };
   }
-  logEvent({ context, event: 'page_view', pageId: home.pageId });
+  logger.info({ event: 'page_view', pageId: home.pageId });
   return {
     props: {
       pageConfig,

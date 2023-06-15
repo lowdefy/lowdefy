@@ -17,11 +17,10 @@
 import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
 import authJson from '../../build/auth.json';
-import getAuthOptions from './getAuthOptions.js';
 
-function getServerSession({ req, res, logger }) {
+function getServerSession({ authOptions, req, res }) {
   if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, getAuthOptions({ logger }));
+    return getNextAuthServerSession(req, res, authOptions);
   }
   return undefined;
 }

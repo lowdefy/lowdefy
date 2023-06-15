@@ -20,6 +20,7 @@ import { _secret } from '@lowdefy/operators-js/operators/server';
 import createAdapter from './createAdapter.js';
 import createCallbacks from './callbacks/createCallbacks.js';
 import createEvents from './events/createEvents.js';
+import createLogger from './createLogger.js';
 import createProviders from './createProviders.js';
 
 const nextAuthConfig = {};
@@ -48,11 +49,13 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
   nextAuthConfig.adapter = createAdapter({ authConfig, plugins });
   nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
   nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
+  nextAuthConfig.logger = createLogger({ logger });
   nextAuthConfig.providers = createProviders({ authConfig, plugins });
 
+  nextAuthConfig.debug = authConfig.debug;
+  nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
-  nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.cookies = authConfig?.advanced?.cookies;
   initialized = true;
   return nextAuthConfig;

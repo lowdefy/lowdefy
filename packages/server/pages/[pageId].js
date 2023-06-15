@@ -16,19 +16,19 @@
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import logEvent from '../lib/log/logEvent.js';
 import serverSidePropsWrapper from '../lib/serverSidePropsWrapper.js';
 import Page from '../lib/Page.js';
 
 async function getServerSidePropsHandler({ context, nextContext }) {
   const { pageId } = nextContext.params;
-
+  const { logger } = context;
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
     getPageConfig(context, { pageId }),
   ]);
 
   if (!pageConfig) {
+    logger.info({ event: 'redirect_page_not_found', pageId });
     return {
       redirect: {
         destination: '/404',
@@ -36,7 +36,7 @@ async function getServerSidePropsHandler({ context, nextContext }) {
       },
     };
   }
-  logEvent({ context, event: 'page_view', pageId });
+  logger.info({ event: 'page_view', pageId });
   return {
     props: {
       pageConfig,

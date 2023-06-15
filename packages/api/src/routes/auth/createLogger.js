@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import pino from 'pino';
-
-const logger = pino({
-  name: 'lowdefy_server',
-  level: 'info', // TODO:
-  base: { pid: undefined, hostname: undefined },
-});
-
-function createLogger(metadata = {}) {
-  // TODO: Also configure level here?
-  return logger.child(metadata);
+function createLogger({ logger }) {
+  return {
+    error: (code, metadata) => logger.error({ code, metadata, event: 'auth_error' }),
+    warn: (code, metadata) => logger.warn({ code, metadata, event: 'auth_warning' }),
+    // TODO: If defined here, this will always be called by next-auth
+    // Either:
+    //  look at configured log level to respect user config
+    //  use `auth.debug`, then user must enable auth debugging (maybe confusing)
+    // TODO: Test debug messages
+    debug: (code, metadata) => logger.debug({ code, metadata }),
+  };
 }
 
 export default createLogger;
