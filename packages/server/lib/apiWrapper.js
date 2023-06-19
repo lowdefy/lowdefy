@@ -47,6 +47,7 @@ function apiWrapper(handler) {
         operators,
         secrets: getSecretsFromEnv(),
         session,
+        req,
       });
       logRequest({ context });
       // Await here so that if handler throws it is caught.

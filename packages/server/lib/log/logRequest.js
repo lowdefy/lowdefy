@@ -30,6 +30,10 @@ function logRequest({ context, metadata = {} }) {
       sub: user.sub,
       session_id: user.session_id, // TODO: Implement session id
     },
+    url: context.req.url,
+    method: context.req.method,
+    resolvedUrl: context.nextContext?.resolvedUrl,
+    hostname: context.req.hostname,
     headers: {
       'accept-language': headers['accept-language'],
       'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
@@ -59,13 +63,7 @@ function logRequest({ context, metadata = {} }) {
   });
   // TODO:
   // Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
-  // console.log('url', nextContext.req?.url);
-  // console.log('method', nextContext.req?.method);
-  // console.log('hostname', nextContext.req?.hostname);
-  // console.log('resolvedUrl', nextContext.resolvedUrl);
   // console.log('params', nextContext.params);
-  // console.log('context', context);
-  // console.log('nextContext', nextContext);
 }
 
 export default logRequest;

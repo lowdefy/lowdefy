@@ -15,14 +15,10 @@
 */
 
 function createLogger({ logger }) {
+  // TODO: No debug logs in production server
   return {
     error: (code, metadata) => logger.error({ code, metadata, event: 'auth_error' }),
     warn: (code, metadata) => logger.warn({ code, metadata, event: 'auth_warning' }),
-    // TODO: If defined here, this will always be called by next-auth
-    // Either:
-    //  look at configured log level to respect user config
-    //  use `auth.debug`, then user must enable auth debugging (maybe confusing)
-    // TODO: Test debug messages
     debug: (code, metadata) => logger.debug({ code, metadata }),
   };
 }

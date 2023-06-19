@@ -51,8 +51,7 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
   nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
   nextAuthConfig.logger = createLogger({ logger });
   nextAuthConfig.providers = createProviders({ authConfig, plugins });
-
-  nextAuthConfig.debug = authConfig.debug;
+  nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
   nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;

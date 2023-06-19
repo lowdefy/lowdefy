@@ -16,17 +16,20 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignOutEvent({ authConfig, plugins }) {
-  const signInPlugins = createEventPlugins({
+function createSignOutEvent({ authConfig, logger, plugins }) {
+  const signOutPlugins = createEventPlugins({
     authConfig,
     plugins,
     type: 'signOut',
   });
 
-  if (signInPlugins.length === 0) return undefined;
-
-  async function signInEvent({ session, token }) {
-    for (const plugin of signInPlugins) {
+  async function signOutEvent({ session, token }) {
+    console.log({ session, token });
+    // logger.info({
+    //   event: 'auth_sign_out',
+    //   user: session.user,
+    // });
+    for (const plugin of signOutPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},
         session,
@@ -34,7 +37,7 @@ function createSignOutEvent({ authConfig, plugins }) {
       });
     }
   }
-  return signInEvent;
+  return signOutEvent;
 }
 
 export default createSignOutEvent;

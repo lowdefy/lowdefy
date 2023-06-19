@@ -28,6 +28,8 @@ function createApiContext({
   operators,
   secrets,
   session,
+  nextContext,
+  req,
 }) {
   const readConfigFile = createReadConfigFile({ buildDirectory, fileCache });
   return {
@@ -41,6 +43,8 @@ function createApiContext({
     readConfigFile,
     secrets,
     user: session?.user,
+    nextContext,
+    req,
   };
 }
 

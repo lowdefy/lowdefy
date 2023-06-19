@@ -42,6 +42,8 @@ function serverSidePropsWrapper(handler) {
         headers: req.headers,
         logger,
         session,
+        nextContext,
+        req,
       });
       logRequest({ context });
       // Await here so that if handler throws it is caught.

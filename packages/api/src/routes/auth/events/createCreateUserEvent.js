@@ -16,16 +16,23 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createCreateUserEvent({ authConfig, plugins }) {
+function createCreateUserEvent({ authConfig, logger, plugins }) {
   const createUserPlugins = createEventPlugins({
     authConfig,
     plugins,
     type: 'createUser',
   });
 
-  if (createUserPlugins.length === 0) return undefined;
-
   async function createUserEvent({ user }) {
+    logger.info({
+      event: 'auth_create_user',
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+    });
     for (const plugin of createUserPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},
