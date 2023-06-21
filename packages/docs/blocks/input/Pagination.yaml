@@ -24,7 +24,7 @@ _ref:
       pageSizeOptions: [10, 20, 30, 40]
     init_state_values:
       block_id:
-        current: 0
+        current: 1
         pageSize: 10
         skip: 0
     description_content: |
