@@ -13,16 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable react/jsx-props-no-spreading */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
-import { authOptions } from '../../pages/api/auth/[...nextauth].js';
-import authJson from '../../build/auth.json';
+import React from 'react';
+import AuthConfigured from './AuthConfigured.js';
+import AuthNotConfigured from './AuthNotConfigured.js';
 
-function getServerSession({ req, res }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
+import authConfig from '../../../build/auth.json';
+
+function Auth({ children, session }) {
+  if (authConfig.configured === true) {
+    return (
+      <AuthConfigured serverSession={session} authConfig={authConfig}>
+        {(auth) => children(auth)}
+      </AuthConfigured>
+    );
   }
-  return undefined;
+  return <AuthNotConfigured authConfig={authConfig}>{(auth) => children(auth)}</AuthNotConfigured>;
 }
 
-export default getServerSession;
+export default Auth;

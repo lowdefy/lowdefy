@@ -24,11 +24,16 @@ function createSignOutEvent({ authConfig, logger, plugins }) {
   });
 
   async function signOutEvent({ session, token }) {
-    console.log({ session, token });
-    // logger.info({
-    //   event: 'auth_sign_out',
-    //   user: session.user,
-    // });
+    const user = token?.user ?? session?.user;
+    logger.info({
+      event: 'auth_sign_out',
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+    });
     for (const plugin of signOutPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},

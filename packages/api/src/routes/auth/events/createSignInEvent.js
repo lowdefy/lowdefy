@@ -23,11 +23,11 @@ function createSignInEvent({ authConfig, logger, plugins }) {
     type: 'signIn',
   });
 
-  // TODO: Log provider
   async function signInEvent({ account, isNewUser, profile, user }) {
     logger.info({
       event: 'auth_sign_in',
       isNewUser,
+      provider: account?.provider,
       user: {
         id: user.id,
         roles: user.roles,
