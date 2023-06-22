@@ -27,7 +27,7 @@ function _switch({ location, params }) {
   for (const branch of params.branches) {
     if (!type.isBoolean(branch.if)) {
       throw new Error(
-        `Operator Error: switch takes a boolean type for parameter test. Received: ${JSON.stringify(
+        `Operator Error: switch takes a boolean type for parameter "if". Received: ${JSON.stringify(
           params
         )} at ${location}.`
       );
