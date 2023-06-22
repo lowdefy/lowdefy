@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
+import pino from 'pino';
 
-import authJson from '../../build/auth.json';
+const logger = pino({
+  name: 'lowdefy_server',
+  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
+  base: { pid: undefined, hostname: undefined },
+});
 
-function getServerSession({ authOptions, req, res }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
-  }
-  return undefined;
+function createLogger(metadata = {}) {
+  return logger.child(metadata);
 }
 
-export default getServerSession;
+export default createLogger;

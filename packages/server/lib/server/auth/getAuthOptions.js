@@ -17,11 +17,11 @@
 import { getNextAuthConfig } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
-import adapters from '../../build/plugins/auth/adapters.js';
-import authJson from '../../build/auth.json';
-import callbacks from '../../build/plugins/auth/callbacks.js';
-import events from '../../build/plugins/auth/events.js';
-import providers from '../../build/plugins/auth/providers.js';
+import adapters from '../../../build/plugins/auth/adapters.js';
+import authJson from '../../../build/auth.json';
+import callbacks from '../../../build/plugins/auth/callbacks.js';
+import events from '../../../build/plugins/auth/events.js';
+import providers from '../../../build/plugins/auth/providers.js';
 
 function getAuthOptions({ logger }) {
   return getNextAuthConfig({

@@ -16,23 +16,22 @@
 import path from 'path';
 import crypto from 'crypto';
 import { createApiContext } from '@lowdefy/api';
-import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
-import config from '../build/config.json';
-import connections from '../build/plugins/connections.js';
+import config from '../../build/config.json';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
 import logRequest from './log/logRequest.js';
-import operators from '../build/plugins/operators/server.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 
-function apiWrapper(handler) {
-  return async function wrappedHandler(req, res) {
+// TODO: Merge serverSidePropsWrapper and apiWrapper?
+function serverSidePropsWrapper(handler) {
+  return async function wrappedHandler(nextContext) {
     let logger = console;
     try {
-      const traceId = crypto.randomUUID();
-      logger = createLogger({ traceId });
+      const { req, res } = nextContext;
+      const rid = crypto.randomUUID();
+      logger = createLogger({ rid });
       const authOptions = getAuthOptions({ logger });
       const session = await getServerSession({ authOptions, req, res });
       // Important to give absolute path so Next can trace build files
@@ -40,28 +39,26 @@ function apiWrapper(handler) {
         authOptions,
         buildDirectory: path.join(process.cwd(), 'build'),
         config,
-        connections,
         fileCache,
         headers: req.headers,
         logger,
-        operators,
-        secrets: getSecretsFromEnv(),
         session,
+        nextContext,
         req,
       });
       logRequest({ context });
       // Await here so that if handler throws it is caught.
-      const response = await handler({ context, req, res });
+      const response = await handler({ context, nextContext });
       // TODO: Log response time?
       return response;
     } catch (error) {
-      // TODO: Improve (logError function)
+      // TODO: Improve
       // TODO: Log cause
       logger.error(error);
       // TODO: What we do here?
-      res.status(500).json({ name: error.name, message: error.message });
+      throw error;
     }
   };
 }
 
-export default apiWrapper;
+export default serverSidePropsWrapper;

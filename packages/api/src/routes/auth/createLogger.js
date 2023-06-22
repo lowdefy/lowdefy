@@ -19,7 +19,7 @@ function createLogger({ logger }) {
   return {
     error: (code, metadata) => logger.error({ code, metadata, event: 'auth_error' }),
     warn: (code, metadata) => logger.warn({ code, metadata, event: 'auth_warning' }),
-    debug: (code, metadata) => logger.debug({ code, metadata }),
+    debug: (code, metadata) => logger.debug({ code, metadata, event: 'auth_debug' }),
   };
 }
 

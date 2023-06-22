@@ -16,8 +16,8 @@
 
 import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import serverSidePropsWrapper from '../lib/serverSidePropsWrapper.js';
-import Page from '../lib/Page.js';
+import serverSidePropsWrapper from '../lib/server/serverSidePropsWrapper.js';
+import Page from '../lib/client/Page.js';
 
 async function getServerSidePropsHandler({ context }) {
   const rootConfig = await getRootConfig(context);

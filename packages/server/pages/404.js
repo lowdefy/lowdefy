@@ -17,9 +17,8 @@ import path from 'path';
 import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
 
 import config from '../build/config.json';
-import createLogger from '../lib/log/createLogger.js';
-import fileCache from '../lib/fileCache.js';
-import Page from '../lib/Page.js';
+import fileCache from '../lib/server/fileCache.js';
+import Page from '../lib/client/Page.js';
 
 export async function getStaticProps() {
   // Important to give absolute path so Next can trace build files
@@ -27,7 +26,7 @@ export async function getStaticProps() {
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
     fileCache,
-    logger: createLogger(), // TODO: pino or console or 🤷‍♂️?
+    logger: console, // TODO: pino or console or 🤷‍♂️?
   });
 
   const [rootConfig, pageConfig] = await Promise.all([

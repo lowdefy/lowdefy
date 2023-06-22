@@ -51,6 +51,8 @@
     "@lowdefy/blocks-basic": "4.0.0-rc.8",
     "@lowdefy/blocks-loaders": "4.0.0-rc.8",
     "@lowdefy/client": "4.0.0-rc.8",
+    "@lowdefy/connection-axios-http": "4.0.0-rc.8",
+    "@lowdefy/connection-mongodb": "4.0.0-rc.8",
     "@lowdefy/helpers": "4.0.0-rc.8",
     "@lowdefy/layout": "4.0.0-rc.8",
     "@lowdefy/node-utils": "4.0.0-rc.8",
