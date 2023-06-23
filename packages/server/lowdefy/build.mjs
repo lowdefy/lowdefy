@@ -38,15 +38,23 @@ async function run() {
   };
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
+
+  const logger = pino({
+    name: 'lowdefy_build',
+    level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
+    base: { pid: undefined, hostname: undefined },
+    mixin: (context, level) => {
+      return {
+        ...context,
+        print: context.print ?? logger.levels.labels[level],
+      };
+    },
+  });
+
   await build({
     customTypesMap,
     directories,
-    // TODO: This should probably log for the CLI similar to dev server
-    logger: pino({
-      name: 'lowdefy_build',
-      level: 'info', // TODO:
-      base: { pid: undefined, hostname: undefined },
-    }),
+    logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
   });
 }

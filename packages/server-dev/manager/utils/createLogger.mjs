@@ -20,7 +20,6 @@ function createLogger({ level = 'info' }) {
     name: 'lowdefy build',
     level,
     base: { pid: undefined, hostname: undefined },
-    // TODO: Add log as custom level
     mixin: (context, level) => {
       return {
         ...context,

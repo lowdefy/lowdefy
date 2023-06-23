@@ -17,16 +17,15 @@ import { get } from '@lowdefy/helpers';
 
 function addUserFieldsToToken({ account, authConfig, logger, profile, token, user }) {
   const objects = { account, profile, user };
-  // TODO: Add when debug is fixed.
-  // logger.debug('Adding userFields to user. Available provider data is:');
-  // logger.debug(objects);
+  logger.debug('Adding userFields to user. Available provider data is:');
+  logger.debug(objects);
   Object.entries(authConfig.userFields).forEach(([lowdefyFieldName, providerFieldName]) => {
     const value = get(objects, providerFieldName);
-    // logger.debug(
-    //   `Adding provider field "${providerFieldName}" with value ${JSON.stringify(
-    //     value
-    //   )} as "${lowdefyFieldName}"`
-    // );
+    logger.debug(
+      `Adding provider field "${providerFieldName}" with value ${JSON.stringify(
+        value
+      )} as "${lowdefyFieldName}"`
+    );
     token[lowdefyFieldName] = value;
   });
 }

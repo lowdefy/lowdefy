@@ -27,7 +27,6 @@ const nextAuthConfig = {};
 let initialized = false;
 
 function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
-  // TODO: What about different loggers;
   if (initialized) return nextAuthConfig;
 
   const operatorsParser = new ServerParser({

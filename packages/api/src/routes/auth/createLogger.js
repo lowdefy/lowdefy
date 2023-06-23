@@ -15,7 +15,6 @@
 */
 
 function createLogger({ logger }) {
-  // TODO: No debug logs in production server
   return {
     error: (code, metadata) => logger.error({ code, metadata, event: 'auth_error' }),
     warn: (code, metadata) => logger.warn({ code, metadata, event: 'auth_warning' }),
