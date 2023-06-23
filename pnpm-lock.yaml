@@ -1247,6 +1247,7 @@ importers:
       next: 12.3.1
       next-auth: 4.20.1
       next-with-less: 2.0.5
+      pino: 8.8.0
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0
@@ -1268,6 +1269,7 @@ importers:
       '@lowdefy/plugin-next-auth': link:../plugins/plugins/plugin-next-auth
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       next-auth: 4.20.1_azq6kxkn3od7qdylwkyksrwopy
+      pino: 8.8.0
       process: 0.11.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
