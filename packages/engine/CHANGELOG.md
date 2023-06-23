@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
+
+
+### Bug Fixes
+
+* **engine:** Fix setting values of blocks to null using set state. ([58d0cf8](https://github.com/lowdefy/lowdefy/commit/58d0cf8cdebf6536c51ad96ab342be0e681b4298))
+
+
+
+
+
 # [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
 
 
