@@ -54,7 +54,6 @@ _ref:
 
             Server parameters:
             - `args: array`: If the operator is used inside a `_function` operator, `args` is an array of arguments passed to the function.
-            - `arrayIndices: array`. An empty array. Provided for consistency with client operators.
             - `methodName: string`: The name of the method if the operator is called with a method (as `_operator.methodName`).
             - `operators: object`: An object with all the operator functions used on the server.
             - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the operator. No validation is performed on this object.
