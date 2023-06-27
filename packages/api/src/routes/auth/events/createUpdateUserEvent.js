@@ -16,16 +16,23 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createUpdateUserEvent(context, { authConfig, plugins }) {
+function createUpdateUserEvent({ authConfig, logger, plugins }) {
   const updateUserPlugins = createEventPlugins({
     authConfig,
     plugins,
     type: 'updateUser',
   });
 
-  if (updateUserPlugins.length === 0) return undefined;
-
   async function updateUserEvent({ user }) {
+    logger.info({
+      event: 'auth_update_user',
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+    });
     for (const plugin of updateUserPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},

@@ -56,6 +56,6 @@ test("switch params branches if doesn't evaluate to boolean ", () => {
   expect(() =>
     _switch({ params: { branches: [{ if: '1, 0', then: 'A' }] }, location: 'locationId' })
   ).toThrow(
-    'Operator Error: switch takes a boolean type for parameter test. Received: {"branches":[{"if":"1, 0","then":"A"}]} at locationId.'
+    'Operator Error: switch takes a boolean type for parameter "if". Received: {"branches":[{"if":"1, 0","then":"A"}]} at locationId.'
   );
 });

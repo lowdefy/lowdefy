@@ -14,22 +14,12 @@
   limitations under the License.
 */
 
-import { createApiContext, getRootConfig } from '@lowdefy/api';
+import { getRootConfig } from '@lowdefy/api';
+import apiWrapper from '../../lib/server/apiWrapper.js';
 
-import config from '../../build/config.json';
-import fileCache from '../../lib/fileCache.js';
-import getServerSession from '../../lib/auth/getServerSession.js';
-
-export default async function handler(req, res) {
-  const session = await getServerSession({ req, res });
-  const apiContext = createApiContext({
-    buildDirectory: './build',
-    config,
-    fileCache,
-    logger: console,
-    session,
-  });
-  const rootConfig = await getRootConfig(apiContext);
-
+async function handler({ context, res }) {
+  const rootConfig = await getRootConfig(context);
   res.status(200).json(rootConfig);
 }
+
+export default apiWrapper(handler);

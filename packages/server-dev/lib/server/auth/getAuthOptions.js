@@ -14,24 +14,22 @@
   limitations under the License.
 */
 
-import NextAuth from 'next-auth';
+import { getNextAuthConfig } from '@lowdefy/api';
+import { getSecretsFromEnv } from '@lowdefy/node-utils';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
+import adapters from '../../../build/plugins/auth/adapters.js';
 import authJson from '../../../build/auth.json';
+import callbacks from '../../../build/plugins/auth/callbacks.js';
+import events from '../../../build/plugins/auth/events.js';
+import providers from '../../../build/plugins/auth/providers.js';
 
-async function handler({ context, req, res }) {
-  if (authJson.configured === true) {
-    // Required for emails in corporate networks, see:
-    // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-    if (req.method === 'HEAD') {
-      return res.status(200).end();
-    }
-    return await NextAuth(req, res, context.authOptions);
-  }
-
-  return res.status(404).json({
-    message: 'Auth not configured',
+function getAuthOptions({ logger }) {
+  return getNextAuthConfig({
+    authJson,
+    logger,
+    plugins: { adapters, callbacks, events, providers },
+    secrets: getSecretsFromEnv(),
   });
 }
 
-export default apiWrapper(handler);
+export default getAuthOptions;

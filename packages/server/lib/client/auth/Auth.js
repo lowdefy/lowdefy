@@ -13,20 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+/* eslint-disable react/jsx-props-no-spreading */
 
-import { callRequest } from '@lowdefy/api';
+import React from 'react';
+import AuthConfigured from './AuthConfigured.js';
+import AuthNotConfigured from './AuthNotConfigured.js';
 
-import apiWrapper from '../../../../lib/server/apiWrapper.js';
+import authConfig from '../../../build/auth.json';
 
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+function Auth({ children, session }) {
+  if (authConfig.configured === true) {
+    return (
+      <AuthConfigured serverSession={session} authConfig={authConfig}>
+        {(auth) => children(auth)}
+      </AuthConfigured>
+    );
   }
-  const { pageId, requestId } = req.query;
-  const { blockId, payload } = req.body;
-  context.logger.info({ event: 'call_request', pageId, requestId, blockId });
-  const response = await callRequest(context, { blockId, pageId, payload, requestId });
-  res.status(200).json(response);
+  return <AuthNotConfigured authConfig={authConfig}>{(auth) => children(auth)}</AuthNotConfigured>;
 }
 
-export default apiWrapper(handler);
+export default Auth;

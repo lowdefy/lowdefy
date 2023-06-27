@@ -14,27 +14,19 @@
   limitations under the License.
 */
 
-import { createApiContext, getPageConfig } from '@lowdefy/api';
+import { getPageConfig } from '@lowdefy/api';
 
-import config from '../../../build/config.json';
-import fileCache from '../../../lib/fileCache.js';
-import getServerSession from '../../../lib/auth/getServerSession.js';
+import apiWrapper from '../../../lib/server/apiWrapper.js';
 
-export default async function handler(req, res) {
-  const session = await getServerSession({ req, res });
-  const apiContext = createApiContext({
-    buildDirectory: './build',
-    config,
-    fileCache,
-    logger: console,
-    session,
-  });
-
+async function handler({ context, req, res }) {
   const { pageId } = req.query;
-  const pageConfig = await getPageConfig(apiContext, { pageId });
+  const pageConfig = await getPageConfig(context, { pageId });
+  // TODO: Do we log here?
   if (pageConfig === null) {
     res.status(404).send('Page not found.');
   } else {
     res.status(200).json(pageConfig);
   }
 }
+
+export default apiWrapper(handler);
