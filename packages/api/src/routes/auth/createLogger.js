@@ -14,15 +14,12 @@
   limitations under the License.
 */
 
-import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
-import { authOptions } from '../../pages/api/auth/[...nextauth].js';
-import authJson from '../../build/auth.json';
-
-function getServerSession({ req, res }) {
-  if (authJson.configured === true) {
-    return getNextAuthServerSession(req, res, authOptions);
-  }
-  return undefined;
+function createLogger({ logger }) {
+  return {
+    error: (code, metadata) => logger.error({ code, metadata, event: 'auth_error' }),
+    warn: (code, metadata) => logger.warn({ code, metadata, event: 'auth_warning' }),
+    debug: (code, metadata) => logger.debug({ code, metadata, event: 'auth_debug' }),
+  };
 }
 
-export default getServerSession;
+export default createLogger;

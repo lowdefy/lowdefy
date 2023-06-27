@@ -18,11 +18,19 @@ import { ConfigurationError } from '../../context/errors.js';
 
 function authorizeRequest({ authorize, logger }, { requestConfig }) {
   if (!authorize(requestConfig)) {
-    logger.warn({ authorized: false }, 'Unauthorized Request');
+    logger.debug({
+      event: 'debug_request_authorize',
+      authorized: false,
+      auth_config: requestConfig.auth,
+    });
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
     throw new ConfigurationError(`Request "${requestConfig.requestId}" does not exist.`);
   }
-  logger.debug({ authorized: true }, 'Authorize Request');
+  logger.debug({
+    event: 'debug_request_authorize',
+    authorized: true,
+    auth_config: requestConfig.auth,
+  });
 }
 
 export default authorizeRequest;

@@ -16,7 +16,7 @@
 
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createRedirectCallback(context, { authConfig, plugins }) {
+function createRedirectCallback({ authConfig, plugins }) {
   const redirectCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,

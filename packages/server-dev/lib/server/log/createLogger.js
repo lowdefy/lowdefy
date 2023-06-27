@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import pino from 'pino';
 
-import apiWrapper from '../../../../lib/server/apiWrapper.js';
+const logger = pino({
+  name: 'lowdefy_server',
+  level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
+  base: { pid: undefined, hostname: undefined },
+});
 
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
-  }
-  const { pageId, requestId } = req.query;
-  const { blockId, payload } = req.body;
-  context.logger.info({ event: 'call_request', pageId, requestId, blockId });
-  const response = await callRequest(context, { blockId, pageId, payload, requestId });
-  res.status(200).json(response);
+function createLogger(metadata = {}) {
+  return logger.child(metadata);
 }
 
-export default apiWrapper(handler);
+export default createLogger;

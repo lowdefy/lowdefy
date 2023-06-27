@@ -18,25 +18,33 @@ import createAuthorize from './createAuthorize.js';
 import createReadConfigFile from './createReadConfigFile.js';
 
 function createApiContext({
+  authOptions,
   buildDirectory,
   config,
   connections,
   fileCache,
+  headers,
   logger,
   operators,
   secrets,
   session,
+  nextContext,
+  req,
 }) {
   const readConfigFile = createReadConfigFile({ buildDirectory, fileCache });
   return {
+    authOptions,
     authorize: createAuthorize({ session }),
     config,
     connections,
+    headers,
     logger,
     operators,
     readConfigFile,
     secrets,
     user: session?.user,
+    nextContext,
+    req,
   };
 }
 

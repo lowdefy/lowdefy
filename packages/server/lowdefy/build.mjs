@@ -16,6 +16,7 @@
 */
 
 import path from 'path';
+import pino from 'pino';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
@@ -37,10 +38,23 @@ async function run() {
   };
 
   const customTypesMap = await createCustomPluginTypesMap({ directories });
+
+  const logger = pino({
+    name: 'lowdefy_build',
+    level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',
+    base: { pid: undefined, hostname: undefined },
+    mixin: (context, level) => {
+      return {
+        ...context,
+        print: context.print ?? logger.levels.labels[level],
+      };
+    },
+  });
+
   await build({
     customTypesMap,
     directories,
-    logger: console,
+    logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
   });
 }

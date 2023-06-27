@@ -16,7 +16,7 @@
 
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createSignInCallback(context, { authConfig, plugins }) {
+function createSignInCallback({ authConfig, plugins }) {
   const signInCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,
