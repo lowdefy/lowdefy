@@ -143,6 +143,7 @@
           pageId: cli
           properties:
             title: The CLI
+
     - id: deployment
       type: MenuGroup
       properties:
@@ -164,6 +165,39 @@
           pageId: vercel
           properties:
             title: Vercel
+
+    - id: plugins_group
+      type: MenuGroup
+      properties:
+        title: Plugins
+        icon: AiOutlineCode
+      links:
+        - id: plugins-introduction
+          type: MenuLink
+          pageId: plugins-introduction
+          properties:
+            title: Introduction
+        - id: plugins-dev
+          type: MenuLink
+          pageId: plugins-dev
+          properties:
+            title: Developing Plugins
+        - id: plugins-actions
+          type: MenuLink
+          pageId: plugins-actions
+          properties:
+            title: Actions
+        - id: plugins-connections
+          type: MenuLink
+          pageId: plugins-connections
+          properties:
+            title: Connections
+        - id: plugins-operators
+          type: MenuLink
+          pageId: plugins-operators
+          properties:
+            title: Operators
+
     - id: users_group
       type: MenuGroup
       properties:
@@ -175,6 +209,11 @@
           pageId: users-introduction
           properties:
             title: Introduction
+        - id: auth-providers
+          type: MenuLink
+          pageId: auth-providers
+          properties:
+            title: Providers
         - id: login-and-logout
           type: MenuLink
           pageId: login-and-logout

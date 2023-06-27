@@ -154,9 +154,11 @@ _ref:
                         required: true
                         properties:
                           title: Product
-                          options: # Set the allowed options QUERY FROM API
+                          options:
+                            # Map over API response to create an array of product titles
                             _array.map:
-                              - _request: get_products.data.products # use dot notation to access value in response object properties
+                              # use dot notation to access value in response object properties
+                              - _request: get_products.data.products
                               - _function:
                                   __args: 0.title
                 ################ ------- Copy to here -------- ################

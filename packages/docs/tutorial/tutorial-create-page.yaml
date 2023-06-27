@@ -130,7 +130,7 @@ _ref:
             ### What happened
 
             - We created a new page with id `new-ticket`.
-            - We used a [`_ref` operator](/_ref) to reference configuration in another file.
+            - We used the [`_ref` operator](/_ref) to reference configuration in another file.
             - That page can now be found at the `/new-ticket` route.
             - A link to that page was created in the menu. These links are in the order of the pages.
 

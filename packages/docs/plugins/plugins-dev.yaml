@@ -1,0 +1,173 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: plugins-dev
+    pageTitle: Developing Plugins
+    section: Concepts
+    filePath: concepts/plugins-dev.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            To develop plugins and publish plugins to npm or to use unpublished, project-specific plugins, we recommend using a pnpm monorepo with the plugin packages and a Lowdefy app, as demonstrated in [this example](https://github.com/lowdefy/lowdefy-example-plugins). The [Lowdefy default plugin packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins) can also be used as examples.
+
+            > In this documentation the collection of blocks, connections, actions, etc. will be referred to as _types_, not to be confused with Typescript types.
+
+      - id: breaking_changes_alert
+        type: Alert
+        properties:
+          type: warning
+          showIcon: false
+          message: The Lowdefy plugin system is under active development and breaking changes might be made in a minor version update.
+
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            A plugin package needs to include the following:
+
+            - A `package.json` file which declares the package and exports the plugin types.
+            - A `types.js` file which exports the plugin type names.
+            - Files that export all the types as named exports.
+            - The code for the types exposed by the plugin package.
+
+            ### package.json
+
+            Lowdefy plugin packages should be an [ECMAScript module](https://nodejs.org/api/esm.html#introduction). To configure a package as an ECMAScript module, the `type` field in the `package.json` file should be set to `"module"`.
+
+            Lowdefy uses the [`exports`](https://nodejs.org/api/packages.html#package-entry-points) package entry points to map to the `types.js` and plugin named export files.
+
+            ```json
+            {
+              "name": "plugin-name",
+              "version": "1.0.0",
+              "type": "module",
+              "exports": {
+                "./actions": "./src/actions.js",
+                "./auth/callbacks": "./src/auth/callbacks.js",
+                "./auth/events": "./src/auth/events.js",
+                "./auth/providers": "./src/auth/providers.js",
+                "./blocks": "./src/blocks.js",
+                "./connections": "./src/connections.js",
+                "./operators/client": "./src/operators/client.js",
+                "./operators/server": "./src/operators/server.js",
+                "./types": "./src/types.js"
+              },
+              "files": ["src/*"],
+              "dependencies": {}
+            }
+            ```
+
+            The `./types` entry point is required, and the other entry points are only required if the package exports the corresponding types.
+
+            You can change your folder structure in your package, but then you need to change the `exports` entry points in the `package.json` file to match your file structure.
+
+            ##### Compiling React for blocks
+
+            To develop a block plugin, the React code needs to compiled before it can be used in the Lowdefy app. The [Lowdefy plugin example](https://github.com/lowdefy/lowdefy-example-plugins) has an example of this configured using SWC.
+
+            ### types.js
+
+            The `types.js` file declares the different types provided by the plugin package. This is used by the Lowdefy build process to map plugin types used in the Lowdefy config to plugin packages.
+
+            The file should export an object that contains the type names (the names used in the Lowdefy config) for all the different types provided by the package.
+
+            ###### Example with all types
+
+            ```js
+            export default {
+              actions: ['Action'],
+              auth: {
+                callbacks: ['Callback'],
+                events: ['Event'],
+                provider: ['Provider'],
+              },
+              blocks: ['Block'],
+              connections: ['Connection'],
+              requests: ['Request'],
+              operators: {
+                build: ['_build_operator', '_shared_operator'],
+                client: ['_client_operator', '_shared_operator'],
+                server: ['_server_operator', '_shared_operator'],
+              },
+            };
+            ```
+
+            The type names do not need to be hard coded, and can be generated by importing the plugin types.
+
+            ###### Example `types.js` for connections
+
+            ```js
+            import * as connections from './connections.js';
+
+            export default {
+              connections: Object.keys(connections),
+              requests: Object.keys(connections)
+                .map((connection) => Object.keys(connections[connection].requests))
+                .flat(),
+            };
+            ```
+
+            When developing blocks, the names of any react-icons used by the block, as well the path to any CSS or LESS files used by the block also need to be included in the types object, as discussed in more detail [here](/plugins-blocks).
+
+            ###### Example `types.js` for blocks
+
+            ```js
+            import * as blocks from './blocks.js';
+
+            const icons = {};
+            const styles = {};
+            Object.keys(blocks).forEach((block) => {
+              icons[block] = blocks[block].meta.icons || [];
+              styles[block] = blocks[block].meta.styles || [];
+            });
+
+            export default {
+              blocks: Object.keys(blocks),
+              icons,
+              styles: { default: [], ...styles },
+            };
+            ```
+
+            ### Named export files
+
+            A file that exports the plugin types as named exports is needed for each kind of plugin-types. This is so that the Lowdefy server can import these directly to allow for tree shaking to reduce bundle size by excluding unused code. In the default configuration these file names correspond to the package entry point paths, for example, the files are named `actions.js`, `blocks.js`, and `operators/client.js`, but different file names and folder structures can be configured.
+
+            ###### Example `actions.js` file
+            ```js
+            export { default as MyAction } from './actions/MyAction.js';
+            ```
+
+            In the Lowdefy server, the types will be imported as:
+            ```js
+            import { MyAction as MyAction } from 'my-plugin-package/actions';
+            ```
+
+            ### Plugin code
+
+            Most types are written as standard Javascript functions, and blocks are written as React components. The function names should be in _CapitalCase_, except for operators which should be written in _snake_case_ and start with an underscore.
+
+            Lowdefy uses object destructing to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Plugins Introduction
+            previous_page_id: plugins-introduction
+            next_page_title: Actions
+            next_page_id: plugins-actions
