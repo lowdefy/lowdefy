@@ -21,11 +21,11 @@ blocks:
               Build <span style="color:#29D3CA;">web UIs</span> with config
             </h2>
             <p>
-              Lowdefy config is easy to read, write, copy, paste or template. <br/>
-              Just like code, but simpler.
+              Lowdefy config is easy to read, write, copy, paste, template, version control and review — Just like code, but simpler.
             </p>
             <ul class="checks">
               <li>+70 Blocks and +150 logic operators to get started fast.</li>
+              <li>+30K <a href="https://react-icons.github.io/react-icons/">React Icons</a> to choose from.</li>
               <li>Dynamic UIs with effortless state management.</li>
               <li>Responsive layouts out of the box.</li>
               <li>Extend with custom React components.</li>

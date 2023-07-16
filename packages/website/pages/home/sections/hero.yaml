@@ -17,12 +17,10 @@ blocks:
         type: Html
         properties:
           html: |
-            <p class="gray-text">Open-Source - Self Hosted - NPM Plugins - For Developers</p>
+            <p class="gray-text">Open-Source - Self Hosted - Next.js - NPM Plugins - For Developers</p>
             <h1>
-              The
-              <span class="gradient-text">easiest</span>
-              config web stack on top of
-              <span class="gradient-text">Next.js</span>
+              The <span class="gradient-text">config</span> web stack for
+              <span class="gradient-text">business apps</span>
             </h1>
             <h5 class="gray-text">Create web apps, internal tools, admin panels, BI dashboards, and CRUD apps with YAML or JSON config.</h5>
 

@@ -19,9 +19,9 @@ blocks:
           margin: 60px 0
         properties:
           html: |
-            <h3 style="color: white;">
-              Helping <span style="color: #000;">All Kinds</span> of Developers get Stuff on the Web
-            </h3>
+            <h2 style="color: white;">
+              Helping <span style="color: #000;">all kinds</span> of developers build web apps
+            </h2>
       - id: cards
         type: Box
         layout:
