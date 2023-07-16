@@ -55,7 +55,7 @@ _ref:
 
                 To map additional fields to the user object the `auth.userFields` configuration option can be used. This should be an object, where the key is the key in the user object to which the field should be mapped, and the value is the key of the value in the data from the provider. Next-Auth provides three data objects called `account`, `profile` and `user`.
 
-                #### Examples
+                ## Examples
 
                 ###### Use the user profile picture in a Avatar block:
                 ```yaml

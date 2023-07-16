@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-next-auth",
-  "version": "4.0.0-rc.8",
+  "version": "4.0.0-rc.9",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -49,6 +49,13 @@
     "jest": "28.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "next"
+      ]
+    }
   },
   "publishConfig": {
     "access": "public"

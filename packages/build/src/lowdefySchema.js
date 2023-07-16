@@ -169,6 +169,12 @@ export default {
             },
           },
         },
+        debug: {
+          type: 'boolean',
+          errorMessage: {
+            type: 'Auth debug should be a boolean.',
+          },
+        },
         events: {
           type: 'array',
           items: {

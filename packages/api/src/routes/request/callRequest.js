@@ -29,10 +29,7 @@ import validateSchemas from './validateSchemas.js';
 
 async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
-  logger.debug(
-    { route: 'request', params: { blockId, pageId, payload, requestId } },
-    'Started request'
-  );
+  logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
   authorizeRequest(context, { requestConfig });

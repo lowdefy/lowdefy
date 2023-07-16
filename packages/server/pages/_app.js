@@ -18,7 +18,7 @@
 import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
-import Auth from '../lib/auth/Auth.js';
+import Auth from '../lib/client/auth/Auth.js';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';

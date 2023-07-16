@@ -19,17 +19,17 @@ import createRedirectCallback from './createRedirectCallback.js';
 import createSessionCallback from './createSessionCallback.js';
 import createSignInCallback from './createSignInCallback.js';
 
-function createCallbacks(context, { authConfig, plugins }) {
+function createCallbacks({ authConfig, logger, plugins }) {
   const callbacks = {
-    session: createSessionCallback(context, { authConfig, plugins }),
+    session: createSessionCallback({ authConfig, plugins }),
   };
-  const jwt = createJWTCallback(context, { authConfig, plugins });
+  const jwt = createJWTCallback({ authConfig, logger, plugins });
   if (jwt) callbacks.jwt = jwt;
 
-  const redirect = createRedirectCallback(context, { authConfig, plugins });
+  const redirect = createRedirectCallback({ authConfig, plugins });
   if (redirect) callbacks.redirect = redirect;
 
-  const signIn = createSignInCallback(context, { authConfig, plugins });
+  const signIn = createSignInCallback({ authConfig, plugins });
   if (signIn) callbacks.signIn = signIn;
 
   return callbacks;

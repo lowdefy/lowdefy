@@ -19,7 +19,7 @@
 // This depends on providerId, which might cause some issues if users copy an example and change the id.
 // We need to allow users to configure ids, since they might have more than one of the same type.
 
-function createProviders(context, { authConfig, plugins }) {
+function createProviders({ authConfig, plugins }) {
   return authConfig.providers.map((providerConfig) =>
     plugins.providers[providerConfig.type]({
       ...providerConfig.properties,

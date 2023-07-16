@@ -33,6 +33,8 @@ _ref:
 
                 Roles can be read from the `roles` field on the user object. It should be an array of strings which are the role names. If the provider returns a `roles` field on the user profile then this will be used, otherwise the `auth.userFields` configuration can be used to map another field to the `roles` field on the user object. Custom auth callback plugins can also be used to add a roles field to the user object.
 
+                ## Examples
+
                 ######  Setting user roles to the `my_roles` field returned from provider:
                 ```yaml
                 lowdefy: {{ version }}
