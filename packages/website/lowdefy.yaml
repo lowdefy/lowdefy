@@ -25,6 +25,14 @@ app:
 plugins:
   - name: '@lowdefy/website'
     version: 'workspace:*'
-
+connections:
+  - id: newsletter
+    type: MongoDBCollection
+    properties:
+      collection: newsletter
+      databaseUri:
+        _secret: MONGODB_URI
+      read: false
+      write: true
 pages:
   - _ref: pages/home/home.yaml

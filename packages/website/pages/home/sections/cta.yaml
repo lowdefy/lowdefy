@@ -60,6 +60,9 @@ blocks:
             blocks:
               - id: email
                 type: TextInput
+                required: true
+                validate:
+                  _ref: shared/validate_email.yaml
                 layout:
                   flex: 1 0 auto
                 properties:
@@ -70,6 +73,9 @@ blocks:
                   prefixIcon: AiOutlineSend
               - id: subscribe_button
                 type: Button
+
+                requests:
+                  - _ref: pages/home/requests/insert_newsletter.yaml
                 layout:
                   flex: 0 1 auto
                 style:
@@ -80,6 +86,15 @@ blocks:
                   size: large
                   shape: round
                   color: '#1a1a1a'
+                events:
+                  onClick:
+                    - id: validate
+                      type: Validate
+                    - id: submit
+                      type: Request
+                      params: insert_newsletter
+                      messages:
+                        success: Thanks for subscribing!
 
   - id: sprite
     type: Img
