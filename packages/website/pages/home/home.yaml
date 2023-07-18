@@ -15,3 +15,4 @@ blocks:
   # - _ref: pages/home/sections/examples.yaml
   - _ref: pages/home/sections/cta.yaml
   - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml
