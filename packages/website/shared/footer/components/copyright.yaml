@@ -8,7 +8,7 @@ blocks:
     properties:
       html:
         _nunjucks:
-          template: <p> © {{ date | date('YYYY') }} Lowdefy, Inc. - Give. Easy. Value. </p>
+          template: <small> © {{ date | date('YYYY') }} Lowdefy, Inc. - Give. Easy. Value. </small>
           on:
             date:
               _date: now

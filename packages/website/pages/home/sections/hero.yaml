@@ -22,7 +22,7 @@ blocks:
               The <span class="gradient-text">config</span> web stack for
               <span class="gradient-text">business apps</span>
             </h1>
-            <h5 class="gray-text">Create web apps, internal tools, admin panels, BI dashboards, and CRUD apps with YAML or JSON config.</h5>
+            <h5 class="gray-text">Create web apps, internal tools, admin panels, dashboards, and CRUD apps with YAML or JSON config.</h5>
 
       - id: get_started_button
         type: Button

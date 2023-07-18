@@ -9,27 +9,36 @@ blocks:
     type: Html
     properties:
       html: |
-        <a href="https://twitter.com/lowdefy">
-          <img src='images/twitter.svg' alt="twitter" width='32'/>
+        <a href="https://twitter.com/lowdefy"
+          aria-label="twitter"
+          style="margin-left: 12px;"
+        >
+          <img src='images/social/twitter.svg' alt="twitter" width='28'/>
         </a>
         <a
           href="https://github.com/lowdefy/lowdefy/discussions"
           aria-label="github discussions"
+          style="margin-left: 12px;"
         >
-          <img src='images/discussions.svg' alt="discussions" width='32' />
+          <img src='images/social/discussions.svg' alt="discussions" width='28' />
         </a>
-        <a href="https://discord.gg/WmcJgXt">
-          <img src='images/discord.svg' alt="discord" width='32' />
+        <a href="https://discord.gg/WmcJgXt"
+          aria-label="discord"
+          style="margin-left: 12px;"
+        >
+          <img src='images/social/discord.svg' alt="discord" width='28' />
         </a>
         <a
           href="https://github.com/lowdefy/lowdefy"
           aria-label="github"
+          style="margin-left: 12px;"
         >
-          <img src='images/github.svg' alt="github" width='32' />
+          <img src='images/social/github.svg' alt="github" width='28' />
         </a>
         <a
           href="https://www.youtube.com/channel/UCQLUr15MfP_9yGSO5dmf9wg"
           aria-label="youtube"
+          style="margin-left: 12px;"
         >
-          <img src='images/youtube.svg' alt="youtube" width='32' />
+          <img src='images/social/youtube.svg' alt="youtube" width='28' />
         </a>

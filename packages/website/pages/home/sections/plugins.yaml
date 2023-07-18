@@ -4,7 +4,7 @@ layout:
   contentAlign: middle
   contentGutter: 64
 style:
-  maxWidth: 1000px
+  maxWidth: 1100px
   margin: 60px auto
   padding: 3rem
   box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)

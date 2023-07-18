@@ -1,0 +1,93 @@
+id: cta
+type: Box
+style:
+  maxWidth: 800px
+  margin: 0px auto 80px auto
+blocks:
+  - _ref:
+      path: pages/home/components/sprite.yaml
+      vars:
+        svg: /images/sprites/04_Sparkle-32.svg
+        style:
+          marginTop: -24px
+          translate: -50px
+  - id: cta
+    type: Box
+    layout:
+      contentGutter: 8
+    style:
+      backgroundColor: '#1990FF'
+      box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
+      borderRadius: 8px
+    properties:
+      style:
+        padding: 60px 10px
+    blocks:
+      - id: title
+        type: Html
+        style:
+          textAlign: center
+        properties:
+          html: |
+            <h3 style="color: white">
+              Join the Lowdefy community
+            </h3>
+
+      - id: buttons_box
+        type: Box
+        layout:
+          span: 24
+          contentGutter: 24
+        style:
+          textAlign: center
+        blocks:
+          - id: discord
+            type: Button
+            properties:
+              title: Join on Discord
+              icon: FaDiscord
+              shape: round
+              size: large
+              ghost: true
+              type: ghost
+              href: https://discord.gg/WmcJgXt
+
+          - id: email_box
+            type: Box
+            style:
+              maxWidth: 400
+              margin: auto
+            blocks:
+              - id: email
+                type: TextInput
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  label:
+                    disabled: true
+                  placeholder: Get our email newsletter
+                  size: large
+                  prefixIcon: AiOutlineSend
+              - id: subscribe_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                style:
+                  marginLeft: -30
+                  zIndex: 10
+                properties:
+                  title: Subscribe
+                  size: large
+                  shape: round
+                  color: '#1a1a1a'
+
+  - id: sprite
+    type: Img
+    style:
+      textAlign: right
+    properties:
+      width: 50
+      style:
+        marginTop: 0
+        translate: 40px
+      src: /images/sprites/04_Sparkle-31.svg

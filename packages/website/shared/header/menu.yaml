@@ -24,7 +24,7 @@ properties:
       type: MenuLink
       url: https://calendly.com/gvw-lowdefy/lowdefy-support
       properties:
-        title: Book an Expert
+        title: Book a Demo
     - id: sponsor
       type: MenuLink
       url: https://opencollective.com/lowdefy-os

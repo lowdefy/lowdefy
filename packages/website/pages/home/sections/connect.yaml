@@ -62,6 +62,7 @@ blocks:
             svg: /images/sprites/04_Sparkle-32.svg
             style:
               marginTop: -24px
+              translate: -50px
       - _ref:
           path: pages/home/components/connection.yaml
           vars:
@@ -187,13 +188,13 @@ blocks:
           path: pages/home/components/sprite.yaml
           vars:
             svg: /images/sprites/04_Sparkle-31.svg
-  - id: light_blob
-    type: Html
-    style:
-      zIndex: -1
-      height: 0
-    layout:
-      order: 2
-    properties:
-      html: |
-        <div class="light-blob" style="width: 40%; height: 400px; left: -80px; top: -400px;"></div>
+  # - id: light_blob
+  #   type: Html
+  #   style:
+  #     zIndex: -1
+  #     height: 0
+  #   layout:
+  #     order: 2
+  #   properties:
+  #     html: |
+  #       <div class="light-blob" style="width: 40%; height: 400px; left: -80px; top: -400px;"></div>

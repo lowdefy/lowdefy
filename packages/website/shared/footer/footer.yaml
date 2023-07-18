@@ -2,13 +2,13 @@ id: footer_box
 type: Box
 style:
   maxWidth: 1200px
-  margin: -200px auto
+  margin: auto
   marginBottom:
     _if:
       test:
         _ref: shared/mobile.yaml
-      then: 0
-      else: 24px
+      then: 12
+      else: 24
 properties:
   style:
     padding:
@@ -17,23 +17,121 @@ properties:
           _ref: shared/mobile.yaml
         then: 0px 10px 16px 10px
         else: 0px 30px 16px 30px
-    boxShadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
-    borderRadius: 8px
 blocks:
-  - id: space_box
-    type: Box
-    style:
-      minHeight: 150px
+  - id: block_id
+    type: Divider
   - id: connect
     type: Html
+    layout:
+      span: 6
     properties:
       html: |
         <a href="/" >
           <img src='images/logo.svg' alt="Lowdefy" width='126'/>
         </a>
-  - id: block_id
-    type: Divider
-  - _ref: shared/footer/components/documentation.yaml
+        <div style="margin-top: 12px;">
+          <small>The config web stack for business apps.</small>
+        </div>
+        <div>
+          <small>hello@lowdefy.com</small>
+        </div>
+  - id: documentation
+    type: Html
+    layout:
+      span: 6
+    properties:
+      html: |
+        <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
+          <small style="color: #A3A3A3;"><b>DOCUMENTATION</b></small>
+          <li>
+            <a href="https://docs.lowdefy.com/introduction" style='color: black'>
+              Introduction
+            </a>
+          <li>
+          </li>
+            <a href="https://docs.lowdefy.com/tutorial-start" style='color: black'>
+              Quick Start
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/overview" style='color: black'>
+              Concepts
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/users-introduction" style='color: black'>
+              Authentication & Roles
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.app/vercel" style='color: black'>
+              Deployment
+            </a>
+          </li>
+        </ul>
+  - id: documentation
+    type: Html
+    layout:
+      span: 6
+    properties:
+      html: |
+        <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
+          <small style="color: #A3A3A3;"><b>CONNECTIONS</b></small>
+          <li>
+            <a href="https://docs.lowdefy.com/MongoDB" style='color: black'>
+              MongoDB
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/MySQL" style='color: black'>
+              MySQL
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/PostgreSQL" style='color: black'>
+              PostgreSQL
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/AxiosHttp" style='color: black'>
+              HTTP API
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.lowdefy.com/AWSS3" style='color: black'>
+              AWS S3
+            </a>
+          </li>
+        </ul>
+  - id: developers
+    type: Html
+    layout:
+      span: 6
+    properties:
+      html: |
+        <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
+          <small style="color: #A3A3A3;"><b>DEVELOPERS</b></small>
+          <li>
+            <a href="https://github.com/lowdefy/lowdefy" style='color: black'>
+              Github
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md" style='color: black'>
+              Changelog
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/lowdefy/lowdefy/blob/main/LICENSE" style='color: black'>
+              Apache 2.0 License
+            </a>
+          </li>
+          <li>
+            <a href="https://opencollective.com/lowdefy-os" style='color: black'>
+              Sponsor
+            </a>
+          </li>
+        </ul>
   - id: block_id
     type: Divider
   - _ref: shared/footer/components/copyright.yaml

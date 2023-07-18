@@ -2,14 +2,15 @@ id: background_box
 type: Box
 properties:
   style:
-    backgroundImage: 'linear-gradient(180deg, #1990FF 0%, #65E1DA 100%)'
+    margin: auto
+    background: 'radial-gradient(farthest-corner at 30% 50%, #1990FF -80%, #1990FF -30%, rgba(0,0,0,0) 60%)'
 blocks:
   - id: open_source_box
     type: Box
     style:
-      maxWidth: 1100px
-      margin: 60px auto
-      padding: 40px 20px
+      maxWidth: 1000px
+      margin: -60px auto
+      padding: 120px 20px
     layout:
       contentAlign: middle
       contentGutter: 8
@@ -17,7 +18,7 @@ blocks:
       - id: image
         type: Img
         layout:
-          span: 12
+          span: 10
           order: 1
         style:
           textAlign: right
@@ -29,7 +30,7 @@ blocks:
       - id: info_box
         type: Box
         layout:
-          span: 12
+          span: 14
           contentGutter: 16
         blocks:
           - id: open_source_content
@@ -37,7 +38,7 @@ blocks:
             properties:
               html: |
                 <h2>
-                  Lowdefy is an <br/><span style="color:white; ">open-source</span> framework
+                  Lowdefy is an <br/><span style="color:white; text-shadow: #1990FF 1px 0 10px;">open-source</span> framework
                 </h2>
                 <p>
                   Build future proof apps that you can host anywhere with no lock-in.
@@ -52,10 +53,10 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white; margin-bottom: 0px">
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
                       2.3K+
                     </h3>
-                    <p style="color: white">
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
                       Github Stars
                     </p>
 
@@ -65,10 +66,10 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white; margin-bottom: 0px">
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
                       24K+
                     </h3>
-                    <p style="color: white">
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
                       Apps Created
                     </p>
 
@@ -78,10 +79,10 @@ blocks:
                   flex: 1 0 auto
                 properties:
                   html: |
-                    <h3 style="color: white; margin-bottom: 0px">
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
                       950+
                     </h3>
-                    <p style="color: white">
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
                       Weekly Downloads
                     </p>
 

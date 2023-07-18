@@ -1,8 +1,8 @@
 id: testimonials_background_box
 type: Box
 style:
-  backgroundColor: '#1990FF'
-  margin: 120px auto
+  background: 'linear-gradient(to bottom, rgba(0,0,0,0), #1990FF 35%, #1990FF 50%, rgba(0,0,0,0))'
+  margin: 40px auto
 blocks:
   - id: testimonials_box
     type: Box
@@ -10,17 +10,17 @@ blocks:
       contentGutter: 8
     style:
       maxWidth: 1200px
-      margin: 60px auto
+      margin: auto
       padding: 0 20px
     blocks:
       - id: testimonials_intro
         type: Html
         style:
-          margin: 60px 0
+          margin: 60px 0 0 0
         properties:
           html: |
-            <h2 style="color: white;">
-              Helping <span style="color: #000;">all kinds</span> of developers build web apps
+            <h2 style="color: white; text-shadow: #1990FF 1px 0 10px;">
+              Enabling <span style="color: #000; text-shadow: #1990FF 1px 0 1px;">all kinds of developers</span> to build web apps
             </h2>
       - id: cards
         type: Box
@@ -77,7 +77,7 @@ blocks:
                               html:
                                 _nunjucks:
                                   template: |
-                                    <a href="{{ link }}">{{ name }}</a><br/>
+                                    <a>{{ name }}</a><br/>
                                     <small class="gray-text">{{ extra }}</small>
                                   on:
                                     name:
@@ -117,7 +117,7 @@ blocks:
                               html:
                                 _nunjucks:
                                   template: |
-                                    <a href="{{ link }}">{{ name }}</a><br/>
+                                    <a>{{ name }}</a><br/>
                                     <small class="gray-text">{{ extra }}</small>
                                   on:
                                     name:
@@ -161,7 +161,7 @@ blocks:
                               html:
                                 _nunjucks:
                                   template: |
-                                    <a href="{{ link }}">{{ name }}</a><br/>
+                                    <a>{{ name }}</a><br/>
                                     <small class="gray-text">{{ extra }}</small>
                                   on:
                                     name:
