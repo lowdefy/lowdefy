@@ -16,6 +16,7 @@
 
 import pino from 'pino';
 
+// TODO: Pino does not serialize error.cause properties if the cause object is not an Error (or Error-like)
 const logger = pino({
   name: 'lowdefy_server',
   level: process.env.LOWDEFY_LOG_LEVEL ?? 'info',

@@ -20,7 +20,6 @@ function testContext({
   config = {},
   connections = {},
   headers = {},
-  host = 'host',
   logger = {
     debug: () => {},
     error: () => {},
@@ -32,23 +31,18 @@ function testContext({
   },
   readConfigFile,
   secrets = {},
-  setHeader,
   session,
-  protocol = 'https',
 } = {}) {
   return {
     authorize: createAuthorize({ session }),
     config,
     connections,
     headers,
-    host,
     logger,
     operators,
-    protocol,
     readConfigFile,
     secrets,
-    setHeader,
-    user: session?.user,
+    session,
   };
 }
 

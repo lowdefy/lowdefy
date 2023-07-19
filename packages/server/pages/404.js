@@ -22,12 +22,13 @@ import Page from '../lib/client/Page.js';
 
 export async function getStaticProps() {
   // Important to give absolute path so Next can trace build files
-  const context = createApiContext({
+  const context = {
     buildDirectory: path.join(process.cwd(), 'build'),
     config,
     fileCache,
     logger: console, // TODO: pino or console or 🤷‍♂️?
-  });
+  };
+  createApiContext(context);
 
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
