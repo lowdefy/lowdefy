@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { get } from '@lowdefy/helpers';
+import { get, set } from '@lowdefy/helpers';
 
 function addUserFieldsToToken({ account, authConfig, logger, profile, token, user }) {
   const objects = { account, profile, user };
@@ -26,7 +26,7 @@ function addUserFieldsToToken({ account, authConfig, logger, profile, token, use
         value
       )} as "${lowdefyFieldName}"`
     );
-    token[lowdefyFieldName] = value;
+    set(token, lowdefyFieldName, value);
   });
 }
 
