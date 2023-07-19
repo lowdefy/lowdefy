@@ -1,0 +1,35 @@
+id: insert_feedback
+type: MongoDBInsertOne
+connectionId: feedback
+payload:
+  session_id:
+    _global: session_id
+  page_id:
+    _location: pageId
+  url_query:
+    _url_query: true
+  url:
+    _location: href
+  feedback:
+    _state: feedback
+properties:
+  doc:
+    _id:
+      _uuid: true
+    session_id:
+      _payload: session_id
+    email:
+      _payload: feedback.email
+    source: docs
+    page_id:
+      _payload: page_id
+    url_query:
+      _payload: url_query
+    url:
+      _location: href
+    timestamp:
+      _date: now
+    feedback:
+      _payload: feedback.text
+    score:
+      _payload: feedback.score
