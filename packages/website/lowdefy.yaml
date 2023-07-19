@@ -26,6 +26,12 @@ plugins:
   - name: '@lowdefy/website'
     version: 'workspace:*'
 connections:
+  - id: discord
+    type: AxiosHttp
+    properties:
+      method: post
+      url:
+        _secret: DISCORD_WEBHOOK
   - id: newsletter
     type: MongoDBCollection
     properties:
@@ -35,4 +41,6 @@ connections:
       read: false
       write: true
 pages:
-  - _ref: pages/home/home.yaml
+  _ref:
+    path: pages.yaml
+    transformer: src/generateSitemap.js

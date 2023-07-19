@@ -1,0 +1,31 @@
+id: insert_newsletter
+type: MongoDBInsertOne
+connectionId: newsletter
+payload:
+  session_id:
+    _global: session_id
+  email:
+    _state: email
+  page_id:
+    _location: pageId
+  url_query:
+    _url_query: true
+  url:
+    _location: href
+properties:
+  doc:
+    _id:
+      _uuid: true
+    session_id:
+      _payload: session_id
+    email:
+      _payload: email
+    source: website
+    page_id:
+      _payload: page_id
+    url_query:
+      _payload: url_query
+    url:
+      _payload: href
+    timestamp:
+      _date: now

@@ -65,7 +65,7 @@ blocks:
                 - id: copy
                   type: CopyToClipboard
                   params:
-                    copy: pnpx lowdefy@4 init && pnpx lowdefy@4 dev
+                    copy: pnpx lowdefy@rc init && pnpx lowdefy@rc dev
                 - id: set_extra
                   type: SetState
                   params:

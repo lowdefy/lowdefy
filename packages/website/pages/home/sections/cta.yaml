@@ -73,9 +73,12 @@ blocks:
                   prefixIcon: AiOutlineSend
               - id: subscribe_button
                 type: Button
-
                 requests:
-                  - _ref: pages/home/requests/insert_newsletter.yaml
+                  - _ref: requests/insert_newsletter.yaml
+                  - _ref:
+                      path: requests/discord_message.yaml
+                      vars:
+                        message: 'New newsletter subscription from website'
                 layout:
                   flex: 0 1 auto
                 style:
@@ -90,9 +93,12 @@ blocks:
                   onClick:
                     - id: validate
                       type: Validate
+                      params: email
                     - id: submit
                       type: Request
-                      params: insert_newsletter
+                      params:
+                        - insert_newsletter
+                        - discord_message
                       messages:
                         success: Thanks for subscribing!
 

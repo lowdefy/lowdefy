@@ -1,0 +1,10 @@
+id: discord_message_{{ key }}
+type: AxiosHttp
+connectionId: discord
+payload:
+  message:
+    _var: message
+properties:
+  data:
+    content:
+      _payload: message
