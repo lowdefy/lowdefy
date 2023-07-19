@@ -1,20 +1,18 @@
 id: home
 type: Box
-layout:
-  contentGutter: 16
 properties:
-  title: Lowdefy - Build internal tools with YAML
-
+  title: Lowdefy - The Easiest Config Web Stack on Top of Next.js
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/hero.yaml
-  - _ref: pages/home/sections/cta_top.yaml
+  - _ref: pages/home/sections/customers.yaml
   - _ref: pages/home/sections/build_uis.yaml
   - _ref: pages/home/sections/connect.yaml
-  - _ref: pages/home/sections/plugins.yaml
-  - _ref: pages/home/sections/create_faster.yaml
   - _ref: pages/home/sections/open_source.yaml
-  - _ref: pages/home/sections/examples.yaml
-  - _ref: pages/home/sections/customers.yaml
-  - _ref: pages/home/sections/create_app.yaml
+  - _ref: pages/home/sections/enterprise_features.yaml
+  - _ref: pages/home/sections/plugins.yaml
+  - _ref: pages/home/sections/testimonials.yaml
+  # - _ref: pages/home/sections/examples.yaml
+  - _ref: pages/home/sections/cta.yaml
   - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

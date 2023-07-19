@@ -1,10 +1,10 @@
 id: {{ id }}
 type: Card
-layout:
-  span: 6
 properties:
   style:
-    minHeight: 400
+    height: 100%
+    minHeight: 450
+    maxWIdth: 80%
 blocks:
   - id: title
     type: Html
@@ -13,9 +13,9 @@ blocks:
         <a href="{{ view}}" >
           <img style="width: 100%;" src="{{ image }}" alt="{{alt}}"/>
         </a>
-        <h3>
+        <h5 style="color:#1990FF;">
           {{ example }}
-        </h3>
+        </h5>
         <p>
           {{ desc }}
         </p>
@@ -25,9 +25,7 @@ blocks:
     properties:
       title: View on GitHub
       icon: AiOutlineGithub
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: {{ git }}
+      type: link
+      size: large
+      block: true
+      href: {{ git }}

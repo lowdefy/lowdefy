@@ -223,7 +223,6 @@ _ref:
                                         properties:
                                           size: large
                                           title: Let's build something
-                                          color: '#1890ff'
                                         events:
                                           onClick:
                                             - id: link_to_docs

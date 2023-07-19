@@ -1,16 +1,14 @@
 id: copyright_box
 type: Box
-properties:
-  style:
-    paddingTop: 48px
-    textAlign: center
+layout:
+  span: 16
 blocks:
   - id: copyright
     type: Html
     properties:
       html:
         _nunjucks:
-          template: <p> © {{ date | date('YYYY') }} Lowdefy, Inc. - Give. Easy. Value. </p>
+          template: <small> © {{ date | date('YYYY') }} Lowdefy, Inc. - Give. Easy. Value. </small>
           on:
             date:
               _date: now

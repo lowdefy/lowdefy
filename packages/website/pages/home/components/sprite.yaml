@@ -1,0 +1,10 @@
+id: sprite
+type: Img
+layout:
+  flex: 0 1 auto
+properties:
+  width: 50
+  style:
+    _var: style
+  src:
+    _var: svg

@@ -7,19 +7,29 @@ properties:
   mode:
     _if:
       test:
-        _ref: shared/mobile.yaml
+        _ref: shared/mobile_md.yaml
       then: vertical
       else: horizontal
   style:
     border: 0
+    background: none
+    fontSize: 103%
   links:
-    - id: community
-      type: MenuLink
-      url: https://github.com/lowdefy/lowdefy/discussions
-      properties:
-        title: Community
     - id: docs
       type: MenuLink
       url: https://docs.lowdefy.com/
       properties:
         title: Docs
+    - id: expert
+      type: MenuLink
+      url: https://calendly.com/gvw-lowdefy/lowdefy-support
+      properties:
+        title: Book a Demo
+    - id: sponsor
+      type: MenuLink
+      url: https://opencollective.com/lowdefy-os
+      properties:
+        title: Sponsor
+        icon:
+          name: AiOutlineHeart
+          color: '#E81E63'

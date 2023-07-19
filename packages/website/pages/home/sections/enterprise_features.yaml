@@ -1,0 +1,80 @@
+id: width_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+  padding: 20px
+blocks:
+  - id: enterprise_features_left_box
+    type: Box
+    layout:
+      span: 8
+    style:
+      padding: 20px
+    blocks:
+      - id: enterprise_features_title
+        type: Html
+        properties:
+          style:
+            textAlign: right
+          html: |
+            <h2>
+              Built for <span style="color:#1990FF;">Developers</span> and Enterprise Ready
+            </h2>
+
+  - id: enterprise_features_info
+    type: Box
+    style:
+      padding: 20px
+    layout:
+      span: 16
+      contentGutter: 16
+    blocks:
+      - _ref:
+          path: pages/home/components/info_box.yaml.njk
+          vars:
+            image:
+              src: ./images/07_Icon 1_001.png
+              width: 120px
+            section: deploy
+            title: Deploy Anywhere
+            info: In production, Lowdefy runs as a Next.js app so you can deploy Lowdefy anywhere that supports Next.js deployment.  Deploy with Vercel, Docker and more.
+            link:
+              title: See the deployment instructions
+              href: https://docs.lowdefy.com/docker
+      - _ref:
+          path: pages/home/components/info_box.yaml.njk
+          vars:
+            image:
+              src: ./images/07_Icon 4_001.png
+              width: 120px
+            section: secure
+            title: Secured with Auth.js
+            info: Authentication is built on top of Auth.js, providing the full flexibility and security from one of the most popular open-source auth layers. SSO, SAML, 2FA, no problem. Google, Okta, Auth0 and more - bring your own provider.
+            link:
+              title: Visit the auth docs for more about auth
+              href: https://docs.lowdefy.com/users-introduction
+      - _ref:
+          path: pages/home/components/info_box.yaml.njk
+          vars:
+            image:
+              src: ./images/07_Icon 2_001.png
+              width: 120px
+            section: git_control
+            title: Git Control for Humans
+            info: Lowdefy's minimal config was designed to be easy to read, write and understand. This makes it easy to copy, paste, review changes or pick up where others left off. Defining apps using a structured schema speeds up development in teams big and small.
+            link:
+              title: Read more about the Lowdefy app schema
+              href: https://docs.lowdefy.com/lowdefy-schema
+      - _ref:
+          path: pages/home/components/info_box.yaml.njk
+          vars:
+            image:
+              src: ./images/07_Icon 3_001.png
+              width: 120px
+            section: user_roles
+            title: Public, Authed and Roles
+            info: Building multipage apps with both public and private pages serves a wide range of use cases. Adding role-based access control (RBAC) to this gives Lowdefy developers the power to easily implement secure granular access control where needed.
+            link:
+              title: Learn more about user roles
+              href: https://docs.lowdefy.com/roles
