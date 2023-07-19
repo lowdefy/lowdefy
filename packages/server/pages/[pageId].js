@@ -22,7 +22,6 @@ import Page from '../lib/client/Page.js';
 async function getServerSidePropsHandler({ context, nextContext }) {
   const { pageId } = nextContext.params;
   const { logger } = context;
-  // throw new Error('Test', { cause: { a: 4, pageId } });
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
     getPageConfig(context, { pageId }),

@@ -14,20 +14,27 @@
   limitations under the License.
 */
 
-// TODO: Better name needed here maybe?
-function logRequest({ context }) {
-  const { user = {} } = context;
-  context.logger.debug({
-    user: {
-      id: user.id,
-      roles: user.roles,
-      sub: user.sub,
-      session_id: user.session_id,
-    },
-    url: context.req.url,
-    method: context.req.method,
-    resolvedUrl: context.nextContext?.resolvedUrl,
-  });
+function logError({ context, error }) {
+  try {
+    const { user = {} } = context;
+
+    context.logger.error({
+      err: error,
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+      url: context.req.url,
+      method: context.req.method,
+      resolvedUrl: context.nextContext?.resolvedUrl,
+    });
+  } catch (e) {
+    console.error(error);
+    console.error('An error occurred while logging the error.');
+    console.error(e);
+  }
 }
 
-export default logRequest;
+export default logError;

@@ -15,7 +15,7 @@
 */
 
 // TODO: Better name needed here maybe?
-function logRequest({ context, metadata = {} }) {
+function logRequest({ context }) {
   const { headers = {}, user = {} } = context;
   context.logger.info({
     // TODO:
@@ -42,7 +42,6 @@ function logRequest({ context, metadata = {} }) {
       'user-agent': headers['user-agent'],
       host: headers.host,
       referer: headers.referer,
-      // Non localhost headers
       'x-forward-for': headers['x-forward-for'],
       // Vercel headers
       'x-vercel-id': headers['x-vercel-id'],
@@ -53,49 +52,15 @@ function logRequest({ context, metadata = {} }) {
       'x-vercel-ip-latitude': headers['x-vercel-ip-latitude'],
       'x-vercel-ip-longitude': headers['x-vercel-ip-longitude'],
       'x-vercel-ip-timezone': headers['x-vercel-ip-timezone'],
-      // TODO: Cloudflare headers
+      // Cloudflare headers
       'cf-connecting-ip': headers['cf-connecting-ip'],
       'cf-ray': headers['cf-ray'],
       'cf-ipcountry': headers['cf-ipcountry'],
       'cf-visitor': headers['cf-visitor'],
     },
-    ...metadata,
   });
   // TODO:
   // Next local? nextContext.locale, nextContext.locales, nextContext.defaultLocale
-  // console.log('params', nextContext.params);
 }
 
 export default logRequest;
-
-/*
-User ID
-Session ID
-Event Type/Action
-Timestamp
-Source IP Address
-User Agent
-Resource ID/Identifier
-Outcome/Status
-Reason
-Details/Additional Information
-Targeted System
-Page URL
-Referrer URL
-IP Address
-
-Response Time
-Error Messages
-Device Information
-Input Data
-Behavioral Metrics
-
-Error Level/Severity
-Error Message
-Error Code
-HTTP Method
-Stack Trace
-Payload/Body
-Application Version
-Environment Information
-*/
