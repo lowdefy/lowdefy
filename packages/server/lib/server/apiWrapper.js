@@ -47,7 +47,6 @@ function apiWrapper(handler) {
       context.logger = createLogger({ rid: context.rid });
       context.authOptions = getAuthOptions(context);
       context.session = await getServerSession(context);
-      // Important to give absolute path so Next can trace build files
       context.secrets = getSecretsFromEnv();
       createApiContext(context);
       logRequest({ context });
@@ -56,7 +55,6 @@ function apiWrapper(handler) {
       return response;
     } catch (error) {
       logError({ error, context });
-
       res.status(500).json({ name: error.name, message: error.message });
     }
   };
