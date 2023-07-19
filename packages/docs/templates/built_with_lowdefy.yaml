@@ -1,0 +1,45 @@
+id: built_with_lowdefy
+type: Affix
+properties:
+  offsetBottom: 0
+layout:
+  contentDirection: row-reverse
+blocks:
+  - id: tag
+    type: Box
+    layout:
+      flex: 0 1 auto
+      contentAlign: middle
+    style:
+      padding: 2px 4px
+      background: '#1990FF'
+      borderRadius: 6px
+      margin: 4
+    blocks:
+      - id: logo
+        type: Img
+        layout:
+          flex: 1 0 auto
+        style:
+          padding: 2
+          marginRight: 4
+        properties:
+          src: /images/logo_white_40.png
+          height: 16
+      - id: tag
+        type: Html
+        layout:
+          flex: 1 0 auto
+        style:
+          fontSize: 0.75em
+          color: white
+          line-height: 1.2rem
+        properties:
+          html: Built with Lowdefy
+    events:
+      onClick:
+        - id: link_repo
+          type: Link
+          params:
+            newTab: true
+            url: https://github.com/lowdefy/lowdefy/tree/main/packages/docs
