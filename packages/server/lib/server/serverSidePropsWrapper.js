@@ -21,41 +21,36 @@ import config from '../../build/config.json';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
 import getServerSession from './auth/getServerSession.js';
+import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import getAuthOptions from './auth/getAuthOptions.js';
 
 // TODO: Merge serverSidePropsWrapper and apiWrapper?
 function serverSidePropsWrapper(handler) {
   return async function wrappedHandler(nextContext) {
-    let logger = console;
-    try {
-      const { req, res } = nextContext;
-      const rid = crypto.randomUUID();
-      logger = createLogger({ rid });
-      const authOptions = getAuthOptions({ logger });
-      const session = await getServerSession({ authOptions, req, res });
+    const context = {
       // Important to give absolute path so Next can trace build files
-      const context = createApiContext({
-        authOptions,
-        buildDirectory: path.join(process.cwd(), 'build'),
-        config,
-        fileCache,
-        headers: req.headers,
-        logger,
-        session,
-        nextContext,
-        req,
-      });
+      rid: crypto.randomUUID(),
+      buildDirectory: path.join(process.cwd(), 'build'),
+      config,
+      fileCache,
+      headers: nextContext?.req?.headers,
+      logger: console,
+      nextContext,
+      req: nextContext?.req,
+      res: nextContext?.res,
+    };
+    try {
+      context.logger = createLogger({ rid: context.rid });
+      context.authOptions = getAuthOptions(context);
+      context.session = await getServerSession(context);
+      createApiContext(context);
       logRequest({ context });
       // Await here so that if handler throws it is caught.
       const response = await handler({ context, nextContext });
-      // TODO: Log response time?
       return response;
     } catch (error) {
-      // TODO: Improve
-      // TODO: Log cause
-      logger.error(error);
-      // TODO: What we do here?
+      logError({ error, context });
       throw error;
     }
   };

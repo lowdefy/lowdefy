@@ -19,14 +19,14 @@ import { ServerParser } from '@lowdefy/operators';
 import { RequestError } from '../../context/errors.js';
 
 function evaluateOperators(
-  { operators, secrets, user },
+  { operators, secrets, session },
   { connectionConfig, payload, requestConfig }
 ) {
   const operatorsParser = new ServerParser({
     operators,
     payload,
     secrets,
-    user,
+    user: session?.user,
   });
   const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
     input: connectionConfig.properties || {},

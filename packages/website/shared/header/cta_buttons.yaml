@@ -38,12 +38,7 @@ blocks:
             _ref: shared/mobile.yaml
           then:
             marginTop: 20px
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: https://github.com/lowdefy/lowdefy
+      href: https://github.com/lowdefy/lowdefy
 
   - id: get_started_button
     type: Button
@@ -59,9 +54,4 @@ blocks:
           then:
             width: 300px
             marginTop: 30px
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: https://docs.lowdefy.com/tutorial-start
+      href: https://docs.lowdefy.com/tutorial-start

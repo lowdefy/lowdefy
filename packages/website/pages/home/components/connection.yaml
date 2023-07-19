@@ -14,11 +14,5 @@ properties:
     _var: title
   ghost: true
   size: large
-events:
-  onClick:
-    - id: connection_link
-      type: Link
-      params:
-        url:
-          _var: link
-        newTab: true
+  href:
+    _var: link
