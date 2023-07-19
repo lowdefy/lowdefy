@@ -23,9 +23,4 @@ blocks:
       style:
         backgroundColor: white
       type: link
-    events:
-      onClick:
-        - id: link
-          type: Link
-          params:
-            url: https://docs.lowdefy.com/tutorial-start
+      href: https://docs.lowdefy.com/tutorial-start
