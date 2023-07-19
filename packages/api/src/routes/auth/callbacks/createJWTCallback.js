@@ -17,7 +17,7 @@
 import addUserFieldsToToken from './addUserFieldsToToken.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createJWTCallback(context, { authConfig, plugins }) {
+function createJWTCallback({ authConfig, logger, plugins }) {
   const jwtCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,
@@ -75,7 +75,7 @@ function createJWTCallback(context, { authConfig, plugins }) {
 
     if (profile || user) {
       if (authConfig.userFields) {
-        addUserFieldsToToken(context, { authConfig, account, profile, token, user });
+        addUserFieldsToToken({ authConfig, account, logger, profile, token, user });
       }
     }
 

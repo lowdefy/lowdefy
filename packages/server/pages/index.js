@@ -14,28 +14,17 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { createApiContext, getPageConfig, getRootConfig } from '@lowdefy/api';
+import { getPageConfig, getRootConfig } from '@lowdefy/api';
 
-import config from '../build/config.json';
-import fileCache from '../lib/fileCache.js';
-import getServerSession from '../lib/auth/getServerSession.js';
-import Page from '../lib/Page.js';
+import serverSidePropsWrapper from '../lib/server/serverSidePropsWrapper.js';
+import Page from '../lib/client/Page.js';
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context);
-
-  // Important to give absolute path so Next can trace build files
-  const apiContext = createApiContext({
-    buildDirectory: path.join(process.cwd(), 'build'),
-    config,
-    fileCache,
-    logger: console,
-    session,
-  });
-  const rootConfig = await getRootConfig(apiContext);
+async function getServerSidePropsHandler({ context }) {
+  const rootConfig = await getRootConfig(context);
   const { home } = rootConfig;
+  const { logger } = context;
   if (home.configured === false) {
+    logger.info({ event: 'redirect_to_homepage', pageId: home.pageId });
     return {
       redirect: {
         destination: `/${home.pageId}`,
@@ -43,8 +32,9 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const pageConfig = await getPageConfig(apiContext, { pageId: home.pageId });
+  const pageConfig = await getPageConfig(context, { pageId: home.pageId });
   if (!pageConfig) {
+    logger.info({ event: 'redirect_page_not_found', pageId: home.pageId });
     return {
       redirect: {
         destination: '/404',
@@ -52,13 +42,16 @@ export async function getServerSideProps(context) {
       },
     };
   }
+  logger.info({ event: 'page_view', pageId: home.pageId });
   return {
     props: {
       pageConfig,
       rootConfig,
-      session,
+      session: context.session,
     },
   };
 }
+
+export const getServerSideProps = serverSidePropsWrapper(getServerSidePropsHandler);
 
 export default Page;

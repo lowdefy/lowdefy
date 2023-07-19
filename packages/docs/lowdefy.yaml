@@ -38,27 +38,28 @@ app:
       _ref: head.html
 
 connections:
-  - id: discord_channel
+  - id: discord
     type: AxiosHttp
     properties:
       method: post
       url:
         _secret: DISCORD_WEBHOOK
-  - id: lowdefy_api_marketing
-    type: AxiosHttp
+  - id: newsletter
+    type: MongoDBCollection
     properties:
-      method: post
-      baseURL:
-        _secret: LOWDEFY_API
-      url: /marketing
-  - id: lowdefy_api_telemetry
-    type: AxiosHttp
+      collection: newsletter
+      databaseUri:
+        _secret: MONGODB_URI
+      read: false
+      write: true
+  - id: feedback
+    type: MongoDBCollection
     properties:
-      method: post
-      baseURL:
-        _secret: LOWDEFY_API
-      url: /telemetry/docs
-
+      collection: feedback
+      databaseUri:
+        _secret: MONGODB_URI
+      read: false
+      write: true
 menus:
   _ref: menus.yaml
 

@@ -12,7 +12,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6efe9bfa0648772cae00/test_coverage)](https://codeclimate.com/github/lowdefy/lowdefy/test_coverage)
 [![Codecov](https://codecov.io/gh/lowdefy/lowdefy/branch/main/graph/badge.svg?token=U2AEEH9K1W)](https://codecov.io/gh/lowdefy/lowdefy)
 
-# Lowdefy 🫶 The Easiest Config Webstack on top of Next.js
+# Lowdefy 🫶 The Config Webstack for Business Apps
 
 Lowdefy is an open-source web framework that enables you to:
 

@@ -13,16 +13,17 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { get, set } from '@lowdefy/helpers';
 
-function addUserFieldsToSession(context, { session, token, authConfig, user }) {
+function addUserFieldsToSession({ session, token, authConfig, user }) {
   if (token) {
     Object.keys(authConfig.userFields).forEach((fieldName) => {
-      session.user[fieldName] = token[fieldName];
+      set(session.user, fieldName, get(token, fieldName));
     });
   }
   if (user) {
     Object.keys(authConfig.userFields).forEach((fieldName) => {
-      session.user[fieldName] = user[fieldName];
+      set(session.user, fieldName, get(user, fieldName));
     });
   }
 }

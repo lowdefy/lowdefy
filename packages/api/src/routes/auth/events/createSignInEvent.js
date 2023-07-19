@@ -16,16 +16,25 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createSignInEvent(context, { authConfig, plugins }) {
+function createSignInEvent({ authConfig, logger, plugins }) {
   const signInPlugins = createEventPlugins({
     authConfig,
     plugins,
     type: 'signIn',
   });
 
-  if (signInPlugins.length === 0) return undefined;
-
   async function signInEvent({ account, isNewUser, profile, user }) {
+    logger.info({
+      event: 'auth_sign_in',
+      isNewUser,
+      provider: account?.provider,
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+    });
     for (const plugin of signInPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},

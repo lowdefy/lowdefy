@@ -14,23 +14,6 @@
 
 id: {{ block_type }}
 type: PageSiderMenu
-requests:
-  - id: post_telemetry
-    type: AxiosHttp
-    connectionId: lowdefy_api_telemetry
-    payload:
-      session_id:
-        _global: session_id
-      page_id: {{ block_type }}
-      url_query:
-        _url_query: true
-      input:
-        _input: true
-    properties:
-      data:
-        _payload: true
-
-
 events:
   onInit:
     - id: set_session_id
@@ -65,9 +48,8 @@ events:
           - _var: init_property_values
           - null
       params:
-        block:
-          properties:
-            _var: init_property_values
+        block.properties:
+          _var: init_property_values
     - id: init_state_values
       type: SetState
       skip:
@@ -76,17 +58,6 @@ events:
           - null
       params:
         _var: init_state_values
-
-  onInitAsync:
-    {# - id: connect_docsearch
-      type: JsAction # TODO:
-      params:
-        name: connectDocsearch #}
-    - id: post_telemetry
-      type: Request
-      messages:
-        error: false
-      params: post_telemetry
 
 properties:
   title: {{ block_type }}

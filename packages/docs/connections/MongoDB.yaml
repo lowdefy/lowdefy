@@ -66,7 +66,7 @@ _ref:
             - `collection: string`: __Required__ - The name of the MongoDB collection.
             - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
-            - `options: object`: See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
+            - `options: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
             - `logCollection: object`: Optional log collection for logging changes.
               - `collection: string`: __Required__ - The name of the MongoDB log collection.
               - `meta: object`: Optional attributes object for user and other information.
@@ -127,7 +127,7 @@ _ref:
 
             #### Properties
             - `pipeline: object[]`: __Required__ - Array containing all the aggregation framework commands for the execution.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#aggregate) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#aggregate) for more information. Supported settings are:
               - `allowDiskUse: boolean`: Default: `false` - Allow disk use on the MongoDB server to store temporary results for the aggregation.
               - `authdb: string`: Specifies the authentication information to be used.
               - `batchSize: number`: The number of documents to return per batch.
@@ -180,7 +180,7 @@ _ref:
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#deletemany) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#deletemany) for more information. Supported settings are:
               - `authdb: string`: Specifies the authentication information to be used.
               - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.
               - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
@@ -224,7 +224,7 @@ _ref:
 
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#deleteone) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#deleteone) for more information. Supported settings are:
               - `authdb: string`: Specifies the authentication information to be used.
               - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.
               - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
@@ -268,7 +268,7 @@ _ref:
 
             #### Properties
             - `query: object`: __Required__ - A MongoDB query object.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#find) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#find) for more information. Supported settings are:
               - `allowDiskUse: boolean`: Allows disk use for blocking sort operations exceeding 100MB memory. (MongoDB 3.2 or higher)
               - `allowPartialResults: boolean`: For queries against a sharded collection, allows the command (or subsequent getMore commands) to return partial results, rather than an error, if one or more queried shards are available.
               - `authdb: string`: Specifies the authentication information to be used.
@@ -336,7 +336,7 @@ _ref:
 
             #### Properties
             - `query: object`: __Required__ - A MongoDB query object.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#findone) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#findone) for more information. Supported settings are:
               - `allowDiskUse: boolean`: Allows disk use for blocking sort operations exceeding 100MB memory. (MongoDB 3.2 or higher)
               - `allowPartialResults: boolean`: For queries against a sharded collection, allows the command (or subsequent getMore commands) to return partial results, rather than an error, if one or more queried shards are available.
               - `authdb: string`: Specifies the authentication information to be used.
@@ -394,7 +394,7 @@ _ref:
 
             #### Properties
             - `docs: object[]`: __Required__ - The array of documents to be inserted.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertmany) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertmany) for more information. Supported settings are:
               - `authdb: string`: Specifies the authentication information to be used.
               - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
@@ -441,7 +441,7 @@ _ref:
 
             #### Properties
             - `doc: object`: __Required__ - The document to be inserted.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertone) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#insertone) for more information. Supported settings are:
               - `authdb: string`: Specifies the authentication information to be used.
               - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher
@@ -487,7 +487,7 @@ _ref:
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
             - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/3.3/api/Collection.html#updateOne) for more information. Supported settings are:
               - `arrayFilters: string[]`: Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
               - `bypassDocumentValidation: boolean`: Default: `false` - Allow driver to bypass schema validation in MongoDB 3.2 or higher.
               - `checkKeys: boolean`: Default: `false` - If true, will throw if bson documents start with $ or include a . in any key value.
@@ -541,7 +541,7 @@ _ref:
             #### Properties
             - `filter: object`: __Required__ - The filter used to select the document to update.
             - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
-            - `options: object`: Optional settings. See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#updateone) for more information. Supported settings are:
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#updateone) for more information. Supported settings are:
               - `arrayFilters: object[]`: _Array_ - Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
               - `authdb: string`: Specifies the authentication information to be used.
               - `bsonRegExp: boolean`: Return the BSON regular expressions as BSONRegExp instances.

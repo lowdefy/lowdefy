@@ -49,8 +49,18 @@ _ref:
 
             The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 16 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
-            Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making use of [Corepack](https://nodejs.org/api/corepack.html) for this installation. The installation steps for using Corepack can be found [here](https://pnpm.io/installation#using-corepack). Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation).
+            Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making activating [Corepack](https://nodejs.org/api/corepack.html), even though it is an experimental feature, as this is the simplest way to install `pnpm`. Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation). To activate Corepack, run the following in your computer's command line interface (Windows CMD, Terminal on MacOS).
 
+      - _ref:
+          path: templates/cli_command.yaml.njk
+          vars:
+            id: corepack_enable
+            command: 'corepack enable'
+
+      - id: body_yaml_files
+        type: MarkdownWithCode
+        properties:
+          content: |
             ##### YAML files
 
             If you don't have any experience using YAML, please familiarize yourself YAML before continuing.
@@ -67,7 +77,7 @@ _ref:
 
             #### 1.2. Open a command line interface
 
-            Open your computer's command line interface (Windows CMD, Terminal on MacOS), and change directory (`cd`) to the project directory.
+            Open your computer's command line interface and change directory (`cd`) to the project directory.
 
             #### 1.3. Initialize an app
 
@@ -213,7 +223,6 @@ _ref:
                                         properties:
                                           size: large
                                           title: Let's build something
-                                          color: '#1890ff'
                                         events:
                                           onClick:
                                             - id: link_to_docs

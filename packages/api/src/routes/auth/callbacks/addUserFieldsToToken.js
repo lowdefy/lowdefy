@@ -13,22 +13,20 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { get } from '@lowdefy/helpers';
+import { get, set } from '@lowdefy/helpers';
 
-function addUserFieldsToToken(context, { account, authConfig, profile, token, user }) {
-  // const { debug } = context.logger;
+function addUserFieldsToToken({ account, authConfig, logger, profile, token, user }) {
   const objects = { account, profile, user };
-  // TODO: Add when debug is fixed.
-  // debug('Adding userFields to user. Available provider data is:');
-  // debug(objects);
+  logger.debug('Adding userFields to user. Available provider data is:');
+  logger.debug(objects);
   Object.entries(authConfig.userFields).forEach(([lowdefyFieldName, providerFieldName]) => {
     const value = get(objects, providerFieldName);
-    // debug(
-    //   `Adding provider field "${providerFieldName}" with value ${JSON.stringify(
-    //     value
-    //   )} as "${lowdefyFieldName}"`
-    // );
-    token[lowdefyFieldName] = value;
+    logger.debug(
+      `Adding provider field "${providerFieldName}" with value ${JSON.stringify(
+        value
+      )} as "${lowdefyFieldName}"`
+    );
+    set(token, lowdefyFieldName, value);
   });
 }
 

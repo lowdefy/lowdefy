@@ -14,23 +14,6 @@
 
 id: "{{ pageId }}"
 type: PageSiderMenu
-requests:
-  - id: post_telemetry
-    type: AxiosHttp
-    connectionId: lowdefy_api_telemetry
-    payload:
-      session_id:
-        _global: session_id
-      page_id:
-        _var: pageId
-      url_query:
-        _url_query: true
-      input:
-        _input: true
-    properties:
-      data:
-        _payload: true
-
 events:
   onInit:
     - id: set_session_id
@@ -45,22 +28,6 @@ events:
           _random:
             type: string
             length: 16
-  onInitAsync:
-    {# - id: connect_docsearch
-      type: JsAction # TODO:
-      params:
-        name: connectDocsearch #}
-    - id: post_telemetry
-      type: Request
-      messages:
-        error: false
-      skip:
-        _build.eq:
-          - _build.env: NEXT_PUBLIC_VERCEL_ENV
-          - null
-      params: post_telemetry
-
-
 properties:
   title: {{ pageTitle }}
   header:

@@ -1,0 +1,33 @@
+id: {{ section }}_info_box
+type: Box
+layout:
+  _var:
+    key: layout
+    default:
+      span: 12
+      contentGutter: 8
+blocks:
+  - id: {{section}}_image
+    type: Img
+    properties:
+      _var: image
+  - id: {{ section }}_info
+    type: Html
+    properties:
+      style:
+        minHeight: 190
+      html: |
+        <h4>{{ title }}</h4>
+        <p>{{ info }}</p>
+  - id: {{ section }}_link
+    type: Button
+    properties:
+      title: '> {{ link.title }}'
+      type: link
+      style:
+        width: 100%
+        whiteSpace: normal
+        textAlign: left
+        paddingLeft: 0
+        paddingRight: 0
+      href: {{ link.href }}

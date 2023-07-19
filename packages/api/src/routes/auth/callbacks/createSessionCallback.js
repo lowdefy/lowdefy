@@ -17,7 +17,7 @@
 import addUserFieldsToSession from './addUserFieldsToSession.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
-function createSessionCallback(context, { authConfig, plugins }) {
+function createSessionCallback({ authConfig, plugins }) {
   const sessionCallbackPlugins = createCallbackPlugins({
     authConfig,
     plugins,
@@ -74,7 +74,7 @@ function createSessionCallback(context, { authConfig, plugins }) {
     }
 
     if (authConfig.userFields) {
-      addUserFieldsToSession(context, { authConfig, session, token, user });
+      addUserFieldsToSession({ authConfig, session, token, user });
     }
 
     for (const plugin of sessionCallbackPlugins) {

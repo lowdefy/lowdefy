@@ -16,16 +16,23 @@
 
 import createEventPlugins from './createEventPlugins.js';
 
-function createLinkAccountEvent(context, { authConfig, plugins }) {
+function createLinkAccountEvent({ authConfig, logger, plugins }) {
   const linkAccountPlugins = createEventPlugins({
     authConfig,
     plugins,
     type: 'linkAccount',
   });
 
-  if (linkAccountPlugins.length === 0) return undefined;
-
   async function linkAccountEvent({ account, profile, user }) {
+    logger.info({
+      event: 'auth_link_account',
+      user: {
+        id: user.id,
+        roles: user.roles,
+        sub: user.sub,
+        session_id: user.session_id,
+      },
+    });
     for (const plugin of linkAccountPlugins) {
       await plugin.fn({
         properties: plugin.properties ?? {},

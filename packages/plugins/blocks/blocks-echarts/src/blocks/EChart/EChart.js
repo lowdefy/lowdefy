@@ -17,7 +17,7 @@
 import React from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { registerTheme } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactECharts from 'echarts-for-react/lib/core.js'; // fix: Error: Cannot find module 'tslib'
 
 class EChart extends React.Component {
   constructor(props) {

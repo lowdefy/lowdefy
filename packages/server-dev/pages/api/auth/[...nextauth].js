@@ -15,36 +15,23 @@
 */
 
 import NextAuth from 'next-auth';
-import { createApiContext, getNextAuthConfig } from '@lowdefy/api';
 
+import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
-import config from '../../../build/config.json';
-import adapters from '../../../build/plugins/auth/adapters.js';
-import callbacks from '../../../build/plugins/auth/callbacks.js';
-import events from '../../../build/plugins/auth/events.js';
-import fileCache from '../../../lib/fileCache.js';
-import providers from '../../../build/plugins/auth/providers.js';
 
-export const authOptions = getNextAuthConfig(
-  createApiContext({
-    config,
-    fileCache,
-    logger: console,
-  }),
-  { authJson, plugins: { adapters, callbacks, events, providers } }
-);
-
-export default async function auth(req, res) {
+async function handler({ context, req, res }) {
   if (authJson.configured === true) {
     // Required for emails in corporate networks, see:
     // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
     if (req.method === 'HEAD') {
       return res.status(200).end();
     }
-    return await NextAuth(req, res, authOptions);
+    return await NextAuth(req, res, context.authOptions);
   }
 
   return res.status(404).json({
     message: 'Auth not configured',
   });
 }
+
+export default apiWrapper(handler);

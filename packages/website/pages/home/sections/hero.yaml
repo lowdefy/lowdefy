@@ -1,57 +1,115 @@
 id: hero
 type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto 20px auto
 blocks:
   - id: hero_box
     type: Box
+    layout:
+      span: 12
+      contentGutter: 18
+      align: middle
     style:
-      maxWidth: 700
-      margin: 60px auto
-      textAlign: center
+      padding: 20
     blocks:
       - id: hero_content
         type: Html
-        style:
-          textAlign: center
-          padding: 20px
         properties:
           html: |
-            <h1 style="color:#1890ff;">
-              Build web apps with YAML
+            <p class="gray-text">Open-Source - Self Hosted - Next.js - NPM Plugins - For Developers</p>
+            <h1>
+              The <span class="gradient-text">config</span> web stack for
+              <span class="gradient-text">business apps</span>
             </h1>
-            <h4>
-              An open-source, extendable low-code framework to build web apps, admin panels, dashboards, internal tools, and CRUD apps with ease.
-            </h4>
+            <h5 class="gray-text">Create web apps, internal tools, client portals, admin panels and dashboards with YAML or JSON config.</h5>
 
-      - id: watch_button
+      - id: get_started_button
         type: Button
+        layout:
+          flex: 0 1 auto
         properties:
-          title: Watch 3 Min Video
-          icon: AiOutlinePlayCircle
+          title: Get Started
           shape: round
           size: large
           style:
-            backgroundImage: 'linear-gradient(#1890ff, #667eea)'
-        events:
-          onClick:
-            - id: OpenModal
-              type: CallMethod
-              params:
-                blockId: watch_modal
-                method: toggleOpen
+            background: '#1990FF'
 
-      - id: watch_modal
-        type: Modal
+      - id: code_box
+        type: Box
         layout:
-          contentGutter: 16
-        properties:
-          width: 900
-          footer: false
+          flex: 0 1 auto
         blocks:
-          - id: iframe
-            type: DangerousHtml
+          - id: code_button
+            type: Button
             properties:
-              DOMPurifyOptions:
-                ADD_TAGS:
-                  - iframe
-              html: |
-                <iframe width="840" height="493" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              title: |
+                > pnpx lowdefy@4 dev
+              ghost: true
+              shape: round
+              size: large
+              block: true
+              style:
+                whiteSpace: normal
+                boxShadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                fontFamily: monospace
+                background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #1990FF, #29D3CA) border-box !important'
+                border: 2px solid transparent !important
+            events:
+              onMount:
+                - id: set_extra
+                  type: SetState
+                  params:
+                    button_extra: Click to copy
+              onClick:
+                - id: copy
+                  type: CopyToClipboard
+                  params:
+                    copy: pnpx lowdefy@rc init && pnpx lowdefy@rc dev
+                - id: set_extra
+                  type: SetState
+                  params:
+                    button_extra: Copied.
+
+          - id: copy_text
+            type: Paragraph
+            properties:
+              style:
+                color: '#A3A3A3'
+                fontSize: 0.8em
+                paddingTop: 4px
+                textAlign: center
+              content:
+                _state: button_extra
+
+  - id: watch_box
+    type: Box
+    style:
+      height: 100%
+      padding: 20px
+    layout:
+      span: 12
+      align: middle
+    blocks:
+      - id: image
+        type: Img
+        properties:
+          src: /images/01_Header_001.png
+          width: 100%
+
+  - id: watch_modal
+    type: Modal
+    layout:
+      contentGutter: 16
+    properties:
+      width: 900
+      footer: false
+    blocks:
+      - id: iframe
+        type: DangerousHtml
+        properties:
+          DOMPurifyOptions:
+            ADD_TAGS:
+              - iframe
+          html: |
+            <iframe width="840" height="493" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

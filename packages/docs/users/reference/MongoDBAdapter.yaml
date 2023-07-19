@@ -36,7 +36,7 @@ _ref:
 
                 ###### object
                   - `databaseUri: string`: Required - Connection uri string for the MongoDb deployment. Should be stored using the _secret operator.
-                  - `mongoDBClientOptions: object`: See the [driver docs](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
+                  - `mongoDBClientOptions: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
                   - `options: object`:
                     - `collections: object`: Set names of MongoDB collections used.
                     - `databaseName`: Set the MongoDB database name. This is optional if the database name is specified in the `databaseUri`.

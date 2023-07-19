@@ -1,5 +1,7 @@
 id: affix_header
 type: Affix
+style:
+  z-index: 20
 blocks:
   - id: header
     type: Header
@@ -8,9 +10,14 @@ blocks:
       style:
         _if:
           test:
-            _ref: shared/mobile.yaml
+            _ref: shared/mobile_md.yaml
           then:
-            padding: 0 15px
+            padding: 4px 16px
+            background: rgba(255,255,255,0.3)
+            backdropFilter: blur(10px)
+          else:
+            background: rgba(255,255,255,0.3)
+            backdropFilter: blur(10px)
     blocks:
       - id: logo
         type: Img
@@ -25,7 +32,7 @@ blocks:
           flex: 1 1 auto
         visible:
           _not:
-            _ref: shared/mobile.yaml
+            _ref: shared/mobile_md.yaml
         blocks:
           - _ref: shared/header/menu.yaml
           - _ref: shared/header/cta_buttons.yaml
@@ -34,7 +41,7 @@ blocks:
         layout:
           flex: 1 1 auto
         visible:
-          _ref: shared/mobile.yaml
+          _ref: shared/mobile_md.yaml
         blocks:
           - id: spacer
             type: Box
@@ -58,7 +65,7 @@ blocks:
           - id: mobile_menu_drawer
             type: Drawer
             properties:
-              width: 100%
+              width: 400
             blocks:
               - _ref: shared/header/menu.yaml
               - _ref: shared/header/cta_buttons.yaml
