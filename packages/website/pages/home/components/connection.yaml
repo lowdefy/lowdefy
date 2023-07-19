@@ -21,3 +21,4 @@ events:
       params:
         url:
           _var: link
+        newTab: true

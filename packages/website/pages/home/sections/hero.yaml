@@ -34,6 +34,13 @@ blocks:
           size: large
           style:
             background: '#1990FF'
+        events:
+          onClick:
+            - id: link_hero_get_started
+              type: Link
+              params:
+                url: https://docs.lowdefy.com/tutorial-start
+                newTab: true
 
       - id: code_box
         type: Box

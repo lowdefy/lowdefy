@@ -41,7 +41,7 @@ blocks:
             info: In production, Lowdefy runs as a Next.js app so you can deploy Lowdefy anywhere that supports Next.js deployment.  Deploy with Vercel, Docker and more.
             link:
               title: See the deployment instructions
-              href: https://docs.lowdefy.com/docker
+              href: https://docs.lowdefy.com/vercel
       - _ref:
           path: pages/home/components/info_box.yaml.njk
           vars:
