@@ -6,6 +6,12 @@ payload:
     _global: session_id
   email:
     _state: email
+  page_id:
+    _location: pageId
+  url_query:
+    _url_query: true
+  url:
+    _location: href
 properties:
   doc:
     _id:
@@ -14,5 +20,12 @@ properties:
       _payload: session_id
     email:
       _payload: email
+    source: website
+    page_id:
+      _payload: page_id
+    url_query:
+      _payload: url_query
+    url:
+      _payload: href
     timestamp:
       _date: now
