@@ -101,7 +101,7 @@ importers:
       jest: 28.1.3
       json5: 2.2.3
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     dependencies:
       '@lowdefy/ajv': link:../utils/ajv
       '@lowdefy/blocks-basic': link:../plugins/blocks/blocks-basic
@@ -114,7 +114,7 @@ importers:
       ajv: 8.12.0
       json5: 2.2.3
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     devDependencies:
       '@jest/globals': 28.1.3
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
@@ -1254,7 +1254,7 @@ importers:
       react-icons: 4.7.1
       webpack: 5.76.0
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     dependencies:
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
       '@lowdefy/api': link:../api
@@ -1282,7 +1282,7 @@ importers:
       next-with-less: 2.0.5_bhmov3cur4gcctpw4k2zrhdwma
       webpack: 5.76.0
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
 
   packages/server-dev:
     specifiers:
@@ -1327,7 +1327,7 @@ importers:
       swr: 2.0.0
       webpack: 5.76.0
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     dependencies:
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
       '@lowdefy/api': link:../api
@@ -1365,7 +1365,7 @@ importers:
       react-icons: 4.7.1_react@18.2.0
       swr: 2.0.0_react@18.2.0
       yaml: 2.2.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     devDependencies:
       '@next/eslint-plugin-next': 12.1.6
       less: 4.1.3
@@ -9363,7 +9363,7 @@ packages:
       jest-util: 28.1.3
       jest-validate: 28.1.3
       prompts: 2.4.2
-      yargs: 17.6.2
+      yargs: 17.7.2
     transitivePeerDependencies:
       - '@types/node'
       - supports-color
@@ -11621,7 +11621,7 @@ packages:
       tsconfig-paths: 3.14.1
       tslib: 2.4.1
       v8-compile-cache: 2.3.0
-      yargs: 17.6.2
+      yargs: 17.7.2
       yargs-parser: 21.1.1
     transitivePeerDependencies:
       - debug
@@ -15257,8 +15257,8 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
-  /yargs/17.6.2:
-    resolution: {integrity: sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw==}
+  /yargs/17.7.2:
+    resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
     dependencies:
       cliui: 8.0.1
