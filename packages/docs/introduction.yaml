@@ -37,7 +37,7 @@ _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: quickstart
-            command: 'pnpx lowdefy@4 init && pnpx lowdefy@4 dev'
+            command: 'pnpx rc init && pnpx lowdefy@rc dev'
 
       - id: body_features
         type: Markdown
