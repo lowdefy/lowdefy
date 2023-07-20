@@ -697,7 +697,7 @@ importers:
       '@testing-library/dom': 8.19.1
       '@testing-library/react': 13.4.0
       '@testing-library/user-event': 14.4.3
-      '@types/react': 18.0.26
+      '@types/react': 18.2.15
       copyfiles: 2.4.1
       dompurify: 2.4.1
       jest: 28.1.0
@@ -714,7 +714,7 @@ importers:
       dompurify: 2.4.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-markdown: 8.0.4_kzbn2opkn2327fwg5yzwzya5o4
+      react-markdown: 8.0.4_tznpbkknyqq5lcv5sgrl332jvu
       react-syntax-highlighter: 15.5.0_react@18.2.0
       rehype-raw: 6.1.1
       remark-gfm: 3.0.1
@@ -728,7 +728,7 @@ importers:
       '@testing-library/dom': 8.19.1
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@testing-library/user-event': 14.4.3_ua4wuun3fnehcjqtqj2e2ldgpe
-      '@types/react': 18.0.26
+      '@types/react': 18.2.15
       copyfiles: 2.4.1
       jest: 28.1.0
       jest-environment-jsdom: 28.1.0
@@ -5223,10 +5223,10 @@ packages:
   /@types/react-dom/18.0.10:
     resolution: {integrity: sha512-E42GW/JA4Qv15wQdqJq8DL4JhNpB3prJgjgapN3qJT9K2zO5IIAQh4VXvCEDupoqAwnz0cY4RlXeC/ajX5SFHg==}
     dependencies:
-      '@types/react': 18.0.26
+      '@types/react': 18.2.15
 
-  /@types/react/18.0.26:
-    resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
+  /@types/react/18.2.15:
+    resolution: {integrity: sha512-oEjE7TQt1fFTFSbf8kkNuc798ahTUzn3Le67/PWjE8MAfYAD/qB7O8hSTcromLFqHCt9bcdOg5GXMokzTjJ5SA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
@@ -13271,7 +13271,7 @@ packages:
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
 
-  /react-markdown/8.0.4_kzbn2opkn2327fwg5yzwzya5o4:
+  /react-markdown/8.0.4_tznpbkknyqq5lcv5sgrl332jvu:
     resolution: {integrity: sha512-2oxHa6oDxc1apg/Gnc1Goh06t3B617xeywqI/92wmDV9FELI6ayRkwge7w7DoEqM0gRpZGTNU6xQG+YpJISnVg==}
     peerDependencies:
       '@types/react': '>=16'
@@ -13279,7 +13279,7 @@ packages:
     dependencies:
       '@types/hast': 2.3.4
       '@types/prop-types': 15.7.5
-      '@types/react': 18.0.26
+      '@types/react': 18.2.15
       '@types/unist': 2.0.6
       comma-separated-tokens: 2.0.3
       hast-util-whitespace: 2.0.0
