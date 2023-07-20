@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "eslint": "8.31.0",
-    "eslint-config-prettier": "8.6.0",
+    "eslint-config-prettier": "8.8.0",
     "eslint-import-resolver-node": "0.3.6",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jsx-a11y": "6.6.1",
