@@ -85,7 +85,7 @@
     "less": "4.1.3",
     "less-loader": "11.1.0",
     "next-with-less": "2.0.5",
-    "webpack": "5.76.0"
+    "webpack": "5.88.2"
   },
   "packageManager": "pnpm@7.11.0",
   "publishConfig": {
