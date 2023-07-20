@@ -49,12 +49,12 @@
     "redis": "4.5.1"
   },
   "devDependencies": {
-    "@jest/globals": "28.1.0",
+    "@jest/globals": "28.1.3",
     "@lowdefy/ajv": "4.0.0-rc.9",
     "@swc/cli": "0.1.59",
     "@swc/core": "1.3.24",
     "@swc/jest": "0.2.24",
-    "jest": "28.1.0"
+    "jest": "28.1.3"
   },
   "publishConfig": {
     "access": "public"
