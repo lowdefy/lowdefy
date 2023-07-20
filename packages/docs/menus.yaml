@@ -871,8 +871,8 @@
         title: Lowdefy Versions
         icon: AiOutlineBranches
       links:
-        - id: v3.23.2
+        - id: v3
           type: MenuLink
-          url: https://628bccb1bb2d810008d517c8--lowdefy-docs.netlify.app
+          url: https://docs-v3.lowdefy.com
           properties:
             title: Version 3

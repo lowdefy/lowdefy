@@ -13,7 +13,7 @@
 # limitations under the License.
 
 id: {{ block_type }}
-type: PageSiderMenu
+type: Box
 events:
   onInit:
     - id: set_session_id
@@ -28,107 +28,118 @@ events:
           _random:
             type: string
             length: 16
-
 properties:
   title: {{ block_type }}
-  header:
-    theme: light
-  menu:
-    forceSubMenuRender: true
-  sider:
-    width: 256px
-    initialCollapsed:
-      _or:
-        - _eq:
-            - _media: size
-            - md
-        - _eq:
-            - _media: size
-            - lg
-  layout:
-    style:
-      background: '#FFFFFF'
-  footer:
-    style:
-      background: '#FFFFFF'
-  breadcrumb:
-    list:
-      - _ref: version.yaml
-      - {{ category }}
-      - {{ block_type }}
-layout:
-  contentGutter: 16
-areas:
-  header:
-    blocks:
-      _ref: templates/header.yaml
-  footer:
-    blocks:
-      _ref:
-        path: templates/footer.yaml.njk
-        vars:
-          hideFeedback:
-            _var: hideFeedback
-          filePath:
-            _var: filePath
-          pageId:
-            _var: block_type
-  content:
-    blocks:
-      - id: title
-        type: Title
-        properties:
-          level: 2
-          content:
-            _var: block_type
-      {% if value_type %}
-      - id: value_type
-        type: Markdown
-        properties:
-          content: |
-            ```
-            value type: {{ value_type }}
-            ```
-      {% endif %}
-      {% if areas %}
-      - id: areas_list
-        type: Markdown
-        properties:
-          content: |
-            {% if user_defined_areas -%}
-            ```
-            areas: [key]
-            ```
-            {% else %}
-            ```
-            areas: {{ areas | join(', ') }}
-            ```
-            {% endif %}
-      {% endif %}
-      - id: description
-        type: MarkdownWithCode
-        properties:
-          content:
-            _var: description_content
-      {% if examples %}
-      - id: examples_divider
-        type: Divider
-        properties:
-          title: Examples
-      - _ref:
-          path: README.md
-          transformer: templates/blocks/exampleTransformer.js
-          vars:
-            block_type: {{ block_type }}
-            examples:
-              _var: examples
-      {% endif %}
-      - _ref:
-          path: templates/blocks/schema.yaml.njk
-          vars:
-            block_type: {{ block_type }}
-            schema_definition:
-              _ref:
-                path:
-                  _var: schema
-                transformer: templates/blocks/schemaTransformer.js
+blocks:
+  - id: v3_alert
+    type: Alert
+    properties:
+      banner: true
+      description: <div style="text-align:center;">For version 3 apps find the docs <a href="https://docs-v3.lowdefy.com">here</a>.</div>
+      showIcon: false
+      type: info
+  - id: {{ pageId }}_page
+    type: PageSiderMenu
+    properties:
+      title: {{ block_type }}
+      header:
+        theme: light
+      menu:
+        forceSubMenuRender: true
+      sider:
+        width: 256px
+        initialCollapsed:
+          _or:
+            - _eq:
+                - _media: size
+                - md
+            - _eq:
+                - _media: size
+                - lg
+      layout:
+        style:
+          background: '#FFFFFF'
+      footer:
+        style:
+          background: '#FFFFFF'
+      breadcrumb:
+        list:
+          - _ref: version.yaml
+          - {{ category }}
+          - {{ block_type }}
+    layout:
+      contentGutter: 16
+    areas:
+      header:
+        blocks:
+          _ref: templates/header.yaml
+      footer:
+        blocks:
+          _ref:
+            path: templates/footer.yaml.njk
+            vars:
+              hideFeedback:
+                _var: hideFeedback
+              filePath:
+                _var: filePath
+              pageId:
+                _var: block_type
+      content:
+        blocks:
+          - id: title
+            type: Title
+            properties:
+              level: 2
+              content:
+                _var: block_type
+          {% if value_type %}
+          - id: value_type
+            type: Markdown
+            properties:
+              content: |
+                ```
+                value type: {{ value_type }}
+                ```
+          {% endif %}
+          {% if areas %}
+          - id: areas_list
+            type: Markdown
+            properties:
+              content: |
+                {% if user_defined_areas -%}
+                ```
+                areas: [key]
+                ```
+                {% else %}
+                ```
+                areas: {{ areas | join(', ') }}
+                ```
+                {% endif %}
+          {% endif %}
+          - id: description
+            type: MarkdownWithCode
+            properties:
+              content:
+                _var: description_content
+          {% if examples %}
+          - id: examples_divider
+            type: Divider
+            properties:
+              title: Examples
+          - _ref:
+              path: README.md
+              transformer: templates/blocks/exampleTransformer.js
+              vars:
+                block_type: {{ block_type }}
+                examples:
+                  _var: examples
+          {% endif %}
+          - _ref:
+              path: templates/blocks/schema.yaml.njk
+              vars:
+                block_type: {{ block_type }}
+                schema_definition:
+                  _ref:
+                    path:
+                      _var: schema
+                    transformer: templates/blocks/schemaTransformer.js
