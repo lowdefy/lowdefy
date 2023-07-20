@@ -51,7 +51,7 @@
     "nunjucks": "3.2.4",
     "swc-loader": "0.2.3",
     "webpack": "5.88.2",
-    "webpack-cli": "5.0.1"
+    "webpack-cli": "5.1.4"
   },
   "publishConfig": {
     "access": "public"
