@@ -60,7 +60,7 @@
     "web:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../website && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start"
   },
   "devDependencies": {
-    "eslint": "8.31.0",
+    "eslint": "8.45.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-import-resolver-node": "0.3.7",
     "eslint-plugin-import": "2.27.5",
