@@ -72,5 +72,14 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "echarts-for-react": {
+        "dependencies": {
+          "tslib": "*"
+        }
+      }
+    }
   }
 }
