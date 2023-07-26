@@ -55,16 +55,10 @@
     "@swc/jest": "0.2.27",
     "jest": "28.1.3",
     "jest-environment-node": "28.1.3",
+    "next": "12.3.4",
     "next-auth": "4.20.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "next"
-      ]
-    }
   },
   "publishConfig": {
     "access": "public"
