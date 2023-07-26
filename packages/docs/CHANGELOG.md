@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* Add V3 banner to docs. ([77610d1](https://github.com/lowdefy/lowdefy/commit/77610d11c23df8c128192beb2837e92e3664b835))
+* Change lowdefy@4 references to lowdefy@rc. ([ceff662](https://github.com/lowdefy/lowdefy/commit/ceff66214482e1152bd15c74880f136f86100f4f))
+* Docs polish and fixes ([1a00dd9](https://github.com/lowdefy/lowdefy/commit/1a00dd9e741e7492646cbfe949506a956103b0c0))
+* **docs:** Fix blocks on docs not rendering. ([965fffa](https://github.com/lowdefy/lowdefy/commit/965fffae3d3dc120fdd5795130b20e5697ae3d31))
+* **docs:** reference version number. ([b121006](https://github.com/lowdefy/lowdefy/commit/b1210065ba990db53d37504dbd4a93aaf2b7f1d4))
+* **docs:** Remove post telemetry. ([93930d6](https://github.com/lowdefy/lowdefy/commit/93930d69fc61e23f281f47da0baceb439d3356e9))
+* **docs:** Tutorial fixes and polish ([69e8c07](https://github.com/lowdefy/lowdefy/commit/69e8c07d23d27a11050886b8eec16e57c5de0bff))
+* Fix documentation yaml indentation. ([12a9ecb](https://github.com/lowdefy/lowdefy/commit/12a9ecbb9ea10b2ec5e1545cf10ac16b05ea3d50))
+* Plugins docs polish. ([286b01f](https://github.com/lowdefy/lowdefy/commit/286b01f167fec572f313ff164f6046bc8bcb1cf2))
+* Remove arrayIndices param from operator docs. ([ba298f4](https://github.com/lowdefy/lowdefy/commit/ba298f4a7cb2360f2e938abcf8c27bcde84b87d8))
+* SetState SetGlobal typo ([b54efb1](https://github.com/lowdefy/lowdefy/commit/b54efb1062f6244b24985c93b2d89d9659fb15d2))
+* Small typos in plugins-dev.yaml ([45c77f3](https://github.com/lowdefy/lowdefy/commit/45c77f356f9dccc85e3944c5b051823ec58332df))
+* Typo in plugins-connections.yaml ([68828cd](https://github.com/lowdefy/lowdefy/commit/68828cd254de46fd69d9d4ee0394e89001c8e0b8))
+* Typos in plugins-operators.yaml ([e028644](https://github.com/lowdefy/lowdefy/commit/e028644b37f0b3e03a78d88ec017b087b36be899))
+
+
+### Features
+
+* Add Auth provider docs. ([7335dd8](https://github.com/lowdefy/lowdefy/commit/7335dd89a9ed093eb3a2ed639be8b7f305def726))
+* **docs:** Add border radius. ([6d50050](https://github.com/lowdefy/lowdefy/commit/6d500504d7224c80c2a148060fb650411e94416a))
+* **docs:** Add operator plugin docs. ([9fd356a](https://github.com/lowdefy/lowdefy/commit/9fd356a38d4ffa91e50171f9e8202763e98deb64))
+* **docs:** Add plugins docs wip. ([00f661f](https://github.com/lowdefy/lowdefy/commit/00f661fa5fce55bdf243081a3c15439f1b0eb560))
+* **docs:** Add posthog ([58e2b3a](https://github.com/lowdefy/lowdefy/commit/58e2b3a4c86f587da7c3757fdef2887f8e34dad2))
+* **docs:** Plugin development docs. ([792eee0](https://github.com/lowdefy/lowdefy/commit/792eee0a6962494eadacb8cde7a592ecd61bbee4))
+* **docs:** Post feedback and newsletter. ([cf7a4e2](https://github.com/lowdefy/lowdefy/commit/cf7a4e2c40b5477f577b7f627dc50fb5260699fc))
+* Fix colors and sponsor btn. ([1160011](https://github.com/lowdefy/lowdefy/commit/1160011eb755447c9b044de42a4229186e76c84e))
+* Plugin documentation ([6a4d3fe](https://github.com/lowdefy/lowdefy/commit/6a4d3fe696712d770e719cb47800e7b45c80c2e5))
+* Plugins docs wip ([182ecab](https://github.com/lowdefy/lowdefy/commit/182ecab9020884a635ca432c306647afe02665d4))
+* **website:** Add robots.txt ([b894817](https://github.com/lowdefy/lowdefy/commit/b8948174c15dadfeb4e9e64f0124ea7df9f0f151))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 

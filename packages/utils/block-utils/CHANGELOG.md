@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency dompurify to v2.4.7 ([5b3709b](https://github.com/lowdefy/lowdefy/commit/5b3709b00ee002f6e56c7d525fe2314c4f68ff3e))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package @lowdefy/block-utils

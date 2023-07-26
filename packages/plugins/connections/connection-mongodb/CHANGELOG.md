@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* Fix next-auth peer dependencies. ([0a251a8](https://github.com/lowdefy/lowdefy/commit/0a251a8ff9d80bdafbe0dc38e6d0394a40699d03))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 
