@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators",
-  "version": "4.0.0-rc.9",
+  "version": "4.0.0-rc.10",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,7 +40,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testTimeout=10000"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.9"
+    "@lowdefy/helpers": "4.0.0-rc.10"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",

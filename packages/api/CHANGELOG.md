@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* **api:** Use lowdefy get,set helpers in auth user fields. ([40dded4](https://github.com/lowdefy/lowdefy/commit/40dded47a92cce829787244e1ce1dbd5fb6e478f))
+* Logging cleanup. ([30a495c](https://github.com/lowdefy/lowdefy/commit/30a495c3e40fe566af306b54d7c8ece3c79de1b9))
+
+
+### Features
+
+* Add logger to next auth options. ([b30412f](https://github.com/lowdefy/lowdefy/commit/b30412f7cda93be43226728340061465bf6597f4))
+* **api:** Refactor next auth configuration for logging. ([5d04948](https://github.com/lowdefy/lowdefy/commit/5d04948cc34b7d95dfc781254e0d5acb346bd2be))
+* Auth event logs WIP ([7601894](https://github.com/lowdefy/lowdefy/commit/760189432f271f682eb9f23abd960ff5d5b12873))
+* Server logging polish and cleanup. ([fe46d23](https://github.com/lowdefy/lowdefy/commit/fe46d23408d3d24d15cc284faa74c2e0eb154f8b))
+* **server:** Add info logs to request calls. ([0f90fdd](https://github.com/lowdefy/lowdefy/commit/0f90fdd9a3d0b18e57829447dfa0097e1a858006))
+* **server:** Log server errors with pino. ([ed36f2f](https://github.com/lowdefy/lowdefy/commit/ed36f2f1aa1134ff4deb7da46f18463b8f70c173))
+* Update dev server to work with logger. ([f036a62](https://github.com/lowdefy/lowdefy/commit/f036a623067bdcc225d37137511baacd4f317535))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 

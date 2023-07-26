@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency fs-extra to v11.1.1 ([e70fc3e](https://github.com/lowdefy/lowdefy/commit/e70fc3e8e5de3091f5c0acd8dde279434f958bcf))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package @lowdefy/node-utils

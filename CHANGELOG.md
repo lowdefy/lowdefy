@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* Add V3 banner to docs. ([77610d1](https://github.com/lowdefy/lowdefy/commit/77610d11c23df8c128192beb2837e92e3664b835))
+* **api:** Use lowdefy get,set helpers in auth user fields. ([40dded4](https://github.com/lowdefy/lowdefy/commit/40dded47a92cce829787244e1ce1dbd5fb6e478f))
+* **blocks-echarts:** Fix echarts-for-react missing tslib dependency. ([3b119d0](https://github.com/lowdefy/lowdefy/commit/3b119d01741df40996cf1144c618da23d4eb7898))
+* Change lowdefy@4 references to lowdefy@rc. ([ceff662](https://github.com/lowdefy/lowdefy/commit/ceff66214482e1152bd15c74880f136f86100f4f))
+* **deps:** update dependency dompurify to v2.4.7 ([5b3709b](https://github.com/lowdefy/lowdefy/commit/5b3709b00ee002f6e56c7d525fe2314c4f68ff3e))
+* **deps:** update dependency echarts to v5.4.3 ([7595527](https://github.com/lowdefy/lowdefy/commit/75955279d704015a07d4b2a56b74247fbb30870c))
+* **deps:** update dependency fs-extra to v11.1.1 ([e70fc3e](https://github.com/lowdefy/lowdefy/commit/e70fc3e8e5de3091f5c0acd8dde279434f958bcf))
+* **deps:** update dependency semver to v7.5.2 [security] ([6326c77](https://github.com/lowdefy/lowdefy/commit/6326c77890d8262d828847b52abd097bd0f39980))
+* Docs polish and fixes ([1a00dd9](https://github.com/lowdefy/lowdefy/commit/1a00dd9e741e7492646cbfe949506a956103b0c0))
+* **docs:** Fix blocks on docs not rendering. ([965fffa](https://github.com/lowdefy/lowdefy/commit/965fffae3d3dc120fdd5795130b20e5697ae3d31))
+* **docs:** reference version number. ([b121006](https://github.com/lowdefy/lowdefy/commit/b1210065ba990db53d37504dbd4a93aaf2b7f1d4))
+* **docs:** Remove post telemetry. ([93930d6](https://github.com/lowdefy/lowdefy/commit/93930d69fc61e23f281f47da0baceb439d3356e9))
+* **docs:** Tutorial fixes and polish ([69e8c07](https://github.com/lowdefy/lowdefy/commit/69e8c07d23d27a11050886b8eec16e57c5de0bff))
+* Fix documentation yaml indentation. ([12a9ecb](https://github.com/lowdefy/lowdefy/commit/12a9ecbb9ea10b2ec5e1545cf10ac16b05ea3d50))
+* Fix next-auth peer dependencies. ([0a251a8](https://github.com/lowdefy/lowdefy/commit/0a251a8ff9d80bdafbe0dc38e6d0394a40699d03))
+* Logging cleanup. ([30a495c](https://github.com/lowdefy/lowdefy/commit/30a495c3e40fe566af306b54d7c8ece3c79de1b9))
+* Plugins docs polish. ([286b01f](https://github.com/lowdefy/lowdefy/commit/286b01f167fec572f313ff164f6046bc8bcb1cf2))
+* Remove arrayIndices param from operator docs. ([ba298f4](https://github.com/lowdefy/lowdefy/commit/ba298f4a7cb2360f2e938abcf8c27bcde84b87d8))
+* SetState SetGlobal typo ([b54efb1](https://github.com/lowdefy/lowdefy/commit/b54efb1062f6244b24985c93b2d89d9659fb15d2))
+* Small typos in plugins-dev.yaml ([45c77f3](https://github.com/lowdefy/lowdefy/commit/45c77f356f9dccc85e3944c5b051823ec58332df))
+* Typo in plugins-connections.yaml ([68828cd](https://github.com/lowdefy/lowdefy/commit/68828cd254de46fd69d9d4ee0394e89001c8e0b8))
+* Typos in plugins-operators.yaml ([e028644](https://github.com/lowdefy/lowdefy/commit/e028644b37f0b3e03a78d88ec017b087b36be899))
+* Update switch operator error message. ([909a611](https://github.com/lowdefy/lowdefy/commit/909a611ae649194888173479f5748a52e6b91f7e))
+* Update website tagline. ([cce91df](https://github.com/lowdefy/lowdefy/commit/cce91df9c74c3a8c26de68814001dd9dced35085))
+* **website:** Add enterprise features section. ([39d63dc](https://github.com/lowdefy/lowdefy/commit/39d63dc16c4f16a1804aaf1bac12c56b9d14821d))
+* **website:** Add font and small style changes. ([76e9e61](https://github.com/lowdefy/lowdefy/commit/76e9e6146b8e833a17fb6002602e762e2467930e))
+* **website:** Add testimonials section to website. ([848d4b9](https://github.com/lowdefy/lowdefy/commit/848d4b94dc4993f19ee031c158cc7dfc5841c629))
+* **website:** All Buttons use href. ([63ca371](https://github.com/lowdefy/lowdefy/commit/63ca3719e30f6f10fcbb7a2dd7e1d28e581335af))
+* **website:** Fix hero link. ([af98679](https://github.com/lowdefy/lowdefy/commit/af98679dcdfc9190d60978bb6e16ea56694ddb48))
+* **website:** Fix sitemap. ([fba5b15](https://github.com/lowdefy/lowdefy/commit/fba5b157add5578def3c3bb4cd7b8be0a2be363d))
+* **website:** Small layout changes to website. ([b7a240e](https://github.com/lowdefy/lowdefy/commit/b7a240e7261b760cebe2ed83cebdc90a338fdc92))
+* **website:** Update examples section. ([79a15d6](https://github.com/lowdefy/lowdefy/commit/79a15d632bb5e1e290df89ed217de0ab5c9f6362))
+* **website:** Update open source section. ([de9e5e7](https://github.com/lowdefy/lowdefy/commit/de9e5e7ff6150c990be25e89e9819799ce43005b))
+* **website:** Update plugins section. ([458e92c](https://github.com/lowdefy/lowdefy/commit/458e92c3af4fb20ba6a63f29c31efc958e40ae17))
+* **website:** Update product description section. ([8f67728](https://github.com/lowdefy/lowdefy/commit/8f67728f6e3728a2e71b6249700cf0b2e22dfae9))
+* **website:** Update testimonials section. ([b623cf5](https://github.com/lowdefy/lowdefy/commit/b623cf5c4588c2660510b23baa6c51ce7f9fc6dd))
+* **website:** Update website hero content. ([339d46d](https://github.com/lowdefy/lowdefy/commit/339d46d9711b9ccbad4d06f549902bddcf26b7c2))
+* **website:** Update website with new design. ([66e01df](https://github.com/lowdefy/lowdefy/commit/66e01df5232f67d2ad601300e766fda91fe273d2))
+
+
+### Features
+
+* Add another testimonial. ([b3b76bf](https://github.com/lowdefy/lowdefy/commit/b3b76bf700b4ed86bd17c66737c4745c96acf457))
+* Add Auth provider docs. ([7335dd8](https://github.com/lowdefy/lowdefy/commit/7335dd89a9ed093eb3a2ed639be8b7f305def726))
+* Add logger to next auth options. ([b30412f](https://github.com/lowdefy/lowdefy/commit/b30412f7cda93be43226728340061465bf6597f4))
+* **api:** Refactor next auth configuration for logging. ([5d04948](https://github.com/lowdefy/lowdefy/commit/5d04948cc34b7d95dfc781254e0d5acb346bd2be))
+* Auth event logs WIP ([7601894](https://github.com/lowdefy/lowdefy/commit/760189432f271f682eb9f23abd960ff5d5b12873))
+* **blocks-aggrid:** Update AgGrid to v29.3.5. ([8c6898a](https://github.com/lowdefy/lowdefy/commit/8c6898a6c57d458af2183a03a4b84bb710abfac7))
+* Connector section. ([bb0d818](https://github.com/lowdefy/lowdefy/commit/bb0d8181417a1dca63a0a8e3dcd8ccf62b28bfa6))
+* **docs:** Add border radius. ([6d50050](https://github.com/lowdefy/lowdefy/commit/6d500504d7224c80c2a148060fb650411e94416a))
+* **docs:** Add operator plugin docs. ([9fd356a](https://github.com/lowdefy/lowdefy/commit/9fd356a38d4ffa91e50171f9e8202763e98deb64))
+* **docs:** Add plugins docs wip. ([00f661f](https://github.com/lowdefy/lowdefy/commit/00f661fa5fce55bdf243081a3c15439f1b0eb560))
+* **docs:** Add posthog ([58e2b3a](https://github.com/lowdefy/lowdefy/commit/58e2b3a4c86f587da7c3757fdef2887f8e34dad2))
+* **docs:** Plugin development docs. ([792eee0](https://github.com/lowdefy/lowdefy/commit/792eee0a6962494eadacb8cde7a592ecd61bbee4))
+* **docs:** Post feedback and newsletter. ([cf7a4e2](https://github.com/lowdefy/lowdefy/commit/cf7a4e2c40b5477f577b7f627dc50fb5260699fc))
+* finalize testimonials. ([60bb443](https://github.com/lowdefy/lowdefy/commit/60bb4430045511129457ef8d482e7cd3d20fc638))
+* Fix colors and sponsor btn. ([1160011](https://github.com/lowdefy/lowdefy/commit/1160011eb755447c9b044de42a4229186e76c84e))
+* Plugin documentation ([6a4d3fe](https://github.com/lowdefy/lowdefy/commit/6a4d3fe696712d770e719cb47800e7b45c80c2e5))
+* Plugins docs wip ([182ecab](https://github.com/lowdefy/lowdefy/commit/182ecab9020884a635ca432c306647afe02665d4))
+* Server logging polish and cleanup. ([fe46d23](https://github.com/lowdefy/lowdefy/commit/fe46d23408d3d24d15cc284faa74c2e0eb154f8b))
+* **server-dev:** Log errors in dev server. ([cacdc12](https://github.com/lowdefy/lowdefy/commit/cacdc12a3b3773603d61487089ae7061cb483af3))
+* **server:** Add info logs to request calls. ([0f90fdd](https://github.com/lowdefy/lowdefy/commit/0f90fdd9a3d0b18e57829447dfa0097e1a858006))
+* **server:** Log server errors with pino. ([ed36f2f](https://github.com/lowdefy/lowdefy/commit/ed36f2f1aa1134ff4deb7da46f18463b8f70c173))
+* **server:** Server logging WIP. ([0718405](https://github.com/lowdefy/lowdefy/commit/0718405735c09170064739575ccd40d0e3e9fed0))
+* **server:** Updates to logging. ([e3fea46](https://github.com/lowdefy/lowdefy/commit/e3fea46b9eec40b603401a2eefd3e602ee42e988))
+* Update dev server to work with logger. ([f036a62](https://github.com/lowdefy/lowdefy/commit/f036a623067bdcc225d37137511baacd4f317535))
+* Website add tag. ([07ae642](https://github.com/lowdefy/lowdefy/commit/07ae6422b4036e1823e670e209e67c0cffec9345))
+* **website:** Add posthog. ([7a357d1](https://github.com/lowdefy/lowdefy/commit/7a357d1f39bc0aaec48b2b7252a1be650116bcd2))
+* **website:** Add robots.txt ([b894817](https://github.com/lowdefy/lowdefy/commit/b8948174c15dadfeb4e9e64f0124ea7df9f0f151))
+* **website:** Add website newsletter signup. ([158232e](https://github.com/lowdefy/lowdefy/commit/158232e438b355e1cc15caaeeea2cde3d7f54e4c))
+* **website:** copy version rc. ([d8235eb](https://github.com/lowdefy/lowdefy/commit/d8235eb37ab0159a765ccc4e6da44444e362a0c3))
+* **website:** Final style changes. ([438a519](https://github.com/lowdefy/lowdefy/commit/438a5193df34e7b8f44367709da37cb07abf15de))
+* **website:** Generate sitemap. ([8e105fd](https://github.com/lowdefy/lowdefy/commit/8e105fd053ba8ad598624f225ad8543b8a0a4fb6))
+* **website:** Post to discord. ([c86492c](https://github.com/lowdefy/lowdefy/commit/c86492c517ae435d47a6c74bbb16b8edcebc6977))
+* **website:** Some color fixes. ([cda004a](https://github.com/lowdefy/lowdefy/commit/cda004aee4aea54aea051a7230ee25f2b9752c7a))
+* **website:** Update typography and hero. ([9845121](https://github.com/lowdefy/lowdefy/commit/98451212196ee8fa4679bf1d29f748d2f1ee6a2f))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 

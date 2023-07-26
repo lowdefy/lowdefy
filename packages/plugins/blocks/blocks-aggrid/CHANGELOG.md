@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Features
+
+* **blocks-aggrid:** Update AgGrid to v29.3.5. ([8c6898a](https://github.com/lowdefy/lowdefy/commit/8c6898a6c57d458af2183a03a4b84bb710abfac7))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package @lowdefy/blocks-aggrid
