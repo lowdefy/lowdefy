@@ -18,6 +18,8 @@ license: Apache-2.0
 
 cli:
   disableTelemetry: true
+config:
+  homePageId: home
 app:
   html:
     appendHead:

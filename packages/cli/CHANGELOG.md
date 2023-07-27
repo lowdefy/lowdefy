@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency semver to v7.5.2 [security] ([6326c77](https://github.com/lowdefy/lowdefy/commit/6326c77890d8262d828847b52abd097bd0f39980))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package lowdefy

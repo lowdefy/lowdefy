@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
+
+
+### Bug Fixes
+
+* **blocks-echarts:** Fix echarts-for-react missing tslib dependency. ([3b119d0](https://github.com/lowdefy/lowdefy/commit/3b119d01741df40996cf1144c618da23d4eb7898))
+* **deps:** update dependency echarts to v5.4.3 ([7595527](https://github.com/lowdefy/lowdefy/commit/75955279d704015a07d4b2a56b74247fbb30870c))
+
+
+
+
+
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package @lowdefy/blocks-echarts
