@@ -154,6 +154,7 @@
 - _ref: connections/Stripe.yaml
 
 - _ref: actions/CallMethod.yaml
+- _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
 - _ref: actions/Fetch.yaml

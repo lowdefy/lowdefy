@@ -626,6 +626,9 @@
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod
+        - id: CopyToClipboard
+          type: MenuLink
+          pageId: CopyToClipboard
         - id: DisplayMessage
           type: MenuLink
           pageId: DisplayMessage
