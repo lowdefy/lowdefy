@@ -21,11 +21,11 @@ _ref:
     types: |
       ```
       (params: {
-        copy: string,
+        copy: string
       }): void
       ```
     description: |
-      The `CopyToClipboard` action is used to copy content to the clipboard, based on [`Clipboard`](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText).
+      The `CopyToClipboard` action is used to copy content to the clipboard. It implements the [`navigator.clipboard.writeText`](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText) web API.
     params: |
       ###### object
         - `copy: string`: __Required__ - Text to be copied to the clipboard.
