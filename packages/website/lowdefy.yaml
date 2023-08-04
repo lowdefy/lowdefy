@@ -26,9 +26,6 @@ app:
   html:
     appendHead:
       _ref: src/head.html
-plugins:
-  - name: '@lowdefy/website'
-    version: 'workspace:*'
 connections:
   - id: discord
     type: AxiosHttp
