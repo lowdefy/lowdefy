@@ -14,4 +14,10 @@
   limitations under the License.
 */
 
-export { default as CopyToClipboard } from './actions/CopyToClipboard.js';
+async function CopyToClipboard({ globals, params }) {
+  const { window } = globals;
+  const { copy } = params;
+  window.navigator.clipboard.writeText(copy);
+}
+
+export default CopyToClipboard;

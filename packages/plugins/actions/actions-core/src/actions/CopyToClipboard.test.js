@@ -14,9 +14,23 @@
   limitations under the License.
 */
 
-async function CopyToClipboard({ params }) {
-  const { copy } = params;
-  navigator.clipboard.writeText(copy);
-}
+import { jest } from '@jest/globals';
+import CopyToClipboard from './CopyToClipboard.js';
 
-export default CopyToClipboard;
+const mockWriteText = jest.fn();
+
+const window = {
+  navigator: {
+    clipboard: { writeText: mockWriteText },
+  },
+};
+
+const globals = { window };
+
+test('CopyToClipboard mock test', async () => {
+  CopyToClipboard({
+    globals,
+    params: { copy: 'Copy content.' },
+  });
+  expect(mockWriteText.mock.calls).toEqual([['Copy content.']]);
+});
