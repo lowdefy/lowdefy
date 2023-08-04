@@ -61,6 +61,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
       types = (await import(`${plugin.name}/types`)).default;
     } catch (e) {
       logger.error(`Failed to import plugin "${plugin.name}".`);
+      logger.debug(e);
       logger.info('If the plugin was added while the server was running, restart the server.');
       throw new Error(`Failed to import plugin "${plugin.name}".`);
     }

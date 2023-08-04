@@ -18,6 +18,8 @@ license: Apache-2.0
 
 cli:
   disableTelemetry: true
+  watchIgnore:
+    - public/sitemap.xml
 config:
   homePageId: home
 app:

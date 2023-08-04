@@ -24,6 +24,7 @@ const defaultPackages = [
   '@lowdefy/actions-core',
   '@lowdefy/actions-pdf-make',
   '@lowdefy/blocks-aggrid',
+  '@lowdefy/blocks-algolia',
   '@lowdefy/blocks-antd',
   '@lowdefy/blocks-basic',
   '@lowdefy/blocks-color-selectors',
