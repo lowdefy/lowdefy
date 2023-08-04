@@ -386,6 +386,9 @@
         - id: Divider
           type: MenuLink
           pageId: Divider
+        - id: DocSearch
+          type: MenuLink
+          pageId: DocSearch
         - id: EChart
           type: MenuLink
           pageId: EChart
