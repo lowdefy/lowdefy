@@ -32,10 +32,8 @@
   },
   "type": "module",
   "exports": {
-    "./actions": "./dist/actions.js",
     "./blocks": "./dist/blocks.js",
-    "./operators/client": "./dist/operatorsClient.js",
-    "./types": "./dist/types.js"
+    "./operators/client": "./dist/operatorsClient.js"
   },
   "files": [
     "dist/*"
