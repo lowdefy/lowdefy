@@ -41,6 +41,17 @@ const DateTimeSelector = ({
     : properties.timeFormat === 'HH'
     ? 'hour'
     : 'minute';
+  const onChange = (newVal) => {
+    methods.setValue(
+      !newVal
+        ? null
+        : moment
+            .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
+            .startOf(timeUnit)
+            .toDate()
+    );
+    methods.triggerEvent({ name: 'onChange' });
+  };
   return (
     <Label
       blockId={blockId}
@@ -81,19 +92,12 @@ const DateTimeSelector = ({
                 minuteStep: properties.minuteStep || 5,
                 secondStep: properties.secondStep || 30,
               }}
-              onSelect={(newVal) => {
+              onChange={onChange}
+              onSelect={
                 // NOTE: we use on select instead of onChange to make the block UX
                 // more like the DataSelector which changes date on click and not on ok.
-                methods.setValue(
-                  !newVal
-                    ? null
-                    : moment
-                        .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
-                        .startOf(timeUnit)
-                        .toDate()
-                );
-                methods.triggerEvent({ name: 'onChange' });
-              }}
+                onChange
+              }
               value={
                 !type.isDate(value)
                   ? null
