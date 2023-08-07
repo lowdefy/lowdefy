@@ -15,6 +15,7 @@
 */
 
 export { default as CallMethod } from './actions/CallMethod.js';
+export { default as CopyToClipboard } from './actions/CopyToClipboard.js';
 export { default as Link } from './actions/Link.js';
 export { default as Login } from './actions/Login.js';
 export { default as Logout } from './actions/Logout.js';

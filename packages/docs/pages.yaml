@@ -82,6 +82,7 @@
 - _ref: blocks/display/DangerousHtml.yaml
 - _ref: blocks/display/DangerousMarkdown.yaml
 - _ref: blocks/display/Divider.yaml
+- _ref: blocks/display/DocSearch.yaml
 - _ref: blocks/display/EChart.yaml
 - _ref: blocks/display/Html.yaml
 - _ref: blocks/display/Icon.yaml
@@ -153,6 +154,7 @@
 - _ref: connections/Stripe.yaml
 
 - _ref: actions/CallMethod.yaml
+- _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
 - _ref: actions/DownloadCsv.yaml
 - _ref: actions/Fetch.yaml

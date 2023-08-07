@@ -31,12 +31,6 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "exports": {
-    "./actions": "./dist/actions.js",
-    "./blocks": "./dist/blocks.js",
-    "./operators/client": "./dist/operatorsClient.js",
-    "./types": "./dist/types.js"
-  },
   "files": [
     "dist/*"
   ],

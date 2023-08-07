@@ -1,3 +1,4 @@
+/* eslint-disable import/namespace */
 /*
   Copyright 2020-2023 Lowdefy, Inc
 
@@ -14,4 +15,16 @@
   limitations under the License.
 */
 
-export { default as CopyToClipboard } from './actions/CopyToClipboard.js';
+import * as blocks from './blocks.js';
+
+const icons = {};
+const styles = {};
+Object.keys(blocks).forEach((block) => {
+  icons[block] = blocks[block].meta.icons || [];
+  styles[block] = blocks[block].meta.styles || [];
+});
+export default {
+  blocks: Object.keys(blocks),
+  icons,
+  styles: { default: [], ...styles },
+};

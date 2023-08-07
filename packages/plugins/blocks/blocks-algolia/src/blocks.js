@@ -14,9 +14,4 @@
   limitations under the License.
 */
 
-async function CopyToClipboard({ params }) {
-  const { copy } = params;
-  navigator.clipboard.writeText(copy);
-}
-
-export default CopyToClipboard;
+export { default as DocSearch } from './blocks/DocSearch/DocSearch.js';
