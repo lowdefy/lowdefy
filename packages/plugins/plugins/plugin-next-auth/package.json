@@ -40,7 +40,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "next": "12.3.4",
+    "next": "13.4.19",
     "next-auth": "4.20.1"
   },
   "devDependencies": {

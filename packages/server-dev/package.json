@@ -44,6 +44,7 @@
   "dependencies": {
     "@lowdefy/actions-core": "4.0.0-rc.10",
     "@lowdefy/api": "4.0.0-rc.10",
+    "@lowdefy/blocks-aggrid": "4.0.0-rc.10",
     "@lowdefy/blocks-antd": "4.0.0-rc.10",
     "@lowdefy/blocks-basic": "4.0.0-rc.10",
     "@lowdefy/blocks-color-selectors": "4.0.0-rc.10",
@@ -54,6 +55,7 @@
     "@lowdefy/build": "4.0.0-rc.10",
     "@lowdefy/client": "4.0.0-rc.10",
     "@lowdefy/connection-axios-http": "4.0.0-rc.10",
+    "@lowdefy/connection-mongodb": "4.0.0-rc.10",
     "@lowdefy/engine": "4.0.0-rc.10",
     "@lowdefy/helpers": "4.0.0-rc.10",
     "@lowdefy/layout": "4.0.0-rc.10",
@@ -68,7 +70,7 @@
     "@lowdefy/plugin-next-auth": "4.0.0-rc.10",
     "chokidar": "3.5.3",
     "dotenv": "16.0.3",
-    "next": "12.3.4",
+    "next": "13.4.19",
     "next-auth": "4.20.1",
     "opener": "1.5.2",
     "pino": "8.8.0",
@@ -82,9 +84,9 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "12.3.4",
-    "less": "4.1.3",
-    "less-loader": "11.1.0",
-    "next-with-less": "2.0.5",
+    "less": "4.2.0",
+    "less-loader": "11.1.3",
+    "next-with-less": "3.0.1",
     "webpack": "5.88.2"
   },
   "packageManager": "pnpm@7.11.0",

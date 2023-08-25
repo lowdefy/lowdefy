@@ -86,19 +86,21 @@ const createLinkComponent = (lowdefy, Link) => {
       );
     }
     return (
-      <Link href={{ pathname, query }} replace={replace} scroll={scroll}>
-        <a
-          id={id}
-          aria-label={ariaLabel}
-          className={className}
-          rel={rel}
-          onClick={(...params) => {
-            setInput();
-            onClick(...params);
-          }}
-        >
-          {type.isFunction(children) ? children(pageId || url || id) : children}
-        </a>
+      // This code can be made simpler.
+      <Link
+        href={{ pathname, query }}
+        replace={replace}
+        scroll={scroll}
+        id={id}
+        aria-label={ariaLabel}
+        className={className}
+        rel={rel}
+        onClick={(...params) => {
+          setInput();
+          onClick(...params);
+        }}
+      >
+        {type.isFunction(children) ? children(pageId || url || id) : children}
       </Link>
     );
   };
