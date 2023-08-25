@@ -47,12 +47,10 @@
   "dependencies": {
     "@lowdefy/actions-core": "4.0.0-rc.10",
     "@lowdefy/api": "4.0.0-rc.10",
-    "@lowdefy/blocks-aggrid": "4.0.0-rc.10",
     "@lowdefy/blocks-antd": "4.0.0-rc.10",
     "@lowdefy/blocks-basic": "4.0.0-rc.10",
     "@lowdefy/blocks-loaders": "4.0.0-rc.10",
     "@lowdefy/client": "4.0.0-rc.10",
-    "@lowdefy/connection-mongodb": "4.0.0-rc.10",
     "@lowdefy/helpers": "4.0.0-rc.10",
     "@lowdefy/layout": "4.0.0-rc.10",
     "@lowdefy/node-utils": "4.0.0-rc.10",
