@@ -1276,13 +1276,11 @@ importers:
     specifiers:
       '@lowdefy/actions-core': 4.0.0-rc.10
       '@lowdefy/api': 4.0.0-rc.10
-      '@lowdefy/blocks-aggrid': 4.0.0-rc.10
       '@lowdefy/blocks-antd': 4.0.0-rc.10
       '@lowdefy/blocks-basic': 4.0.0-rc.10
       '@lowdefy/blocks-loaders': 4.0.0-rc.10
       '@lowdefy/build': 4.0.0-rc.10
       '@lowdefy/client': 4.0.0-rc.10
-      '@lowdefy/connection-mongodb': 4.0.0-rc.10
       '@lowdefy/helpers': 4.0.0-rc.10
       '@lowdefy/layout': 4.0.0-rc.10
       '@lowdefy/node-utils': 4.0.0-rc.10
@@ -1305,12 +1303,10 @@ importers:
     dependencies:
       '@lowdefy/actions-core': link:../plugins/actions/actions-core
       '@lowdefy/api': link:../api
-      '@lowdefy/blocks-aggrid': link:../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-antd': link:../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic': link:../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders': link:../plugins/blocks/blocks-loaders
       '@lowdefy/client': link:../client
-      '@lowdefy/connection-mongodb': link:../plugins/connections/connection-mongodb
       '@lowdefy/helpers': link:../utils/helpers
       '@lowdefy/layout': link:../layout
       '@lowdefy/node-utils': link:../utils/node-utils
