@@ -56,7 +56,7 @@
     "@lowdefy/node-utils": "4.0.0-rc.10",
     "@lowdefy/operators-js": "4.0.0-rc.10",
     "@lowdefy/plugin-next-auth": "4.0.0-rc.10",
-    "next": "12.3.4",
+    "next": "13.4.19",
     "next-auth": "4.20.1",
     "pino": "8.8.0",
     "process": "0.11.10",
@@ -67,9 +67,9 @@
   "devDependencies": {
     "@lowdefy/build": "4.0.0-rc.10",
     "@next/eslint-plugin-next": "12.3.4",
-    "less": "4.1.3",
-    "less-loader": "11.1.0",
-    "next-with-less": "2.0.5",
+    "less": "4.2.0",
+    "less-loader": "11.1.3",
+    "next-with-less": "3.0.1",
     "webpack": "5.88.2",
     "yaml": "2.2.2",
     "yargs": "17.7.2"
