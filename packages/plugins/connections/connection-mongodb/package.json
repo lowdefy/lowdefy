@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.10",
     "@next-auth/mongodb-adapter": "1.1.1",
-    "mongodb": "4.13.0",
+    "mongodb": "4.17.0",
     "saslprep": "1.0.3"
   },
   "devDependencies": {
