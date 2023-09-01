@@ -37,7 +37,7 @@ _ref:
           path: templates/cli_command.yaml.njk
           vars:
             id: quickstart
-            command: 'pnpx rc init && pnpx lowdefy@rc dev'
+            command: 'pnpx lowdefy@rc init && pnpx lowdefy@rc dev'
 
       - id: body_features
         type: Markdown
@@ -66,8 +66,6 @@ _ref:
             Lowdefy is an open-source Apache-2 licensed project, free from vendor lock-in. We hope to see many community open-source Lowdefy apps and plugins in the future and actively nurture the Lowdefy community on [Github](https://github.com/lowdefy/lowdefy/discussions) and [Discord](https://discord.gg/QQY9eJ7A2D) to help other developers to get started with Lowdefy and grow the ecosystem.
 
             To date, more than 20 000 apps have been built using Lowdefy.
-
-            In the future, we plan to build optional "nice-to-have" services best suited for Lowdefy apps to further enriching the Lowdefy ecosystem.
 
             Currently, we also provide Custom Software as a Service for larger customers, as well as support plans for those who need some extra help.
 
