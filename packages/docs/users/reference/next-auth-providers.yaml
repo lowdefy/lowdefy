@@ -104,16 +104,17 @@ _ref:
 
                 ```yaml
                 lowdefy: {{ version }}
-                providers:
-                  - id: auth0
-                    type: Auth0Provider
-                    properties:
-                      clientId:
-                        _secret: AUTH0_CLIENT_ID
-                      clientSecret:
-                        _secret: AUTH0_CLIENT_SECRET
-                      issuer:
-                        _secret: AUTH0_ISSUER
+                auth:
+                  providers:
+                    - id: auth0
+                      type: Auth0Provider
+                      properties:
+                        clientId:
+                          _secret: AUTH0_CLIENT_ID
+                        clientSecret:
+                          _secret: AUTH0_CLIENT_SECRET
+                        issuer:
+                          _secret: AUTH0_ISSUER
                 ```
 
                 In Auth0, the callback URL should be configured to `https://example.com/api/auth/callback/auth0` for production and `http://localhost:3000/api/auth/callback/auth0` for development.
@@ -122,12 +123,13 @@ _ref:
 
                 ```yaml
                 lowdefy: {{ version }}
-                providers:
-                  - id: github
-                    type: GitHubProvider
-                    properties:
-                      clientId:
-                        _secret: GITHUB_CLIENT_ID
-                      clientSecret:
-                        _secret: GITHUB_CLIENT_SECRET
+                auth:
+                  providers:
+                    - id: github
+                      type: GitHubProvider
+                      properties:
+                        clientId:
+                          _secret: GITHUB_CLIENT_ID
+                        clientSecret:
+                          _secret: GITHUB_CLIENT_SECRET
                 ```
