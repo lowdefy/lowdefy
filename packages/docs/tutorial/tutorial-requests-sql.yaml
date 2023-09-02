@@ -187,9 +187,9 @@ _ref:
                             - id: validate
                               type: Validate
                             ################ -------- Copy from here -------- ################
-                            - id: save_data # Make a request to the SQLite database
+                            - id: save_new_ticket # Make a request to the SQLite database
                               type: Request
-                              params: save_data
+                              params: save_new_ticket
                             - id: reset # Reset the form once data has been submitted
                               type: Reset
                             ################ ------- Copy to here ----------- ################
