@@ -77,7 +77,7 @@ _ref:
 
                 ##### `.env`
                 ```
-                LOWDEFY_SECRET_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
+                LOWDEFY_SECRET_SQLITE_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
                 ```
 
                 #### 5.2.3. Setting the connection environment variable secrets
