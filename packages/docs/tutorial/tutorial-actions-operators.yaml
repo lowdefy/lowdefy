@@ -406,7 +406,7 @@ _ref:
 
             ## Up next
 
-            Our app doesn't save the form data anywhere when the submit button is clicked. In the next section we will set up a Google Sheets connection, and make a request to save the data in the sheet.
+            Our app doesn't save the form data anywhere when the submit button is clicked. In the next section we will set up a connection and a request to save the data in a local SQLite database.
 
       - _ref:
           path: templates/navigation_buttons.yaml

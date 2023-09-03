@@ -77,7 +77,7 @@ _ref:
 
                 ##### `.env`
                 ```
-                LOWDEFY_SECRET_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
+                LOWDEFY_SECRET_SQLITE_FILENAME= __ABSOLUTE_PATH_TO_SQLITE_DB_FILE__
                 ```
 
                 #### 5.2.3. Setting the connection environment variable secrets
@@ -187,9 +187,9 @@ _ref:
                             - id: validate
                               type: Validate
                             ################ -------- Copy from here -------- ################
-                            - id: save_data # Make a request to the SQLite database
+                            - id: save_new_ticket # Make a request to the SQLite database
                               type: Request
-                              params: save_data
+                              params: save_new_ticket
                             - id: reset # Reset the form once data has been submitted
                               type: Reset
                             ################ ------- Copy to here ----------- ################
