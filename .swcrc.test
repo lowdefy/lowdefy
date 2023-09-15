@@ -11,8 +11,6 @@
   },
   "module": {
     "type": "es6",
-    "noInterop": true,
-    "ignoreDynamic": true
   },
   "sourceMaps": true
 }
