@@ -30,8 +30,8 @@ function transformer(pages) {
     <url>
       <loc>https://docs.lowdefy.com/${page.id}</loc>
       <lastmod>${now.getFullYear()}-${now.getMonth() > 8 ? '' : 0}${now.getMonth() + 1}-${
-      now.getDate() > 9 ? '' : 0
-    }${now.getDate()}</lastmod>
+        now.getDate() > 9 ? '' : 0
+      }${now.getDate()}</lastmod>
     </url>
 `);
   };
