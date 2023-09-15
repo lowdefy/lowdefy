@@ -56,6 +56,7 @@ import okta from 'next-auth/providers/okta';
 import onelogin from 'next-auth/providers/onelogin';
 import osso from 'next-auth/providers/osso';
 import osu from 'next-auth/providers/osu';
+import passage from 'next-auth/providers/passage';
 import patreon from 'next-auth/providers/patreon';
 import pinterest from 'next-auth/providers/pinterest';
 import pipedrive from 'next-auth/providers/pipedrive';
@@ -118,6 +119,7 @@ const OktaProvider = okta.default;
 const OneLoginProvider = onelogin.default;
 const OssoProvider = osso.default;
 const OsuProvider = osu.default;
+const PassageProvider = passage.default;
 const PatreonProvider = patreon.default;
 const PinterestProvider = pinterest.default;
 const PipedriveProvider = pipedrive.default;
@@ -181,6 +183,7 @@ export {
   OpenIDConnectProvider,
   OssoProvider,
   OsuProvider,
+  PassageProvider,
   PatreonProvider,
   PinterestProvider,
   PipedriveProvider,
