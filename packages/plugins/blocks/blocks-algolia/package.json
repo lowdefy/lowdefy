@@ -45,7 +45,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@docsearch/react": "3.5.1",
+    "@docsearch/react": "3.5.2",
     "@lowdefy/block-utils": "4.0.0-rc.10",
     "react": "18.2.0",
     "react-dom": "18.2.0"

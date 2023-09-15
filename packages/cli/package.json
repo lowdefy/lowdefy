@@ -47,8 +47,8 @@
     "decompress-targz": "4.1.1",
     "dotenv": "16.0.3",
     "ora": "6.1.2",
-    "semver": "7.5.2",
-    "uuid": "9.0.0",
+    "semver": "7.5.4",
+    "uuid": "9.0.1",
     "yaml": "2.3.2"
   },
   "devDependencies": {
