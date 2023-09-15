@@ -45,7 +45,7 @@
     "commander": "9.4.1",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
-    "dotenv": "16.0.3",
+    "dotenv": "16.3.1",
     "ora": "6.1.2",
     "semver": "7.5.4",
     "uuid": "9.0.1",

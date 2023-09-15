@@ -242,8 +242,8 @@ importers:
         specifier: 4.1.1
         version: 4.1.1
       dotenv:
-        specifier: 16.0.3
-        version: 16.0.3
+        specifier: 16.3.1
+        version: 16.3.1
       ora:
         specifier: 6.1.2
         version: 6.1.2
@@ -1929,8 +1929,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       dotenv:
-        specifier: 16.0.3
-        version: 16.0.3
+        specifier: 16.3.1
+        version: 16.3.1
       next:
         specifier: 13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
@@ -8491,8 +8491,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /dotenv@16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+  /dotenv@16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
     dev: false
 
