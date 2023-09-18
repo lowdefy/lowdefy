@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.10",
-    "knex": "2.4.2",
+    "knex": "2.5.1",
     "mssql": "9.0.1",
     "mysql": "2.18.1",
     "pg": "8.11.3",
