@@ -1245,7 +1245,7 @@ importers:
         version: link:../../../utils/helpers
       knex:
         specifier: 2.4.2
-        version: 2.4.2(mysql@2.18.1)(pg@8.8.0)(sqlite3@5.1.6)
+        version: 2.4.2(mysql@2.18.1)(pg@8.11.3)(sqlite3@5.1.6)
       mssql:
         specifier: 9.0.1
         version: 9.0.1
@@ -1253,8 +1253,8 @@ importers:
         specifier: 2.18.1
         version: 2.18.1
       pg:
-        specifier: 8.8.0
-        version: 8.8.0
+        specifier: 8.11.3
+        version: 8.11.3
       sqlite3:
         specifier: 5.1.6
         version: 5.1.6
@@ -11524,7 +11524,7 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /knex@2.4.2(mysql@2.18.1)(pg@8.8.0)(sqlite3@5.1.6):
+  /knex@2.4.2(mysql@2.18.1)(pg@8.11.3)(sqlite3@5.1.6):
     resolution: {integrity: sha512-tMI1M7a+xwHhPxjbl/H9K1kHX+VncEYcvCx5K00M16bWvpYPKAZd6QrCu68PtHAdIZNQPWZn0GVhqVBEthGWCg==}
     engines: {node: '>=12'}
     hasBin: true
@@ -11562,7 +11562,7 @@ packages:
       interpret: 2.2.0
       lodash: 4.17.21
       mysql: 2.18.1
-      pg: 8.8.0
+      pg: 8.11.3
       pg-connection-string: 2.5.0
       rechoir: 0.8.0
       resolve-from: 5.0.0
@@ -13936,6 +13936,12 @@ packages:
   /pend@1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
 
+  /pg-cloudflare@1.1.1:
+    resolution: {integrity: sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /pg-connection-string@2.5.0:
     resolution: {integrity: sha512-r5o/V/ORTA6TmUnyWZR9nCj1klXCO2CEKNRlVuJptZe85QuhFayC7WeMic7ndayT5IRIR0S0xFxFi2ousartlQ==}
     dev: false
@@ -13949,12 +13955,12 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: false
 
-  /pg-pool@3.6.1(pg@8.8.0):
+  /pg-pool@3.6.1(pg@8.11.3):
     resolution: {integrity: sha512-jizsIzhkIitxCGfPRzJn1ZdcosIt3pz9Sh3V01fm1vZnbnCMgmGl5wvGGdNN2EL9Rmb0EcFoCkixH4Pu+sP9Og==}
     peerDependencies:
       pg: '>=8.0'
     dependencies:
-      pg: 8.8.0
+      pg: 8.11.3
     dev: false
 
   /pg-protocol@1.6.0:
@@ -13972,8 +13978,8 @@ packages:
       postgres-interval: 1.2.0
     dev: false
 
-  /pg@8.8.0:
-    resolution: {integrity: sha512-UXYN0ziKj+AeNNP7VDMwrehpACThH7LUl/p8TDFpEUuSejCUIwGSfxpHsPvtM6/WXFy6SU4E5RG4IJV/TZAGjw==}
+  /pg@8.11.3:
+    resolution: {integrity: sha512-+9iuvG8QfaaUrrph+kpF24cXkH1YOOUeArRNYIxq1viYHZagBxrTno7cecY1Fa44tJeZvaoG+Djpkc3JwehN5g==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
       pg-native: '>=3.0.1'
@@ -13984,10 +13990,12 @@ packages:
       buffer-writer: 2.0.0
       packet-reader: 1.0.0
       pg-connection-string: 2.6.2
-      pg-pool: 3.6.1(pg@8.8.0)
+      pg-pool: 3.6.1(pg@8.11.3)
       pg-protocol: 1.6.0
       pg-types: 2.2.0
       pgpass: 1.0.5
+    optionalDependencies:
+      pg-cloudflare: 1.1.1
     dev: false
 
   /pgpass@1.0.5:
