@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/block-utils": "4.0.0-rc.10",
-    "@react-google-maps/api": "2.17.1",
+    "@react-google-maps/api": "2.19.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
