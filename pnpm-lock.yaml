@@ -1102,8 +1102,8 @@ importers:
         specifier: 4.0.0-rc.10
         version: link:../../../utils/block-utils
       html5-qrcode:
-        specifier: 2.2.1
-        version: 2.2.1
+        specifier: 2.3.8
+        version: 2.3.8
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -10190,8 +10190,8 @@ packages:
     resolution: {integrity: sha512-0quDb7s97CfemeJAnW9wC0hw78MtW7NU3hqtCD75g2vFlDLt36llsYD7uB7SUzojLMP24N5IatXf7ylGXiGG9A==}
     dev: false
 
-  /html5-qrcode@2.2.1:
-    resolution: {integrity: sha512-itYnSlSxC3gNRe825mUkKaMzlmevLc4hpH2XLlhCdiEYIE3aMdQUr1XjQ9/zk7NuRMcYRerlbCaMKM+Z66KpSg==}
+  /html5-qrcode@2.3.8:
+    resolution: {integrity: sha512-jsr4vafJhwoLVEDW3n1KvPnCCXWaQfRng0/EEYk1vNcQGcG/htAdhJX0be8YyqMoSz7+hZvOZSTAepsabiuhiQ==}
     dev: false
 
   /htmlparser2@3.10.1:
