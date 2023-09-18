@@ -42,7 +42,7 @@
     "@lowdefy/helpers": "4.0.0-rc.10",
     "@lowdefy/node-utils": "4.0.0-rc.10",
     "axios": "1.5.0",
-    "commander": "9.4.1",
+    "commander": "11.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
     "dotenv": "16.3.1",
