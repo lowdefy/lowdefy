@@ -1179,8 +1179,8 @@ importers:
   packages/plugins/connections/connection-elasticsearch:
     dependencies:
       '@elastic/elasticsearch':
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.17.12
+        version: 7.17.12
       '@lowdefy/helpers':
         specifier: 4.0.0-rc.10
         version: link:../../../utils/helpers
@@ -3524,8 +3524,8 @@ packages:
       - '@algolia/client-search'
     dev: false
 
-  /@elastic/elasticsearch@7.16.0:
-    resolution: {integrity: sha512-lMY2MFZZFG3om7QNHninxZZOXYx3NdIUwEISZxqaI9dXPoL3DNhU31keqjvx1gN6T74lGXAzrRNP4ag8CJ/VXw==}
+  /@elastic/elasticsearch@7.17.12:
+    resolution: {integrity: sha512-iypJDSzlnA1dXcw6H77qy0pH1Et8Nrw/TA6UHA7ECjKwZ9iBxZKS3WgOX0KgtL6GWdmTQWhGEha7k+ELVHygjQ==}
     engines: {node: '>=12'}
     dependencies:
       debug: 4.3.4
