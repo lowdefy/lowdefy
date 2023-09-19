@@ -19,41 +19,47 @@ import { Statistic } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
-const StatisticBlock = ({ blockId, components: { Icon }, events, properties, methods }) => (
-  <Statistic
-    className={methods.makeCssClass(properties.style)}
-    decimalSeparator={properties.decimalSeparator}
-    groupSeparator={properties.groupSeparator}
-    id={blockId}
-    loading={properties.loading}
-    precision={properties.precision}
-    title={renderHtml({ html: properties.title, methods })}
-    value={type.isNone(properties.value) ? '' : properties.value}
-    valueStyle={methods.makeCssClass(properties.valueStyle, true)}
-    prefix={
-      properties.prefixIcon ? (
-        <Icon
-          blockId={`${blockId}_prefixIcon`}
-          events={events}
-          properties={properties.prefixIcon}
-        />
-      ) : (
-        properties.prefix || ''
-      )
-    }
-    suffix={
-      properties.suffixIcon ? (
-        <Icon
-          blockId={`${blockId}_suffixIcon`}
-          events={events}
-          properties={properties.suffixIcon}
-        />
-      ) : (
-        properties.suffix || ''
-      )
-    }
-  />
-);
+const StatisticBlock = ({ blockId, components: { Icon }, events, properties, methods }) => {
+  const additionalProps = {};
+  if (properties.decimalSeparator) {
+    additionalProps.decimalSeparator = properties.decimalSeparator;
+  }
+  return (
+    <Statistic
+      className={methods.makeCssClass(properties.style)}
+      groupSeparator={properties.groupSeparator}
+      id={blockId}
+      loading={properties.loading}
+      precision={properties.precision}
+      title={renderHtml({ html: properties.title, methods })}
+      value={type.isNone(properties.value) ? '' : properties.value}
+      valueStyle={methods.makeCssClass(properties.valueStyle, true)}
+      prefix={
+        properties.prefixIcon ? (
+          <Icon
+            blockId={`${blockId}_prefixIcon`}
+            events={events}
+            properties={properties.prefixIcon}
+          />
+        ) : (
+          properties.prefix || ''
+        )
+      }
+      suffix={
+        properties.suffixIcon ? (
+          <Icon
+            blockId={`${blockId}_suffixIcon`}
+            events={events}
+            properties={properties.suffixIcon}
+          />
+        ) : (
+          properties.suffix || ''
+        )
+      }
+      {...additionalProps}
+    />
+  );
+};
 
 StatisticBlock.defaultProps = blockDefaultProps;
 StatisticBlock.meta = {
