@@ -31,6 +31,7 @@ const iconPackages = {
   'react-icons/im': /"(Im[A-Z0-9]\w*)"/gm,
   'react-icons/io': /"(IoIos[A-Z0-9]\w*)"/gm,
   'react-icons/io5': /"(Io[A-Z0-9]\w*)"/gm,
+  'react-icons/lu': /"(Lu[A-Z0-9]\w*)"/gm,
   'react-icons/md': /"(Md[A-Z0-9]\w*)"/gm,
   'react-icons/ri': /"(Ri[A-Z0-9]\w*)"/gm,
   'react-icons/rx': /"(Rx[A-Z0-9]\w*)"/gm,

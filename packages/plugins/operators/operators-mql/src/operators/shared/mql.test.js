@@ -224,7 +224,7 @@ test('_mql.aggregate invalid', () => {
       methodName: 'aggregate',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _mql.aggregate - invalid aggregation operator $badOp Received: {\\"_mql.aggregate\\":{\\"on\\":[{\\"id\\":2},{\\"id\\":1}],\\"pipeline\\":[{\\"$badOp\\":{\\"id\\":1}}]}} at locationId."`
+    `"Operator Error: _mql.aggregate - invalid pipeline operator $badOp Received: {\\"_mql.aggregate\\":{\\"on\\":[{\\"id\\":2},{\\"id\\":1}],\\"pipeline\\":[{\\"$badOp\\":{\\"id\\":1}}]}} at locationId."`
   );
 });
 

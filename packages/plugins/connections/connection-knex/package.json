@@ -42,18 +42,18 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.10",
-    "knex": "2.4.2",
-    "mssql": "9.0.1",
+    "knex": "2.5.1",
+    "mssql": "10.0.1",
     "mysql": "2.18.1",
-    "pg": "8.8.0",
-    "sqlite3": "5.1.5"
+    "pg": "8.11.3",
+    "sqlite3": "5.1.6"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
     "@lowdefy/ajv": "4.0.0-rc.10",
     "@swc/cli": "0.1.62",
-    "@swc/core": "1.3.70",
-    "@swc/jest": "0.2.27",
+    "@swc/core": "1.3.85",
+    "@swc/jest": "0.2.29",
     "jest": "28.1.3"
   },
   "publishConfig": {

@@ -76,6 +76,7 @@ _ref:
                 - [OneLoginProvider](https://next-auth.js.org/providers/onelogin)
                 - [OssoProvider](https://next-auth.js.org/providers/osso)
                 - [OsuProvider](https://next-auth.js.org/providers/osu)
+                - [PassageProvider](https://authjs.dev/reference/core/providers_passage)
                 - [PatreonProvider](https://next-auth.js.org/providers/patreon)
                 - [PinterestProvider](https://next-auth.js.org/providers/pinterest)
                 - [PipedriveProvider](https://next-auth.js.org/providers/pipedrive)
