@@ -8,3 +8,4 @@ blocks:
   - _ref: pages/pricing/sections/tiers.yaml
   - _ref: pages/pricing/sections/trusted_by.yaml
   - _ref: pages/pricing/sections/pricing_calculator.yaml
+  - _ref: pages/pricing/sections/compare_features.yaml
