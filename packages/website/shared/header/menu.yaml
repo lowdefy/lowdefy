@@ -33,3 +33,8 @@ properties:
         icon:
           name: AiOutlineHeart
           color: '#E81E63'
+    - id: pricing
+      type: MenuLink
+      properties:
+        title: Pricing
+      pageId: pricing

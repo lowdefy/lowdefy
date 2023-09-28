@@ -1,0 +1,6 @@
+id: pricing
+type: Box
+properties:
+  title: Lowdefy - Pricing
+blocks:
+  - _ref: shared/header/header.yaml
