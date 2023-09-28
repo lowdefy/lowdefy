@@ -6,3 +6,4 @@ blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/pricing/sections/pay_for_what_you_use.yaml
   - _ref: pages/pricing/sections/tiers.yaml
+  - _ref: pages/pricing/sections/trusted_by.yaml

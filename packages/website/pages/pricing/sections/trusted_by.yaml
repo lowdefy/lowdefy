@@ -1,0 +1,15 @@
+id: trusted_by_box
+type: Box
+style:
+  margin: 60px auto
+blocks:
+  - id: customers
+    type: Html
+    style:
+      textAlign: center
+      padding: 8px
+    properties:
+      html: |
+        <p style="color:#D3D3D3;">Customers that trust Lowdefy to power their business apps</p>
+
+  - _ref: shared/customers_marquee.yaml
