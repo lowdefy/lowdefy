@@ -29,14 +29,14 @@ export default {
     },
     databaseName: {
       type: 'string',
-      description: 'AWS IAM secret access key with s3 access.',
+      description: 'Database name.',
       errorMessage: {
         type: 'MongoDBCollection connection property "databaseName" should be a string.',
       },
     },
     collection: {
       type: 'string',
-      description: 'AWS region the bucket is located in.',
+      description: 'Collection name.',
       errorMessage: {
         type: 'MongoDBCollection connection property "collection" should be a string.',
       },
