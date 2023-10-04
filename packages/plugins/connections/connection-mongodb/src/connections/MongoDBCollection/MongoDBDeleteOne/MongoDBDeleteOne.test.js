@@ -16,7 +16,6 @@
 
 import { validate } from '@lowdefy/ajv';
 import MongoDBDeleteOne from './MongoDBDeleteOne.js';
-import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBDeleteOne.meta;
@@ -25,7 +24,6 @@ const schema = MongoDBDeleteOne.schema;
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'deleteOne';
-const logCollection = 'logCollection';
 const documents = [{ _id: 'deleteOne' }, { _id: 'deleteOne_log' }];
 
 beforeAll(() => {
@@ -46,46 +44,6 @@ test('deleteOne', async () => {
   expect(res).toEqual({
     acknowledged: true,
     deletedCount: 1,
-  });
-});
-
-test('deleteOne logCollection', async () => {
-  const request = {
-    filter: { _id: 'deleteOne_log' },
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    changeLog: { collection: logCollection, meta: { meta: true } },
-    write: true,
-  };
-  const res = await MongoDBDeleteOne({
-    request,
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'deleteOne_log',
-    connection,
-  });
-  expect(res).toEqual({
-    lastErrorObject: {
-      n: 1,
-    },
-    ok: 1,
-  });
-  const logged = await findLogCollectionRecordTestMongoDb({
-    logCollection,
-    requestId: 'deleteOne_log',
-  });
-  expect(logged).toMatchObject({
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'deleteOne_log',
-    before: { _id: 'deleteOne_log' },
-    type: 'MongoDBDeleteOne',
-    meta: { meta: true },
   });
 });
 
