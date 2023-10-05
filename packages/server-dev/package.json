@@ -87,6 +87,9 @@
     "next-with-less": "3.0.1",
     "webpack": "5.88.2"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "publishConfig": {
     "access": "public"
   }

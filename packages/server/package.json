@@ -74,6 +74,9 @@
     "yaml": "2.3.2",
     "yargs": "17.7.2"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "publishConfig": {
     "access": "public"
   }
