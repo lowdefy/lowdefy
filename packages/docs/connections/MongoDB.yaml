@@ -67,9 +67,6 @@ _ref:
             - `read: boolean`: Default: `true` - Allow read operations like find on the collection.
             - `write: boolean`: Default: `false` - Allow write operations like update on the collection.
             - `options: object`: See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/interfaces/mongoclientoptions.html) for more information.
-            - `logCollection: object`: Optional log collection for logging changes.
-              - `collection: string`: __Required__ - The name of the MongoDB log collection.
-              - `meta: object`: Optional attributes object for user and other information.
 
             #### Examples
 

@@ -18,29 +18,13 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbDeleteOne({ blockId, connection, pageId, request, requestId, payload }) {
+async function MongodbDeleteOne({ connection, request }) {
   const deserializedRequest = deserialize(request);
   const { filter, options } = deserializedRequest;
-  const { collection, client, logCollection } = await getCollection({ connection });
+  const { collection, client } = await getCollection({ connection });
   let response;
   try {
-    if (logCollection) {
-      const { value, ...responseWithoutValue } = await collection.findOneAndDelete(filter, options);
-      response = responseWithoutValue;
-      await logCollection.insertOne({
-        args: { filter, options },
-        blockId,
-        pageId,
-        payload,
-        requestId,
-        before: value,
-        timestamp: new Date(),
-        type: 'MongoDBDeleteOne',
-        meta: connection.changeLog?.meta,
-      });
-    } else {
-      response = await collection.deleteOne(filter, options);
-    }
+    response = await collection.deleteOne(filter, options);
   } catch (error) {
     await client.close();
     throw error;
