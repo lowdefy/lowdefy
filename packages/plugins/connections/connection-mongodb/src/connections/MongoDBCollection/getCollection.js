@@ -18,7 +18,7 @@ import { MongoClient } from 'mongodb';
 
 async function getCollection({ connection }) {
   let client;
-  const { collection, databaseName, databaseUri, changeLog, options } = connection;
+  const { collection, databaseName, databaseUri, options } = connection;
   client = new MongoClient(databaseUri, options);
   await client.connect();
   try {
@@ -26,7 +26,6 @@ async function getCollection({ connection }) {
     return {
       client,
       collection: db.collection(collection),
-      logCollection: changeLog?.collection && db.collection(changeLog.collection),
     };
   } catch (error) {
     await client.close();
