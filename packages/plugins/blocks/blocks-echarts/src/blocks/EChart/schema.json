@@ -46,7 +46,7 @@
           },
           "locale": {
             "type": "string",
-            "enum": ["EN", "ZN"],
+            "enum": ["EN", "ZH"],
             "default": "EN",
             "description": "Specify the locale."
           }
