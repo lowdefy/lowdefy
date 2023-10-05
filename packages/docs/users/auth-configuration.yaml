@@ -86,7 +86,7 @@ _ref:
 
                 ## Debug
 
-                If the server log level is set to `debug`, the Next-Auth debug mode will be enable. The `auth.debug` property can be set to false to disable authentication debug output.
+                If the server log level is set to `debug`, the Next-Auth debug mode will be enabled. The `auth.debug` property can be set to false to disable authentication debug output.
 
                 ## Cookies
 
