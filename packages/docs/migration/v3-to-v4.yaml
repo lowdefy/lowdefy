@@ -282,7 +282,7 @@ _ref:
 
                 In version 4, authentication has been reworked to use [NextAuth.js](https://next-auth.js.org), which offers a lot more flexibility and additional features - read more [here](/users-introduction).
 
-                To migrate V3 authentication:
+                To migrate a version 3 OpenID Connect provider, at least the following needs to be done:
                 - The `config.auth` property has moved to the `auth` root level property.
                 - The `config.auth.openId` properties have been removed, replace them with configuration for your provider:
                 ```yaml
@@ -350,7 +350,7 @@ _ref:
 
                 ## Other removed blocks
 
-                In version 4 the `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` blocks have been removed. Instead you can now use the `Layout`, `Header`, `Content`, `Sider` and `Footer` blocks. See more about this [layout](https://4x.ant.design/components/layout/).
+                In version 4 the `PageHCF`, `PageHCSF`, `PageHSCF`, and `PageSHCF` blocks have been removed. Instead you can now use the `Layout`, `Header`, `Content`, `Sider` and `Footer` blocks. See more about this [here](https://4x.ant.design/components/layout/).
 
                 ###### Layout, Header-Content-Footer example:
 

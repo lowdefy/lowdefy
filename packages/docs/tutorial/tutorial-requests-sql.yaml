@@ -73,7 +73,7 @@ _ref:
 
                 #### 6.2. Setting app environment variables
 
-                Create a file called `.env` in your project directory with the following:
+                Create a file called `.env` in your project directory with the following content:
 
                 ##### `.env`
                 ```
