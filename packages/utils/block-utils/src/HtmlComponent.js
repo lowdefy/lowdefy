@@ -24,6 +24,7 @@ class HtmlComponent extends React.Component {
     this.div = {
       innerHTML: '',
     };
+    this.onTextSelection = this.onTextSelection.bind(this);
   }
 
   componentDidMount() {
@@ -36,6 +37,19 @@ class HtmlComponent extends React.Component {
     this.div.innerHTML = DOMPurify.sanitize(htmlString);
   }
 
+  onTextSelection() {
+    if (this.props.events.onTextSelection) {
+      const selection = window.getSelection().toString();
+      if (selection !== '') {
+        this.props.methods.triggerEvent({
+          name: 'onTextSelection',
+          event: {
+            selection: selection,
+          },
+        });
+      }
+    }
+  }
   render() {
     const { div, id, methods, style } = this.props;
     if (div === true) {
@@ -49,6 +63,7 @@ class HtmlComponent extends React.Component {
             }
           }}
           className={methods.makeCssClass(style)}
+          onMouseUp={this.onTextSelection}
         />
       );
     }
