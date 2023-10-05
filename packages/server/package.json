@@ -56,7 +56,7 @@
     "@lowdefy/node-utils": "4.0.0-rc.10",
     "@lowdefy/operators-js": "4.0.0-rc.10",
     "@lowdefy/plugin-next-auth": "4.0.0-rc.10",
-    "next": "13.4.19",
+    "next": "13.5.4",
     "next-auth": "4.23.2",
     "pino": "8.15.6",
     "process": "0.11.10",

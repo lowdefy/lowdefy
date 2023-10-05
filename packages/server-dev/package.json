@@ -68,7 +68,7 @@
     "@lowdefy/plugin-next-auth": "4.0.0-rc.10",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
-    "next": "13.4.19",
+    "next": "13.5.4",
     "next-auth": "4.23.2",
     "opener": "1.5.2",
     "pino": "8.15.6",
