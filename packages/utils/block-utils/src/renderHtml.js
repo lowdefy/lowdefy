@@ -19,9 +19,9 @@ import { type } from '@lowdefy/helpers';
 
 import HtmlComponent from './HtmlComponent.js';
 
-const renderHtml = ({ div, html, id, methods, style }) =>
+const renderHtml = ({ div, events, html, id, methods, style }) =>
   type.isNone(html) ? undefined : (
-    <HtmlComponent div={div} html={html} id={id} methods={methods} style={style} />
+    <HtmlComponent div={div} events={events} html={html} id={id} methods={methods} style={style} />
   );
 
 export default renderHtml;
