@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Patch version updates for various deps. ([64068f3](https://github.com/lowdefy/lowdefy/commit/64068f38573113e9436d638489e9435ac7f45edf))
+* **deps:** Update axios to v1.5.0. ([a23099a](https://github.com/lowdefy/lowdefy/commit/a23099af2738faff4a27c55bcf413ca3da5cdbd2))
+* **deps:** Update dependency commander to v11.0.0 ([d1a93ac](https://github.com/lowdefy/lowdefy/commit/d1a93acbdad40651b34faacb2fc8cf4c075d2e98))
+* **deps:** Update dependency dotenv to v16.3.1 ([82c1f7a](https://github.com/lowdefy/lowdefy/commit/82c1f7aa168cacab4197326c4f000a00e22761fb))
+* **deps:** Update dependency ora to v7.0.1 ([7b58aac](https://github.com/lowdefy/lowdefy/commit/7b58aac1538f765f78b6e6dfa7dc06f7d5349116))
+* **deps:** Update dependency yaml to 2.3.2 ([cbcdc7d](https://github.com/lowdefy/lowdefy/commit/cbcdc7d3e313fca96fa52bc4724344a061d9f444))
+
+
+### Features
+
+* Update minimum node version to 18 ([0b64fd1](https://github.com/lowdefy/lowdefy/commit/0b64fd1347fc807d79819cc9c2022671088c8921))
+
+
+### BREAKING CHANGES
+
+* Update minimum node version to 18
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 

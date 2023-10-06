@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Add onChange to DateTimeSelector. ([c0d0b87](https://github.com/lowdefy/lowdefy/commit/c0d0b8788e15359b341b37d4139763ccf40d25b7))
+* **blocks-antd:** Fix Statistic decimalSeparator after ant design update. ([8a4c90c](https://github.com/lowdefy/lowdefy/commit/8a4c90c6da905a7bf5ee383edbb7e4a1e6f14be7))
+* **blocks:** Add onTextSelection to Paragraph and document. ([7325633](https://github.com/lowdefy/lowdefy/commit/7325633d27adb876734e62140fc3e97b7e4ff119))
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Update dependency antd to v4.24.14 ([208acbe](https://github.com/lowdefy/lowdefy/commit/208acbebe44b98e1662deb974d4689d13de26536))
+* **deps:** Update dependency rc-motion to v2.9.0. ([a8bf242](https://github.com/lowdefy/lowdefy/commit/a8bf242024ec88785fba3f7185ad31b4e8f4f3db))
+* **deps:** Update dependency tinycolor2 to v1.6.0. ([0f21f87](https://github.com/lowdefy/lowdefy/commit/0f21f878c50bd5c67360d58606e42e4fd91faad8))
+
+
+### Features
+
+* **blocks-antd:** Add renderTags and option to render Tags in MultipleSelector. ([92a28fd](https://github.com/lowdefy/lowdefy/commit/92a28fd4ceb096257c4181a8ea0c5dd8bfbc8c2d))
+* **blocks-antd:** Add Tag block. ([07d16cf](https://github.com/lowdefy/lowdefy/commit/07d16cfc31c34bc5f77e5ae76b4851f52f9bfda3))
+* **blocks-antd:** Add Tag to docs. ([6a9a29e](https://github.com/lowdefy/lowdefy/commit/6a9a29e458eb52da6b65c8db5b1438ef592aa906))
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 **Note:** Version bump only for package @lowdefy/blocks-antd
