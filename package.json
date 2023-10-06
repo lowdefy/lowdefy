@@ -60,7 +60,7 @@
     "web:server": "pnpm -r --filter='@lowdefy/server' build:lowdefy --config-directory ../website && pnpm install && pnpm -r --filter='@lowdefy/server' build:next && pnpm -r --filter='@lowdefy/server' start"
   },
   "devDependencies": {
-    "eslint": "8.49.0",
+    "eslint": "8.50.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-node": "0.3.9",
     "eslint-plugin-import": "2.28.1",
@@ -70,7 +70,7 @@
     "eslint-plugin-react-hooks": "4.6.0",
     "lerna": "6.3.0",
     "prettier": "3.0.3",
-    "turbo": "1.10.13"
+    "turbo": "1.10.14"
   },
-  "packageManager": "pnpm@8.7.5"
+  "packageManager": "pnpm@8.8.0"
 }
