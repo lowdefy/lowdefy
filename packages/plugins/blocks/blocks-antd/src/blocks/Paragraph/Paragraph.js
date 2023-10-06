@@ -101,7 +101,7 @@ const ParagraphBlock = ({ blockId, components: { Icon }, events, methods, proper
     type={properties.type}
     underline={properties.underline}
   >
-    {renderHtml({ html: properties.content, methods })}
+    {renderHtml({ html: properties.content, events, methods })}
   </Paragraph>
 );
 

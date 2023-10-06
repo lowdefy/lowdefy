@@ -38,7 +38,7 @@ class HtmlComponent extends React.Component {
   }
 
   onTextSelection() {
-    if (this.props.events.onTextSelection) {
+    if (this.props.events?.onTextSelection) {
       const selection = window.getSelection().toString();
       if (selection !== '') {
         this.props.methods.triggerEvent({
@@ -77,6 +77,7 @@ class HtmlComponent extends React.Component {
           }
         }}
         className={methods.makeCssClass(style)}
+        onMouseUp={this.onTextSelection}
       />
     );
   }

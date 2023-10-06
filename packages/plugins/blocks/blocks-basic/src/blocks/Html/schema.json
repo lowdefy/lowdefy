@@ -19,5 +19,15 @@
         }
       }
     }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onTextSelection": {
+        "type": "array",
+        "description": "Trigger action when text is selected and pass selected text to the event object."
+      }
+    }
   }
 }
