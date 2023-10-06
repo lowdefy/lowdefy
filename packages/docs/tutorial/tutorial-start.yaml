@@ -47,7 +47,7 @@ _ref:
 
             ### Requirements
 
-            The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 16 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
+            The Lowdefy CLI (Command Line Interface) is needed to run the development server. To run the Lowdefy CLI you need to install Node.js at version 18 or greater. If you don't have it installed, download Node.js from https://nodejs.org/en/download/, and follow the installation steps for your computer. All of the default settings given by the installer are fine for what we need. You will also need a text editor to modify the Lowdefy configuration files.
 
             Lowdefy also requires [`pnpm`](https://pnpm.io/) to be installed. We recommend making activating [Corepack](https://nodejs.org/api/corepack.html), even though it is an experimental feature, as this is the simplest way to install `pnpm`. Alternative methods to install `pnpm` can also be found [here](https://pnpm.io/installation). To activate Corepack, run the following in your computer's command line interface (Windows CMD, Terminal on MacOS).
 

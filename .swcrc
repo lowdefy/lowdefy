@@ -12,8 +12,6 @@
     "transform": { "react": { "runtime": "classic" } }
   },
   "module": {
-    "type": "es6",
-    "noInterop": true,
-    "ignoreDynamic": true
+    "type": "es6"
   }
 }

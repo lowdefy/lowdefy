@@ -33,8 +33,6 @@ export default {
             },
             module: {
               type: 'es6',
-              noInterop: true,
-              ignoreDynamic: true,
             },
           },
         },

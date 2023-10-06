@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/server",
-  "version": "4.0.0-rc.10",
+  "version": "4.0.0-rc.11",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -45,36 +45,38 @@
     "next": "next"
   },
   "dependencies": {
-    "@lowdefy/actions-core": "4.0.0-rc.10",
-    "@lowdefy/api": "4.0.0-rc.10",
-    "@lowdefy/blocks-antd": "4.0.0-rc.10",
-    "@lowdefy/blocks-basic": "4.0.0-rc.10",
-    "@lowdefy/blocks-loaders": "4.0.0-rc.10",
-    "@lowdefy/client": "4.0.0-rc.10",
-    "@lowdefy/helpers": "4.0.0-rc.10",
-    "@lowdefy/layout": "4.0.0-rc.10",
-    "@lowdefy/node-utils": "4.0.0-rc.10",
-    "@lowdefy/operators-js": "4.0.0-rc.10",
-    "@lowdefy/plugin-next-auth": "4.0.0-rc.10",
-    "next": "12.3.4",
-    "next-auth": "4.20.1",
-    "pino": "8.8.0",
+    "@lowdefy/actions-core": "4.0.0-rc.11",
+    "@lowdefy/api": "4.0.0-rc.11",
+    "@lowdefy/blocks-antd": "4.0.0-rc.11",
+    "@lowdefy/blocks-basic": "4.0.0-rc.11",
+    "@lowdefy/blocks-loaders": "4.0.0-rc.11",
+    "@lowdefy/client": "4.0.0-rc.11",
+    "@lowdefy/helpers": "4.0.0-rc.11",
+    "@lowdefy/layout": "4.0.0-rc.11",
+    "@lowdefy/node-utils": "4.0.0-rc.11",
+    "@lowdefy/operators-js": "4.0.0-rc.11",
+    "@lowdefy/plugin-next-auth": "4.0.0-rc.11",
+    "next": "13.5.4",
+    "next-auth": "4.23.2",
+    "pino": "8.15.6",
     "process": "0.11.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "4.7.1"
+    "react-icons": "4.11.0"
   },
   "devDependencies": {
-    "@lowdefy/build": "4.0.0-rc.10",
-    "@next/eslint-plugin-next": "12.3.4",
-    "less": "4.1.3",
-    "less-loader": "11.1.0",
-    "next-with-less": "2.0.5",
+    "@lowdefy/build": "4.0.0-rc.11",
+    "@next/eslint-plugin-next": "13.5.4",
+    "less": "4.2.0",
+    "less-loader": "11.1.3",
+    "next-with-less": "3.0.1",
     "webpack": "5.88.2",
-    "yaml": "2.2.2",
+    "yaml": "2.3.2",
     "yargs": "17.7.2"
   },
-  "packageManager": "pnpm@7.11.0",
+  "engines": {
+    "node": ">=18"
+  },
   "publishConfig": {
     "access": "public"
   }

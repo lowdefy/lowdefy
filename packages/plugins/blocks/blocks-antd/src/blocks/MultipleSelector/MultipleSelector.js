@@ -22,8 +22,26 @@ import { Select } from 'antd';
 import getUniqueValues from '../../getUniqueValues.js';
 import getValueIndex from '../../getValueIndex.js';
 import Label from '../Label/Label.js';
+import Tag from '../Tag/Tag.js';
 
 const Option = Select.Option;
+
+const tagRender = (props, option, methods, components) => {
+  const { label, closable, onClose } = props;
+  return (
+    <Tag
+      components={components}
+      methods={methods}
+      onClose={onClose}
+      properties={{
+        title: label,
+        ...(option?.tag || {}),
+        closable,
+        style: { marginRight: 3, ...(option.tag?.style || {}) },
+      }}
+    />
+  );
+};
 
 const MultipleSelector = ({
   blockId,
@@ -58,6 +76,11 @@ const MultipleSelector = ({
               disabled={properties.disabled || loading}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
               mode="multiple"
+              tagRender={
+                properties.renderTags &&
+                ((props) => tagRender(props, uniqueValueOptions[props.value], methods, { Icon }))
+              }
+              maxTagCount={properties.maxTagCount}
               notFoundContent={fetchState ? 'Loading' : 'Not found'}
               placeholder={get(properties, 'placeholder', { default: 'Select items' })}
               showArrow={get(properties, 'showArrow', { default: true })}

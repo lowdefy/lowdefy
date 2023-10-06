@@ -15,12 +15,13 @@
 */
 
 import { spawnProcess } from '@lowdefy/node-utils';
+import createStdOutLineHandler from '../utils/createStdOutLineHandler.mjs';
 
 function startServer(context) {
   context.shutdownServer();
 
   const nextServer = spawnProcess({
-    stdOutLineHandler: (line) => context.logger.info({ print: 'log' }, line),
+    stdOutLineHandler: createStdOutLineHandler({ context }),
     stdErrLineHandler: (line) => context.logger.error(line),
     command: 'node',
     args: [context.bin.next, 'start'],

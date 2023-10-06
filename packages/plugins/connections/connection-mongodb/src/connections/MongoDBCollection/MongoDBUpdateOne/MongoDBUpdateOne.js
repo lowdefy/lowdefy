@@ -18,37 +18,13 @@ import getCollection from '../getCollection.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbUpdateOne({ blockId, connection, pageId, request, requestId, payload }) {
+async function MongodbUpdateOne({ connection, request }) {
   const deserializedRequest = deserialize(request);
   const { filter, update, options } = deserializedRequest;
-  const { collection, client, logCollection } = await getCollection({ connection });
+  const { collection, client } = await getCollection({ connection });
   let response;
   try {
-    if (logCollection) {
-      const { value, ...responseWithoutValue } = await collection.findOneAndUpdate(
-        filter,
-        update,
-        options
-      );
-      response = responseWithoutValue;
-      const after = await collection.findOne({
-        _id: value ? value._id : response.lastErrorObject?.upserted,
-      });
-      await logCollection.insertOne({
-        args: { filter, update, options },
-        blockId,
-        pageId,
-        payload,
-        requestId,
-        before: value,
-        after,
-        timestamp: new Date(),
-        type: 'MongoDBUpdateOne',
-        meta: connection.changeLog?.meta,
-      });
-    } else {
-      response = await collection.updateOne(filter, update, options);
-    }
+    response = await collection.updateOne(filter, update, options);
   } catch (error) {
     await client.close();
     throw error;

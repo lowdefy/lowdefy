@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Update dependency next-auth to v4.23.1 ([48f9780](https://github.com/lowdefy/lowdefy/commit/48f97809e825fb9afdd169120371184b3e2a98c8))
+* **docs:** Add Fetch action documentation. ([8a2af0c](https://github.com/lowdefy/lowdefy/commit/8a2af0c22a04e2ca6438dd6e13c9533d0b82face))
+* **docs:** General polish and bug fixes. ([384e2ff](https://github.com/lowdefy/lowdefy/commit/384e2ff7224181c96b0b130b1f6ff583fc849cd3))
+* **docs:** Update CopyToClipboard docs. ([8fd55ca](https://github.com/lowdefy/lowdefy/commit/8fd55cacc20c2a326cb7bf6fa7bf2f5a1bd9f53f))
+* **docs:** Update migration guide ([9c1e6c0](https://github.com/lowdefy/lowdefy/commit/9c1e6c0ff2cb095b06fd9175f25e0fba0190b0d9))
+* Documentation fixes. ([7753924](https://github.com/lowdefy/lowdefy/commit/7753924e578a860b890bab8c24497b090bc07f78))
+* Fix docs quickstart command ([ad305b5](https://github.com/lowdefy/lowdefy/commit/ad305b582f74b8245d45aa6a8f6a572822bbcbf4))
+
+
+### Features
+
+* **actions-core:** Add CopyToClipboard action. ([964cd8f](https://github.com/lowdefy/lowdefy/commit/964cd8fb9cee93f4979f5c106f6ba89b5ea9b3a1))
+* **blocks-algolia:** Add DocSearch block. ([701ee87](https://github.com/lowdefy/lowdefy/commit/701ee87ec7f3e5f2b28568e43c14948548b90d9e))
+* **blocks-antd:** Add renderTags and option to render Tags in MultipleSelector. ([92a28fd](https://github.com/lowdefy/lowdefy/commit/92a28fd4ceb096257c4181a8ea0c5dd8bfbc8c2d))
+* **blocks-antd:** Add Tag block. ([07d16cf](https://github.com/lowdefy/lowdefy/commit/07d16cfc31c34bc5f77e5ae76b4851f52f9bfda3))
+* **blocks-antd:** Add Tag to docs. ([6a9a29e](https://github.com/lowdefy/lowdefy/commit/6a9a29e458eb52da6b65c8db5b1438ef592aa906))
+* **plugin-mongodb:** Update docs. ([4d2e03d](https://github.com/lowdefy/lowdefy/commit/4d2e03d768cd0e651706b207c654a9c8d0837241))
+* Update minimum node version to 18 ([0b64fd1](https://github.com/lowdefy/lowdefy/commit/0b64fd1347fc807d79819cc9c2022671088c8921))
+
+
+### BREAKING CHANGES
+
+* Update minimum node version to 18
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 

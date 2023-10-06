@@ -36,6 +36,77 @@ _ref:
       > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `RadioSelector` and `Selector`.
 
     examples:
+      - title: Basic MultipleSelector Usage
+        block:
+          id: basic_selector
+          type: MultipleSelector
+          properties:
+            title: Select options
+            options:
+              - Option A
+              - Option B
+              - Option C
+      - title: MultipleSelector with label value options
+        block:
+          id: label_value_selector
+          type: MultipleSelector
+          properties:
+            title: Select options
+            options:
+              - label: Option 1
+                value: 1
+              - label: Option 2
+                value: 2
+              - label: Option 3
+                value: 3
+      - title: MultipleSelector with html label value options
+        block:
+          id: label_value_selector
+          type: MultipleSelector
+          properties:
+            title: Select options
+            options:
+              - label: |
+                  <div style="font-weight: bold;">Max Verstappen</div>
+                  <div style="font-size: 0.7em;">Red Bull Racing</div>
+                value: 1
+              - label: |
+                  <div style="font-weight: bold;">Logan Sargeant</div>
+                  <div style="font-size: 0.7em;">Williams</div>
+                value: 2
+              - label: |
+                  <div style="font-weight: bold;">Daniel Ricciardo</div>
+                  <div style="font-size: 0.7em;">AlphaTauri</div>
+                value: 3
+      - title: MultipleSelector that renders Tags for selected values
+        block:
+          id: label_value_selector
+          type: MultipleSelector
+          properties:
+            title: Select options
+            renderTags: true
+            options:
+              - label: |
+                  <div style="font-weight: bold;">Max Verstappen</div>
+                  <div style="font-size: 0.7em;">Red Bull Racing</div>
+                value: 1
+                tag:
+                  color: red
+                  title: Max
+              - label: |
+                  <div style="font-weight: bold;">Logan Sargeant</div>
+                  <div style="font-size: 0.7em;">Williams</div>
+                value: 2
+                tag:
+                  color: blue
+                  title: Logan
+              - label: |
+                  <div style="font-weight: bold;">Daniel Ricciardo</div>
+                  <div style="font-size: 0.7em;">AlphaTauri</div>
+                value: 3
+                tag:
+                  color: magenta
+                  title: Daniel
       - title: Listing options from database search
         block:
           id: example_selector

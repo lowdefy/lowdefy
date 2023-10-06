@@ -14,18 +14,4 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
-
-async function findLogCollectionRecordTestMongoDb({ logCollection, requestId }) {
-  const client = new MongoClient(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  await client.connect();
-  const db = client.db();
-  const logged = await db.collection(logCollection).findOne({ requestId });
-  await client.close();
-  return logged;
-}
-
-export default findLogCollectionRecordTestMongoDb;
+@import 'antd/lib/tag/style/index.less';

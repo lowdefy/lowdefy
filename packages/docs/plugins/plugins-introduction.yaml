@@ -34,6 +34,8 @@ _ref:
 
             If two plugins export types with the same type name, user defined plugins will override the default Lowdefy types, and user defined plugins will overwrite other plugins defined before them in the plugins array.
 
+            The `typePrefix` property can be used to prevent plugins with the same name overwriting each other. If specified, the type names of all plugins in that package will have the prefix appended. For example, if a package contains a block with type `Button` and the typePrefix is set to `Other`, that block can be used with type name `OtherButton`, and the default Lowdefy `Button` block will still be available.
+
             ###### Example
 
             ```yaml
@@ -44,6 +46,10 @@ _ref:
                 # local plugins in pnpm monorepo
               - name: local-plugin
                 version: workspace:*
+              # Add a prefix to type names
+              - name: other-plugin
+                version: 1.0.0
+                typePrefix: Other
             ```
 
       - _ref:

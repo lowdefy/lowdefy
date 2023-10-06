@@ -101,6 +101,7 @@
 - _ref: blocks/display/SkeletonInput.yaml
 - _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
+- _ref: blocks/display/Tag.yaml
 - _ref: blocks/display/Title.yaml
 
 - _ref: blocks/container/Alert.yaml
