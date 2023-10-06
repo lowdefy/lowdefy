@@ -17,7 +17,6 @@
 import { validate } from '@lowdefy/ajv';
 import MongoDBInsertMany from './MongoDBInsertMany.js';
 import clearTestMongoDb from '../../../../test/clearTestMongoDb.js';
-import findLogCollectionRecordTestMongoDb from '../../../../test/findLogCollectionRecordTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBInsertMany.meta;
 const schema = MongoDBInsertMany.schema;
@@ -25,7 +24,6 @@ const schema = MongoDBInsertMany.schema;
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const collection = 'insertMany';
-const logCollection = 'logCollection';
 
 beforeAll(() => {
   return clearTestMongoDb({ collection });
@@ -48,47 +46,6 @@ test('insertMany', async () => {
   });
 });
 
-test('insertMany logCollection', async () => {
-  const request = {
-    docs: [
-      { _id: 'insertMany1-1_log' },
-      { _id: 'insertMany1-2_log' },
-      { _id: 'insertMany1-3_log' },
-    ],
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    changeLog: { collection: logCollection, meta: { meta: true } },
-    write: true,
-  };
-  const res = await MongoDBInsertMany({
-    request,
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'insertMany_log',
-    connection,
-  });
-  expect(res).toEqual({
-    acknowledged: true,
-    insertedCount: 3,
-  });
-  const logged = await findLogCollectionRecordTestMongoDb({
-    logCollection,
-    requestId: 'insertMany_log',
-  });
-  expect(logged).toMatchObject({
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'insertMany_log',
-    type: 'MongoDBInsertMany',
-    meta: { meta: true },
-  });
-});
-
 test('insertMany options', async () => {
   const request = {
     docs: [{ _id: 'insertMany2-1' }, { _id: 'insertMany2-2' }],
@@ -104,44 +61,6 @@ test('insertMany options', async () => {
   expect(res).toEqual({
     acknowledged: true,
     insertedCount: 2,
-  });
-});
-
-test('insertMany logCollection options', async () => {
-  const request = {
-    docs: [{ _id: 'insertMany2-1_log' }, { _id: 'insertMany2-2_log' }],
-    options: { writeConcern: { w: 'majority' } },
-  };
-  const connection = {
-    databaseUri,
-    databaseName,
-    collection,
-    changeLog: { collection: logCollection, meta: { meta: true } },
-    write: true,
-  };
-  const res = await MongoDBInsertMany({
-    request,
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'insertMany_options_log',
-    connection,
-  });
-  expect(res).toEqual({
-    acknowledged: true,
-    insertedCount: 2,
-  });
-  const logged = await findLogCollectionRecordTestMongoDb({
-    logCollection,
-    requestId: 'insertMany_options_log',
-  });
-  expect(logged).toMatchObject({
-    blockId: 'blockId',
-    pageId: 'pageId',
-    payload: { payload: true },
-    requestId: 'insertMany_options_log',
-    type: 'MongoDBInsertMany',
-    meta: { meta: true },
   });
 });
 

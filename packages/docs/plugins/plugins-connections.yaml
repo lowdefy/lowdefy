@@ -39,7 +39,7 @@ _ref:
 
             #### Schema Validation
 
-            A [JSON Schema](https://json-schema.org/) schema can be used to validate the connection and request properties before they are passed to the request function. The [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) package is used to provide useful error messages if the schema validation fails. Attached the json-schema to the request function with property `schema`, to validate requist input before the request function is called.
+            A [JSON Schema](https://json-schema.org/) schema can be used to validate the connection and request properties before they are passed to the request function. The [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) package is used to provide useful error messages if the schema validation fails. Attached the json-schema to the request function with property `schema`, to validate request input before the request function is called.
 
             #### Examples
 
@@ -58,7 +58,7 @@ _ref:
               return { status, statusText, headers, method, path, data };
             }
 
-            AxiosHttp.schema = schema; // Attached json-schema used to validate requist input before the request function is called.
+            AxiosHttp.schema = schema; // Attached json-schema used to validate request input before the request function is called.
             AxiosHttp.meta = {
               checkRead: false,
               checkWrite: false,

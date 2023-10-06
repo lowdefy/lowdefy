@@ -159,8 +159,6 @@ _ref:
 
             ## Custom JavaScript Functions
 
-            TODO: Test common js vs es module exports
-
             The `_ref` operator can also be extended with custom JavaScript functions. A `resolver` function can be specified, which can overwrite the default way configuration files are read from the filesystem. A `transformer` function can be used to transform the value returned by the `_ref` operator.
 
             ### Resolver

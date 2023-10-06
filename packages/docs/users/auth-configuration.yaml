@@ -84,6 +84,10 @@ _ref:
                     maxAge: 43200 # 12 hours in seconds
                 ```
 
+                ## Debug
+
+                If the server log level is set to `debug`, the Next-Auth debug mode will be enabled. The `auth.debug` property can be set to false to disable authentication debug output.
+
                 ## Cookies
 
                 The  `auth.advanced.cookies` section can be used to overwrite the NextAuth cookie options. This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application. See [here](https://next-auth.js.org/configuration/options#cookies) for more details.

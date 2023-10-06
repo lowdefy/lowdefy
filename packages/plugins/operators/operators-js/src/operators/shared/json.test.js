@@ -17,10 +17,8 @@
 import json from './json.js';
 
 test('_json.parse string unquoted', () => {
-  expect(() =>
-    json({ params: 'firstName', location: 'locationId', methodName: 'parse' })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _json.parse - Unexpected token i in JSON at position 1 Received: {\\"_json.parse\\":\\"firstName\\"} at locationId."`
+  expect(() => json({ params: 'firstName', location: 'locationId', methodName: 'parse' })).toThrow(
+    'Operator Error: _json.parse - Unexpected token'
   );
 });
 

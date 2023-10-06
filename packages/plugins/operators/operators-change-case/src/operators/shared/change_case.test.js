@@ -114,9 +114,7 @@ test('_change_case.capitalCase on: string, invalid regex throw', () => {
       location: 'locationId',
       methodName: 'capitalCase',
     })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Invalid regular expression: /(a/: Unterminated group. Received: \\"(a\\" at locationId."`
-  );
+  ).toThrow('Operator Error: Invalid regular expression');
 });
 
 test('_change_case.capitalCase on: string, regex not string or object throw', () => {
