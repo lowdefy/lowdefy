@@ -32,9 +32,13 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Called when Tag is clicked."
+      },
       "onClose": {
         "type": "array",
-        "description": "Called when Alert close button is clicked."
+        "description": "Called when Tag close icon is clicked."
       }
     }
   }

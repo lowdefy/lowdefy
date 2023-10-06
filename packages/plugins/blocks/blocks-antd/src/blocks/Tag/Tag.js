@@ -19,7 +19,15 @@ import { Tag } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-const TagBlock = ({ blockId, events, components: { Icon }, methods, onClick, properties }) => {
+const TagBlock = ({
+  blockId,
+  components: { Icon },
+  events,
+  methods,
+  onClick,
+  onClose,
+  properties,
+}) => {
   const additionalProps = {};
   if (properties.icon) {
     additionalProps.icon = (
@@ -29,19 +37,23 @@ const TagBlock = ({ blockId, events, components: { Icon }, methods, onClick, pro
   if (onClick || events.onClick) {
     additionalProps.onClick = onClick || (() => methods.triggerEvent({ name: 'onClick' }));
   }
-
+  if (onClose || events.onClose) {
+    additionalProps.onClose = onClose || (() => methods.triggerEvent({ name: 'onClose' }));
+  }
   return (
     <Tag
+      id={blockId}
       closable={properties.closable}
       color={properties.color}
-      {...additionalProps}
-      onClose={() => methods.triggerEvent({ name: 'onClose' })}
       className={methods.makeCssClass(properties.style)}
+      {...additionalProps}
     >
-      {renderHtml({
-        html: type.isNone(properties.title) ? blockId : properties.title,
-        methods,
-      })}
+      {type.isString(properties.title)
+        ? renderHtml({
+            html: properties.title,
+            methods,
+          })
+        : properties.title ?? blockId}
     </Tag>
   );
 };

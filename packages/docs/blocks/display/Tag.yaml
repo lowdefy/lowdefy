@@ -54,4 +54,4 @@ _ref:
           properties:
             title: Error
             color: error
-            icon: AiOutlinedCloseCircle
+            icon: AiOutlineCloseCircle
