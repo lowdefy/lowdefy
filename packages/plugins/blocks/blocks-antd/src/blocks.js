@@ -65,6 +65,7 @@ export { default as Sider } from './blocks/Sider/Sider.js';
 export { default as Statistic } from './blocks/Statistic/Statistic.js';
 export { default as Switch } from './blocks/Switch/Switch.js';
 export { default as Tabs } from './blocks/Tabs/Tabs.js';
+export { default as Tag } from './blocks/Tag/Tag.js';
 export { default as TimelineList } from './blocks/TimelineList/TimelineList.js';
 export { default as TextArea } from './blocks/TextArea/TextArea.js';
 export { default as TextInput } from './blocks/TextInput/TextInput.js';
