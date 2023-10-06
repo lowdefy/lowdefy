@@ -78,7 +78,7 @@ _ref:
                   <div style="font-weight: bold;">Daniel Ricciardo</div>
                   <div style="font-size: 0.7em;">AlphaTauri</div>
                 value: 3
-      - title: MultipleSelector that render Tags for selected values
+      - title: MultipleSelector that renders Tags for selected values
         block:
           id: label_value_selector
           type: MultipleSelector
