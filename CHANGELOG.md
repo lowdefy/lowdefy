@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Add onChange to DateTimeSelector. ([c0d0b87](https://github.com/lowdefy/lowdefy/commit/c0d0b8788e15359b341b37d4139763ccf40d25b7))
+* **blocks-antd:** Fix Statistic decimalSeparator after ant design update. ([8a4c90c](https://github.com/lowdefy/lowdefy/commit/8a4c90c6da905a7bf5ee383edbb7e4a1e6f14be7))
+* **blocks:** Add onTextSelection to Paragraph and document. ([7325633](https://github.com/lowdefy/lowdefy/commit/7325633d27adb876734e62140fc3e97b7e4ff119))
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Patch version updates for various deps. ([64068f3](https://github.com/lowdefy/lowdefy/commit/64068f38573113e9436d638489e9435ac7f45edf))
+* **deps:** Revert rehype and remark blocks-markdown deps ([f075afc](https://github.com/lowdefy/lowdefy/commit/f075afc21c0f8748fdfa5433b59d3ce307edaf6a))
+* **deps:** UIpdate dependency mingo to v6.4.4 ([7f63c57](https://github.com/lowdefy/lowdefy/commit/7f63c571b141ddebb7d080790e820430e6970cec))
+* **deps:** Update @elastic/elasticsearch to v7.17.12 ([f5edd4c](https://github.com/lowdefy/lowdefy/commit/f5edd4cda33df8b1999dba93e48ae673fb17c13b))
+* **deps:** Update axios to v1.5.0. ([a23099a](https://github.com/lowdefy/lowdefy/commit/a23099af2738faff4a27c55bcf413ca3da5cdbd2))
+* **deps:** Update dependencies rehype-raw and remark-gfm ([683ff03](https://github.com/lowdefy/lowdefy/commit/683ff039a2da4c6d6ffed4166a4068bd6d3b5fe4))
+* **deps:** Update dependency @emotion/css to v11.11.2 ([6bd3155](https://github.com/lowdefy/lowdefy/commit/6bd3155430c861dadedbce7f49b0ccc32922aa29))
+* **deps:** Update dependency @react-google-maps/api to v2.19.2 ([8f69817](https://github.com/lowdefy/lowdefy/commit/8f69817c2f186fe506e3ba83055e665a349619dd))
+* **deps:** Update dependency antd to v4.24.14 ([208acbe](https://github.com/lowdefy/lowdefy/commit/208acbebe44b98e1662deb974d4689d13de26536))
+* **deps:** Update dependency aws to v2.1459.0 ([c01488c](https://github.com/lowdefy/lowdefy/commit/c01488cb8ed4290729ded77e4cc6347b4e20d009))
+* **deps:** Update dependency commander to v11.0.0 ([d1a93ac](https://github.com/lowdefy/lowdefy/commit/d1a93acbdad40651b34faacb2fc8cf4c075d2e98))
+* **deps:** Update dependency dompurify to v3.0.5 ([62204c5](https://github.com/lowdefy/lowdefy/commit/62204c5e25603eb997a3021d7efe57f2fb9250a9))
+* **deps:** Update dependency dotenv to v16.3.1 ([82c1f7a](https://github.com/lowdefy/lowdefy/commit/82c1f7aa168cacab4197326c4f000a00e22761fb))
+* **deps:** Update dependency html5-qrcode to v2.3.8 ([534e02a](https://github.com/lowdefy/lowdefy/commit/534e02aab27b4c6aa24e14cba5c7076050a26c52))
+* **deps:** Update dependency knex to v2.5.1 ([45045ba](https://github.com/lowdefy/lowdefy/commit/45045ba754f040bf763659c592721f0824a32205))
+* **deps:** Update dependency mssql to v10.0.1 ([491ab72](https://github.com/lowdefy/lowdefy/commit/491ab72d023ffa9ef673a8ce46ce4feeaaae96de))
+* **deps:** Update dependency next to v13.5.4. ([230a687](https://github.com/lowdefy/lowdefy/commit/230a6876993a0802190a7f33d823fe5630062da9))
+* **deps:** Update dependency next-auth to v4.23.1 ([48f9780](https://github.com/lowdefy/lowdefy/commit/48f97809e825fb9afdd169120371184b3e2a98c8))
+* **deps:** Update dependency ora to v7.0.1 ([7b58aac](https://github.com/lowdefy/lowdefy/commit/7b58aac1538f765f78b6e6dfa7dc06f7d5349116))
+* **deps:** Update dependency pg to v8.11.3 ([40706a1](https://github.com/lowdefy/lowdefy/commit/40706a1886c421b6ba028a943178bdcc33fdcab8))
+* **deps:** Update dependency pino to v8.15.0 ([d380b3c](https://github.com/lowdefy/lowdefy/commit/d380b3cfa51387f1602689e353f82c59dc1cd9ed))
+* **deps:** Update dependency rc-motion to v2.9.0. ([a8bf242](https://github.com/lowdefy/lowdefy/commit/a8bf242024ec88785fba3f7185ad31b4e8f4f3db))
+* **deps:** Update dependency react-icons to v4.11.0 ([21f23d4](https://github.com/lowdefy/lowdefy/commit/21f23d40cf0a7c4ed1931b55ebf854b2bc239948))
+* **deps:** Update dependency redis to v4.6.8 ([41051a3](https://github.com/lowdefy/lowdefy/commit/41051a34ed29b9159c8011db0a7f51b6a669fdef))
+* **deps:** Update dependency stripe to v13.6.0 ([4ec189b](https://github.com/lowdefy/lowdefy/commit/4ec189b0afed3166b93199e816406b85b36b83a3))
+* **deps:** Update dependency swr to v2.2.2 ([017e865](https://github.com/lowdefy/lowdefy/commit/017e865023edafeb52428466d8fa7e0c2b96b9f2))
+* **deps:** Update dependency tinycolor2 to v1.6.0. ([0f21f87](https://github.com/lowdefy/lowdefy/commit/0f21f878c50bd5c67360d58606e42e4fd91faad8))
+* **deps:** Update dependency yaml to 2.3.2 ([cbcdc7d](https://github.com/lowdefy/lowdefy/commit/cbcdc7d3e313fca96fa52bc4724344a061d9f444))
+* **deps:** Update development dependencies. ([b7d7cca](https://github.com/lowdefy/lowdefy/commit/b7d7cca10e676949957cf6650ec706ab1a08f68a))
+* **docs:** Add Fetch action documentation. ([8a2af0c](https://github.com/lowdefy/lowdefy/commit/8a2af0c22a04e2ca6438dd6e13c9533d0b82face))
+* **docs:** Fix Apache Echarts default locale. ([c1707e3](https://github.com/lowdefy/lowdefy/commit/c1707e397a6216f23de877a0bf2491a88d7643ea)), closes [#1326](https://github.com/lowdefy/lowdefy/issues/1326)
+* **docs:** General polish and bug fixes. ([384e2ff](https://github.com/lowdefy/lowdefy/commit/384e2ff7224181c96b0b130b1f6ff583fc849cd3))
+* **docs:** Update CopyToClipboard docs. ([8fd55ca](https://github.com/lowdefy/lowdefy/commit/8fd55cacc20c2a326cb7bf6fa7bf2f5a1bd9f53f))
+* **docs:** Update migration guide ([9c1e6c0](https://github.com/lowdefy/lowdefy/commit/9c1e6c0ff2cb095b06fd9175f25e0fba0190b0d9))
+* Documentation fixes. ([7753924](https://github.com/lowdefy/lowdefy/commit/7753924e578a860b890bab8c24497b090bc07f78))
+* Fix docs quickstart command ([ad305b5](https://github.com/lowdefy/lowdefy/commit/ad305b582f74b8245d45aa6a8f6a572822bbcbf4))
+* **plugin-mongodb:** Fix schema discription. ([5f5cca1](https://github.com/lowdefy/lowdefy/commit/5f5cca1ca6fcacd6092dd6e56620346926925ad3))
+* Remove unnecessary dependencies from server ([a8246c0](https://github.com/lowdefy/lowdefy/commit/a8246c0e84cd5d1545de05c17de4cea029836b0a))
+* **server-dev:** Update stdOutLineHandler for pino logs ([2cef6d7](https://github.com/lowdefy/lowdefy/commit/2cef6d7e66d8ef7a34d9dec5eb1d6aea2fdb4f3f))
+* Update to Next 13 and update Link. ([33c34c3](https://github.com/lowdefy/lowdefy/commit/33c34c3b5b10973bd749b7dc806210aa7d92dbda))
+* **web:** Fix website build after removed plugins. ([9e2115d](https://github.com/lowdefy/lowdefy/commit/9e2115d8b94f662711036e94b8dedae36f61fff9))
+* **website:** Configure home page id on website. ([2542644](https://github.com/lowdefy/lowdefy/commit/2542644c1840145b08881b03caa48a729af2ae72))
+
+
+### Features
+
+* **actions-core:** Add CopyToClipboard action. ([964cd8f](https://github.com/lowdefy/lowdefy/commit/964cd8fb9cee93f4979f5c106f6ba89b5ea9b3a1))
+* **blocks-algolia:** Add DocSearch block. ([701ee87](https://github.com/lowdefy/lowdefy/commit/701ee87ec7f3e5f2b28568e43c14948548b90d9e))
+* **blocks-antd:** Add renderTags and option to render Tags in MultipleSelector. ([92a28fd](https://github.com/lowdefy/lowdefy/commit/92a28fd4ceb096257c4181a8ea0c5dd8bfbc8c2d))
+* **blocks-antd:** Add Tag block. ([07d16cf](https://github.com/lowdefy/lowdefy/commit/07d16cfc31c34bc5f77e5ae76b4851f52f9bfda3))
+* **blocks-antd:** Add Tag to docs. ([6a9a29e](https://github.com/lowdefy/lowdefy/commit/6a9a29e458eb52da6b65c8db5b1438ef592aa906))
+* **blocks:** Add onTextSelection event to Html. ([4f00d5e](https://github.com/lowdefy/lowdefy/commit/4f00d5e8851e21d0409539b18f4ee8182a92ddcc))
+* **plugin-mongodb:** Move log-collection to community plugins. ([d526a10](https://github.com/lowdefy/lowdefy/commit/d526a10da8725e9e50de13e24d29d282a1969899))
+* **plugin-mongodb:** Update docs. ([4d2e03d](https://github.com/lowdefy/lowdefy/commit/4d2e03d768cd0e651706b207c654a9c8d0837241))
+* Update minimum node version to 18 ([0b64fd1](https://github.com/lowdefy/lowdefy/commit/0b64fd1347fc807d79819cc9c2022671088c8921))
+* **website:** Remove custom CopyToClipboard action from website. ([9c9dbc8](https://github.com/lowdefy/lowdefy/commit/9c9dbc86beea43227fc14ae09eb9fa65fe3346e8))
+
+
+### BREAKING CHANGES
+
+* Update minimum node version to 18
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 

@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **docs:** Update CopyToClipboard docs. ([8fd55ca](https://github.com/lowdefy/lowdefy/commit/8fd55cacc20c2a326cb7bf6fa7bf2f5a1bd9f53f))
+* **web:** Fix website build after removed plugins. ([9e2115d](https://github.com/lowdefy/lowdefy/commit/9e2115d8b94f662711036e94b8dedae36f61fff9))
+* **website:** Configure home page id on website. ([2542644](https://github.com/lowdefy/lowdefy/commit/2542644c1840145b08881b03caa48a729af2ae72))
+
+
+### Features
+
+* **blocks-algolia:** Add DocSearch block. ([701ee87](https://github.com/lowdefy/lowdefy/commit/701ee87ec7f3e5f2b28568e43c14948548b90d9e))
+* **website:** Remove custom CopyToClipboard action from website. ([9c9dbc8](https://github.com/lowdefy/lowdefy/commit/9c9dbc86beea43227fc14ae09eb9fa65fe3346e8))
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 

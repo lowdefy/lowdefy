@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-yaml",
-  "version": "4.0.0-rc.10",
+  "version": "4.0.0-rc.11",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,8 +42,8 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.10",
-    "@lowdefy/operators": "4.0.0-rc.10",
+    "@lowdefy/helpers": "4.0.0-rc.11",
+    "@lowdefy/operators": "4.0.0-rc.11",
     "yaml": "2.3.2"
   },
   "devDependencies": {

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **blocks:** Add onTextSelection to Paragraph and document. ([7325633](https://github.com/lowdefy/lowdefy/commit/7325633d27adb876734e62140fc3e97b7e4ff119))
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Update dependency dompurify to v3.0.5 ([62204c5](https://github.com/lowdefy/lowdefy/commit/62204c5e25603eb997a3021d7efe57f2fb9250a9))
+
+
+### Features
+
+* **blocks:** Add onTextSelection event to Html. ([4f00d5e](https://github.com/lowdefy/lowdefy/commit/4f00d5e8851e21d0409539b18f4ee8182a92ddcc))
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 

@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
+
+
+### Bug Fixes
+
+* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+* **deps:** Patch version updates for various deps. ([64068f3](https://github.com/lowdefy/lowdefy/commit/64068f38573113e9436d638489e9435ac7f45edf))
+* **deps:** Update dependency knex to v2.5.1 ([45045ba](https://github.com/lowdefy/lowdefy/commit/45045ba754f040bf763659c592721f0824a32205))
+* **deps:** Update dependency mssql to v10.0.1 ([491ab72](https://github.com/lowdefy/lowdefy/commit/491ab72d023ffa9ef673a8ce46ce4feeaaae96de))
+* **deps:** Update dependency pg to v8.11.3 ([40706a1](https://github.com/lowdefy/lowdefy/commit/40706a1886c421b6ba028a943178bdcc33fdcab8))
+
+
+
+
+
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
