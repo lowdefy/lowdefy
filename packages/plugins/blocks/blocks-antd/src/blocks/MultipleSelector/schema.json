@@ -178,11 +178,38 @@
                   "docs": {
                     "displayType": "yaml"
                   }
+                },
+                "tag": {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "description": "Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color.",
+                      "docs": {
+                        "displayType": "color"
+                      }
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Content title of tag - supports html."
+                    },
+                    "icon": {
+                      "type": ["string", "object"],
+                      "description": "Name of an Ant Design Icon or properties of an Icon block to customize alert icon.",
+                      "docs": {
+                        "displayType": "icon"
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         ]
+      },
+      "maxTagCount": {
+        "type": "number",
+        "description": "Max tag count to show."
       },
       "placeholder": {
         "type": "string",
@@ -219,6 +246,10 @@
       "title": {
         "type": "string",
         "description": "Multiple selector label title - supports html."
+      },
+      "renderTags": {
+        "type": "boolean",
+        "description": "When true, the selected option labels are rendered as tags in the selector input. This field must be true to render option tag values."
       }
     }
   },
