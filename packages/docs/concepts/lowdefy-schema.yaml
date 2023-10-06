@@ -85,7 +85,21 @@ _ref:
 
             ## Auth
 
-            [TODO]: <> (# TODO: Add auth things here)
+            The auth object is used to configure user authentication, and has the following properties:
+
+            - `adapter: object`: Configure a database adapter.
+            - `authPages: object`: Configure pages like the sign in page used by authentication flows.
+            - `callbacks: object[]`: Configure callback functions.
+            - `debug: boolean`: Can be set to false to disable auth debugging if the log level is set to debug.
+            - `events: object[]`: Configure event functions.
+            - `pages: object`: Configure which pages should be protected.
+            - `providers: object[]`: Configure authentication providers.
+            - `session: object`: Configure session.
+            - `theme: object`: Configure theme for default authentication pages.
+            - `userFields: object`: Map data from the provider to the user object.
+            - `advanced: object`: Set advanced authentication options.
+
+            See more about how user authentication and authorization [here](/users-introduction).
 
             ## Global
 
@@ -99,7 +113,11 @@ _ref:
 
             ## Plugins
 
-            [TODO]: <> (# TODO: Add plugins things here)
+            The plugins section is used to configure which plugin packages should be used in the app. It contains an array of plugin definitions, which have the following properties:
+
+            - `name: string`: The name of the package. If published to npm, this is the name under which the package is published on npm.
+            - `version: string`: An npm or pnpm version specifier of the package to use.
+            - `typePrefix: string`: A prefix to append to all types exported by the package to prevent type name clashes.
 
             ## Menus
 
@@ -112,8 +130,6 @@ _ref:
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
 
             Each page should have an `id` that is unique among all pages in the app. Each page is served with the `pageId` as the url route. That is, if a page is created with id `page1`, it will be served at `domain.com/page1`.
-
-            [TODO]: <> (# TODO: Below will change once we add the head configuration option on pages. Discuss that here.)
 
             If `properties.title` is set on a page block, the title will be set as the page title (This is the title displayed on the tabs in your browser).
       - id: pages_example_collapse

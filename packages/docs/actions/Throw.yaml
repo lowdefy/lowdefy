@@ -27,8 +27,6 @@ _ref:
       }): void
       ```
     description: |
-      ##### TODO: This page needs to be updated.
-
       The `Throw` action is used throw an error to the user and log to the console. If `throw: true`, the `Throw`
       action will throw an error, and this will stop the execution of actions that are defined after it. If the action does not thrown, the `Throw` action will do nothing and the actions defined after it will be executed.
 
