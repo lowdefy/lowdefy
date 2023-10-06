@@ -443,6 +443,9 @@
         - id: Statistic
           type: MenuLink
           pageId: Statistic
+        - id: Tag
+          type: MenuLink
+          pageId: Tag
         - id: Title
           type: MenuLink
           pageId: Title
