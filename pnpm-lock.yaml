@@ -1981,6 +1981,88 @@ importers:
         specifier: 5.88.2
         version: 5.88.2
 
+  packages/servers/server-enterprise:
+    dependencies:
+      '@lowdefy/actions-core':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/actions/actions-core
+      '@lowdefy/api':
+        specifier: 4.0.0-rc.11
+        version: link:../../api
+      '@lowdefy/blocks-antd':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/blocks-basic':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/blocks/blocks-basic
+      '@lowdefy/blocks-loaders':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/blocks/blocks-loaders
+      '@lowdefy/client':
+        specifier: 4.0.0-rc.11
+        version: link:../../client
+      '@lowdefy/helpers':
+        specifier: 4.0.0-rc.11
+        version: link:../../utils/helpers
+      '@lowdefy/layout':
+        specifier: 4.0.0-rc.11
+        version: link:../../layout
+      '@lowdefy/node-utils':
+        specifier: 4.0.0-rc.11
+        version: link:../../utils/node-utils
+      '@lowdefy/operators-js':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/operators/operators-js
+      '@lowdefy/plugin-next-auth':
+        specifier: 4.0.0-rc.11
+        version: link:../../plugins/plugins/plugin-next-auth
+      next:
+        specifier: 13.5.4
+        version: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
+      next-auth:
+        specifier: 4.23.2
+        version: 4.23.2(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
+      pino:
+        specifier: 8.15.6
+        version: 8.15.6
+      process:
+        specifier: 0.11.10
+        version: 0.11.10
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-icons:
+        specifier: 4.11.0
+        version: 4.11.0(react@18.2.0)
+    devDependencies:
+      '@lowdefy/build':
+        specifier: 4.0.0-rc.11
+        version: link:../../build
+      '@next/eslint-plugin-next':
+        specifier: 13.5.4
+        version: 13.5.4
+      less:
+        specifier: 4.2.0
+        version: 4.2.0
+      less-loader:
+        specifier: 11.1.3
+        version: 11.1.3(less@4.2.0)(webpack@5.88.2)
+      next-with-less:
+        specifier: 3.0.1
+        version: 3.0.1(less-loader@11.1.3)(less@4.2.0)(next@13.5.4)
+      webpack:
+        specifier: 5.88.2
+        version: 5.88.2
+      yaml:
+        specifier: 2.3.2
+        version: 2.3.2
+      yargs:
+        specifier: 17.7.2
+        version: 17.7.2
+
   packages/utils/ajv:
     dependencies:
       '@lowdefy/nunjucks':
