@@ -1769,41 +1769,41 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
 
-  packages/server:
+  packages/servers/server-community:
     dependencies:
       '@lowdefy/actions-core':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/actions/actions-core
+        version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
         specifier: 4.0.0-rc.11
-        version: link:../api
+        version: link:../../api
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-antd
+        version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-basic
+        version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-loaders
+        version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/client':
         specifier: 4.0.0-rc.11
-        version: link:../client
+        version: link:../../client
       '@lowdefy/helpers':
         specifier: 4.0.0-rc.11
-        version: link:../utils/helpers
+        version: link:../../utils/helpers
       '@lowdefy/layout':
         specifier: 4.0.0-rc.11
-        version: link:../layout
+        version: link:../../layout
       '@lowdefy/node-utils':
         specifier: 4.0.0-rc.11
-        version: link:../utils/node-utils
+        version: link:../../utils/node-utils
       '@lowdefy/operators-js':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-js
+        version: link:../../plugins/operators/operators-js
       '@lowdefy/plugin-next-auth':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/plugins/plugin-next-auth
+        version: link:../../plugins/plugins/plugin-next-auth
       next:
         specifier: 13.5.4
         version: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1828,7 +1828,7 @@ importers:
     devDependencies:
       '@lowdefy/build':
         specifier: 4.0.0-rc.11
-        version: link:../build
+        version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 13.5.4
         version: 13.5.4
@@ -1851,80 +1851,80 @@ importers:
         specifier: 17.7.2
         version: 17.7.2
 
-  packages/server-dev:
+  packages/servers/server-dev:
     dependencies:
       '@lowdefy/actions-core':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/actions/actions-core
+        version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
         specifier: 4.0.0-rc.11
-        version: link:../api
+        version: link:../../api
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-antd
+        version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-basic
+        version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-color-selectors':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-color-selectors
+        version: link:../../plugins/blocks/blocks-color-selectors
       '@lowdefy/blocks-echarts':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-echarts
+        version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-loaders
+        version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-markdown
+        version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/blocks/blocks-qr
+        version: link:../../plugins/blocks/blocks-qr
       '@lowdefy/build':
         specifier: 4.0.0-rc.11
-        version: link:../build
+        version: link:../../build
       '@lowdefy/client':
         specifier: 4.0.0-rc.11
-        version: link:../client
+        version: link:../../client
       '@lowdefy/connection-axios-http':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/connections/connection-axios-http
+        version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/engine':
         specifier: 4.0.0-rc.11
-        version: link:../engine
+        version: link:../../engine
       '@lowdefy/helpers':
         specifier: 4.0.0-rc.11
-        version: link:../utils/helpers
+        version: link:../../utils/helpers
       '@lowdefy/layout':
         specifier: 4.0.0-rc.11
-        version: link:../layout
+        version: link:../../layout
       '@lowdefy/node-utils':
         specifier: 4.0.0-rc.11
-        version: link:../utils/node-utils
+        version: link:../../utils/node-utils
       '@lowdefy/operators-change-case':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-change-case
+        version: link:../../plugins/operators/operators-change-case
       '@lowdefy/operators-diff':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-diff
+        version: link:../../plugins/operators/operators-diff
       '@lowdefy/operators-js':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-js
+        version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-mql':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-mql
+        version: link:../../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-nunjucks
+        version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-uuid
+        version: link:../../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/operators/operators-yaml
+        version: link:../../plugins/operators/operators-yaml
       '@lowdefy/plugin-next-auth':
         specifier: 4.0.0-rc.11
-        version: link:../plugins/plugins/plugin-next-auth
+        version: link:../../plugins/plugins/plugin-next-auth
       chokidar:
         specifier: 3.5.3
         version: 3.5.3
@@ -4089,7 +4089,7 @@ packages:
     resolution: {integrity: sha512-UTYAUj/wviwdsMfzoSJspJxbkH5o1snzwX0//0ENX1u/55kkZZkcTZP6u9bwKGkv+dkk9at4m1Cpt0uY80kcpQ==}
     dependencies:
       '@jridgewell/gen-mapping': 0.3.2
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
     dev: true
 
   /@jridgewell/sourcemap-codec@1.4.14:
@@ -16138,7 +16138,7 @@ packages:
       uglify-js:
         optional: true
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
       '@swc/core': 1.3.92
       jest-worker: 27.5.1
       schema-utils: 3.3.0
@@ -16163,7 +16163,7 @@ packages:
       uglify-js:
         optional: true
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
@@ -16784,7 +16784,7 @@ packages:
     resolution: {integrity: sha512-74Y4LqY74kLE6IFyIjPtkSTWzUZmj8tdHT9Ii/26dvQ6K9Dl2NbEfj0XgU2sHCtKgt5VupqhlO/5aWuqS+IY1w==}
     engines: {node: '>=10.12.0'}
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
       '@types/istanbul-lib-coverage': 2.0.4
       convert-source-map: 1.9.0
 
@@ -16941,14 +16941,14 @@ packages:
       '@webassemblyjs/wasm-parser': 1.11.6
       acorn: 8.10.0
       acorn-import-assertions: 1.9.0(acorn@8.10.0)
-      browserslist: 4.21.9
+      browserslist: 4.22.1
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.15.0
       es-module-lexer: 1.3.0
       eslint-scope: 5.1.1
       events: 3.3.0
       glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       json-parse-even-better-errors: 2.3.1
       loader-runner: 4.3.0
       mime-types: 2.1.35

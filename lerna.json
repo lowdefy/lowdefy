@@ -5,6 +5,7 @@
     "src/packages/blocks/*",
     "src/packages/connections/*",
     "src/packages/plugins/**",
+    "src/packages/servers/*",
     "src/packages/utils/*"
   ],
   "npmClient": "pnpm",
