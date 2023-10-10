@@ -26,6 +26,8 @@ import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 
+const secrets = getSecretsFromEnv();
+
 function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {
     const context = {
@@ -40,11 +42,11 @@ function apiWrapper(handler) {
       operators,
       req,
       res,
+      secrets,
     };
     try {
       context.logger = createLogger({ rid: context.rid });
       context.authOptions = { configured: false };
-      context.secrets = getSecretsFromEnv();
       createApiContext(context);
       logRequest({ context });
       // Await here so that if handler throws it is caught.
