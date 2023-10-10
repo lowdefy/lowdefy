@@ -14,21 +14,9 @@
   limitations under the License.
 */
 
-import NextAuth from 'next-auth';
-
 import apiWrapper from '../../../lib/server/apiWrapper.js';
-import authJson from '../../../build/auth.json';
 
-async function handler({ context, req, res }) {
-  if (authJson.configured === true) {
-    // Required for emails in corporate networks, see:
-    // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-    if (req.method === 'HEAD') {
-      return res.status(200).end();
-    }
-    return await NextAuth(req, res, context.authOptions);
-  }
-
+async function handler({ res }) {
   return res.status(404).json({
     message: 'Auth not configured',
   });

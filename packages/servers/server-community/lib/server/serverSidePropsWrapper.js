@@ -20,10 +20,8 @@ import { createApiContext } from '@lowdefy/api';
 import config from '../../build/config.json';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
-import getServerSession from './auth/getServerSession.js';
 import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
-import getAuthOptions from './auth/getAuthOptions.js';
 
 // TODO: Merge serverSidePropsWrapper and apiWrapper?
 function serverSidePropsWrapper(handler) {
@@ -42,8 +40,6 @@ function serverSidePropsWrapper(handler) {
     };
     try {
       context.logger = createLogger({ rid: context.rid });
-      context.authOptions = getAuthOptions(context);
-      context.session = await getServerSession(context);
       createApiContext(context);
       logRequest({ context });
       // Await here so that if handler throws it is caught.

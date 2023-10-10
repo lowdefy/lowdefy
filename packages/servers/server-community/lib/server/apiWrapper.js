@@ -22,11 +22,9 @@ import config from '../../build/config.json';
 import connections from '../../build/plugins/connections.js';
 import createLogger from './log/createLogger.js';
 import fileCache from './fileCache.js';
-import getServerSession from './auth/getServerSession.js';
 import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
-import getAuthOptions from './auth/getAuthOptions.js';
 
 function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {
@@ -45,8 +43,7 @@ function apiWrapper(handler) {
     };
     try {
       context.logger = createLogger({ rid: context.rid });
-      context.authOptions = getAuthOptions(context);
-      context.session = await getServerSession(context);
+      context.authOptions = { configured: false };
       context.secrets = getSecretsFromEnv();
       createApiContext(context);
       logRequest({ context });
