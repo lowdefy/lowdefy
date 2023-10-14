@@ -23,7 +23,7 @@ const connection = {
 
 jest.unstable_mockModule('stripe', () => {
   return {
-    default() {
+    default: function () {
       return {
         customers: {
           list(...args) {
