@@ -18,7 +18,7 @@ import knex from 'knex';
 import { type } from '@lowdefy/helpers';
 import schema from './schema.js';
 
-function KnexBuilder({ request, connection }) {
+async function KnexBuilder({ request, connection }) {
   let client = knex(connection);
   if (request.tableName) {
     client = client(request.tableName);
