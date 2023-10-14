@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
 const Spinner = ({ properties, methods }) => {
-  let size = properties.size || 20;
+  let size = properties.size ?? 20;
   if (type.isString(size)) {
     switch (properties.size) {
       case 'small':

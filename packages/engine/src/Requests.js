@@ -50,7 +50,7 @@ class Requests {
     return Promise.all(requests);
   }
 
-  async callRequest({ actions, arrayIndices, blockId, event, requestId }) {
+  callRequest({ actions, arrayIndices, blockId, event, requestId }) {
     const requestConfig = this.requestConfig[requestId];
     if (!this.context.requests[requestId]) {
       this.context.requests[requestId] = [];

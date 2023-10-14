@@ -30,7 +30,7 @@ async function GoogleSheetGetOne({ request, connection }) {
   if (filter) {
     rows = mingoFilter({ input: rows, filter });
   }
-  return rows[0] || null;
+  return rows[0] ?? null;
 }
 
 GoogleSheetGetOne.schema = schema;

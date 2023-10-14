@@ -18,7 +18,7 @@ import createAuthorize from './createAuthorize.js';
 
 import { ServerError } from './errors.js';
 
-test('authorize public object', async () => {
+test('authorize public object', () => {
   const auth = { public: true };
   let authorize = createAuthorize({});
   expect(authorize({ auth })).toBe(true);
@@ -27,7 +27,7 @@ test('authorize public object', async () => {
   expect(authorize({ auth })).toBe(true);
 });
 
-test('authorize protected object, no roles', async () => {
+test('authorize protected object, no roles', () => {
   const auth = { public: false };
 
   let authorize = createAuthorize({});
@@ -37,7 +37,7 @@ test('authorize protected object, no roles', async () => {
   expect(authorize({ auth })).toBe(true);
 });
 
-test('authorize role protected object', async () => {
+test('authorize role protected object', () => {
   const auth = { public: false, roles: ['role1'] };
 
   let authorize = createAuthorize({});
@@ -59,7 +59,7 @@ test('authorize role protected object', async () => {
   expect(authorize({ auth })).toBe(true);
 });
 
-test('invalid auth config', async () => {
+test('invalid auth config', () => {
   const authorize = createAuthorize({});
   expect(() => authorize({ auth: { other: 'value' } })).toThrow(ServerError);
   expect(() => authorize({ auth: {} })).toThrow(ServerError);

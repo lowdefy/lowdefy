@@ -18,12 +18,12 @@ import { jest } from '@jest/globals';
 import path from 'path';
 
 jest.unstable_mockModule('./getLowdefyYaml.js', () => ({
-  default: jest.fn(async () =>
+  default: jest.fn(() =>
     Promise.resolve({ cliConfig: { cliConfig: true }, lowdefyVersion: 'lowdefyVersion' })
   ),
 }));
 jest.unstable_mockModule('./getCliJson.js', () => ({
-  default: async () => Promise.resolve({ appId: 'appId' }),
+  default: () => Promise.resolve({ appId: 'appId' }),
 }));
 jest.unstable_mockModule('./createPrint.js', () => ({
   default: () => ({

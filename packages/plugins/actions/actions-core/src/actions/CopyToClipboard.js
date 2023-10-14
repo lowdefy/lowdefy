@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-async function CopyToClipboard({ globals, params }) {
+function CopyToClipboard({ globals, params }) {
   const { window } = globals;
   const { copy } = params;
   window.navigator.clipboard.writeText(copy);

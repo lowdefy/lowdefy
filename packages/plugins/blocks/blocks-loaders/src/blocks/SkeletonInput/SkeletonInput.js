@@ -37,8 +37,8 @@ const SkeletonInput = ({ properties, methods }) => {
         <Skeleton
           methods={methods}
           properties={{
-            width: properties.labelWidth || properties.width || '30%',
-            height: properties.labelHeight || 20,
+            width: properties.labelWidth ?? properties.width ?? '30%',
+            height: properties.labelHeight ?? 20,
             style: { ...{ marginBottom: 10 }, ...(properties.labelStyle || {}) },
           }}
         />
@@ -46,8 +46,8 @@ const SkeletonInput = ({ properties, methods }) => {
       <Skeleton
         methods={methods}
         properties={{
-          width: properties.width || '100%',
-          height: properties.inputHeight || inputHeight,
+          width: properties.width ?? '100%',
+          height: properties.inputHeight ?? inputHeight,
           style: properties.inputStyle || {},
         }}
       />

@@ -33,11 +33,11 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
         title: renderHtml({ html: properties.title, methods }),
         bodyStyle: methods.makeCssClass(properties.bodyStyle, true),
         content:
-          (content.content && content.content()) ||
+          (content.content && content.content()) ??
           renderHtml({ html: properties.content, methods }),
         className: methods.makeCssClass(properties.modalStyle),
         closable: properties.closable,
-        okText: properties.okText || 'Ok',
+        okText: properties.okText ?? 'Ok',
         okButtonProps: properties.okButton?.icon
           ? {
               ...properties.okButton,
@@ -62,10 +62,10 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
               ),
             }
           : properties.cancelButton,
-        cancelText: properties.cancelText || 'Cancel',
-        centered: properties.centered || false,
+        cancelText: properties.cancelText ?? 'Cancel',
+        centered: properties.centered ?? false,
         mask: properties.mask !== undefined ? properties.mask : true,
-        maskClosable: properties.maskClosable || false,
+        maskClosable: properties.maskClosable ?? false,
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {

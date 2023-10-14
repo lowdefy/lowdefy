@@ -172,7 +172,7 @@ const MenuComp = ({
                                 <Menu.Divider
                                   key={`${subLink.id}_${k}`}
                                   className={methods.makeCssClass([subLink.style])}
-                                  dashed={subLink.properties && subLink.properties.dashed}
+                                  dashed={subLink.properties?.dashed}
                                 />
                               );
                             }

@@ -42,7 +42,7 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
             properties={properties.prefixIcon}
           />
         ) : (
-          properties.prefix || ''
+          properties.prefix ?? ''
         )
       }
       suffix={
@@ -53,7 +53,7 @@ const StatisticBlock = ({ blockId, components: { Icon }, events, properties, met
             properties={properties.suffixIcon}
           />
         ) : (
-          properties.suffix || ''
+          properties.suffix ?? ''
         )
       }
       {...additionalProps}

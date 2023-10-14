@@ -21,7 +21,7 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonAvatar = ({ properties, methods }) => {
-  let size = properties.size || 32;
+  let size = properties.size ?? 32;
   if (type.isString(size)) {
     switch (properties.size) {
       case 'small':

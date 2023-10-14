@@ -56,9 +56,9 @@ const MonthSelector = ({
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format || 'YYYY-MM'}
+              format={properties.format ?? 'YYYY-MM'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              placeholder={properties.placeholder || 'Select Month'}
+              placeholder={properties.placeholder ?? 'Select Month'}
               size={properties.size}
               status={validation.status}
               value={type.isDate(value) ? moment.utc(value).startOf('month') : null}
@@ -66,7 +66,7 @@ const MonthSelector = ({
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
                   events={events}
-                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
                 />
               }
               onChange={(newVal) => {

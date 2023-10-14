@@ -53,7 +53,7 @@ class Events {
     this.events[name] = this.initEvent(actions);
   }
 
-  async triggerEvent({ name, event, progress }) {
+  triggerEvent({ name, event, progress }) {
     const eventDescription = this.events[name];
     const result = {
       blockId: this.block.blockId,

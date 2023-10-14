@@ -39,7 +39,7 @@ const SkeletonButton = ({ properties, methods }) => {
           ...{ borderRadius: properties.shape === 'round' && height / 2 },
           ...(properties.style || {}),
         },
-        width: properties.width || '100%',
+        width: properties.width ?? '100%',
         height,
       }}
     />

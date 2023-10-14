@@ -35,7 +35,7 @@ async function logError({ error, context = {} }) {
         stack: error.stack,
       },
     });
-  } catch (error) {
+  } catch (_) {
     // pass
   }
 }

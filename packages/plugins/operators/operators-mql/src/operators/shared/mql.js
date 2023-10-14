@@ -34,7 +34,7 @@ function aggregate(data, pipeline) {
   return agg.run(data);
 }
 
-function expr(data, expr) {
+function expr(data, expression) {
   if (data === null) {
     data = {};
   }
@@ -44,7 +44,7 @@ function expr(data, expr) {
   const agg = new mingo.Aggregator([
     {
       $project: {
-        value: expr,
+        value: expression,
       },
     },
   ]);
@@ -52,17 +52,17 @@ function expr(data, expr) {
   return get(res, '0.value', { default: null });
 }
 
-function test(data, test) {
+function test(data, testQuery) {
   if (data === null) {
     data = {};
   }
   if (!type.isObject(data)) {
     throw new Error('Data must be of type object.');
   }
-  if (!type.isObject(test)) {
+  if (!type.isObject(testQuery)) {
     throw new Error('Query test must be of type object.');
   }
-  const query = new mingo.Query(test);
+  const query = new mingo.Query(testQuery);
   return query.test(data);
 }
 

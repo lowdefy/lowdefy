@@ -53,9 +53,9 @@ const DateSelector = ({
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
-              format={properties.format || 'YYYY-MM-DD'}
+              format={properties.format ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              placeholder={properties.placeholder || 'Select Date'}
+              placeholder={properties.placeholder ?? 'Select Date'}
               showToday={properties.showToday}
               size={properties.size}
               status={validation.status}
@@ -63,7 +63,7 @@ const DateSelector = ({
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
                   events={events}
-                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
                 />
               }
               disabledDate={disabledDate(properties.disabledDates)}

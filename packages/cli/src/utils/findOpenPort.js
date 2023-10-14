@@ -49,7 +49,7 @@
 
 import net from 'net';
 
-async function findPort() {
+function findPort() {
   return new Promise((resolve, reject) => {
     const server = net.createServer();
     server.on('error', reject);

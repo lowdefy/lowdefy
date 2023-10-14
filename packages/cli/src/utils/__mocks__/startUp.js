@@ -27,7 +27,7 @@ async function mockStartUpImp({ context, options = {} }) {
     log: jest.fn(),
   };
 
-  context.configDirectory = options.configDirectory || 'configDirectory';
+  context.configDirectory = options.configDirectory ?? 'configDirectory';
 
   context.cliConfig = {};
   context.lowdefyVersion = 'lowdefyVersion';

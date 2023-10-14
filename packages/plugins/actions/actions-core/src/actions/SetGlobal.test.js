@@ -20,7 +20,7 @@ import SetGlobal from './SetGlobal.js';
 const mockSetGlobal = jest.fn();
 const methods = { setGlobal: mockSetGlobal };
 
-test('SetGlobal action invocation', async () => {
+test('SetGlobal action invocation', () => {
   SetGlobal({ methods, params: { key: 'value' } });
   expect(mockSetGlobal.mock.calls).toEqual([[{ key: 'value' }]]);
 });

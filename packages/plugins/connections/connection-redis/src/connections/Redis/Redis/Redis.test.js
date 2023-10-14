@@ -31,6 +31,7 @@ beforeAll(async () => {
 
 test('redis command with connection as an object', async () => {
   const Redis = (await import('./Redis.js')).default;
+  const response = 'responseValue';
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -55,7 +56,6 @@ test('redis command with connection as an object', async () => {
       b: false,
     },
   };
-  const response = 'responseValue';
   const res = await Redis({ request, connection });
   expect(mockedCreateClient.mock.calls).toEqual([[connection.connection]]);
   expect(client.connect).toHaveBeenCalledTimes(1);
@@ -66,6 +66,7 @@ test('redis command with connection as an object', async () => {
 
 test('redis command with connection as a string', async () => {
   const Redis = (await import('./Redis.js')).default;
+  const response = 'responseValue';
   const client = {
     on: jest.fn(),
     connect: jest.fn().mockImplementation(() => Promise.resolve()),
@@ -84,7 +85,6 @@ test('redis command with connection as a string', async () => {
       b: false,
     },
   };
-  const response = 'responseValue';
   const res = await Redis({ request, connection });
   expect(mockedCreateClient.mock.calls).toEqual([[{ url: connection.connection }]]);
   expect(client.connect).toHaveBeenCalledTimes(1);
@@ -101,7 +101,7 @@ test('connection error', async () => {
         cb(new Error('connection error'));
       }
     }),
-    connect: jest.fn().mockImplementation(() => Promise.reject()),
+    connect: jest.fn().mockImplementation(() => Promise.reject(new Error('connection error'))),
   };
   mockedCreateClient.mockImplementationOnce(() => client);
   const connection = {

@@ -55,6 +55,7 @@ test('getCliJson, file exists', async () => {
     if (filePath === path.resolve(process.cwd(), '.lowdefy/cli.json')) {
       return '{"appId": "appId"}';
     }
+    return null;
   });
   const res = await getCliJson({ configDirectory });
   expect(res).toEqual({ appId: 'appId' });

@@ -33,7 +33,7 @@ const AgGridInputBalham = ({
     id={blockId}
     className={`ag-theme-balham ${methods.makeCssClass({
       width: '100%',
-      height: properties.height || 500,
+      height: properties.height ?? 500,
       ...properties.style,
     })}`}
   >

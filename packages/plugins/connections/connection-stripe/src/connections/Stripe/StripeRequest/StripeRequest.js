@@ -18,7 +18,7 @@ import { get } from '@lowdefy/helpers';
 import Stripe from 'stripe';
 import schema from './schema.js';
 
-async function StripeRequest({ request, connection }) {
+function StripeRequest({ request, connection }) {
   const stripe = new Stripe(connection.secretKey, {
     apiVersion: connection.apiVersion,
     maxNetworkRetries: connection.maxNetworkRetries,
