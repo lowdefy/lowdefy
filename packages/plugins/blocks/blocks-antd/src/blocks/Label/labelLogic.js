@@ -42,11 +42,11 @@ const labelLogic = ({
   label = label === '' ? null : label;
   // trim colon when colon is set, and the user inputs a colon, because antd class renders a colon
   if (type.isString(label) && properties.colon && label.trim() !== '') {
-    label = label.replace(/[:|：]\s*$/, '');
+    label = label.replace(/[:|：]\s*$/u, '');
   }
   const rowClassName = classNames({
-    [`ant-form-item`]: true,
-    [`ant-form-item-with-help`]: false,
+    ['ant-form-item']: true,
+    ['ant-form-item-with-help']: false,
     [methods.makeCssClass({
       flexWrap: properties.inline && 'inherit', // wrap extra content below input
       marginBottom: 0,
@@ -54,8 +54,8 @@ const labelLogic = ({
   });
 
   const labelColClassName = classNames({
-    [`ant-form-item-label`]: true,
-    [`ant-form-item-label-left`]: properties.align === 'left' || !properties.align, // default align left
+    ['ant-form-item-label']: true,
+    ['ant-form-item-label-left']: properties.align === 'left' || !properties.align, // default align left
     [methods.makeCssClass({
       overflow: properties.inline && 'inherit', // wrap label content below input
       whiteSpace: !properties.inline && 'normal', // set label title wrap for long labels
@@ -65,8 +65,8 @@ const labelLogic = ({
   });
 
   const labelClassName = classNames({
-    [`ant-form-item-required`]: required,
-    [`ant-form-item-no-colon`]: properties.colon === false,
+    ['ant-form-item-required']: required,
+    ['ant-form-item-no-colon']: properties.colon === false,
     [methods.makeCssClass([
       {
         height: 'fit-content !important',
@@ -90,10 +90,10 @@ const labelLogic = ({
   });
 
   const feedbackClassName = classNames({
-    [`ant-form-item-explain-success`]: validation.status === 'success',
-    [`ant-form-item-explain-warning`]: validation.status === 'warning',
-    [`ant-form-item-explain-error`]: validation.status === 'error',
-    [`ant-form-item-explain-validating`]: validation.status === 'validating',
+    ['ant-form-item-explain-success']: validation.status === 'success',
+    ['ant-form-item-explain-warning']: validation.status === 'warning',
+    ['ant-form-item-explain-error']: validation.status === 'error',
+    ['ant-form-item-explain-validating']: validation.status === 'validating',
     [methods.makeCssClass([
       {
         marginTop: properties.size === 'small' ? -4 : 0, // in size small reduce extra top margin
@@ -104,10 +104,10 @@ const labelLogic = ({
 
   const iconClassName = classNames({
     'ant-form-item-feedback-icon': true,
-    [`ant-form-item-feedback-icon-success`]: validation.status === 'success',
-    [`ant-form-item-feedback-icon-warning`]: validation.status === 'warning',
-    [`ant-form-item-feedback-icon-error`]: validation.status === 'error',
-    [`ant-form-item-feedback-icon-validating`]: validation.status === 'validating',
+    ['ant-form-item-feedback-icon-success']: validation.status === 'success',
+    ['ant-form-item-feedback-icon-warning']: validation.status === 'warning',
+    ['ant-form-item-feedback-icon-error']: validation.status === 'error',
+    ['ant-form-item-feedback-icon-validating']: validation.status === 'validating',
     'ldf-feedback-icon': true,
   });
 

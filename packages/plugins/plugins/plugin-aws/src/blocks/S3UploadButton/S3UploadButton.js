@@ -37,10 +37,8 @@ const makeOnChangeValue = (s3Parameters, changeEvent) => {
 
 const getDisabled = ({ properties, value }) => {
   if (properties.disabled) return true;
-  if (properties.singleFile && value && (value.fileList || []).length >= 1) {
-    return true;
-  }
-  return false;
+
+  return properties.singleFile && value && (value.fileList || []).length >= 1;
 };
 
 const getCustomRequest =

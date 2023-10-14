@@ -315,7 +315,7 @@ test('operators are evaluated in error messages after error', async () => {
     [
       {
         content: `{
-  \"data\": 1234
+  "data": 1234
 }`,
         duration: 6,
         status: 'error',

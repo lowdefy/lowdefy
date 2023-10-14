@@ -22,7 +22,7 @@ const Skeleton = ({ properties, methods }) => {
     <div
       className={'skeleton ' + methods.makeCssClass(properties.style)}
       style={{ width: properties.width || '100%', height: properties.height || '100%' }}
-    ></div>
+    />
   );
 };
 

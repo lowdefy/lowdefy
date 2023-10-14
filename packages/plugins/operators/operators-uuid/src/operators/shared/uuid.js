@@ -33,7 +33,7 @@ function _uuid({ params, location, methodName }) {
     return v4();
   }
   return runClass({
-    functions: functions,
+    functions,
     location,
     meta,
     methodName,

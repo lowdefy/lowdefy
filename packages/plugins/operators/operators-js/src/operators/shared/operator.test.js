@@ -50,7 +50,7 @@ test('_operator, _payload', () => {
   expect(res.output).toEqual({
     a: 'Some String',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_operator.name invalid', () => {
@@ -118,7 +118,7 @@ test('_operator, _not with no params', () => {
   const parser = new ServerParser({ operators, payload });
   const res = parser.parse({ input, location });
   expect(res.output).toEqual({ a: true });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_operator, _json.parse with params', () => {
@@ -128,5 +128,5 @@ test('_operator, _json.parse with params', () => {
   expect(res.output).toEqual({
     a: [{ a: 'a1' }],
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });

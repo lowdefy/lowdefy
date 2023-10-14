@@ -38,32 +38,30 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
         className: methods.makeCssClass(properties.modalStyle),
         closable: properties.closable,
         okText: properties.okText || 'Ok',
-        okButtonProps:
-          properties.okButton && properties.okButton.icon
-            ? {
-                ...properties.okButton,
-                icon: properties.okButton.icon && (
-                  <Icon
-                    blockId={`${blockId}_ok_icon`}
-                    events={events}
-                    properties={properties.okButton.icon}
-                  />
-                ),
-              }
-            : properties.okButton,
-        cancelButtonProps:
-          properties.cancelButton && properties.cancelButton.icon
-            ? {
-                ...properties.cancelButton,
-                icon: properties.cancelButton.icon && (
-                  <Icon
-                    blockId={`${blockId}_ok_icon`}
-                    events={events}
-                    properties={properties.cancelButton.icon}
-                  />
-                ),
-              }
-            : properties.cancelButton,
+        okButtonProps: properties.okButton?.icon
+          ? {
+              ...properties.okButton,
+              icon: properties.okButton.icon && (
+                <Icon
+                  blockId={`${blockId}_ok_icon`}
+                  events={events}
+                  properties={properties.okButton.icon}
+                />
+              ),
+            }
+          : properties.okButton,
+        cancelButtonProps: properties.cancelButton?.icon
+          ? {
+              ...properties.cancelButton,
+              icon: properties.cancelButton.icon && (
+                <Icon
+                  blockId={`${blockId}_ok_icon`}
+                  events={events}
+                  properties={properties.cancelButton.icon}
+                />
+              ),
+            }
+          : properties.cancelButton,
         cancelText: properties.cancelText || 'Cancel',
         centered: properties.centered || false,
         mask: properties.mask !== undefined ? properties.mask : true,

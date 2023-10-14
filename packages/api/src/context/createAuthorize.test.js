@@ -16,7 +16,7 @@
 
 import createAuthorize from './createAuthorize.js';
 
-import { ServerError } from '../context/errors.js';
+import { ServerError } from './errors.js';
 
 test('authorize public object', async () => {
   const auth = { public: true };

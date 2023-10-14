@@ -44,7 +44,7 @@ async function getServer({ context, packageName, directory }) {
     await fetchNpmTarball({
       packageName,
       version: context.lowdefyVersion,
-      directory: directory,
+      directory,
     });
     context.print.log(`Fetched ${packageName} from npm.`);
   }

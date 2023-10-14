@@ -78,7 +78,7 @@ const options = {
 program
   .command('build')
   .description('Build a Lowdefy production app.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
@@ -90,7 +90,7 @@ program
 program
   .command('dev')
   .description('Start a Lowdefy development server.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -105,7 +105,7 @@ program
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .action(runCommand({ cliVersion, handler: init }));
@@ -113,7 +113,7 @@ program
 program
   .command('init-docker')
   .description('Initialize Dockerfile.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
@@ -122,7 +122,7 @@ program
 program
   .command('init-vercel')
   .description('Initialize Vercel deployment installation scripts.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
@@ -131,7 +131,7 @@ program
 program
   .command('start')
   .description('Start a Lowdefy production app.')
-  .usage(`[options]`)
+  .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)

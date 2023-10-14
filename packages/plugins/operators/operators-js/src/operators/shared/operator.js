@@ -44,7 +44,7 @@ function _operator(options) {
     return operators[operator]({
       ...options,
       location,
-      params: params && params.params,
+      params: params?.params,
       methodName,
     });
   }

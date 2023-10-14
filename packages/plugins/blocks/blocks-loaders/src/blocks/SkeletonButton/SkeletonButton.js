@@ -40,7 +40,7 @@ const SkeletonButton = ({ properties, methods }) => {
           ...(properties.style || {}),
         },
         width: properties.width || '100%',
-        height: height,
+        height,
       }}
     />
   );

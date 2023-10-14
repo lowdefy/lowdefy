@@ -34,13 +34,11 @@ const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
 const SiderBlock = ({ blockId, properties, content, methods, rename }) => {
   const [openState, setOpen] = useState(!properties.initialCollapsed);
   useEffect(() => {
-    methods.registerMethod(
-      get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }),
-      async () => await triggerSetOpen({ state: !openState, setOpen, methods, rename })
+    methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
+      triggerSetOpen({ state: !openState, setOpen, methods, rename })
     );
-    methods.registerMethod(
-      get(rename, 'methods.setOpen', { default: 'setOpen' }),
-      async ({ open }) => await triggerSetOpen({ state: !!open, setOpen, methods, rename })
+    methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
+      triggerSetOpen({ state: !!open, setOpen, methods, rename })
     );
   });
   return (

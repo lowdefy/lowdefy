@@ -48,8 +48,7 @@ const disabledDate = (disabledDates = {}) => {
         match = true;
       }
     });
-    if (match) return true;
-    return false;
+    return !!match;
   };
 };
 

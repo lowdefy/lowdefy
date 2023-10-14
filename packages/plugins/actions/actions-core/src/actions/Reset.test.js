@@ -21,6 +21,6 @@ const mockReset = jest.fn();
 const methods = { reset: mockReset };
 
 test('Reset action invocation', async () => {
-  Reset({ methods: methods });
+  Reset({ methods });
   expect(mockReset.mock.calls).toEqual([[]]);
 });
