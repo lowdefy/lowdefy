@@ -43,13 +43,7 @@ test('writeConnections write connection', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'connections/connection1.json',
-      `{
-  "id": "connection:connection1",
-  "connectionId": "connection1",
-  "properties": {
-    "prop": "val"
-  }
-}`,
+      `{"id":"connection:connection1","connectionId":"connection1","properties":{"prop":"val"}}`,
     ],
   ]);
 });
@@ -71,17 +65,11 @@ test('writeConnections multiple connection', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'connections/connection1.json',
-      `{
-  "id": "connection:connection1",
-  "connectionId": "connection1"
-}`,
+      `{"id":"connection:connection1","connectionId":"connection1"}`,
     ],
     [
       'connections/connection2.json',
-      `{
-  "id": "connection:connection2",
-  "connectionId": "connection2"
-}`,
+      `{"id":"connection:connection2","connectionId":"connection2"}`,
     ],
   ]);
 });

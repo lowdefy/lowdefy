@@ -16,10 +16,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 async function writeApp({ components, context }) {
-  await context.writeBuildArtifact(
-    'app.json',
-    serializer.serializeToString(components.app ?? {}, { space: 2 })
-  );
+  await context.writeBuildArtifact('app.json', serializer.serializeToString(components.app ?? {}));
 }
 
 export default writeApp;

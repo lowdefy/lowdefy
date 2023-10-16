@@ -34,14 +34,7 @@ test('writeConfig', async () => {
     },
   };
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'config.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', `{"key":"value"}`]]);
 });
 
 test('writeConfig empty config', async () => {

@@ -39,16 +39,7 @@ test('writeMenus', async () => {
   };
   await writeMenus({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'menus.json',
-      `[
-  {
-    "id": "menu:default",
-    "menuId": "default",
-    "links": []
-  }
-]`,
-    ],
+    ['menus.json', `[{"id":"menu:default","menuId":"default","links":[]}]`],
   ]);
 });
 

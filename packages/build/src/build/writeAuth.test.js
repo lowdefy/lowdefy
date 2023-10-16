@@ -34,14 +34,7 @@ test('writeAuth', async () => {
     },
   };
   await writeAuth({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'auth.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', `{"key":"value"}`]]);
 });
 
 test('writeAuth empty auth', async () => {

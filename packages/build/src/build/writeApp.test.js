@@ -34,14 +34,7 @@ test('writeApp', async () => {
     },
   };
   await writeApp({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'app.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['app.json', `{"key":"value"}`]]);
 });
 
 test('writeApp empty config', async () => {

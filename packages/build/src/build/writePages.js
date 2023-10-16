@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 async function writePage({ page, context }) {
   await context.writeBuildArtifact(
     `pages/${page.pageId}/${page.pageId}.json`,
-    serializer.serializeToString(page ?? {}, { space: 2 })
+    serializer.serializeToString(page ?? {})
   );
 }
 

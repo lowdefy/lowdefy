@@ -34,14 +34,7 @@ test('writeGlobal', async () => {
     },
   };
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'global.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{"key":"value"}`]]);
 });
 
 test('writeGlobal empty global', async () => {
