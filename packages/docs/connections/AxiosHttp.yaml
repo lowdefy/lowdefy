@@ -150,17 +150,17 @@ _ref:
                     type: AxiosHttp
                     connectionId: app_api
                     payload:
+                      order_id:
+                        _state: order_id
+                      data:
+                        _state: true
+                    properties:
                       url:
                         _nunjucks:
                           template: /orders/{{ order_id }}
                           on:
                             order_id:
-                              _state: order_id
-                      data:
-                        _state: true
-                    properties:
-                      url:
-                        _payload: url
+                              _payload: order_id
                       method: post
                       data:
                         _payload: data
