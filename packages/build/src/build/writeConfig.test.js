@@ -34,14 +34,7 @@ test('writeConfig', async () => {
     },
   };
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'config.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', '{"key":"value"}']]);
 });
 
 test('writeConfig empty config', async () => {
@@ -49,11 +42,11 @@ test('writeConfig empty config', async () => {
     config: {},
   };
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', '{}']]);
 });
 
 test('writeConfig config undefined', async () => {
   const components = {};
   await writeConfig({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['config.json', '{}']]);
 });

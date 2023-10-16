@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 async function writeTypes({ components, context }) {
   await context.writeBuildArtifact(
     'types.json',
-    serializer.serializeToString(components.types ?? {}, { space: 2 })
+    serializer.serializeToString(components.types ?? {})
   );
 }
 
