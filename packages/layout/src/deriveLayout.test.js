@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import deriveLayout from '../src/deriveLayout.js';
+import deriveLayout from './deriveLayout.js';
 
 const defaultValue = {
   xs: {

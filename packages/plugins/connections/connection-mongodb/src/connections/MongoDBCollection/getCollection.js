@@ -17,9 +17,8 @@
 import { MongoClient } from 'mongodb';
 
 async function getCollection({ connection }) {
-  let client;
   const { collection, databaseName, databaseUri, options } = connection;
-  client = new MongoClient(databaseUri, options);
+  const client = new MongoClient(databaseUri, options);
   await client.connect();
   try {
     const db = client.db(databaseName);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import gutterSetup from '../src/gutterSetup.js';
+import gutterSetup from './gutterSetup.js';
 
 test('no gutter specified', () => {
   expect(gutterSetup(undefined)).toEqual(undefined);

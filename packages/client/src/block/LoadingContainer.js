@@ -40,7 +40,7 @@ const LoadingContainer = ({
           areaKey,
           layout: skeleton.layout ?? blockLayout,
         })}
-        areaStyle={[areaStyle, skeleton.areas[areaKey] && skeleton.areas[areaKey].style]}
+        areaStyle={[areaStyle, skeleton.areas[areaKey]?.style]}
         highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
         key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}

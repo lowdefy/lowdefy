@@ -47,13 +47,13 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
   return (
     <Tabs
       animated={properties.animated !== undefined ? properties.animated : true}
-      defaultActiveKey={properties.defaultActiveKey || tabs[0].key}
+      defaultActiveKey={properties.defaultActiveKey ?? tabs[0].key}
       id={blockId}
       onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
-      size={properties.size || 'default'}
+      size={properties.size ?? 'default'}
       tabBarStyle={methods.makeCssClass(properties.tabBarStyle, true)}
-      tabPosition={properties.tabPosition || 'top'}
-      type={properties.tabType || 'line'}
+      tabPosition={properties.tabPosition ?? 'top'}
+      type={properties.tabType ?? 'line'}
       onTabScroll={({ direction }) =>
         methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
@@ -69,7 +69,7 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
               {tab.icon && (
                 <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />
               )}
-              {tab.title || tab.key}
+              {tab.title ?? tab.key}
             </span>
           }
         >

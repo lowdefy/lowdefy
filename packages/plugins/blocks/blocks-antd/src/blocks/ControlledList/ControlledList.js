@@ -73,7 +73,7 @@ const ControlledListBlock = ({
                 properties={{
                   icon: 'AiOutlinePlus',
                   size: properties.size,
-                  title: get(properties, 'addItemButton.title ') || 'Add Item',
+                  title: get(properties, 'addItemButton.title ') ?? 'Add Item',
                   type: 'default',
                   ...properties.addItemButton,
                 }}
@@ -95,7 +95,7 @@ const ControlledListBlock = ({
               properties={{
                 icon: 'AiOutlinePlus',
                 size: properties.size,
-                title: get(properties, 'addItemButton.title ') || 'Add Item',
+                title: get(properties, 'addItemButton.title ') ?? 'Add Item',
                 type: 'dashed',
                 ...properties.addItemButton,
               }}
@@ -105,7 +105,7 @@ const ControlledListBlock = ({
         )
       }
       bordered
-      locale={{ emptyText: properties.noDataTitle || 'No Items' }}
+      locale={{ emptyText: properties.noDataTitle ?? 'No Items' }}
       dataSource={list}
       renderItem={(item, i) => (
         <List.Item
@@ -125,9 +125,7 @@ const ControlledListBlock = ({
                       properties.size === 'small' ? 2 : properties.size === 'large' ? 6 : 4,
                     fontSize:
                       properties.size === 'small' ? 16 : properties.size === 'large' ? 20 : 18,
-                    ...(properties.removeItemIcon && properties.removeItemIcon.style
-                      ? properties.removeItemIcon.style
-                      : {}),
+                    ...(properties.removeItemIcon?.style ? properties.removeItemIcon.style : {}),
                   },
                 }}
                 onClick={() => methods.removeItem(i)}

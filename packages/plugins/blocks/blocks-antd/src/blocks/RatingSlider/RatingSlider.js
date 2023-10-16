@@ -89,12 +89,12 @@ const RatingSlider = ({
   if (type.isString(propertiesIconMax)) {
     propertiesIconMax = { name: propertiesIconMax };
   }
-  const minMax = [get(properties, 'max', { default: 10 }), properties.min || 0].sort(
+  const minMax = [get(properties, 'max', { default: 10 }), properties.min ?? 0].sort(
     (a, b) => a - b
   );
 
   // round to fix floating point error
-  const minMin = parseFloat((minMax[0] - (properties.step || 1)).toPrecision(8));
+  const minMin = parseFloat((minMax[0] - (properties.step ?? 1)).toPrecision(8));
   const validationColor =
     validation.status === 'error' ? '#ff4d4f' : validation.status === 'warning' ? '#faad14' : null;
   return (
@@ -123,7 +123,7 @@ const RatingSlider = ({
                 properties={mergeObjects([
                   {
                     label: { disabled: true },
-                    options: [{ value: true, label: properties.notApplicableLabel || 'N/A' }],
+                    options: [{ value: true, label: properties.notApplicableLabel ?? 'N/A' }],
                     color: properties.color,
                     disabled: properties.disabled || loading,
                   },
@@ -135,7 +135,7 @@ const RatingSlider = ({
                   setValue: (val) => {
                     if (val[0] === true) {
                       unCheck(true);
-                      methods.setValue(properties.notApplicableLabel || 'N/A');
+                      methods.setValue(properties.notApplicableLabel ?? 'N/A');
                     } else {
                       unCheck(false);
                     }
@@ -196,15 +196,15 @@ const RatingSlider = ({
               }
               tipFormatter={(val) => `${val}`}
               marks={
-                properties.marks ||
+                properties.marks ??
                 (get(properties, 'showMarks', { default: true })
-                  ? includeMarks(minMax, minMin, properties.step || 1)
+                  ? includeMarks(minMax, minMin, properties.step ?? 1)
                   : undefined)
               }
               min={minMin}
               max={minMax[1]}
               range={false}
-              step={properties.step || 1}
+              step={properties.step ?? 1}
               onChange={(val) => {
                 if (val === minMin) {
                   methods.setValue(null);

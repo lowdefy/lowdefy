@@ -37,7 +37,7 @@ const AlertBlock = ({ blockId, content, events, components: { Icon }, methods, p
       id={blockId}
       message={
         type.isNone(properties.message) ? (
-          <div style={{ marginBottom: -4 }}></div>
+          <div style={{ marginBottom: -4 }} />
         ) : (
           renderHtml({ html: properties.message, methods })
         )

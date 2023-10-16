@@ -68,7 +68,7 @@ function stableStringify(obj, opts) {
     const indent = space ? `\n${new Array(level + 1).join(space)}` : '';
     const colonSeparator = space ? ': ' : ':';
 
-    if (node && node.toJSON && typeof node.toJSON === 'function') {
+    if (node?.toJSON && typeof node.toJSON === 'function') {
       node = node.toJSON();
     }
 
@@ -93,7 +93,7 @@ function stableStringify(obj, opts) {
       throw new TypeError('Converting circular structure to JSON');
     } else seen.push(node);
 
-    const keys = Object.keys(node).sort(cmp && cmp(node));
+    const keys = Object.keys(node).sort(cmp?.(node));
     const out = [];
     for (let i = 0; i < keys.length; i++) {
       const ky = keys[i];

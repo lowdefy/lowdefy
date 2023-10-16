@@ -34,7 +34,7 @@ test('_nunjucks string template', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with Some String embedded');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks null', () => {
@@ -42,7 +42,7 @@ test('_nunjucks null', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks { template: , on: }', () => {
@@ -52,7 +52,7 @@ test('_nunjucks { template: , on: }', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('String with test embedded');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks template not a string', () => {
@@ -60,7 +60,7 @@ test('_nunjucks template not a string', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks params on template not a string', () => {
@@ -70,7 +70,7 @@ test('_nunjucks params on template not a string', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks on not a object', () => {
@@ -80,7 +80,7 @@ test('_nunjucks on not a object', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks on null', () => {
@@ -90,7 +90,7 @@ test('_nunjucks on null', () => {
   const parser = new ServerParser({ operators, payload, secrets: {}, user: {} });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe('String with  embedded');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_nunjucks invalid template', () => {

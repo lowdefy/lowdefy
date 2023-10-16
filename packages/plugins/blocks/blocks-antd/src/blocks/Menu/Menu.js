@@ -26,8 +26,7 @@ const getDefaultMenu = (menus, menuId = 'default', links) => {
   return menu.links ?? [];
 };
 
-const getTitle = ({ id, properties, pageId, url }) =>
-  (properties && properties.title) ?? pageId ?? url ?? id;
+const getTitle = ({ id, properties, pageId, url }) => properties?.title ?? pageId ?? url ?? id;
 
 const MenuComp = ({
   blockId,
@@ -117,7 +116,7 @@ const MenuComp = ({
               <Menu.Divider
                 key={link.id}
                 className={methods.makeCssClass([link.style])}
-                dashed={link.properties && link.properties.dashed}
+                dashed={link.properties?.dashed}
               />
             );
           case 'MenuGroup':
@@ -134,8 +133,7 @@ const MenuComp = ({
                   </Link>
                 }
                 icon={
-                  link.properties &&
-                  link.properties.icon && (
+                  link.properties?.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
                       events={events}
@@ -151,7 +149,7 @@ const MenuComp = ({
                         <Menu.Divider
                           key={subLink.id ?? j}
                           className={methods.makeCssClass([subLink.style])}
-                          dashed={subLink.properties && subLink.properties.dashed}
+                          dashed={subLink.properties?.dashed}
                         />
                       );
                     case 'MenuGroup':
@@ -174,7 +172,7 @@ const MenuComp = ({
                                 <Menu.Divider
                                   key={`${subLink.id}_${k}`}
                                   className={methods.makeCssClass([subLink.style])}
-                                  dashed={subLink.properties && subLink.properties.dashed}
+                                  dashed={subLink.properties?.dashed}
                                 />
                               );
                             }
@@ -183,8 +181,7 @@ const MenuComp = ({
                                 key={subLinkGroup.pageId ?? subLinkGroup.id}
                                 danger={get(subLinkGroup, 'properties.danger')}
                                 icon={
-                                  subLinkGroup.properties &&
-                                  subLinkGroup.properties.icon && (
+                                  subLinkGroup.properties?.icon && (
                                     <Icon
                                       blockId={`${subLinkGroup.id}_icon`}
                                       events={events}
@@ -212,8 +209,7 @@ const MenuComp = ({
                           key={subLink.pageId ?? subLink.id}
                           danger={get(subLink, 'properties.danger')}
                           icon={
-                            subLink.properties &&
-                            subLink.properties.icon && (
+                            subLink.properties?.icon && (
                               <Icon
                                 blockId={`${subLink.id}_icon`}
                                 events={events}
@@ -242,8 +238,7 @@ const MenuComp = ({
                 key={link.pageId ?? link.id}
                 danger={get(link, 'properties.danger')}
                 icon={
-                  link.properties &&
-                  link.properties.icon && (
+                  link.properties?.icon && (
                     <Icon
                       blockId={`${link.id}_icon`}
                       events={events}

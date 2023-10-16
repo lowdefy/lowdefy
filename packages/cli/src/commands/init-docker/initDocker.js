@@ -20,18 +20,18 @@ import url from 'url';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 
 async function initDocker({ context }) {
-  context.print.log(`Initializing Docker deployment.`);
+  context.print.log('Initializing Docker deployment.');
   const dockerfile = await readFile(url.fileURLToPath(new URL('./Dockerfile', import.meta.url)));
   await writeFile(path.join(context.directories.config, 'Dockerfile'), dockerfile);
-  context.print.log(`Created 'Dockerfile'.`);
+  context.print.log("Created 'Dockerfile'.");
   const dockerignore = await readFile(
     url.fileURLToPath(new URL('./.dockerignore', import.meta.url))
   );
   await writeFile(path.join(context.directories.config, '.dockerignore'), dockerignore);
-  context.print.log(`Created '.dockerignore'.`);
+  context.print.log("Created '.dockerignore'.");
 
   await context.sendTelemetry();
-  context.print.succeed(`Docker deployment initialized.`);
+  context.print.succeed('Docker deployment initialized.');
 }
 
 export default initDocker;

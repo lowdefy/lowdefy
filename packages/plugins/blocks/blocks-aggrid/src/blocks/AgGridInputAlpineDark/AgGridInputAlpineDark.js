@@ -33,7 +33,7 @@ const AgGridInputAlpineDark = ({
     id={blockId}
     className={`ag-theme-alpine-dark ${methods.makeCssClass({
       width: '100%',
-      height: properties.height || 500,
+      height: properties.height ?? 500,
       ...properties.style,
     })}`}
   >

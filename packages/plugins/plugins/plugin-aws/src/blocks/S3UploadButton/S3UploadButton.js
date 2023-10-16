@@ -37,15 +37,14 @@ const makeOnChangeValue = (s3Parameters, changeEvent) => {
 
 const getDisabled = ({ properties, value }) => {
   if (properties.disabled) return true;
-  if (properties.singleFile && value && (value.fileList || []).length >= 1) {
-    return true;
-  }
-  return false;
+
+  return properties.singleFile && value && (value.fileList || []).length >= 1;
 };
 
 const getCustomRequest =
   ({ methods, setS3Parameters }) =>
   async ({ file, onError, onProgress, onSuccess }) => {
+    let meta;
     try {
       const { name, size, type, uid } = file;
 
@@ -60,7 +59,7 @@ const getCustomRequest =
 
       const { url, fields } = s3PostPolicyResponse.responses.__getS3PostPolicy.response[0];
       const { bucket, key } = fields;
-      const meta = { bucket, key, filename: name, size, type, uid };
+      meta = { bucket, key, filename: name, size, type, uid };
 
       setS3Parameters((prevState) => {
         const ret = { ...prevState };
@@ -100,7 +99,7 @@ const getCustomRequest =
       xhr.send(formData);
     } catch (error) {
       console.error(error);
-      await methods.triggerEvent({ name: 'onError', event: { meta, event } });
+      await methods.triggerEvent({ name: 'onError', event: { meta, error } });
       onError(error);
     }
   };

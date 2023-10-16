@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import layoutParamsToArea from '../src/layoutParamsToArea.js';
+import layoutParamsToArea from './layoutParamsToArea.js';
 
 test('empty area and layout', () => {
   const layout = {};

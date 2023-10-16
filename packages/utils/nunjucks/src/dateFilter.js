@@ -49,7 +49,7 @@ const dateFilter = (date, format, ...args) => {
     if (obj[format] && type.isFunction(obj[format])) {
       result = obj[format](...args);
     } else {
-      result = obj.format(format || dateFilterDefaultFormat);
+      result = obj.format(format ?? dateFilterDefaultFormat);
     }
   } catch (err) {
     errs.push(err);
@@ -69,7 +69,7 @@ dateFilter.setDefaultFormat = (format) => {
 
 // install the filter to nunjucks environment
 dateFilter.install = (env, customName) => {
-  (env || nunjucks.configure()).addFilter(customName || 'date', dateFilter);
+  (env || nunjucks.configure()).addFilter(customName ?? 'date', dateFilter);
 };
 
 export default dateFilter;

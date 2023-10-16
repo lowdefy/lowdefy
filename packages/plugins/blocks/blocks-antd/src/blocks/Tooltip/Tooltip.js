@@ -31,7 +31,7 @@ const TooltipBlock = ({ blockId, content, properties, methods }) => (
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}
-    trigger={properties.trigger || 'hover'}
+    trigger={properties.trigger ?? 'hover'}
     zIndex={properties.zIndex}
     onVisibleChange={() => methods.triggerEvent({ name: 'onVisibleChange' })}
   >

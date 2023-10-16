@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout, layoutParamsToArea } from '../../../src/index.js';
+import { Area, BlockLayout, layoutParamsToArea } from '../../index.js';
 
 import Block from './Block.js';
 import Box from './Box.js';
@@ -74,7 +74,7 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
             })}
             areaStyle={[areaStyle, areas[areaKey]?.style]}
             highlightBorders={highlightBorders}
-            id={`${block.id}-${areaKey}` + randomId()}
+            id={`${block.id}-${areaKey}${randomId()}`}
             key={`${block.id}-${areaKey}`}
             makeCssClass={makeCssClass}
           >
@@ -91,7 +91,7 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
       });
       return (
         <Comp
-          blockId={block.id + randomId()}
+          blockId={`${block.id}${randomId()}`}
           content={content}
           makeCssClass={makeCssClass}
           properties={block.properties}
@@ -100,7 +100,7 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
     default:
       return (
         <Comp
-          blockId={block.id + randomId()}
+          blockId={`${block.id}${randomId()}`}
           makeCssClass={makeCssClass}
           properties={block.properties}
         />
@@ -112,7 +112,7 @@ const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
   return (
     <Loading id={`${block.id}-loading`} showLoading>
       <BlockLayout
-        id={`bl-${block.id}` + randomId()}
+        id={`bl-${block.id}${randomId()}`}
         highlightBorders={highlightBorders}
         layout={block.layout}
         blockStyle={block.style}

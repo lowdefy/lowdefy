@@ -15,8 +15,8 @@
 */
 
 function createRequest({ actions, arrayIndices, blockId, context, event }) {
-  return async function request(params) {
-    return await context._internal.Requests.callRequests({
+  return function request(params) {
+    return context._internal.Requests.callRequests({
       actions,
       arrayIndices,
       blockId,

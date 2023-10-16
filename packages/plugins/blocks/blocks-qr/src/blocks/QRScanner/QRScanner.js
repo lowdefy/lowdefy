@@ -56,7 +56,7 @@ class QRScanner extends React.Component {
     if (!this.scanning) {
       this.scanning = true;
       this.html5QrCode?.start(
-        { facingMode: this.props.properties.facingMode || 'environment' },
+        { facingMode: this.props.properties.facingMode ?? 'environment' },
         {
           ...{ aspectRatio: 1 },
           ...this.props.properties,

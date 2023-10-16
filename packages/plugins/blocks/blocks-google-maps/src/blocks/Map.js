@@ -49,7 +49,7 @@ const Map = ({ blockId, children, content, methods, properties }) => {
       if (!bounds || !map) {
         throw new Error('fitBounds can only be called once google maps has been mounted.');
       }
-      (args?.bounds ?? []).map((position) => {
+      (args?.bounds ?? []).forEach((position) => {
         bounds.extend(position);
       });
       map.fitBounds(bounds);
@@ -76,11 +76,11 @@ const Map = ({ blockId, children, content, methods, properties }) => {
     if (properties.infoWindow) {
       bounds.extend(properties.infoWindow.position ?? MAP_DEFAULTS.center);
     }
-    (properties.markers ?? []).map((marker) => {
+    (properties.markers ?? []).forEach((marker) => {
       bounds.extend(marker.position);
     });
-    (properties.markerClusterers ?? []).map((markerClusterer) => {
-      (markerClusterer.markers ?? []).map((marker) => {
+    (properties.markerClusterers ?? []).forEach((markerClusterer) => {
+      (markerClusterer.markers ?? []).forEach((marker) => {
         bounds.extend(marker.position);
       });
     });
@@ -202,7 +202,7 @@ const Map = ({ blockId, children, content, methods, properties }) => {
           {content.infoWindow && content.infoWindow()}
         </InfoWindow>
       )}
-      {children && children(map, bounds)}
+      {children?.(map, bounds)}
     </GoogleMap>
   );
 };

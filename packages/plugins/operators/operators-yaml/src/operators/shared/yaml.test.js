@@ -95,7 +95,7 @@ test('_yaml.parse date array', () => {
 test('_yaml.parse date as object', () => {
   expect(
     yaml({
-      params: [`~d: "1970-01-01T00:00:00.000Z"`],
+      params: ['~d: "1970-01-01T00:00:00.000Z"'],
       location: 'locationId',
       methodName: 'parse',
     })

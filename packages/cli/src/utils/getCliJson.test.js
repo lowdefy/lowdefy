@@ -48,13 +48,14 @@ test('getCliJson, no file exists', async () => {
   ]);
 });
 
-test('getCliJson, no file exists', async () => {
+test('getCliJson, file exists', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
   const getCliJson = (await import('./getCliJson.js')).default;
   nodeUtils.readFile.mockImplementation((filePath) => {
     if (filePath === path.resolve(process.cwd(), '.lowdefy/cli.json')) {
-      return `{"appId": "appId"}`;
+      return '{"appId": "appId"}';
     }
+    return null;
   });
   const res = await getCliJson({ configDirectory });
   expect(res).toEqual({ appId: 'appId' });

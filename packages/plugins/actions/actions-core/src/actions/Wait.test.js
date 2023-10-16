@@ -33,11 +33,11 @@ test('wait set ms before continuing', async () => {
   expect(flag).toBe(true);
 });
 
-test('Wait params undefined', async () => {
+test('Wait params undefined', () => {
   expect(() => Wait({})).toThrow('Wait action "ms" param should be an integer.');
 });
 
-test('Wait params.ms not an integer', async () => {
+test('Wait params.ms not an integer', () => {
   expect(() => Wait({ params: { key: 'value' } })).toThrow(
     'Wait action "ms" param should be an integer.'
   );

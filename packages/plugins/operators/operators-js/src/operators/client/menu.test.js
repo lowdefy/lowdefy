@@ -81,7 +81,7 @@ test('_menu using string menuId', () => {
       menuId: 'default',
     },
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu using index', () => {
@@ -93,7 +93,7 @@ test('_menu using index', () => {
       menuId: 'm_1',
     },
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu in object', () => {
@@ -105,7 +105,7 @@ test('_menu in object', () => {
       menuId: 'default',
     },
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu full menus', () => {
@@ -123,7 +123,7 @@ test('_menu full menus', () => {
       menuId: 'm_2',
     },
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu null', () => {
@@ -147,7 +147,7 @@ test('_menu param object value', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu param object index', () => {
@@ -159,7 +159,7 @@ test('_menu param object index', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual({ menuId: 'm_2' });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu params object value not string', () => {
@@ -213,7 +213,7 @@ test('_menu param object all', () => {
       menuId: 'm_2',
     },
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu param object all and value', () => {
@@ -236,7 +236,7 @@ test('_menu param object all and value', () => {
       menuId: 'm_2',
     },
   ]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_menu param object invalid', () => {

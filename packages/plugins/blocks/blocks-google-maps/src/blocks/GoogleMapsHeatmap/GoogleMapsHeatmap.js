@@ -23,7 +23,7 @@ import Map from '../Map.js';
 function updateHeatmap(data) {
   if (data.location) {
     const latLng = new window.google.maps.LatLng(data.location);
-    latLng.weight = data.weight || 1;
+    latLng.weight = data.weight ?? 1;
     return latLng;
   }
   return new window.google.maps.LatLng(data);

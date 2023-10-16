@@ -34,7 +34,7 @@ const runMockMethodTests = ({ Block, examples, mocks, schema, testConfig }) => {
 
   examples.forEach((ex) => {
     values.forEach((value, v) => {
-      if (testConfig && testConfig.methods) {
+      if (testConfig?.methods) {
         testConfig.methods.forEach((method) => {
           mocks.forEach((mock) => {
             test(`Mock for method: ${JSON.stringify(method)} - ${ex.id} - value[${v}] - ${

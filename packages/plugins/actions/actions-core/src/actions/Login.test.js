@@ -20,7 +20,7 @@ import Login from './Login.js';
 const mockLogin = jest.fn();
 const methods = { login: mockLogin };
 
-test('Login action invocation', async () => {
+test('Login action invocation', () => {
   Login({ methods, params: { providerId: 'provider' } });
   expect(mockLogin.mock.calls).toEqual([[{ providerId: 'provider' }]]);
 });

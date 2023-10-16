@@ -35,7 +35,7 @@ const ErrorPage = ({ code, description, message, name }) => (
         paddingRight: 30,
       }}
     >
-      {code || 500}
+      {code ?? 500}
     </div>
     <div
       style={{
@@ -46,9 +46,9 @@ const ErrorPage = ({ code, description, message, name }) => (
       }}
     >
       <div style={{ fontSize: '1.3em', fontWeight: '300', paddingBottom: 10 }}>
-        {name || 'Error'}
+        {name ?? 'Error'}
       </div>
-      <div style={{ fontSize: '0.9em' }}>{message || 'An error has occurred.'}</div>
+      <div style={{ fontSize: '0.9em' }}>{message ?? 'An error has occurred.'}</div>
       <div style={{ fontSize: '0.9em' }}>{description}</div>
       <div style={{ paddingTop: 20 }}>
         <a href="/">Return to home page</a>
