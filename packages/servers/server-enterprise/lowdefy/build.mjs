@@ -48,6 +48,7 @@ async function run() {
   await build({
     customTypesMap,
     directories,
+    entitlements: JSON.parse(process.env.LOWDEFY_LICENSE_ENTITLEMENTS ?? '[]'),
     logger,
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
   });

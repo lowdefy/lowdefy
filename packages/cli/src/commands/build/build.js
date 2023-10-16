@@ -21,16 +21,20 @@ import readDotEnv from '../../utils/readDotEnv.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
+import validateLicense from './validateLicense.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
   readDotEnv(context);
+
   const directory = context.directories.server;
-  await getServer({ context, packageName: '@lowdefy/server', directory });
+
+  const { license, packageName } = await validateLicense({ context });
+  await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
-  await runLowdefyBuild({ context, directory });
+  await runLowdefyBuild({ context, directory, license });
   await installServer({ context, directory });
   if (context.options.nextBuild !== false) {
     await runNextBuild({ context, directory });

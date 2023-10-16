@@ -24,6 +24,10 @@ import validateAuthConfig from './validateAuthConfig.js';
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
 
+  if (configured && context.stage !== 'dev' && !context.entitlements.includes('AUTH')) {
+    throw new Error('Not entitled to use auth.'); // TODO:
+  }
+
   validateAuthConfig({ components });
   components.auth.configured = configured;
   buildPageAuth({ components });
