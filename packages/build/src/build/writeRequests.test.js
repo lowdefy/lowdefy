@@ -52,7 +52,7 @@ test('writeRequests write request', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'pages/page1/requests/request1.json',
-      `{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}`,
+      '{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}',
     ],
   ]);
 });
@@ -92,11 +92,11 @@ test('writeRequests write multiple requests on a page', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'pages/page1/requests/request1.json',
-      `{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}`,
+      '{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}',
     ],
     [
       'pages/page1/requests/request2.json',
-      `{"id":"request:page1:request2","requestId":"request2","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}`,
+      '{"id":"request:page1:request2","requestId":"request2","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}',
     ],
   ]);
 });
@@ -142,11 +142,11 @@ test('writeRequests write requests on a for multiple pages', async () => {
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
     [
       'pages/page1/requests/request1.json',
-      `{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}`,
+      '{"id":"request:page1:request1","requestId":"request1","pageId":"page1","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}',
     ],
     [
       'pages/page2/requests/request1.json',
-      `{"id":"request:page2:request1","requestId":"request1","pageId":"page2","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}`,
+      '{"id":"request:page2:request1","requestId":"request1","pageId":"page2","connectionId":"connection1","auth":{"public":true},"type":"Request","payload":{},"properties":{"key":"value"}}',
     ],
   ]);
 });

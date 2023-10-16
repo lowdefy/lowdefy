@@ -34,7 +34,7 @@ test('writeGlobal', async () => {
     },
   };
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{"key":"value"}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', '{"key":"value"}']]);
 });
 
 test('writeGlobal empty global', async () => {
@@ -42,13 +42,13 @@ test('writeGlobal empty global', async () => {
     global: {},
   };
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', '{}']]);
 });
 
 test('writeGlobal global undefined', async () => {
   const components = {};
   await writeGlobal({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['global.json', '{}']]);
 });
 
 test('writeGlobal global not an object', async () => {
