@@ -119,9 +119,12 @@ _ref:
             requests:
               - id: delete_document
                 type:  ElasticsearchDelete
+                payload:
+                  selected_id:
+                    _state: selected_id
                 properties:
                   id:
-                    _state: selected_id
+                    _payload: selected_id
             ```
 
             ### ElasticsearchDeleteByQuery
@@ -157,12 +160,15 @@ _ref:
             requests:
               - id: delete_multiple
                 type:  ElasticsearchUpdate
+                payload:
+                  selected_user:
+                    _state: selected_user
                 properties:
                   body:
                     query:
                       term:
                         user.id:
-                          _state: selected_user
+                          _payload: selected_user
             ```
 
             ### ElasticsearchIndex
@@ -196,10 +202,13 @@ _ref:
               - id: insert_new_comment
                 type:  Elasticsearch
                 connectionId: elasticsearch
+                payload:
+                  comment:
+                    _state: comment_input
                 properties:
                   body:
                     comment:
-                      _state: comment_input
+                      _payload: comment
                     user_id:
                       _user: id
                     timestamp:
@@ -311,12 +320,17 @@ _ref:
             requests:
               - id: update
                 type:  ElasticsearchUpdate
-                properties:
+                payload:
                   id:
                     _state: _id
+                  name:
+                    _state: name
+                properties:
+                  id:
+                    _payload: id
                   body:
                     doc:
-                      _state: name
+                      _payload: name
             ```
 
             ###### Increase the like counter using a script:
@@ -324,9 +338,12 @@ _ref:
             requests:
               - id: increase_like_counter
                 type:  ElasticsearchUpdate
-                properties:
+                payload:
                   id:
                     _state: _id
+                properties:
+                  id:
+                    _payload: id
                   body:
                     script:
                       source: |

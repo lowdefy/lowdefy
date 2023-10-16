@@ -115,6 +115,12 @@ _ref:
             - id: example_search
               type: MongoDBAggregation
               connectionId: companies
+              payload:
+                query:
+                  _string.concat:
+                    - '*'
+                    - _state: search_input
+                    - '*'
               properties:
                 pipeline:
                   - $search:
@@ -122,10 +128,7 @@ _ref:
                         should:
                           - wildcard:
                               query:
-                                _string.concat:
-                                  - '*'
-                                  - _state: search_input
-                                  - '*'
+                                _payload: query
                               path: # field names to search in the companies collection
                                 - _id
                                 - company_name

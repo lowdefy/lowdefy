@@ -207,16 +207,21 @@ _ref:
               - id: get_10_rows
                 type:  GoogleSheetGetMany
                 connectionId: google_sheets
+                payload:
+                  page_size:
+                    _state: page_size
+                  page_number:
+                    _state: page_number
                 properties:
                   options:
                     skip:
                       _product:
-                        - _state: page_size
+                        - _payload: page_size
                         - _subtract:
-                            - _state: page_number
+                            - _payload: page_number
                             - 1
                     limit:
-                      _state: page_size
+                      _payload: page_size
             ```
 
             ###### Get all records where age is greater than 25.
