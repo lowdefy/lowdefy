@@ -17,9 +17,8 @@
 import { serializer } from '@lowdefy/helpers';
 import testContext from '../test/testContext.js';
 
-const context = testContext();
-
 test('mutate keyMap and components', async () => {
+  const context = testContext();
   const addKeys = (await import('./addKeys.js')).default;
   const components = {
     '~r': '1',
@@ -129,5 +128,65 @@ test('mutate keyMap and components', async () => {
         type: 'Box',
       },
     ],
+  });
+});
+
+test('Handle nested arrays', async () => {
+  const context = testContext();
+  const addKeys = (await import('./addKeys.js')).default;
+  const components = {
+    '~r': '1',
+    pages: [
+      {
+        '~r': '2',
+        id: 'A1',
+        type: 'Selector',
+        properties: {
+          '~r': '3',
+          options: [
+            {
+              '~r': '4',
+              '_array.concat': [[{ '~r': '5', value: 'A' }], [{ '~r': '6', value: 'B' }]],
+            },
+          ],
+        },
+      },
+    ],
+  };
+  addKeys({ components, context });
+  expect(context.keyMap).toEqual({
+    2: { key: 'root', '~r': '1', '~k_parent': '1' },
+    3: { key: 'root.pages[0]:A1]:Selector]', '~r': '2', '~k_parent': '2' },
+    4: { key: 'root.pages[0]:A1]:Selector].properties', '~r': '3', '~k_parent': '3' },
+    5: { key: 'root.pages[0]:A1]:Selector].properties.options[0]', '~r': '4', '~k_parent': '4' },
+    6: {
+      key: 'root.pages[0]:A1]:Selector].properties.options[0]._array.concat[0]',
+      '~r': '5',
+      '~k_parent': '5',
+    },
+    7: {
+      key: 'root.pages[0]:A1]:Selector].properties.options[0]._array.concat[0]',
+      '~r': '6',
+      '~k_parent': '5',
+    },
+  });
+  expect(JSON.parse(serializer.serializeToString(components))).toEqual({
+    pages: [
+      {
+        id: 'A1',
+        type: 'Selector',
+        properties: {
+          options: [
+            {
+              '_array.concat': [[{ value: 'A', '~k': '6' }], [{ value: 'B', '~k': '7' }]],
+              '~k': '5',
+            },
+          ],
+          '~k': '4',
+        },
+        '~k': '3',
+      },
+    ],
+    '~k': '2',
   });
 });
