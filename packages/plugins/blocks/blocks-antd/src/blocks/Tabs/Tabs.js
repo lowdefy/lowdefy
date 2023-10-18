@@ -58,25 +58,20 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
         methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
       onTabClick={(key) => methods.triggerEvent({ name: 'onTabClick', event: { key } })}
+      items={tabs.map((tab) => ({
+        id: `${blockId}_${tab.key}`,
+        key: tab.key,
+        disabled: tab.disabled,
+        label: (
+          <span className={methods.makeCssClass(tab.titleStyle)}>
+            {tab.icon && <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />}
+            {tab.title ?? tab.key}
+          </span>
+        ),
+        children: content[tab.key] && content[tab.key](),
+      }))}
       {...additionalProps}
-    >
-      {tabs.map((tab) => (
-        <Tabs.TabPane
-          disabled={tab.disabled}
-          key={tab.key}
-          tab={
-            <span className={methods.makeCssClass(tab.titleStyle)}>
-              {tab.icon && (
-                <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />
-              )}
-              {tab.title ?? tab.key}
-            </span>
-          }
-        >
-          {content[tab.key] && content[tab.key]()}
-        </Tabs.TabPane>
-      ))}
-    </Tabs>
+    />
   );
 };
 
