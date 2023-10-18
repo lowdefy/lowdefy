@@ -32,10 +32,10 @@ function recArray({ array, nextKey, key, keyMap, keyMapId }) {
         item.connectionId ??
         item.id;
       if (id) {
-        path = `${path.substring(-1)}:${id}]`;
+        path = `${path.slice(0, -1)}:${id}]`;
       }
       if (item.type) {
-        path = `${path.substring(-1)}:${item.type}]`;
+        path = `${path.slice(0, -1)}:${item.type}]`;
       }
       recAddKeys({
         object: item,
