@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
+
+
+### Bug Fixes
+
+* **docs:** Fix payload on request examples. ([5ce3335](https://github.com/lowdefy/lowdefy/commit/5ce3335469c01979011f55cffd4f76285ef13d1a))
+* **docs:** Update example requests to make use of payload. ([2917d07](https://github.com/lowdefy/lowdefy/commit/2917d07c423051125f723ca329691e5b5a1eafe8))
+
+
+
+
+
 # [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
 
 
