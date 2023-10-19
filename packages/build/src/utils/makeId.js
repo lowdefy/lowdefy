@@ -16,7 +16,10 @@
 
 let id_counter = 0;
 
-function makeId() {
+function makeId(reset) {
+  if (reset) {
+    id_counter = 0;
+  }
   id_counter++;
   return id_counter.toString(36);
 }
