@@ -62,22 +62,22 @@ const DateRangeSelector = ({
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format || 'YYYY-MM-DD'}
+              format={properties.format ?? 'YYYY-MM-DD'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              separator={properties.separator || '~'}
+              separator={properties.separator ?? '~'}
               size={properties.size}
               status={validation.status}
               placeholder={
                 (type.isArray(properties.placeholder) && [
-                  properties.placeholder[0] || 'Start Date',
-                  properties.placeholder[1] || 'End Date',
-                ]) || ['Start Date', 'End Date']
+                  properties.placeholder[0] ?? 'Start Date',
+                  properties.placeholder[1] ?? 'End Date',
+                ]) ?? ['Start Date', 'End Date']
               }
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
                   events={events}
-                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
                 />
               }
               onChange={(newVal) => {

@@ -40,7 +40,7 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
-      `No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.`
+      'No version specified in "lowdefy.yaml" file. Specify a version in the "lowdefy" field.'
     );
   }
   if (!type.isString(lowdefy.lowdefy)) {

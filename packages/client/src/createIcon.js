@@ -45,8 +45,7 @@ const createIcon = (Icons) => {
   const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
-      (propertiesObj.spin || (events.onClick && events.onClick.loading)) &&
-      !propertiesObj.disableLoadingIcon;
+      (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
     const iconProps = {
       id: blockId,
       className: classNames({

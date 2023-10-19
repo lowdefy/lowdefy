@@ -32,9 +32,9 @@ const ProgressBar = ({ blockId, methods, style, properties }) => {
       id={blockId}
       className={methods.makeCssClass(style)}
       style={{
-        '--height': height + 'px',
-        '--progress': progress + '%',
-        '--transition': 'all ' + transitionTime + 'ms ease',
+        '--height': `${height}px`,
+        '--progress': `${progress}%`,
+        '--transition': `all ${transitionTime}ms ease`,
         '--opacity': progress < 100 ? 1 : 0,
       }}
     >

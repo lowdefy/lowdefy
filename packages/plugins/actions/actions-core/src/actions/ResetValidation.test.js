@@ -20,7 +20,7 @@ import ResetValidation from './ResetValidation.js';
 const mockResetValidation = jest.fn();
 const methods = { resetValidation: mockResetValidation };
 
-test('ResetValidation action invocation', async () => {
+test('ResetValidation action invocation', () => {
   ResetValidation({ methods, params: 'blockId' });
   expect(mockResetValidation.mock.calls).toEqual([['blockId']]);
 });

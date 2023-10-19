@@ -21,8 +21,8 @@ async function authenticate({ doc, apiKey, client_email, private_key }) {
     doc.useApiKey(apiKey);
   } else {
     await doc.useServiceAccountAuth({
-      client_email: client_email,
-      private_key: private_key,
+      client_email,
+      private_key,
     });
   }
 }

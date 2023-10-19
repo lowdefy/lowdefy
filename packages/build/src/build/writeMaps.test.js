@@ -36,8 +36,8 @@ test('writeMaps', async () => {
   };
   await writeMaps({ context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    ['keyMap.json', `{"key":"value"}`],
-    ['refMap.json', `{"ref":"value"}`],
+    ['keyMap.json', '{"key":"value"}'],
+    ['refMap.json', '{"ref":"value"}'],
   ]);
 });
 

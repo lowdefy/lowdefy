@@ -39,16 +39,7 @@ test('writeMenus', async () => {
   };
   await writeMenus({ components, context });
   expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'menus.json',
-      `[
-  {
-    "id": "menu:default",
-    "menuId": "default",
-    "links": []
-  }
-]`,
-    ],
+    ['menus.json', '[{"id":"menu:default","menuId":"default","links":[]}]'],
   ]);
 });
 
@@ -57,7 +48,7 @@ test('writeMenus empty menus', async () => {
     menus: [],
   };
   await writeMenus({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['menus.json', `[]`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['menus.json', '[]']]);
 });
 
 test('writeMenus menus undefined', async () => {

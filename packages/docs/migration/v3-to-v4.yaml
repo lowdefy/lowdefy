@@ -70,7 +70,7 @@ _ref:
                     name:
                       _payload: name
                     product_category:
-                      _payload: name
+                      _payload: product_category
                 ```
 
                 The payload can also be created more explicitly using more than one operator type:

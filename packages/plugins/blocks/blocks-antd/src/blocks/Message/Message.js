@@ -22,16 +22,16 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 const MessageBlock = ({ blockId, components: { Icon }, events, methods, properties }) => {
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
-      return message[args.status || properties.status || 'success']({
+      return message[args.status ?? properties.status ?? 'success']({
         id: `${blockId}_message`,
-        content: renderHtml({ html: args.content || properties.content || blockId, methods }),
+        content: renderHtml({ html: args.content ?? properties.content ?? blockId, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
-        icon: (args.icon || properties.icon) && (
+        icon: (args.icon ?? properties.icon) && (
           <Icon
             blockId={`${blockId}_icon`}
             events={events}
-            properties={args.icon || properties.icon}
+            properties={args.icon ?? properties.icon}
           />
         ),
         className: methods.makeCssClass(properties.messageStyle),

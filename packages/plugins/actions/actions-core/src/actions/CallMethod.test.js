@@ -20,7 +20,7 @@ import CallMethod from './CallMethod.js';
 const mockCallMethod = jest.fn();
 const methods = { callMethod: mockCallMethod };
 
-test('CallMethod mock test', async () => {
+test('CallMethod mock test', () => {
   CallMethod({
     methods,
     params: { blockId: 'blockId', method: 'method', args: ['arg1', 'arg2'] },

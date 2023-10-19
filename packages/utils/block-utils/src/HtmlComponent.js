@@ -44,7 +44,7 @@ class HtmlComponent extends React.Component {
         this.props.methods.triggerEvent({
           name: 'onTextSelection',
           event: {
-            selection: selection,
+            selection,
           },
         });
       }

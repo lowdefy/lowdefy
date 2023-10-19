@@ -33,12 +33,5 @@ test('writeTypes', async () => {
     type: 'value',
   };
   await writeTypes({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'types.json',
-      `{
-  "type": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['types.json', '{"type":"value"}']]);
 });

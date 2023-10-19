@@ -20,6 +20,9 @@ Request types:
 id: knexBuilder
 type: KnexBuilder
 connectionId: knex
+payload:
+  name:
+    _state: name
 properties:
   query:
     - select:
@@ -28,7 +31,7 @@ properties:
         - users
     - where:
         - name
-        - _state: name
+        - _payload: name
 ```
 
 ###### Using `tableName`:
@@ -37,6 +40,9 @@ properties:
 id: knexBuilder
 type: KnexBuilder
 connectionId: knex
+payload:
+  name:
+    _state: name
 properties:
   tableName: users
   query:
@@ -44,7 +50,7 @@ properties:
         - '*'
     - where:
         - name
-        - _state: name
+        - _payload: name
 ```
 
 ###### Aliases:
@@ -90,11 +96,14 @@ properties:
 id: knexRaw
 type: KnexRaw
 connectionId: knex
+payload:
+  selected_name:
+    _state: selected_name
 properties:
   query: select * from users where name = :name
   parameters:
     name:
-      _state: selected_name
+      _payload: selected_name
 ```
 
 ###### Query with positional parameters:
@@ -103,10 +112,13 @@ properties:
 id: knexRaw
 type: KnexRaw
 connectionId: knex
+payload:
+  selected_name:
+    _state: selected_name
 properties:
   query: select * from users where name = ?
   parameters:
-    - _state: selected_name
+    - _payload: selected_name
 ```
 
 ###### Reference a `.sql` file:

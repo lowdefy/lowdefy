@@ -90,7 +90,7 @@ test('_request by id', () => {
   expect(res.output).toEqual({
     a: 'request String',
   });
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request true gives null', () => {
@@ -110,7 +110,7 @@ test('_request return full array', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual([{ a: 'request a1' }, { a: 'request a2' }]);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request return number', () => {
@@ -118,7 +118,7 @@ test('_request return number', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(500);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request null', () => {
@@ -138,7 +138,7 @@ test('_request loading true', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request dot notation', () => {
@@ -146,7 +146,7 @@ test('_request dot notation', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request a1');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request dot notation with arrayindices', () => {
@@ -154,7 +154,7 @@ test('_request dot notation with arrayindices', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual('request a2');
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });
 
 test('_request dot notation returns null if ', () => {
@@ -162,5 +162,5 @@ test('_request dot notation returns null if ', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`Array []`);
+  expect(res.errors).toEqual([]);
 });

@@ -18,15 +18,15 @@
 import { runBlockSchemaTests } from '@lowdefy/block-dev';
 // import { runBlockSchemaTests, runRenderTests } from '@lowdefy/block-dev';
 
-import Block from './EChart.js';
+// import Block from './EChart.js';
 import examples from './examples.yaml';
 import schema from './schema.json';
 
-const testConfig = {
-  validation: true,
-  required: true,
-  values: [],
-};
+// const testConfig = {
+//   validation: true,
+//   required: true,
+//   values: [],
+// };
 
 // runRenderTests({ Block, examples, schema, testConfig });
 runBlockSchemaTests({ examples, schema });

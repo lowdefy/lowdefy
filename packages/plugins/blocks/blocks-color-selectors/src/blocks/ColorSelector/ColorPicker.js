@@ -66,7 +66,7 @@ export const ColorPicker = ({
             'ant-input-sm': size === 'small',
             'ant-input-lg': size === 'large',
           })}
-          color={value || ''}
+          color={value ?? ''}
           onChange={(newColor) => {
             onChange(newColor);
           }}
@@ -76,7 +76,7 @@ export const ColorPicker = ({
       )}
       {isOpen && (
         <div className="color-picker-popover" ref={popover}>
-          <HexColorPicker color={value || DEFAULT_COLOR} onChange={onChange} />
+          <HexColorPicker color={value ?? DEFAULT_COLOR} onChange={onChange} />
         </div>
       )}
     </div>

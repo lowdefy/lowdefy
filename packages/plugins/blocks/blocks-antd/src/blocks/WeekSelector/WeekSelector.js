@@ -56,16 +56,16 @@ const WeekSelector = ({
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format || 'YYYY-wo'}
+              format={properties.format ?? 'YYYY-wo'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              placeholder={properties.placeholder || 'Select Week'}
+              placeholder={properties.placeholder ?? 'Select Week'}
               size={properties.size}
               status={validation.status}
               suffixIcon={
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
                   events={events}
-                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
                 />
               }
               onChange={(newVal) => {

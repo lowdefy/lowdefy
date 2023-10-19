@@ -30,7 +30,7 @@ function createRedirectCallback({ authConfig, plugins }) {
   }
   const [plugin] = redirectCallbackPlugins;
 
-  async function redirectCallback({ url, baseUrl }) {
+  function redirectCallback({ url, baseUrl }) {
     return plugin.fn({
       properties: plugin.properties ?? {},
       baseUrl,

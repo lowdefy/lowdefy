@@ -41,13 +41,13 @@ const runTests = ({ times, results = [], fn }) => {
   });
 };
 
-test(`parse nunjucks value 500 blocks`, async () => {
+test('parse nunjucks value 500 blocks', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
     blocks: [
       {
-        id: `b0`,
+        id: 'b0',
         type: 'TextInput',
         properties: {
           test: '1',
@@ -77,20 +77,20 @@ test(`parse nunjucks value 500 blocks`, async () => {
   const average = (totalTime / NUM_TIMES).toFixed(3);
   const max = results.reduce((maxS, r) => (r > maxS ? r : maxS), 0);
   const min = results.reduce((minS, r) => (r < minS ? r : minS), Infinity);
-  console.log(`parse nunjucks value 1000 blocks`);
+  console.log('parse nunjucks value 1000 blocks');
   console.log(`Average: ${average}ms`);
   console.log(`Max: ${max}ms`);
   console.log(`Min: ${min}ms`);
   expect(Object.keys(context.state).length).toEqual(501);
 });
 
-test(`parse nunjucks value 100 blocks`, async () => {
+test('parse nunjucks value 100 blocks', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
     blocks: [
       {
-        id: `b0`,
+        id: 'b0',
         type: 'TextInput',
         properties: {
           test: '1',
@@ -120,20 +120,20 @@ test(`parse nunjucks value 100 blocks`, async () => {
   const average = (totalTime / NUM_TIMES).toFixed(3);
   const max = results.reduce((maxS, r) => (r > maxS ? r : maxS), 0);
   const min = results.reduce((minS, r) => (r < minS ? r : minS), Infinity);
-  console.log(`parse nunjucks value 100 blocks`);
+  console.log('parse nunjucks value 100 blocks');
   console.log(`Average: ${average}ms`);
   console.log(`Max: ${max}ms`);
   console.log(`Min: ${min}ms`);
   expect(Object.keys(context.state).length).toEqual(101);
 });
 
-test(`parse state value 1000 blocks`, async () => {
+test('parse state value 1000 blocks', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
     blocks: [
       {
-        id: `b0`,
+        id: 'b0',
         type: 'TextInput',
         properties: {
           test: '1',
@@ -162,20 +162,20 @@ test(`parse state value 1000 blocks`, async () => {
   const average = (totalTime / NUM_TIMES).toFixed(3);
   const max = results.reduce((maxS, r) => (r > maxS ? r : maxS), 0);
   const min = results.reduce((minS, r) => (r < minS ? r : minS), Infinity);
-  console.log(`parse state value 1000 blocks`);
+  console.log('parse state value 1000 blocks');
   console.log(`Average: ${average}ms`);
   console.log(`Max: ${max}ms`);
   console.log(`Min: ${min}ms`);
   expect(Object.keys(context.state).length).toEqual(1001);
 });
 
-// test.only(`parse state value 10 blocks`, async () => {
+// test.only('parse state value 10 blocks', async () => {
 //   const pageConfig = {
 //     id: 'root',
 //     type: 'Box',
 //     areas: { content: { blocks: [
 //       {
-//         id: `b_0`,
+//         id: 'b_0',
 //         type: 'TextInput',
 //         properties: {
 //           test: '1',
@@ -208,21 +208,21 @@ test(`parse state value 1000 blocks`, async () => {
 //   // const average = (totalTime / 3).toFixed(3);
 //   // const max = results.reduce((maxS, r) => (r > maxS ? r : maxS), 0);
 //   // const min = results.reduce((minS, r) => (r < minS ? r : minS), Infinity);
-//   // console.log(`parse state value 10 blocks`);
+//   // console.log('parse state value 10 blocks');
 //   // console.log(`Average: ${average}ms`);
 //   // console.log(`Max: ${max}ms`);
 //   // console.log(`Min: ${min}ms`);
 //   expect(Object.keys(context.state).length).toEqual(10);
 // });
 
-// test(`parse state value 1000 array items with rec loop of visible`, async () => {
+// test('parse state value 1000 array items with rec loop of visible', async () => {
 //   const blocks = [
 //     {
 //       type: 'TextInput',
 //       id: 'a',
 //     },
 //     {
-//       id: `b_0`,
+//       id: 'b_0',
 //       type: 'TextInput',
 //       visible: { _state: 'a' },
 //     },
@@ -261,10 +261,10 @@ test(`parse state value 1000 blocks`, async () => {
 //   expect(Object.keys(context.State.state.list[0]).length).toEqual(80);
 // });
 
-// test(`parse state value 100 blocks`, async () => {
+// test('parse state value 100 blocks', async () => {
 //   const blocks = [
 //     {
-//       id: `b_0`,
+//       id: 'b_0',
 //       type: 'TextInput',
 //       properties: {
 //         test: '1',
@@ -290,10 +290,10 @@ test(`parse state value 1000 blocks`, async () => {
 //   expect(Object.keys(context.State.state).length).toEqual(101);
 // });
 
-// test(`parse state value 1000 blocks`, () => {
+// test('parse state value 1000 blocks', () => {
 //   const blocks = [
 //     {
-//       id: `b_0`,
+//       id: 'b_0',
 //       type: 'TextInput',
 //       properties: {
 //         test: '1',
@@ -319,10 +319,10 @@ test(`parse state value 1000 blocks`, async () => {
 //   expect(Object.keys(context.State.state).length).toEqual(1001);
 // });
 
-// test(`parse nunjucks value 100 blocks`, async () => {
+// test('parse nunjucks value 100 blocks', async () => {
 //   const blocks = [
 //     {
-//       id: `b_0`,
+//       id: 'b_0',
 //       type: 'TextInput',
 //       properties: {
 //         test: '1',

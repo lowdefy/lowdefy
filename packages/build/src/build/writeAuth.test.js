@@ -34,14 +34,7 @@ test('writeAuth', async () => {
     },
   };
   await writeAuth({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([
-    [
-      'auth.json',
-      `{
-  "key": "value"
-}`,
-    ],
-  ]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', '{"key":"value"}']]);
 });
 
 test('writeAuth empty auth', async () => {
@@ -49,11 +42,11 @@ test('writeAuth empty auth', async () => {
     auth: {},
   };
   await writeAuth({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', '{}']]);
 });
 
 test('writeConfig config undefined', async () => {
   const components = {};
   await writeAuth({ components, context });
-  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', `{}`]]);
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([['auth.json', '{}']]);
 });

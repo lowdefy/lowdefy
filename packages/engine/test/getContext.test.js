@@ -82,7 +82,7 @@ const getLowdefy = () => {
   return testLowdefy;
 };
 
-test('page is required input', async () => {
+test('page is required input', () => {
   const resetContext = { reset: true, setReset: () => {} };
   const lowdefy = getLowdefy();
   expect(() => getContext({ lowdefy, resetContext })).toThrow(
@@ -90,7 +90,7 @@ test('page is required input', async () => {
   );
 });
 
-test('memoize context and reset', async () => {
+test('memoize context and reset', () => {
   const lowdefy = getLowdefy();
   const page = {
     id: 'pageId',
@@ -132,7 +132,7 @@ test('create context', () => {
   expect(context._internal.update).toBeDefined();
 });
 
-test('create context, initialize input', async () => {
+test('create context, initialize input', () => {
   const resetContext = { reset: true, setReset: () => {} };
   const lowdefy = getLowdefy();
   const page = {
@@ -144,7 +144,7 @@ test('create context, initialize input', async () => {
   expect(context._internal.lowdefy.inputs['page:pageId']).toEqual({});
 });
 
-test('update memoized context', async () => {
+test('update memoized context', () => {
   const lowdefy = getLowdefy();
   const page = {
     id: 'pageId',

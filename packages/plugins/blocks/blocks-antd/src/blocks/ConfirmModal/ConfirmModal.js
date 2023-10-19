@@ -33,41 +33,39 @@ const ConfirmModal = ({ blockId, events, content, components: { Icon }, methods,
         title: renderHtml({ html: properties.title, methods }),
         bodyStyle: methods.makeCssClass(properties.bodyStyle, true),
         content:
-          (content.content && content.content()) ||
+          (content.content && content.content()) ??
           renderHtml({ html: properties.content, methods }),
         className: methods.makeCssClass(properties.modalStyle),
         closable: properties.closable,
-        okText: properties.okText || 'Ok',
-        okButtonProps:
-          properties.okButton && properties.okButton.icon
-            ? {
-                ...properties.okButton,
-                icon: properties.okButton.icon && (
-                  <Icon
-                    blockId={`${blockId}_ok_icon`}
-                    events={events}
-                    properties={properties.okButton.icon}
-                  />
-                ),
-              }
-            : properties.okButton,
-        cancelButtonProps:
-          properties.cancelButton && properties.cancelButton.icon
-            ? {
-                ...properties.cancelButton,
-                icon: properties.cancelButton.icon && (
-                  <Icon
-                    blockId={`${blockId}_ok_icon`}
-                    events={events}
-                    properties={properties.cancelButton.icon}
-                  />
-                ),
-              }
-            : properties.cancelButton,
-        cancelText: properties.cancelText || 'Cancel',
-        centered: properties.centered || false,
+        okText: properties.okText ?? 'Ok',
+        okButtonProps: properties.okButton?.icon
+          ? {
+              ...properties.okButton,
+              icon: properties.okButton.icon && (
+                <Icon
+                  blockId={`${blockId}_ok_icon`}
+                  events={events}
+                  properties={properties.okButton.icon}
+                />
+              ),
+            }
+          : properties.okButton,
+        cancelButtonProps: properties.cancelButton?.icon
+          ? {
+              ...properties.cancelButton,
+              icon: properties.cancelButton.icon && (
+                <Icon
+                  blockId={`${blockId}_ok_icon`}
+                  events={events}
+                  properties={properties.cancelButton.icon}
+                />
+              ),
+            }
+          : properties.cancelButton,
+        cancelText: properties.cancelText ?? 'Cancel',
+        centered: properties.centered ?? false,
         mask: properties.mask !== undefined ? properties.mask : true,
-        maskClosable: properties.maskClosable || false,
+        maskClosable: properties.maskClosable ?? false,
         width: properties.width,
         zIndex: properties.zIndex,
         onOk: async () => {

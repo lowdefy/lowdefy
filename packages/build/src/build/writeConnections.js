@@ -24,7 +24,7 @@ async function writeConnections({ components, context }) {
   const writePromises = components.connections.map(async (connection) => {
     await context.writeBuildArtifact(
       `connections/${connection.connectionId}.json`,
-      serializer.serializeToString(connection, { space: 2 })
+      serializer.serializeToString(connection)
     );
   });
   return Promise.all(writePromises);

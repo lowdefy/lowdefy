@@ -20,7 +20,7 @@ import Request from './Request.js';
 const mockRequest = jest.fn();
 const methods = { request: mockRequest };
 
-test('Request action invocation', async () => {
+test('Request action invocation', () => {
   Request({ methods, params: 'requestId' });
   expect(mockRequest.mock.calls).toEqual([['requestId']]);
 });

@@ -20,9 +20,9 @@ import { blockDefaultProps } from '@lowdefy/block-utils';
 import Skeleton from '../Skeleton/Skeleton.js';
 
 const SkeletonParagraph = ({ properties, methods }) => {
-  const lines = [...Array(properties.lines || 4).keys()];
+  const lines = [...Array(properties.lines ?? 4).keys()];
   return (
-    <div style={{ width: properties.width || '100%' }}>
+    <div style={{ width: properties.width ?? '100%' }}>
       {lines.map((key) => (
         <Skeleton
           key={key}

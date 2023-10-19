@@ -38,7 +38,7 @@ const CarouselBlock = ({ blockId, content, properties, methods }) => {
       const slideNumber = slides.findIndex((item) => {
         return item.key === slide;
       });
-      if (slideNumber != -1) {
+      if (slideNumber !== -1) {
         carousel.current.goTo(slideNumber, dontAnimate);
       }
     });
@@ -71,10 +71,9 @@ const CarouselBlock = ({ blockId, content, properties, methods }) => {
       className={methods.makeCssClass(properties.style)}
       ref={carousel}
     >
-      {slides &&
-        slides.map((slide) => (
-          <div key={slide.key}>{content[slide.key] && content[slide.key]()}</div>
-        ))}
+      {slides?.map((slide) => (
+        <div key={slide.key}>{content[slide.key] && content[slide.key]()}</div>
+      ))}
     </Carousel>
   );
 };

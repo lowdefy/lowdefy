@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 async function writeAuth({ components, context }) {
   await context.writeBuildArtifact(
     'auth.json',
-    serializer.serializeToString(components.auth ?? {}, { space: 2 })
+    serializer.serializeToString(components.auth ?? {})
   );
 }
 

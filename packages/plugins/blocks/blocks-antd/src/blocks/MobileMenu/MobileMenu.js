@@ -88,29 +88,27 @@ const MobileMenu = ({
         onClose={() => methods[get(rename, 'methods.toggleOpen', { default: 'toggleOpen' })]()}
         content={{
           content: () => (
-            <>
-              <Menu
-                basePath={basePath}
-                components={components}
-                blockId={`${blockId}_menu`}
-                methods={methods}
-                events={events}
-                menus={menus}
-                pageId={pageId}
-                properties={{
-                  collapsed: false,
-                  theme: 'light',
-                  ...(mergeObjects(properties, { style: { marginTop: 24 } }) || {}),
-                  mode: 'inline',
-                }}
-                rename={{
-                  events: {
-                    onClick: 'onMenuItemClick',
-                    onSelect: 'onMenuItemSelect',
-                  },
-                }}
-              />
-            </>
+            <Menu
+              basePath={basePath}
+              components={components}
+              blockId={`${blockId}_menu`}
+              methods={methods}
+              events={events}
+              menus={menus}
+              pageId={pageId}
+              properties={{
+                collapsed: false,
+                theme: 'light',
+                ...(mergeObjects(properties, { style: { marginTop: 24 } }) || {}),
+                mode: 'inline',
+              }}
+              rename={{
+                events: {
+                  onClick: 'onMenuItemClick',
+                  onSelect: 'onMenuItemSelect',
+                },
+              }}
+            />
           ),
         }}
       />

@@ -20,7 +20,7 @@ import SetState from './SetState.js';
 const mockSetState = jest.fn();
 const methods = { setState: mockSetState };
 
-test('SetState action invocation', async () => {
+test('SetState action invocation', () => {
   SetState({ methods, params: { key: 'value' } });
   expect(mockSetState.mock.calls).toEqual([[{ key: 'value' }]]);
 });

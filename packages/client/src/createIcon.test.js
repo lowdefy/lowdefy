@@ -32,13 +32,11 @@ beforeAll(() => {
 });
 
 const Icons = {
-  AiIcon: (props) => <svg {...props} data-testid="AiIcon"></svg>,
+  AiIcon: (props) => <svg {...props} data-testid="AiIcon" />,
   AiOutlineExclamationCircle: (props) => (
-    <svg {...props} data-testid="AiOutlineExclamationCircle"></svg>
+    <svg {...props} data-testid="AiOutlineExclamationCircle" />
   ),
-  AiOutlineLoading3Quarters: (props) => (
-    <svg {...props} data-testid="AiOutlineLoading3Quarters"></svg>
-  ),
+  AiOutlineLoading3Quarters: (props) => <svg {...props} data-testid="AiOutlineLoading3Quarters" />,
   ErrorIcon: () => {
     throw new Error('ErrorIcon');
   },

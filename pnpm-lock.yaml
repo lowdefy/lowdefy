@@ -45,22 +45,22 @@ importers:
   packages/api:
     dependencies:
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/ajv
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-js
     devDependencies:
       '@jest/globals':
@@ -82,28 +82,28 @@ importers:
   packages/build:
     dependencies:
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/ajv
       '@lowdefy/blocks-basic':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-loaders
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/node-utils
       '@lowdefy/nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../operators
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-js
       ajv:
         specifier: 8.12.0
@@ -122,91 +122,91 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/actions/actions-core
       '@lowdefy/actions-pdf-make':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/actions/actions-pdf-make
       '@lowdefy/blocks-aggrid':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-aggrid
       '@lowdefy/blocks-algolia':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-antd
       '@lowdefy/blocks-color-selectors':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-color-selectors
       '@lowdefy/blocks-echarts':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-google-maps':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-markdown':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/blocks/blocks-qr
       '@lowdefy/connection-axios-http':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-axios-http
       '@lowdefy/connection-elasticsearch':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-elasticsearch
       '@lowdefy/connection-google-sheets':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-google-sheets
       '@lowdefy/connection-knex':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-knex
       '@lowdefy/connection-mongodb':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-mongodb
       '@lowdefy/connection-redis':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-redis
       '@lowdefy/connection-sendgrid':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-sendgrid
       '@lowdefy/connection-stripe':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/connections/connection-stripe
       '@lowdefy/operators-change-case':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-change-case
       '@lowdefy/operators-diff':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-diff
       '@lowdefy/operators-moment':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-moment
       '@lowdefy/operators-mql':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-yaml
       '@lowdefy/plugin-auth0':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/plugins/plugin-auth0
       '@lowdefy/plugin-aws':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/plugins/plugin-aws
       '@lowdefy/plugin-csv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/plugins/plugin-csv
       '@lowdefy/plugin-next-auth':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/plugins/plugin-next-auth
       '@swc/cli':
         specifier: 0.1.62
@@ -224,10 +224,10 @@ importers:
   packages/cli:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/node-utils
       axios:
         specifier: 1.5.1
@@ -279,16 +279,16 @@ importers:
         specifier: 4.8.0
         version: 4.8.0(react-dom@18.2.0)(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/block-utils
       '@lowdefy/engine':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../engine
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../layout
       classnames:
         specifier: 2.3.2
@@ -307,7 +307,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -343,7 +343,7 @@ importers:
   packages/docs:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -365,26 +365,26 @@ importers:
   packages/engine:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../operators
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/actions-core':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/actions/actions-core
       '@lowdefy/build':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../build
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../plugins/operators/operators-mql
       '@swc/cli':
         specifier: 0.1.62
@@ -402,10 +402,10 @@ importers:
   packages/layout:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
       antd:
         specifier: 4.24.14
@@ -424,10 +424,10 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -463,7 +463,7 @@ importers:
   packages/operators:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -488,7 +488,7 @@ importers:
   packages/plugins/actions/actions-core:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
@@ -553,10 +553,10 @@ importers:
         specifier: 29.3.5
         version: 29.3.5
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       react:
         specifier: 18.2.0
@@ -569,10 +569,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -611,7 +611,7 @@ importers:
         specifier: 3.5.2
         version: 3.5.2(@algolia/client-search@4.20.0)(react-dom@18.2.0)(react@18.2.0)(search-insights@2.8.3)
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       react:
         specifier: 18.2.0
@@ -624,10 +624,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -666,10 +666,10 @@ importers:
         specifier: 4.8.0
         version: 4.8.0(react-dom@18.2.0)(react@18.2.0)
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       antd:
         specifier: 4.24.14
@@ -697,13 +697,13 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/node-utils
       '@swc/cli':
         specifier: 0.1.62
@@ -739,10 +739,10 @@ importers:
   packages/plugins/blocks/blocks-basic:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       dompurify:
         specifier: 3.0.6
@@ -758,10 +758,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -797,10 +797,10 @@ importers:
   packages/plugins/blocks/blocks-color-selectors:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../blocks-antd
       classnames:
         specifier: 2.3.2
@@ -819,10 +819,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -861,7 +861,7 @@ importers:
   packages/plugins/blocks/blocks-echarts:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       echarts:
         specifier: 5.4.3
@@ -880,10 +880,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -919,7 +919,7 @@ importers:
   packages/plugins/blocks/blocks-google-maps:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@react-google-maps/api':
         specifier: 2.19.2
@@ -935,10 +935,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -974,10 +974,10 @@ importers:
   packages/plugins/blocks/blocks-loaders:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       react:
         specifier: 18.2.0
@@ -990,10 +990,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -1029,7 +1029,7 @@ importers:
   packages/plugins/blocks/blocks-markdown:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       dompurify:
         specifier: 3.0.6
@@ -1057,10 +1057,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -1099,7 +1099,7 @@ importers:
   packages/plugins/blocks/blocks-qr:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       html5-qrcode:
         specifier: 2.3.8
@@ -1115,10 +1115,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -1154,14 +1154,14 @@ importers:
   packages/plugins/connections/connection-axios-http:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       axios:
         specifier: 1.5.1
         version: 1.5.1
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1182,14 +1182,14 @@ importers:
         specifier: 7.17.12
         version: 7.17.12
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1207,7 +1207,7 @@ importers:
   packages/plugins/connections/connection-google-sheets:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       google-spreadsheet:
         specifier: 3.3.0
@@ -1223,7 +1223,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1241,7 +1241,7 @@ importers:
   packages/plugins/connections/connection-knex:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       knex:
         specifier: 2.5.1
@@ -1263,7 +1263,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1281,24 +1281,24 @@ importers:
   packages/plugins/connections/connection-mongodb:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@next-auth/mongodb-adapter':
         specifier: 1.1.3
-        version: 1.1.3(mongodb@4.13.0)(next-auth@4.23.2)
+        version: 1.1.3(mongodb@4.17.1)(next-auth@4.23.2)
       mongodb:
-        specifier: 4.13.0
-        version: 4.13.0
+        specifier: 4.17.1
+        version: 4.17.1
       saslprep:
         specifier: 1.0.3
         version: 1.0.3
     devDependencies:
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@shelf/jest-mongodb':
         specifier: 4.1.7
-        version: 4.1.7(jest-environment-node@28.1.3)(mongodb@4.13.0)
+        version: 4.1.7(jest-environment-node@28.1.3)(mongodb@4.17.1)
       '@swc/cli':
         specifier: 0.1.62
         version: 0.1.62(@swc/core@1.3.92)
@@ -1330,7 +1330,7 @@ importers:
   packages/plugins/connections/connection-redis:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       redis:
         specifier: 4.6.10
@@ -1340,7 +1340,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1358,7 +1358,7 @@ importers:
   packages/plugins/connections/connection-sendgrid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@sendgrid/mail':
         specifier: 7.7.0
@@ -1368,7 +1368,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1386,7 +1386,7 @@ importers:
   packages/plugins/connections/connection-stripe:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       stripe:
         specifier: 13.6.0
@@ -1396,7 +1396,7 @@ importers:
         specifier: 28.1.3
         version: 28.1.3
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@swc/cli':
         specifier: 0.1.62
@@ -1414,10 +1414,10 @@ importers:
   packages/plugins/operators/operators-change-case:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       change-case:
         specifier: 4.1.2
@@ -1442,10 +1442,10 @@ importers:
   packages/plugins/operators/operators-diff:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       deep-diff:
         specifier: 1.0.2
@@ -1470,10 +1470,10 @@ importers:
   packages/plugins/operators/operators-js:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
     devDependencies:
       '@jest/globals':
@@ -1498,7 +1498,7 @@ importers:
   packages/plugins/operators/operators-moment:
     dependencies:
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       moment:
         specifier: 2.29.4
@@ -1523,10 +1523,10 @@ importers:
   packages/plugins/operators/operators-mql:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       mingo:
         specifier: 6.4.6
@@ -1551,13 +1551,13 @@ importers:
   packages/plugins/operators/operators-nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/nunjucks
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
     devDependencies:
       '@swc/cli':
@@ -1579,10 +1579,10 @@ importers:
   packages/plugins/operators/operators-uuid:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       uuid:
         specifier: 9.0.1
@@ -1610,10 +1610,10 @@ importers:
   packages/plugins/operators/operators-yaml:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       '@lowdefy/operators':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../operators
       yaml:
         specifier: 2.3.2
@@ -1656,13 +1656,13 @@ importers:
   packages/plugins/plugins/plugin-aws:
     dependencies:
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-utils
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../blocks/blocks-antd
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/helpers
       antd:
         specifier: 4.24.14
@@ -1681,13 +1681,13 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/ajv':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/ajv
       '@lowdefy/block-dev':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/block-dev
       '@lowdefy/jest-yaml-transform':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../../utils/jest-yaml-transform
       '@swc/cli':
         specifier: 0.1.62
@@ -1772,37 +1772,37 @@ importers:
   packages/servers/server-community:
     dependencies:
       '@lowdefy/actions-core':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../api
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/client':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../client
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../layout
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../utils/node-utils
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-js
       '@lowdefy/plugin-next-auth':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/plugins/plugin-next-auth
       next:
         specifier: 13.5.4
@@ -1827,7 +1827,7 @@ importers:
         version: 4.11.0(react@18.2.0)
     devDependencies:
       '@lowdefy/build':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 13.5.4
@@ -1854,76 +1854,76 @@ importers:
   packages/servers/server-dev:
     dependencies:
       '@lowdefy/actions-core':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../api
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-color-selectors':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-color-selectors
       '@lowdefy/blocks-echarts':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-echarts
       '@lowdefy/blocks-loaders':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/blocks-markdown':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/blocks-qr':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-qr
       '@lowdefy/build':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../build
       '@lowdefy/client':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../client
       '@lowdefy/connection-axios-http':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/connections/connection-axios-http
       '@lowdefy/engine':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../engine
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../layout
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../utils/node-utils
       '@lowdefy/operators-change-case':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-change-case
       '@lowdefy/operators-diff':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-diff
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-js
       '@lowdefy/operators-mql':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-mql
       '@lowdefy/operators-nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-nunjucks
       '@lowdefy/operators-uuid':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-uuid
       '@lowdefy/operators-yaml':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/operators/operators-yaml
       '@lowdefy/plugin-next-auth':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../../plugins/plugins/plugin-next-auth
       chokidar:
         specifier: 3.5.3
@@ -1985,37 +1985,37 @@ importers:
     dependencies:
       '@lowdefy/actions-core':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/actions/actions-core
+        version: 4.0.0-rc.11
       '@lowdefy/api':
         specifier: 4.0.0-rc.11
-        version: link:../../api
+        version: 4.0.0-rc.11
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/blocks/blocks-antd
+        version: 4.0.0-rc.11
       '@lowdefy/blocks-basic':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/blocks/blocks-basic
+        version: 4.0.0-rc.11
       '@lowdefy/blocks-loaders':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/blocks/blocks-loaders
+        version: 4.0.0-rc.11
       '@lowdefy/client':
         specifier: 4.0.0-rc.11
-        version: link:../../client
+        version: 4.0.0-rc.11
       '@lowdefy/helpers':
         specifier: 4.0.0-rc.11
-        version: link:../../utils/helpers
+        version: 4.0.0-rc.11
       '@lowdefy/layout':
         specifier: 4.0.0-rc.11
-        version: link:../../layout
+        version: 4.0.0-rc.11
       '@lowdefy/node-utils':
         specifier: 4.0.0-rc.11
-        version: link:../../utils/node-utils
+        version: 4.0.0-rc.11
       '@lowdefy/operators-js':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/operators/operators-js
+        version: 4.0.0-rc.11
       '@lowdefy/plugin-next-auth':
         specifier: 4.0.0-rc.11
-        version: link:../../plugins/plugins/plugin-next-auth
+        version: 4.0.0-rc.11(react-dom@18.2.0)(react@18.2.0)
       next:
         specifier: 13.5.4
         version: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
@@ -2040,7 +2040,7 @@ importers:
     devDependencies:
       '@lowdefy/build':
         specifier: 4.0.0-rc.11
-        version: link:../../build
+        version: 4.0.0-rc.11
       '@next/eslint-plugin-next':
         specifier: 13.5.4
         version: 13.5.4
@@ -2066,7 +2066,7 @@ importers:
   packages/utils/ajv:
     dependencies:
       '@lowdefy/nunjucks':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../nunjucks
       ajv:
         specifier: 8.12.0
@@ -2094,10 +2094,10 @@ importers:
         specifier: 11.10.5
         version: 11.10.5
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../block-utils
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../helpers
       '@testing-library/dom':
         specifier: 8.19.1
@@ -2143,7 +2143,7 @@ importers:
         specifier: 11.11.2
         version: 11.11.2
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../helpers
       dompurify:
         specifier: 3.0.6
@@ -2241,7 +2241,7 @@ importers:
   packages/utils/node-utils:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../helpers
       fs-extra:
         specifier: 11.1.1
@@ -2263,7 +2263,7 @@ importers:
   packages/utils/nunjucks:
     dependencies:
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
         version: link:../helpers
       moment:
         specifier: 2.29.4
@@ -2724,7 +2724,7 @@ packages:
     dependencies:
       '@aws-sdk/client-cognito-identity': 3.425.0
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -2737,7 +2737,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       tslib: 2.6.2
     optional: true
@@ -2750,7 +2750,7 @@ packages:
       '@aws-sdk/types': 3.425.0
       '@smithy/fetch-http-handler': 2.2.1
       '@smithy/node-http-handler': 2.1.6
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/protocol-http': 3.0.6
       '@smithy/types': 2.3.4
       tslib: 2.6.2
@@ -2766,8 +2766,8 @@ packages:
       '@aws-sdk/credential-provider-sso': 3.425.0
       '@aws-sdk/credential-provider-web-identity': 3.425.0
       '@aws-sdk/types': 3.425.0
-      '@smithy/credential-provider-imds': 2.0.10
-      '@smithy/property-provider': 2.0.8
+      '@smithy/credential-provider-imds': 2.0.13
+      '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
       tslib: 2.6.2
@@ -2786,8 +2786,8 @@ packages:
       '@aws-sdk/credential-provider-sso': 3.425.0
       '@aws-sdk/credential-provider-web-identity': 3.425.0
       '@aws-sdk/types': 3.425.0
-      '@smithy/credential-provider-imds': 2.0.10
-      '@smithy/property-provider': 2.0.8
+      '@smithy/credential-provider-imds': 2.0.13
+      '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
       tslib: 2.6.2
@@ -2801,7 +2801,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
       tslib: 2.6.2
@@ -2815,7 +2815,7 @@ packages:
       '@aws-sdk/client-sso': 3.425.0
       '@aws-sdk/token-providers': 3.425.0
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/types': 2.3.4
       tslib: 2.6.2
@@ -2829,7 +2829,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       tslib: 2.6.2
     optional: true
@@ -2851,8 +2851,8 @@ packages:
       '@aws-sdk/credential-provider-sso': 3.425.0
       '@aws-sdk/credential-provider-web-identity': 3.425.0
       '@aws-sdk/types': 3.425.0
-      '@smithy/credential-provider-imds': 2.0.10
-      '@smithy/property-provider': 2.0.8
+      '@smithy/credential-provider-imds': 2.0.13
+      '@smithy/property-provider': 2.0.11
       '@smithy/types': 2.3.4
       tslib: 2.6.2
     transitivePeerDependencies:
@@ -2908,7 +2908,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@aws-sdk/types': 3.425.0
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/protocol-http': 3.0.6
       '@smithy/signature-v4': 2.0.10
       '@smithy/types': 2.3.4
@@ -2966,7 +2966,7 @@ packages:
       '@smithy/middleware-stack': 2.0.4
       '@smithy/node-config-provider': 2.0.13
       '@smithy/node-http-handler': 2.1.6
-      '@smithy/property-provider': 2.0.8
+      '@smithy/property-provider': 2.0.11
       '@smithy/protocol-http': 3.0.6
       '@smithy/shared-ini-file-loader': 2.0.12
       '@smithy/smithy-client': 2.1.9
@@ -3263,7 +3263,7 @@ packages:
     dependencies:
       '@babel/types': 7.22.19
       '@jridgewell/gen-mapping': 0.3.2
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
       jsesc: 2.5.2
 
   /@babel/generator@7.23.0:
@@ -3700,7 +3700,6 @@ packages:
       find-root: 1.1.0
       source-map: 0.5.7
       stylis: 4.2.0
-    dev: false
 
   /@emotion/cache@11.11.0:
     resolution: {integrity: sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==}
@@ -3710,7 +3709,6 @@ packages:
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
       stylis: 4.2.0
-    dev: false
 
   /@emotion/css-prettifier@1.1.3:
     resolution: {integrity: sha512-KNv23+VQ+pcw3ebd1vSEl11CQ6SKAG5EQkrinjVGsfw3ZTWe6/tpWQrsvFLqCtU2LRiLPi04KgFCE4A9+crfpQ==}
@@ -3726,11 +3724,9 @@ packages:
       '@emotion/serialize': 1.1.2
       '@emotion/sheet': 1.2.2
       '@emotion/utils': 1.2.1
-    dev: false
 
   /@emotion/hash@0.9.1:
     resolution: {integrity: sha512-gJB6HLm5rYwSLI6PQa+X1t5CFGrv1J1TWG+sOyMCeKz2ojaj6Fnl/rZEspogG+cvqbt4AE/2eIyD2QfLKTBNlQ==}
-    dev: false
 
   /@emotion/jest@11.10.5:
     resolution: {integrity: sha512-LagosxybgisPlxfBGas9kGcNB5xTTX125WbjEVZiE3MEbb+dI4UYn0XIzrsilR8nUaQ5lH6yKUFrMmz7kB34vg==}
@@ -3760,23 +3756,18 @@ packages:
       '@emotion/unitless': 0.8.1
       '@emotion/utils': 1.2.1
       csstype: 3.1.2
-    dev: false
 
   /@emotion/sheet@1.2.2:
     resolution: {integrity: sha512-0QBtGvaqtWi+nx6doRwDdBIzhNdZrXUppvTM4dtZZWEGTXL/XE/yJxLMGlDT1Gt+UHH5IX1n+jkXyytE/av7OA==}
-    dev: false
 
   /@emotion/unitless@0.8.1:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
-    dev: false
 
   /@emotion/utils@1.2.1:
     resolution: {integrity: sha512-Y2tGf3I+XVnajdItskUCn6LX+VUDmP6lTL4fcqsXAv43dnlbZiuW4MWQW38rW/BVWSE7Q/7+XQocmpnRYILUmg==}
-    dev: false
 
   /@emotion/weak-memoize@0.3.1:
     resolution: {integrity: sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==}
-    dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.50.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -4145,7 +4136,7 @@ packages:
     dependencies:
       '@jridgewell/set-array': 1.1.2
       '@jridgewell/sourcemap-codec': 1.4.14
-      '@jridgewell/trace-mapping': 0.3.17
+      '@jridgewell/trace-mapping': 0.3.19
 
   /@jridgewell/gen-mapping@0.3.3:
     resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
@@ -4911,6 +4902,163 @@ packages:
       write-file-atomic: 4.0.2
     dev: true
 
+  /@lowdefy/actions-core@4.0.0-rc.11:
+    resolution: {integrity: sha512-cL1Trxe6UBD1SB4RZhfWVTYV07r9EI1vhX298cFsRGb4HLCZYhtJJ9NKRLggrzcfhbWkT7BM9uQtGS8sTfoTNg==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+    dev: false
+
+  /@lowdefy/ajv@4.0.0-rc.11:
+    resolution: {integrity: sha512-brciZR0i8QJ3M/Cs9YUJy/ii+8NR8NcB2jI8cfEEiTMYtehjQ5ZyTmWhixrTNFzXVtWKeawysCSjLaqVpQu5Qg==}
+    dependencies:
+      '@lowdefy/nunjucks': 4.0.0-rc.11
+      ajv: 8.12.0
+      ajv-errors: 3.0.0(ajv@8.12.0)
+
+  /@lowdefy/api@4.0.0-rc.11:
+    resolution: {integrity: sha512-X+ruCY0oW0S2fQOi+7u7PvP3gfOo5U5CalsHw3bLySDswayxOirDaA07KwoVZfdG+WEo59b0Rm8IghvnQdBtGw==}
+    dependencies:
+      '@lowdefy/ajv': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      '@lowdefy/node-utils': 4.0.0-rc.11
+      '@lowdefy/nunjucks': 4.0.0-rc.11
+      '@lowdefy/operators': 4.0.0-rc.11
+      '@lowdefy/operators-js': 4.0.0-rc.11
+    dev: false
+
+  /@lowdefy/block-utils@4.0.0-rc.11:
+    resolution: {integrity: sha512-TzRI0qPMEx/oco+ts16LKWDKfnCfIFoXXN/b4afV5fGMS+B3XvBSsWNmoNIk1d/o05ursqWoQy0DdD5w5NPFDA==}
+    dependencies:
+      '@emotion/css': 11.11.2
+      '@lowdefy/helpers': 4.0.0-rc.11
+      dompurify: 3.0.6
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
+  /@lowdefy/blocks-antd@4.0.0-rc.11:
+    resolution: {integrity: sha512-uFEu8oi8Fm3RgzA/Ae94ZvsY48Xts6V4Eo5iQ5+0D9Y+BDl51eEiO9aU9fn5mWDywktQ2403dFcAp/jdFuK4rw==}
+    dependencies:
+      '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
+      '@lowdefy/block-utils': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      antd: 4.24.14(react-dom@18.2.0)(react@18.2.0)
+      classnames: 2.3.2
+      moment: 2.29.4
+      rc-motion: 2.9.0(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tinycolor2: 1.6.0
+    dev: false
+
+  /@lowdefy/blocks-basic@4.0.0-rc.11:
+    resolution: {integrity: sha512-wZxO6F5L4IhJ/FtageOzI/Q2BC972EW6rmR2T8Jcl6wSBHrOkzAkdUgOS3V3eyJ2FCIlC0mfxylLS6r/ZNP+/g==}
+    dependencies:
+      '@lowdefy/block-utils': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      dompurify: 3.0.6
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
+  /@lowdefy/blocks-loaders@4.0.0-rc.11:
+    resolution: {integrity: sha512-bh5blSBg6NyXFX8Y295mJ2ZjrslPxUCq4M03xlCKEvFIg+8Oi4vuINeCkRjle3HhBjohrOmzy0hTgnrKo7Tg1w==}
+    dependencies:
+      '@lowdefy/block-utils': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+
+  /@lowdefy/build@4.0.0-rc.11:
+    resolution: {integrity: sha512-nmglHw5xw+/j4szrHndPxu6OpvD4QJO49Uemof9g12z2zLBR3mMrUUt6mnmXkDX7knk83iAsE819g6Umj7A6UQ==}
+    hasBin: true
+    dependencies:
+      '@lowdefy/ajv': 4.0.0-rc.11
+      '@lowdefy/blocks-basic': 4.0.0-rc.11
+      '@lowdefy/blocks-loaders': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      '@lowdefy/node-utils': 4.0.0-rc.11
+      '@lowdefy/nunjucks': 4.0.0-rc.11
+      '@lowdefy/operators': 4.0.0-rc.11
+      '@lowdefy/operators-js': 4.0.0-rc.11
+      ajv: 8.12.0
+      json5: 2.2.3
+      yaml: 2.3.2
+      yargs: 17.7.2
+    dev: true
+
+  /@lowdefy/client@4.0.0-rc.11:
+    resolution: {integrity: sha512-vIXA3D/WakIHLlMuwebYVUXxTvvslf3+0/YgTTI4ktIjlX9VUDmvJtJRvRc2+il+t15goYhVF90ZSud5SDm4xA==}
+    dependencies:
+      '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
+      '@lowdefy/block-utils': 4.0.0-rc.11
+      '@lowdefy/engine': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      '@lowdefy/layout': 4.0.0-rc.11
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@lowdefy/engine@4.0.0-rc.11:
+    resolution: {integrity: sha512-m5+UQD/XkEjxmXAIQkg5G9b742vVNi12uuAU4kRAbl22mrh9/8+j052PoI79FX9C1qJJEDnrwj1EM55zIvAWjg==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+      '@lowdefy/operators': 4.0.0-rc.11
+    dev: false
+
+  /@lowdefy/helpers@4.0.0-rc.11:
+    resolution: {integrity: sha512-wb01NEAOR0FbJC/xj1XWJmGKWlOL3+wMQIGnmH67zfoDaEfOWVFYcJfCcD0MmJZmJpvIQZ9yBEHcWYPEFhGj7w==}
+    dependencies:
+      lodash.merge: 4.6.2
+      query-string: 8.1.0
+
+  /@lowdefy/layout@4.0.0-rc.11:
+    resolution: {integrity: sha512-c0jfL2kFIfd2Fpai1GVbP9CM9qdT8ZSVh1uQvvrgKHYIk85eQOODXXWzr6JVKa0i6h8E9w1wisl3G3P8E2E2AQ==}
+    dependencies:
+      '@lowdefy/block-utils': 4.0.0-rc.11
+      '@lowdefy/helpers': 4.0.0-rc.11
+      antd: 4.24.14(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@lowdefy/node-utils@4.0.0-rc.11:
+    resolution: {integrity: sha512-hzRperBuyX3nqqvP9RTuJaj3rNhWcMNDqf6Q1ycTgaxvcAcSI7XqdU+Nld4wR5oRhBWIjPF3qiwK1kvzUu7Plw==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+      fs-extra: 11.1.1
+
+  /@lowdefy/nunjucks@4.0.0-rc.11:
+    resolution: {integrity: sha512-5Y7aD1OsqZSp9XPq5kNn/kFGQwZwYPiFX+7CBNUij2pQ8q19wY343wVhAGeFg7VZHOMiGD+nbh1PeufcmKnddw==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+      moment: 2.29.4
+
+  /@lowdefy/operators-js@4.0.0-rc.11:
+    resolution: {integrity: sha512-g/5x9f8Xca7YMHpWvOr4QHyPdOyBy+VAOvPAUwI/b6Df/AZ0D/Ncfkz9gKZ0YTTn1q9lmcCqpPHLWHea6Z0ZPw==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+      '@lowdefy/operators': 4.0.0-rc.11
+
+  /@lowdefy/operators@4.0.0-rc.11:
+    resolution: {integrity: sha512-+4WsSplWdzkVwEbwG++M5JbymrhsBCid4aMDPJxhlhUHzDfKlIZNEUnqsBqtUsouH0/2BMwXphDtR0pkfE4uNg==}
+    dependencies:
+      '@lowdefy/helpers': 4.0.0-rc.11
+
+  /@lowdefy/plugin-next-auth@4.0.0-rc.11(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ICKGP8niU3DbUbEe34xcbNFbfq2oBOG1y45BshYVX69oV55u1Ct+4ylcJLs61gOB+wQWx0EFLGhZz5D0USdvUg==}
+    dependencies:
+      next: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
+      next-auth: 4.23.2(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@opentelemetry/api'
+      - babel-plugin-macros
+      - nodemailer
+      - react
+      - react-dom
+      - sass
+    dev: false
+
   /@mapbox/node-pre-gyp@1.0.11:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
     hasBin: true
@@ -4942,13 +5090,20 @@ packages:
       got: 11.8.6
       os-filter-obj: 2.0.0
 
-  /@next-auth/mongodb-adapter@1.1.3(mongodb@4.13.0)(next-auth@4.23.2):
+  /@mongodb-js/saslprep@1.1.0:
+    resolution: {integrity: sha512-Xfijy7HvfzzqiOAhAepF4SGN5e9leLkMvg/OPOF97XemjfVCYN/oWa75wnkc6mltMSTwY+XlbhWgUOJmkFspSw==}
+    requiresBuild: true
+    dependencies:
+      sparse-bitfield: 3.0.3
+    optional: true
+
+  /@next-auth/mongodb-adapter@1.1.3(mongodb@4.17.1)(next-auth@4.23.2):
     resolution: {integrity: sha512-nH/may8hntYBlcuxepSsR2b95w6SRnP+c/FFt3KKjdTScNjhrN0zZdlT90nisjG/3gK+MvzMbz/F4Rwpgr9RMA==}
     peerDependencies:
       mongodb: ^5 || ^4
       next-auth: ^4
     dependencies:
-      mongodb: 4.13.0
+      mongodb: 4.17.1
       next-auth: 4.23.2(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
@@ -5612,7 +5767,7 @@ packages:
       - debug
     dev: false
 
-  /@shelf/jest-mongodb@4.1.7(jest-environment-node@28.1.3)(mongodb@4.13.0):
+  /@shelf/jest-mongodb@4.1.7(jest-environment-node@28.1.3)(mongodb@4.17.1):
     resolution: {integrity: sha512-1sQXHmEirGL+apuOGEt6dkySsgq5SmIGj7uKWYZ6VWch7kg7imCn4CrbfHgotRoiS6QRRIIVBfMdpv7g3XoEMg==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -5621,7 +5776,7 @@ packages:
     dependencies:
       debug: 4.3.4
       jest-environment-node: 28.1.3
-      mongodb: 4.13.0
+      mongodb: 4.17.1
       mongodb-memory-server: 8.11.5
     transitivePeerDependencies:
       - aws-crt
@@ -5663,18 +5818,6 @@ packages:
       '@smithy/types': 2.3.4
       '@smithy/util-config-provider': 2.0.0
       '@smithy/util-middleware': 2.0.3
-      tslib: 2.6.2
-    optional: true
-
-  /@smithy/credential-provider-imds@2.0.10:
-    resolution: {integrity: sha512-may2/gYlDip2rjlU1Z5fcCEWY0Fu3tSu/HykgZrLfb2/171P6OYuz7dGNKBOCS1W57vP4W5wmUhm0WGehrixig==}
-    engines: {node: '>=14.0.0'}
-    requiresBuild: true
-    dependencies:
-      '@smithy/node-config-provider': 2.0.10
-      '@smithy/property-provider': 2.0.8
-      '@smithy/types': 2.3.4
-      '@smithy/url-parser': 2.0.7
       tslib: 2.6.2
     optional: true
 
@@ -5793,17 +5936,6 @@ packages:
       tslib: 2.6.2
     optional: true
 
-  /@smithy/node-config-provider@2.0.10:
-    resolution: {integrity: sha512-e5MiLH5Eu+BbYsmhZIkvUKCzite6JCBPL75PNjlRK2TWvSpfp19hNf2SiJIQbPalcFj5zlyBvtcEkF1sfYIdhg==}
-    engines: {node: '>=14.0.0'}
-    requiresBuild: true
-    dependencies:
-      '@smithy/property-provider': 2.0.8
-      '@smithy/shared-ini-file-loader': 2.0.9
-      '@smithy/types': 2.3.4
-      tslib: 2.6.2
-    optional: true
-
   /@smithy/node-config-provider@2.0.13:
     resolution: {integrity: sha512-pPpLqYuJcOq1sj1EGu+DoZK47DUS4gepqSTNgRezmrjnzNlSU2/Dcc9Ebzs+WZ0Z5vXKazuE+k+NksFLo07/AA==}
     engines: {node: '>=14.0.0'}
@@ -5829,15 +5961,6 @@ packages:
 
   /@smithy/property-provider@2.0.11:
     resolution: {integrity: sha512-kzuOadu6XvrnlF1iXofpKXYmo4oe19st9/DE8f5gHNaFepb4eTkR8gD8BSdTnNnv7lxfv6uOwZPg4VS6hemX1w==}
-    engines: {node: '>=14.0.0'}
-    requiresBuild: true
-    dependencies:
-      '@smithy/types': 2.3.4
-      tslib: 2.6.2
-    optional: true
-
-  /@smithy/property-provider@2.0.8:
-    resolution: {integrity: sha512-oaaP/i7bGG8XbxG9Kx4PZh83iJ2jo/vt8RmJdi9hmc8APBaW1HGDperVXDCyPQdVYXmiqrtxc/rPImyBma1G3A==}
     engines: {node: '>=14.0.0'}
     requiresBuild: true
     dependencies:
@@ -5873,15 +5996,6 @@ packages:
       tslib: 2.6.2
     optional: true
 
-  /@smithy/querystring-parser@2.0.7:
-    resolution: {integrity: sha512-Cwi/Hgs73nbLKfgH7dXAxzvDxyTrK+BLrlAd0KXU7xcBR94V132nvxoq39BMWckYAPmnMwxCwq8uusNH4Dnagw==}
-    engines: {node: '>=14.0.0'}
-    requiresBuild: true
-    dependencies:
-      '@smithy/types': 2.3.4
-      tslib: 2.6.2
-    optional: true
-
   /@smithy/service-error-classification@2.0.3:
     resolution: {integrity: sha512-b+m4QCHXb7oKAkM/jHwHrl5gpqhFoMTHF643L0/vAEkegrcUWyh1UjyoHttuHcP5FnHVVy4EtpPtLkEYD+xMFw==}
     engines: {node: '>=14.0.0'}
@@ -5892,15 +6006,6 @@ packages:
 
   /@smithy/shared-ini-file-loader@2.0.12:
     resolution: {integrity: sha512-umi0wc4UBGYullAgYNUVfGLgVpxQyES47cnomTqzCKeKO5oudO4hyDNj+wzrOjqDFwK2nWYGVgS8Y0JgGietrw==}
-    engines: {node: '>=14.0.0'}
-    requiresBuild: true
-    dependencies:
-      '@smithy/types': 2.3.4
-      tslib: 2.6.2
-    optional: true
-
-  /@smithy/shared-ini-file-loader@2.0.9:
-    resolution: {integrity: sha512-vBLgJI+Qpz1TZ0W2kUBOmG2Q+geVEhiXE99UX02+UFag2WzOQ6frvV6rpadwJu0uwF02GG620NbiKGboqZ19YA==}
     engines: {node: '>=14.0.0'}
     requiresBuild: true
     dependencies:
@@ -5947,15 +6052,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@smithy/querystring-parser': 2.0.10
-      '@smithy/types': 2.3.4
-      tslib: 2.6.2
-    optional: true
-
-  /@smithy/url-parser@2.0.7:
-    resolution: {integrity: sha512-SwMl1Lq3yFR2hzhwWYKg04uJHpfcXWMBPycm4Z8GkLI6Dw7rJNDApEbMtujlYw6pVP2WKbrpaGHjQ9MdP92kMQ==}
-    requiresBuild: true
-    dependencies:
-      '@smithy/querystring-parser': 2.0.7
       '@smithy/types': 2.3.4
       tslib: 2.6.2
     optional: true
@@ -6405,7 +6501,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.11.18
+      '@types/node': 20.6.2
 
   /@types/mdast@3.0.13:
     resolution: {integrity: sha512-HjiGiWedR0DVFkeNljpa6Lv4/IZU1+30VY5d747K7lBudFc3R0Ibr6yJ9lN3BE28VnZyDfLF/VB1Ql1ZIbKrmg==}
@@ -6437,7 +6533,6 @@ packages:
 
   /@types/node@20.6.2:
     resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
-    dev: false
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -6504,7 +6599,7 @@ packages:
   /@types/whatwg-url@8.2.2:
     resolution: {integrity: sha512-FtQu10RWgn3D9U4aazdwIE2yzphmTJREDqNdODHrbrZmmMqI0vMheC/6NE/J1Yveaj8H+ela+YwWTjq5PGmuhA==}
     dependencies:
-      '@types/node': 20.6.1
+      '@types/node': 20.6.2
       '@types/webidl-conversions': 7.0.0
 
   /@types/yargs-parser@21.0.0:
@@ -6796,7 +6891,6 @@ packages:
       ajv: ^8.0.1
     dependencies:
       ajv: 8.12.0
-    dev: false
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
     resolution: {integrity: sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==}
@@ -6822,7 +6916,6 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
-    dev: false
 
   /algoliasearch@4.20.0:
     resolution: {integrity: sha512-y+UHEjnOItoNy0bYO+WWmLWBlPwDjKHW6mNHrPi0NkuhpQOOEbrkwQH/wgKFDLh7qlKjzoKeiRtlpewDPDG23g==}
@@ -7272,10 +7365,9 @@ packages:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
-      '@babel/runtime': 7.22.15
+      '@babel/runtime': 7.23.1
       cosmiconfig: 7.1.0
       resolve: 1.22.6
-    dev: false
 
   /babel-preset-current-node-syntax@1.0.1(@babel/core@7.23.0):
     resolution: {integrity: sha512-M7LQ0bxarkxQoN+vz5aJPsLBn77n8QgTFmo8WK0/44auK2xlCXrYcUxHFxgU7qW5Yzw/CjmLRK2uJzaCd7LvqQ==}
@@ -7501,8 +7593,8 @@ packages:
     dependencies:
       node-int64: 0.4.0
 
-  /bson@4.7.0:
-    resolution: {integrity: sha512-VrlEE4vuiO1WTpfof4VmaVolCVYkYTgB9iWgYNOrVlnifpME/06fhFRmONgBhClD5pFC1t9ZWqFUQEQAzY43bA==}
+  /bson@4.7.2:
+    resolution: {integrity: sha512-Ry9wCtIZ5kGqkJoi6aD8KjxFZEx78guTQDnpXWiNthsxzrxAK/i8E6pCHAIZTbaEFWcOCvbecMukfK7XUvyLpQ==}
     engines: {node: '>=6.9.0'}
     dependencies:
       buffer: 5.7.1
@@ -8341,7 +8433,6 @@ packages:
   /decode-uri-component@0.4.1:
     resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
     engines: {node: '>=14.16'}
-    dev: false
 
   /decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
@@ -8635,7 +8726,6 @@ packages:
 
   /dompurify@3.0.6:
     resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
-    dev: false
 
   /domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -9629,7 +9719,6 @@ packages:
   /filter-obj@5.1.0:
     resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
     engines: {node: '>=14.16'}
-    dev: false
 
   /find-cache-dir@3.3.2:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
@@ -9642,7 +9731,6 @@ packages:
 
   /find-root@1.1.0:
     resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
-    dev: false
 
   /find-up@2.1.0:
     resolution: {integrity: sha512-NWzkk0jSJtTt08+FBFMvXoeZnOJD+jTtsRmBYbAIzJdX6l7dLgR7CTubCM5/eDdPUBvLCeVasP1brfVR/9/EZQ==}
@@ -11539,7 +11627,6 @@ packages:
 
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
-    dev: false
 
   /json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -12774,7 +12861,6 @@ packages:
 
   /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
-    dev: false
 
   /mongodb-connection-string-url@2.6.0:
     resolution: {integrity: sha512-WvTZlI9ab0QYtTYnuMLgobULWhokRjtC7db9LtcVfJ+Hsnyr5eo6ZtNAt3Ly24XZScGMelOcGtm7lSn0332tPQ==}
@@ -12794,7 +12880,7 @@ packages:
       get-port: 5.1.1
       https-proxy-agent: 5.0.1
       md5-file: 5.0.0
-      mongodb: 4.13.0
+      mongodb: 4.17.1
       new-find-package-json: 2.0.0
       semver: 7.5.4
       tar-stream: 2.2.0
@@ -12819,16 +12905,16 @@ packages:
       - supports-color
     dev: true
 
-  /mongodb@4.13.0:
-    resolution: {integrity: sha512-+taZ/bV8d1pYuHL4U+gSwkhmDrwkWbH1l4aah4YpmpscMwgFBkufIKxgP/G7m87/NUuQzc2Z75ZTI7ZOyqZLbw==}
+  /mongodb@4.17.1:
+    resolution: {integrity: sha512-MBuyYiPUPRTqfH2dV0ya4dcr2E5N52ocBuZ8Sgg/M030nGF78v855B3Z27mZJnp8PxjnUquEnAtjOsphgMZOlQ==}
     engines: {node: '>=12.9.0'}
     dependencies:
-      bson: 4.7.0
+      bson: 4.7.2
       mongodb-connection-string-url: 2.6.0
       socks: 2.7.1
     optionalDependencies:
       '@aws-sdk/credential-providers': 3.425.0
-      saslprep: 1.0.3
+      '@mongodb-js/saslprep': 1.1.0
     transitivePeerDependencies:
       - aws-crt
 
@@ -14260,7 +14346,6 @@ packages:
       decode-uri-component: 0.4.1
       filter-obj: 5.1.0
       split-on-first: 3.0.0
-    dev: false
 
   /querystring@0.2.0:
     resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==}
@@ -15193,7 +15278,6 @@ packages:
   /require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
@@ -15375,6 +15459,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       sparse-bitfield: 3.0.3
+    dev: false
 
   /sax@1.2.1:
     resolution: {integrity: sha512-8I2a3LovHTOpm7NV5yOyO8IHqgVsfK4+UuySrXU8YXkSRX7k6hCV9b3HrkKCr3nMpgj+0bmocaJJWpvp1oc7ZA==}
@@ -15661,7 +15746,6 @@ packages:
   /source-map@0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
     engines: {node: '>=0.10.0'}
-    dev: false
 
   /source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -15718,7 +15802,6 @@ packages:
   /split-on-first@3.0.0:
     resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
     engines: {node: '>=12'}
-    dev: false
 
   /split2@3.2.2:
     resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
@@ -16220,7 +16303,7 @@ packages:
       uglify-js:
         optional: true
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.19
+      '@jridgewell/trace-mapping': 0.3.17
       '@swc/core': 1.3.92
       jest-worker: 27.5.1
       schema-utils: 3.3.0

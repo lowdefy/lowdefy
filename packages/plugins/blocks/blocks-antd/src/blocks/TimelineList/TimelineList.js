@@ -45,21 +45,21 @@ const TimelineList = ({ blockId, components: { Icon }, events, list, methods, pr
       {...other}
     >
       {(list || []).map((child, i) => {
-        let icon = serializer.copy(get(value, `${i}.${properties.iconField || 'icon'}`));
-        let style = get(value, `${i}.${properties.styleField || 'style'}`);
+        let icon = serializer.copy(get(value, `${i}.${properties.iconField ?? 'icon'}`));
+        let style = get(value, `${i}.${properties.styleField ?? 'style'}`);
         if (type.isString(icon)) {
           icon = { name: icon };
         }
         if (!type.isObject(style)) {
           style = {};
         }
-        const color = get(value, `${i}.${properties.colorField || 'color'}`);
+        const color = get(value, `${i}.${properties.colorField ?? 'color'}`);
         return (
           <Timeline.Item
             key={`${blockId}_${i}`}
             color={color}
-            position={get(value, `${i}.${properties.positionField || 'position'}`)}
-            label={get(value, `${i}.${properties.labelField || 'label'}`)}
+            position={get(value, `${i}.${properties.positionField ?? 'position'}`)}
+            label={get(value, `${i}.${properties.labelField ?? 'label'}`)}
             dot={
               icon && (
                 <Icon
