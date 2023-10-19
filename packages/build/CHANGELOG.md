@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
+
+
+### Bug Fixes
+
+* **build:** Fix path keys. ([a6d9bb9](https://github.com/lowdefy/lowdefy/commit/a6d9bb9b376205d1a3ce1ffc5c133a2a8e44b5e1))
+* **build:** Handel rec array keys. ([ce429e7](https://github.com/lowdefy/lowdefy/commit/ce429e7fd67c307456b705b4bb23782854be8852))
+* **build:** Reduce spaces in build output. ([2e14c4f](https://github.com/lowdefy/lowdefy/commit/2e14c4f38ba8819aefddd1072c69910e6c0b6969))
+* **build:** reset id counter. ([a06d15d](https://github.com/lowdefy/lowdefy/commit/a06d15da753ed1026c891a8611df5534d80aae91))
+* **build:** Update menuLink in lowdefy schema to include urlQuery and input. ([3d1f6c5](https://github.com/lowdefy/lowdefy/commit/3d1f6c5981f635eeee84e4c7c606867517aa13b5))
+
+
+
+
+
 # [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
 
 

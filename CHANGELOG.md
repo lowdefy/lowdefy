@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
+
+
+### Bug Fixes
+
+* **build:** Fix path keys. ([a6d9bb9](https://github.com/lowdefy/lowdefy/commit/a6d9bb9b376205d1a3ce1ffc5c133a2a8e44b5e1))
+* **build:** Handel rec array keys. ([ce429e7](https://github.com/lowdefy/lowdefy/commit/ce429e7fd67c307456b705b4bb23782854be8852))
+* **build:** Reduce spaces in build output. ([2e14c4f](https://github.com/lowdefy/lowdefy/commit/2e14c4f38ba8819aefddd1072c69910e6c0b6969))
+* **build:** reset id counter. ([a06d15d](https://github.com/lowdefy/lowdefy/commit/a06d15da753ed1026c891a8611df5534d80aae91))
+* **build:** Update menuLink in lowdefy schema to include urlQuery and input. ([3d1f6c5](https://github.com/lowdefy/lowdefy/commit/3d1f6c5981f635eeee84e4c7c606867517aa13b5))
+* Deepsource style fixes. ([e0804b8](https://github.com/lowdefy/lowdefy/commit/e0804b87999e6d812f2d2378770ed214d4264142))
+* Deepsource style fixes. ([2086f5d](https://github.com/lowdefy/lowdefy/commit/2086f5d2e8e5665ec5fd16ce83e59119571f833d))
+* **deps:** Update dependency mongodb to v4.17.1 ([35abd12](https://github.com/lowdefy/lowdefy/commit/35abd12336d60ad316905cc19260061af7efc90e))
+* **docs:** Fix payload on request examples. ([5ce3335](https://github.com/lowdefy/lowdefy/commit/5ce3335469c01979011f55cffd4f76285ef13d1a))
+* **docs:** Update example requests to make use of payload. ([2917d07](https://github.com/lowdefy/lowdefy/commit/2917d07c423051125f723ca329691e5b5a1eafe8))
+* Fix engine tests. ([9a826e6](https://github.com/lowdefy/lowdefy/commit/9a826e6667ebcd780dc430addbff5ee65c10fbf6))
+* Fix KnexBuilder connection. ([9f4d823](https://github.com/lowdefy/lowdefy/commit/9f4d823a9c19c68a90bdb7229cf0f6ad5a1e2c8a))
+* Fix Stripe request. ([421a326](https://github.com/lowdefy/lowdefy/commit/421a3264fecdcfc98853491c5eda97aaa235361a))
+
+
+
+
+
 # [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
 
 
