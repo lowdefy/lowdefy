@@ -15,7 +15,7 @@
 */
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('uuid', async () => {
+jest.unstable_mockModule('uuid', () => {
   return {
     v1: jest.fn(() => 'ABC-v1'),
     v3: jest.fn(() => 'ABC-v3'),
@@ -104,7 +104,6 @@ test('_uuid.v5: {"name":"hello", "namespace":"world"}', async () => {
 });
 
 test('_uuid: error', async () => {
-  const uuid = await import('uuid');
   const _uuid = (await import('./uuid.js')).default;
   expect(() => _uuid({ params: 'error', location: 'locationId' })).toThrow();
 });

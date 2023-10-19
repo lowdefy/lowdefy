@@ -26,6 +26,6 @@ properties:
     url_query:
       _payload: url_query
     url:
-      _payload: href
+      _payload: url
     timestamp:
       _date: now

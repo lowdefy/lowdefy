@@ -18,7 +18,7 @@ import { serializer } from '@lowdefy/helpers';
 async function writeConfig({ components, context }) {
   await context.writeBuildArtifact(
     'config.json',
-    serializer.serializeToString(components.config ?? {}, { space: 2 })
+    serializer.serializeToString(components.config ?? {})
   );
 }
 

@@ -36,13 +36,13 @@ const window = {
 
 const globals = { document, window };
 
-test('ScrollTo with no params', async () => {
+test('ScrollTo with no params', () => {
   expect(() => ScrollTo({ globals })).toThrow(
     'Invalid ScrollTo, check action params. Received "undefined".'
   );
 });
 
-test('ScrollTo with no blockId', async () => {
+test('ScrollTo with no blockId', () => {
   ScrollTo({ globals, params: { behavior: 'smooth', top: 0 } });
   expect(mockWindowScrollTo.mock.calls).toEqual([
     [
@@ -54,7 +54,7 @@ test('ScrollTo with no blockId', async () => {
   ]);
 });
 
-test('ScrollTo with blockId', async () => {
+test('ScrollTo with blockId', () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
@@ -63,7 +63,7 @@ test('ScrollTo with blockId', async () => {
   expect(mockElemScrollIntoView.mock.calls).toEqual([[undefined]]);
 });
 
-test('ScrollTo with blockId and options', async () => {
+test('ScrollTo with blockId and options', () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });
@@ -72,7 +72,7 @@ test('ScrollTo with blockId and options', async () => {
   expect(mockElemScrollIntoView.mock.calls).toEqual([[{ behavior: 'smooth' }]]);
 });
 
-test('ScrollTo with blockId, block not found', async () => {
+test('ScrollTo with blockId, block not found', () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === 'blockId') return { id, scrollIntoView: mockElemScrollIntoView };
   });

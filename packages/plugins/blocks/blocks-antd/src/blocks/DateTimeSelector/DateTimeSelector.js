@@ -72,9 +72,9 @@ const DateTimeSelector = ({
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
-              format={properties.format || 'YYYY-MM-DD HH:mm'}
+              format={properties.format ?? 'YYYY-MM-DD HH:mm'}
               getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
-              placeholder={properties.placeholder || 'Select Date & Time'}
+              placeholder={properties.placeholder ?? 'Select Date & Time'}
               showNow={properties.showNow}
               showToday={properties.showToday}
               size={properties.size}
@@ -83,14 +83,14 @@ const DateTimeSelector = ({
                 <Icon
                   blockId={`${blockId}_suffixIcon`}
                   events={events}
-                  properties={properties.suffixIcon || 'AiOutlineCalendar'}
+                  properties={properties.suffixIcon ?? 'AiOutlineCalendar'}
                 />
               }
               showTime={{
-                format: properties.timeFormat || 'HH:mm',
-                hourStep: properties.hourStep || 1,
-                minuteStep: properties.minuteStep || 5,
-                secondStep: properties.secondStep || 30,
+                format: properties.timeFormat ?? 'HH:mm',
+                hourStep: properties.hourStep ?? 1,
+                minuteStep: properties.minuteStep ?? 5,
+                secondStep: properties.secondStep ?? 30,
               }}
               onChange={onChange}
               onSelect={

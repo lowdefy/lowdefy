@@ -9,7 +9,7 @@ const createLinkComponent = (lowdefy, Link) => {
       id={id}
       className={className}
       rel={rel}
-      aria-label={ariaLabel || 'back'}
+      aria-label={ariaLabel ?? 'back'}
       onClick={(...params) => {
         lowdefy._internal.router.back();
         onClick(...params);
@@ -36,15 +36,15 @@ const createLinkComponent = (lowdefy, Link) => {
         id={id}
         aria-label={ariaLabel}
         className={className}
-        href={href || `${url}${query ? `?${query}` : ''}`}
-        rel={rel || (newTab && 'noopener noreferrer')}
+        href={href ?? `${url}${query ? `?${query}` : ''}`}
+        rel={rel ?? (newTab && 'noopener noreferrer')}
         target={newTab && '_blank'}
         onClick={async (...params) => {
           await onClick(...params);
           return true;
         }}
       >
-        {type.isFunction(children) ? children(pageId || url || id) : children}
+        {type.isFunction(children) ? children(pageId ?? url ?? id) : children}
       </a>
     );
   };
@@ -74,14 +74,14 @@ const createLinkComponent = (lowdefy, Link) => {
           href={`${window.location.origin}${lowdefy.basePath}${pathname}${
             query ? `?${query}` : ''
           }`}
-          rel={rel || 'noopener noreferrer'}
+          rel={rel ?? 'noopener noreferrer'}
           target="_blank"
           onClick={async (...params) => {
             await onClick(...params);
             return true;
           }}
         >
-          {type.isFunction(children) ? children(pageId || url || id) : children}
+          {type.isFunction(children) ? children(pageId ?? url ?? id) : children}
         </a>
       );
     }
@@ -100,7 +100,7 @@ const createLinkComponent = (lowdefy, Link) => {
           onClick(...params);
         }}
       >
-        {type.isFunction(children) ? children(pageId || url || id) : children}
+        {type.isFunction(children) ? children(pageId ?? url ?? id) : children}
       </Link>
     );
   };

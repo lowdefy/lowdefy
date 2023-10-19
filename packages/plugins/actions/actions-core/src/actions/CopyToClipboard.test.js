@@ -27,7 +27,7 @@ const window = {
 
 const globals = { window };
 
-test('CopyToClipboard mock test', async () => {
+test('CopyToClipboard mock test', () => {
   CopyToClipboard({
     globals,
     params: { copy: 'Copy content.' },

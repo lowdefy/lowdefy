@@ -52,7 +52,7 @@ const AutoCompleteInput = ({
             className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
-            placeholder={properties.placeholder || 'Type or select item'}
+            placeholder={properties.placeholder ?? 'Type or select item'}
             allowClear={properties.allowClear !== false}
             size={properties.size}
             filterOption={(input, option) =>

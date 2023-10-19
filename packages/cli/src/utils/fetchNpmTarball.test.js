@@ -35,7 +35,7 @@ jest.unstable_mockModule('decompress', () => {
 jest.unstable_mockModule('axios', () => {
   return {
     default: {
-      get: (url) => {
+      get(url) {
         if (url === 'https://registry.npmjs.org/valid-package') {
           return Promise.resolve({
             data: {
@@ -89,6 +89,7 @@ jest.unstable_mockModule('axios', () => {
         if (url === 'https://registry.npmjs.org/undefined') {
           return;
         }
+        return;
       },
     },
   };

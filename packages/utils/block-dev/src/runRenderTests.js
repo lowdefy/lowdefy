@@ -52,8 +52,8 @@ const runRenderTests = ({
         await waitFor(() => expect(container.firstChild).toMatchSnapshot());
       });
 
-      if (testConfig && testConfig.validation) {
-        (validationsExamples || []).map((validationEx) => {
+      if (testConfig?.validation) {
+        (validationsExamples || []).forEach((validationEx) => {
           test(`Render validation.status = ${validationEx.status} ${ex.id} - value[${v}]`, async () => {
             // create shell to setup react hooks with getProps before render;
             const Shell = () => (
@@ -65,7 +65,7 @@ const runRenderTests = ({
         });
       }
 
-      if (testConfig && testConfig.required) {
+      if (testConfig?.required) {
         test(`Render required = true ${ex.id} - value[${v}]`, async () => {
           // create shell to setup react hooks with getProps before render;
           const Shell = () => <Block {...getProps(ex)} value={value} methods={methods} required />;

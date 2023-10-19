@@ -35,9 +35,9 @@ const tagRender = (props, option, methods, components) => {
       onClose={onClose}
       properties={{
         title: label,
-        ...(option?.tag || {}),
+        ...(option?.tag ?? {}),
         closable,
-        style: { marginRight: 3, ...(option.tag?.style || {}) },
+        style: { marginRight: 3, ...(option.tag?.style ?? {}) },
       }}
     />
   );
@@ -55,7 +55,7 @@ const MultipleSelector = ({
   value,
 }) => {
   const [fetchState, setFetch] = useState(false);
-  const uniqueValueOptions = getUniqueValues(properties.options || []);
+  const uniqueValueOptions = getUniqueValues(properties.options ?? []);
   return (
     <Label
       blockId={blockId}

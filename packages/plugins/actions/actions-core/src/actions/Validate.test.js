@@ -20,7 +20,7 @@ import Validate from './Validate.js';
 const mockValidate = jest.fn();
 const methods = { validate: mockValidate };
 
-test('Validate action invocation', async () => {
+test('Validate action invocation', () => {
   Validate({ methods, params: 'blockId' });
   expect(mockValidate.mock.calls).toEqual([['blockId']]);
 });

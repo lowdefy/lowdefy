@@ -24,7 +24,7 @@ const AgGridMaterial = ({ blockId, events, loading, methods, properties }) => (
     id={blockId}
     className={`ag-theme-material ${methods.makeCssClass({
       width: '100%',
-      height: properties.height || 500,
+      height: properties.height ?? 500,
       ...properties.style,
     })}`}
   >

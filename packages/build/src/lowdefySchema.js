@@ -613,6 +613,18 @@ export default {
             type: 'MenuLink "url" should be a string.',
           },
         },
+        urlQuery: {
+          type: 'object',
+          errorMessage: {
+            type: 'MenuLink "urlQuery" should be an object.',
+          },
+        },
+        input: {
+          type: 'object',
+          errorMessage: {
+            type: 'MenuLink "input" should be an object.',
+          },
+        },
         properties: {
           type: 'object',
           errorMessage: {

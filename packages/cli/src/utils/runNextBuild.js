@@ -19,7 +19,7 @@ import { spawnProcess } from '@lowdefy/node-utils';
 function createStdOutLineHandler({ context }) {
   function stdOutLineHandler(line) {
     // Matches next build output of form: ┌ λ /           261 B        403 kB
-    const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/);
+    const match = line.match(/┌ λ \/\s*\d* [a-zA-Z]*\s*(\d* [a-zA-Z]*)/u);
     if (match) {
       context.print.info(`Home page first load JS size: ${match[1]}.`);
     }

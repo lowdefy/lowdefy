@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ServerError } from '../context/errors.js';
+import { ServerError } from './errors.js';
 
 function createAuthorize({ session }) {
   // Next-auth getSession provides a session object if the user is authenticated

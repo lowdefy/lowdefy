@@ -34,7 +34,7 @@ const getActions = () => {
   return {
     ActionSync: jest.fn(({ params }) => params),
     ActionAsync: jest.fn(async ({ params }) => {
-      await timeout(params.ms || 1);
+      await timeout(params.ms ?? 1);
       return params;
     }),
     ActionError: jest.fn(() => {
@@ -44,7 +44,7 @@ const getActions = () => {
       throw new Error('Test catch error');
     }),
     ActionAsyncError: jest.fn(async ({ params }) => {
-      await timeout(params.ms || 1);
+      await timeout(params.ms ?? 1);
       throw new Error('Test error');
     }),
   };
@@ -315,7 +315,7 @@ test('operators are evaluated in error messages after error', async () => {
     [
       {
         content: `{
-  \"data\": 1234
+  "data": 1234
 }`,
         duration: 6,
         status: 'error',

@@ -20,7 +20,7 @@ async function writeRequestsOnPage({ page, context }) {
     page.requests.map(async (request) => {
       await context.writeBuildArtifact(
         `pages/${page.pageId}/requests/${request.requestId}.json`,
-        serializer.serializeToString(request ?? {}, { space: 2 })
+        serializer.serializeToString(request ?? {})
       );
       delete request.properties;
       delete request.type;

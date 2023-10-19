@@ -251,10 +251,13 @@ _ref:
               - id: delete_selected_document
                 type:  MongoDBDeleteOne
                 connectionId: my_mongodb_collection_id
+                payload:
+                  selected_id
+                    _state: selected_id
                 properties:
                   filter:
                     _id:
-                      _state: selected_id
+                      _payload: selected_id
             ```
 
             ### MongoDBFind
@@ -379,10 +382,13 @@ _ref:
               - id: find_by_id
                 type:  MongoDBFindOne
                 connectionId: my_mongodb_collection_id
+                payload:
+                  _id:
+                    _input: _id
                 properties:
                   query:
                     _id:
-                      _input: _id
+                      _payload: _id
             ```
 
             ### MongoDBInsertMany
@@ -467,10 +473,13 @@ _ref:
               - id: insert_new_comment
                 type:  MongoDBInsertOne
                 connectionId: my_mongodb_collection_id
+                payload:
+                  comment:
+                    _state: comment_input
                 properties:
                   doc:
                     comment:
-                      _state: comment_input
+                      _payload: comment
                     user_id:
                       _user: id
                     timestamp:
@@ -505,12 +514,15 @@ _ref:
               - id: set_resolved
                 type:  MongoDBUpdateMany
                 connectionId: my_mongodb_collection_id
+                payload:
+                  selected_issues_list:
+                    _state: selected_issues_list
                 properties:
                   # Select all documents where the _id is in selected_issues_list in state
                   filter:
                     _id:
                       $in:
-                        _state: selected_issues_list
+                        _payload: selected_issues_list
                   update:
                     $set:
                       resolved: true
@@ -570,10 +582,13 @@ _ref:
               - id: update
                 type:  MongoDBUpdateOne
                 connectionId: my_mongodb_collection_id
+                payload:
+                  _id:
+                    _state: _id
                 properties:
                   filter:
                     _id:
-                      _state: _id
+                      _payload: _id
                   update:
                     $set:
                       _state: true
@@ -585,10 +600,13 @@ _ref:
               - id: like_comment
                 type:  MongoDBUpdateOne
                 connectionId: my_mongodb_collection_id
+                payload:
+                  comment_id:
+                    _state: comment._id
                 properties:
                   filter:
                     _id:
-                      _state: comments.$_id
+                      _payload: comment_id
                   update:
                     $inc:
                       likes: 1

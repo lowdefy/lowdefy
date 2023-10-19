@@ -44,7 +44,7 @@ function _number({ params, location, methodName }) {
   ) {
     return runInstance({
       location,
-      meta: meta,
+      meta,
       methodName,
       operator: '_number',
       params,
@@ -54,7 +54,7 @@ function _number({ params, location, methodName }) {
   return runClass({
     functions: Number,
     location,
-    meta: meta,
+    meta,
     methodName,
     operator: '_number',
     params,

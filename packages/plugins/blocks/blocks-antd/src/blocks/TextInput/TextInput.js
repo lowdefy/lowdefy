@@ -57,7 +57,7 @@ const TextInput = ({
               status={validation.status}
               value={value}
               onChange={(event) => {
-                var input = event.target.value;
+                let input = event.target.value;
 
                 if (properties.replaceInput) {
                   const regex = new RegExp(

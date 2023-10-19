@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-async function wait(ms) {
+function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 

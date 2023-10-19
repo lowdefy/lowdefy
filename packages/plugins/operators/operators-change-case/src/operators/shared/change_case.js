@@ -54,7 +54,7 @@ const prepRegex = (prop, location) => {
     );
   }
   try {
-    return new RegExp(regex.pattern, regex.flags || 'gm');
+    return new RegExp(regex.pattern, regex.flags ?? 'gm');
   } catch (e) {
     throw new Error(
       `Operator Error: ${e.message}. Received: ${JSON.stringify(prop)} at ${location}.`

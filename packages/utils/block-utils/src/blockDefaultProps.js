@@ -24,7 +24,7 @@ const blockDefaultProps = {
   list: [],
   menus: [],
   methods: {
-    makeCssClass: makeCssClass,
+    makeCssClass,
     registerEvent: () => undefined,
     registerMethod: () => undefined,
     triggerEvent: () => undefined,

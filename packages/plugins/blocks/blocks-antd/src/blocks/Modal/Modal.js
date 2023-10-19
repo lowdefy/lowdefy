@@ -53,7 +53,7 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
         afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
         bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
         cancelButtonProps={properties.cancelButtonProps}
-        cancelText={properties.cancelText || 'Cancel'}
+        cancelText={properties.cancelText ?? 'Cancel'}
         centered={!!properties.centered}
         closable={properties.closable !== undefined ? properties.closable : true}
         confirmLoading={get(events, 'onOk.loading')}
@@ -61,8 +61,8 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
         maskClosable={properties.maskClosable !== undefined ? properties.maskClosable : true}
         maskStyle={methods.makeCssClass(properties.maskStyle, true)}
         okButtonProps={properties.okButtonProps}
-        okText={properties.okText || 'Ok'}
-        okType={properties.okButtonType || 'primary'}
+        okText={properties.okText ?? 'Ok'}
+        okType={properties.okButtonType ?? 'primary'}
         title={renderHtml({ html: properties.title, methods })}
         visible={openState}
         width={properties.width}

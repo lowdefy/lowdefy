@@ -74,7 +74,7 @@ function getContext({
     lowdefy.inputs[id] = {};
   }
   const ctx = {
-    id: id,
+    id,
     pageId: config.pageId,
     eventLog: [],
     requests: {},

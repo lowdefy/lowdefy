@@ -138,15 +138,20 @@ _ref:
             - id: my_post_policy
               type: AwsS3PresignedPostPolicy
               connectionId: my_bucket_connection
+              payload:
+                filename:
+                  _args: filename
+                uid:
+                  _args: uid
               properties:
                 key:
                   _nunjucks:
                     template: uploads/{{filename}}-{{uid}}
                     on:
                       filename:
-                        _args: filename
+                        _payload: filename
                       uid:
-                        _args: filename
+                        _payload: uid
             ```
 
             ## Creating a bucket

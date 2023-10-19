@@ -36,7 +36,7 @@ const testDefFormat = 'YYYY-MM-DD';
 const env = new nunjucks.Environment();
 const renderNunjucks = (filter, str) => {
   if (str === undefined) {
-    str = '{{ my_date | ' + (filter || 'date') + ' }}';
+    str = `{{ my_date | ${filter ?? 'date'} }}`;
   }
   return env.renderString(str, { my_date: testDate });
 };
