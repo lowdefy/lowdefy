@@ -16,6 +16,7 @@
 
 import crypto from 'crypto';
 import keygenGetLicenseFile from './keygenGetLicenseFile.js';
+import keygenVerifyApiSignature from './keygenVerifyApiSignature.js';
 
 async function keygenGetLicense({ config, offlineFilePath }) {
   const offline = await keygenGetLicenseFile({
@@ -39,57 +40,62 @@ async function keygenGetLicense({ config, offlineFilePath }) {
   }
 
   const nonce = crypto.randomInt(1_000_000_000_000);
-  const response = await (
-    await fetch(
-      `https://api.keygen.sh/v1/accounts/${config.accountId}/licenses/actions/validate-key`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/vnd.api+json',
-          Accept: 'application/vnd.api+json',
-        },
-        body: JSON.stringify({
-          meta: {
-            key: licenseKey,
-            nonce,
-            scope: {
-              product: config.productId,
-            },
+  const res = await fetch(
+    `https://api.keygen.sh/v1/accounts/${config.accountId}/licenses/actions/validate-key`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+        Accept: 'application/vnd.api+json',
+      },
+      body: JSON.stringify({
+        meta: {
+          key: licenseKey,
+          nonce,
+          scope: {
+            product: config.productId,
           },
-        }),
-      }
-    )
-  ).json();
+        },
+      }),
+    }
+  );
 
-  // TODO: Validate signature
+  const body = await res.text();
 
-  if (response.meta.nonce !== nonce) {
+  await keygenVerifyApiSignature({
+    body,
+    config,
+    date: res.headers.get('date'),
+    signatureHeader: res.headers.get('keygen-signature'),
+    target: `post /v1/accounts/${config.accountId}/licenses/actions/validate-key`,
+  });
+
+  const { meta, data, errors } = JSON.parse(body);
+  if (meta.nonce !== nonce) {
+    throw new Error('License validation failed.');
+  }
+  if (errors) {
     throw new Error('License validation failed.');
   }
 
-  if (response?.data?.relationships?.entitlements?.links?.related) {
+  if (data?.relationships?.entitlements?.links?.related) {
     const entitlementResponse = await (
-      await fetch(
-        `https://api.keygen.sh/${response.data.relationships.entitlements.links.related}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/vnd.api+json',
-            Accept: 'application/vnd.api+json',
-            Authorization: `License ${licenseKey}`,
-          },
-        }
-      )
+      await fetch(`https://api.keygen.sh/${data.relationships.entitlements.links.related}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
+          Accept: 'application/vnd.api+json',
+          Authorization: `License ${licenseKey}`,
+        },
+      })
     ).json();
     entitlements = (entitlementResponse?.data ?? []).map((ent) => ent?.attributes?.code);
   }
   return {
-    id: response?.data?.id,
-    code: response?.meta?.code,
+    id: data?.id,
+    code: meta?.code,
     entitlements,
-    expiry: response?.data?.attributes?.expiry
-      ? new Date(response?.data?.attributes?.expiry)
-      : undefined,
+    expiry: data?.attributes?.expiry ? new Date(data?.attributes?.expiry) : undefined,
   };
 }
 

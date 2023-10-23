@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable no-console */
-
 import crypto from 'crypto';
 import { readFile } from '@lowdefy/node-utils';
 
