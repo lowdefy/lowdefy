@@ -12,6 +12,7 @@ import NextAuth from 'next-auth';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
+import createLicenseRedirectCallback from '../../../lib/server/auth/createLicenseRedirectCallback.js';
 
 async function handler({ context, req, res }) {
   if (authJson.configured === true) {
@@ -20,7 +21,12 @@ async function handler({ context, req, res }) {
     if (req.method === 'HEAD') {
       return res.status(200).end();
     }
-    return await NextAuth(req, res, context.authOptions);
+    if (req.url.startsWith('/api/auth/callback')) {
+      context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context, {
+        originalRedirect: context.authOptions.callbacks.redirect,
+      });
+    }
+    return NextAuth(req, res, context.authOptions);
   }
 
   return res.status(404).json({

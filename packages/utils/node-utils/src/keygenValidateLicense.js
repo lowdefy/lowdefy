@@ -15,28 +15,29 @@
 */
 
 import crypto from 'crypto';
-import keygenGetLicenseFile from './keygenGetLicenseFile.js';
+import keygenValidateLicenseOffline from './keygenValidateLicenseOffline.js';
 import keygenVerifyApiSignature from './keygenVerifyApiSignature.js';
 
-async function keygenGetLicense({ config, offlineFilePath }) {
-  const offline = await keygenGetLicenseFile({
-    config,
-    offlineFilePath,
-  });
-
-  if (offline) {
-    return offline;
-  }
-
+async function keygenValidateLicense({ config }) {
   const licenseKey = process.env.LOWDEFY_LICENSE_KEY;
   let entitlements = [];
 
-  // TODO: Return this of undefined/null?
+  // TODO: Return this or undefined/null?
   if (!licenseKey) {
     return {
       code: 'NO_LICENSE',
       entitlements,
     };
+  }
+
+  if (licenseKey.startsWith('key/')) {
+    const offlineLicense = await keygenValidateLicenseOffline({
+      config,
+      licenseKey,
+    });
+    if (offlineLicense.entitlements.includes('OFFLINE')) {
+      return offlineLicense;
+    }
   }
 
   const nonce = crypto.randomInt(1_000_000_000_000);
@@ -99,4 +100,4 @@ async function keygenGetLicense({ config, offlineFilePath }) {
   };
 }
 
-export default keygenGetLicense;
+export default keygenValidateLicense;

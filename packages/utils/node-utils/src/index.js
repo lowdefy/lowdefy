@@ -18,8 +18,7 @@ import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
-import keygenGetLicense from './keygenGetLicense.js';
-import keygenGetLicenseFile from './keygenGetLicenseFile.js';
+import keygenValidateLicense from './keygenValidateLicense.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -30,8 +29,7 @@ export {
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,
-  keygenGetLicense,
-  keygenGetLicenseFile,
+  keygenValidateLicense,
   spawnProcess,
   readFile,
   writeFile,

@@ -25,7 +25,7 @@ class Blocks {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
-      .substr(0, 5);
+      .substring(0, 5);
     this.areas = serializer.copy(areas || []);
     this.arrayIndices = arrayIndices;
     this.context = context;
