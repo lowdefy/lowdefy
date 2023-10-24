@@ -1984,38 +1984,38 @@ importers:
   packages/servers/server-enterprise:
     dependencies:
       '@lowdefy/actions-core':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/actions/actions-core
       '@lowdefy/api':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../api
       '@lowdefy/blocks-antd':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/blocks-basic':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/blocks/blocks-basic
       '@lowdefy/blocks-loaders':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/blocks/blocks-loaders
       '@lowdefy/client':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../client
       '@lowdefy/helpers':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../utils/helpers
       '@lowdefy/layout':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../layout
       '@lowdefy/node-utils':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../utils/node-utils
       '@lowdefy/operators-js':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/operators/operators-js
       '@lowdefy/plugin-next-auth':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11(react-dom@18.2.0)(react@18.2.0)
+        specifier: 4.0.0-rc.12
+        version: link:../../plugins/plugins/plugin-next-auth
       next:
         specifier: 13.5.4
         version: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
@@ -2039,8 +2039,8 @@ importers:
         version: 4.11.0(react@18.2.0)
     devDependencies:
       '@lowdefy/build':
-        specifier: 4.0.0-rc.11
-        version: 4.0.0-rc.11
+        specifier: 4.0.0-rc.12
+        version: link:../../build
       '@next/eslint-plugin-next':
         specifier: 13.5.4
         version: 13.5.4
@@ -3700,6 +3700,7 @@ packages:
       find-root: 1.1.0
       source-map: 0.5.7
       stylis: 4.2.0
+    dev: false
 
   /@emotion/cache@11.11.0:
     resolution: {integrity: sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==}
@@ -3709,6 +3710,7 @@ packages:
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
       stylis: 4.2.0
+    dev: false
 
   /@emotion/css-prettifier@1.1.3:
     resolution: {integrity: sha512-KNv23+VQ+pcw3ebd1vSEl11CQ6SKAG5EQkrinjVGsfw3ZTWe6/tpWQrsvFLqCtU2LRiLPi04KgFCE4A9+crfpQ==}
@@ -3724,9 +3726,11 @@ packages:
       '@emotion/serialize': 1.1.2
       '@emotion/sheet': 1.2.2
       '@emotion/utils': 1.2.1
+    dev: false
 
   /@emotion/hash@0.9.1:
     resolution: {integrity: sha512-gJB6HLm5rYwSLI6PQa+X1t5CFGrv1J1TWG+sOyMCeKz2ojaj6Fnl/rZEspogG+cvqbt4AE/2eIyD2QfLKTBNlQ==}
+    dev: false
 
   /@emotion/jest@11.10.5:
     resolution: {integrity: sha512-LagosxybgisPlxfBGas9kGcNB5xTTX125WbjEVZiE3MEbb+dI4UYn0XIzrsilR8nUaQ5lH6yKUFrMmz7kB34vg==}
@@ -3756,18 +3760,23 @@ packages:
       '@emotion/unitless': 0.8.1
       '@emotion/utils': 1.2.1
       csstype: 3.1.2
+    dev: false
 
   /@emotion/sheet@1.2.2:
     resolution: {integrity: sha512-0QBtGvaqtWi+nx6doRwDdBIzhNdZrXUppvTM4dtZZWEGTXL/XE/yJxLMGlDT1Gt+UHH5IX1n+jkXyytE/av7OA==}
+    dev: false
 
   /@emotion/unitless@0.8.1:
     resolution: {integrity: sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==}
+    dev: false
 
   /@emotion/utils@1.2.1:
     resolution: {integrity: sha512-Y2tGf3I+XVnajdItskUCn6LX+VUDmP6lTL4fcqsXAv43dnlbZiuW4MWQW38rW/BVWSE7Q/7+XQocmpnRYILUmg==}
+    dev: false
 
   /@emotion/weak-memoize@0.3.1:
     resolution: {integrity: sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==}
+    dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.50.0):
     resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
@@ -4901,163 +4910,6 @@ packages:
       npmlog: 6.0.2
       write-file-atomic: 4.0.2
     dev: true
-
-  /@lowdefy/actions-core@4.0.0-rc.11:
-    resolution: {integrity: sha512-cL1Trxe6UBD1SB4RZhfWVTYV07r9EI1vhX298cFsRGb4HLCZYhtJJ9NKRLggrzcfhbWkT7BM9uQtGS8sTfoTNg==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-    dev: false
-
-  /@lowdefy/ajv@4.0.0-rc.11:
-    resolution: {integrity: sha512-brciZR0i8QJ3M/Cs9YUJy/ii+8NR8NcB2jI8cfEEiTMYtehjQ5ZyTmWhixrTNFzXVtWKeawysCSjLaqVpQu5Qg==}
-    dependencies:
-      '@lowdefy/nunjucks': 4.0.0-rc.11
-      ajv: 8.12.0
-      ajv-errors: 3.0.0(ajv@8.12.0)
-
-  /@lowdefy/api@4.0.0-rc.11:
-    resolution: {integrity: sha512-X+ruCY0oW0S2fQOi+7u7PvP3gfOo5U5CalsHw3bLySDswayxOirDaA07KwoVZfdG+WEo59b0Rm8IghvnQdBtGw==}
-    dependencies:
-      '@lowdefy/ajv': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      '@lowdefy/node-utils': 4.0.0-rc.11
-      '@lowdefy/nunjucks': 4.0.0-rc.11
-      '@lowdefy/operators': 4.0.0-rc.11
-      '@lowdefy/operators-js': 4.0.0-rc.11
-    dev: false
-
-  /@lowdefy/block-utils@4.0.0-rc.11:
-    resolution: {integrity: sha512-TzRI0qPMEx/oco+ts16LKWDKfnCfIFoXXN/b4afV5fGMS+B3XvBSsWNmoNIk1d/o05ursqWoQy0DdD5w5NPFDA==}
-    dependencies:
-      '@emotion/css': 11.11.2
-      '@lowdefy/helpers': 4.0.0-rc.11
-      dompurify: 3.0.6
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  /@lowdefy/blocks-antd@4.0.0-rc.11:
-    resolution: {integrity: sha512-uFEu8oi8Fm3RgzA/Ae94ZvsY48Xts6V4Eo5iQ5+0D9Y+BDl51eEiO9aU9fn5mWDywktQ2403dFcAp/jdFuK4rw==}
-    dependencies:
-      '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
-      '@lowdefy/block-utils': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      antd: 4.24.14(react-dom@18.2.0)(react@18.2.0)
-      classnames: 2.3.2
-      moment: 2.29.4
-      rc-motion: 2.9.0(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      tinycolor2: 1.6.0
-    dev: false
-
-  /@lowdefy/blocks-basic@4.0.0-rc.11:
-    resolution: {integrity: sha512-wZxO6F5L4IhJ/FtageOzI/Q2BC972EW6rmR2T8Jcl6wSBHrOkzAkdUgOS3V3eyJ2FCIlC0mfxylLS6r/ZNP+/g==}
-    dependencies:
-      '@lowdefy/block-utils': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      dompurify: 3.0.6
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  /@lowdefy/blocks-loaders@4.0.0-rc.11:
-    resolution: {integrity: sha512-bh5blSBg6NyXFX8Y295mJ2ZjrslPxUCq4M03xlCKEvFIg+8Oi4vuINeCkRjle3HhBjohrOmzy0hTgnrKo7Tg1w==}
-    dependencies:
-      '@lowdefy/block-utils': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
-  /@lowdefy/build@4.0.0-rc.11:
-    resolution: {integrity: sha512-nmglHw5xw+/j4szrHndPxu6OpvD4QJO49Uemof9g12z2zLBR3mMrUUt6mnmXkDX7knk83iAsE819g6Umj7A6UQ==}
-    hasBin: true
-    dependencies:
-      '@lowdefy/ajv': 4.0.0-rc.11
-      '@lowdefy/blocks-basic': 4.0.0-rc.11
-      '@lowdefy/blocks-loaders': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      '@lowdefy/node-utils': 4.0.0-rc.11
-      '@lowdefy/nunjucks': 4.0.0-rc.11
-      '@lowdefy/operators': 4.0.0-rc.11
-      '@lowdefy/operators-js': 4.0.0-rc.11
-      ajv: 8.12.0
-      json5: 2.2.3
-      yaml: 2.3.2
-      yargs: 17.7.2
-    dev: true
-
-  /@lowdefy/client@4.0.0-rc.11:
-    resolution: {integrity: sha512-vIXA3D/WakIHLlMuwebYVUXxTvvslf3+0/YgTTI4ktIjlX9VUDmvJtJRvRc2+il+t15goYhVF90ZSud5SDm4xA==}
-    dependencies:
-      '@ant-design/icons': 4.8.0(react-dom@18.2.0)(react@18.2.0)
-      '@lowdefy/block-utils': 4.0.0-rc.11
-      '@lowdefy/engine': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      '@lowdefy/layout': 4.0.0-rc.11
-      classnames: 2.3.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@lowdefy/engine@4.0.0-rc.11:
-    resolution: {integrity: sha512-m5+UQD/XkEjxmXAIQkg5G9b742vVNi12uuAU4kRAbl22mrh9/8+j052PoI79FX9C1qJJEDnrwj1EM55zIvAWjg==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-      '@lowdefy/operators': 4.0.0-rc.11
-    dev: false
-
-  /@lowdefy/helpers@4.0.0-rc.11:
-    resolution: {integrity: sha512-wb01NEAOR0FbJC/xj1XWJmGKWlOL3+wMQIGnmH67zfoDaEfOWVFYcJfCcD0MmJZmJpvIQZ9yBEHcWYPEFhGj7w==}
-    dependencies:
-      lodash.merge: 4.6.2
-      query-string: 8.1.0
-
-  /@lowdefy/layout@4.0.0-rc.11:
-    resolution: {integrity: sha512-c0jfL2kFIfd2Fpai1GVbP9CM9qdT8ZSVh1uQvvrgKHYIk85eQOODXXWzr6JVKa0i6h8E9w1wisl3G3P8E2E2AQ==}
-    dependencies:
-      '@lowdefy/block-utils': 4.0.0-rc.11
-      '@lowdefy/helpers': 4.0.0-rc.11
-      antd: 4.24.14(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@lowdefy/node-utils@4.0.0-rc.11:
-    resolution: {integrity: sha512-hzRperBuyX3nqqvP9RTuJaj3rNhWcMNDqf6Q1ycTgaxvcAcSI7XqdU+Nld4wR5oRhBWIjPF3qiwK1kvzUu7Plw==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-      fs-extra: 11.1.1
-
-  /@lowdefy/nunjucks@4.0.0-rc.11:
-    resolution: {integrity: sha512-5Y7aD1OsqZSp9XPq5kNn/kFGQwZwYPiFX+7CBNUij2pQ8q19wY343wVhAGeFg7VZHOMiGD+nbh1PeufcmKnddw==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-      moment: 2.29.4
-
-  /@lowdefy/operators-js@4.0.0-rc.11:
-    resolution: {integrity: sha512-g/5x9f8Xca7YMHpWvOr4QHyPdOyBy+VAOvPAUwI/b6Df/AZ0D/Ncfkz9gKZ0YTTn1q9lmcCqpPHLWHea6Z0ZPw==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-      '@lowdefy/operators': 4.0.0-rc.11
-
-  /@lowdefy/operators@4.0.0-rc.11:
-    resolution: {integrity: sha512-+4WsSplWdzkVwEbwG++M5JbymrhsBCid4aMDPJxhlhUHzDfKlIZNEUnqsBqtUsouH0/2BMwXphDtR0pkfE4uNg==}
-    dependencies:
-      '@lowdefy/helpers': 4.0.0-rc.11
-
-  /@lowdefy/plugin-next-auth@4.0.0-rc.11(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ICKGP8niU3DbUbEe34xcbNFbfq2oBOG1y45BshYVX69oV55u1Ct+4ylcJLs61gOB+wQWx0EFLGhZz5D0USdvUg==}
-    dependencies:
-      next: 13.5.4(@babel/core@7.23.0)(react-dom@18.2.0)(react@18.2.0)
-      next-auth: 4.23.2(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@opentelemetry/api'
-      - babel-plugin-macros
-      - nodemailer
-      - react
-      - react-dom
-      - sass
-    dev: false
 
   /@mapbox/node-pre-gyp@1.0.11:
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -6891,6 +6743,7 @@ packages:
       ajv: ^8.0.1
     dependencies:
       ajv: 8.12.0
+    dev: false
 
   /ajv-keywords@3.5.2(ajv@6.12.6):
     resolution: {integrity: sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==}
@@ -6916,6 +6769,7 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+    dev: false
 
   /algoliasearch@4.20.0:
     resolution: {integrity: sha512-y+UHEjnOItoNy0bYO+WWmLWBlPwDjKHW6mNHrPi0NkuhpQOOEbrkwQH/wgKFDLh7qlKjzoKeiRtlpewDPDG23g==}
@@ -7368,6 +7222,7 @@ packages:
       '@babel/runtime': 7.23.1
       cosmiconfig: 7.1.0
       resolve: 1.22.6
+    dev: false
 
   /babel-preset-current-node-syntax@1.0.1(@babel/core@7.23.0):
     resolution: {integrity: sha512-M7LQ0bxarkxQoN+vz5aJPsLBn77n8QgTFmo8WK0/44auK2xlCXrYcUxHFxgU7qW5Yzw/CjmLRK2uJzaCd7LvqQ==}
@@ -8433,6 +8288,7 @@ packages:
   /decode-uri-component@0.4.1:
     resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
     engines: {node: '>=14.16'}
+    dev: false
 
   /decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
@@ -8726,6 +8582,7 @@ packages:
 
   /dompurify@3.0.6:
     resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
+    dev: false
 
   /domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -9719,6 +9576,7 @@ packages:
   /filter-obj@5.1.0:
     resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
     engines: {node: '>=14.16'}
+    dev: false
 
   /find-cache-dir@3.3.2:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
@@ -9731,6 +9589,7 @@ packages:
 
   /find-root@1.1.0:
     resolution: {integrity: sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng==}
+    dev: false
 
   /find-up@2.1.0:
     resolution: {integrity: sha512-NWzkk0jSJtTt08+FBFMvXoeZnOJD+jTtsRmBYbAIzJdX6l7dLgR7CTubCM5/eDdPUBvLCeVasP1brfVR/9/EZQ==}
@@ -11627,6 +11486,7 @@ packages:
 
   /json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
+    dev: false
 
   /json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
@@ -12861,6 +12721,7 @@ packages:
 
   /moment@2.29.4:
     resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
+    dev: false
 
   /mongodb-connection-string-url@2.6.0:
     resolution: {integrity: sha512-WvTZlI9ab0QYtTYnuMLgobULWhokRjtC7db9LtcVfJ+Hsnyr5eo6ZtNAt3Ly24XZScGMelOcGtm7lSn0332tPQ==}
@@ -14346,6 +14207,7 @@ packages:
       decode-uri-component: 0.4.1
       filter-obj: 5.1.0
       split-on-first: 3.0.0
+    dev: false
 
   /querystring@0.2.0:
     resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==}
@@ -15278,6 +15140,7 @@ packages:
   /require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
@@ -15746,6 +15609,7 @@ packages:
   /source-map@0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -15802,6 +15666,7 @@ packages:
   /split-on-first@3.0.0:
     resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
     engines: {node: '>=12'}
+    dev: false
 
   /split2@3.2.2:
     resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
