@@ -15,23 +15,22 @@ import authJson from '../../../build/auth.json';
 import createLicenseRedirectCallback from '../../../lib/server/auth/createLicenseRedirectCallback.js';
 
 async function handler({ context, req, res }) {
-  if (authJson.configured === true) {
-    // Required for emails in corporate networks, see:
-    // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-    if (req.method === 'HEAD') {
-      return res.status(200).end();
-    }
-    if (req.url.startsWith('/api/auth/callback')) {
-      context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context, {
-        originalRedirect: context.authOptions.callbacks.redirect,
-      });
-    }
-    return NextAuth(req, res, context.authOptions);
+  if (authJson.configured !== true) {
+    return res.status(404).json({
+      message: 'Auth not configured',
+    });
   }
-
-  return res.status(404).json({
-    message: 'Auth not configured',
-  });
+  // Required for emails in corporate networks, see:
+  // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
+  if (req.method === 'HEAD') {
+    return res.status(200).end();
+  }
+  if (req.url.startsWith('/api/auth/callback')) {
+    context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context);
+  } else {
+    context.authOptions.callbacks.redirect = context.authOptions.originalRedirectCallback;
+  }
+  return NextAuth(req, res, context.authOptions);
 }
 
 export default apiWrapper(handler);

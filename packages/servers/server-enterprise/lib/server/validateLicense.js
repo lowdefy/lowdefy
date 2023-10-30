@@ -22,17 +22,16 @@ const config = {
   },
 };
 
-// TODO: Handle expired
-// TODO: Cache results
-// TODO: Check AUTH entitlement
-
 async function validateLicense() {
-  const license = await keygenValidateLicense({ config: config['dev'] });
+  if (global.license) {
+    // Check cached license every 24 hours
+    if (global.license?.timestamp.valueOf?.() > Date.now() - 1000 * 60 * 60 * 24) {
+      return global.license;
+    }
+  }
 
-  console.log(license);
-  return {
-    redirect: license.code !== 'VALID',
-  };
+  global.license = await keygenValidateLicense({ config: config['dev'] });
+  return global.license;
 }
 
 export default validateLicense;

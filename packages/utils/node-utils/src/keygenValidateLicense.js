@@ -97,6 +97,7 @@ async function keygenValidateLicense({ config }) {
     code: meta?.code,
     entitlements,
     expiry: data?.attributes?.expiry ? new Date(data?.attributes?.expiry) : undefined,
+    timestamp: new Date(), // TODO: timestamp, validated, validated_at, validated_ts?
   };
 }
 

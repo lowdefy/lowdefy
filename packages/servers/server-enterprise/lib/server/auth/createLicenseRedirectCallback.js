@@ -10,23 +10,14 @@
 
 import validateLicense from '../validateLicense.js';
 
-function defaultRedirect({ url, baseUrl }) {
-  if (url.startsWith('/')) return `${baseUrl}${url}`;
-  else if (new URL(url).origin === baseUrl) return url;
-  return baseUrl;
-}
-
-function createLicenseRedirectCallback(context, { originalRedirect }) {
+function createLicenseRedirectCallback(context) {
   async function licenseRedirectCallback({ url, baseUrl }) {
-    const { redirect } = await validateLicense(context);
+    const license = await validateLicense(context);
 
-    if (redirect) {
+    if (license.code !== 'VALID' || !license.entitlements.includes('AUTH')) {
       return '/lowdefy/license-invalid';
     }
-    if (originalRedirect) {
-      return originalRedirect({ url, baseUrl });
-    }
-    return defaultRedirect({ url, baseUrl });
+    return context.authOptions.originalRedirectCallback({ url, baseUrl });
   }
   return licenseRedirectCallback;
 }

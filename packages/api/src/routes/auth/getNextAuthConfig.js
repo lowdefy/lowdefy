@@ -55,6 +55,7 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
   nextAuthConfig.cookies = authConfig?.advanced?.cookies;
+  nextAuthConfig.originalRedirectCallback = nextAuthConfig.callbacks.redirect;
   initialized = true;
   return nextAuthConfig;
 }
