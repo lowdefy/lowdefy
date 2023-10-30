@@ -55,7 +55,7 @@ async function sha1(filePath) {
   return crypto
     .createHash('sha1')
     .update(content || '')
-    .digest('hex');
+    .digest('base64');
 }
 
 async function nextBuildWatcher(context) {

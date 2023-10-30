@@ -45,11 +45,11 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.adapter = createAdapter({ authConfig, plugins });
+  nextAuthConfig.adapter = createAdapter({ authConfig, logger, plugins });
   nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
   nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
   nextAuthConfig.logger = createLogger({ logger });
-  nextAuthConfig.providers = createProviders({ authConfig, plugins });
+  nextAuthConfig.providers = createProviders({ authConfig, logger, plugins });
   nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
   nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.session = authConfig.session;

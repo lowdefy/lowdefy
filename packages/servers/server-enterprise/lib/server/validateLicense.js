@@ -22,16 +22,18 @@ const config = {
   },
 };
 
+let license;
+
 async function validateLicense() {
-  if (global.license) {
+  if (license) {
     // Check cached license every 24 hours
-    if (global.license?.timestamp.valueOf?.() > Date.now() - 1000 * 60 * 60 * 24) {
-      return global.license;
+    if (license?.timestamp.valueOf?.() > Date.now() - 1000 * 60 * 60 * 24) {
+      return license;
     }
   }
 
-  global.license = await keygenValidateLicense({ config: config['dev'] });
-  return global.license;
+  license = await keygenValidateLicense({ config: config['dev'] });
+  return license;
 }
 
 export default validateLicense;
