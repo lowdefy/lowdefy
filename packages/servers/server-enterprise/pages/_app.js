@@ -12,22 +12,27 @@ import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import Auth from '../lib/client/auth/Auth.js';
+import createLogUsage from '../lib/client/createLogUsage.js';
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
-  const lowdefyRef = useRef({});
+  const hashedIdRef = useRef();
+  const lowdefyRef = useRef({ eventCallback: createLogUsage({ hashedIdRef }) });
   return (
     <Auth session={session}>
-      {(auth) => (
-        <Component
-          auth={auth}
-          lowdefy={lowdefyRef.current}
-          rootConfig={rootConfig}
-          pageConfig={pageConfig}
-        />
-      )}
+      {(auth) => {
+        hashedIdRef.current = auth.session?.hashed_id;
+        return (
+          <Component
+            auth={auth}
+            lowdefy={lowdefyRef.current}
+            rootConfig={rootConfig}
+            pageConfig={pageConfig}
+          />
+        );
+      }}
     </Auth>
   );
 }

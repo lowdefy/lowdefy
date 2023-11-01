@@ -54,6 +54,7 @@ class Events {
   }
 
   triggerEvent({ name, event, progress }) {
+    this.context._internal.lowdefy.eventCallback?.({ name, blockId: this.block.blockId });
     const eventDescription = this.events[name];
     const result = {
       blockId: this.block.blockId,
