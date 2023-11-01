@@ -8,7 +8,7 @@
   of this software will be governed by the Apache License, Version 2.0.
 */
 
-function createLogUsage({ hashedIdRef }) {
+function createLogUsage({ usageDataRef }) {
   let lastTimestamp = 0;
   let machineId = localStorage.getItem('lowdefy_machine_id');
   if (!machineId) {
@@ -17,14 +17,21 @@ function createLogUsage({ hashedIdRef }) {
   }
 
   async function logUsage() {
-    if (lastTimestamp < Date.now() - 1000 * 10) {
-      console.log({
-        user: hashedIdRef.current,
-        machine: machineId,
-        timestamp: Date.now(),
-      });
-      lastTimestamp = Date.now();
+    if (usageDataRef.current.license.entitlements.includes['OFFLINE']) {
+      return;
     }
+
+    if (lastTimestamp > Date.now() - 1000 * 10) {
+      return;
+    }
+
+    console.log({
+      license_key: usageDataRef.current.license.id,
+      user: usageDataRef.current.user,
+      machine: machineId,
+      timestamp: Date.now(),
+    });
+    lastTimestamp = Date.now();
   }
   return logUsage;
 }

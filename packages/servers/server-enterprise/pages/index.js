@@ -16,7 +16,7 @@ import Page from '../lib/client/Page.js';
 async function getServerSidePropsHandler({ context }) {
   const rootConfig = await getRootConfig(context);
   const { home } = rootConfig;
-  const { logger } = context;
+  const { logger, license, session } = context;
   if (home.configured === false) {
     logger.info({ event: 'redirect_to_homepage', pageId: home.pageId });
     return {
@@ -41,7 +41,8 @@ async function getServerSidePropsHandler({ context }) {
     props: {
       pageConfig,
       rootConfig,
-      session: context.session,
+      session,
+      license,
     },
   };
 }

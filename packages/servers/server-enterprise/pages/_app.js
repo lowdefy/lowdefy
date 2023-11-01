@@ -17,13 +17,13 @@ import createLogUsage from '../lib/client/createLogUsage.js';
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
-  const hashedIdRef = useRef();
-  const lowdefyRef = useRef({ eventCallback: createLogUsage({ hashedIdRef }) });
+function App({ Component, pageProps: { session, rootConfig, pageConfig, license } }) {
+  const usageDataRef = useRef({ license });
+  const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
   return (
     <Auth session={session}>
       {(auth) => {
-        hashedIdRef.current = auth.session?.hashed_id;
+        usageDataRef.current.user = auth.session?.hashed_id;
         return (
           <Component
             auth={auth}
