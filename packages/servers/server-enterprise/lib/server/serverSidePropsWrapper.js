@@ -19,7 +19,6 @@ import getServerSession from './auth/getServerSession.js';
 import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import getAuthOptions from './auth/getAuthOptions.js';
-import validateLicense from './validateLicense.js';
 
 // TODO: Merge serverSidePropsWrapper and apiWrapper?
 function serverSidePropsWrapper(handler) {
@@ -37,13 +36,11 @@ function serverSidePropsWrapper(handler) {
       res: nextContext?.res,
     };
     try {
-      const licensePromise = validateLicense();
       context.logger = createLogger({ rid: context.rid });
       context.authOptions = getAuthOptions(context);
       context.session = await getServerSession(context);
       createApiContext(context);
       logRequest({ context });
-      context.license = await licensePromise;
       // Await here so that if handler throws it is caught.
       const response = await handler({ context, nextContext });
       return response;

@@ -17,8 +17,8 @@ import createLogUsage from '../lib/client/createLogUsage.js';
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
-function App({ Component, pageProps: { session, rootConfig, pageConfig, license } }) {
-  const usageDataRef = useRef({ license });
+function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
+  const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
   return (
     <Auth session={session}>

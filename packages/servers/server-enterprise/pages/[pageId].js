@@ -15,7 +15,7 @@ import Page from '../lib/client/Page.js';
 
 async function getServerSidePropsHandler({ context, nextContext }) {
   const { pageId } = nextContext.params;
-  const { logger, license, session } = context;
+  const { logger, session } = context;
   const [rootConfig, pageConfig] = await Promise.all([
     getRootConfig(context),
     getPageConfig(context, { pageId }),
@@ -36,7 +36,6 @@ async function getServerSidePropsHandler({ context, nextContext }) {
       pageConfig,
       rootConfig,
       session,
-      license,
     },
   };
 }
