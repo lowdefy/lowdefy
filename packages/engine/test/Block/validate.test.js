@@ -703,7 +703,7 @@ test('validation warnings', async () => {
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({
     errors: [],
-    status: null,
+    status: 'warning',
     warnings: ["Not 'c'"],
   });
 
@@ -726,6 +726,52 @@ test('validation warnings', async () => {
     errors: [],
     status: 'warning',
     warnings: ["Not 'a'", "Not 'c'"],
+  });
+});
+
+test('validation errors override warnings', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        validate: [
+          {
+            pass: { _not: { _type: 'none' } },
+            status: 'warning',
+            message: 'Warning message',
+          },
+          {
+            pass: { _not: { _type: 'none' } },
+            status: 'error',
+            message: 'Error message',
+          },
+        ],
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { text } = context._internal.RootBlocks.map;
+
+  console.log(text.validationEval);
+  expect(text.eval.validation).toEqual({
+    errors: ['Error message'],
+    status: 'warning',
+    warnings: ['Warning message'],
+  });
+
+  context._internal.RootBlocks.validate(match);
+  console.log('showValidation', text.showValidation);
+  console.log(text.validationEval);
+  expect(text.eval.validation).toEqual({
+    errors: ['Error message'],
+    status: 'error',
+    warnings: ['Warning message'],
   });
 });
 
@@ -833,9 +879,9 @@ test('showValidation only on fields that matches for warning', async () => {
 
   expect(context.state).toEqual({ text1: '3', text2: null });
   expect(text1.showValidation).toBe(false);
-  expect(text1.eval.validation).toEqual({ warnings: ["Not '1'"], status: null, errors: [] });
+  expect(text1.eval.validation).toEqual({ warnings: ["Not '1'"], status: 'warning', errors: [] });
   expect(text2.showValidation).toBe(false);
-  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
+  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: 'warning', errors: [] });
   context._internal.RootBlocks.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
@@ -844,7 +890,7 @@ test('showValidation only on fields that matches for warning', async () => {
     warnings: ["Not '1'"],
   });
   expect(text2.showValidation).toBe(false);
-  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: null, errors: [] });
+  expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: 'warning', errors: [] });
 });
 
 test('showValidation only on fields that matches for success', async () => {
@@ -1124,4 +1170,30 @@ test('dynamic required on input to return validation error when required evaluat
   expect(context._internal.RootBlocks.validate(match)).toEqual([]);
   text.setValue('a');
   expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+});
+
+test('user specified required message', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        type: 'TextInput',
+        id: 'text',
+        required: 'Custom required message',
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { text } = context._internal.RootBlocks.map;
+
+  context._internal.RootBlocks.validate(match);
+  expect(text.eval.validation).toEqual({
+    errors: ['Custom required message'],
+    status: 'error',
+    warnings: [],
+  });
 });

@@ -387,7 +387,7 @@ class Blocks {
         if (validationWarning) {
           block.validationEval.output.status = 'warning';
         }
-        if (validationError) {
+        if (validationError && block.showValidation) {
           block.validationEval.output.status = 'error';
         }
 
@@ -514,8 +514,9 @@ class Blocks {
         if (
           block.visibleEval.output !== false &&
           block.validationEval.output &&
-          block.validationEval.output.status === 'error'
+          block.validationEval.output.errors.length > 0
         ) {
+          block.validationEval.output.status = 'error';
           result.push({
             blockId: block.blockId,
             validation: block.validationEval.output,
@@ -599,7 +600,10 @@ class Blocks {
           style: block.styleEval.output,
           validation: {
             ...(block.validationEval.output || {}),
-            status: block.showValidation ? (block.validationEval.output || {}).status : null,
+            status:
+              block.showValidation || block.validationEval.output?.status === 'warning'
+                ? block.validationEval.output?.status
+                : null,
           },
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,
