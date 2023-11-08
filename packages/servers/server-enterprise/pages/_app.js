@@ -11,6 +11,8 @@
 import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
 
@@ -21,19 +23,21 @@ function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
   return (
-    <Auth session={session}>
-      {(auth) => {
-        usageDataRef.current.user = auth.session?.hashed_id;
-        return (
-          <Component
-            auth={auth}
-            lowdefy={lowdefyRef.current}
-            rootConfig={rootConfig}
-            pageConfig={pageConfig}
-          />
-        );
-      }}
-    </Auth>
+    <ErrorBoundary fullPage>
+      <Auth session={session}>
+        {(auth) => {
+          usageDataRef.current.user = auth.session?.hashed_id;
+          return (
+            <Component
+              auth={auth}
+              lowdefy={lowdefyRef.current}
+              rootConfig={rootConfig}
+              pageConfig={pageConfig}
+            />
+          );
+        }}
+      </Auth>
+    </ErrorBoundary>
   );
 }
 

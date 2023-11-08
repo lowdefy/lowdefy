@@ -1777,6 +1777,9 @@ importers:
       '@lowdefy/api':
         specifier: 4.0.0-rc.12
         version: link:../../api
+      '@lowdefy/block-utils':
+        specifier: 4.0.0-rc.12
+        version: link:../../utils/block-utils
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-antd
@@ -1859,6 +1862,9 @@ importers:
       '@lowdefy/api':
         specifier: 4.0.0-rc.12
         version: link:../../api
+      '@lowdefy/block-utils':
+        specifier: 4.0.0-rc.12
+        version: link:../../utils/block-utils
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-antd
@@ -1989,6 +1995,9 @@ importers:
       '@lowdefy/api':
         specifier: 4.0.0-rc.12
         version: link:../../api
+      '@lowdefy/block-utils':
+        specifier: 4.0.0-rc.12
+        version: link:../../utils/block-utils
       '@lowdefy/blocks-antd':
         specifier: 4.0.0-rc.12
         version: link:../../plugins/blocks/blocks-antd

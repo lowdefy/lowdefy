@@ -18,6 +18,8 @@
 import React, { useRef } from 'react';
 import dynamic from 'next/dynamic';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import Auth from '../lib/client/auth/Auth.js';
 
 // Must be in _app due to next specifications.
@@ -26,16 +28,18 @@ import '../build/plugins/styles.less';
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const lowdefyRef = useRef({});
   return (
-    <Auth session={session}>
-      {(auth) => (
-        <Component
-          auth={auth}
-          lowdefy={lowdefyRef.current}
-          rootConfig={rootConfig}
-          pageConfig={pageConfig}
-        />
-      )}
-    </Auth>
+    <ErrorBoundary fullPage>
+      <Auth session={session}>
+        {(auth) => (
+          <Component
+            auth={auth}
+            lowdefy={lowdefyRef.current}
+            rootConfig={rootConfig}
+            pageConfig={pageConfig}
+          />
+        )}
+      </Auth>
+    </ErrorBoundary>
   );
 }
 

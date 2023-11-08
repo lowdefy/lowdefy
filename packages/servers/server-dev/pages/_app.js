@@ -17,6 +17,8 @@
 import React, { Suspense, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import Auth from '../lib/client/auth/Auth.js';
 
 // Must be in _app due to next specifications.
@@ -25,9 +27,11 @@ import '../build/plugins/styles.less';
 function App({ Component }) {
   const lowdefyRef = useRef({});
   return (
-    <Suspense fallback="">
-      <Auth>{(auth) => <Component auth={auth} lowdefy={lowdefyRef.current} />}</Auth>
-    </Suspense>
+    <ErrorBoundary fullPage>
+      <Suspense fallback="">
+        <Auth>{(auth) => <Component auth={auth} lowdefy={lowdefyRef.current} />}</Auth>
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

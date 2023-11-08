@@ -44,6 +44,7 @@
   "dependencies": {
     "@lowdefy/actions-core": "4.0.0-rc.12",
     "@lowdefy/api": "4.0.0-rc.12",
+    "@lowdefy/block-utils": "4.0.0-rc.12",
     "@lowdefy/blocks-antd": "4.0.0-rc.12",
     "@lowdefy/blocks-basic": "4.0.0-rc.12",
     "@lowdefy/blocks-color-selectors": "4.0.0-rc.12",
