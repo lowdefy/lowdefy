@@ -344,7 +344,8 @@ class Blocks {
         const validation =
           block.requiredEval.output === false
             ? block.validate
-            : [requiredValidation, ...block.validate];
+            : [...block.validate, requiredValidation];
+
         block.validationEval = {
           output: {
             status: null,

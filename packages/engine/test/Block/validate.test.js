@@ -370,7 +370,7 @@ test('required on input to return validation error with priority over validation
     {
       blockId: 'text',
       validation: {
-        errors: ['This field is required', 'Error 1234'],
+        errors: ['Error 1234', 'This field is required'],
         status: 'error',
         warnings: [],
       },
@@ -394,7 +394,7 @@ test('required on input to return validation error with priority over validation
     {
       blockId: 'text',
       validation: {
-        errors: ['This field is required', 'Error 1234'],
+        errors: ['Error 1234', 'This field is required'],
         status: 'error',
         warnings: [],
       },
