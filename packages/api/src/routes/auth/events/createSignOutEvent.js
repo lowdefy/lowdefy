@@ -24,7 +24,7 @@ function createSignOutEvent({ authConfig, logger, plugins }) {
   });
 
   async function signOutEvent({ session, token }) {
-    const user = token?.user ?? session?.user;
+    const user = session?.user ?? token;
     logger.info({
       event: 'auth_sign_out',
       user: {
