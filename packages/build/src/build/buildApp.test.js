@@ -14,73 +14,88 @@
   limitations under the License.
 */
 
-import validateApp from './validateApp.js';
+import { execSync } from 'child_process';
+
+import buildApp from './buildApp.js';
 import testContext from '../test/testContext.js';
 
 const context = testContext();
 
-test('validateApp no app defined', () => {
+let git_sha;
+
+try {
+  git_sha = execSync('git rev-parse HEAD').toString().trim();
+} catch (_) {
+  //pass
+}
+
+test('buildApp no app defined', () => {
   const components = {};
-  const result = validateApp({ components, context });
+  const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
         appendBody: '',
         appendHead: '',
       },
+      git_sha,
     },
   });
 });
 
-test('validateApp empty app object', () => {
+test('buildApp empty app object', () => {
   const components = { app: {} };
-  const result = validateApp({ components, context });
+  const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
         appendBody: '',
         appendHead: '',
       },
+      git_sha,
     },
   });
 });
 
-test('validateApp empty html', () => {
+test('buildApp empty html', () => {
   const components = { app: { html: {} } };
-  const result = validateApp({ components, context });
+  const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
         appendBody: '',
         appendHead: '',
       },
+      git_sha,
     },
   });
 });
 
-test('validateApp appendHead and appendHead', () => {
+test('buildApp appendHead and appendHead', () => {
   const components = {
     app: {
       html: {
         appendBody: 'body',
         appendHead: 'head',
       },
+      git_sha,
     },
   };
-  const result = validateApp({ components, context });
+  const result = buildApp({ components, context });
   expect(result).toEqual({
     app: {
       html: {
         appendBody: 'body',
         appendHead: 'head',
       },
+      git_sha,
     },
   });
 });
 
-test('validateApp app not an object', () => {
+test('buildApp app not an object', () => {
   const components = {
     app: 'app',
   };
-  expect(() => validateApp({ components, context })).toThrow('lowdefy.app is not an object.');
+  expect(() => buildApp({ components, context })).toThrow('lowdefy.app is not an object.');
 });

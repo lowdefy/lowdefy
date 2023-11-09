@@ -16,9 +16,10 @@
   limitations under the License.
 */
 
+import { execSync } from 'child_process';
 import { type } from '@lowdefy/helpers';
 
-function validateApp({ components }) {
+function buildApp({ components }) {
   if (type.isNone(components.app)) {
     components.app = {};
   }
@@ -34,7 +35,12 @@ function validateApp({ components }) {
   if (type.isNone(components.app.html.appendHead)) {
     components.app.html.appendHead = '';
   }
+  try {
+    components.app.git_sha = execSync('git rev-parse HEAD').toString().trim();
+  } catch (_) {
+    //pass
+  }
   return components;
 }
 
-export default validateApp;
+export default buildApp;
