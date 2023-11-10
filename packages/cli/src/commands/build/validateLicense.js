@@ -29,35 +29,25 @@ const config = {
   },
 };
 
-// TODO: Name here
+// TODO: Messages
 async function validateLicense({ context }) {
+  // TODO: env
   const license = await keygenValidateLicense({ config: config['dev'] });
 
-  if (license.code == 'NO_LICENSE') {
-    throw new Error('License is required.'); // TODO
-  }
-
-  if (!['VALID', 'EXPIRED'].includes(license.code)) {
-    throw new Error('Invalid license.'); // TODO
-  }
-
   if (license.code == 'EXPIRED') {
-    if (license?.expiry.valueOf?.() < Date.now() - 1000 * 60 * 60 * 24 * 31) {
-      throw new Error('License is expired.'); // TODO
-    }
-    context.print.warn('License is expired.'); // TODO
+    context.print.warn('License is expired.');
+    return license;
+  }
+  if (license.code == 'NO_LICENSE') {
+    context.print.warn('No license.');
+    return license;
   }
 
-  if (license.entitlements.includes('PAID')) {
-    return {
-      packageName: '@lowdefy/server-enterprise',
-      license,
-    };
+  if (license.code !== 'VALID') {
+    throw new Error('Invalid license.');
   }
-  return {
-    packageName: '@lowdefy/server-community',
-    license,
-  };
+
+  return license;
 }
 
 export default validateLicense;

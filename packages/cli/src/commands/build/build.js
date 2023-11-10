@@ -29,7 +29,14 @@ async function build({ context }) {
 
   const directory = context.directories.server;
 
-  const { license, packageName } = await validateLicense({ context });
+  let packageName = '@lowdefy/server-community';
+  let license = { entitlements: [] };
+
+  if (!context.options.communityEdition) {
+    packageName = '@lowdefy/server-enterprise';
+    license = await validateLicense({ context });
+  }
+
   await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
