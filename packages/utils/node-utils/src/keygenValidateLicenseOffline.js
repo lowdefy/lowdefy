@@ -50,6 +50,7 @@ async function keygenValidateLicenseOffline({ config, licenseKey }) {
     code: expiry.valueOf() < Date.now() ? 'EXPIRED' : 'VALID',
     entitlements: decoded.entitlements,
     expiry: expiry,
+    metadata: decoded.metadata,
     timestamp: new Date(),
   };
 }

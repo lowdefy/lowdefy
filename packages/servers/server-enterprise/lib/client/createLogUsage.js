@@ -13,6 +13,7 @@
 
 function createLogUsage({ usageDataRef }) {
   let lastTimestamp = 0;
+  let isOffline = false;
   let machine = localStorage.getItem('lowdefy_machine_id');
   if (!machine) {
     machine = crypto.randomUUID();
@@ -20,7 +21,7 @@ function createLogUsage({ usageDataRef }) {
   }
 
   async function logUsage() {
-    if (lastTimestamp > Date.now() - 1000 * 10) {
+    if (isOffline || lastTimestamp > Date.now() - 1000 * 60 * 60) {
       return;
     }
     lastTimestamp = Date.now();
@@ -33,11 +34,17 @@ function createLogUsage({ usageDataRef }) {
       body: JSON.stringify({ user: usageDataRef.current.user, machine }),
     });
     const { offline, data } = await res.json();
-    console.log({ offline, data });
     if (offline) {
+      isOffline = true;
       return;
     }
-    // fetch ldf endpoint
+    await fetch('https://billing.lowdefy.net/v4/billing/usage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
   }
   return logUsage;
 }

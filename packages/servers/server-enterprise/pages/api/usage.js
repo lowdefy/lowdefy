@@ -9,6 +9,7 @@
 */
 import crypto from 'crypto';
 
+import appJson from '../../build/app.json';
 import packageJson from '../../package.json';
 import apiWrapper from '../../lib/server/apiWrapper.js';
 import validateLicense from '../../lib/server/validateLicense.js';
@@ -24,12 +25,11 @@ async function handler({ context, req, res }) {
   if (license.entitlements.includes['OFFLINE']) {
     return res.status(200).json({ offline: true });
   }
-  if (license.code === 'NO_LICENSE') {
-    throw new Error('No license key found.'); // TODO:
-  }
   const timestamp = Date.now();
 
   const data = [
+    `git_sha: ${appJson.git_sha}`,
+    `host: ${req.headers.host}`,
     `license_key: ${license.id}`,
     `machine: ${machine}`,
     `timestamp: ${timestamp}`,
@@ -37,20 +37,20 @@ async function handler({ context, req, res }) {
     `version: ${packageJson.version}`,
   ].join('\n');
 
-  const hmac = crypto.createHmac('sha256', process.env.LOWDEFY_LICENSE_KEY);
+  const hmac = crypto.createHmac('sha256', process.env.LOWDEFY_LICENSE_KEY ?? 'NO_LICENSE');
   hmac.update(data);
   const sig = hmac.digest('base64');
-
-  // post to lowdefy api
 
   return res.status(200).json({
     offline: false,
     data: {
+      git_sha: appJson.git_sha,
+      host: req.headers.host,
       license_key: license.id,
       machine,
+      sig,
       timestamp,
       user,
-      sig,
       version: packageJson.version,
     },
   });

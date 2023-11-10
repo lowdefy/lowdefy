@@ -25,6 +25,7 @@ async function keygenValidateLicense({ config }) {
   // TODO: Return this or undefined/null?
   if (!licenseKey) {
     return {
+      id: 'NO_LICENSE',
       code: 'NO_LICENSE',
       entitlements,
     };
@@ -97,6 +98,7 @@ async function keygenValidateLicense({ config }) {
     code: meta?.code,
     entitlements,
     expiry: data?.attributes?.expiry ? new Date(data?.attributes?.expiry) : undefined,
+    metadata: data?.attributes?.metadata,
     timestamp: new Date(), // TODO: timestamp, validated, validated_at, validated_ts?
   };
 }
