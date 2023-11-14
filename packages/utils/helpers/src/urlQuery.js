@@ -14,20 +14,17 @@
   limitations under the License.
 */
 
-// TODO: do we want this query-string dep in helpers?
-import queryString from 'query-string';
-
 import serializer from './serializer.js';
 import type from './type.js';
 
 const parse = (str) => {
-  const parsed = queryString.parse(str);
+  const parsed = new URLSearchParams(str);
   const deserialized = {};
-  Object.keys(parsed).forEach((key) => {
+  parsed.forEach((value, key) => {
     try {
-      deserialized[key] = serializer.deserializeFromString(parsed[key]);
+      deserialized[key] = serializer.deserializeFromString(value);
     } catch (error) {
-      deserialized[key] = parsed[key];
+      deserialized[key] = value;
     }
   });
   return deserialized;
@@ -39,9 +36,11 @@ const stringify = (object) => {
   }
   const toSerialize = {};
   Object.keys(object).forEach((key) => {
-    toSerialize[key] = serializer.serializeToString(object[key]);
+    toSerialize[key] = type.isString(object[key])
+      ? object[key]
+      : serializer.serializeToString(object[key]);
   });
-  return queryString.stringify(toSerialize);
+  return new URLSearchParams(toSerialize).toString();
 };
 
 export default { stringify, parse };

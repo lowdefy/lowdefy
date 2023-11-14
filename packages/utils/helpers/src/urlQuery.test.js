@@ -26,7 +26,7 @@ test('primitives in object', () => {
     a: 1,
     b: 'b',
   });
-  expect(string).toEqual('a=1&b=%22b%22');
+  expect(string).toEqual('a=1&b=b');
   expect(urlQuery.parse(string)).toEqual({
     a: 1,
     b: 'b',
@@ -106,23 +106,23 @@ test('array in array', () => {
 test('object, primitive and array in object', () => {
   const string = urlQuery.stringify({
     a: 'a',
+    arr: [1, 2],
     obj: {
       b: '1',
     },
-    arr: [1, 2],
   });
-  expect(string).toEqual('a=%22a%22&arr=%5B1%2C2%5D&obj=%7B%22b%22%3A%221%22%7D');
+  expect(string).toEqual('a=a&arr=%5B1%2C2%5D&obj=%7B%22b%22%3A%221%22%7D');
   expect(urlQuery.parse(string)).toEqual({
     a: 'a',
+    arr: [1, 2],
     obj: {
       b: '1',
     },
-    arr: [1, 2],
   });
 });
 
 test('urlQuery parse string starts with ?', () => {
-  const string = '?a=%22a%22&arr=%5B1%2C2%5D&obj=%7B%22b%22%3A%221%22%7D';
+  const string = '?a=a&arr=%5B1%2C2%5D&obj=%7B%22b%22%3A%221%22%7D';
   expect(urlQuery.parse(string)).toEqual({
     a: 'a',
     obj: {

@@ -37,8 +37,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "lodash.merge": "4.6.2",
-    "query-string": "8.1.0"
+    "lodash.merge": "4.6.2"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
