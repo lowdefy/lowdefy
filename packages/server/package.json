@@ -67,7 +67,7 @@
   "devDependencies": {
     "@lowdefy/build": "4.0.0-rc.12",
     "@next/eslint-plugin-next": "13.5.4",
-    "less": "4.2.0",
+    "less": "4.1.3",
     "less-loader": "11.1.3",
     "next-with-less": "3.0.1",
     "webpack": "5.88.2",
