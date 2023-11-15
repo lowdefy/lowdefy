@@ -43,6 +43,7 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
   useEffect(() => {
     if (properties.activeKey !== key) {
       setKey(properties.activeKey);
+      methods.triggerEvent({ name: 'onChange', event: { activeKey: properties.activeKey } });
     }
   }, [properties.activeKey]);
 
@@ -63,7 +64,6 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
         methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
       onTabClick={(key) => {
-        setKey(key);
         methods.triggerEvent({ name: 'onTabClick', event: { key } });
       }}
       items={tabs.map((tab) => ({
