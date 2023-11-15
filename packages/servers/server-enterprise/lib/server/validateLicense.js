@@ -31,8 +31,9 @@ async function validateLicense() {
       return license;
     }
   }
-
-  license = await keygenValidateLicense({ config: config['dev'] });
+  license = await keygenValidateLicense({
+    config: config[process.env.LOWDEFY_LICENSE_ENV ?? 'prod'],
+  });
   return license;
 }
 

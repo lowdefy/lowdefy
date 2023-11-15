@@ -31,8 +31,9 @@ const config = {
 
 // TODO: Messages
 async function validateLicense({ context }) {
-  // TODO: env
-  const license = await keygenValidateLicense({ config: config['dev'] });
+  const license = await keygenValidateLicense({
+    config: config[process.env.LOWDEFY_LICENSE_ENV ?? 'prod'],
+  });
 
   if (license.code == 'EXPIRED') {
     context.print.warn('License is expired.');
