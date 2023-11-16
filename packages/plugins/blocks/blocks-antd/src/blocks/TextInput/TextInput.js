@@ -78,6 +78,12 @@ const TextInput = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
               prefix={
                 properties.prefix ||
                 (properties.prefixIcon && (

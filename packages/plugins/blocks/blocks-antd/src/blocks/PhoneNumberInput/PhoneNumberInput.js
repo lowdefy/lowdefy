@@ -86,6 +86,12 @@ function AddOnSelect({
         methods.triggerEvent({ name: 'onCodeChange' });
         methods.triggerEvent({ name: 'onChange' });
       }}
+      onBlur={() => {
+        methods.triggerEvent({ name: 'onBlur' });
+      }}
+      onFocus={() => {
+        methods.triggerEvent({ name: 'onFocus' });
+      }}
       optionFilterProp="filterString"
       optionLabelProp="label"
       placeholder={'Select item'}
@@ -215,6 +221,12 @@ const PhoneNumberInput = ({
               }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
+              }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
               }}
               prefix={
                 properties.prefix ||
