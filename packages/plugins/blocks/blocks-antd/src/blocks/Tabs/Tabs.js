@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
 const getTabs = ({ content, properties }) => {
@@ -73,7 +73,7 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
         label: (
           <span className={methods.makeCssClass(tab.titleStyle)}>
             {tab.icon && <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />}
-            {tab.title ?? tab.key}
+            {tab.title ? renderHtml({ html: tab.title, methods }) : tab.key}
           </span>
         ),
         children: content[tab.key] && content[tab.key](),
