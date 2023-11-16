@@ -37,15 +37,15 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
       content[properties.extraAreaKey] && content[properties.extraAreaKey]();
   }
 
-  const [key, setKey] = useState(
-    properties.activeKey ?? properties.defaultActiveKey ?? tabs[0].key
-  );
+  const [key, setKey] = useState(properties.defaultActiveKey ?? tabs[0].key);
   useEffect(() => {
-    if (properties.activeKey !== key) {
-      setKey(properties.activeKey);
-      methods.triggerEvent({ name: 'onChange', event: { activeKey: properties.activeKey } });
-    }
-  }, [properties.activeKey]);
+    methods.registerMethod('setActiveKey', ({ activeKey }) => {
+      if (activeKey !== key) {
+        setKey(activeKey);
+        methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+      }
+    });
+  });
 
   return (
     <Tabs
