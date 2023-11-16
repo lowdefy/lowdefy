@@ -43,7 +43,7 @@
           "properties": {
             "title": {
               "type": "string",
-              "description": "Title of the tab."
+              "description": "Title of the tab - supports html."
             },
             "key": {
               "type": "string",
