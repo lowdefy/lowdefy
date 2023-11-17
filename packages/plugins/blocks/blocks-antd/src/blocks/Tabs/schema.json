@@ -4,10 +4,6 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-      "activeKey": {
-        "type": "string",
-        "description": "Current TabPane's key."
-      },
       "animated": {
         "type": "boolean",
         "default": true,
@@ -43,7 +39,7 @@
           "properties": {
             "title": {
               "type": "string",
-              "description": "Title of the tab."
+              "description": "Title of the tab - supports html."
             },
             "key": {
               "type": "string",
