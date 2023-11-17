@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.13) (2023-11-17)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Change to controlled tab, closes [#1705](https://github.com/lowdefy/lowdefy/issues/1705) ([c804c18](https://github.com/lowdefy/lowdefy/commit/c804c18c7753782e301b7e1d077f27f4138939a7))
+* **blocks-antd:** Control tabs using setActiveKey method. ([1d2845c](https://github.com/lowdefy/lowdefy/commit/1d2845c3a73d8cf536fb081f5c61c823ec98375f))
+* **blocks-antd:** Mention html support in title schema. ([6929fa3](https://github.com/lowdefy/lowdefy/commit/6929fa3cc83ca50e4bdd38ce6dc9b1ceb7794ff0))
+* **blocks-antd:** Set ant-tabs-tabpane-hidden class to display none. ([c354acb](https://github.com/lowdefy/lowdefy/commit/c354acb0e8937d9c025bb810d34914ca66d57fe1))
+* **deps:** Revert less to 4.1.3. ([ea298c9](https://github.com/lowdefy/lowdefy/commit/ea298c9f49d0a30b7877f28c12cde944e2c1b803))
+* **helpers:** Do not add quotes around strings in query params. ([250c617](https://github.com/lowdefy/lowdefy/commit/250c6174f54c27ddc11a11295a387afeef7272fc))
+
+
+### Features
+
+* **api:** Add connectionId to request object. ([df16dbc](https://github.com/lowdefy/lowdefy/commit/df16dbca8545128cb51f78d173a2a96e47cbf729))
+* **blocks-antd:** Add onFocus and onBlur events to inputs ([ac9f342](https://github.com/lowdefy/lowdefy/commit/ac9f342c6bcd2b0c5df940fc9cc4783013f44714))
+* **blocks-antd:** Render HTML in tabs titles. ([28421cc](https://github.com/lowdefy/lowdefy/commit/28421cc2ae644f0924d876d1b276334e20cfdfa3))
+* **blocks-antd:** Trigger onChange event when active key changes. ([0c1908e](https://github.com/lowdefy/lowdefy/commit/0c1908e2c4887c4b492a8a2c6994b0bf63eb02b7))
+* **docs:** Add connectionId field to request docs. ([9f67461](https://github.com/lowdefy/lowdefy/commit/9f67461bed5f56a6a2f089bb6723a0bef9f358bf))
+
+
+
+
+
 # [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
 
 
