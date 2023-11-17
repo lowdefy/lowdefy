@@ -24,6 +24,7 @@ jobs:
       # --yes to autoconfirm in ci
       # --pre-dist-tag do not tag prereleases as latest
       - name: publish to npm
-        run: pnpm lerna:publish --ignore-scripts --yes --no-verify-access --pre-dist-tag rc
+        run: pnpm lerna:publish --ignore-scripts --yes --no-verify-access
+        # run: pnpm lerna:publish --ignore-scripts --yes --no-verify-access --pre-dist-tag rc
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
