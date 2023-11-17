@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/node-utils",
-  "version": "4.0.0-rc.13",
+  "version": "4.0.0-rc.14",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -40,7 +40,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.13",
+    "@lowdefy/helpers": "4.0.0-rc.14",
     "fs-extra": "11.1.1"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-moment",
-  "version": "4.0.0-rc.13",
+  "version": "4.0.0-rc.14",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -46,7 +46,7 @@
     "test": "TZ=UTC node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/operators": "4.0.0-rc.13",
+    "@lowdefy/operators": "4.0.0-rc.14",
     "moment": "2.29.4"
   },
   "devDependencies": {

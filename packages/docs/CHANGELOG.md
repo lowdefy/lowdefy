@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.14) (2023-11-17)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Control tabs using setActiveKey method. ([1d2845c](https://github.com/lowdefy/lowdefy/commit/1d2845c3a73d8cf536fb081f5c61c823ec98375f))
+
+
+### Features
+
+* **docs:** Add connectionId field to request docs. ([9f67461](https://github.com/lowdefy/lowdefy/commit/9f67461bed5f56a6a2f089bb6723a0bef9f358bf))
+
+
+
+
+
 # [4.0.0-rc.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.13) (2023-11-17)
 
 
