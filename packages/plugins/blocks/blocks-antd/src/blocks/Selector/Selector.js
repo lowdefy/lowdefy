@@ -96,6 +96,15 @@ const Selector = ({
                 );
                 methods.triggerEvent({ name: 'onChange' });
               }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
               onSearch={async (value) => {
                 setFetch(true);
                 const result = await methods.triggerEvent({ name: 'onSearch', event: { value } });

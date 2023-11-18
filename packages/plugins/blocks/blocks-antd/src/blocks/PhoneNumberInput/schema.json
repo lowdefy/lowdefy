@@ -199,6 +199,14 @@
         "type": "array",
         "description": "Trigger action when the number is changed."
       },
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when input loses focus."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when input gets focus."
+      },
       "onPressEnter": {
         "type": "array",
         "description": "Trigger action when enter is pressed while text input is focused."

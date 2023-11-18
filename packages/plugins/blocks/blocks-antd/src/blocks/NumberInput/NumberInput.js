@@ -67,6 +67,12 @@ const NumberInput = ({
             onPressEnter={() => {
               methods.triggerEvent({ name: 'onPressEnter' });
             }}
+            onBlur={() => {
+              methods.triggerEvent({ name: 'onBlur' });
+            }}
+            onFocus={() => {
+              methods.triggerEvent({ name: 'onFocus' });
+            }}
             value={value}
           />
         ),
