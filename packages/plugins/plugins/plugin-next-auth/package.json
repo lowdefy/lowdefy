@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "next": "13.5.4",
-    "next-auth": "4.23.2"
+    "next-auth": "4.24.5"
   },
   "devDependencies": {
     "@swc/cli": "0.1.62",
