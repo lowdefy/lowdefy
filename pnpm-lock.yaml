@@ -230,8 +230,8 @@ importers:
         specifier: 4.0.0-rc.14
         version: link:../utils/node-utils
       axios:
-        specifier: 1.5.1
-        version: 1.5.1
+        specifier: 1.6.0
+        version: 1.6.0
       commander:
         specifier: 11.0.0
         version: 11.0.0
@@ -1157,8 +1157,8 @@ importers:
         specifier: 4.0.0-rc.14
         version: link:../../../utils/helpers
       axios:
-        specifier: 1.5.1
-        version: 1.5.1
+        specifier: 1.6.0
+        version: 1.6.0
     devDependencies:
       '@lowdefy/ajv':
         specifier: 4.0.0-rc.14
@@ -7083,8 +7083,8 @@ packages:
       - debug
     dev: false
 
-  /axios@1.5.1:
-    resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
+  /axios@1.6.0:
+    resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
     dependencies:
       follow-redirects: 1.15.3
       form-data: 4.0.0
@@ -13184,7 +13184,7 @@ packages:
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.0-rc.46
       '@zkochan/js-yaml': 0.0.6
-      axios: 1.5.1
+      axios: 1.6.0
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1
