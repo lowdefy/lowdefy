@@ -25,6 +25,7 @@ const CardBlock = ({ blockId, content, properties, methods, events }) => (
     headStyle={methods.makeCssClass(properties.headerStyle, true)}
     bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
     bordered={properties.bordered}
+    cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}
     size={properties.size}
