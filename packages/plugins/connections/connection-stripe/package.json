@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-stripe",
-  "version": "4.0.0-rc.12",
+  "version": "4.0.0-rc.14",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -41,12 +41,12 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.12",
+    "@lowdefy/helpers": "4.0.0-rc.14",
     "stripe": "13.6.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
-    "@lowdefy/ajv": "4.0.0-rc.12",
+    "@lowdefy/ajv": "4.0.0-rc.14",
     "@swc/cli": "0.1.62",
     "@swc/core": "1.3.92",
     "@swc/jest": "0.2.29",
