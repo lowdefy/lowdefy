@@ -24,8 +24,17 @@ import validateAuthConfig from './validateAuthConfig.js';
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
 
-  if (configured && context.stage !== 'dev' && !context.entitlements.includes('AUTH')) {
-    throw new Error('Not entitled to use auth.'); // TODO:
+  if (configured && !context.entitlements.includes('AUTH')) {
+    // TODO: Warning message
+    context.logger.warn(`
+---------------------------------------------------
+  Authentication configured without a license key.
+
+  Paid features can not be used in production
+  without a valid license.
+
+  See https://lowdefy.com/license-faqs.
+---------------------------------------------------`);
   }
 
   validateAuthConfig({ components });
