@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.14) (2023-11-17)
+
+
+### Features
+
+* **api:** Add connectionId to request object. ([df16dbc](https://github.com/lowdefy/lowdefy/commit/df16dbca8545128cb51f78d173a2a96e47cbf729))
+
+
+
+
+
+# [4.0.0-rc.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.13) (2023-11-17)
+
+
+### Features
+
+* **api:** Add connectionId to request object. ([df16dbc](https://github.com/lowdefy/lowdefy/commit/df16dbca8545128cb51f78d173a2a96e47cbf729))
+
+
+
+
+
 # [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
 
 

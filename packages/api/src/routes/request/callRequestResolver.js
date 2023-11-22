@@ -24,6 +24,7 @@ async function callRequestResolver(
     const response = await requestResolver({
       blockId,
       connection: connectionProperties,
+      connectionId: requestConfig.connectionId,
       pageId: requestConfig.pageId,
       payload,
       request: requestProperties,

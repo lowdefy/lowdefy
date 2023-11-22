@@ -62,6 +62,12 @@ const PasswordInput = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
               placeholder={properties.placeholder}
               value={value}
               size={properties.size}

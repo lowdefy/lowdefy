@@ -39,3 +39,13 @@ _ref:
       - tab3
       - panel3
       - extra
+    methods:
+      - name: setActiveKey
+        onClick:
+          - id: setActiveKey
+            type: CallMethod
+            params:
+              blockId: block_id
+              method: setActiveKey
+              args:
+                - activeKey: tab3

@@ -223,9 +223,21 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when selector loses focus."
+      },
       "onChange": {
         "type": "array",
         "description": "Trigger action when selection is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when selector gets focus."
+      },
+      "onClear": {
+        "type": "array",
+        "description": "Trigger action when selector is cleared."
       },
       "onSearch": {
         "type": "array",

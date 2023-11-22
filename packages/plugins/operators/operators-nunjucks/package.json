@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/operators-nunjucks",
-  "version": "4.0.0-rc.12",
+  "version": "4.0.0-rc.14",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -42,9 +42,9 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.0-rc.12",
-    "@lowdefy/nunjucks": "4.0.0-rc.12",
-    "@lowdefy/operators": "4.0.0-rc.12"
+    "@lowdefy/helpers": "4.0.0-rc.14",
+    "@lowdefy/nunjucks": "4.0.0-rc.14",
+    "@lowdefy/operators": "4.0.0-rc.14"
   },
   "devDependencies": {
     "@swc/cli": "0.1.62",
