@@ -19,6 +19,7 @@ async function handler({ context, req, res }) {
     throw new Error('Only POST requests are supported.');
   }
   const { user, machine } = req.body;
+  const host = req.headers.host;
   context.logger.info({ event: 'log_usage', user, machine });
 
   const license = await validateLicense();
@@ -29,7 +30,7 @@ async function handler({ context, req, res }) {
 
   const data = [
     `git_sha: ${appJson.git_sha}`,
-    `host: ${req.headers.host}`,
+    `host: ${host}`,
     `license_key: ${license.id}`,
     `machine: ${machine}`,
     `timestamp: ${timestamp}`,
@@ -45,7 +46,7 @@ async function handler({ context, req, res }) {
     offline: false,
     data: {
       git_sha: appJson.git_sha,
-      host: req.headers.host,
+      host,
       license_key: license.id,
       machine,
       sig,

@@ -13,6 +13,8 @@ import NextAuth from 'next-auth';
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
 import createLicenseRedirectCallback from '../../../lib/server/auth/createLicenseRedirectCallback.js';
+import validateLicense from '../../../lib/server/validateLicense.js';
+import checkAuthorizedHost from '../../../lib/server/checkAuthorizedHost.js';
 
 async function handler({ context, req, res }) {
   if (authJson.configured !== true) {
@@ -26,7 +28,12 @@ async function handler({ context, req, res }) {
     return res.status(200).end();
   }
   if (req.url.startsWith('/api/auth/callback')) {
-    context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context);
+    const license = await validateLicense(context);
+    const authorizedHost = checkAuthorizedHost({ license, req });
+    if (!authorizedHost) {
+      throw new Error('Domain not authorized to use license.');
+    }
+    context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context, license);
   } else {
     context.authOptions.callbacks.redirect = context.authOptions.originalRedirectCallback;
   }

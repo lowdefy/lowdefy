@@ -8,12 +8,8 @@
   of this software will be governed by the Apache License, Version 2.0.
 */
 
-import validateLicense from '../validateLicense.js';
-
-function createLicenseRedirectCallback(context) {
+function createLicenseRedirectCallback(context, license) {
   async function licenseRedirectCallback({ url, baseUrl }) {
-    const license = await validateLicense(context);
-
     if (license.code !== 'VALID' || !license.entitlements.includes('AUTH')) {
       return '/lowdefy/license-invalid';
     }
