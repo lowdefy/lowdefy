@@ -1823,8 +1823,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-icons:
-        specifier: 4.11.0
-        version: 4.11.0(react@18.2.0)
+        specifier: 4.12.0
+        version: 4.12.0(react@18.2.0)
     devDependencies:
       '@lowdefy/build':
         specifier: 4.0.0-rc.14
@@ -1959,8 +1959,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-icons:
-        specifier: 4.11.0
-        version: 4.11.0(react@18.2.0)
+        specifier: 4.12.0
+        version: 4.12.0(react@18.2.0)
       swr:
         specifier: 2.2.4
         version: 2.2.4(react@18.2.0)
@@ -2044,8 +2044,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       react-icons:
-        specifier: 4.11.0
-        version: 4.11.0(react@18.2.0)
+        specifier: 4.12.0
+        version: 4.12.0(react@18.2.0)
     devDependencies:
       '@lowdefy/build':
         specifier: 4.0.0-rc.14
@@ -14971,8 +14971,8 @@ packages:
       react: 18.2.0
       scheduler: 0.23.0
 
-  /react-icons@4.11.0(react@18.2.0):
-    resolution: {integrity: sha512-V+4khzYcE5EBk/BvcuYRq6V/osf11ODUM2J8hg2FDSswRrGvqiYUYPRy4OdrWaQOBj4NcpJfmHZLNaD+VH0TyA==}
+  /react-icons@4.12.0(react@18.2.0):
+    resolution: {integrity: sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==}
     peerDependencies:
       react: '*'
     dependencies:
