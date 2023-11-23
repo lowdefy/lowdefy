@@ -27,7 +27,7 @@ let license;
 async function validateLicense() {
   if (license) {
     // Check cached license every 24 hours
-    if (license?.timestamp.valueOf?.() > Date.now() - 1000 * 60 * 60 * 24) {
+    if (license?.timestamp?.valueOf?.() > Date.now() - 1000 * 60 * 60 * 24) {
       return license;
     }
   }

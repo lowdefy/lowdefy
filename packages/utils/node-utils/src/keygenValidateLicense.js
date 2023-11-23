@@ -22,12 +22,18 @@ async function keygenValidateLicense({ config }) {
   const licenseKey = process.env.LOWDEFY_LICENSE_KEY;
   let entitlements = [];
 
+  if (!config) {
+    throw new Error('License server config is not defined.');
+  }
+
   // TODO: Return this or undefined/null?
   if (!licenseKey) {
     return {
       id: 'NO_LICENSE',
       code: 'NO_LICENSE',
       entitlements,
+      metadata: {},
+      timestamp: new Date(),
     };
   }
 
