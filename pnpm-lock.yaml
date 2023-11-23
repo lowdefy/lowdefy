@@ -1213,8 +1213,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0
       mingo:
-        specifier: 6.4.6
-        version: 6.4.6
+        specifier: 6.4.9
+        version: 6.4.9
       moment:
         specifier: 2.29.4
         version: 2.29.4
@@ -1529,8 +1529,8 @@ importers:
         specifier: 4.0.0-rc.14
         version: link:../../../operators
       mingo:
-        specifier: 6.4.6
-        version: 6.4.6
+        specifier: 6.4.9
+        version: 6.4.9
     devDependencies:
       '@swc/cli':
         specifier: 0.1.63
@@ -12669,8 +12669,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /mingo@6.4.6:
-    resolution: {integrity: sha512-SMp06Eo5iEthCPpKXgEZ6DTZKxknpTqj49YN6iHpapj9DKltBCv0RFu+0mBBjMU0SiHR9pYkurkk74+VFGTqxw==}
+  /mingo@6.4.9:
+    resolution: {integrity: sha512-jsOiIEJ19UtTaWjNFN4CnuKWqELm2sINZcHqI/nmjezMvXthBIQOftJrlT85NuIDoSFc0vrbjD+GnrzEgYnPbA==}
     dev: false
 
   /minimatch@3.0.5:

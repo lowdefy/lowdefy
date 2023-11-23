@@ -43,7 +43,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.14",
     "google-spreadsheet": "3.3.0",
-    "mingo": "6.4.6",
+    "mingo": "6.4.9",
     "moment": "2.29.4"
   },
   "devDependencies": {
