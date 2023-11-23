@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.14",
-    "stripe": "13.6.0"
+    "stripe": "14.5.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
