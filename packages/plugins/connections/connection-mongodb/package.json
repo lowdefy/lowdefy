@@ -56,7 +56,7 @@
     "jest": "28.1.3",
     "jest-environment-node": "28.1.3",
     "next": "13.5.4",
-    "next-auth": "4.23.2",
+    "next-auth": "4.24.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
