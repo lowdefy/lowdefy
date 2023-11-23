@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.14",
-    "redis": "4.6.10"
+    "redis": "4.6.11"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
