@@ -61,7 +61,7 @@
     "@lowdefy/operators-js": "4.0.0-rc.14",
     "ajv": "8.12.0",
     "json5": "2.2.3",
-    "yaml": "2.3.2",
+    "yaml": "2.3.4",
     "yargs": "17.7.2"
   },
   "devDependencies": {
