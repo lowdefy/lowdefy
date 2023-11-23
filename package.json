@@ -44,17 +44,17 @@
     "start:server-enterprise": "pnpm -r --filter='@lowdefy/server-enterprise' start"
   },
   "devDependencies": {
-    "eslint": "8.50.0",
+    "eslint": "8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-node": "0.3.9",
-    "eslint-plugin-import": "2.28.1",
-    "eslint-plugin-jsx-a11y": "6.7.1",
-    "eslint-plugin-prettier": "5.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-jsx-a11y": "6.8.0",
+    "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "lerna": "6.3.0",
-    "prettier": "3.0.3",
-    "turbo": "1.10.14"
+    "prettier": "3.1.0",
+    "turbo": "1.10.16"
   },
   "packageManager": "pnpm@8.8.0"
 }
