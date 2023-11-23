@@ -230,8 +230,8 @@ importers:
         specifier: 4.0.0-rc.14
         version: link:../utils/node-utils
       axios:
-        specifier: 1.5.1
-        version: 1.5.1
+        specifier: 1.6.2
+        version: 1.6.2
       commander:
         specifier: 11.0.0
         version: 11.0.0
@@ -1157,8 +1157,8 @@ importers:
         specifier: 4.0.0-rc.14
         version: link:../../../utils/helpers
       axios:
-        specifier: 1.5.1
-        version: 1.5.1
+        specifier: 1.6.2
+        version: 1.6.2
     devDependencies:
       '@lowdefy/ajv':
         specifier: 4.0.0-rc.14
@@ -7220,6 +7220,17 @@ packages:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /axios@1.6.2:
+    resolution: {integrity: sha512-7i24Ri4pmDRfJTR7LDBhsOTtcm+9kjX5WiY1X3wIisx6G9So3pfMkEiU7emUBe46oceVImccTEM3k6C5dbVW8A==}
+    dependencies:
+      follow-redirects: 1.15.3
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /axobject-query@3.2.1:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}

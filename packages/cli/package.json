@@ -41,7 +41,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.0.0-rc.14",
     "@lowdefy/node-utils": "4.0.0-rc.14",
-    "axios": "1.5.1",
+    "axios": "1.6.2",
     "commander": "11.0.0",
     "decompress": "4.2.1",
     "decompress-targz": "4.1.1",
