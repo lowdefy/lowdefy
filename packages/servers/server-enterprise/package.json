@@ -59,7 +59,7 @@
     "@lowdefy/plugin-next-auth": "4.0.0-rc.14",
     "next": "13.5.4",
     "next-auth": "4.23.2",
-    "pino": "8.15.6",
+    "pino": "8.16.2",
     "process": "0.11.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
