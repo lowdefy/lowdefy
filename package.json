@@ -25,8 +25,6 @@
     "build": "pnpm -r build",
     "build:turbo": "turbo run build",
     "clean": "pnpm -r clean",
-    "lerna:publish": "lerna publish from-git",
-    "lerna:version": "lerna version --no-git-tag-version",
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "pnpm -r --filter='!@lowdefy/blocks-*' --filter='!@lowdefy/plugin-aws' test",
     "update-packages": "pnpm up -i -r --latest",
@@ -52,7 +50,6 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
-    "lerna": "6.3.0",
     "prettier": "3.1.0",
     "turbo": "1.10.16"
   },
