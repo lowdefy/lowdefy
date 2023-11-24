@@ -33,14 +33,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   checkDuplicatePageId({ id: page.id });
   page.pageId = page.id;
   const requests = [];
-  const operators = new Set();
   buildBlock(page, {
     auth: page.auth,
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
-    operators,
     pageId: page.pageId,
     requests,
     typeCounters: context.typeCounters,
@@ -49,7 +47,6 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   page.id = `page:${page.pageId}`;
 
   page.requests = requests;
-  page.operators = [...operators];
 }
 
 export default buildPage;

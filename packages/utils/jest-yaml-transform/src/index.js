@@ -19,7 +19,7 @@ import crypto from 'crypto';
 
 function getCacheKey(fileData, filePath, options) {
   const optionsString = typeof options === 'string' ? options : JSON.stringify(options);
-  return crypto.createHash('sha1').update(fileData).update(optionsString).digest('hex');
+  return crypto.createHash('sha1').update(fileData).update(optionsString).digest('base64');
 }
 
 function process(sourceText) {
