@@ -34,10 +34,10 @@ const tagRender = (props, option, methods, components) => {
       methods={methods}
       onClose={onClose}
       properties={{
-        title: label,
+        title: label ?? '',
         ...(option?.tag ?? {}),
         closable,
-        style: { marginRight: 3, ...(option.tag?.style ?? {}) },
+        style: { marginRight: 3, ...(option?.tag?.style ?? {}) },
       }}
     />
   );
@@ -82,11 +82,13 @@ const MultipleSelector = ({
               }
               maxTagCount={properties.maxTagCount}
               notFoundContent={fetchState ? 'Loading' : 'Not found'}
-              placeholder={get(properties, 'placeholder', { default: 'Select items' })}
+              placeholder={
+                loading ? 'Loading...' : get(properties, 'placeholder', { default: 'Select items' })
+              }
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
               status={validation.status}
-              value={getValueIndex(value, uniqueValueOptions, true)}
+              value={loading ? [] : getValueIndex(value, uniqueValueOptions, true)}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon
