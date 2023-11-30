@@ -52,6 +52,7 @@
     "@lowdefy/blocks-loaders": "4.0.0-rc.14",
     "@lowdefy/blocks-markdown": "4.0.0-rc.14",
     "@lowdefy/blocks-qr": "4.0.0-rc.14",
+    "@lowdefy/block-utils": "4.0.0-rc.14",
     "@lowdefy/build": "4.0.0-rc.14",
     "@lowdefy/client": "4.0.0-rc.14",
     "@lowdefy/connection-axios-http": "4.0.0-rc.14",
