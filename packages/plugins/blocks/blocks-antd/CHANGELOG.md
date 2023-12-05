@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.14...v4.0.0-rc.15) (2023-12-05)
+
+
+### Bug Fixes
+
+* **blocks-antd:** Check if option exists before checking tag. ([a72688d](https://github.com/lowdefy/lowdefy/commit/a72688d687674e309f103244eacba9613938293a))
+
+
+### Features
+
+* Add cover content area to Card block. ([c8a75a9](https://github.com/lowdefy/lowdefy/commit/c8a75a9155c994cc96658933ca4d0b6a5b1afc74))
+
+
+
+
+
 # [4.0.0-rc.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.14) (2023-11-17)
 
 
