@@ -1,0 +1,111 @@
+id: pricing_calculator_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+layout:
+  contentGutter: 16
+blocks:
+  - id: free_tier
+    type: Card
+    layout:
+      span: 8
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Free
+      - id: price
+        type: Html
+        properties:
+          html: <p> No credit card required </p>
+      - id: features
+        type: Html
+        properties:
+          html: |
+            <ul>
+              <li> All Business features available in development </li>
+              <li> Unlimited Apps & Users </li>
+              <li> Unlimited public pages & blocks </li>
+              <li> Unlimited Connections & Requests </li>
+              <li> Unlimited Connections & Requests </li>
+              <li> Custom Lowdefy Plugins from NPM or local </li>
+              <li> Custom templates using config references </li>
+              <li> Custom app themes & branding </li>
+              <li> Mobile responsive by default </li>
+              <li> Use Any Next.js Host (Vercel, Fly.io, Docker) </li>
+              <li> Readable config Git source control in your repos </li>
+              <li> Multiple deployment environments </li>
+              <li> Environment variables </li>
+              <li> Community Support </li>
+            </ul>
+      - id: usage_key_button
+        type: Button
+        properties:
+          title: Build for Free
+          block: true
+
+  - id: business_tier
+    type: Card
+    layout:
+      span: 8
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Business
+      - id: price
+        type: Html
+        properties:
+          html: <p> $0.5 per hour per user, capped at $15 per user per month </p>
+      - id: features
+        type: Html
+        properties:
+          html: |
+            <p> Everything in the Free plan plus </p>
+            <ul>
+              <li> Remove “Built with Lowdefy” branding </li>
+              <li> White-label apps </li>
+              <li> All Auth.js provides and adapters including OpenID Connect and custom SSO </li>
+              <li> Role based & granular access control (RBAC) </li>
+              <li> Invite only apps </li>
+              <li> Audit logs </li>
+              <li> Log drains (coming soon) </li>
+              <li> Embed authenticated apps including JWT auth </li>
+              <li> Priority Support </li>
+            </ul>
+      - id: usage_key_button
+        type: Button
+        properties:
+          title: Create Account
+          block: true
+
+  - id: enterprise_tier
+    type: Card
+    layout:
+      span: 8
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Enterprise
+      - id: price
+        type: Html
+        properties:
+          html: <p> Custom Pricing </p>
+      - id: features
+        type: Html
+        properties:
+          html: |
+            <p> Volume based discounts </p>
+            <p> Everything in the Business plan plus </p>
+            <ul>
+              <li> Air-gapped deployment </li>
+              <li> Dedicated support </li>
+              <li> Access to a Lowdefy Engineer, Build first app with our engineers </li>
+            </ul>
+      - id: contact_us_button
+        type: Button
+        properties:
+          title: Contact Us
+          block: true

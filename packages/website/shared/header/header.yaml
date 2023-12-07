@@ -40,6 +40,12 @@ blocks:
         properties:
           src: /logo-light-theme.png
           width: 156
+        events:
+          onClick:
+            - id: link_to_home
+              type: Link
+              params:
+                pageId: home
       - id: desktop_menu
         type: Box
         layout:

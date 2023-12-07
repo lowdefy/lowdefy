@@ -1,0 +1,320 @@
+id: compare_features_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+blocks:
+  - id: compare_features_title
+    type: Html
+    properties:
+      html: |
+        <h2> Compare Features </h2>
+
+  - id: compare_features_table
+    type: Html
+    properties:
+      html: |
+        <table style="width: 100%;">
+        <colgroup>
+          <col style="width: 20%; border: 1px solid #dddddd;" />
+          <col style="width: 20%; border: 1px solid #dddddd;" />
+          <col style="width: 20%; border: 1px solid #dddddd;" />
+          <col style="width: 20%; border: 1px solid #dddddd;" />
+          <col style="width: 20%; border: 1px solid #dddddd;" />
+        </colgroup>
+        <thead>
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <th> Plans </th>
+            <td> &nbsp </td>
+            <th> Free </th>
+            <th> Business </th>
+            <th> Enterprise </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> Pricing </td>
+            <td> &nbsp </td>
+            <td> Free </td>
+            <td> $0.5 per hour per user, capped at $15 per user per month </td>
+            <td> Custom pricing, contact us </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <td> Volume based discounts </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Yes, contact us </td>
+          </tr>
+
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <th> Users </th>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+          </tr>
+          <tr>
+            <td> Users </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+          </tr>
+          <tr>
+            <td> Roles based access control </td>
+            <td> Authenticate pages and requests using custom roles. </td>
+            <td> &nbsp </td>
+            <td> Any custom roles </td>
+            <td> Any custom roles </td>
+          </tr>
+          <tr>
+            <td> User attributes </td>
+            <td> Full control over in-app user objects to map additional user properties or attributes. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Email, Google, Azure Active Directory, Github, Okta, Auth0, OpenID Connect and More </td>
+            <td> All >50 Auth.js authentication providers are supported. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <td> Custom authentications adapters and providers </td>
+            <td> Write a Auth.js adapter or provider Lowdefy plugin for any custom Auth requirements. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <th> APPS </th>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+          </tr>
+          <tr>
+            <td> Web apps </td>
+            <td> &nbsp </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+          </tr>
+          <tr>
+            <td> Public pages </td>
+            <td> &nbsp </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+          </tr>
+          <tr>
+            <td> Auth pages </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Unlimited </td>
+            <td> Unlimited </td>
+          </tr>
+          <tr>
+            <td> Public embedded apps </td>
+            <td> Embed your Lowdefy app on any web page as an iframe.  </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Authenticated embedded apps </td>
+            <td> Embedded apps can be authenticated with in-app auth, or JWT auth can be implemented to pass parent app context to your Lowdefy app. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Install plugins from NPM </td>
+            <td> Plugins are installed as part of your app’s Next.js build and are simply NPM packages which can have their own package dependencies. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Include custom javascript in app header </td>
+            <td> Include script tags into your app html head. Useful for including scripts like google analytics, intercom, etc. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Custom blocks and React Components </td>
+            <td> Extend your app front-end with any React component by publishing it as a Lowdefy block. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Custom javascript logic as Actions and Operators </td>
+            <td> Extend your app client and server side logic. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Connections and requests for custom app APIs </td>
+            <td> Write your own connection and request functions. This allows you to easily add server API functions that is built and deployed as part of your app. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Mobile apps </td>
+            <td> Lowdefy apps are responsive by default and can be used as PWAs, but they are not native mobile apps neither are the blocks optimised for mobile. </td>
+            <td> Mobile responsive and PWA </td>
+            <td> Mobile responsive and PWA </td>
+            <td> Mobile responsive and PWA </td>
+          </tr>
+          <tr>
+            <td> Build customer portals </td>
+            <td> Our pricing model is designed to offer low rates for apps which has a large number of infrequent users, making Lowdefy ideal for building customer portals. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> App themes </td>
+            <td> Lowdefy apps use Ant-Design as a design system, which include over 1000 theme variables. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Custom CSS </td>
+            <td> You can include custom CSS or LESS as part of your build bundle. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> White-label apps </td>
+            <td> Remove “Built with Lowdefy” and all Lowdefy branding. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <th> DEVELOPER WORKFLOW </th>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+          </tr>
+          <tr>
+            <td> Config Git source control </td>
+            <td> Readable config Git source control in your repos. Do code reviews and change diffs like with code. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Develop using files in any code editor </td>
+            <td> Write config like code in your favourite code editor, like VSCode. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Search, find, replace, copy and paste config </td>
+            <td> Some things are just more productive when not hidden in a GUI. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Config templates </td>
+            <td> Put reusable config in separate files using reference templates. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Environment Variables </td>
+            <td> Set environment variables during deployment and use within your apps server.  </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Continues Integration </td>
+            <td> Deploy using any continues integrations pipelines such as Github Actions. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Multiple deployment environments </td>
+            <td> Setup any deployment environments like you would with a normal Next.js app. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Air-gapped deployment </td>
+            <td> Get a Lowdefy annual usage key. </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+          </tr>
+
+          <tr style="border-bottom: 1px solid #dddddd;">
+            <th> Support </th>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+          </tr>
+          <tr>
+            <td> Audit log drains </td>
+            <td> Coming soon. </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Debug level log drains </td>
+            <td> Coming soon. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Search, find, replace, copy and paste config </td>
+            <td> Some things are just more productive when not hidden in a GUI. </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Community Support </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+            <td> Yes </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Priority Support </td>
+            <td> &nbsp  </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+          </tr>
+          <tr>
+            <td> Dedicated Support </td>
+            <td> Access to a Lowdefy Engineer. Build first app with the help of our engineers. </td>
+            <td> &nbsp </td>
+            <td> &nbsp </td>
+            <td> Yes </td>
+          </tr>
+        <t/body>
+        </table>
