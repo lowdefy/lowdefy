@@ -25,6 +25,9 @@ function buildTypeClass(
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
       if (warnIfMissing) {
+        if (typeName === '_id') {
+          return;
+        }
         context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
         return;
       }
