@@ -21,7 +21,7 @@ function createLogUsage({ usageDataRef }) {
   }
 
   async function logUsage() {
-    if (isOffline || lastTimestamp > Date.now() - 1000 * 60 * 60) {
+    if (isOffline || lastTimestamp > Date.now() - 1000 * 60 * 15) {
       return;
     }
     lastTimestamp = Date.now();
