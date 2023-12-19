@@ -55,17 +55,16 @@ test('addDefaultPages, no pages array', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },
@@ -101,17 +100,16 @@ test('addDefaultPages, empty pages array', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },
@@ -151,17 +149,16 @@ test('addDefaultPages, pages without 404 page', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },
