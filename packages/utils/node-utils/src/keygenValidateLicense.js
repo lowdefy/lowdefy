@@ -69,6 +69,13 @@ async function keygenValidateLicense({ config }) {
   );
 
   const body = await res.text();
+  const { meta, data, errors } = JSON.parse(body);
+  if (meta.nonce !== nonce) {
+    throw new Error('License validation failed.');
+  }
+  if (errors) {
+    throw new Error('License validation failed.');
+  }
 
   await keygenVerifyApiSignature({
     body,
@@ -77,14 +84,6 @@ async function keygenValidateLicense({ config }) {
     signatureHeader: res.headers.get('keygen-signature'),
     target: `post /v1/accounts/${config.accountId}/licenses/actions/validate-key`,
   });
-
-  const { meta, data, errors } = JSON.parse(body);
-  if (meta.nonce !== nonce) {
-    throw new Error('License validation failed.');
-  }
-  if (errors) {
-    throw new Error('License validation failed.');
-  }
 
   if (data?.relationships?.entitlements?.links?.related) {
     const entitlementResponse = await (
