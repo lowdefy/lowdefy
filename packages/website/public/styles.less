@@ -6,6 +6,8 @@
 @primary-color: #1990FF;
 @border-radius-base: 20px;
 
+
+
 @min768: ~"(min-width: 768px)";
 @min992: ~"(min-width: 992px)";
 
@@ -128,4 +130,30 @@ th, td {
   border-radius: 100%;
   opacity: .6;
   pointer-events: none;
+}
+
+// Sliders
+
+@slider-track-background-color: @primary-color;
+@slider-track-background-color-hover: @primary-color;
+@slider-handle-border-width: 0px;
+@slider-handle-background-color: @primary-color;
+@slider-handle-color: @primary-color;
+@slider-handle-size: 18px;
+@slider-handle-margin-top: -7px;
+
+.ant-slider-rail {
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 2px;
+}
+
+.ant-slider-track {
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 2px;
+}
+
+.ant-slider-dot {
+  display: none;
 }
