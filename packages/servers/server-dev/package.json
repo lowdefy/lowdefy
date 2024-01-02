@@ -44,6 +44,7 @@
   "dependencies": {
     "@lowdefy/actions-core": "4.0.0-rc.15",
     "@lowdefy/api": "4.0.0-rc.15",
+    "@lowdefy/block-utils": "4.0.0-rc.15",
     "@lowdefy/blocks-aggrid": "4.0.0-rc.15",
     "@lowdefy/blocks-antd": "4.0.0-rc.15",
     "@lowdefy/blocks-basic": "4.0.0-rc.15",
@@ -52,7 +53,6 @@
     "@lowdefy/blocks-loaders": "4.0.0-rc.15",
     "@lowdefy/blocks-markdown": "4.0.0-rc.15",
     "@lowdefy/blocks-qr": "4.0.0-rc.15",
-    "@lowdefy/block-utils": "4.0.0-rc.15",
     "@lowdefy/build": "4.0.0-rc.15",
     "@lowdefy/client": "4.0.0-rc.15",
     "@lowdefy/connection-axios-http": "4.0.0-rc.15",
