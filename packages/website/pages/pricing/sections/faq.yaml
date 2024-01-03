@@ -16,7 +16,7 @@ blocks:
       expandIconPosition: right
       panels:
         - key: usage
-          title: How does Lowdefy measure usage? And who counts as user?
+          title: How does Lowdefy measure usage? And who counts as a user?
         - key: track
           title: Does Lowdefy see your data to track usage?
         - key: build
@@ -26,7 +26,7 @@ blocks:
         - key: deploy
           title: How can I deploy my Lowdefy app? Is on-premise supported?
         - key: keys
-          title: Can I use the same usage key on multiple apps?
+          title: Can I use the same license key on multiple apps?
         - key: mobile
           title: Can I build a mobile app with Lowdefy?
         - key: secure
@@ -82,7 +82,7 @@ blocks:
             type: Paragraph
             properties:
               content: |
-                Lowdefy simply runs a Next.js app, thus you can deploy Lowdefy to any platform that supports Next.js deployment. As the maintainers of Next.js, Vercel will likely be the preferred hosting provider, but since Next.js apps are extremely popular, most hosting providers such as Netlify, Heroku, render.com, [fly.io](http://fly.io), DigitalOcean and others all include documentation to host Next.js apps. <br/><br/> For on-premise deployment, Lowdefy supports Docker deployment.
+                Lowdefy runs a Next.js app, thus you can deploy Lowdefy to any platform that supports Next.js deployment. As the maintainers of Next.js, Vercel will likely be the preferred hosting provider, but since Next.js apps are extremely popular, most hosting providers such as Netlify, Heroku, render.com, fly.io, DigitalOcean and others all include documentation to host Next.js apps. <br/><br/> For on-premise deployment, Lowdefy supports Docker deployment.
 
       keys:
         blocks:
@@ -90,7 +90,7 @@ blocks:
             type: Paragraph
             properties:
               content: |
-                Yes, the only check we apply to a usage key is to confirm that it is only used by the domains white-listed for each usage key.
+                Yes you can use a license key for multiple apps.
 
       mobile:
         blocks:
