@@ -56,7 +56,6 @@
     "@lowdefy/build": "4.0.0-rc.15",
     "@lowdefy/client": "4.0.0-rc.15",
     "@lowdefy/connection-axios-http": "4.0.0-rc.15",
-    "@lowdefy/connection-mongodb": "4.0.0-rc.15",
     "@lowdefy/engine": "4.0.0-rc.15",
     "@lowdefy/helpers": "4.0.0-rc.15",
     "@lowdefy/layout": "4.0.0-rc.15",
