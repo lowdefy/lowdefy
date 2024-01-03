@@ -42,16 +42,15 @@ const textStyle = {
   lineHeight: '1.2rem',
 };
 
+const checkEntitlement = async ({ setShowBranding }) => {
+  const license = await (await fetch('/api/license')).json();
+  setShowBranding(!license.entitlements.includes['NO_BRANDING']);
+};
+
 const BrandTag = () => {
   const [showBranding, setShowBranding] = useState(false);
   useEffect(() => {
-    fetch('/api/license')
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setShowBranding(!data.entitlements.includes['NO_BRANDING']);
-      });
+    checkEntitlement({ setShowBranding });
   }, []);
 
   if (!showBranding) {
@@ -60,10 +59,10 @@ const BrandTag = () => {
   return (
     <div style={containerStyle}>
       <span style={brandStyle}>
-        <img style={imageStyle} src="/logo_white_40.png" alt="Logo" height={20} />
+        <img style={imageStyle} src="https://lowdefy.com/logo_white_40.png" alt="" height={20} />
         <span style={textStyle}>
           <a
-            href="https://github.com/lowdefy/lowdefy/tree/main/packages/website"
+            href="https://lowdefy.com"
             target="_blank"
             rel="noreferrer"
             style={{ textDecoration: 'none', color: 'inherit' }}
