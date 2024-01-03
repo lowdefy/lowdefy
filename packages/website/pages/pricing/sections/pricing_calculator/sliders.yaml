@@ -8,12 +8,12 @@
 - id: divider
   type: Divider
   properties:
-    title: Uncapped Users
+    title: Usage Based Billing
 - id: monthly_users_lt_30
   type: Slider
   properties:
-    title: Number of users using more than 30 hours per month
-    min: 0
+    title: Number of users using less than 30 hours per month
+    min: -0.2
     max: 3
     dots: false
     step: 0.05
@@ -22,12 +22,24 @@
         _function:
           __string.concat:
             - ''
-            - __math.ceil:
-                __math.pow:
-                  - 10
-                  - __args: 0
+            - __if:
+                test:
+                  __gte:
+                    - __args: 0
+                    - 0
+                then:
+                  __math.ceil:
+                    __math.pow:
+                      - 10
+                      - __args: 0
+                else: 0
             - ' users'
     marks:
+      -0.2:
+        label: '0'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
       0:
         label: '1'
         style:
@@ -54,7 +66,7 @@
 - id: session_durations
   type: Slider
   properties:
-    title: Average hours per user per month for uncapped users
+    title: Average hours per user per month for usage based users
     min: 0
     max: 30
     dots: false
@@ -93,12 +105,12 @@
 - id: divider
   type: Divider
   properties:
-    title: Capped Users
+    title: Flat Rate Billing
 - id: monthly_users_gt_30
   type: Slider
   properties:
     title: Number of users using more than 30 hours per month
-    min: 0
+    min: -0.2
     max: 3
     dots: false
     step: 0.05
@@ -107,12 +119,24 @@
         _function:
           __string.concat:
             - ''
-            - __math.ceil:
-                __math.pow:
-                  - 10
-                  - __args: 0
+            - __if:
+                test:
+                  __gte:
+                    - __args: 0
+                    - 0
+                then:
+                  __math.ceil:
+                    __math.pow:
+                      - 10
+                      - __args: 0
+                else: 0
             - ' users'
     marks:
+      -0.2:
+        label: '0'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
       0:
         label: '1'
         style:
