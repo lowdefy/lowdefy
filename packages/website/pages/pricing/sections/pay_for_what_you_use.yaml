@@ -4,13 +4,21 @@ style:
   maxWidth: 1200px
   margin: 60px auto
   textAlign: center
+layout:
+  contentJustify: center
 blocks:
-  - id: pay_for_what_you_use_info
+  - id: pay_for_what_you_use_header
     type: Html
     properties:
       html: |
         <h1> Only Pay for What You Use </h1>
-        <h3> No charge for public apps. No charge for developing apps. </h3>
-        <h4> Capped at $15 per user per month. </h4>
-        <h4> Predictable fair pricing at any scale </h4>
-        <p> (Deploy your app to any Next.js host) </p>
+  - id: pay_for_what_you_use_description
+    type: Html
+    style:
+      maxWidth: 500px
+      textAlign: center
+    properties:
+      html: |
+        <p>
+          No charge for public apps. No charge for developing apps. Capped at $15 per user per month. Predictable fair pricing at any scale. Deploy your app to any Next.js host.
+        </p>

@@ -1,0 +1,46 @@
+id: pricing_calculator_box
+type: Box
+layout:
+  contentJustify: center
+blocks:
+  - id: pricing_calculator_left_section
+    type: Box
+    layout:
+      flex: 0 1 700px
+    style:
+      borderRadius: 40px 0px 0px 40px
+      padding: 60px 40px 80px 60px
+      backgroundColor: rgba(256,256,256,0.5)
+    blocks:
+      _ref: pages/pricing/sections/pricing_calculator/sliders.yaml
+  - id: pricing_calculator_right_section
+    type: Box
+    layout:
+      flex: 0 1 300px
+      contentDirection: column
+    blocks:
+      - id: pricing_calculator_right_top_section
+        type: Box
+        layout:
+          flex: 0 0 400px
+        style:
+          borderRadius: 0px 40px 0px 0px
+          backgroundColor: '#1965F3'
+        blocks:
+          - id: prices
+            type: Paragraph
+            properties:
+              content:
+                _json.stringify:
+                  - _if_none:
+                      - _state: pricing_calculator
+                      - {}
+      - id: pricing_calculator_right_bottom_section
+        type: Box
+        layout:
+          flex: 0 0 200px
+        style:
+          backgroundColor: '#000000'
+          borderRadius: 0px 0px 40px 0px
+        blocks:
+          - _ref: pages/pricing/sections/pricing_calculator/total.yaml

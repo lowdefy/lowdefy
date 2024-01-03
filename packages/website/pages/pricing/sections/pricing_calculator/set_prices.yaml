@@ -1,0 +1,46 @@
+id: set_prices
+type: SetState
+params:
+  pricing_calculator:
+    uncapped:
+      _product:
+        - _if_none:
+            - _state: session_durations
+            - 0
+        - _if_none:
+            - _math.ceil:
+                _math.pow:
+                  - 10
+                  - _state: monthly_users_lt_30
+            - 0
+        - 0.5
+    capped:
+      _product:
+        - _if_none:
+            - _math.ceil:
+                _math.pow:
+                  - 10
+                  - _state: monthly_users_gt_30
+            - 0
+        - 15
+    total:
+      _sum:
+        - _product:
+            - _if_none:
+                - _state: session_durations
+                - 0
+            - _if_none:
+                - _math.ceil:
+                    _math.pow:
+                      - 10
+                      - _state: monthly_users_lt_30
+                - 0
+            - 0.5
+        - _product:
+            - _if_none:
+                - _math.ceil:
+                    _math.pow:
+                      - 10
+                      - _state: monthly_users_gt_30
+                - 0
+            - 15

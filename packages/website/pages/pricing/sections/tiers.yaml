@@ -1,15 +1,19 @@
-id: pricing_calculator_box
+id: tiers_box
 type: Box
-style:
-  maxWidth: 1200px
-  margin: 60px auto
 layout:
-  contentGutter: 16
+  contentJustify: center
+  contentAlign: bottom
 blocks:
   - id: free_tier
-    type: Card
+    type: Box
     layout:
-      span: 8
+      flex: 0 1 350px
+    style:
+      # TODO: border radius overlap gap
+      marginBottom: 20px
+      borderRadius: 40px 0px 0px 40px
+      padding: 20px 20px 20px 80px
+      backgroundColor: rgba(256,256,256,0.5)
     blocks:
       - id: title
         type: Title
@@ -18,27 +22,29 @@ blocks:
       - id: price
         type: Html
         properties:
-          html: <p> No credit card required </p>
+          html: <p>No credit card required</p>
       - id: features
         type: Html
         properties:
           html: |
             <ul>
-              <li> All Business features available in development </li>
-              <li> Unlimited Apps & Users </li>
-              <li> Unlimited public pages & blocks </li>
-              <li> Unlimited Connections & Requests </li>
-              <li> Unlimited Connections & Requests </li>
-              <li> Custom Lowdefy Plugins from NPM or local </li>
-              <li> Custom templates using config references </li>
-              <li> Custom app themes & branding </li>
-              <li> Mobile responsive by default </li>
-              <li> Use Any Next.js Host (Vercel, Fly.io, Docker) </li>
-              <li> Readable config Git source control in your repos </li>
-              <li> Multiple deployment environments </li>
-              <li> Environment variables </li>
-              <li> Community Support </li>
+              <li>All Business features available in development</li>
+              <li>Unlimited Apps & Users</li>
+              <li>Unlimited public pages & blocks</li>
+              <li>Unlimited Connections & Requests</li>
+              <li>Unlimited Connections & Requests</li>
+              <li>Custom Lowdefy Plugins from NPM or local</li>
+              <li>Custom templates using config references</li>
             </ul>
+
+      # <li>Custom app themes & branding</li>
+      # <li>Mobile responsive by default</li>
+      # <li>Use Any Next.js Host (Vercel, Fly.io, Docker)</li>
+      # <li>Readable config Git source control in your repos</li>
+      # <li>Multiple deployment environments</li>
+      # <li>Environment variables</li>
+      # <li>Community Support</li>
+
       - id: usage_key_button
         type: Button
         properties:
@@ -46,9 +52,13 @@ blocks:
           block: true
 
   - id: business_tier
-    type: Card
+    type: Box
     layout:
-      span: 8
+      flex: 0 1 560px
+    style:
+      backgroundColor: '#FFF'
+      borderRadius: 40px
+      padding: 50px 80px 80px 80px
     blocks:
       - id: title
         type: Title
@@ -57,22 +67,22 @@ blocks:
       - id: price
         type: Html
         properties:
-          html: <p> $0.5 per hour per user, capped at $15 per user per month </p>
+          html: <p>$0.5 per hour per user, capped at $15 per user per month</p>
       - id: features
         type: Html
         properties:
           html: |
-            <p> Everything in the Free plan plus </p>
+            <p>Everything in the Free plan plus</p>
             <ul>
-              <li> Remove “Built with Lowdefy” branding </li>
-              <li> White-label apps </li>
-              <li> All Auth.js provides and adapters including OpenID Connect and custom SSO </li>
-              <li> Role based & granular access control (RBAC) </li>
-              <li> Invite only apps </li>
-              <li> Audit logs </li>
-              <li> Log drains (coming soon) </li>
-              <li> Embed authenticated apps including JWT auth </li>
-              <li> Priority Support </li>
+              <li>Remove “Built with Lowdefy” branding</li>
+              <li>White-label apps</li>
+              <li>All Auth.js provides and adapters including OpenID Connect and custom SSO</li>
+              <li>Role based & granular access control (RBAC)</li>
+              <li>Invite only apps</li>
+              <li>Audit logs</li>
+              <li>Log drains (coming soon)</li>
+              <li>Embed authenticated apps including JWT auth</li>
+              <li>Priority Support</li>
             </ul>
       - id: usage_key_button
         type: Button
@@ -81,9 +91,14 @@ blocks:
           block: true
 
   - id: enterprise_tier
-    type: Card
+    type: Box
     layout:
-      span: 8
+      flex: 0 1 350px
+    style:
+      marginBottom: 20px
+      borderRadius: 0px 40px 40px 0px
+      padding: 20px 80px 20px 20px
+      backgroundColor: rgba(256,256,256,0.5)
     blocks:
       - id: title
         type: Title
@@ -92,17 +107,20 @@ blocks:
       - id: price
         type: Html
         properties:
-          html: <p> Custom Pricing </p>
+          html: <p>Custom Pricing</p>
       - id: features
         type: Html
         properties:
           html: |
-            <p> Volume based discounts </p>
-            <p> Everything in the Business plan plus </p>
+            <p>Volume based discounts</p>
+            <p>Everything in the Business plan plus</p>
             <ul>
-              <li> Air-gapped deployment </li>
-              <li> Dedicated support </li>
-              <li> Access to a Lowdefy Engineer, Build first app with our engineers </li>
+              <li>Air-gapped deployment</li>
+              <li>Dedicated support</li>
+              <li>Access to a Lowdefy Engineer, Build first app with our engineers</li>
+              <li>Access to a Lowdefy Engineer</li>
+              <li>Access to a Lowdefy Engineer</li>
+              <li>Access to a Lowdefy Engineer</li>
             </ul>
       - id: contact_us_button
         type: Button
