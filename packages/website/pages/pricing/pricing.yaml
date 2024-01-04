@@ -10,6 +10,10 @@ blocks:
   - _ref: pages/pricing/sections/tiers.yaml
   - _ref: pages/pricing/sections/trusted_by.yaml
   - _ref: pages/pricing/sections/pricing_calculator/pricing_calculator.yaml
-  - _ref: pages/pricing/sections/compare_features.yaml
+  - _ref:
+      path: pages/pricing/sections/compare_features.yaml.njk
+      vars:
+        sections:
+          _ref: pages/pricing/sections/compare_features_info.yaml
   - _ref: pages/pricing/sections/faq.yaml
   - _ref: shared/footer/footer.yaml

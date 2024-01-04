@@ -1,0 +1,10 @@
+id: business_button
+type: Button
+style:
+  textAlign: center
+properties:
+  title: Create Account
+  size: large
+  color: '#28D3CA'
+  style:
+    width: 260

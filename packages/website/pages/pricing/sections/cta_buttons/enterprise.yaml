@@ -1,0 +1,14 @@
+id: enterprise_button
+type: Button
+style:
+  textAlign: center
+  '.ant-btn:hover':
+    background: linear-gradient(0deg, rgba(40, 211, 202, 0.75), rgba(68, 132, 242, 0.75))
+properties:
+  title: Contact Us
+  size: large
+  color: '#4484F2'
+  style:
+    width: 260
+    background: linear-gradient(0deg, rgb(40, 211, 202), rgb(68, 132, 242)) # #28D3CA #4484F2
+    border: 0px
