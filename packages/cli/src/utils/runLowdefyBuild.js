@@ -17,7 +17,7 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import createStdOutLineHandler from './createStdOutLineHandler.js';
 
-async function runLowdefyBuild({ context, directory, license }) {
+async function runLowdefyBuild({ context, directory }) {
   context.print.spin('Running Lowdefy build.');
   try {
     await spawnProcess({
@@ -31,7 +31,7 @@ async function runLowdefyBuild({ context, directory, license }) {
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
           LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
           LOWDEFY_LOG_LEVEL: context.options.logLevel,
-          LOWDEFY_LICENSE_ENTITLEMENTS: JSON.stringify(license.entitlements),
+          LOWDEFY_LICENSE_ENTITLEMENTS: JSON.stringify(context.license.entitlements),
         },
       },
     });

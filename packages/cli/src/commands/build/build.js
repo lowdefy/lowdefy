@@ -17,31 +17,26 @@
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
-import readDotEnv from '../../utils/readDotEnv.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
-import validateLicense from './validateLicense.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
-  readDotEnv(context);
 
   const directory = context.directories.server;
 
   let packageName = '@lowdefy/server-community';
-  let license = { entitlements: [] };
 
   if (!context.options.communityEdition) {
     packageName = '@lowdefy/server-enterprise';
-    license = await validateLicense({ context });
   }
 
   await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });
-  await runLowdefyBuild({ context, directory, license });
+  await runLowdefyBuild({ context, directory });
   await installServer({ context, directory });
   if (context.options.nextBuild !== false) {
     await runNextBuild({ context, directory });

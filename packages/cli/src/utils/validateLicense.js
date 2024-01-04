@@ -30,17 +30,26 @@ const config = {
 };
 
 // TODO: Messages
-async function validateLicense({ context }) {
+async function validateLicense({ print }) {
   const license = await keygenValidateLicense({
     config: config[process.env.LOWDEFY_LICENSE_ENV ?? 'prod'],
   });
 
+  if (license.code == 'NO_LICENSE') {
+    return license;
+  }
+
   if (license.code == 'EXPIRED') {
-    context.print.warn('License is expired.');
+    print.warn(`
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Your Lowdefy license has expired.                ┃
+┠──────────────────────────────────────────────────┨
+┃ Please renew your license at                     ┃
+┃ https://cloud.lowdefy.com                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`);
     return license;
   }
   if (license.code == 'NO_LICENSE') {
-    context.print.warn('No license.');
     return license;
   }
 

@@ -17,13 +17,14 @@
 import build from '@lowdefy/build';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
-function lowdefyBuild({ directories, logger, options }) {
+function lowdefyBuild({ directories, logger, options, license }) {
   return async () => {
     logger.info({ print: 'spin' }, 'Building config...');
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     await build({
       customTypesMap,
       directories,
+      entitlements: license.entitlements,
       logger,
       refResolver: options.refResolver,
       stage: 'dev',
