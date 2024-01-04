@@ -242,7 +242,7 @@
         - id: auth_provider_reference
           type: MenuGroup
           properties:
-          title: Provider Reference
+            title: Provider Reference
           links:
             - id: next-auth-providers
               type: MenuLink
