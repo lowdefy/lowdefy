@@ -30,7 +30,7 @@ _ref:
 
             Each connection type can include a number of request types. Requests are the functions that the Lowdefy server executes. The response returned by the request function will be serialised into JSON (with additional support for dates and Javascript errors) and used as the response value for the request by the client. If a promise is returned it wil be awaited.
 
-            [Request parameters](https://github.com/lowdefy/lowdefy-example-plugins/blob/main/plugins/plugin-name/src/connections/Connection/Request/Request.js):
+            Request parameters:
             - `connection: object`: The connection `properties` defined by the user in the Lowdefy configuration. Operators are evaluated before the properties are passed to the request.
             - `connectionId: string`: The connectionId used by the request and as set on the request.
             - `pageId: string`: The pageId from which the request was called.
