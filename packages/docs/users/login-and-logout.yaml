@@ -148,7 +148,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Providers
-            previous_page_id: auth-providers
-            next_page_title: Protected pages
-            next_page_id: protected-pages
+            previous_page_title: Configuration
+            previous_page_id: auth-configuration
+            next_page_title: Providers
+            next_page_id: auth-providers
