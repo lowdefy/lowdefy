@@ -157,3 +157,49 @@ th, td {
 .ant-slider-dot {
   display: none;
 }
+
+// CSS Grid for pricing breakdown
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  margin-bottom: 2rem;
+}
+
+.pricing-grid .pricing-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+// Pricing styling for small screens
+@media screen and (max-width: 768px) {
+  #bl-free_tier, #bl-enterprise_tier {
+    border-radius: 40px;
+    padding: 10px 10px 10px 40px;
+    background-color: rgba(256,256,256,1);
+    height: 500px;
+    margin-bottom: 20px;
+    #bl-features {
+      height: 300px;
+    }
+  }
+
+  #bl-business_tier {
+    border-radius: 40px;
+    padding: 10px 10px 10px 40px;
+    background-color: rgba(256,256,256,1);
+    height: 600px;
+    max-width: 350px;
+    margin-bottom: 20px;
+    #bl-features {
+      height: 400px;
+    }
+  }
+
+  #bl-pricing_calculator_box {
+    display: none;
+  }
+}

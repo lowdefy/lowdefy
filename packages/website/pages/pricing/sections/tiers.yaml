@@ -14,6 +14,7 @@ blocks:
       borderRadius: 40px 0px 0px 40px
       padding: 20px 20px 20px 80px
       backgroundColor: rgba(256,256,256,0.5)
+      height: 650px
     blocks:
       - id: title
         type: Title
@@ -21,10 +22,16 @@ blocks:
           content: Free
       - id: price
         type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
         properties:
-          html: <p>No credit card required</p>
+          html: <b>No credit card required</b>
       - id: features
         type: Html
+        style:
+          fontSize: 14px
+          height: 370px
         properties:
           html: |
             <ul>
@@ -47,9 +54,14 @@ blocks:
 
       - id: usage_key_button
         type: Button
+        style:
+          textAlign: center
         properties:
           title: Build for Free
-          block: true
+          size: large
+          color: '#4484F2'
+          style:
+            width: 260
 
   - id: business_tier
     type: Box
@@ -59,6 +71,7 @@ blocks:
       backgroundColor: '#FFF'
       borderRadius: 40px
       padding: 50px 80px 80px 80px
+      height: 700px
     blocks:
       - id: title
         type: Title
@@ -66,10 +79,16 @@ blocks:
           content: Business
       - id: price
         type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
         properties:
-          html: <p>$0.5 per hour per user, capped at $15 per user per month</p>
+          html: <b>$0.5 per hour per user, capped at $15 per user per month</b>
       - id: features
         type: Html
+        style:
+          fontSize: 14px
+          height: 370px
         properties:
           html: |
             <p>Everything in the Free plan plus</p>
@@ -86,9 +105,14 @@ blocks:
             </ul>
       - id: usage_key_button
         type: Button
+        style:
+          textAlign: center
         properties:
           title: Create Account
-          block: true
+          size: large
+          color: '#28D3CA'
+          style:
+            width: 260
 
   - id: enterprise_tier
     type: Box
@@ -99,6 +123,7 @@ blocks:
       borderRadius: 0px 40px 40px 0px
       padding: 20px 80px 20px 20px
       backgroundColor: rgba(256,256,256,0.5)
+      height: 650px
     blocks:
       - id: title
         type: Title
@@ -106,10 +131,16 @@ blocks:
           content: Enterprise
       - id: price
         type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
         properties:
-          html: <p>Custom Pricing</p>
+          html: <b>Custom Pricing</b>
       - id: features
         type: Html
+        style:
+          fontSize: 14px
+          height: 370px
         properties:
           html: |
             <p>Volume based discounts</p>
@@ -124,6 +155,15 @@ blocks:
             </ul>
       - id: contact_us_button
         type: Button
+        style:
+          textAlign: center
+          '.ant-btn:hover':
+            background: linear-gradient(0deg, rgba(40, 211, 202, 0.75), rgba(68, 132, 242, 0.75))
         properties:
           title: Contact Us
-          block: true
+          size: large
+          color: '#4484F2'
+          style:
+            width: 260
+            background: linear-gradient(0deg, rgb(40, 211, 202), rgb(68, 132, 242)) # #28D3CA #4484F2
+            border: 0px

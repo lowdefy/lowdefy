@@ -59,7 +59,12 @@ const BrandTag = () => {
   return (
     <div style={containerStyle}>
       <span style={brandStyle}>
-        <img style={imageStyle} src="https://lowdefy.com/logo_white_40.png" alt="" height={20} />
+        <img
+          style={imageStyle}
+          src="https://lowdefy.com/images/logo_white_40.png"
+          alt=""
+          height={20}
+        />
         <span style={textStyle}>
           <a
             href="https://lowdefy.com"
