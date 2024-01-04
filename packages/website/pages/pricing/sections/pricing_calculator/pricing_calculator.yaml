@@ -34,15 +34,80 @@ blocks:
         style:
           borderRadius: 0px 40px 0px 0px
           backgroundColor: '#1965F3'
+          textAlign: right
+          paddingTop: 30px
         blocks:
-          - id: prices
-            type: Paragraph
+          - id: pricing_breakdown_title
+            type: Title
+            style:
+              textAlign: center
+              marginBottom: 10px
             properties:
-              content:
-                _json.stringify:
-                  - _if_none:
-                      - _state: pricing_calculator
-                      - {}
+              content: Pricing Breakdown
+              color: white
+              level: 4
+          - id: pricing_breakdown
+            type: Html
+            properties:
+              html:
+                _nunjucks:
+                  template: |
+                    <div style="padding-left: 50px; padding-right: 50px">
+                      <div style="text-align: center;"><b>Usage Based Users</b></div>
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item"></div>
+                        <div class="pricing-grid-item">{{ usage_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">users</div>
+                        <div class="pricing-grid-item">x</div>
+                        <div class="pricing-grid-item">{{ usage_users_hours }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">hours</div>
+                        <div class="pricing-grid-item">x</div>
+                        <div class="pricing-grid-item">0.5</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">$/hour/user</div>
+                      </div>
+                      <hr style="width: 100%; background-color: black; margin-top: -20px;">
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item">$</div>
+                        <div class="pricing-grid-item">{{ usage_users_total }}</div>
+                        <div class="pricing-grid-item"></div>
+                      </div>
+                      <div style="text-align: center;"><b>Flat Rate Users</b></div>
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item"></div>
+                        <div class="pricing-grid-item">{{ flat_rate_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">users</div>
+                        <div class="pricing-grid-item">x</div>
+                        <div class="pricing-grid-item">15</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">$/user</div>
+                      </div>
+                      <hr style="width: 100%; background-color: black; margin-top: -20px;">
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item">$</div>
+                        <div class="pricing-grid-item">{{ flat_rate_total }}</div>
+                        <div class="pricing-grid-item"></div>
+                      </div>
+                    </div>
+                  on:
+                    usage_users:
+                      _if_none:
+                        - _state: pricing_calculator.usage_users
+                        - 0
+                    usage_users_hours:
+                      _state: session_durations
+                    usage_users_total:
+                      _if_none:
+                        - _state: pricing_calculator.usage_total
+                        - 0
+                    flat_rate_users:
+                      _if_none:
+                        - _state: pricing_calculator.flat_rate_users
+                        - 0
+                    flat_rate_total:
+                      _if_none:
+                        - _state: pricing_calculator.flat_rate_total
+                        - 0
+                    total:
+                      _state: pricing_calculator.total
       - id: pricing_calculator_right_bottom_section
         type: Box
         layout:

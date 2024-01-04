@@ -20,5 +20,5 @@ blocks:
     properties:
       html: |
         <p>
-          No charge for public apps. No charge for developing apps. Capped at $15 per user per month. Predictable fair pricing at any scale. Deploy your app to any Next.js host.
+          No charge for public apps. No charge for developing apps. Capped at $15 per user per month. Predictable and fair pricing at any scale. Deploy your app to any Next.js host.
         </p>
