@@ -197,6 +197,11 @@
           pageId: plugins-operators
           properties:
             title: Operators
+        - id: community-plugins
+          type: MenuLink
+          pageId: community-plugins
+          properties:
+            title: Community Plugins
 
     - id: users_group
       type: MenuGroup

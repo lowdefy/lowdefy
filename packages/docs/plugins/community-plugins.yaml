@@ -1,0 +1,72 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: community-plugins
+    pageTitle: Community Plugins
+    section: Plugins
+    filePath: plugins/community-plugins.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Community plugins are a collection of unofficial plugins created and published by the Lowdefy community.
+
+            These plugin packages can be added directly to your Lowdefy project or simply provide a good starting point for seeing what plugins are capable of or a reference point for developing your own plugins.
+
+      - id: block_id # have used this as a reference doc: https://help.obsidian.md/Extending+Obsidian/Community+plugins but could also just have this as body text
+        type: Alert
+        properties:
+          message: Use with caution
+          banner: true
+          description: Because community plugins contain third-party code, they may not be as reliable, safe, or as high quality as official Lowdefy packages. It is recommended to treat community plugins as experimental collections of code that can be used to share and learn with others in the community.
+          icon: AiOutlineExperiment
+          type: info
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Community plugins are a collection of unofficial plugins created and published by the Lowdefy community.
+            Any questions about how these plugins work or publishing your own can be asked via on [Github](https://github.com/lowdefy/lowdefy/discussions) and [Discord]https://discord.gg/QQY9eJ7A2D).
+
+      - id: community_plugins_button # have set this to match the introduction page
+        type: Button
+        style:
+          marginTop: 40px
+          marginBottom: 80px
+        properties:
+          block: true
+          hideActionLoading: true
+          icon: AiOutlineBuild
+          size: large
+          title: Go to Community Plugins
+          type: primary
+        events:
+          onClick:
+            - id: link_forward
+              type: Link
+              params:
+                url: https://plugins.lowdefy.com/
+
+      - _ref: # this could be removed, not sure how the buttons will look on top of each other
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Operators
+            previous_page_id: plugins-operators
+            next_page_title: User Authentication # not sure if renaming this will work?
+            next_page_id: users-introduction
