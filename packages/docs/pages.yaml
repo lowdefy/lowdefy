@@ -34,6 +34,7 @@
 - _ref: plugins/plugins-actions.yaml
 - _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
+- _ref: plugins/community-plugins.yaml
 
 - _ref: users/users-introduction.yaml
 - _ref: users/auth-providers.yaml
