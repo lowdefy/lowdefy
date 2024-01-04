@@ -41,7 +41,6 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Community plugins are a collection of unofficial plugins created and published by the Lowdefy community.
             Any questions about how these plugins work or publishing your own can be asked via on [Github](https://github.com/lowdefy/lowdefy/discussions) and [Discord]https://discord.gg/QQY9eJ7A2D).
 
       - id: community_plugins_button # have set this to match the introduction page
