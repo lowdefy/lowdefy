@@ -2,6 +2,14 @@ id: pricing_calculator_box
 type: Box
 layout:
   contentJustify: center
+events:
+  onMount:
+    - id: init_calculator
+      type: SetState
+      params:
+        monthly_users_lt_30: -0.2
+        session_durations: 0
+        monthly_users_gt_30: -0.2
 blocks:
   - id: pricing_calculator_left_section
     type: Box

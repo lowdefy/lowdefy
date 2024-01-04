@@ -2,26 +2,58 @@ id: set_prices
 type: SetState
 params:
   pricing_calculator:
-    uncapped:
+    usage_users:
+      _if:
+        test:
+          _gte:
+            - _state: monthly_users_lt_30
+            - 0
+        then:
+          _math.ceil:
+            _math.pow:
+              - 10
+              - _state: monthly_users_lt_30
+    usage_total:
       _product:
         - _if_none:
             - _state: session_durations
             - 0
-        - _if_none:
-            - _math.ceil:
+        - _if:
+            test:
+              _gte:
+                - _state: monthly_users_lt_30
+                - 0
+            then:
+              _math.ceil:
                 _math.pow:
                   - 10
                   - _state: monthly_users_lt_30
-            - 0
         - 0.5
-    capped:
+    flat_rate_users:
+      _if:
+        test:
+          _gte:
+            - _state: monthly_users_gt_30
+            - 0
+        then:
+          _math.ceil:
+            _math.pow:
+              - 10
+              - _state: monthly_users_gt_30
+        else: 0
+    flat_rate_total:
       _product:
-        - _if_none:
-            - _math.ceil:
+        - _if:
+            test:
+              _gte:
+                - _state: monthly_users_gt_30
+                - 0
+            then:
+              _math.ceil:
                 _math.pow:
                   - 10
                   - _state: monthly_users_gt_30
-            - 0
+            else: 0
         - 15
     total:
       _sum:
@@ -29,18 +61,28 @@ params:
             - _if_none:
                 - _state: session_durations
                 - 0
-            - _if_none:
-                - _math.ceil:
+            - _if:
+                test:
+                  _gte:
+                    - _state: monthly_users_lt_30
+                    - 0
+                then:
+                  _math.ceil:
                     _math.pow:
                       - 10
                       - _state: monthly_users_lt_30
-                - 0
+                else: 0
             - 0.5
         - _product:
-            - _if_none:
-                - _math.ceil:
+            - _if:
+                test:
+                  _gte:
+                    - _state: monthly_users_gt_30
+                    - 0
+                then:
+                  _math.ceil:
                     _math.pow:
                       - 10
                       - _state: monthly_users_gt_30
-                - 0
+                else: 0
             - 15
