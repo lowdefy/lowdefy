@@ -10,7 +10,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.repository == 'lowdefy/community-plugins'
+    if: github.repository == 'lowdefy/lowdefy'
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
