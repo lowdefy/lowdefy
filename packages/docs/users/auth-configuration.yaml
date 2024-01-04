@@ -91,3 +91,11 @@ _ref:
                 ## Cookies
 
                 The  `auth.advanced.cookies` section can be used to overwrite the NextAuth cookie options. This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application. See [here](https://next-auth.js.org/configuration/options#cookies) for more details.
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: User Object
+            previous_page_id: user-object
+            next_page_title: Login and Logout
+            next_page_id: login-and-logout
