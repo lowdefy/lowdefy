@@ -10,8 +10,12 @@
 
 function createLicenseRedirectCallback(context, license) {
   async function licenseRedirectCallback({ url, baseUrl }) {
-    if (license.code !== 'VALID' || !license.entitlements.includes('AUTH')) {
-      return '/lowdefy/license-invalid';
+    if (license.code !== 'VALID') {
+      const code = ['NO_LICENSE', 'EXPIRED'].includes(license.code) ? license.code : 'INVALID';
+      return `/lowdefy/license-invalid?code=${code}`;
+    }
+    if (!license.entitlements.includes('AUTH')) {
+      return '/lowdefy/license-invalid?code=NOT_ENTITLED_AUTH';
     }
     return context.authOptions.originalRedirectCallback({ url, baseUrl });
   }

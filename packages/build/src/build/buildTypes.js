@@ -52,7 +52,12 @@ function buildTypes({ components, context }) {
   // Add loaders and basic
   basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
   loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  typeCounters.blocks.increment('Message'); // Used for DisplayMessage in @lowdefy/client
+  // Used for DisplayMessage in @lowdefy/client
+  typeCounters.blocks.increment('Message');
+  // Used by license-invalid page
+  typeCounters.blocks.increment('Button');
+  typeCounters.blocks.increment('Result');
+  typeCounters.operators.client.increment('_get');
 
   components.types = {
     actions: {},

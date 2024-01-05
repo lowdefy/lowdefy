@@ -43,19 +43,24 @@ async function getContext() {
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
-      config: path.resolve(argv.configDirectory || env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()),
+      config: path.resolve(argv.configDirectory ?? env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()),
       server: process.cwd(),
     },
     logger: createLogger({ level: env.LOWDEFY_LOG_LEVEL }),
     options: {
-      port: argv.port || env.PORT || 3000,
-      refResolver: argv.refResolver || env.LOWDEFY_BUILD_REF_RESOLVER,
+      port: argv.port ?? env.PORT ?? 3000,
+      refResolver: argv.refResolver ?? env.LOWDEFY_BUILD_REF_RESOLVER,
       watch:
-        argv.watch || env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
+        argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
       watchIgnore:
-        argv.watchIgnore || env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
+        argv.watchIgnore ?? env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
+    },
+    license: {
+      entitlements: env.LOWDEFY_LICENSE_ENTITLEMENTS
+        ? JSON.parse(env.LOWDEFY_LICENSE_ENTITLEMENTS)
+        : [],
     },
     version: env.npm_package_version,
   };
