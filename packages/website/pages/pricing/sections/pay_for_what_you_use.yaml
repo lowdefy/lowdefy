@@ -1,0 +1,24 @@
+id: pay_for_what_you_use_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+  textAlign: center
+layout:
+  contentJustify: center
+blocks:
+  - id: pay_for_what_you_use_header
+    type: Html
+    properties:
+      html: |
+        <h1> Only Pay for What You Use </h1>
+  - id: pay_for_what_you_use_description
+    type: Html
+    style:
+      maxWidth: 500px
+      textAlign: center
+    properties:
+      html: |
+        <p>
+          No charge for public apps. No charge for developing apps. Capped at $15 per user per month. Predictable and fair pricing at any scale. Deploy your app to any Next.js host.
+        </p>

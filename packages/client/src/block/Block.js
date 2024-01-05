@@ -16,8 +16,9 @@
 
 import React, { useState } from 'react';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import CategorySwitch from './CategorySwitch.js';
-import ErrorBoundary from '../ErrorBoundary.js';
 import MountEvents from '../MountEvents.js';
 
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {

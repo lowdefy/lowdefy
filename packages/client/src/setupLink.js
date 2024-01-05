@@ -23,10 +23,19 @@ function setupLink(lowdefy) {
   const disabledLink = () => {};
   const newOriginLink = ({ url, query, newTab }) => {
     if (newTab) {
-      return window.open(`${url}${query ? `?${query}` : ''}`, '_blank').focus();
-    } else {
-      return window.location.assign(`${url}${query ? `?${query}` : ''}`);
+      const handle = window.open(`${url}${query ? `?${query}` : ''}`, '_blank');
+      if (!handle) {
+        lowdefy._internal.displayMessage({
+          content:
+            'A popup blocker may be preventing the application from opening the page. Approve the popup to continue.',
+          status: 'info',
+          duration: 10,
+        });
+        return;
+      }
+      return handle.focus();
     }
+    return window.location.assign(`${url}${query ? `?${query}` : ''}`);
   };
   const sameOriginLink = ({ newTab, pathname, query, setInput }) => {
     if (newTab) {

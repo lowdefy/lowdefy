@@ -16,6 +16,12 @@
 
 import createCallbackPlugins from './createCallbackPlugins.js';
 
+function defaultRedirect({ url, baseUrl }) {
+  if (url.startsWith('/')) return `${baseUrl}${url}`;
+  else if (new URL(url).origin === baseUrl) return url;
+  return baseUrl;
+}
+
 function createRedirectCallback({ authConfig, plugins }) {
   const redirectCallbackPlugins = createCallbackPlugins({
     authConfig,
@@ -23,7 +29,7 @@ function createRedirectCallback({ authConfig, plugins }) {
     type: 'redirect',
   });
 
-  if (redirectCallbackPlugins.length === 0) return undefined;
+  if (redirectCallbackPlugins.length === 0) return defaultRedirect;
 
   if (redirectCallbackPlugins.length !== 1) {
     throw new Error('More than one auth redirect callbacks are configured. Only one is allowed.');

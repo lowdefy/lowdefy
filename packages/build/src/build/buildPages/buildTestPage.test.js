@@ -47,7 +47,6 @@ test('buildTestPage', () => {
     auth: {
       public: true,
     },
-    operators: [],
     requests: [
       {
         id: 'request:page:request',

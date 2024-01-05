@@ -21,12 +21,12 @@ import createSignInCallback from './createSignInCallback.js';
 
 function createCallbacks({ authConfig, logger, plugins }) {
   const callbacks = {
-    session: createSessionCallback({ authConfig, plugins }),
+    session: createSessionCallback({ authConfig, logger, plugins }),
   };
   const jwt = createJWTCallback({ authConfig, logger, plugins });
   if (jwt) callbacks.jwt = jwt;
 
-  const redirect = createRedirectCallback({ authConfig, plugins });
+  const redirect = createRedirectCallback({ authConfig, logger, plugins });
   if (redirect) callbacks.redirect = redirect;
 
   const signIn = createSignInCallback({ authConfig, plugins });

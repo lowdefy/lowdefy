@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
+
 import addUserFieldsToSession from './addUserFieldsToSession.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
@@ -25,6 +27,9 @@ function createSessionCallback({ authConfig, plugins }) {
   });
 
   async function sessionCallback({ session, token, user }) {
+    const identifier = user
+      ? user.id ?? user.sub ?? user.email
+      : token.id ?? token.sub ?? token.email;
     if (token) {
       const {
         sub,
@@ -86,6 +91,13 @@ function createSessionCallback({ authConfig, plugins }) {
         user,
       });
     }
+
+    // TODO: Should this be session.hashed_id or session.user.hashed_id
+    // Only session.user will be available using the _user operator
+    session.hashed_id = crypto
+      .createHash('sha256')
+      .update(identifier ?? '')
+      .digest('base64');
 
     return session;
   }
