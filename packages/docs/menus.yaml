@@ -108,7 +108,7 @@
           pageId: menus
           properties:
             title: Menus
-        - id: layout
+        - id: layout-overview
           type: MenuLink
           pageId: layout-overview
           properties:
