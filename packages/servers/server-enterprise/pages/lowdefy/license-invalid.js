@@ -10,8 +10,6 @@
 
 import Page from '../../lib/client/Page.js';
 
-// TODO: Use default blocks (basic only)
-
 export async function getStaticProps() {
   const rootConfig = {
     home: {
@@ -21,16 +19,35 @@ export async function getStaticProps() {
     lowdefyGlobal: {},
     menus: [],
   };
-  // TODO: ~k values here?
   const pageConfig = {
     id: 'page:licence-invalid',
     type: 'Result',
     style: { minHeight: '100vh' },
     properties: {
       status: 'warning',
-      title: 'License Invalid',
-      subTitle:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: {
+        _get: {
+          key: { _url_query: 'code' },
+          from: {
+            EXPIRED: 'Expired  License',
+            NOT_ENTITLED_AUTH: 'Not Entitled To Use Authentication',
+            NO_LICENSE: 'Missing License',
+          },
+          default: 'Invalid License',
+        },
+      },
+      subTitle: {
+        _get: {
+          key: { _url_query: 'code' },
+          from: {
+            EXPIRED: 'The Lowdefy license associated with this app has expired.',
+            NOT_ENTITLED_AUTH:
+              'The Lowdefy license associated with this app is not entitled to use user authentication.',
+            NO_LICENSE: 'There is no Lowdefy license associated with this app.',
+          },
+          default: 'The Lowdefy license associated with this app is invalid.',
+        },
+      },
     },
     areas: {
       extra: {
@@ -56,7 +73,7 @@ export async function getStaticProps() {
             type: 'Html',
             style: { maxWidth: '600px' },
             properties: {
-              html: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
+              html: '<p>Lowdefy paid features may not be used in production without a valid license. Please contact the app developer to resolve this issue as soon as possible to ensure compliance.</p><p>To learn more about the Lowdefy terms of see the <a href="https://lowdefy.com/licensing-faq">licensing FAQ page</a>.</p>',
             },
             blockId: 'more_text',
           },
