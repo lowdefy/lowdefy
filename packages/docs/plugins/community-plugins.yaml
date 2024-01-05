@@ -24,7 +24,8 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Community plugins are a collection of unofficial plugins created and published by the Lowdefy community.
+            ##### Community plugins are a collection of unofficial plugins created and published by the Lowdefy community.
+            ---
 
             These plugin packages can be added directly to your Lowdefy project or simply provide a good starting point for seeing what plugins are capable of or a reference point for developing your own plugins.
 
@@ -33,7 +34,7 @@ _ref:
         properties:
           message: Use with caution
           banner: true
-          description: Because community plugins contain third-party code, they may not be as reliable, safe, or as high quality as official Lowdefy packages. It is recommended to treat community plugins as experimental collections of code that can be used to share and learn with others in the community.
+          description: Because community plugins contain third-party code, they are more experimental and subject to change than official Lowdefy packages. It is recommended to treat community plugins as beta ware that can be used to share and learn with others in the community.
           icon: AiOutlineExperiment
           type: info
 
