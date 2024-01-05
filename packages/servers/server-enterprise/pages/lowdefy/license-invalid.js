@@ -73,7 +73,7 @@ export async function getStaticProps() {
             type: 'Html',
             style: { maxWidth: '600px' },
             properties: {
-              html: '<p>Lowdefy paid features may not be used in production without a valid license. Please contact the app developer to resolve this issue as soon as possible to ensure compliance.</p><p>To learn more about the Lowdefy terms of see the <a href="https://lowdefy.com/licensing-faq">licensing FAQ page</a>.</p>',
+              html: '<p>Lowdefy paid features may not be used in production without a valid license. Please contact the app developer to resolve this issue as soon as possible to ensure compliance.</p><p>To learn more about the Lowdefy terms of use see the <a href="https://lowdefy.com/licensing-faq">licensing FAQ page</a>.</p>',
             },
             blockId: 'more_text',
           },
