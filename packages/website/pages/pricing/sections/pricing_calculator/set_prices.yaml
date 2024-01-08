@@ -29,7 +29,9 @@ params:
                     _math.pow:
                       - 10
                       - _state: monthly_users_lt_30
-            - 0.5
+            - _ref:
+                path: app_config.yaml
+                key: rates.per_user_per_hour
         - 2
     flat_rate_users:
       _if:
@@ -57,7 +59,9 @@ params:
                       - 10
                       - _state: monthly_users_gt_30
                 else: 0
-            - 15
+            - _ref:
+                path: app_config.yaml
+                key: rates.flat
         - 2
     total:
       _sum:
@@ -76,7 +80,9 @@ params:
                       - 10
                       - _state: monthly_users_lt_30
                 else: 0
-            - 0.5
+            - _ref:
+                path: app_config.yaml
+                key: rates.per_user_per_hour
         - _product:
             - _if:
                 test:
@@ -89,4 +95,6 @@ params:
                       - 10
                       - _state: monthly_users_gt_30
                 else: 0
-            - 15
+            - _ref:
+                path: app_config.yaml
+                key: rates.flat
