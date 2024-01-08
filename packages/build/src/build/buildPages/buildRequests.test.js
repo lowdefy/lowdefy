@@ -202,7 +202,6 @@ test('give request an id', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -250,7 +249,6 @@ test('request on a sub-block', () => {
         id: 'page:page_1',
         auth: { public: true },
         blockId: 'page_1',
-        operators: [],
         pageId: 'page_1',
         type: 'Container',
         requests: [
@@ -305,7 +303,6 @@ test('multiple requests', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -365,7 +362,6 @@ test('set auth to request', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -383,7 +379,6 @@ test('set auth to request', () => {
       {
         id: 'page:page_2',
         auth: { public: false },
-        operators: [],
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',

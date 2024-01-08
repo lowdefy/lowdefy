@@ -23,9 +23,17 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
-function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+function createContext({
+  customTypesMap,
+  directories,
+  entitlements = [],
+  logger,
+  refResolver,
+  stage = 'prod',
+}) {
   const context = {
     directories,
+    entitlements,
     keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),

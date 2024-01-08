@@ -62,6 +62,7 @@ export { default as RatingSlider } from './blocks/RatingSlider/RatingSlider.js';
 export { default as Result } from './blocks/Result/Result.js';
 export { default as Selector } from './blocks/Selector/Selector.js';
 export { default as Sider } from './blocks/Sider/Sider.js';
+export { default as Slider } from './blocks/Slider/Slider.js';
 export { default as Statistic } from './blocks/Statistic/Statistic.js';
 export { default as Switch } from './blocks/Switch/Switch.js';
 export { default as Tabs } from './blocks/Tabs/Tabs.js';

@@ -6,6 +6,8 @@
 @primary-color: #1990FF;
 @border-radius-base: 20px;
 
+
+
 @min768: ~"(min-width: 768px)";
 @min992: ~"(min-width: 992px)";
 
@@ -80,6 +82,11 @@ hr {
   border-width: 0;
 }
 
+th, td {
+  padding: 5px 8px;
+  vertical-align: top;
+}
+
 // marquee component
 @keyframes marquee {
   0% {
@@ -123,4 +130,76 @@ hr {
   border-radius: 100%;
   opacity: .6;
   pointer-events: none;
+}
+
+// Sliders
+
+@slider-track-background-color: @primary-color;
+@slider-track-background-color-hover: @primary-color;
+@slider-handle-border-width: 0px;
+@slider-handle-background-color: @primary-color;
+@slider-handle-color: @primary-color;
+@slider-handle-size: 18px;
+@slider-handle-margin-top: -7px;
+
+.ant-slider-rail {
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 2px;
+}
+
+.ant-slider-track {
+  height: 10px;
+  margin-top: -3px;
+  border-radius: 2px;
+}
+
+.ant-slider-dot {
+  display: none;
+}
+
+// CSS Grid for pricing breakdown
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  margin-bottom: 2rem;
+}
+
+.pricing-grid .pricing-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+// Pricing styling for small screens
+@media screen and (max-width: 768px) {
+  #bl-free_tier, #bl-enterprise_tier {
+    border-radius: 40px;
+    padding: 10px 10px 10px 40px;
+    background-color: rgba(256,256,256,1);
+    height: 500px;
+    margin-bottom: 20px;
+    #bl-features {
+      height: 300px;
+    }
+  }
+
+  #bl-business_tier {
+    border-radius: 40px;
+    padding: 10px 10px 10px 40px;
+    background-color: rgba(256,256,256,1);
+    height: 600px;
+    max-width: 350px;
+    margin-bottom: 20px;
+    #bl-features {
+      height: 400px;
+    }
+  }
+
+  #bl-pricing_calculator_box {
+    display: none;
+  }
 }

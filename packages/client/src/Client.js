@@ -18,6 +18,7 @@ import React from 'react';
 import { serializer } from '@lowdefy/helpers';
 
 import Block from './block/Block.js';
+import BrandTag from './BrandTag.js';
 import Context from './Context.js';
 import DisplayMessage from './DisplayMessage.js';
 import Head from './Head.js';
@@ -92,6 +93,7 @@ const Client = ({
           );
         }}
       </Context>
+      <BrandTag />
     </>
   );
 };
