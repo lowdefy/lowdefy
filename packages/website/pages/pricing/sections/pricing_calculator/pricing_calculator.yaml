@@ -53,34 +53,34 @@ blocks:
                       <div style="text-align: center;"><b>Pro Rata Users</b></div>
                       <div class="pricing-grid">
                         <div class="pricing-grid-item"></div>
-                        <div class="pricing-grid-item">{{ usage_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">users</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">{{ usage_users_hours }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_hours }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">hours</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">0.5</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">0.5</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/hour/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
                       <div class="pricing-grid">
-                        <div class="pricing-grid-item">$</div>
-                        <div class="pricing-grid-item">{{ usage_users_total }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_total }}</div>
                         <div class="pricing-grid-item"></div>
                       </div>
                       <div style="text-align: center;"><b>Flat Rate Users</b></div>
                       <div class="pricing-grid">
                         <div class="pricing-grid-item"></div>
-                        <div class="pricing-grid-item">{{ flat_rate_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_users }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">users</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">15</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">15</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
                       <div class="pricing-grid">
-                        <div class="pricing-grid-item">$</div>
-                        <div class="pricing-grid-item">{{ flat_rate_total }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_total }}</div>
                         <div class="pricing-grid-item"></div>
                       </div>
                     </div>

@@ -182,7 +182,7 @@ th, td {
     margin-bottom: 40px;
     margin-right: -10px;
     border-radius: 40px 0px 0px 40px;
-    padding: 20px 20px 20px 80px;
+    padding: 20px 40px 20px 60px;
     background-color: rgba(256,256,256,0.5);
     height: 650px;
   }
@@ -218,6 +218,10 @@ th, td {
     background-color: rgba(256,256,256,1);
     max-width: 360px;
     order: 1;
+    height: 500px;
+    #bl-features {
+      height: 275px;
+    }
   }
 
   #bl-enterprise_tier {
@@ -227,20 +231,25 @@ th, td {
     background-color: rgba(256,256,256,1);
     max-width: 360px;
     order: 2;
+    height: 500px;
+    #bl-features {
+      height: 275px;
+    }
   }
 
   #bl-business_tier {
     border-radius: 40px;
-    padding: 10px 10px 10px 40px;
+    padding: 10px 40px 10px 40px;
     background-color: rgba(256,256,256,1);
     height: 600px;
     max-width: 600px;
     margin-bottom: 20px;
     order: 0;
+    height: 550px;
     margin-left: 300px;
     margin-right: 300px;
     #bl-features {
-      height: 400px;
+      height: 325px;
     }
   }
 }
@@ -264,16 +273,21 @@ th, td {
 // Pricing styling for medium screens
 @media screen and (max-width: 992px) {
   #bl-pricing_calculator_left_section {
-    flex: 0 1 500px;
+    flex: 0 1 525px;
   }
 
   #bl-pricing_calculator_right_section {
-    flex: 0 1 200px;
+    flex: 0 1 225px;
   }
 
   #bl-pricing_breakdown {
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  #bl-pricing {
+    padding-left: 5px;
+    padding-right: 5px;
   }
 }
 
@@ -287,7 +301,7 @@ th, td {
     max-width: 360px;
     margin-bottom: 20px;
     #bl-features {
-      height: 300px;
+      height: 275px;
     }
   }
 
@@ -298,22 +312,19 @@ th, td {
     height: 600px;
     max-width: 360px;
     margin-bottom: 20px;
+    order: 1;
     #bl-features {
-      height: 400px;
+      height: 375px;
     }
   }
 
   #bl-pricing_calculator_box {
     display: none;
   }
-
-  #bl-pricing{
-    margin: 5px;
-  }
 }
 
 // Hide table for smaller screens
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 950px) {
   #bl-compare_features_box {
     display: none;
   }
