@@ -21,11 +21,14 @@ import buildAuthPlugins from './buildAuthPlugins.js';
 import buildPageAuth from './buildPageAuth.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
+let warningLogged = false;
+
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
 
   if (configured && !context.entitlements.includes('AUTH')) {
-    context.logger.warn(`
+    if (!warningLogged) {
+      context.logger.warn(`
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Authentication configured without a license key. ┃
 ┠──────────────────────────────────────────────────┨
@@ -34,6 +37,8 @@ function buildAuth({ components, context }) {
 ┃                                                  ┃
 ┃ See https://lowdefy.com/license-faqs.            ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`);
+      warningLogged = true;
+    }
   }
 
   validateAuthConfig({ components });
