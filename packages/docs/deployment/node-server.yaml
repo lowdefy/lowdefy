@@ -51,7 +51,7 @@ _ref:
 
             `pnpx lowdefy@4 build`
 
-            The above creates a Next.js standalone folder at `<config-directory>/.lowdefy/server/.next/standalone`. Read more about this [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output#automatically-copying-traced-files).
+            The above creates a Next.js standalone folder at `<config-directory>/.lowdefy/server/.next/standalone`. Read more about this [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output).
 
             This folder can be copied or moved around as needed and can be run using:
 
@@ -59,7 +59,7 @@ _ref:
 
             or with the applicable path if the standalone folder has been moved.
 
-            It is worth noting that the files in the public folder do not get copied over into this standalone folder and should therefore be copied over manually or be stored in a CDN.
+            Files in the `public` and `.next/static` folders do not get copied over into this standalone folder and should therefore be copied over manually or be served from a CDN. Read more [here](https://nextjs.org/docs/pages/api-reference/next-config-js/output#automatically-copying-traced-files).
 
             ### Alternative
 
