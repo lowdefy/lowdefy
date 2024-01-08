@@ -6,15 +6,6 @@ layout:
 blocks:
   - id: free_tier
     type: Box
-    layout:
-      flex: 0 1 350px
-    style:
-      # TODO: border radius overlap gap
-      marginBottom: 20px
-      borderRadius: 40px 0px 0px 40px
-      padding: 20px 20px 20px 80px
-      backgroundColor: rgba(256,256,256,0.5)
-      height: 650px
     blocks:
       - id: title
         type: Title
@@ -56,13 +47,6 @@ blocks:
 
   - id: business_tier
     type: Box
-    layout:
-      flex: 0 1 560px
-    style:
-      backgroundColor: '#FFF'
-      borderRadius: 40px
-      padding: 50px 80px 80px 80px
-      height: 700px
     blocks:
       - id: title
         type: Title
@@ -98,14 +82,6 @@ blocks:
 
   - id: enterprise_tier
     type: Box
-    layout:
-      flex: 0 1 350px
-    style:
-      marginBottom: 20px
-      borderRadius: 0px 40px 40px 0px
-      padding: 20px 80px 20px 20px
-      backgroundColor: rgba(256,256,256,0.5)
-      height: 650px
     blocks:
       - id: title
         type: Title

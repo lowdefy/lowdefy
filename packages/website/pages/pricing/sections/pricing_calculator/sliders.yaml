@@ -8,7 +8,7 @@
 - id: divider
   type: Divider
   properties:
-    title: Usage Based Billing
+    title: Pro Rata Billing
 - id: monthly_users_lt_30
   type: Slider
   properties:
@@ -61,7 +61,7 @@
 - id: session_durations
   type: Slider
   properties:
-    title: Average hours per user per month for usage based users
+    title: Average hours per user per month for pro rata users
     min: 0
     max: 30
     dots: false

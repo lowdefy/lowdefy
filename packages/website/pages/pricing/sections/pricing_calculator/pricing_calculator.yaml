@@ -13,8 +13,6 @@ events:
 blocks:
   - id: pricing_calculator_left_section
     type: Box
-    layout:
-      flex: 0 1 700px
     style:
       borderRadius: 40px 0px 0px 40px
       padding: 60px 40px 80px 60px
@@ -24,7 +22,6 @@ blocks:
   - id: pricing_calculator_right_section
     type: Box
     layout:
-      flex: 0 1 300px
       contentDirection: column
     blocks:
       - id: pricing_calculator_right_top_section
@@ -52,8 +49,8 @@ blocks:
               html:
                 _nunjucks:
                   template: |
-                    <div style="padding-left: 50px; padding-right: 50px">
-                      <div style="text-align: center;"><b>Usage Based Users</b></div>
+                    <div>
+                      <div style="text-align: center;"><b>Pro Rata Users</b></div>
                       <div class="pricing-grid">
                         <div class="pricing-grid-item"></div>
                         <div class="pricing-grid-item">{{ usage_users }}</div>
