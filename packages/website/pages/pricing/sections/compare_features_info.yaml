@@ -4,7 +4,17 @@
       title: Pricing
       tooltip: null
       free: Free
-      business: $0.5 per hour per user, capped at $15 per user per month
+      business:
+        _build.string.concat:
+          - $
+          - _ref:
+              path: app_config.yaml
+              key: rates.per_user_per_hour
+          - ' per hour per user, capped at $'
+          - _ref:
+              path: app_config.yaml
+              key: rates.flat
+          - ' per user per month'
       enterprise: Custom pricing, contact us
 
     - id: volume_based_discounts

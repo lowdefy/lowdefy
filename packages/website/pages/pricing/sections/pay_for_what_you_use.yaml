@@ -18,7 +18,14 @@ blocks:
       maxWidth: 500px
       textAlign: center
     properties:
-      html: |
-        <p>
-          No charge for public apps. No charge for developing apps. Capped at $15 per user per month. Predictable and fair pricing at any scale. Deploy your app to any Next.js host.
-        </p>
+      html:
+        _nunjucks:
+          template: |
+            <p>
+              No charge for public apps. No charge for developing apps. Capped at ${{ rates.flat }} per user per month. Predictable and fair pricing at any scale. Deploy your app to any Next.js host.
+            </p>
+          on:
+            rates:
+              _ref:
+                path: app_config.yaml
+                key: rates
