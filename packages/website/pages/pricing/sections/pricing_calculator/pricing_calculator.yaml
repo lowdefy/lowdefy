@@ -59,7 +59,7 @@ blocks:
                         <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_hours }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">hours</div>
                         <div class="pricing-grid-item" style="justify-self: end;">x</div>
-                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">0.5</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.per_user_per_hour }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/hour/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
@@ -74,7 +74,7 @@ blocks:
                         <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_users }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">users</div>
                         <div class="pricing-grid-item" style="justify-self: end;">x</div>
-                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">15</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.flat }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
@@ -105,6 +105,10 @@ blocks:
                         - 0
                     total:
                       _state: pricing_calculator.total
+                    rates:
+                      _ref:
+                        path: app_config.yaml
+                        key: rates
       - id: pricing_calculator_right_bottom_section
         type: Box
         layout:

@@ -68,10 +68,19 @@ blocks:
                 layout:
                   span: 8
                 properties:
-                  html: |
-                    <h2> Business </h2>
-                    <p> $0.5 per use* </p>
-                    <small> *capped at $15 per user per month </small>
+                  html:
+                    _nunjucks:
+                      template: |
+                        {% raw %}
+                        <h2> Business </h2>
+                        <p> ${{ rates.per_user_per_hour }} per use* </p>
+                        <small> *capped at ${{ rates.flat }} per user per month </small>
+                        {% endraw %}
+                      on:
+                        rates:
+                          _ref:
+                            path: app_config.yaml
+                            key: rates
               - id: enterprise_title
                 type: Html
                 layout:
