@@ -34,6 +34,7 @@ async function runDevServer({ context, directory }) {
         LOWDEFY_SERVER_DEV_WATCH: JSON.stringify(context.options.watch),
         LOWDEFY_SERVER_DEV_WATCH_IGNORE: JSON.stringify(context.options.watchIgnore),
         PORT: context.options.port,
+        NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
       },
     },
     silent: false,

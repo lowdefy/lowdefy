@@ -38,6 +38,10 @@ async function runNextBuild({ context, directory }) {
       processOptions: {
         cwd: directory,
       },
+      env: {
+        ...process.env,
+        NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
+      },
     });
   } catch (error) {
     throw new Error('Next build failed.');

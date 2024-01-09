@@ -28,6 +28,7 @@ async function runStart({ context, directory }) {
         ...process.env,
         LOWDEFY_LOG_LEVEL: context.options.logLevel,
         PORT: context.options.port,
+        NEXT_TELEMETRY_DISABLED: context.options.disableTelemetry ? '1' : undefined,
       },
     },
   });
