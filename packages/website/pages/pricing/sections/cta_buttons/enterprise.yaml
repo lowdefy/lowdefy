@@ -9,6 +9,6 @@ properties:
   size: large
   color: '#4484F2'
   style:
-    width: 260
+    width: 160
     background: linear-gradient(0deg, rgb(40, 211, 202), rgb(68, 132, 242)) # #28D3CA #4484F2
     border: 0px

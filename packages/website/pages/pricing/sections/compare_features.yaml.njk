@@ -36,8 +36,8 @@ blocks:
                   span: 8
                 properties:
                   html: |
-                    <p style='margin-top: -5px;'>
-                      <span style='padding: 0 16px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
+                    <p style='margin-top: 2px;'>
+                      <span style='padding: 6px 20px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
                         Plans
                       </span>
                     </p>
@@ -123,6 +123,29 @@ blocks:
                 blocks:
                   - _ref: pages/pricing/sections/cta_buttons/enterprise.yaml
 
+      - id: top_cover
+        type: Box
+        layout:
+          contentJustify: end
+        style:
+          height: 30px
+          backgroundColor: '#FFFFFF80'
+          borderTopLeftRadius: 20px
+        blocks:
+          - id: black_cover
+            type: Box
+            layout:
+              span: 6
+            style:
+              backgroundColor: black
+              height: 30px
+              borderTopLeftRadius: 20px
+          - id: white_cover
+            type: Box
+            layout:
+              span: 18
+            style:
+              height: 30px
       {% for section in sections %}
       {% set outer_loop = loop %}
       {% if section.section_name %}
@@ -151,8 +174,8 @@ blocks:
             properties:
               html: |
                 <hr align='right' style='width: 90%; background-color:#D9D9D9; margin-bottom: 0px'/hr>
-                <p style='margin-top: -5px;'>
-                  <span style='padding: 0 16px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
+                <p style='margin-top: 1px;'>
+                  <span style='padding: 6px 20px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
                     {{ section.section_name }}
                   </span>
                 </p>
@@ -181,14 +204,6 @@ blocks:
         type: Box
         style:
           backgroundColor: '#FFFFFF80'
-          {% if outer_loop.first and loop.first %}
-          borderTopLeftRadius: 20px
-          {% endif %}
-          {% if outer_loop.last and loop.last%}
-          borderBottomLeftRadius: 20px
-          borderBottomRightRadius: 20px
-          boderBottom: 10px
-          {% endif %}
         blocks:
           - id: section_title
             type: Box
@@ -198,12 +213,9 @@ blocks:
             style:
               textAlign: left
               backgroundColor: black
-              {% if outer_loop.first and loop.first %}
-              borderTopLeftRadius: 20px
-              {% endif %}
-              {% if outer_loop.last and loop.last %}
-              borderBottomLeftRadius: 20px
-              {% endif %}
+              display: flex
+              alignItems: center
+              height: 100px
             blocks:
               - id: content_tooltip
                 type: Tooltip
@@ -226,7 +238,10 @@ blocks:
               span: 6
             style:
               borderRight: '2px solid #D9D9D9'
+              display: flex
+              justifyContent: center
               alignItems: center
+              height: 100px
             blocks:
               {% if row.free == true or row.free == false %}
               - id: free_image
@@ -259,6 +274,10 @@ blocks:
               span: 6
             style:
               borderRight: '2px solid #D9D9D9'
+              display: flex
+              justifyContent: center
+              alignItems: center
+              height: 100px
             blocks:
               {% if row.business == true or row.business == false %}
               - id: business_image
@@ -289,6 +308,11 @@ blocks:
             layout:
               align: stretch
               span: 6
+            style:
+              display: flex
+              justifyContent: center
+              alignItems: center
+              height: 100px
             blocks:
               {% if row.enterprise == true or row.enterprise == false %}
               - id: enterprise_image
@@ -315,3 +339,28 @@ blocks:
               {% endif %}
       {% endfor %}
       {% endfor %}
+      - id: bottom_cover
+        type: Box
+        layout:
+          contentJustify: end
+        style:
+          height: 30px
+          backgroundColor: '#FFFFFF80'
+          borderBottomLeftRadius: 20px
+          borderBottomRightRadius: 20px
+        blocks:
+          - id: black_cover
+            type: Box
+            layout:
+              span: 6
+            style:
+              backgroundColor: black
+              height: 30px
+              borderBottomLeftRadius: 20px
+          - id: white_cover
+            type: Box
+            layout:
+              span: 18
+            style:
+              height: 30px
+              borderBottomRightRadius: 20px

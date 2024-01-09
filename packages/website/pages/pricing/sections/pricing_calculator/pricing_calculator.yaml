@@ -13,8 +13,6 @@ events:
 blocks:
   - id: pricing_calculator_left_section
     type: Box
-    layout:
-      flex: 0 1 700px
     style:
       borderRadius: 40px 0px 0px 40px
       padding: 60px 40px 80px 60px
@@ -24,7 +22,6 @@ blocks:
   - id: pricing_calculator_right_section
     type: Box
     layout:
-      flex: 0 1 300px
       contentDirection: column
     blocks:
       - id: pricing_calculator_right_top_section
@@ -52,38 +49,38 @@ blocks:
               html:
                 _nunjucks:
                   template: |
-                    <div style="padding-left: 50px; padding-right: 50px">
-                      <div style="text-align: center;"><b>Usage Based Users</b></div>
+                    <div>
+                      <div style="text-align: center;"><b>Pro Rata Users</b></div>
                       <div class="pricing-grid">
                         <div class="pricing-grid-item"></div>
-                        <div class="pricing-grid-item">{{ usage_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">users</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">{{ usage_users_hours }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_hours }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">hours</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">{{ rates.per_user_per_hour }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.per_user_per_hour }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/hour/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
                       <div class="pricing-grid">
-                        <div class="pricing-grid-item">$</div>
-                        <div class="pricing-grid-item">{{ usage_users_total }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_total }}</div>
                         <div class="pricing-grid-item"></div>
                       </div>
                       <div style="text-align: center;"><b>Flat Rate Users</b></div>
                       <div class="pricing-grid">
                         <div class="pricing-grid-item"></div>
-                        <div class="pricing-grid-item">{{ flat_rate_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_users }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">users</div>
-                        <div class="pricing-grid-item">x</div>
-                        <div class="pricing-grid-item">{{ rates.flat }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.flat }}</div>
                         <div class="pricing-grid-item" style="justify-self: start;">$/user</div>
                       </div>
                       <hr style="width: 100%; background-color: black; margin-top: -20px;">
                       <div class="pricing-grid">
-                        <div class="pricing-grid-item">$</div>
-                        <div class="pricing-grid-item">{{ flat_rate_total }}</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_total }}</div>
                         <div class="pricing-grid-item"></div>
                       </div>
                     </div>
