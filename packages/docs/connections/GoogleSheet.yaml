@@ -31,7 +31,7 @@ _ref:
 
             ### GoogleSheet
 
-            The `GoogleSheet` connection can be used to connect to a Google using an API key or a service account. An API key can only be used for read-only access to public sheets, so most applications should use a service account. A guide to creating a service account can be found in the [tutorial](/tutorial-requests).
+            The `GoogleSheet` connection offers the flexibility to connect to Google Sheets using either an API key or a service account. While an API key is suitable for read-only access to public sheets, most applications will benefit more from using a service account, which offers broader capabilities. For detailed instructions on creating a service account, you can refer to the [Google Sheets API Quickstart Guide](https://developers.google.com/sheets/api/quickstart/js) and the [Google Workspace Guide on Creating a Project](https://developers.google.com/workspace/guides/create-project).
 
             This connection refers to the entire document as the `spreadsheet`, and the individual sheets in the document as `sheets`. The spreadsheet is identified by it's `spreadsheetId`, and sheets can either be identified by their `sheetId` or their `index` (position in the document starting from 0).
 
