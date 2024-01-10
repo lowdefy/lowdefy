@@ -25,7 +25,7 @@ const containerStyle = {
 const brandStyle = {
   flex: '0 1 auto',
   contentAlign: 'middle',
-  padding: '8px 4px',
+  padding: 4,
   background: '#1990FF',
   borderRadius: 6,
   margin: 4,

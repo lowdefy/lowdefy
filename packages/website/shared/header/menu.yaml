@@ -52,3 +52,8 @@ properties:
       properties:
         title: Pricing
       pageId: pricing
+    - id: contact-us
+      type: MenuLink
+      properties:
+        title: Contact Us
+      pageId: contact-us
