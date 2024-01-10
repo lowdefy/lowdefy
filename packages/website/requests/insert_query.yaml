@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: insert_newsletter
+id: insert_query
 type: MongoDBInsertOne
-connectionId: newsletter
+connectionId: queries
 payload:
   session_id:
     _global: session_id
+  name:
+    _state: query.name
   email:
-    _state: email
+    _state: query.email
+  message:
+    _state: query.message
   page_id:
     _location: pageId
   url_query:
@@ -32,8 +36,12 @@ properties:
       _uuid: true
     session_id:
       _payload: session_id
+    name:
+      _payload: name
     email:
       _payload: email
+    message:
+      _payload: message
     source: website
     page_id:
       _payload: page_id

@@ -12,23 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: enterprise_button
-type: Button
-style:
-  textAlign: center
-  '.ant-btn:hover':
-    background: linear-gradient(0deg, rgba(40, 211, 202, 0.75), rgba(68, 132, 242, 0.75))
+id: contact-us
+type: Box
 properties:
-  title: Contact Us
-  size: large
-  color: '#4484F2'
-  style:
-    width: 160
-    background: linear-gradient(0deg, rgb(40, 211, 202), rgb(68, 132, 242)) # #28D3CA #4484F2
-    border: 0px
-events:
-  onClick:
-    - id: link_to_contact_us
-      type: Link
-      params:
-        pageId: contact-us
+  title: Lowdefy - Contact Us
+blocks:
+  - _ref: shared/header/header.yaml
+  - _ref: pages/contact-us/sections/contact_us.yaml
+  - _ref: pages/contact-us/sections/contact_us_form.yaml
+  - _ref: pages/pricing/sections/trusted_by.yaml
+  - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

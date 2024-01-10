@@ -41,6 +41,14 @@ connections:
         _secret: MONGODB_URI
       read: false
       write: true
+  - id: queries
+    type: MongoDBCollection
+    properties:
+      collection: queries
+      databaseUri:
+        _secret: MONGODB_URI
+      read: false
+      write: true
 pages:
   _ref:
     path: pages.yaml
