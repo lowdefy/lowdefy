@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: trusted_by_box
+id: contact-us
 type: Box
-style:
-  margin: 60px auto
+properties:
+  title: Lowdefy - Contact Us
 blocks:
-  - id: customers
-    type: Html
-    style:
-      textAlign: center
-      padding: 8px
-    properties:
-      html: |
-        <p style="color:#D3D3D3;">Customers that trust Lowdefy to power their business apps</p>
-
-  - _ref: shared/customers_marquee.yaml
+  - _ref: shared/header/header.yaml
+  - _ref: pages/contact-us/sections/contact_us.yaml
+  - _ref: pages/contact-us/sections/contact_us_form.yaml
+  - _ref: pages/pricing/sections/trusted_by.yaml
+  - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

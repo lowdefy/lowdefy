@@ -1,0 +1,139 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: contact_us_form_box
+type: Box
+layout:
+  contentJustify: space-around
+  contentAlign: middle
+style:
+  margin: auto
+  background: 'radial-gradient(farthest-corner at 30% 50%, #1990FF -80%, #1990FF -30%, rgba(0,0,0,0) 70%)'
+blocks:
+  - id: sprite_box
+    type: Box
+    layout:
+      flex: 0 1 auto
+    blocks:
+      - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Cloud-19.svg
+            style:
+              width: 100
+  - id: query_box
+    type: Box
+    layout:
+      contentGutter: 16
+    style:
+      marginTop: -30
+      borderRadius: 8
+      maxWidth: 500
+      padding: 3rem
+      box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
+      background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #29D3CA, #1990FF) border-box'
+      border: 3px solid transparent
+    visible:
+      _not:
+        _state: query_sent
+    blocks:
+      - id: query.name
+        type: TextInput
+        required: true
+        properties:
+          title: Name
+          placeholder: Your name
+          size: large
+          inputStyle:
+            borderRadius: 10px
+      - id: query.email
+        type: TextInput
+        required: true
+        validate:
+          _ref: shared/validate_email.yaml
+        properties:
+          title: Email
+          placeholder: Your email address
+          size: large
+          inputStyle:
+            borderRadius: 10px
+      - id: query.message
+        type: TextArea
+        required: true
+        properties:
+          title: Message
+          rows: 5
+          placeholder: Your query message
+          size: large
+          inputStyle:
+            borderRadius: 10px
+      - id: query_send_box
+        type: Box
+        layout:
+          contentDirection: row-reverse
+        blocks:
+          - id: query.send
+            type: Button
+            requests:
+              - _ref: requests/insert_query.yaml
+              - _ref:
+                  path: requests/discord_message.yaml
+                  vars:
+                    message: 'New contact us query message from website'
+            layout:
+              size: auto
+            style:
+              textAlign: center
+            properties:
+              title: Submit
+              size: large
+              color: '#1990FF'
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+                  params:
+                    regex: ^query
+                - id: post_data
+                  type: Request
+                  params:
+                    - insert_query
+                    - discord_message
+                - id: set_query
+                  type: SetState
+                  params:
+                    query_sent: true
+  - id: query_sent_thank_you
+    type: Alert
+    visible:
+      _not:
+        _not:
+          _state: query_sent
+    properties:
+      message: Thank you! We will get to your query as soon as possible 🚀
+      type: success
+    style:
+      padding: 3rem
+      maxWidth: 500
+  - id: sprite_box
+    type: Box
+    layout:
+      flex: 0 1 auto
+    blocks:
+      - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Sparkle-32.svg
+            style:
+              width: 100
