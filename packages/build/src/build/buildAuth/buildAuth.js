@@ -35,7 +35,7 @@ function buildAuth({ components, context }) {
 ┃ Paid features can not be used in production      ┃
 ┃ without a valid license.                         ┃
 ┃                                                  ┃
-┃ See https://lowdefy.com/license-faqs.            ┃
+┃ See https://docs.lowdefy.com/licenses.            ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛`);
       warningLogged = true;
     }
