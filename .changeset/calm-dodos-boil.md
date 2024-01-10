@@ -2,4 +2,4 @@
 '@lowdefy/connection-mongodb': patch
 ---
 
-Handle type in getCollection.js.
+Improve property validation errors in MongoDBCollection connection.
