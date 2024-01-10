@@ -15,13 +15,23 @@
 */
 
 import { MongoClient } from 'mongodb';
+import { type } from '@lowdefy/helpers';
 
 async function getCollection({ connection }) {
   const { collection, databaseName, databaseUri, options } = connection;
+  if (!type.isString(databaseUri)) {
+    throw new Error('Database URI must be a string');
+  }
   const client = new MongoClient(databaseUri, options);
   await client.connect();
   try {
+    if (!type.isString(databaseName) && !type.isNone(databaseName)) {
+      throw new Error('Database name must be a string');
+    }
     const db = client.db(databaseName);
+    if (!type.isString(collection)) {
+      throw new Error('Collection name must be a string');
+    }
     return {
       client,
       collection: db.collection(collection),
