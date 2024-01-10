@@ -53,6 +53,17 @@ test('invalid databaseUri', async () => {
   );
 });
 
+test('invalid databaseUri', async () => {
+  const connection = {
+    databaseUri: {},
+    databaseName: 'test',
+    collection: 'getCollection',
+  };
+  await expect(() => getCollection({ connection })).rejects.toThrow(
+    'Database URI must be a string'
+  );
+});
+
 test('invalid databaseName', async () => {
   const connection = {
     databaseUri,
@@ -71,6 +82,6 @@ test('invalid collection', async () => {
     collection: {},
   };
   await expect(() => getCollection({ connection })).rejects.toThrow(
-    'Collection name must be a String'
+    'Collection name must be a string'
   );
 });
