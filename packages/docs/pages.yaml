@@ -24,6 +24,7 @@
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/cli.yaml
+- _ref: concepts/licenses.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml

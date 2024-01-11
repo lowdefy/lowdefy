@@ -143,6 +143,11 @@
           pageId: cli
           properties:
             title: The CLI
+        - id: licenses
+          type: MenuLink
+          pageId: licenses
+          properties:
+            title: Licenses
 
     - id: deployment
       type: MenuGroup

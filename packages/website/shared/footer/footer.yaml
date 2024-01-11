@@ -131,13 +131,12 @@ blocks:
             </a>
           </li>
           <li>
-            <a href="https://github.com/lowdefy/lowdefy/blob/main/CHANGELOG.md" style='color: black'>
+            <a href="https://github.com/lowdefy/lowdefy/releases" style='color: black'>
               Changelog
-            </a>
           </li>
           <li>
-            <a href="https://github.com/lowdefy/lowdefy/blob/main/LICENSE" style='color: black'>
-              Apache 2.0 License
+            <a href="https://docs.lowdefy.com/licenses" style='color: black'>
+              Licenses
             </a>
           </li>
           <li>

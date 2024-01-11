@@ -96,7 +96,6 @@ program
   .command('dev')
   .description('Start a Lowdefy development server.')
   .usage('[options]')
-  .addOption(options.communityEdition)
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
