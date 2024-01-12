@@ -17,6 +17,31 @@ type: Box
 layout:
   flex: 0 1 auto
 blocks:
+  - id: sponsor
+    type: Button
+    layout:
+      flex: 0 1 auto
+    properties:
+      title: Sponsor
+      icon:
+        name: AiOutlineHeart
+        color: '#E81E63'
+      href: https://opencollective.com/lowdefy-os
+      shape: round
+      type: link
+      style:
+        _if:
+          test:
+            _ref: shared/mobile_lg.yaml
+          then:
+            color: black
+            ':hover':
+              color: '#E81E63'
+            marginTop: 20px
+          else:
+            color: black
+            ':hover':
+              color: '#E81E63'
   - id: discord
     type: Button
     layout:
@@ -27,17 +52,8 @@ blocks:
       shape: round
       type: link
       style:
-        _if:
-          test:
-            _ref: shared/mobile.yaml
-          then:
-            color: black
-            marginTop: 20px
-          else:
-            color: black
-
+        color: black
       href: https://discord.gg/WmcJgXt
-
   - id: github_button
     type: Button
     layout:
@@ -46,14 +62,7 @@ blocks:
       title: Star on Github
       icon: AiOutlineGithub
       type: link
-      style:
-        _if:
-          test:
-            _ref: shared/mobile.yaml
-          then:
-            marginTop: 20px
       href: https://github.com/lowdefy/lowdefy
-
   - id: get_started_button
     type: Button
     layout:
@@ -64,8 +73,8 @@ blocks:
       style:
         _if:
           test:
-            _ref: shared/mobile.yaml
+            _ref: shared/mobile_lg.yaml
           then:
-            width: 300px
-            marginTop: 30px
+            width: 200px
+            marginTop: 20px
       href: https://docs.lowdefy.com/tutorial-start

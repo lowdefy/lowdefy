@@ -15,3 +15,5 @@
 - _ref: pages/home/home.yaml
 - _ref: pages/pricing/pricing.yaml
 - _ref: pages/contact-us/contact-us.yaml
+- _ref: pages/terms-and-conditions/terms-and-conditions.yaml
+- _ref: pages/blog/blog.yaml

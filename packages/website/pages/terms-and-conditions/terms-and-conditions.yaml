@@ -12,23 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: pricing
+id: terms-and-conditions
 type: Box
 properties:
-  title: Lowdefy - Pricing
-style:
-  backgroundColor: '#F7F7F7'
+  title: Lowdefy - Terms And Conditions
 blocks:
   - _ref: shared/header/header.yaml
-  - _ref: pages/pricing/sections/pay_for_what_you_use.yaml
-  - _ref: pages/pricing/sections/tiers.yaml
-  - _ref: shared/customers.yaml
-  - _ref: pages/pricing/sections/pricing_calculator/pricing_calculator.yaml
-  - _ref:
-      path: pages/pricing/sections/compare_features.yaml.njk
-      vars:
-        sections:
-          _ref: pages/pricing/sections/compare_features_info.yaml
-  - _ref: pages/pricing/sections/faq.yaml
+  - _ref: pages/terms-and-conditions/sections/terms_and_conditions.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

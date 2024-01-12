@@ -21,7 +21,7 @@ payload:
   name:
     _state: query.name
   email:
-    _state: query.email
+    _state: email
   message:
     _state: query.message
   page_id:
