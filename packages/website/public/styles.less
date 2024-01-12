@@ -285,7 +285,7 @@ th, td {
     padding-right: 20px;
   }
 
-  #bl-pricing, #contact-us {
+  #bl-pricing, #contact-us, #bl-terms-and-conditions {
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -321,9 +321,23 @@ th, td {
   #bl-pricing_calculator_box {
     display: none;
   }
+}
 
+// Contact us styling for medium screens
+@media screen and (max-width: 950px) {
   #bl-sprite_box {
     display: none;
+  }
+}
+
+// Contact us styling for small screens
+@media screen and (max-width: 700px) {
+  #bl-left_query_box {
+    display: none;
+  }
+
+  #bl-right_query_box {
+    flex: 1 0 auto;
   }
 }
 

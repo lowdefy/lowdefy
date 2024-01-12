@@ -19,7 +19,7 @@ properties:
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/home/sections/hero.yaml
-  - _ref: pages/home/sections/customers.yaml
+  - _ref: shared/customers.yaml
   - _ref: pages/home/sections/build_uis.yaml
   - _ref: pages/home/sections/connect.yaml
   - _ref: pages/home/sections/open_source.yaml

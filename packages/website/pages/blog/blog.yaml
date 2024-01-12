@@ -12,18 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: trusted_by_box
+id: blog
 type: Box
-style:
-  margin: 60px auto
+properties:
+  title: Lowdefy - Blog
 blocks:
-  - id: customers
-    type: Html
-    style:
-      textAlign: center
-      padding: 8px
-    properties:
-      html: |
-        <p style="color:#D3D3D3;">Customers that trust Lowdefy to power their business apps</p>
-
-  - _ref: shared/customers_marquee.yaml
+  - _ref: shared/header/header.yaml
+  - _ref: pages/blog/sections/lowdefy_v4_launch.yaml
+  - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

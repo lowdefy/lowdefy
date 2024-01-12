@@ -15,7 +15,7 @@
 id: contact_us_box
 type: Box
 style:
-  maxWidth: 1200px
+  maxWidth: 600px
   margin: 60px auto
   textAlign: center
 layout:
@@ -28,8 +28,34 @@ blocks:
         <h1> Contact Us </h1>
   - id: contact_us_description
     type: Html
+    layout:
+      flex: 1 0 auto
+    style:
+      marginTop: 5px
+      textAlign: center
+    properties:
+      html: <p>Keen to show something you built in Lowdefy?</p>
+  - id: contact_us_book_a_demo
+    type: Button
+    layout:
+      flex: 1 0 auto
+    properties:
+      title: Book a demo
+      ghost: true
+      shape: round
+      size: large
+      style:
+        whiteSpace: normal
+        boxShadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        fontFamily: monospace
+        background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #1990FF, #29D3CA) border-box !important'
+        border: 2px solid transparent !important
+      href: https://calendly.com/gvw-lowdefy/lowdefy-support
+  - id: contact_us_form_description
+    type: Html
     style:
       maxWidth: 500px
       textAlign: center
+      marginTop: 30px
     properties:
-      html: <p>For more details on custom pricing or any other queries, you can fill in the form below.</p>
+      html: <p>For more details on custom pricing or any other queries, you can fill in the form below and we will get back to you.</p>
