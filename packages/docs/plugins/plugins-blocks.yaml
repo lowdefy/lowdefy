@@ -1,0 +1,81 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: plugins-blocks
+    pageTitle: Blocks Plugins
+    section: Plugins
+    filePath: plugins/plugins-blocks.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ### Blocks introduction
+            Blocks are the visual components which make up the user interface of a Lowdefy app.
+
+            Lowdefy blocks are React components.
+
+            Blocks are sorted into four categories, based on their primary function:
+            - display: Display page elements.
+            - input: Capture user input and modify a value in state.
+            - container: Render other blocks into content areas.
+            - list: Render blocks for each element in the data array represented in state.
+
+            Block parameters:
+            - `basePath: string`: The configured app URL basePath.
+            - `blockId: string`: Unique id of the block.
+            - `components: object`: React components used in the block (i.e. Icon).
+            - `content: object`: Content areas for container type blocks.
+            - `events: object`: The block events. See [events and actions](/events-and-actions).
+            - `list: array`: List of blocks for list type blocks.
+            - `loading: boolean`: Determines the block's loading state.
+            - `methods: object`: Method functions exposed by the block. Accessed using the [`CallMethod`](/CallMethod) action.
+            - `menus: array`: The app menus.
+            - `pageId: string`: Page ID of current page for menu blocks.
+            - `properties: object`: All the block properties.
+            - `required: boolean or string`: Required flag or message for validation.
+            - `validation: array`: A list of validation tests to pass when the [`Validate`](/Validate) action is called.
+            - `value: any`: Value for input type blocks.
+
+            #### Block Categories
+            Content area children
+
+            #### Styling and Icons
+
+            Mention styles files
+
+            Mention icons
+
+            Mention blockDefaultProps
+
+            #### Build
+
+            Mention swc build
+
+
+            #### Schema for documentation
+
+            #### Examples
+            Examples of each block category
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Actions
+            previous_page_id: plugins-actions
+            next_page_title: Connections
+            next_page_id: plugins-connections

@@ -93,3 +93,9 @@ _ref:
 
             export default _eq;
             ```
+
+      - _ref:
+          path: templates/navigation_buttons.yaml
+          vars:
+            previous_page_title: Actions
+            previous_page_id: plugins-actions

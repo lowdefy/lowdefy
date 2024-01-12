@@ -192,6 +192,11 @@
           pageId: plugins-actions
           properties:
             title: Actions
+        # - id: plugins-blocks
+        #   type: MenuLink
+        #   pageId: plugins-blocks
+        #   properties:
+        #     title: Blocks
         - id: plugins-connections
           type: MenuLink
           pageId: plugins-connections

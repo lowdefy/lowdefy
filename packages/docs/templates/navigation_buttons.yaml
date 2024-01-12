@@ -20,49 +20,63 @@ style:
 layout:
   contentGutter: 16
 blocks:
-  - id: previous_button
-    type: Button
+  - id: previous_button_box
+    type: Box
     layout:
       span: 12
-    properties:
-      block: true
-      hideActionLoading: true
-      icon: AiOutlineArrowLeft
-      size: large
-      title:
-        _var: previous_page_title
-      type: default
-    events:
-      onClick:
-        - id: link_back
-          type: Link
-          params:
-            pageId:
-              _var: previous_page_id
-        - id: scroll_to_top
-          type: ScrollTo
-          params:
-            top: 0
-  - id: next_button
-    type: Button
+    blocks:
+      - id: previous_button
+        type: Button
+        visible:
+          _ne:
+            - _var: previous_page_id
+            - null
+        properties:
+          block: true
+          hideActionLoading: true
+          icon: AiOutlineArrowLeft
+          size: large
+          title:
+            _var: previous_page_title
+          type: default
+        events:
+          onClick:
+            - id: link_back
+              type: Link
+              params:
+                pageId:
+                  _var: previous_page_id
+            - id: scroll_to_top
+              type: ScrollTo
+              params:
+                top: 0
+  - id: next_button_box
+    type: Box
     layout:
       span: 12
-    properties:
-      block: true
-      hideActionLoading: true
-      icon: AiOutlineArrowRight
-      size: large
-      title:
-        _var: next_page_title
-      type: default
-    events:
-      onClick:
-        - id: link_forward
-          type: Link
-          params:
-            pageId:
-              _var: next_page_id
-        - id: scroll_to_top
-          type: ScrollTo
-          params:
-            top: 0
+    blocks:
+      - id: next_button
+        type: Button
+        visible:
+          _ne:
+            - _var: next_page_id
+            - null
+        properties:
+          block: true
+          hideActionLoading: true
+          icon: AiOutlineArrowRight
+          size: large
+          title:
+            _var: next_page_title
+          type: default
+        events:
+          onClick:
+            - id: link_forward
+              type: Link
+              params:
+                pageId:
+                  _var: next_page_id
+            - id: scroll_to_top
+              type: ScrollTo
+              params:
+                top: 0

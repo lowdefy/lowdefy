@@ -55,7 +55,5 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Overview
-            previous_page_id: overview
             next_page_title: Developing Plugins
             next_page_id: plugins-dev
