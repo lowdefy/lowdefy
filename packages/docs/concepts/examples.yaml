@@ -1,0 +1,93 @@
+# Copyright 2020-2023 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License";
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License:
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: examples
+    pageTitle: Examples
+    section: Concepts
+    filePath: concepts/examples.yaml
+    content:
+      - id: examples_content
+        type: Markdown
+        properties:
+          content: |
+            ### Case Management
+
+            This example focuses on building a rich UI for a hypothetical case management app, in a customer relations setting.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-case-management
+
+            View the example: https://example-case-management.lowdefy.com/
+
+            ### CRUD
+
+            This example shows patterns to implement a data admin app which allows users to view, create new, edit and delete data records.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-crud
+
+            View the example: https://example-crud.lowdefy.com/
+
+            ### Reporting
+
+            This example demonstrates useful patterns for building a BI report/dashboard pages in Lowdefy. It connects to a MongoDB database with the Atlas Movies sample dataset pre-loaded.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-reporting
+
+            View the example: https://example-reporting.lowdefy.com/
+
+            ### Auth Email
+
+            This example app uses the Next-Auth email provider and a custom MongoDB adapter as authentication system. It has support for invite-only users - the user is only allowed to log in if an invite is created for them.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-auth-email
+
+            ### Plugins
+
+            This example app shows how to enhance your Lowdefy app by making use of custom plugins.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-plugins
+
+            ### AWS Amplify
+
+            View the code: https://github.com/lowdefy/lowdefy-example-aws-amplify
+
+            ### Survey
+
+            This is a simple customer survey example built with Lowdefy. With this example we demonstrate how simple it is to define a public webform and thank you page in Lowdefy.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-survey
+
+            View this example: https://example-survey.lowdefy.com/
+
+            ### JWT Auth
+
+            A lowdefy monorepo starter for jwt auth.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-jwt-auth
+
+            ### Auth0 Mongo
+
+            A lowdefy monorepo starter for Auth0 and MongoDB user auth.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-auth0-mongo
+
+            ### Business Card
+
+            An example app that allows users to link to one another and makes use of linkedIn login.
+
+            View the code: https://github.com/lowdefy/lowdefy-example-business-card
+
+            View the example: http://lowdefy-example-business-card.vercel.app/

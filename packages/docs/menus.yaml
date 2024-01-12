@@ -148,6 +148,11 @@
           pageId: licenses
           properties:
             title: Licenses
+        - id: examples
+          type: MenuLink
+          pageId: examples
+          properties:
+            title: Examples
 
     - id: deployment
       type: MenuGroup
