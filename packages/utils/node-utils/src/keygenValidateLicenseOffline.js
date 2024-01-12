@@ -42,7 +42,13 @@ async function keygenValidateLicenseOffline({ config, licenseKey }) {
   const expiry = new Date(decoded.expiry);
 
   if (decoded.product !== config.productId) {
-    throw new Error('Invalid license.');
+    return {
+      id: 'INVALID_LICENSE',
+      code: 'INVALID_LICENSE',
+      entitlements: [],
+      metadata: {},
+      timestamp: new Date(),
+    };
   }
 
   return {
