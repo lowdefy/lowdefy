@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -47,10 +47,8 @@ const createIcon = (Icons) => {
     const iconProps = {
       id: blockId,
       className: classNames({
-        [makeCssClass([
-          { cursor: (onClick || events.onClick) && 'pointer' },
-          propertiesObj.style,
-        ])]: true,
+        [makeCssClass([{ cursor: (onClick || events.onClick) && 'pointer' }, propertiesObj.style])]:
+          true,
         'icon-spin': spin,
       }),
       rotate: propertiesObj.rotate,

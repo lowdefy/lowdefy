@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ const labelLogic = ({
   let label = content.label
     ? content.label()
     : !type.isString(properties.title)
-    ? blockId
-    : properties.title;
+      ? blockId
+      : properties.title;
   label = label === '' ? null : label;
   // trim colon when colon is set, and the user inputs a colon, because antd class renders a colon
   if (type.isString(label) && properties.colon && label.trim() !== '') {
