@@ -15,5 +15,7 @@
 - _ref: pages/home/home.yaml
 - _ref: pages/pricing/pricing.yaml
 - _ref: pages/contact-us/contact-us.yaml
-- _ref: pages/terms-and-conditions/terms-and-conditions.yaml
+- _ref: pages/terms/terms.yaml
 - _ref: pages/blog/blog.yaml
+- _ref: pages/blog/lowdefy-v4-launch.yaml
+- _ref: pages/privacy-policy/privacy-policy.yaml

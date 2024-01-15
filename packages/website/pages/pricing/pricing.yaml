@@ -30,5 +30,6 @@ blocks:
         sections:
           _ref: pages/pricing/sections/compare_features_info.yaml
   - _ref: pages/pricing/sections/faq.yaml
+  - _ref: shared/cta.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

@@ -14,14 +14,19 @@
 
 id: {{ id }}
 type: Card
+layout:
+  _var: layout
 properties:
   style:
     height: 100%
-    minHeight: 450
-    maxWIdth: 80%
+    '&:hover':
+      boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.1)
+      border: '1px solid var(--primary-color)'
 blocks:
   - id: title
     type: Html
+    style:
+      minHeight: 320
     properties:
       html: |
         <a href="{{ view}}" >

@@ -12,21 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: home
+id: privacy-policy
 type: Box
 properties:
-  title: Lowdefy - The Easiest Config Web Stack on Top of Next.js
+  title: Lowdefy - Privacy Policy
 blocks:
   - _ref: shared/header/header.yaml
-  - _ref: pages/home/sections/hero.yaml
-  - _ref: shared/customers.yaml
-  - _ref: pages/home/sections/build_uis.yaml
-  - _ref: pages/home/sections/connect.yaml
-  - _ref: pages/home/sections/open_source.yaml
-  - _ref: pages/home/sections/enterprise_features.yaml
-  - _ref: pages/home/sections/plugins.yaml
-  - _ref: pages/home/sections/testimonials.yaml
-  # - _ref: pages/home/sections/examples.yaml
-  - _ref: shared/cta.yaml
+  - _ref: pages/privacy-policy/sections/privacy_policy.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

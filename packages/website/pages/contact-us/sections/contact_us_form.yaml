@@ -218,7 +218,7 @@ blocks:
         _not:
           _state: query_sent
     properties:
-      message: Thank you! We will get to your query as soon as possible 🚀
+      message: Thank you! We'll be in contact soon 🙌
       type: info
     style:
       padding: 3rem
