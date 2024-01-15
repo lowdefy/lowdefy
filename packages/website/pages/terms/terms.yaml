@@ -16,6 +16,8 @@ id: terms
 type: Box
 properties:
   title: Lowdefy - Terms
+style:
+  padding: 0px 8px
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/terms/sections/terms_section.yaml

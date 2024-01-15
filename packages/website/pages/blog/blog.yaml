@@ -16,6 +16,8 @@ id: blog
 type: Box
 properties:
   title: Lowdefy - Blog
+style:
+  padding: 0px 8px
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/blog/sections/blog_posts.yaml

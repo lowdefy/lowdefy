@@ -32,9 +32,10 @@ blocks:
     type: Img
     properties:
       src: ./images/blogs/V4_Launch.jpg
-      width: 800px
       style:
         borderRadius: 20px
+        width: 100%
+        maxWidth: 800px
   - id: content
     type: DangerousMarkdown
     style:
