@@ -36,7 +36,7 @@ blocks:
   - id: lowdefy_v4_launch_card
     type: Card
     layout:
-      contentGutter: 8
+      contentGutter: 16
     properties:
       style:
         '&:hover':
@@ -51,13 +51,14 @@ blocks:
       - id: lowdefy_v4_launch_image
         type: Img
         layout:
-          flex: 1 0 200px
+          flex: 1 0 250px
           align: center
         properties:
           src: ./images/blogs/V4_Launch.jpg
-          width: 240px
           style:
             borderRadius: 10px
+            height: auto
+            maxWidth: 100%
       - id: info_box
         type: Box
         layout:
