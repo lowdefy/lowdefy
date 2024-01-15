@@ -37,7 +37,7 @@ blocks:
   - id: connect
     type: Html
     layout:
-      span: 6
+      span: 8
     properties:
       html: |
         <a href="/" >
@@ -52,7 +52,7 @@ blocks:
   - id: documentation
     type: Html
     layout:
-      span: 6
+      span: 4
     properties:
       html: |
         <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
@@ -77,16 +77,11 @@ blocks:
               Authentication & Roles
             </a>
           </li>
-          <li>
-            <a href="https://docs.lowdefy.app/vercel" style='color: black'>
-              Deployment
-            </a>
-          </li>
         </ul>
   - id: documentation
     type: Html
     layout:
-      span: 6
+      span: 4
     properties:
       html: |
         <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
@@ -97,13 +92,8 @@ blocks:
             </a>
           </li>
           <li>
-            <a href="https://docs.lowdefy.com/MySQL" style='color: black'>
-              MySQL
-            </a>
-          </li>
-          <li>
-            <a href="https://docs.lowdefy.com/PostgreSQL" style='color: black'>
-              PostgreSQL
+            <a href="https://docs.lowdefy.com/Knex" style='color: black'>
+              SQL
             </a>
           </li>
           <li>
@@ -120,7 +110,7 @@ blocks:
   - id: developers
     type: Html
     layout:
-      span: 6
+      span: 4
     properties:
       html: |
         <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
@@ -135,13 +125,32 @@ blocks:
               Changelog
           </li>
           <li>
+            <a href="https://opencollective.com/lowdefy-os" style='color: black'>
+              Sponsor
+            </a>
+          </li>
+        </ul>
+  - id: legal
+    type: Html
+    layout:
+      span: 4
+    properties:
+      html: |
+        <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
+          <small style="color: #A3A3A3;"><b>LEGAL</b></small>
+          <li>
             <a href="https://docs.lowdefy.com/licenses" style='color: black'>
               Licenses
             </a>
           </li>
           <li>
-            <a href="https://opencollective.com/lowdefy-os" style='color: black'>
-              Sponsor
+            <a href="/terms-and-conditions" style='color: black'>
+              Terms & Conditions
+            </a>
+          </li>
+          <li>
+            <a href="/privacy-policy" style='color: black'>
+              Privacy Policy
             </a>
           </li>
         </ul>

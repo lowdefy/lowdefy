@@ -71,10 +71,22 @@ async function keygenValidateLicense({ config }) {
   const body = await res.text();
   const { meta, data, errors } = JSON.parse(body);
   if (meta.nonce !== nonce) {
-    throw new Error('License validation failed.');
+    return {
+      id: 'INVALID_LICENSE',
+      code: 'INVALID_LICENSE',
+      entitlements,
+      metadata: {},
+      timestamp: new Date(),
+    };
   }
   if (errors) {
-    throw new Error('License validation failed.');
+    return {
+      id: 'INVALID_LICENSE',
+      code: 'INVALID_LICENSE',
+      entitlements,
+      metadata: {},
+      timestamp: new Date(),
+    };
   }
 
   await keygenVerifyApiSignature({

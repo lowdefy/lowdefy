@@ -35,85 +35,182 @@ blocks:
   - id: query_box
     type: Box
     layout:
-      contentGutter: 16
+      contentDirection: row
     style:
-      marginTop: -30
-      borderRadius: 8
-      maxWidth: 500
-      padding: 3rem
+      marginTop: -40
+      borderRadius: 40
+      maxWidth: 700
       box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
-      background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #29D3CA, #1990FF) border-box'
-      border: 3px solid transparent
+      background-color: white
     visible:
       _not:
         _state: query_sent
     blocks:
-      - id: query.name
-        type: TextInput
-        required: true
-        properties:
-          title: Name
-          placeholder: Your name
-          size: large
-          inputStyle:
-            borderRadius: 10px
-      - id: query.email
-        type: TextInput
-        required: true
-        validate:
-          _ref: shared/validate_email.yaml
-        properties:
-          title: Email
-          placeholder: Your email address
-          size: large
-          inputStyle:
-            borderRadius: 10px
-      - id: query.message
-        type: TextArea
-        required: true
-        properties:
-          title: Message
-          rows: 5
-          placeholder: Your query message
-          size: large
-          inputStyle:
-            borderRadius: 10px
-      - id: query_send_box
+      - id: left_query_box
         type: Box
         layout:
-          contentDirection: row-reverse
+          contentGutter: 16
+          flex: 0 0 300px
+          contentJustify: center
+        style:
+          backgroundColor: rgba(68, 132, 242, 1)
+          padding: 2rem
+          borderRadius: 40px 0px 0px 40px
+          marginRight: 16
         blocks:
-          - id: query.send
-            type: Button
-            requests:
-              - _ref: requests/insert_query.yaml
-              - _ref:
-                  path: requests/discord_message.yaml
-                  vars:
-                    message: 'New contact us query message from website'
-            layout:
-              size: auto
-            style:
-              textAlign: center
+          - _ref:
+              path: pages/home/components/sprite.yaml
+              vars:
+                svg: /images/logo_white_120.png
+                style:
+                  width: 120
+          - id: left_query_description
+            type: Html
             properties:
-              title: Submit
+              html: |
+                <div style="font-size: 12px; color: white; text-align: center; margin-bottom: -20px;">
+                  <p>Build with Lowdefy now</p>
+                  <p>For support contact us on support@lowdefy.com</p>
+                </div>
+          - _ref:
+              path: pages/home/components/sprite.yaml
+              vars:
+                svg: /images/05_OpenSource_001.png
+                style:
+                  width: 200
+          - id: left_query_join_the_community
+            type: Html
+            properties:
+              html: |
+                <div style="font-size: 12px; color: white; text-align: center;">
+                  <p>Join the community</p>
+                </div>
+          - id: left_query_discord_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              hideTitle: true
+              icon: FaDiscord
+              shape: round
+              type: link
               size: large
-              color: '#1990FF'
-            events:
-              onClick:
-                - id: validate
-                  type: Validate
-                  params:
-                    regex: ^query
-                - id: post_data
-                  type: Request
-                  params:
-                    - insert_query
-                    - discord_message
-                - id: set_query
-                  type: SetState
-                  params:
-                    query_sent: true
+              style:
+                color: white
+                border: 1px solid white
+                borderRadius: 100%
+                ':hover':
+                  border: 1px solid rgba(255,255,255,0.75)
+                  color: rgba(255,255,255,0.75)
+              href: https://discord.gg/WmcJgXt
+          - id: left_query_github_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              hideTitle: true
+              icon: AiOutlineGithub
+              type: link
+              size: large
+              style:
+                color: white
+                border: 1px solid white
+                borderRadius: 100%
+                ':hover':
+                  border: 1px solid rgba(255,255,255,0.75)
+                  color: rgba(255,255,255,0.75)
+              href: https://github.com/lowdefy/lowdefy
+      - id: right_query_box
+        type: Box
+        layout:
+          contentGutter: 16
+          contentDirection: column
+          flex: 0 0 400
+        style:
+          padding: 2rem
+        blocks:
+          - id: query.name
+            type: TextInput
+            required: true
+            properties:
+              title: Name
+              placeholder: Your name
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: email
+            type: TextInput
+            required: true
+            validate:
+              _ref: shared/validate_email.yaml
+            properties:
+              title: Email
+              placeholder: Your email address
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: query.message
+            type: TextArea
+            required: true
+            properties:
+              title: Message
+              rows: 5
+              placeholder: Your query message
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: query.subscribe
+            type: CheckboxSelector
+            properties:
+              label:
+                disabled: true
+              options:
+                - label: Subscribe to newsletter
+                  value: true
+          - id: query_send_box
+            type: Box
+            layout:
+              contentDirection: row-reverse
+            blocks:
+              - id: query.submit
+                type: Button
+                requests:
+                  - _ref: requests/insert_newsletter.yaml
+                  - _ref: requests/insert_query.yaml
+                  - _ref:
+                      path: requests/discord_message.yaml
+                      vars:
+                        message: 'New contact us query message from website'
+                layout:
+                  size: auto
+                properties:
+                  title: Submit
+                  size: large
+                  color: '#1990FF'
+                events:
+                  onClick:
+                    - id: validate
+                      type: Validate
+                      params:
+                        regex: ^query
+                    - id: post_data
+                      type: Request
+                      params:
+                        - insert_query
+                        - discord_message
+                    - id: post_data_newsletter
+                      type: Request
+                      params:
+                        - insert_newsletter
+                      skip:
+                        _not:
+                          _if_none:
+                            - _state: query.subscribe.0
+                            - false
+                    - id: set_query
+                      type: SetState
+                      params:
+                        query_sent: true
   - id: query_sent_thank_you
     type: Alert
     visible:
@@ -122,7 +219,7 @@ blocks:
           _state: query_sent
     properties:
       message: Thank you! We will get to your query as soon as possible 🚀
-      type: success
+      type: info
     style:
       padding: 3rem
       maxWidth: 500

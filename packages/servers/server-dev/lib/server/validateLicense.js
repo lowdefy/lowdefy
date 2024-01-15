@@ -16,9 +16,9 @@ const config = {
     publicKey: 'MCowBQYDK2VwAyEAN27y1DiHiEDYFbNGjgfFdWygxrVSetq6rApWq3psJZI=',
   },
   prod: {
-    accountId: '',
-    productId: '',
-    publicKey: '',
+    accountId: '63b3d4e4-39e1-4ccc-8c58-6b8f97ddf4fa',
+    productId: 'd19a5af0-4147-4a65-8b6d-0706d7804bc1',
+    publicKey: 'MCowBQYDK2VwAyEAFPoseE3gi+YsJziigc1kFKOkdUIBiUMd9RZujTh23Fc=',
   },
 };
 

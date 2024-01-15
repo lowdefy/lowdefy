@@ -21,7 +21,7 @@ properties:
   mode:
     _if:
       test:
-        _ref: shared/mobile_md.yaml
+        _ref: shared/mobile_lg.yaml
       then: vertical
       else: horizontal
   style:
@@ -34,19 +34,14 @@ properties:
       url: https://docs.lowdefy.com/
       properties:
         title: Docs
-    - id: expert
+    - id: blog
       type: MenuLink
-      url: https://calendly.com/gvw-lowdefy/lowdefy-support
       properties:
-        title: Book a Demo
-    - id: sponsor
-      type: MenuLink
-      url: https://opencollective.com/lowdefy-os
-      properties:
-        title: Sponsor
+        title: Blog
         icon:
-          name: AiOutlineHeart
-          color: '#E81E63'
+          name: BiMessageAltDetail
+          color: '#1990FF'
+      pageId: blog
     - id: pricing
       type: MenuLink
       properties:

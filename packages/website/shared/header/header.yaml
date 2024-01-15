@@ -24,7 +24,7 @@ blocks:
       style:
         _if:
           test:
-            _ref: shared/mobile_md.yaml
+            _ref: shared/mobile_lg.yaml
           then:
             padding: 4px 16px
             background: rgba(255,255,255,0.3)
@@ -52,7 +52,7 @@ blocks:
           flex: 1 1 auto
         visible:
           _not:
-            _ref: shared/mobile_md.yaml
+            _ref: shared/mobile_lg.yaml
         blocks:
           - _ref: shared/header/menu.yaml
           - _ref: shared/header/cta_buttons.yaml
@@ -61,7 +61,7 @@ blocks:
         layout:
           flex: 1 1 auto
         visible:
-          _ref: shared/mobile_md.yaml
+          _ref: shared/mobile_lg.yaml
         blocks:
           - id: spacer
             type: Box
@@ -85,7 +85,7 @@ blocks:
           - id: mobile_menu_drawer
             type: Drawer
             properties:
-              width: 400
+              width: 300
             blocks:
               - _ref: shared/header/menu.yaml
               - _ref: shared/header/cta_buttons.yaml
