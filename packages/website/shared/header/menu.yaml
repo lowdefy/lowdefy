@@ -38,9 +38,6 @@ properties:
       type: MenuLink
       properties:
         title: Blog
-        icon:
-          name: BiMessageAltDetail
-          color: '#1990FF'
       pageId: blog
     - id: pricing
       type: MenuLink

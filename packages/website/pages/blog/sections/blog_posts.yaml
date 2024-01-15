@@ -52,9 +52,12 @@ blocks:
         type: Img
         layout:
           flex: 1 0 200px
+          align: center
         properties:
-          src: ./images/01_Header_001.png
-          width: 200px
+          src: ./images/blogs/V4_Launch.jpg
+          width: 240px
+          style:
+            borderRadius: 10px
       - id: info_box
         type: Box
         layout:
