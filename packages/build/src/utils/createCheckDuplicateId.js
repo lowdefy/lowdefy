@@ -20,8 +20,9 @@ function createCheckDuplicateId({ message }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
   function checkDuplicateId({ id, blockId, eventId, menuId, pageId }) {
-    if (ids.has(id)) throw new Error(template({ id, blockId, eventId, menuId, pageId }));
-    ids.add(id);
+    if (ids.has(id.toLowerCase()))
+      throw new Error(template({ id, blockId, eventId, menuId, pageId }));
+    ids.add(id.toLowerCase());
   }
   return checkDuplicateId;
 }

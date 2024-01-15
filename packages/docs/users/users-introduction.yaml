@@ -26,7 +26,7 @@ _ref:
           content: |
             Lowdefy uses the [Next-Auth](https://next-auth.js.org) package to implement user authentication. Next-Auth has built in support for many sign-in services, and can be extended using Lowdefy [plugins](/plugins). User authentication can be stateless using JSON Web Tokens (JWT) or can use database sessions.
 
-            User authorization is done at the page level. Pages can be set as public or private, and role-based-access control can be used to restrict access to pages based on a user's roles. Authorisation checks are done on the Lowdefy server when executing requests, respecting the same authorization rules as the page the request is defined on.
+            User authorization is done at the page level. Pages can be set as public or private, and role-based-access control can be used to [restrict access](https://docs.lowdefy.com/protected-pages) to pages based on a user's [roles](https://docs.lowdefy.com/roles). Authorisation checks are done on the Lowdefy server when executing requests, respecting the same authorization rules as the page the request is defined on.
 
             The authentication system consists of the following components:
 
@@ -40,7 +40,7 @@ _ref:
 
             ## Callbacks
 
-            Callbacks are functions that are executed during certain actions of the authentication process. They are blocking - if an error is thrown they stop the action, so they can be used for access control checks. A few default callbacks are provided, but a custom plugin will likely need to be written.
+            Callbacks are functions that are executed during certain actions of the authentication process. They are blocking - if an error is thrown they stop the action, so they can be used for access control checks. A few default callbacks are provided, but a [custom plugin](https://docs.lowdefy.com/plugins-dev) will likely need to be written.
 
             ## Events
 
@@ -59,5 +59,5 @@ _ref:
           vars:
             previous_page_title: Overview
             previous_page_id: overview
-            next_page_title: Providers
-            next_page_id: auth-providers
+            next_page_title: Protected Pages
+            next_page_id: protected-pages

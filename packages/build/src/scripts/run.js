@@ -27,20 +27,20 @@ async function run() {
   await build({
     directories: {
       build: path.resolve(
-        argv.buildDirectory ||
-          process.env.LOWDEFY_DIRECTORY_BUILD ||
+        argv.buildDirectory ??
+          process.env.LOWDEFY_DIRECTORY_BUILD ??
           path.join(process.cwd(), 'build')
       ),
       config: path.resolve(
-        argv.configDirectory || process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd()
+        argv.configDirectory ?? process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()
       ),
       server: path.resolve(
-        argv.serverDirectory || process.env.LOWDEFY_DIRECTORY_SERVER || process.cwd()
+        argv.serverDirectory ?? process.env.LOWDEFY_DIRECTORY_SERVER ?? process.cwd()
       ),
     },
     logger: console,
-    refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
-    stage: argv.stage || process.env.LOWDEFY_BUILD_STAGE || 'prod',
+    refResolver: argv.refResolver ?? process.env.LOWDEFY_BUILD_REF_RESOLVER,
+    stage: argv.stage ?? process.env.LOWDEFY_BUILD_STAGE ?? 'prod',
   });
 }
 

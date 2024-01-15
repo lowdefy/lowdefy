@@ -75,6 +75,12 @@ const TextAreaBlock = ({
                   event.target.setSelectionRange(cStart, cEnd);
                 });
               }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}

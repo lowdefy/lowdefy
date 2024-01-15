@@ -31,6 +31,7 @@ async function runLowdefyBuild({ context, directory }) {
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
           LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
           LOWDEFY_LOG_LEVEL: context.options.logLevel,
+          LOWDEFY_LICENSE_ENTITLEMENTS: JSON.stringify(context.license.entitlements),
         },
       },
     });

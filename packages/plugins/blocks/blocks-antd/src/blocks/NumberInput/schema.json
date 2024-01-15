@@ -151,9 +151,17 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when number input loses focus."
+      },
       "onChange": {
         "type": "array",
-        "description": "Trigger actions when number is changed."
+        "description": "Trigger action when number input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when number input gets focus."
       },
       "onPressEnter": {
         "type": "array",

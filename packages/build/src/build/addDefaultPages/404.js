@@ -33,7 +33,6 @@ export default {
           type: 'Button',
           properties: {
             title: 'Go to home page',
-            type: 'Link',
           },
           events: {
             onClick: [

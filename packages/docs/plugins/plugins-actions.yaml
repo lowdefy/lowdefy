@@ -24,7 +24,7 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Actions are functions that are triggered by events in a Lowdefy app. Actions can be `async` functions. The response returned by the action can be read using the `_actions` operator. If a promise is returned, the promise will be awaited before the next action is run.
+            Actions are functions that are triggered by [events](https://docs.lowdefy.com/events-and-actions) in a Lowdefy app. Actions can be `async` functions. The response returned by the action can be read using the `_actions` operator. If a promise is returned, the promise will be awaited before the next action is run.
 
             The Lowdefy engine provides a context object to the action with the following parameters:
 
@@ -84,6 +84,7 @@ _ref:
 
             ###### An action that shows the user confetti using the js-confetti package:
             ```js
+            // Confetti.js
             import JSConfetti from 'js-confetti';
 
             async function Confetti({ params }) {
@@ -104,5 +105,7 @@ _ref:
           vars:
             previous_page_title: Developing Plugins
             previous_page_id: plugins-dev
-            next_page_title: Blocks
-            next_page_id: plugins-blocks
+            # next_page_title: Blocks
+            # next_page_id: plugins-blocks
+            next_page_title: Connections # while blocks is in progress
+            next_page_id: plugins-connections

@@ -151,9 +151,17 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when text input loses focus."
+      },
       "onChange": {
         "type": "array",
         "description": "Trigger action when text input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when text input gets focus."
       },
       "onPressEnter": {
         "type": "array",

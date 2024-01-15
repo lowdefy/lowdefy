@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { blockDefaultProps } from '@lowdefy/block-utils';
+import React, { useState, useEffect } from 'react';
+import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 import { Tabs } from 'antd';
 
 const getTabs = ({ content, properties }) => {
@@ -29,27 +29,33 @@ const getTabs = ({ content, properties }) => {
   return tabs.filter((tab) => tab.key !== properties.extraAreaKey);
 };
 
-const getAdditionalProps = ({ content, properties }) => {
+const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => {
+  const tabs = getTabs({ content, properties });
   const additionalProps = {};
-  if (properties.activeKey) {
-    additionalProps.activeKey = properties.activeKey;
-  }
   if (properties.extraAreaKey) {
     additionalProps.tabBarExtraContent =
       content[properties.extraAreaKey] && content[properties.extraAreaKey]();
   }
-  return additionalProps;
-};
 
-const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, properties }) => {
-  const tabs = getTabs({ content, properties });
-  const additionalProps = getAdditionalProps({ content, properties });
+  const [key, setKey] = useState(properties.defaultActiveKey ?? tabs[0].key);
+  useEffect(() => {
+    methods.registerMethod('setActiveKey', ({ activeKey }) => {
+      if (activeKey !== key) {
+        setKey(activeKey);
+        methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+      }
+    });
+  });
+
   return (
     <Tabs
+      activeKey={key}
       animated={properties.animated !== undefined ? properties.animated : true}
-      defaultActiveKey={properties.defaultActiveKey ?? tabs[0].key}
       id={blockId}
-      onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
+      onChange={(activeKey) => {
+        setKey(activeKey);
+        methods.triggerEvent({ name: 'onChange', event: { activeKey } });
+      }}
       size={properties.size ?? 'default'}
       tabBarStyle={methods.makeCssClass(properties.tabBarStyle, true)}
       tabPosition={properties.tabPosition ?? 'top'}
@@ -57,7 +63,9 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
       onTabScroll={({ direction }) =>
         methods.triggerEvent({ name: 'onTabScroll', event: { direction } })
       }
-      onTabClick={(key) => methods.triggerEvent({ name: 'onTabClick', event: { key } })}
+      onTabClick={(key) => {
+        methods.triggerEvent({ name: 'onTabClick', event: { key } });
+      }}
       items={tabs.map((tab) => ({
         id: `${blockId}_${tab.key}`,
         key: tab.key,
@@ -65,7 +73,7 @@ const TabsBlock = ({ blockId, components: { Icon }, events, content, methods, pr
         label: (
           <span className={methods.makeCssClass(tab.titleStyle)}>
             {tab.icon && <Icon blockId={`${blockId}_icon`} events={events} properties={tab.icon} />}
-            {tab.title ?? tab.key}
+            {tab.title ? renderHtml({ html: tab.title, methods }) : tab.key}
           </span>
         ),
         children: content[tab.key] && content[tab.key](),

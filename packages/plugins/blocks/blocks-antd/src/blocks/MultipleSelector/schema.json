@@ -261,6 +261,18 @@
         "type": "array",
         "description": "Trigger actions when selection is changed."
       },
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when selector loses focus."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when selector gets focus."
+      },
+      "onClear": {
+        "type": "array",
+        "description": "Trigger action when selector gets cleared."
+      },
       "onSearch": {
         "type": "array",
         "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."

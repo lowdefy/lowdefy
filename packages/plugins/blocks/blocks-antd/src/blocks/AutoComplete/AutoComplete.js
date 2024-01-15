@@ -62,6 +62,15 @@ const AutoCompleteInput = ({
               methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange' });
             }}
+            onFocus={() => {
+              methods.triggerEvent({ name: 'onFocus' });
+            }}
+            onBlur={() => {
+              methods.triggerEvent({ name: 'onBlur' });
+            }}
+            onClear={() => {
+              methods.triggerEvent({ name: 'onClear' });
+            }}
             onSearch={(newVal) => {
               methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
             }}

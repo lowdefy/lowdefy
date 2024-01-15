@@ -1,29 +1,44 @@
 name: Release
 on:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build_and_publish:
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    environment: publish
+    if: github.repository == 'lowdefy/lowdefy'
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - name: pnpm install
-        run: pnpm install --frozen-lockfile
-      - name: pnpm build
-        run: pnpm build
-      # --no-verify-access to use automation tokens https://github.com/lerna/lerna/issues/2788
-      # --ignore-scripts to avoid scripts that could read npm token
-      # --yes to autoconfirm in ci
-      # --pre-dist-tag do not tag prereleases as latest
-      - name: publish to npm
-        run: pnpm lerna:publish --ignore-scripts --yes --no-verify-access --pre-dist-tag rc
+          node-version: 18.x
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
