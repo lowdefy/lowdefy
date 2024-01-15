@@ -44,7 +44,7 @@ const textStyle = {
 
 const checkEntitlement = async ({ setShowBranding }) => {
   const license = await (await fetch('/api/license')).json();
-  setShowBranding(!license.entitlements.includes['NO_BRANDING']);
+  setShowBranding(!license.entitlements.includes('NO_BRANDING'));
 };
 
 const BrandTag = () => {
