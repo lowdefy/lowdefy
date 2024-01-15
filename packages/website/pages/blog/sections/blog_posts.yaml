@@ -69,7 +69,7 @@ blocks:
             properties:
               html: |
                 <h4>Lowdefy V4 Launch</h4>
-                <p>Introducing Lowdefy v4: The Easiest Config Webstack built on top of Next.js. We're excited to announce Lowdefy v4.</p>
+                <p>Introducing Lowdefy V4: The Easiest Config Webstack built on top of Next.js. We're excited to announce Lowdefy V4.</p>
           - id: author_block
             type: Box
             layout:
