@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: terms_and_conditions_box
+id: terms_section_box
 type: Box
 style:
   maxWidth: 800px
@@ -20,18 +20,18 @@ style:
 layout:
   contentJustify: center
 blocks:
-  - id: terms_and_conditions_header
+  - id: terms_header
     type: Html
     properties:
       html: |
-        <h1> Terms & Conditions </h1>
-  - id: terms_and_conditions
+        <h1> Terms </h1>
+  - id: terms_section
     type: Markdown
     properties:
       content: |
         PLEASE READ THIS LOWDEFY SUBSCRIPTION AGREEMENT (“AGREEMENT”) CAREFULLY BEFORE USING THE SERVICES OFFERED BY LOWDEFY. (“LOWDEFY”).  BY MUTUALLY EXECUTING OR ACCEPTING ONE OR MORE ORDERS WITH LOWDEFY WHICH REFERENCE THIS AGREEMENT (EACH, AN “ORDER FORM”), YOU AND THE ENTITY YOU REPRESENT (“CUSTOMER”) AGREE TO BE BOUND BY THIS AGREEMENT (TOGETHER WITH ALL ORDER FORMS) TO THE EXCLUSION OF ALL OTHER TERMS.  IN ADDITION, ANY ONLINE ORDER FORM WHICH YOU SUBMIT VIA LOWDEFY’S STANDARD ONLINE PROCESS AND WHICH IS ACCEPTED BY LOWDEFY SHALL BE DEEMED TO BE MUTUALLY EXECUTED.  IF THE TERMS OF THIS AGREEMENT ARE CONSIDERED AN OFFER, ACCEPTANCE IS EXPRESSLY LIMITED TO SUCH TERMS.  CUSTOMER AGREES THAT IT HAS READ AND AGREES TO BE BOUND BY THE TERMS AND CONDITIONS OF THIS AGREEMENT, AND YOU REPRESENT THAT YOU ARE AUTHORIZED TO BIND CUSTOMER.
 
-        LOWDEFY reserves the right to change, modify or remove portions of this AGREEMENT at any time.  LOWDEFY will provide you with 75 days’ notice prior to making any material changes by posting a notice on LOWDEFY’S website, by sending you an email and/or by some other means. The most current version of the Standard Contract will be posted at https://www.lowdefy.com/terms-and-conditions.
+        LOWDEFY reserves the right to change, modify or remove portions of this AGREEMENT at any time.  LOWDEFY will provide you with 75 days’ notice prior to making any material changes by posting a notice on LOWDEFY’S website, by sending you an email and/or by some other means. The most current version of the Standard Contract will be posted at https://www.lowdefy.com/terms.
 
         ### 1. DEFINITIONS.
 

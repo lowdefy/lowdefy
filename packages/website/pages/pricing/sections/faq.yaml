@@ -15,7 +15,7 @@
 id: faq_box
 type: Box
 style:
-  maxWidth: 1200px
+  maxWidth: 800px
   margin: 60px auto
 blocks:
   - id: faq_title

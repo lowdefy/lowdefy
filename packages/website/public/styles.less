@@ -1,17 +1,19 @@
 @font-face {
-  font-family: "Inter";
+  font-family: 'Inter';
   src: url('fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
 }
 
-@primary-color: #1990FF;
+@primary-color: #1990ff;
 @border-radius-base: 20px;
+:root {
+  --primary-color: @primary-color;
+}
 
+@min768: ~'(min-width: 768px)';
+@min992: ~'(min-width: 992px)';
 
-
-@min768: ~"(min-width: 768px)";
-@min992: ~"(min-width: 992px)";
-
-html, body {
+html,
+body {
   max-width: 100%;
   overflow-x: hidden;
 }
@@ -32,7 +34,11 @@ p {
   margin-bottom: 1rem;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   // margin: 3rem 0 1.38rem;
   font-family: Inter, sans-serif;
   font-weight: 800;
@@ -62,7 +68,10 @@ h5 {
   font-weight: 500;
 }
 
-small, .text_small {font-size: 0.8rem;}
+small,
+.text_small {
+  font-size: 0.8rem;
+}
 
 ul.checks {
   list-style: none;
@@ -71,18 +80,19 @@ ul.checks {
 
 ul.checks li:before {
   content: '✓';
-  color: #1990FF;
+  color: #1990ff;
   padding-right: 1rem;
 }
 
 hr {
   height: 2px;
-  width:30%;
-  background-color:#1990FF;
+  width: 30%;
+  background-color: #1990ff;
   border-width: 0;
 }
 
-th, td {
+th,
+td {
   padding: 5px 8px;
   vertical-align: top;
 }
@@ -105,8 +115,8 @@ th, td {
 }
 
 .gradient-text {
-  background-color: #1990FF;
-  background-image: linear-gradient(45deg, #1990FF, #65E1DA);
+  background-color: #1990ff;
+  background-image: linear-gradient(45deg, #1990ff, #65e1da);
   background-size: 100%;
   -webkit-background-clip: text;
   -moz-background-clip: text;
@@ -115,20 +125,20 @@ th, td {
 }
 
 .gray-text {
-  color: #A3A3A3;
+  color: #a3a3a3;
 }
 
 .light-blob {
   position: absolute;
   width: 100%;
   height: 800px;
-  background: #65E1DA;
+  background: #65e1da;
   filter: blur(100px);
   mix-blend-mode: overlay;
   transform: translate3d(0, 0, 0);
   z-index: 3;
   border-radius: 100%;
-  opacity: .6;
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -183,7 +193,7 @@ th, td {
     margin-right: -10px;
     border-radius: 40px 0px 0px 40px;
     padding: 20px 40px 20px 60px;
-    background-color: rgba(256,256,256,0.5);
+    background-color: rgba(256, 256, 256, 0.5);
     height: 650px;
   }
 
@@ -194,7 +204,7 @@ th, td {
     margin-left: -10px;
     border-radius: 0px 40px 40px 0px;
     padding: 20px 40px 20px 60px;
-    background-color: rgba(256,256,256,0.5);
+    background-color: rgba(256, 256, 256, 0.5);
     height: 650px;
   }
 
@@ -202,7 +212,7 @@ th, td {
     max-width: 600px;
     margin-bottom: 20px;
     order: 1;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     border-radius: 40px;
     padding: 50px 80px 80px 80px;
     height: 700px;
@@ -215,7 +225,7 @@ th, td {
     padding: 30px 10px 10px 40px;
     margin-right: 0px;
     border-radius: 40px 0px 0px 40px;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     max-width: 360px;
     order: 1;
     height: 500px;
@@ -228,7 +238,7 @@ th, td {
     padding: 30px 10px 10px 40px;
     margin-left: 0px;
     border-radius: 0px 40px 40px 0px;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     max-width: 360px;
     order: 2;
     height: 500px;
@@ -240,7 +250,7 @@ th, td {
   #bl-business_tier {
     border-radius: 40px;
     padding: 30px 40px 10px 40px;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     height: 600px;
     max-width: 600px;
     margin-bottom: 20px;
@@ -285,7 +295,10 @@ th, td {
     padding-right: 20px;
   }
 
-  #bl-pricing, #contact-us, #bl-terms-and-conditions {
+  #bl-pricing,
+  #contact-us,
+  #bl-terms,
+  #bl-blog {
     padding-left: 5px;
     padding-right: 5px;
   }
@@ -293,10 +306,11 @@ th, td {
 
 // Pricing styling for small screens
 @media screen and (max-width: 768px) {
-  #bl-free_tier, #bl-enterprise_tier {
+  #bl-free_tier,
+  #bl-enterprise_tier {
     border-radius: 40px;
     padding: 25px 10px 10px 40px;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     height: 500px;
     max-width: 360px;
     margin-bottom: 20px;
@@ -308,7 +322,7 @@ th, td {
   #bl-business_tier {
     border-radius: 40px;
     padding: 25px 10px 10px 40px;
-    background-color: rgba(256,256,256,1);
+    background-color: rgba(256, 256, 256, 1);
     height: 600px;
     max-width: 360px;
     margin-bottom: 20px;

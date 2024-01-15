@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: terms-and-conditions
+id: terms
 type: Box
 properties:
-  title: Lowdefy - Terms And Conditions
+  title: Lowdefy - Terms
 blocks:
   - _ref: shared/header/header.yaml
-  - _ref: pages/terms-and-conditions/sections/terms_and_conditions.yaml
+  - _ref: pages/terms/sections/terms_section.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml
