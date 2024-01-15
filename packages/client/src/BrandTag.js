@@ -53,7 +53,7 @@ const BrandTag = () => {
     checkEntitlement({ setShowBranding });
   }, []);
 
-  if (showBranding) {
+  if (!showBranding) {
     return;
   }
   return (
