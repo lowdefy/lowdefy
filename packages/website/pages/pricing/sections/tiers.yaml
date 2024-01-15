@@ -39,25 +39,23 @@ blocks:
           height: 370px
         properties:
           html: |
+            <p>All Business features available in development</p>
             <ul>
-              <li>All Business features available in development</li>
-              <li>Unlimited Apps & Users</li>
-              <li>Unlimited public pages & blocks</li>
-              <li>Unlimited Connections & Requests</li>
-              <li>Unlimited Connections & Requests</li>
-              <li>Custom Lowdefy Plugins from NPM or local</li>
-              <li>Custom templates using config references</li>
+              <li>Unlimited pages and requests</li>
+              <li>Custom Lowdefy plugins from npm or local</li>
+              <li>Custom app themes & branding</li>
+              <li>Mobile responsive by default</li>
+              <li>Readable config Git source control in your repos</li>
+              <li>Multiple deployment environments</li>
+              <li>Community Support</li>
             </ul>
 
-      # <li>Custom app themes & branding</li>
-      # <li>Mobile responsive by default</li>
-      # <li>Use Any Next.js Host (Vercel, Fly.io, Docker)</li>
-      # <li>Readable config Git source control in your repos</li>
-      # <li>Multiple deployment environments</li>
-      # <li>Environment variables</li>
-      # <li>Community Support</li>
-
       - _ref: pages/pricing/sections/cta_buttons/free.yaml
+
+  # <li>Custom templates using config references</li>
+  # <li>Unlimited apps & users</li>
+  # <li>Unlimited public pages & Blocks</li>
+  # <li>Unlimited Connections & Requests</li>
 
   - id: business_tier
     type: Box
@@ -75,7 +73,7 @@ blocks:
           html:
             _nunjucks:
               template: |
-                <b>${{ rates.per_user_per_hour }} per hour per user, capped at ${{ rates.flat }} per user per month</b>
+                <b>${{ rates.per_user_per_hour }} per hour per user<br/><small>capped at ${{ rates.flat }} per user per month</small></b>
               on:
                 rates:
                   _ref:
@@ -88,15 +86,12 @@ blocks:
           height: 370px
         properties:
           html: |
-            <p>Everything in the Free plan plus</p>
+            <p>Everything in the Free plan, plus</p>
             <ul>
               <li>Remove “Built with Lowdefy” branding</li>
-              <li>White-label apps</li>
-              <li>All Auth.js provides and adapters including OpenID Connect and custom SSO</li>
+              <li>All Auth.js providers and adapters including OpenID Connect and custom SSO</li>
               <li>Role based & granular access control (RBAC)</li>
               <li>Invite only apps</li>
-              <li>Audit logs</li>
-              <li>Log drains (coming soon)</li>
               <li>Embed authenticated apps including JWT auth</li>
               <li>Priority Support</li>
             </ul>
@@ -123,14 +118,11 @@ blocks:
           height: 370px
         properties:
           html: |
-            <p>Volume based discounts</p>
-            <p>Everything in the Business plan plus</p>
+            <p>Everything in the Business plan, plus</p>
             <ul>
               <li>Air-gapped deployment</li>
               <li>Dedicated support</li>
-              <li>Access to a Lowdefy Engineer, Build first app with our engineers</li>
-              <li>Access to a Lowdefy Engineer</li>
-              <li>Access to a Lowdefy Engineer</li>
-              <li>Access to a Lowdefy Engineer</li>
+              <li>Volume based discounts</li>
+              <li>Work with Lowdefy engineers to build your first app</li>
             </ul>
       - _ref: pages/pricing/sections/cta_buttons/enterprise.yaml

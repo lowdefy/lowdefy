@@ -87,8 +87,8 @@ blocks:
                       template: |
                         {% raw %}
                         <h2> Business </h2>
-                        <p> ${{ rates.per_user_per_hour }} per use* </p>
-                        <small> *capped at ${{ rates.flat }} per user per month </small>
+                        <p> ${{ rates.per_user_per_hour }} per user per hour<br/>
+                        <small> capped at ${{ rates.flat }} per user per month </small> </p>
                         {% endraw %}
                       on:
                         rates:
@@ -103,7 +103,6 @@ blocks:
                   html: |
                     <h2> Enterprise </h2>
                     <p> Custom Pricing </p>
-                    <small> Volume based discount </small>
 
       - id: cta_buttons
         type: Box
