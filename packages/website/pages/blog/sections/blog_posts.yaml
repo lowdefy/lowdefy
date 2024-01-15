@@ -32,7 +32,7 @@ blocks:
     style:
       textAlign: center
     properties:
-      html: <p>Read more about the latest Lowdefy updates, features, examples and news<on how businesses and developers are rapidly building apps with Lowdefy.</p>
+      html: <p>Read more about the latest Lowdefy updates, features, examples and news on how businesses and developers are building apps with Lowdefy.</p>
   - id: lowdefy_v4_launch_card
     type: Card
     layout:
