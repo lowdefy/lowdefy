@@ -16,6 +16,8 @@ id: lowdefy-v4-launch
 type: Box
 properties:
   title: Lowdefy V4 Launch
+style:
+  padding: 0px 8px
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/blog/sections/lowdefy_v4_launch.yaml
