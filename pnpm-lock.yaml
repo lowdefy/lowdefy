@@ -538,23 +538,23 @@ importers:
   packages/plugins/blocks/blocks-aggrid:
     dependencies:
       '@ag-grid-community/client-side-row-model':
-        specifier: 29.3.5
-        version: 29.3.5
+        specifier: 30.2.0
+        version: 30.2.0
       '@ag-grid-community/core':
-        specifier: 29.3.5
-        version: 29.3.5
+        specifier: 30.2.0
+        version: 30.2.0
       '@ag-grid-community/csv-export':
-        specifier: 29.3.5
-        version: 29.3.5
+        specifier: 30.2.0
+        version: 30.2.0
       '@ag-grid-community/react':
-        specifier: 29.3.5
-        version: 29.3.5(@ag-grid-community/core@29.3.5)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 30.2.0
+        version: 30.2.0(@ag-grid-community/core@30.2.0)(react-dom@18.2.0)(react@18.2.0)
       '@ag-grid-community/styles':
-        specifier: 29.3.5
-        version: 29.3.5
+        specifier: 30.2.0
+        version: 30.2.0
       '@lowdefy/block-utils':
-        specifier: 4.0.0-rc.15
-        version: link:../../../utils/block-utils
+        specifier: 4.0.0-rc.12
+        version: 4.0.0-rc.12
       '@lowdefy/helpers':
         specifier: 4.0.0-rc.15
         version: link:../../../utils/helpers
@@ -2325,37 +2325,37 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /@ag-grid-community/client-side-row-model@29.3.5:
-    resolution: {integrity: sha512-+uA28LTAummyYdZbEDys+cTECPn1Po1f6vX9QZOK9gpZdNzSpGjd3Vc1SKR/2brR6XMGlPeSRsX+FPZmG9uvHQ==}
+  /@ag-grid-community/client-side-row-model@30.2.0:
+    resolution: {integrity: sha512-XCe7V/+qhmpldbP++XGbWvenkxfVY/YJ+/Y64e/ugNi8piQN8DBNSSoSn6cVVGmuYEdB2zACgKv60mg/tLngdQ==}
     dependencies:
-      '@ag-grid-community/core': 29.3.5
+      '@ag-grid-community/core': 30.2.0
     dev: false
 
-  /@ag-grid-community/core@29.3.5:
-    resolution: {integrity: sha512-r86bOCscnKVtaYyKqlN2UCtfbjf4UcmxHfVuXzJ94iN8Jy3iiQVrbQnbNArnjR589Bt/1VR/m+SdAMsOLcdpag==}
+  /@ag-grid-community/core@30.2.0:
+    resolution: {integrity: sha512-BdRavyYxyl0rx3w4VKQlV9KHRR9TIJ9RFt4FIsWUxC+VDC+VEL64J1PzgJqXqgkM7Zmb+rYbluA2UPmRrQQJ9A==}
     dev: false
 
-  /@ag-grid-community/csv-export@29.3.5:
-    resolution: {integrity: sha512-8NOAmioHhapqvYdu1QjAzwQH5jihuOlaKk6FpF/8ECvLQePhoIK6rOyhcktOot4ZWo5f8q/4Ph5LGK3oFzdU9g==}
+  /@ag-grid-community/csv-export@30.2.0:
+    resolution: {integrity: sha512-BYhHCCTvHYelZovLCPimdUy4+Lu9OKf0cWBRjtypT4NoBlIRCL86tLovzUjqNifZw1PzaY2rN5DpMBLJ46B2vA==}
     dependencies:
-      '@ag-grid-community/core': 29.3.5
+      '@ag-grid-community/core': 30.2.0
     dev: false
 
-  /@ag-grid-community/react@29.3.5(@ag-grid-community/core@29.3.5)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-vetngHiWXptSsWLaXtmr89zaBKEIAUpl+P+QGup27oYiqjTtdZKAgT2lowZZOQ7dFxsjb1OxDOtmOZrZGxuMUw==}
+  /@ag-grid-community/react@30.2.0(@ag-grid-community/core@30.2.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-9xqqCdIAFfYV7pBeh1vikLomzT0NQ465SfOzdO7bt3ZZ099vdrrZIfvZ7KyJgbaOzAM99qXvRWHamnOJeZD4AA==}
     peerDependencies:
-      '@ag-grid-community/core': ~29.3.5
+      '@ag-grid-community/core': ~30.2.0
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@ag-grid-community/core': 29.3.5
+      '@ag-grid-community/core': 30.2.0
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@ag-grid-community/styles@29.3.5:
-    resolution: {integrity: sha512-Z1r6lKx0ds92SV5mX9ZsGFgiStktrRMrWGs92bz3rQN9uethsthIri4RfLaZYaZ03i3zw15peqJtmYEu+sGy/A==}
+  /@ag-grid-community/styles@30.2.0:
+    resolution: {integrity: sha512-ipI/weI0jgvhZI/PooNkKUJlJQ21uiyLKmzeQkSOTBPxSqpszvBm5BGkeaw+WmTc6dF/dF2yRVcFz8uTcwveLA==}
     dev: false
 
   /@algolia/autocomplete-core@1.9.3(@algolia/client-search@4.20.0)(algoliasearch@4.20.0)(search-insights@2.8.3):
@@ -4403,6 +4403,23 @@ packages:
 
   /@js-joda/core@5.5.3:
     resolution: {integrity: sha512-7dqNYwG8gCt4hfg5PKgM7xLEcgSBcx/UgC92OMnhMmvAnq11QzDFPrxUkNR/u5kn17WWLZ8beZ4A3Qrz4pZcmQ==}
+    dev: false
+
+  /@lowdefy/block-utils@4.0.0-rc.12:
+    resolution: {integrity: sha512-dsaxvOpmNNhbYaBAo6Oz3sbr9nVw/dTsaIMr9qNkYEt7KbWeyjtQ1Ug7uDa1ezIjLUXNk1t+2MVwUxnOwhtBTw==}
+    dependencies:
+      '@emotion/css': 11.11.2
+      '@lowdefy/helpers': 4.0.0-rc.12
+      dompurify: 3.0.6
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@lowdefy/helpers@4.0.0-rc.12:
+    resolution: {integrity: sha512-kFBTMRmjKKGG/Tc2UeZFleqlv1aKHTlRA7xH/9UZHNMhPg+IMs3YyBvlz5FpUQxTNSzlJdDbveaa5nUUrywJAA==}
+    dependencies:
+      lodash.merge: 4.6.2
+      query-string: 8.1.0
     dev: false
 
   /@manypkg/find-root@1.1.0:
@@ -7139,6 +7156,11 @@ packages:
       character-entities: 2.0.2
     dev: false
 
+  /decode-uri-component@0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+    engines: {node: '>=14.16'}
+    dev: false
+
   /decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
     engines: {node: '>=10'}
@@ -8303,6 +8325,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       to-regex-range: 5.0.1
+
+  /filter-obj@5.1.0:
+    resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
+    engines: {node: '>=14.16'}
+    dev: false
 
   /find-cache-dir@3.3.2:
     resolution: {integrity: sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==}
@@ -12146,6 +12173,15 @@ packages:
       side-channel: 1.0.4
     dev: false
 
+  /query-string@8.1.0:
+    resolution: {integrity: sha512-BFQeWxJOZxZGix7y+SByG3F36dA0AbTy9o6pSmKFcFz7DAj0re9Frkty3saBn3nHo3D0oZJ/+rx3r8H8r8Jbpw==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      decode-uri-component: 0.4.1
+      filter-obj: 5.1.0
+      split-on-first: 3.0.0
+    dev: false
+
   /querystring@0.2.0:
     resolution: {integrity: sha512-X/xY82scca2tau62i9mDyU9K+I+djTMUsvwf7xnUX5GLvVzgJybOJf4Y6o9Zx3oJK/LSXg5tTZBjwzqVPaPO2g==}
     engines: {node: '>=0.4.x'}
@@ -13511,6 +13547,11 @@ packages:
   /specificity@0.4.1:
     resolution: {integrity: sha512-1klA3Gi5PD1Wv9Q0wUoOQN1IWAuPu0D1U03ThXTr0cJ20+/iq2tHSDnK7Kk/0LXJ1ztUB2/1Os0wKmfyNgUQfg==}
     hasBin: true
+
+  /split-on-first@3.0.0:
+    resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /split2@4.2.0:
     resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
