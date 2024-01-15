@@ -116,7 +116,7 @@ blocks:
         <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
           <small style="color: #A3A3A3;"><b>DEVELOPERS</b></small>
           <li>
-            <a href="https://github.com/lowdefy/lowdefy" style='color: black'>
+            <a href="https://github.com/lowdefy" style='color: black'>
               Github
             </a>
           </li>
@@ -144,8 +144,8 @@ blocks:
             </a>
           </li>
           <li>
-            <a href="/terms-and-conditions" style='color: black'>
-              Terms & Conditions
+            <a href="/terms" style='color: black'>
+              Terms
             </a>
           </li>
           <li>
