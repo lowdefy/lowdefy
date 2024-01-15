@@ -14,29 +14,12 @@
 
 - section_id: plan
   rows:
-    - id: pricing
-      title: Pricing
-      tooltip: null
-      free: Free
-      business:
-        _build.string.concat:
-          - $
-          - _ref:
-              path: app_config.yaml
-              key: rates.per_user_per_hour
-          - ' per hour per user, capped at $'
-          - _ref:
-              path: app_config.yaml
-              key: rates.flat
-          - ' per user per month'
-      enterprise: Custom pricing, contact us
-
     - id: volume_based_discounts
       title: Volume based discounts
       tooltip: null
       free: false
       business: false
-      enterprise: Yes, contact us
+      enterprise: true
 
 - section_name: Users
   section_id: user
@@ -52,8 +35,8 @@
       title: Roles based access control
       tooltip: Authenticate pages and requests using custom roles.
       free: false
-      business: Any custom roles
-      enterprise: Any custom roles
+      business: true
+      enterprise: true
 
     - id: user_attributes
       title: User attributes
@@ -62,16 +45,30 @@
       business: true
       enterprise: true
 
+    - id: email_auth
+      title: Email passwordless authentication
+      tooltip: Support for email passwordless authentication, also know as "magic-links".
+      free: false
+      business: true
+      enterprise: true
+
+    - id: oauth
+      title: 60+  authentication providers
+      tooltip: More than 60 identity providers, including Microsoft Entra ID, Google, Github, Auth0 and Okta.
+      free: false
+      business: true
+      enterprise: true
+
     - id: email
-      title: Email, Google, Azure Active Directory, Github, Okta, Auth0, OpenID Connect and More
-      tooltip: All >50 Auth.js authentication providers are supported.
+      title: OpenID Connect
+      tooltip: Use any OpenID Connect compliant identity provider to authenticate your users
       free: false
       business: true
       enterprise: true
 
     - id: custom
-      title: Custom authentications adapters and providers
-      tooltip: Write a Auth.js adapter or provider Lowdefy plugin for any custom Auth requirements.
+      title: Custom authentication adapters and providers
+      tooltip: Write a Auth.js adapter or provider Lowdefy plugin for any custom requirements.
       free: false
       business: true
       enterprise: true
@@ -115,7 +112,7 @@
       enterprise: true
 
     - id: plugins
-      title: Install plugins from NPM
+      title: Install plugins from npm
       tooltip: Plugins are installed as part of your app’s Next.js build and are simply NPM packages which can have their own package dependencies.
       free: true
       business: true
@@ -123,7 +120,7 @@
 
     - id: custom_javascript
       title: Include custom javascript in app header
-      tooltip: Include script tags into your app html head. Useful for including scripts like google analytics, intercom, etc.
+      tooltip: Include script tags into your app html head. Useful for including scripts like Google Analytics, Intercom, etc.
       free: true
       business: true
       enterprise: true
@@ -222,9 +219,9 @@
       business: true
       enterprise: true
 
-    - id: integration
-      title: Continues Integration
-      tooltip: Deploy using any continues integrations pipelines such as Github Actions.
+    - id: continuous_integration
+      title: Continuous Integration
+      tooltip: Deploy using any continuous integration pipeline such as Github Actions.
       free: true
       business: true
       enterprise: true
@@ -238,7 +235,7 @@
 
     - id: air_gapped
       title: Air-gapped deployment
-      tooltip: Get a Lowdefy annual usage key.
+      tooltip: Get an offline Lowdefy license key.
       free: false
       business: false
       enterprise: true
@@ -246,19 +243,19 @@
 - section_name: Support
   section_id: support
   rows:
-    - id: audit_log
-      title: Audit log drains
-      tooltip: Coming soon.
-      free: true
-      business: true
-      enterprise: true
+    # - id: audit_log
+    #   title: Audit log drains
+    #   tooltip: Coming soon.
+    #   free: true
+    #   business: true
+    #   enterprise: true
 
-    - id: debug
-      title: Debug level log drains
-      tooltip: Coming soon.
-      free: false
-      business: true
-      enterprise: true
+    # - id: debug
+    #   title: Debug level log drains
+    #   tooltip: Coming soon.
+    #   free: false
+    #   business: true
+    #   enterprise: true
 
     - id: community_support
       title: Community Support
@@ -271,9 +268,10 @@
       title: Priority Support
       tooltip: null
       free: false
-      business: false
+      business: true
       enterprise: true
 
+    # Maybe rename this - dedicated developers/engineers,
     - id: dedicated_support
       title: Dedicated Support
       tooltip: Access to a Lowdefy Engineer. Build first app with the help of our engineers.
