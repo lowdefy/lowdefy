@@ -18,6 +18,7 @@ properties:
   title: Lowdefy - Pricing
 style:
   backgroundColor: '#F7F7F7'
+  padding: 0px 8px
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/pricing/sections/pay_for_what_you_use.yaml

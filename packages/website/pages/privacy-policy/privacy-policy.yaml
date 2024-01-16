@@ -16,6 +16,8 @@ id: privacy-policy
 type: Box
 properties:
   title: Lowdefy - Privacy Policy
+style:
+  padding: 0px 8px
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/privacy-policy/sections/privacy_policy.yaml

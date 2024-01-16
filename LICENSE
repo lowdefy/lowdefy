@@ -1,8 +1,11 @@
 Portions of this software are licensed as follows:
 
-The following packages are licensed under the Business Source License 1.1 (BUSL-1.1):
+The following packages are licensed under the Business Source License 1.1 (BUSL-1.1) as well as the Lowdefy Commercial License:
+
 - @lowdefy/server-enterprise (/packages/servers/server-enterprise)
 
 All other packages are licensed under the Apache-2.0 license.
+
+All relevant licenses are located in the licenses directory.
 
 All third party components incorporated into the software are licensed under the original license provided by the owner of the applicable component.

@@ -22,7 +22,7 @@ blocks:
   - _ref: shared/customers.yaml
   - _ref: pages/home/sections/build_uis.yaml
   - _ref: pages/home/sections/connect.yaml
-  - _ref: pages/home/sections/open_source.yaml
+  - _ref: pages/home/sections/source_available.yaml
   - _ref: pages/home/sections/enterprise_features.yaml
   - _ref: pages/home/sections/plugins.yaml
   - _ref: pages/home/sections/testimonials.yaml
