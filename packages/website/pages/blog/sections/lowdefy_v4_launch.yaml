@@ -99,11 +99,11 @@ blocks:
 
         ### Monetising The Value We Create
 
-        With that said, for us to build Lowdefy to it's full potential, it needs to grow beyond the needs of us as an app development agency. With the growth of the Lowdefy community, more than 25 000 apps have been built with Lowdefy. Lowdefy is becoming the tool of choice for developers who do not want to invest time learning the complex details of javascript and web ecosystem, or for larger teams looking for an easy, secure and scalable way to publish maintainable business web apps. 
-        
-        Instead of building services like hosting, that other companies do really well, we have decided we should remain focused on the actual value Lowdefy provides. By charging for this, we also incentivise ourselves to build a better platform. Starting with Lowdefy **V4**, we are introducing a [capped usage based pricing](https://lowdefy.com/pricing) to Lowdefy apps that include authentication. 
+        With that said, for us to build Lowdefy to it's full potential, it needs to grow beyond the needs of us as an app development agency. With the growth of the Lowdefy community, more than 25 000 apps have been built with Lowdefy. Lowdefy is becoming the tool of choice for developers who do not want to invest time learning the complex details of javascript and web ecosystem, or for larger teams looking for an easy, secure and scalable way to publish maintainable business web apps.
 
-        We believe this pricing model to best fit Lowdefy apps because: 
+        Instead of building services like hosting, that other companies do really well, we have decided we should remain focused on the actual value Lowdefy provides. By charging for this, we also incentivise ourselves to build a better platform. Starting with Lowdefy **V4**, we are introducing a [capped usage based pricing](https://lowdefy.com/pricing) to Lowdefy apps that include authentication.
+
+        We believe this pricing model to best fit Lowdefy apps because:
 
         - Predicting the maximum cost is easy as with popular user-based pricing models.
         - Infrequent app users pay very little, thus allowing for the large infrequent user base use-case.
@@ -112,12 +112,12 @@ blocks:
 
         Ultimately we want our pricing model to align with the value Lowdefy creates, while being open to most use cases to promote Lowdefy adoption. Please see this [Github Community Discussion](https://github.com/lowdefy/lowdefy/discussions/1668) for more details regarding our license change and pricing decision.
 
-       ## Licensing Changes
+        ## Licensing Changes
 
-       Given the new pricing model we have changed how we license Lowdefy. Lowdefy is now available under three different software licenses. The majority of the project will remain licensed under the Apache License Version 2.0. The paid components of the project can be used under the [Lowdefy Commercial License](https://lowdefy.com/terms), which can be "aquired" by signing up for an account at [cloud.lowdefy.com](https://cloud.lowdefy.com). The paid components are also licensed under the Business Source License Version 1.1, a source available license that allows for non-production use and that converts to the Apache License Version 2.0 after 4 years. 
-       
-       For more information see [the license page](https://docs.lowdefy.com/licenses) in the Lowdefy docs.
-       
+        Given the new pricing model we have changed how we license Lowdefy. Lowdefy is now available under three different software licenses. The majority of the project will remain licensed under the Apache License Version 2.0. The paid components of the project can be used under the [Lowdefy Commercial License](https://lowdefy.com/terms), which can be "acquired" by signing up for an account at [cloud.lowdefy.com](https://cloud.lowdefy.com). The paid components are also licensed under the Business Source License Version 1.1, a source available license that allows for non-production use and that converts to the Apache License Version 2.0 after 4 years.
+
+        For more information see [the license page](https://docs.lowdefy.com/licenses) in the Lowdefy docs.
+
         ## Getting Started with Lowdefy V4
 
         To start building applications with Lowdefy **V4**, check out our [documentation](https://docs.lowdefy.com) and explore the [plugins project example](https://github.com/lowdefy/lowdefy-example-plugins) for a pnpm monorepo / workspaces setup.
