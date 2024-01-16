@@ -125,7 +125,7 @@ blocks:
         layout:
           contentGutter: 16
           contentDirection: column
-          flex: 0 0 400
+          flex: 0 0 380px
         style:
           padding: 2rem
         blocks:
