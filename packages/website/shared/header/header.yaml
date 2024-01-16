@@ -1,3 +1,17 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 id: affix_header
 type: Affix
 style:
@@ -10,7 +24,7 @@ blocks:
       style:
         _if:
           test:
-            _ref: shared/mobile_md.yaml
+            _ref: shared/mobile_lg.yaml
           then:
             padding: 4px 16px
             background: rgba(255,255,255,0.3)
@@ -26,13 +40,19 @@ blocks:
         properties:
           src: /logo-light-theme.png
           width: 156
+        events:
+          onClick:
+            - id: link_to_home
+              type: Link
+              params:
+                pageId: home
       - id: desktop_menu
         type: Box
         layout:
           flex: 1 1 auto
         visible:
           _not:
-            _ref: shared/mobile_md.yaml
+            _ref: shared/mobile_lg.yaml
         blocks:
           - _ref: shared/header/menu.yaml
           - _ref: shared/header/cta_buttons.yaml
@@ -41,7 +61,7 @@ blocks:
         layout:
           flex: 1 1 auto
         visible:
-          _ref: shared/mobile_md.yaml
+          _ref: shared/mobile_lg.yaml
         blocks:
           - id: spacer
             type: Box
@@ -65,7 +85,7 @@ blocks:
           - id: mobile_menu_drawer
             type: Drawer
             properties:
-              width: 400
+              width: 300
             blocks:
               - _ref: shared/header/menu.yaml
               - _ref: shared/header/cta_buttons.yaml

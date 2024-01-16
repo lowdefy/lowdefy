@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -53,6 +53,17 @@ test('invalid databaseUri', async () => {
   );
 });
 
+test('invalid databaseUri', async () => {
+  const connection = {
+    databaseUri: {},
+    databaseName: 'test',
+    collection: 'getCollection',
+  };
+  await expect(() => getCollection({ connection })).rejects.toThrow(
+    'Database URI must be a string'
+  );
+});
+
 test('invalid databaseName', async () => {
   const connection = {
     databaseUri,
@@ -71,6 +82,6 @@ test('invalid collection', async () => {
     collection: {},
   };
   await expect(() => getCollection({ connection })).rejects.toThrow(
-    'Collection name must be a String'
+    'Collection name must be a string'
   );
 });

@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Users Introduction
-            previous_page_id: users-introduction
-            next_page_title: Login and Logout
-            next_page_id: login-and-logout
+            previous_page_title: Login and Logout
+            previous_page_id: login-and-logout
+            next_page_title: Next Auth Providers
+            next_page_id: next-auth-providers

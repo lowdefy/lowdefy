@@ -1,0 +1,166 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: pricing_calculator_title
+  type: Html
+  style:
+    marginBottom: 20px
+  properties:
+    html: |
+      <h2>Pricing Calculator</h2>
+- id: divider
+  type: Divider
+  properties:
+    title: Pro Rata Billing
+- id: monthly_users_lt_30
+  type: Slider
+  properties:
+    title: Number of users using less than 30 hours per month
+    min: -0.05
+    max: 3
+    dots: false
+    step: 0.05
+    tooltip:
+      formatter:
+        _function:
+          __string.concat:
+            - ''
+            - __if:
+                test:
+                  __gte:
+                    - __args: 0
+                    - 0
+                then:
+                  __math.ceil:
+                    __math.pow:
+                      - 10
+                      - __args: 0
+                else: 0
+            - ' users'
+    marks:
+      -0.05:
+        label: '0'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      1:
+        label: '10'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      2:
+        label: '100'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      3:
+        label: '1000'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+  events:
+    onChange:
+      - _ref: pages/pricing/sections/pricing_calculator/set_prices.yaml
+- id: session_durations
+  type: Slider
+  properties:
+    title: Average hours per user per month for pro rata users
+    min: 0
+    max: 30
+    dots: false
+    step: 1
+    tooltip:
+      formatter:
+        _function:
+          __string.concat:
+            - ''
+            - __args: 0
+            - ' hours'
+    marks:
+      0:
+        label: '0'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      10:
+        label: '10'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      20:
+        label: '20'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      30:
+        label: '30'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+  events:
+    onChange:
+      - _ref: pages/pricing/sections/pricing_calculator/set_prices.yaml
+- id: divider
+  type: Divider
+  properties:
+    title: Flat Rate Billing
+- id: monthly_users_gt_30
+  type: Slider
+  properties:
+    title: Number of users using more than 30 hours per month
+    min: -0.05
+    max: 3
+    dots: false
+    step: 0.01
+    tooltip:
+      formatter:
+        _function:
+          __string.concat:
+            - ''
+            - __if:
+                test:
+                  __gte:
+                    - __args: 0
+                    - 0
+                then:
+                  __math.ceil:
+                    __math.pow:
+                      - 10
+                      - __args: 0
+                else: 0
+            - ' users'
+    marks:
+      -0.05:
+        label: '0'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      1:
+        label: '10'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      2:
+        label: '100'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+      3:
+        label: '1000'
+        style:
+          color: '#1965F3'
+          fontWeight: bold
+  events:
+    onChange:
+      - _ref: pages/pricing/sections/pricing_calculator/set_prices.yaml

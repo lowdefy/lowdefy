@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import crypto from 'crypto';
 
 function getCacheKey(fileData, filePath, options) {
   const optionsString = typeof options === 'string' ? options : JSON.stringify(options);
-  return crypto.createHash('sha1').update(fileData).update(optionsString).digest('hex');
+  return crypto.createHash('sha1').update(fileData).update(optionsString).digest('base64');
 }
 
 function process(sourceText) {

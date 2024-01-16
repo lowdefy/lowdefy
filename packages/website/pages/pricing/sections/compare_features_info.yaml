@@ -1,0 +1,279 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- section_id: plan
+  rows:
+    - id: volume_based_discounts
+      title: Volume based discounts
+      tooltip: null
+      free: false
+      business: false
+      enterprise: true
+
+- section_name: Users
+  section_id: user
+  rows:
+    - id: users
+      title: Users
+      tooltip: null
+      free: false
+      business: Unlimited
+      enterprise: Unlimited
+
+    - id: role_base
+      title: Roles based access control
+      tooltip: Authenticate pages and requests using custom roles.
+      free: false
+      business: true
+      enterprise: true
+
+    - id: user_attributes
+      title: User attributes
+      tooltip: Full control over in-app user objects to map additional user properties or attributes.
+      free: false
+      business: true
+      enterprise: true
+
+    - id: email_auth
+      title: Email passwordless authentication
+      tooltip: Support for email passwordless authentication, also know as "magic-links".
+      free: false
+      business: true
+      enterprise: true
+
+    - id: oauth
+      title: 60+  authentication providers
+      tooltip: More than 60 identity providers, including Microsoft Entra ID, Google, Github, Auth0 and Okta.
+      free: false
+      business: true
+      enterprise: true
+
+    - id: email
+      title: OpenID Connect
+      tooltip: Use any OpenID Connect compliant identity provider to authenticate your users
+      free: false
+      business: true
+      enterprise: true
+
+    - id: custom
+      title: Custom authentication adapters and providers
+      tooltip: Write a Auth.js adapter or provider Lowdefy plugin for any custom requirements.
+      free: false
+      business: true
+      enterprise: true
+
+- section_name: Apps
+  section_id: apps
+  rows:
+    - id: web_apps
+      title: Web apps
+      tooltip: null
+      free: Unlimited
+      business: Unlimited
+      enterprise: Unlimited
+
+    - id: public_pages
+      title: Public pages
+      tooltip: null
+      free: Unlimited
+      business: Unlimited
+      enterprise: Unlimited
+
+    - id: auth_pages
+      title: Auth pages
+      tooltip: null
+      free: false
+      business: Unlimited
+      enterprise: Unlimited
+
+    - id: public_embedded_apps
+      title: Public embedded apps
+      tooltip: Embed your Lowdefy app on any web page as an iframe.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: auth_embedded_apps
+      title: Authenticated embedded apps
+      tooltip: Embedded apps can be authenticated with in-app auth, or JWT auth can be implemented to pass parent app context to your Lowdefy app.
+      free: false
+      business: true
+      enterprise: true
+
+    - id: plugins
+      title: Install plugins from npm
+      tooltip: Plugins are installed as part of your app’s Next.js build and are simply NPM packages which can have their own package dependencies.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: custom_javascript
+      title: Include custom javascript in app header
+      tooltip: Include script tags into your app html head. Useful for including scripts like Google Analytics, Intercom, etc.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: custom_blocks
+      title: Custom blocks and React Components
+      tooltip: Extend your app front-end with any React component by publishing it as a Lowdefy block.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: custom_javascript
+      title: Custom javascript logic as Actions and Operators
+      tooltip: Extend your app client and server side logic.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: connections_and_requests
+      title: Connections and requests for custom app APIs
+      tooltip: Write your own connection and request functions. This allows you to easily add server API functions that is built and deployed as part of your app.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: mobile_apps
+      title: Mobile apps
+      tooltip: Lowdefy apps are responsive by default and can be used as PWAs, but they are not native mobile apps neither are the blocks optimised for mobile.
+      free: Mobile responsive and PWA
+      business: Mobile responsive and PWA
+      enterprise: Mobile responsive and PWA
+
+    - id: build_customer_portals
+      title: Build customer portals
+      tooltip: Our pricing model is designed to offer low rates for apps which has a large number of infrequent users, making Lowdefy ideal for building customer portals.
+      free: false
+      business: true
+      enterprise: true
+
+    - id: app_themes
+      title: App themes
+      tooltip: Lowdefy apps use Ant-Design as a design system, which include over 1000 theme variables.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: custom_css
+      title: Custom CSS
+      tooltip: You can include custom CSS or LESS as part of your build bundle.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: white_label_apps
+      title: White-label apps
+      tooltip: Remove “Built with Lowdefy” and all Lowdefy branding.
+      free: false
+      business: true
+      enterprise: true
+
+- section_name: Developer Workflow
+  section_id: developer_workflow
+  rows:
+    - id: config_git
+      title: Config Git source control
+      tooltip: Readable config Git source control in your repos. Do code reviews and change diffs like with code.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: code_editor
+      title: Develop using files in any code editor
+      tooltip: Write config like code in your favourite code editor, like VSCode.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: search_config
+      title: Search, find, replace, copy and paste config
+      tooltip: Some things are just more productive when not hidden in a GUI.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: config_templates
+      title: Config templates
+      tooltip: Put reusable config in separate files using reference templates.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: env_variables
+      title: Environment Variables
+      tooltip: Set environment variables during deployment and use within your apps server.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: continuous_integration
+      title: Continuous Integration
+      tooltip: Deploy using any continuous integration pipeline such as Github Actions.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: multiple_dev_env
+      title: Multiple deployment environments
+      tooltip: Setup any deployment environments like you would with a normal Next.js app.
+      free: true
+      business: true
+      enterprise: true
+
+    - id: air_gapped
+      title: Air-gapped deployment
+      tooltip: Get an offline Lowdefy license key.
+      free: false
+      business: false
+      enterprise: true
+
+- section_name: Support
+  section_id: support
+  rows:
+    # - id: audit_log
+    #   title: Audit log drains
+    #   tooltip: Coming soon.
+    #   free: true
+    #   business: true
+    #   enterprise: true
+
+    # - id: debug
+    #   title: Debug level log drains
+    #   tooltip: Coming soon.
+    #   free: false
+    #   business: true
+    #   enterprise: true
+
+    - id: community_support
+      title: Community Support
+      tooltip: null
+      free: true
+      business: true
+      enterprise: true
+
+    - id: priority_support
+      title: Priority Support
+      tooltip: null
+      free: false
+      business: true
+      enterprise: true
+
+    - id: enterprise_support
+      title: Enterprise Support
+      tooltip: Access to a Lowdefy Engineer. Build first app with the help of our engineers.
+      free: false
+      business: false
+      enterprise: true

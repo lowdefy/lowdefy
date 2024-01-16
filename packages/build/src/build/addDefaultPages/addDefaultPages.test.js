@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -55,17 +55,16 @@ test('addDefaultPages, no pages array', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },
@@ -101,17 +100,16 @@ test('addDefaultPages, empty pages array', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },
@@ -151,17 +149,16 @@ test('addDefaultPages, pages without 404 page', () => {
                   onClick: [
                     {
                       id: 'home',
+                      type: 'Link',
                       params: {
                         home: true,
                       },
-                      type: 'Link',
                     },
                   ],
                 },
                 id: 'home',
                 properties: {
                   title: 'Go to home page',
-                  type: 'Link',
                 },
                 type: 'Button',
               },

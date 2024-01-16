@@ -1,0 +1,105 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: total
+  type: Html
+  properties:
+    html: |
+      <h3>Total</h3>
+- id: durations_price_calculation
+  type: Html
+  properties:
+    html:
+      _nunjucks:
+        template: |
+          {{ session_durations }} hours * {{ monthly_users_lt_30 }} monthly users < 30 hours * $0.5 = ${{ total }}
+        on:
+          session_durations:
+            _if_none:
+              - _state: session_durations
+              - 0
+          monthly_users_lt_30:
+            _if_none:
+              - _math.ceil:
+                  _math.pow:
+                    - 10
+                    - _state: monthly_users_lt_30
+              - 0
+          total:
+            _product:
+              - _if_none:
+                  - _state: session_durations
+                  - 0
+              - _if_none:
+                  - _math.ceil:
+                      _math.pow:
+                        - 10
+                        - _state: monthly_users_lt_30
+                  - 0
+              - 0.5
+- id: durations_gt_30_price_calculation
+  type: Html
+  properties:
+    html:
+      _nunjucks:
+        template: |
+          $15 * {{ monthly_users_gt_30 }} monthly users > 30 hours = ${{ total }}
+        on:
+          monthly_users_gt_30:
+            _if_none:
+              - _math.ceil:
+                  _math.pow:
+                    - 10
+                    - _state: monthly_users_gt_30
+              - 0
+          total:
+            _product:
+              - _math.ceil:
+                  _math.pow:
+                    - 10
+                    - _state: monthly_users_gt_30
+              - 15
+- id: total_price
+  type: Html
+  properties:
+    html:
+      _nunjucks:
+        template: |
+          {% if total > 5000 %}
+            Contact Us
+          {% else %}
+            ${{ total }}
+          {% endif %}
+        on:
+          total:
+            _sum:
+              - _product:
+                  - _if_none:
+                      - _state: session_durations
+                      - 0
+                  - _if_none:
+                      - _math.ceil:
+                          _math.pow:
+                            - 10
+                            - _state: monthly_users_lt_30
+                      - 0
+                  - 0.5
+              - _product:
+                  - _if_none:
+                      - _math.ceil:
+                          _math.pow:
+                            - 10
+                            - _state: monthly_users_gt_30
+                      - 0
+                  - 15

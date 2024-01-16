@@ -1,0 +1,61 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: contact_us_box
+type: Box
+style:
+  maxWidth: 600px
+  margin: 60px auto
+  textAlign: center
+layout:
+  contentJustify: center
+blocks:
+  - id: contact_us_header
+    type: Html
+    properties:
+      html: |
+        <h1> Contact Us </h1>
+  - id: contact_us_description
+    type: Html
+    layout:
+      flex: 1 0 auto
+    style:
+      marginTop: 5px
+      textAlign: center
+    properties:
+      html: <p>Want to see what's possible with Lowdefy</p>
+  - id: contact_us_book_a_demo
+    type: Button
+    layout:
+      flex: 1 0 auto
+    properties:
+      title: Book a demo
+      ghost: true
+      shape: round
+      size: large
+      style:
+        whiteSpace: normal
+        boxShadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        fontFamily: monospace
+        background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #1990FF, #29D3CA) border-box !important'
+        border: 2px solid transparent !important
+      href: https://calendly.com/gvw-lowdefy/lowdefy-support
+  - id: contact_us_form_description
+    type: Html
+    style:
+      maxWidth: 500px
+      textAlign: center
+      marginTop: 30px
+    properties:
+      html: <p>For more details on custom pricing or any other queries, please complete the form below and our team will get back to you.</p>

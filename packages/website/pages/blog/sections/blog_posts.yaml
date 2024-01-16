@@ -1,0 +1,107 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: blog_posts
+type: Box
+style:
+  maxWidth: 800px
+  margin: 60px auto
+layout:
+  contentJustify: center
+blocks:
+  - id: blog_posts_header
+    type: Html
+    style:
+      textAlign: center
+    properties:
+      html: |
+        <h2>The Lowdefy <span class="gradient-text">Blog</span></h2>
+  - id: blog_posts_description
+    type: Html
+    style:
+      textAlign: center
+    properties:
+      html: <p>Read more about the latest Lowdefy updates, features, examples and news on how businesses and developers are building apps with Lowdefy.</p>
+  - id: lowdefy_v4_launch_card
+    type: Card
+    layout:
+      contentGutter: 16
+    properties:
+      style:
+        '&:hover':
+          boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.1)
+          border: '1px solid var(--primary-color)'
+    events:
+      onClick:
+        - id: link_to_post
+          type: Link
+          params: /lowdefy-v4-launch
+    blocks:
+      - id: lowdefy_v4_launch_image
+        type: Img
+        layout:
+          flex: 1 0 250px
+          align: center
+        properties:
+          src: ./images/blogs/V4_Launch.jpg
+          style:
+            borderRadius: 10px
+            height: auto
+            maxWidth: 100%
+      - id: info_box
+        type: Box
+        layout:
+          flex: 1 0 400px
+          contentGutter: 8
+        blocks:
+          - id: lowdefy_v4_launch_info
+            type: Html
+            properties:
+              html: |
+                <h4>Lowdefy V4 Launch</h4>
+                <p>Introducing Lowdefy V4: The Easiest Config Webstack built on top of Next.js. We're excited to announce Lowdefy V4.</p>
+          - id: author_block
+            type: Box
+            layout:
+              flex: 1 0 auto
+            blocks:
+              - id: avatar
+                type: Avatar
+                layout:
+                  flex: 1 0 40
+                properties:
+                  size: 40
+                  src: ./images/profiles/gervwyk.jpeg
+                  alt: Gerrie
+              - id: details
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                style:
+                  marginLeft: 10
+                  fontSize: 12
+                properties:
+                  html: |
+                    <b>Gerrie van Wyk</b>
+                    <p>15 January 2024</p>
+          - id: lowdefy_v4_launch_anchor
+            type: Anchor
+            layout:
+              flex: 0 1 auto
+            style:
+              marginTop: 20
+            properties:
+              href: /lowdefy-v4-launch
+              title: Click to view
+              newTab: true

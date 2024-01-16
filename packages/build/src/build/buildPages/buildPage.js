@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -33,14 +33,12 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   checkDuplicatePageId({ id: page.id });
   page.pageId = page.id;
   const requests = [];
-  const operators = new Set();
   buildBlock(page, {
     auth: page.auth,
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),
-    operators,
     pageId: page.pageId,
     requests,
     typeCounters: context.typeCounters,
@@ -49,7 +47,6 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   page.id = `page:${page.pageId}`;
 
   page.requests = requests;
-  page.operators = [...operators];
 }
 
 export default buildPage;

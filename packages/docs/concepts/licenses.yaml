@@ -1,0 +1,72 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: licenses
+    pageTitle: Licenses
+    section: Concepts
+    filePath: concepts/licenses.yaml
+    content:
+      - id: content
+        type: DangerousMarkdown
+        properties:
+          content: |
+            Lowdefy software is distributed under three different software licenses.
+
+            - The Apache License Version 2.0 Open Source license
+            - The Lowdefy Commercial License
+            - The Business Source License Version 1.1
+
+            ## Open Source License
+
+            An Open Source version of Lowdefy is available, licensed under the [Apache License Version 2.0](https://github.com/lowdefy/lowdefy/blob/main/licenses/Apache-2.0.txt). Lowdefy Commercial features are not available under the Apache License.
+
+            The Open Source licensed version can be used by setting the community edition flag when running the CLI. To build a Open Source production server:
+
+            ```
+            pnpx lowdefy@4 build --community-edition
+            ```
+
+            ## Lowdefy Commercial License
+
+            To use Lowdefy commercial features in production, a [Lowdefy Commercial License](https://lowdefy.com/terms) is needed. Some features are available for free, while others require a paid plan, as presented on the [pricing page](https://lowdefy.com/pricing).
+
+            #### Obtaining a License Key
+
+            A Free or Business tier licence can be obtained by signing up for an account at [https://cloud.lowdefy.com](https://cloud.lowdefy.com).
+
+            For Enterprise licenses, contact <a href='mailto:sales@lowdefy.com'>sales@lowdefy.com</a>.
+
+            Keep your license keys secret, as app usage with these keys will be billed to your account.
+
+            #### Setting a License
+
+            To set a license key, set the `LOWDEFY_LICENSE_KEY` environment variable. When developing locally, a `.env` file can be used.
+
+            Most hosting providers have a way to set environment variables. Documentation for some hosting providers are listed below:
+
+            - [Vercel](https://vercel.com/docs/projects/environment-variables)
+            - [Fly.io](https://fly.io/docs/reference/runtime-environment/)
+
+            ## Business Source License
+
+            “Business Source License” is a trademark of MariaDB Corporation Ab.
+
+            Lowdefy commercial features are also available under the [Business Source License version 1.1](https://github.com/lowdefy/lowdefy/blob/main/licenses/BUSL-1.1.txt). This license allows you to make **non-production use** of the Lowdefy commercial features. Lowdefy code release under this license convert to the Apache 2.0 license at the specified change date, or four years after its release. To use Lowdefy under the terms of the Business Source License, do not set the `LOWDEFY_LICENSE_KEY` environment variable.
+
+            ## Third Party Licenses
+
+            Lowdefy, or third party Lowdefy plugins, may use, or provide you access to third party software which may be subject to the terms of a third party open source license or other terms and conditions governing their use.

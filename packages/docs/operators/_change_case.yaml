@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,11 +25,14 @@ _ref:
       The `_change_case` operator takes `on` and `options` as arguments.
       The `on` argument is the input to be transformed and can be a `string`,  `array` or `object`.
       The `options` argument is an object with the following properties:
-        - `splitRegexp`: The regular expression used to split `on` into word segments. Can be a `string` or an `object` with `pattern` and `flags`.
-        - `stripRegexp`: The regular expression used to remove extraneous characters (default: `/[^A-Z0-9]/gi`). Can be a `string` or an `object` with `pattern` and `flags`.
-        - `delimiter`: Value used between words (e.g. " ").
-        - `convertValues`: Only used when `on` is an object. Toggles whether the object values are converted to the new case (`true`) or left as-is (`false`). Default `true`.
         - `convertKeys`: Only used when `on` is an object. Toggles whether the object keys are converted to the new case (`true`) or left as-is (`false`). Default `false`.
+        - `convertValues`: Only used when `on` is an object. Toggles whether the object values are converted to the new case (`true`) or left as-is (`false`). Default `true`.
+        - `delimiter`: Value used between words (e.g. " ").
+        - `locale`: Lower/upper according to specified locale, defaults to host environment. Set to false to disable.
+        - `mergeAmbiguousCharacters`: By default, pascalCase and snakeCase separate ambiguous characters with _. To merge them instead, set mergeAmbiguousCharacters to true.
+        - `prefixCharacters``: A string that specifies characters to retain at the beginning of the string. Defaults to "".
+        - `split`: A function to define how the input is split into words.
+        - `suffixCharacters``: A string that specifies characters to retain at the end of the string. Defaults to "".
 
       The `on` argument behaves as follows:
       ###### string
@@ -87,45 +90,21 @@ _ref:
       ```
       Returns: `{ "foo": "bar" }`
 
-      ###### String with options.splitRegexp string:
+      ###### Object with options.SPLT:
       ```yaml
-      _change_case.sentenceCase:
-        on: 'foo8ar'
+      _change_case.capitalCase:
+        on: this123is_an example string
         options:
-          splitRegexp: '([a-z])([A-Z0-9])'
+          split:
+            _function:
+              __string.split:
+                - __string.replace:
+                    - __args: 0
+                    - '123'
+                    - '_'
+                - '_'
       ```
-      Returns: `"Foo 8ar"`
-
-      ###### String with options.stripRegexp string:
-      ```yaml
-      _change_case.sentenceCase:
-        on: 'FOO8AR'
-        options:
-          stripRegexp: '[^A-Z]'
-      ```
-      Returns: `"Foo ar"`
-
-      ###### String with options.splitRegexp object:
-      ```yaml
-      _change_case.sentenceCase:
-        on: 'foo8ar'
-        options:
-          splitRegexp:
-            pattern: '([a-z])([A-Z0-9])'
-            flags: 'gi'
-      ```
-      Returns: `"F oo 8a r"`
-
-      ###### String with options.stripRegexp object:
-      ```yaml
-      _change_case.sentenceCase:
-        on: 'foo8ar'
-        options:
-          stripRegexp:
-            pattern: '[^A-Z]'
-            flags: gi
-      ```
-      Returns: `"Foo ar"`
+      Returns: `This Is An example string`
 
     methods:
       - name: camelCase
@@ -147,6 +126,7 @@ _ref:
             on: 'my_variable'
           ```
           Returns: `"myVariable"`
+
       - name: capitalCase
         types: |
           ```
@@ -166,6 +146,7 @@ _ref:
             on: 'my_variable'
           ```
           Returns:  `"My Variable"`
+
       - name: constantCase
         types: |
           ```
@@ -206,7 +187,7 @@ _ref:
           ```
           Returns: `"my.variable"`
 
-      - name: headerCase
+      - name: kebabCase
         types: |
           ```
           ({on: string, options: object}): string
@@ -217,14 +198,14 @@ _ref:
           ([on: array, options: object]): array
           ```
         description: |
-          The `_change_case.headerCase` method transforms `on` into a dash separated string of capitalized words.
+          The `_change_case.kebabCase` method transforms `on` into a lower cased string with dashes between words.
         examples: |
-          ###### Transform snake_case variable to headerCase:
+          ###### Transform snake_case variable to kebabCase:
           ```yaml
-          _change_case.headerCase:
+          _change_case.kebabCase:
             on: 'my_variable'
           ```
-          Returns: `"My-Variable"`
+          Returns: `"my-variable"`
 
       - name: noCase
         types: |
@@ -246,26 +227,6 @@ _ref:
           ```
           Returns: `"my variable"`
 
-      - name: paramCase
-        types: |
-          ```
-          ({on: string, options: object}): string
-          ([on: string, options: object]): string
-          ({on: object, options: object}): object
-          ([on: object, options: object]): object
-          ({on: array, options: object}): array
-          ([on: array, options: object]): array
-          ```
-        description: |
-          The `_change_case.paramCase` method transforms `on` into a lower cased string with dashes between words.
-        examples: |
-          ###### Transform snake_case variable to paramCase:
-          ```yaml
-          _change_case.paramCase:
-            on: 'my_variable'
-          ```
-          Returns: `"my-variable"`
-
       - name: pascalCase
         types: |
           ```
@@ -286,6 +247,26 @@ _ref:
           ```
           Returns: `"MyVariable"`
 
+      - name: pascalSnakeCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.pascalSnakeCase` method transforms `on` into a string of capitalized words with underscores between words.
+        examples: |
+          ###### Transform snake_case variable to pascalSnakeCase:
+          ```yaml
+          _change_case.pascalCase:
+            on: 'my_variable'
+          ```
+          Returns: `"My_Variable"`
+
       - name: pathCase
         types: |
           ```
@@ -304,7 +285,7 @@ _ref:
           _change_case.pathCase:
             on: 'my_variable'
           ```
-          Returns:
+          Returns: `my/variable`
 
       - name: sentenceCase
         types: |
@@ -345,3 +326,23 @@ _ref:
             on: 'My variable'
           ```
           Returns: `"my_variable"`
+
+      - name: trainCase
+        types: |
+          ```
+          ({on: string, options: object}): string
+          ([on: string, options: object]): string
+          ({on: object, options: object}): object
+          ([on: object, options: object]): object
+          ({on: array, options: object}): array
+          ([on: array, options: object]): array
+          ```
+        description: |
+          The `_change_case.trainCase` method transforms `on` into a dash separated string of capitalized words.
+        examples: |
+          ###### Transform snake_case variable to trainCase:
+          ```yaml
+          _change_case.trainCase:
+            on: 'my_variable'
+          ```
+          Returns: `"My-Variable"`

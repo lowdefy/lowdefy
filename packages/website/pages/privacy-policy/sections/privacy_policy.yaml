@@ -1,0 +1,32 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: privacy_policy_box
+type: Box
+style:
+  maxWidth: 800px
+  margin: 60px auto
+layout:
+  contentJustify: center
+blocks:
+  - id: privacy_policy_header
+    type: Html
+    properties:
+      html: |
+        <h1> Privacy Policy </h1>
+  - id: privacy_policy
+    type: Markdown
+    properties:
+      content:
+        _ref: pages/privacy-policy/sections/privacy_policy.md

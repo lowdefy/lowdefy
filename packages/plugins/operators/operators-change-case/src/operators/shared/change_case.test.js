@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -50,6 +50,76 @@ test('_change_case.capitalCase [string, {delimiter: "-"}]', () => {
   ).toEqual('Test-String');
 });
 
+test('_change_case.capitalCase on: string, options: {prefixCharacters: "_"}', () => {
+  expect(
+    change_case({
+      params: {
+        on: '_test string',
+        options: {
+          prefixCharacters: '_',
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual('_Test String');
+});
+
+test('_change_case.capitalCase on: string, options: {suffixCharacters: "_"}', () => {
+  expect(
+    change_case({
+      params: {
+        on: '_test string_',
+        options: {
+          suffixCharacters: '_',
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual('Test String_');
+});
+
+test('_change_case.capitalCase on: string, options: {locale: "tr"}', () => {
+  expect(
+    change_case({
+      params: {
+        on: 'this is a test string',
+        options: {
+          locale: 'tr',
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual('This İs A Test String');
+});
+
+test('_change_case.capitalCase on: string, options: {split}', () => {
+  expect(
+    change_case({
+      params: {
+        on: 'test string',
+        options: {
+          split: (input) => input.split('t s'),
+        },
+      },
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual('Tes Tring');
+});
+
+test('_change_case.capitalCase [string, {delimiter: "-"}]', () => {
+  expect(
+    change_case({
+      params: ['test string', { delimiter: '-' }],
+      location: 'locationId',
+      methodName: 'capitalCase',
+    })
+  ).toEqual('Test-String');
+});
+
 test('_change_case.capitalCase on: string, options: [] throw', () => {
   expect(() =>
     change_case({
@@ -61,116 +131,6 @@ test('_change_case.capitalCase on: string, options: [] throw', () => {
       methodName: 'capitalCase',
     })
   ).toThrow('Operator Error: options must be an object.');
-});
-
-test('_change_case.sentenceCase on: string, options: {splitRegexp: "([a-z])([A-Z0-9])"}', () => {
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('Word2019');
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-        options: {
-          splitRegexp: '([a-z])([A-Z0-9])',
-        },
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('Word 2019');
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-        options: {
-          splitRegexp: {
-            pattern: '([a-z])([A-Z0-9])',
-            flags: 'gi',
-          },
-        },
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('W or d2019');
-});
-
-test('_change_case.capitalCase on: string, invalid regex throw', () => {
-  expect(() =>
-    change_case({
-      params: {
-        on: testString,
-        options: {
-          splitRegexp: '(a',
-        },
-      },
-      location: 'locationId',
-      methodName: 'capitalCase',
-    })
-  ).toThrow('Operator Error: Invalid regular expression');
-});
-
-test('_change_case.capitalCase on: string, regex not string or object throw', () => {
-  expect(() =>
-    change_case({
-      params: {
-        on: testString,
-        options: {
-          splitRegexp: [],
-        },
-      },
-      location: 'locationId',
-      methodName: 'capitalCase',
-    })
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: regex must be string or an object. Received [] at locationId."`
-  );
-});
-
-test('_change_case.sentenceCase on: string, options: {stripRegexp: "[^A-Z]"}', () => {
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('Word2019');
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-        options: {
-          stripRegexp: '[^A-Z]',
-        },
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('');
-  expect(
-    change_case({
-      params: {
-        on: 'word2019',
-        options: {
-          stripRegexp: {
-            pattern: '[^A-Z]',
-            flags: 'gi',
-          },
-        },
-      },
-      location: 'locationId',
-      methodName: 'sentenceCase',
-    })
-  ).toEqual('Word');
 });
 
 test('_change_case.capitalCase on: array, options: {delimiter: "-"}', () => {
@@ -392,9 +352,9 @@ test('_change_case.(AllMethods) on: string', () => {
         on: testString,
       },
       location: 'locationId',
-      methodName: 'headerCase',
+      methodName: 'kebabCase',
     })
-  ).toEqual('Test-String');
+  ).toEqual('test-string');
   expect(
     change_case({
       params: {
@@ -410,18 +370,18 @@ test('_change_case.(AllMethods) on: string', () => {
         on: testString,
       },
       location: 'locationId',
-      methodName: 'paramCase',
+      methodName: 'pascalCase',
     })
-  ).toEqual('test-string');
+  ).toEqual('TestString');
   expect(
     change_case({
       params: {
         on: testString,
       },
       location: 'locationId',
-      methodName: 'pascalCase',
+      methodName: 'pascalSnakeCase',
     })
-  ).toEqual('TestString');
+  ).toEqual('Test_String');
   expect(
     change_case({
       params: {
@@ -449,6 +409,15 @@ test('_change_case.(AllMethods) on: string', () => {
       methodName: 'snakeCase',
     })
   ).toEqual('test_string');
+  expect(
+    change_case({
+      params: {
+        on: testString,
+      },
+      location: 'locationId',
+      methodName: 'trainCase',
+    })
+  ).toEqual('Test-String');
 });
 
 test('_change_case.(AllMethods) on: object', () => {
@@ -494,9 +463,9 @@ test('_change_case.(AllMethods) on: object', () => {
         on: testObject,
       },
       location: 'locationId',
-      methodName: 'headerCase',
+      methodName: 'kebabCase',
     })
-  ).toEqual({ field_1: 'Test-String-1', field_2: 'Test-String-2' });
+  ).toEqual({ field_1: 'test-string-1', field_2: 'test-string-2' });
   expect(
     change_case({
       params: {
@@ -512,18 +481,18 @@ test('_change_case.(AllMethods) on: object', () => {
         on: testObject,
       },
       location: 'locationId',
-      methodName: 'paramCase',
+      methodName: 'pascalCase',
     })
-  ).toEqual({ field_1: 'test-string-1', field_2: 'test-string-2' });
+  ).toEqual({ field_1: 'TestString_1', field_2: 'TestString_2' });
   expect(
     change_case({
       params: {
         on: testObject,
       },
       location: 'locationId',
-      methodName: 'pascalCase',
+      methodName: 'pascalSnakeCase',
     })
-  ).toEqual({ field_1: 'TestString_1', field_2: 'TestString_2' });
+  ).toEqual({ field_1: 'Test_String_1', field_2: 'Test_String_2' });
   expect(
     change_case({
       params: {
@@ -551,6 +520,15 @@ test('_change_case.(AllMethods) on: object', () => {
       methodName: 'snakeCase',
     })
   ).toEqual({ field_1: 'test_string_1', field_2: 'test_string_2' });
+  expect(
+    change_case({
+      params: {
+        on: testObject,
+      },
+      location: 'locationId',
+      methodName: 'trainCase',
+    })
+  ).toEqual({ field_1: 'Test-String-1', field_2: 'Test-String-2' });
 });
 
 test('_change_case.(AllMethods) on: array', () => {
@@ -596,9 +574,9 @@ test('_change_case.(AllMethods) on: array', () => {
         on: testArray,
       },
       location: 'locationId',
-      methodName: 'headerCase',
+      methodName: 'kebabCase',
     })
-  ).toEqual(['Test-String-1', 'Test-String-2', 'Test-String-3']);
+  ).toEqual(['test-string-1', 'test-string-2', 'test-string-3']);
   expect(
     change_case({
       params: {
@@ -614,18 +592,18 @@ test('_change_case.(AllMethods) on: array', () => {
         on: testArray,
       },
       location: 'locationId',
-      methodName: 'paramCase',
+      methodName: 'pascalCase',
     })
-  ).toEqual(['test-string-1', 'test-string-2', 'test-string-3']);
+  ).toEqual(['TestString_1', 'TestString_2', 'TestString_3']);
   expect(
     change_case({
       params: {
         on: testArray,
       },
       location: 'locationId',
-      methodName: 'pascalCase',
+      methodName: 'pascalSnakeCase',
     })
-  ).toEqual(['TestString_1', 'TestString_2', 'TestString_3']);
+  ).toEqual(['Test_String_1', 'Test_String_2', 'Test_String_3']);
   expect(
     change_case({
       params: {
@@ -653,4 +631,13 @@ test('_change_case.(AllMethods) on: array', () => {
       methodName: 'snakeCase',
     })
   ).toEqual(['test_string_1', 'test_string_2', 'test_string_3']);
+  expect(
+    change_case({
+      params: {
+        on: testArray,
+      },
+      location: 'locationId',
+      methodName: 'trainCase',
+    })
+  ).toEqual(['Test-String-1', 'Test-String-2', 'Test-String-3']);
 });

@@ -1,3 +1,17 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 id: examples_box
 type: Box
 layout:
@@ -8,90 +22,158 @@ style:
 blocks:
   - id: examples_intro
     type: Html
+    style:
+      textAlign: center
     properties:
       html: |
         <h3>
           Built with Lowdefy
         </h3>
-        <h5>
+        <p>
           Explore examples and apps from the community.
-        </h5>
+        </p>
+  - id: examples_box
+    type: Box
+    layout:
+      justifyContent: center
+      contentGutter: 8
+    style:
+      maxWidth: 1200
+      margin: auto
+    blocks:
+      - _ref:
+          path: pages/home/components/example_card.yaml.njk
+          vars:
+            id: survey_example
+            image: /images/examples/survey.png
+            alt: Survey
+            example: Survey
+            desc: A customer feedback webform that saves customer feedback to a Google sheet. All in less than 400 lines of YAML.
+            git: https://github.com/lowdefy/lowdefy-example-survey
+            view: https://example-survey.lowdefy.com
+            layout:
+              span: 6
+              sm:
+                span: 12
+      - _ref:
+          path: pages/home/components/example_card.yaml.njk
+          vars:
+            id: case_management_example
+            image: /images/examples/case_management.png
+            alt: Case Management App
+            example: Case Management App
+            desc: A rich UI for a hypothetical case management app, in a customer relations setting, cases can be flagged, escalated, or closed.
+            git: https://github.com/lowdefy/lowdefy-example-case-management
+            view: https://example-case-management.lowdefy.com
+            layout:
+              span: 6
+              sm:
+                span: 12
+      - _ref:
+          path: pages/home/components/example_card.yaml.njk
+          vars:
+            id: CRUD_example
+            image: /images/examples/crud.png
+            alt: CRUD
+            example: CRUD Admin App
+            desc: A data admin app which allows users to view, create new, edit and delete data records in MongoDB.
+            git: https://github.com/lowdefy/lowdefy-example-crud
+            view: https://example-crud.lowdefy.com
+            layout:
+              span: 6
+              sm:
+                span: 12
+      - _ref:
+          path: pages/home/components/example_card.yaml.njk
+          vars:
+            id: BI_example
+            image: /images/examples/reporting.png
+            alt: BI
+            example: BI Dashboard App
+            desc: A simple live report aggregated from a MongoDB sample dataset, showing results in AmCharts and AgGrid custom blocks.
+            git: https://github.com/lowdefy/lowdefy-example-reporting
+            view: https://example-reporting.lowdefy.com
+            layout:
+              span: 6
+              sm:
+                span: 12
 
-  - id: carousel
-    type: Carousel
-    properties:
-      autoplay: true
-      adaptiveHeight: true
-      slidesToShow: 4
-      slides:
-        - key: slide_one
-        - key: slide_two
-        - key: slide_three
-        - key: slide_four
-      style:
-        height: 100%
-      responsive:
-        - breakpoint: 1024
-          settings:
-            slidesToShow: 3
-            slidesToScroll: 3
-            infinite: true
-            dots: true
-        - breakpoint: 600
-          settings:
-            slidesToShow: 2
-            slidesToScroll: 2
-            initialSlide: 2
-        - breakpoint: 480
-          settings:
-            slidesToShow: 1
-            slidesToScroll: 1
-    areas:
-      slide_one:
-        blocks:
-          - _ref:
-              path: pages/home/components/example_card.yaml.njk
-              vars:
-                id: survey_example
-                image: /images/examples/survey.png
-                alt: Survey
-                example: Survey
-                desc: A customer feedback webform that saves customer feedback to a Google sheet. All in less than 400 lines of YAML.
-                git: https://github.com/lowdefy/lowdefy-example-survey
-                view: https://example-survey.lowdefy.com
-      slide_two:
-        blocks:
-          - _ref:
-              path: pages/home/components/example_card.yaml.njk
-              vars:
-                id: case_management_example
-                image: /images/examples/case_management.png
-                alt: Case Management App
-                example: Case Management App
-                desc: A rich UI for a hypothetical case management app, in a customer relations setting, cases can be flagged, escalated, or closed.
-                git: https://github.com/lowdefy/lowdefy-example-case-management
-                view: https://example-case-management.lowdefy.com
-      slide_three:
-        blocks:
-          - _ref:
-              path: pages/home/components/example_card.yaml.njk
-              vars:
-                id: CRUD_example
-                image: /images/examples/crud.png
-                alt: CRUD
-                example: CRUD Admin App
-                desc: A data admin app which allows users to view, create new, edit and delete data records in MongoDB.
-                git: https://github.com/lowdefy/lowdefy-example-crud
-                view: https://example-crud.lowdefy.com
-      slide_four:
-        blocks:
-          - _ref:
-              path: pages/home/components/example_card.yaml.njk
-              vars:
-                id: BI_example
-                image: /images/examples/reporting.png
-                alt: BI
-                example: BI Dashboard App
-                desc: A simple live report aggregated from a MongoDB sample dataset, showing results in AmCharts and AgGrid custom blocks.
-                git: https://github.com/lowdefy/lowdefy-example-reporting
-                view: https://example-reporting.lowdefy.com
+  # TODO
+  # - id: carousel
+  #   type: Carousel
+  #   properties:
+  #     autoplay: true
+  #     adaptiveHeight: true
+  #     slidesToShow: 4
+  #     slides:
+  #       - key: slide_one
+  #       - key: slide_two
+  #       - key: slide_three
+  #       - key: slide_four
+  #     style:
+  #       height: 100%
+  #     responsive:
+  #       - breakpoint: 1024
+  #         settings:
+  #           slidesToShow: 3
+  #           slidesToScroll: 3
+  #           infinite: true
+  #           dots: true
+  #       - breakpoint: 600
+  #         settings:
+  #           slidesToShow: 2
+  #           slidesToScroll: 2
+  #           initialSlide: 2
+  #       - breakpoint: 480
+  #         settings:
+  #           slidesToShow: 1
+  #           slidesToScroll: 1
+  #   areas:
+  #     slide_one:
+  #       blocks:
+  #         - _ref:
+  #             path: pages/home/components/example_card.yaml.njk
+  #             vars:
+  #               id: survey_example
+  #               image: /images/examples/survey.png
+  #               alt: Survey
+  #               example: Survey
+  #               desc: A customer feedback webform that saves customer feedback to a Google sheet. All in less than 400 lines of YAML.
+  #               git: https://github.com/lowdefy/lowdefy-example-survey
+  #               view: https://example-survey.lowdefy.com
+  #     slide_two:
+  #       blocks:
+  #         - _ref:
+  #             path: pages/home/components/example_card.yaml.njk
+  #             vars:
+  #               id: case_management_example
+  #               image: /images/examples/case_management.png
+  #               alt: Case Management App
+  #               example: Case Management App
+  #               desc: A rich UI for a hypothetical case management app, in a customer relations setting, cases can be flagged, escalated, or closed.
+  #               git: https://github.com/lowdefy/lowdefy-example-case-management
+  #               view: https://example-case-management.lowdefy.com
+  #     slide_three:
+  #       blocks:
+  #         - _ref:
+  #             path: pages/home/components/example_card.yaml.njk
+  #             vars:
+  #               id: CRUD_example
+  #               image: /images/examples/crud.png
+  #               alt: CRUD
+  #               example: CRUD Admin App
+  #               desc: A data admin app which allows users to view, create new, edit and delete data records in MongoDB.
+  #               git: https://github.com/lowdefy/lowdefy-example-crud
+  #               view: https://example-crud.lowdefy.com
+  #     slide_four:
+  #       blocks:
+  #         - _ref:
+  #             path: pages/home/components/example_card.yaml.njk
+  #             vars:
+  #               id: BI_example
+  #               image: /images/examples/reporting.png
+  #               alt: BI
+  #               example: BI Dashboard App
+  #               desc: A simple live report aggregated from a MongoDB sample dataset, showing results in AmCharts and AgGrid custom blocks.
+  #               git: https://github.com/lowdefy/lowdefy-example-reporting
+  #               view: https://example-reporting.lowdefy.com

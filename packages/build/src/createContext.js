@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,9 +23,17 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
-function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+function createContext({
+  customTypesMap,
+  directories,
+  entitlements = [],
+  logger,
+  refResolver,
+  stage = 'prod',
+}) {
   const context = {
     directories,
+    entitlements,
     keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),

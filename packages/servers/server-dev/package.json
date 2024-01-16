@@ -1,0 +1,99 @@
+{
+  "name": "@lowdefy/server-dev",
+  "version": "4.0.0",
+  "license": "Apache-2.0",
+  "description": "",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "server"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Sam Tolmay",
+      "url": "https://github.com/SamTolmay"
+    },
+    {
+      "name": "Gerrie van Wyk",
+      "url": "https://github.com/Gervwyk"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "files": [
+    "lib/*",
+    "manager/*",
+    "pages/*",
+    "public_default/*",
+    "next.config.js",
+    "package.original.json",
+    ".eslintrc.yaml",
+    ".npmrc"
+  ],
+  "scripts": {
+    "build": "cp package.json package.original.json || copy package.json package.original.json",
+    "start": "node manager/run.mjs",
+    "lint": "next lint",
+    "next": "next"
+  },
+  "dependencies": {
+    "@lowdefy/actions-core": "4.0.0",
+    "@lowdefy/api": "4.0.0",
+    "@lowdefy/block-utils": "4.0.0",
+    "@lowdefy/blocks-aggrid": "4.0.0",
+    "@lowdefy/blocks-antd": "4.0.0",
+    "@lowdefy/blocks-basic": "4.0.0",
+    "@lowdefy/blocks-color-selectors": "4.0.0",
+    "@lowdefy/blocks-echarts": "4.0.0",
+    "@lowdefy/blocks-loaders": "4.0.0",
+    "@lowdefy/blocks-markdown": "4.0.0",
+    "@lowdefy/blocks-qr": "4.0.0",
+    "@lowdefy/build": "4.0.0",
+    "@lowdefy/client": "4.0.0",
+    "@lowdefy/connection-axios-http": "4.0.0",
+    "@lowdefy/engine": "4.0.0",
+    "@lowdefy/helpers": "4.0.0",
+    "@lowdefy/layout": "4.0.0",
+    "@lowdefy/node-utils": "4.0.0",
+    "@lowdefy/operators-change-case": "4.0.0",
+    "@lowdefy/operators-diff": "4.0.0",
+    "@lowdefy/operators-js": "4.0.0",
+    "@lowdefy/operators-moment": "4.0.0",
+    "@lowdefy/operators-mql": "4.0.0",
+    "@lowdefy/operators-nunjucks": "4.0.0",
+    "@lowdefy/operators-uuid": "4.0.0",
+    "@lowdefy/operators-yaml": "4.0.0",
+    "@lowdefy/plugin-next-auth": "4.0.0",
+    "chokidar": "3.5.3",
+    "dotenv": "16.3.1",
+    "next": "13.5.4",
+    "next-auth": "4.24.5",
+    "opener": "1.5.2",
+    "pino": "8.16.2",
+    "process": "0.11.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "4.12.0",
+    "swr": "2.2.4",
+    "yaml": "2.3.4",
+    "yargs": "17.7.2"
+  },
+  "devDependencies": {
+    "@next/eslint-plugin-next": "13.5.4",
+    "less": "4.1.3",
+    "less-loader": "11.1.3",
+    "next-with-less": "3.0.1",
+    "webpack": "5.89.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

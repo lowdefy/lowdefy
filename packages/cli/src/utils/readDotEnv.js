@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 
 function readDotEnv(context) {
-  dotenv.config({ path: path.join(context.directories.config, '.env'), silent: true });
+  dotenv.config({ path: path.join(context.configDirectory, '.env'), silent: true });
 }
 
 export default readDotEnv;

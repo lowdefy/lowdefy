@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ function createJWTCallback({ authConfig, logger, plugins }) {
   async function jwtCallback({ token, user, account, profile, isNewUser }) {
     if (profile) {
       const {
+        id,
         sub,
         name,
         given_name,
@@ -49,6 +50,7 @@ function createJWTCallback({ authConfig, logger, plugins }) {
         updated_at,
       } = profile;
       token = {
+        id,
         sub,
         name,
         given_name,

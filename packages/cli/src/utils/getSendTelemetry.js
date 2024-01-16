@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,15 @@ async function getTypes({ directories }) {
   return JSON.parse(await readFile(path.join(directories.build, 'types.json')));
 }
 
-function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVersion, options }) {
+function getSendTelemetry({
+  appId,
+  cliVersion,
+  command,
+  directories,
+  license,
+  lowdefyVersion,
+  options,
+}) {
   if (options.disableTelemetry) {
     return () => {};
   }
@@ -34,7 +42,7 @@ function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVers
     try {
       await axios.request({
         method: 'post',
-        url: 'https://api.lowdefy.net/telemetry/cli',
+        url: 'https://api.lowdefy.net/v4/telemetry/cli',
         headers: {
           'User-Agent': `Lowdefy CLI v${cliVersion}`,
         },
@@ -43,6 +51,7 @@ function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVers
           app_id: appId,
           cli_version: cliVersion,
           command,
+          license_id: license?.id,
           lowdefy_version: lowdefyVersion,
           types,
         },

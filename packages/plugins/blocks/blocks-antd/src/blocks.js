@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ export { default as RatingSlider } from './blocks/RatingSlider/RatingSlider.js';
 export { default as Result } from './blocks/Result/Result.js';
 export { default as Selector } from './blocks/Selector/Selector.js';
 export { default as Sider } from './blocks/Sider/Sider.js';
+export { default as Slider } from './blocks/Slider/Slider.js';
 export { default as Statistic } from './blocks/Statistic/Statistic.js';
 export { default as Switch } from './blocks/Switch/Switch.js';
 export { default as Tabs } from './blocks/Tabs/Tabs.js';

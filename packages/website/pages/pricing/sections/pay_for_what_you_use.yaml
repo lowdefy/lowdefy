@@ -1,0 +1,45 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pay_for_what_you_use_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+  textAlign: center
+layout:
+  contentJustify: center
+blocks:
+  - id: pay_for_what_you_use_header
+    type: Html
+    properties:
+      html: |
+        <h1> Only Pay for What You Use </h1>
+  - id: pay_for_what_you_use_description
+    type: Html
+    style:
+      maxWidth: 500px
+      textAlign: center
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>
+              No charge for public apps. No charge for developing apps. Capped at ${{ rates.flat }} per user per month. Predictable and fair pricing at any scale. Deploy your app to any Next.js host.
+            </p>
+          on:
+            rates:
+              _ref:
+                path: app_config.yaml
+                key: rates
