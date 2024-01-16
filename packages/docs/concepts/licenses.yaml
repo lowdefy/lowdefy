@@ -26,13 +26,13 @@ _ref:
           content: |
             Lowdefy software is distributed under three different software licenses.
 
-            - The Apache 2.0 open source license
+            - The Apache License Version 2.0 open source license
             - The Lowdefy Commercial License
             - The Business Source License version 1.1
 
             ## Open Source License
 
-            An open source version of Lowdefy is available, licensed under the [Apache 2.0 license](https://github.com/lowdefy/lowdefy/blob/main/packages/servers/server-community/LICENSE). Lowdefy Commercial features are not available under the Apache 2.0 license.
+            An open source version of Lowdefy is available, licensed under the [Apache License Version 2.0](https://github.com/lowdefy/lowdefy/blob/main/licenses/Apache-2.0.txt). Lowdefy Commercial features are not available under the Apache License.
 
             The open source licensed version can be used by setting the community edition flag when running the CLI. To build a open source production server:
 
@@ -65,7 +65,7 @@ _ref:
 
             “Business Source License” is a trademark of MariaDB Corporation Ab.
 
-            Lowdefy commercial features are also available under the [Business Source License version 1.1](https://github.com/lowdefy/lowdefy/blob/main/packages/servers/server-enterprise/LICENSE). This license allows you to make **non-production use** of the Lowdefy commercial features. Lowdefy code release under this license convert to the Apache 2.0 license at the specified change date, or four years after its release. To use Lowdefy under the terms of the Business Source License, do not set the `LOWDEFY_LICENSE_KEY` environment variable.
+            Lowdefy commercial features are also available under the [Business Source License version 1.1](https://github.com/lowdefy/lowdefy/blob/main/licenses/BUSL-1.1.txt). This license allows you to make **non-production use** of the Lowdefy commercial features. Lowdefy code release under this license convert to the Apache 2.0 license at the specified change date, or four years after its release. To use Lowdefy under the terms of the Business Source License, do not set the `LOWDEFY_LICENSE_KEY` environment variable.
 
             ## Third Party Licenses
 
