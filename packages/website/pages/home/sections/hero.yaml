@@ -31,7 +31,7 @@ blocks:
         type: Html
         properties:
           html: |
-            <p class="gray-text">Open-Source - Self Hosted - Next.js - NPM Plugins - For Developers</p>
+            <p class="gray-text"> Self Hosted - Next.js - NPM Plugins - For Developers - Source Available </p>
             <h1>
               The <span class="gradient-text">config</span> web stack for
               <span class="gradient-text">business apps</span>

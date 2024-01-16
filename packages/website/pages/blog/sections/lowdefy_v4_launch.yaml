@@ -58,7 +58,7 @@ blocks:
 
         ### Built on top of Next.js
 
-        Lowdefy **V4** is now built on top of the popular [Next.js](https://nextjs.org) framework. You'll now have the benefit of the thriving Next.js ecosystem.
+        Lowdefy **V4** is now built on top of the popular [Next.js](https://nextjs.org) framework. You'll now have the benefits of the thriving Next.js ecosystem.
 
         By adopting Next.js, Lowdefy **V4** gains access to industry leading web development practices, faster page load times, flexible and easy deployment options.
 
@@ -81,9 +81,9 @@ blocks:
         In this Lowdefy upgrade we are bringing back the JavaScript build step to Lowdefy apps.
 
         While the Webpack module federation of **V3** simplified the build process by using one build bundle for all apps and loading front-end dependencies at run time, it introduced other problems such as:
-        - large loading waterfalls,
-        - complications for loading server side dependencies at runtime and
-        - limitations on app specific build process optimizations and modifications.
+        - large loading waterfalls
+        - complications for loading server side dependencies at runtime
+        - limitations on app specific build process optimizations and modifications
 
         In Lowdefy **V4** the app-specific build step enables app-specific dependencies for bundles that can apply advanced features. For example, in **V4** any [Ant Design V4's +900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less) can be modified. We've introduced this change to help you build beautiful apps with ease.
 

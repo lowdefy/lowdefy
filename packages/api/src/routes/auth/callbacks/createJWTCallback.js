@@ -27,6 +27,7 @@ function createJWTCallback({ authConfig, logger, plugins }) {
   async function jwtCallback({ token, user, account, profile, isNewUser }) {
     if (profile) {
       const {
+        id,
         sub,
         name,
         given_name,
@@ -49,6 +50,7 @@ function createJWTCallback({ authConfig, logger, plugins }) {
         updated_at,
       } = profile;
       token = {
+        id,
         sub,
         name,
         given_name,

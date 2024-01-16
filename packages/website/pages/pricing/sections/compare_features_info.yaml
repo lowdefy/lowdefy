@@ -271,9 +271,8 @@
       business: true
       enterprise: true
 
-    # Maybe rename this - dedicated developers/engineers,
-    - id: dedicated_support
-      title: Dedicated Support
+    - id: enterprise_support
+      title: Enterprise Support
       tooltip: Access to a Lowdefy Engineer. Build first app with the help of our engineers.
       free: false
       business: false

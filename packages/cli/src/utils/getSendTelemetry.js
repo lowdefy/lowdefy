@@ -42,7 +42,7 @@ function getSendTelemetry({
     try {
       await axios.request({
         method: 'post',
-        url: 'https://api.lowdefy.net/telemetry/cli',
+        url: 'https://api.lowdefy.net/v4/telemetry/cli',
         headers: {
           'User-Agent': `Lowdefy CLI v${cliVersion}`,
         },

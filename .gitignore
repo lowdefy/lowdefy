@@ -33,6 +33,6 @@ packages/utils/node-utils/test/copyFile/**
 app/**
 
 packages/docs/public/sitemap.xml
-packages/web/public/sitemap.xml
+packages/website/public/sitemap.xml
 
 lerna-debug.log
