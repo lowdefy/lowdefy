@@ -3,22 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-rc.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.14...v4.0.0-rc.15) (2023-12-05)
+# [4.0.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.15...v4.0.0) (2024-01-16)
 
+We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
+
+In this update, Lowdefy developers now enjoy faster app performance and improved functionality with custom code plugins.
+
+## New Features in Lowdefy V4
+
+1. **Next.js build**: Lowdefy apps have been converted to run on top of the [Next.js](https://nextjs.org/) framework.
+2. **All of Auth.js**: App authentication are now implemented by configuring any [Auth.js](https://authjs.dev/) supported providers, adapters and callbacks and events, all of which can be customized.
+3. **Plugin extensibility**: Apps can now be extended with any [**npm**](https://www.npmjs.com/) or [**pnpm workspace**](https://pnpm.io/workspaces) plugins.
+4. **Flexible Styling**: Change any of Ant Design's [more than 900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less).
+5. **Better, Faster Rendering**: Reduced page loading times, better loading state management including easy configuration of loading skeletons where needed.
+
+See our [blog post](https://lowdefy.com/lowdefy-v4-launch) for more details.
+
+See our [migration guide](https://docs.lowdefy.com/v3-to-v4) to guidance on converting V3 apps to V4.
+
+## Pricing and Licensing Changes
+
+Starting with Lowdefy **V4**, we are introducing a [capped usage based pricing](https://lowdefy.com/pricing) to Lowdefy apps that include authentication.
+
+Given the new pricing model we have changed how we license Lowdefy, for more information see [the licenses page](https://docs.lowdefy.com/licenses) in the Lowdefy docs.
+
+## Changes Compared to v4.0.0-rc.15
+
+### Major Changes
+
+- 5cfe04a68: Upgrade change-case dependency to 5.4.0. This is a breaking change and effects the `_change_case` operator. Changes to the `_change_case` operator:
+
+  - Options splitRegex and stripRegexp are no longer supported.
+  - paramCase has been renamed to kebabCase
+  - headerCase has been renamed to trainCase
+  - The following options have been added:
+    - locale
+    - mergeAmbiguousCharacters
+    - prefixCharacters
+    - split
+    - suffixCharacters
+
+### Minor Changes
+
+- Add cover content area to Card block. ([c8a75a9](https://github.com/lowdefy/lowdefy/commit/c8a75a9155c994cc96658933ca4d0b6a5b1afc74))
+- Add git sha to build artifacts. ([c0c0a51](https://github.com/lowdefy/lowdefy/commit/c0c0a512d4586852b32d0fcce2d413848ccbadde))
+- Optimise server apiWrapper. ([7c48608](https://github.com/lowdefy/lowdefy/commit/7c48608b700694c66b94289ff9c3aa323c0e20e2))
+- Support Phosphor icon set. ([82009c6](https://github.com/lowdefy/lowdefy/commit/82009c653d42ce0639b4de786a4adbffb150eb2b))
+
+### Patch Changes
+
+- 66e3c1bfe: Improve property validation errors in MongoDBCollection connection.
+- a8673449b: Update dependency mongodb to v6.3.0.
+- Add error boundary to servers. ([c3f2c4f](https://github.com/lowdefy/lowdefy/commit/c3f2c4fc2fc7dbd981752b2d1792c141bb221d02))
+- Cleanup unused buildoutput. ([75db8b1](https://github.com/lowdefy/lowdefy/commit/75db8b1d380ed82df3bbe6226fa1f299639a470f))
+- Fix sign out event user definition ([3821bfd](https://github.com/lowdefy/lowdefy/commit/3821bfdd7c7b4f8db9258bb849aeb5c607effd22))
+- Fix warning validation not showing. ([7289dcc](https://github.com/lowdefy/lowdefy/commit/7289dcc9e2bd49ee942ba969aab5a924b8900c7b))
+- User defined validation messages should over required message. ([f40c135](https://github.com/lowdefy/lowdefy/commit/f40c1353b396333fc3ba9bc4bcbbdf8958906953))
+
+# [4.0.0-rc.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.14...v4.0.0-rc.15) (2023-12-05)
 
 ### Bug Fixes
 
-* **blocks-antd:** Check if option exists before checking tag. ([a72688d](https://github.com/lowdefy/lowdefy/commit/a72688d687674e309f103244eacba9613938293a))
-
+- **blocks-antd:** Check if option exists before checking tag. ([a72688d](https://github.com/lowdefy/lowdefy/commit/a72688d687674e309f103244eacba9613938293a))
 
 ### Features
 
-* Add cover content area to Card block. ([c8a75a9](https://github.com/lowdefy/lowdefy/commit/c8a75a9155c994cc96658933ca4d0b6a5b1afc74))
-* Support Phosphor icon set. ([82009c6](https://github.com/lowdefy/lowdefy/commit/82009c653d42ce0639b4de786a4adbffb150eb2b))
-
-
-
-
+- Add cover content area to Card block. ([c8a75a9](https://github.com/lowdefy/lowdefy/commit/c8a75a9155c994cc96658933ca4d0b6a5b1afc74))
+- Support Phosphor icon set. ([82009c6](https://github.com/lowdefy/lowdefy/commit/82009c653d42ce0639b4de786a4adbffb150eb2b))
 
 # [4.0.0-rc.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.14) (2023-11-17)
 

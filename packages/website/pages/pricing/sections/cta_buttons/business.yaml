@@ -27,7 +27,7 @@ events:
     - id: link_to_signup
       type: Link
       params:
-        url: https://cloud-dev.lowdefy.app
+        url: https://cloud.lowdefy.com
         urlQuery:
           tier: business
         newTab: true

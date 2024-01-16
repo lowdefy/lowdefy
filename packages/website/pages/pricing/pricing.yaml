@@ -19,6 +19,8 @@ properties:
 style:
   backgroundColor: '#F7F7F7'
   padding: 0px 8px
+layout:
+  contentJustify: center
 blocks:
   - _ref: shared/header/header.yaml
   - _ref: pages/pricing/sections/pay_for_what_you_use.yaml
@@ -30,7 +32,14 @@ blocks:
       vars:
         sections:
           _ref: pages/pricing/sections/compare_features_info.yaml
-  - _ref: pages/pricing/sections/faq.yaml
-  - _ref: shared/cta.yaml
+  - id: max_width
+    type: Box
+    layout:
+      contentJustify: center
+    style:
+      maxWidth: 1000px
+    blocks:
+      - _ref: pages/pricing/sections/faq.yaml
+      - _ref: shared/cta.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml
