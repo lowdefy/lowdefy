@@ -15,8 +15,8 @@ async function handler({ req, res }) {
     throw new Error('Only GET requests are supported.');
   }
 
-  const license = await validateLicense();
-  return res.status(200).json(license);
+  const { code, entitlements } = await validateLicense();
+  return res.status(200).json({ code, entitlements });
 }
 
 export default apiWrapper(handler);
