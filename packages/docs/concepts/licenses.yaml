@@ -26,15 +26,15 @@ _ref:
           content: |
             Lowdefy software is distributed under three different software licenses.
 
-            - The Apache License Version 2.0 open source license
+            - The Apache License Version 2.0 Open Source license
             - The Lowdefy Commercial License
-            - The Business Source License version 1.1
+            - The Business Source License Version 1.1
 
             ## Open Source License
 
-            An open source version of Lowdefy is available, licensed under the [Apache License Version 2.0](https://github.com/lowdefy/lowdefy/blob/main/licenses/Apache-2.0.txt). Lowdefy Commercial features are not available under the Apache License.
+            An Open Source version of Lowdefy is available, licensed under the [Apache License Version 2.0](https://github.com/lowdefy/lowdefy/blob/main/licenses/Apache-2.0.txt). Lowdefy Commercial features are not available under the Apache License.
 
-            The open source licensed version can be used by setting the community edition flag when running the CLI. To build a open source production server:
+            The Open Source licensed version can be used by setting the community edition flag when running the CLI. To build a Open Source production server:
 
             ```
             pnpx lowdefy@4 build --community-edition

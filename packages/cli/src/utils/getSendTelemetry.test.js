@@ -64,7 +64,7 @@ test('send telemetry', async () => {
           'User-Agent': 'Lowdefy CLI vcliVersion',
         },
         method: 'post',
-        url: 'https://api.lowdefy.net/telemetry/cli',
+        url: 'https://api.lowdefy.net/v4/telemetry/cli',
       },
     ],
   ]);

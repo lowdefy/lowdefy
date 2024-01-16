@@ -32,6 +32,7 @@ function createSessionCallback({ authConfig, plugins }) {
       : token.id ?? token.sub ?? token.email;
     if (token) {
       const {
+        id,
         sub,
         name,
         given_name,
@@ -54,6 +55,7 @@ function createSessionCallback({ authConfig, plugins }) {
         updated_at,
       } = token;
       session.user = {
+        id,
         sub,
         name,
         given_name,
