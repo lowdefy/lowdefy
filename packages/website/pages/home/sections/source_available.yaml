@@ -47,12 +47,13 @@ blocks:
           span: 14
           contentGutter: 16
         blocks:
+          # TODO:
           - id: open_source_content
             type: Html
             properties:
               html: |
                 <h2>
-                  Lowdefy is an <br/><span style="color:white; text-shadow: #1990FF 1px 0 10px;">open-source</span> framework
+                  Lowdefy is a <br/><span style="color:white; text-shadow: #1990FF 1px 0 10px;">source available</span> framework
                 </h2>
                 <p>
                   Build future proof apps that you can host anywhere with no lock-in.

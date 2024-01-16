@@ -14,7 +14,7 @@
 
 # Lowdefy 🫶 The Config Webstack for Business Apps
 
-Lowdefy is an open-source web framework that enables you to:
+Lowdefy is a source available web framework that enables you to:
 
 - 🎨 Build web UIs and connect to databases and APIs.
 - 🔌 Extend app functionality with npm plugins.
@@ -41,10 +41,6 @@ Make API calls and read and write to your databases with minimal config. Build w
 - Execute requests from both authenticated and public pages.
 - Secure secrets for passwords and API keys.
 - Build custom connections with any npm modules.
-
-### 🔓 Open-Source Framework with No Lock-In
-
-Lowdefy is an open-source framework built on top of Next.js. Lowdefy allows you to build future-proof apps, host them anywhere, and avoid vendor lock-in.
 
 ## 🔧 Extend Everything with NPM Plugins
 
