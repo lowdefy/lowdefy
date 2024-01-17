@@ -42,7 +42,7 @@ blocks:
       padding: 20px 0 40px 0
     properties:
       content: |
-        # Introducing <span class="gradient-text">Lowdefy V4</span>: The Easiest Config Webstack built on top of Next.js
+        # Introducing <span class="gradient-text">Lowdefy V4</span>: The Easiest Config Webstack Built on Top of Next.js
 
         We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
 
@@ -51,7 +51,7 @@ blocks:
         ## New Features in Lowdefy V4
 
           1. **Next.js build**: Lowdefy apps have been converted to run on top of the [Next.js](https://nextjs.org/) framework.
-          2. **All of Auth.js**: App authentication are now implemented by configuring any [Auth.js](https://authjs.dev/) supported providers, adapters and callbacks and events, all of which can be customized.
+          2. **All of Auth.js**: App authentication is now implemented by configuring any [Auth.js](https://authjs.dev/) supported providers, adapters and callbacks and events, all of which can be customized.
           3. **Plugin extensibility**: Apps can now be extended with any [**npm**](https://www.npmjs.com/) or [**pnpm workspace**](https://pnpm.io/workspaces) plugins.
           4. **Flexible Styling**: Change any of Ant Design's [more than 900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less).
           5. **Better, Faster Rendering**: Reduced page loading times, better loading state management including easy configuration of loading skeletons where needed.
@@ -66,7 +66,7 @@ blocks:
 
         ### Flexible authentication secured with Auth.js
 
-        With over 700k daily npm installs, [Auth.js](https://authjs.dev/) is one of the most popular authentication solutions in the JavaScript ecosystem. Authentication in Lowdefy **V4** has been reengineered to support not only OpenID Connect identity providers, but also inlcude more than 75 popular services (Google, Github, MS Active Directory, Auth0), email/passwordless/magic link auth, or other credentials using any customizible database adapter. This enables Lowdefy developers to build apps using any identity provider or implement niche authentication requirements such as [JWT token based authentication](https://github.com/lowdefy/lowdefy-example-jwt-auth).
+        With over 700k daily npm installs, [Auth.js](https://authjs.dev/) is one of the most popular authentication solutions in the JavaScript ecosystem. Authentication in Lowdefy **V4** has been reengineered to support not only OpenID Connect identity providers, but also include more than 75 popular services (Google, Github, MS Active Directory, Auth0), email/passwordless/magic link auth, or other credentials using any customizible database adapter. This enables Lowdefy developers to build apps using any identity provider or implement niche authentication requirements such as [JWT token based authentication](https://github.com/lowdefy/lowdefy-example-jwt-auth).
 
         In Lowdefy **V4** authentication configuration remains easy but powerful. Features such as public pages, role based access control, custom callbacks and configurable user objects enable Lowdefy developers to build applications for every business need. See the [user authentication section](https://docs.lowdefy.com/users-introduction) in our docs for more details regarding Lowdefy authentication.
 
