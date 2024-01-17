@@ -16,6 +16,9 @@ id: pricing_calculator_box
 type: Box
 layout:
   contentJustify: center
+style:
+  '@media (max-width: 768px)':
+    display: none
 events:
   onMount:
     - id: init_calculator
@@ -31,12 +34,19 @@ blocks:
       borderRadius: 40px 0px 0px 40px
       padding: 60px 40px 80px 60px
       backgroundColor: rgba(256,256,256,0.5)
+      flex: 0 1 700px
+      '@media (max-width: 1015px)':
+        flex: 0 1 525px
     blocks:
       _ref: pages/pricing/sections/pricing_calculator/sliders.yaml
   - id: pricing_calculator_right_section
     type: Box
     layout:
       contentDirection: column
+    style:
+      flex: 0 1 300px
+      '@media (max-width: 1015px)':
+        flex: 0 1 225px
     blocks:
       - id: pricing_calculator_right_top_section
         type: Box
@@ -59,6 +69,10 @@ blocks:
               level: 4
           - id: pricing_breakdown
             type: Html
+            style:
+              padding: 0px 50px
+              '@media (max-width: 1015px)':
+                padding: 0px 20px
             properties:
               html:
                 _nunjucks:

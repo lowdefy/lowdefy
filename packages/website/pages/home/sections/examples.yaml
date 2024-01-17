@@ -52,9 +52,12 @@ blocks:
             git: https://github.com/lowdefy/lowdefy-example-survey
             view: https://example-survey.lowdefy.com
             layout:
-              span: 6
-              sm:
+              lg:
+                span: 6
+              md:
                 span: 12
+              sm:
+                span: 24
       - _ref:
           path: pages/home/components/example_card.yaml.njk
           vars:
@@ -66,9 +69,12 @@ blocks:
             git: https://github.com/lowdefy/lowdefy-example-case-management
             view: https://example-case-management.lowdefy.com
             layout:
-              span: 6
-              sm:
+              lg:
+                span: 6
+              md:
                 span: 12
+              sm:
+                span: 24
       - _ref:
           path: pages/home/components/example_card.yaml.njk
           vars:
@@ -80,9 +86,12 @@ blocks:
             git: https://github.com/lowdefy/lowdefy-example-crud
             view: https://example-crud.lowdefy.com
             layout:
-              span: 6
-              sm:
+              lg:
+                span: 6
+              md:
                 span: 12
+              sm:
+                span: 24
       - _ref:
           path: pages/home/components/example_card.yaml.njk
           vars:
@@ -94,9 +103,12 @@ blocks:
             git: https://github.com/lowdefy/lowdefy-example-reporting
             view: https://example-reporting.lowdefy.com
             layout:
-              span: 6
-              sm:
+              lg:
+                span: 6
+              md:
                 span: 12
+              sm:
+                span: 24
 
   # TODO
   # - id: carousel

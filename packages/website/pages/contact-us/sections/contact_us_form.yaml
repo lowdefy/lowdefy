@@ -25,6 +25,9 @@ blocks:
     type: Box
     layout:
       flex: 0 1 auto
+    style:
+      '@media (max-width: 950px)':
+        display: none
     blocks:
       - _ref:
           path: pages/home/components/sprite.yaml
@@ -57,6 +60,8 @@ blocks:
           padding: 2rem
           borderRadius: 40px 0px 0px 40px
           marginRight: 16
+          '@media (max-width: 690px)':
+            display: none
         blocks:
           - _ref:
               path: pages/home/components/sprite.yaml
@@ -128,6 +133,8 @@ blocks:
           flex: 0 0 380px
         style:
           padding: 2rem
+          '@media (max-width: 700px)':
+            flex: 1 0 auto
         blocks:
           - id: query.name
             type: TextInput
@@ -227,6 +234,9 @@ blocks:
     type: Box
     layout:
       flex: 0 1 auto
+    style:
+      '@media (max-width: 950px)':
+        display: none
     blocks:
       - _ref:
           path: pages/home/components/sprite.yaml
