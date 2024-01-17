@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.0.1
+
+### Patch Changes
+
+- Fix build issue on release.
+
 # [4.0.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.15...v4.0.0) (2024-01-16)
 
 We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
