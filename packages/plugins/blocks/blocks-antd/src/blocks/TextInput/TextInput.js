@@ -56,6 +56,7 @@ const TextInput = ({
               size={properties.size}
               status={validation.status}
               value={value}
+              type={properties.type}
               onChange={(event) => {
                 let input = event.target.value;
 

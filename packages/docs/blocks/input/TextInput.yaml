@@ -57,3 +57,11 @@ _ref:
             placeholder: Your name
             label:
               span: 6
+      - title: Field Type
+        block:
+          id: field_type_example
+          type: TextInput
+          properties:
+            type: password
+            label:
+              span: 6

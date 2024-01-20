@@ -108,3 +108,7 @@
   type: TextInput
   properties:
     maxLength: 4
+- id: 'properties.type: password'
+  type: TextInput
+  properties:
+    type: password

@@ -8,6 +8,11 @@
         "type": "boolean",
         "default": false,
         "description": "Allow the user to clear their input."
+      },      
+      "type": {
+        "type": "string",
+        "default": "text",
+        "description": "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>)."
       },
       "autoFocus": {
         "type": "boolean",
