@@ -27,6 +27,7 @@ const TextInput = ({
   events,
   loading,
   methods,
+  onChange,
   properties,
   required,
   validation,
@@ -54,27 +55,31 @@ const TextInput = ({
               maxLength={properties.maxLength}
               placeholder={properties.placeholder}
               size={properties.size}
+              showCount={properties.showCount}
               status={validation.status}
               value={value}
-              onChange={(event) => {
-                let input = event.target.value;
+              onChange={
+                onChange ||
+                ((event) => {
+                  let input = event.target.value;
 
-                if (properties.replaceInput) {
-                  const regex = new RegExp(
-                    properties.replaceInput.pattern,
-                    properties.replaceInput.flags ?? 'gm'
-                  );
-                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
-                }
+                  if (properties.replaceInput) {
+                    const regex = new RegExp(
+                      properties.replaceInput.pattern,
+                      properties.replaceInput.flags ?? 'gm'
+                    );
+                    input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                  }
 
-                methods.setValue(input);
-                methods.triggerEvent({ name: 'onChange' });
-                const cStart = event.target.selectionStart;
-                const cEnd = event.target.selectionEnd;
-                runAfterUpdate(() => {
-                  event.target.setSelectionRange(cStart, cEnd);
-                });
-              }}
+                  methods.setValue(input);
+                  methods.triggerEvent({ name: 'onChange' });
+                  const cStart = event.target.selectionStart;
+                  const cEnd = event.target.selectionEnd;
+                  runAfterUpdate(() => {
+                    event.target.setSelectionRange(cStart, cEnd);
+                  });
+                })
+              }
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}

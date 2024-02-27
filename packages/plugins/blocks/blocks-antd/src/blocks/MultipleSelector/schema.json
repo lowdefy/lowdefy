@@ -216,6 +216,16 @@
         "default": "Select item",
         "description": "Placeholder text inside the block before user selects input."
       },
+      "loadingPlaceholder": {
+        "type": "string",
+        "default": "Loading",
+        "description": "Placeholder text to show in options while the block is loading."
+      },
+      "notFoundContent": {
+        "type": "string",
+        "default": "not Found",
+        "description": "Placeholder text to show when list of options are empty."
+      },
       "selectedIcon": {
         "type": ["string", "object"],
         "default": "AiOutlineCheck",

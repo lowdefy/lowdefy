@@ -87,7 +87,11 @@ const Selector = ({
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-              notFoundContent={fetchState ? 'Loading' : 'Not found'}
+              notFoundContent={
+                fetchState
+                  ? properties.loadingPlaceholder || 'Loading'
+                  : properties.notFoundContent || 'Not found'
+              }
               onChange={(newVal) => {
                 methods.setValue(
                   type.isPrimitive(uniqueValueOptions[newVal])
