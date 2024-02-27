@@ -81,7 +81,11 @@ const MultipleSelector = ({
                 ((props) => tagRender(props, uniqueValueOptions[props.value], methods, { Icon }))
               }
               maxTagCount={properties.maxTagCount}
-              notFoundContent={fetchState ? 'Loading' : 'Not found'}
+              notFoundContent={
+                fetchState
+                  ? properties.loadingPlaceholder || 'Loading'
+                  : properties.notFoundContent || 'Not found'
+              }
               placeholder={
                 loading ? 'Loading...' : get(properties, 'placeholder', { default: 'Select items' })
               }
