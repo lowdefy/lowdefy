@@ -2,4 +2,4 @@
 '@lowdefy/blocks-antd': patch
 ---
 
-Add showCount propperty to TextInput.
+Add showCount property to TextInput.
