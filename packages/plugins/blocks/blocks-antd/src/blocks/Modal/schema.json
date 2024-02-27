@@ -59,6 +59,13 @@
           "displayType": "yaml"
         }
       },
+      "style": {
+        "type": "object",
+        "description": "Css style to applied to modal.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
       "cancelText": {
         "type": "string",
         "default": "Cancel",
