@@ -38,8 +38,11 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm run publish
+          version: pnpm release:version
+          publish: pnpm release:publish
           createGithubReleases: false
+          commit: 'chore: Publish new release'
+          title: 'Publish new release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
