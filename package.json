@@ -40,7 +40,7 @@
     "start:server-community": "pnpm -r --filter='@lowdefy/server-community' start",
     "start:server-enterprise": "pnpm -r --filter='@lowdefy/server-enterprise' start",
     "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile",
-    "release:publish": "pnpm build && pnpm -r publish"
+    "release:publish": "pnpm -r publish"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.2",
