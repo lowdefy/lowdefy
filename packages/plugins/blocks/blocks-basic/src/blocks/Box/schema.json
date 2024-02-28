@@ -24,6 +24,10 @@
       "onClick": {
         "type": "array",
         "description": "Trigger actions when the Box is clicked."
+      },
+      "onPaste": {
+        "type": "array",
+        "description": "Trigger actions when the element is focused and a paste event is triggered."
       }
     }
   }
