@@ -50,7 +50,7 @@ const BreadcrumbBlock = ({
               },
               link.style,
             ])}
-            {...link}
+            {...(type.isObject(link) ? link : {})}
           >
             {() => (
               <>
@@ -61,7 +61,10 @@ const BreadcrumbBlock = ({
                     properties={{
                       name: type.isString(link.icon) && link.icon,
                       ...(type.isObject(link.icon) ? link.icon : {}),
-                      style: { marginRight: 8, ...(link.icon.style || {}) },
+                      style: {
+                        marginRight: 8,
+                        ...(type.isObject(link.icon?.style) ? link.icon.style : {}),
+                      },
                     }}
                   />
                 )}
