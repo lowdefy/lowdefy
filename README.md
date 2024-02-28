@@ -129,7 +129,3 @@ If you discover a vulnerability, please follow the guide in [SECURITY.md](https:
 ### 🤝 Code of Conduct
 
 In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to follow the [Contributor Covenant](https://www.contributor-covenant.org) code of conduct. See [CODE_OF_CONDUCT.md](https://github.com/lowdefy/lowdefy/blob/main/CODE_OF_CONDUCT.md) for more.
-
-### ⚖️ Licence
-
-[Apache-2.0](https://github.com/lowdefy/lowdefy/blob/main/LICENSE)
