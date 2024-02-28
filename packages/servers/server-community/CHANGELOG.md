@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- Updated dependencies [628c6e2f6]
+- Updated dependencies [126a61267]
+- Updated dependencies [126a61267]
+- Updated dependencies [7fa709f19]
+- Updated dependencies [126a61267]
+- Updated dependencies [bbcf07a27]
+  - @lowdefy/blocks-antd@4.0.2
+  - @lowdefy/blocks-basic@4.0.2
+  - @lowdefy/api@4.0.2
+  - @lowdefy/client@4.0.2
+  - @lowdefy/layout@4.0.2
+  - @lowdefy/actions-core@4.0.2
+  - @lowdefy/blocks-loaders@4.0.2
+  - @lowdefy/operators-js@4.0.2
+  - @lowdefy/plugin-next-auth@4.0.2
+  - @lowdefy/block-utils@4.0.2
+  - @lowdefy/helpers@4.0.2
+  - @lowdefy/node-utils@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

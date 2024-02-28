@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- @lowdefy/operators@4.0.2
+- @lowdefy/helpers@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes
