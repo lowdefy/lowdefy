@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- 7fa709f19: Add onPaste property to Box.
+  - @lowdefy/block-utils@4.0.2
+  - @lowdefy/helpers@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

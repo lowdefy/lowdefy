@@ -1,5 +1,17 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- 628c6e2f6: Bug fix on Breadcrumb.
+- 126a61267: Add style property to Modal.
+- 126a61267: Add showCount property to TextInput.
+- 126a61267: Add notFoundContent and loadingPlaceholder properties to Selector and MultipleSelector.
+- bbcf07a27: Bug fix on Pagination block.
+  - @lowdefy/block-utils@4.0.2
+  - @lowdefy/helpers@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes
