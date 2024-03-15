@@ -2,4 +2,4 @@
 '@lowdefy/actions-core': minor
 ---
 
-Feature: Add new SetFocus Action
+Add the SetFocus action that sets focus on a specified HTML element
