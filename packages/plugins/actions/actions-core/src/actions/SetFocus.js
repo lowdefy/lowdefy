@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 function SetFocus({ globals, params }) {
   const { document } = globals;
-  if (typeof params !== 'string') {
+  if (!type.isString(params)) {
     throw new Error('SetFocus parameter must be a string.');
   }
   document.getElementById(params)?.focus?.();
