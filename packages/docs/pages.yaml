@@ -169,6 +169,7 @@
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
+- _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml

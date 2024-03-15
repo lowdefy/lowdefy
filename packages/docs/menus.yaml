@@ -673,6 +673,9 @@
         - id: ScrollTo
           type: MenuLink
           pageId: ScrollTo
+        - id: SetFocus
+          type: MenuLink
+          pageId: SetFocus
         - id: SetGlobal
           type: MenuLink
           pageId: SetGlobal
