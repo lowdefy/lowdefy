@@ -37,7 +37,7 @@ test('SetFocus with element id param', () => {
   mockDocGetElementById.mockImplementation((id) => {
     if (id === blockId) return { id };
   });
-  SetFocus({ params: blockId });
+  SetFocus({ globals, params: blockId });
   expect(mockDocGetElementById.mock.calls).toEqual([[blockId]]);
 });
 
@@ -45,7 +45,7 @@ test('SetFocus focuses on element with valid ID', () => {
   const blockId = 'blockId';
   const mockElement = { id: blockId, focus: jest.fn() };
   mockDocGetElementById.mockReturnValue(mockElement);
-  SetFocus({ params: blockId });
+  SetFocus({ globals, params: blockId });
   expect(mockDocGetElementById.mock.calls).toEqual([[blockId]]);
   expect(mockElement.focus).toHaveBeenCalledTimes(1);
 });
@@ -53,5 +53,5 @@ test('SetFocus focuses on element with valid ID', () => {
 test('SetFocus handles non-existent element ID', () => {
   const nonExistentId = 'nonExistentId';
   mockDocGetElementById.mockReturnValue(null);
-  expect(() => SetFocus({ params: nonExistentId })).not.toThrow();
+  expect(() => SetFocus({ globals, params: nonExistentId })).not.toThrow();
 });

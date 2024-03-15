@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-function SetFocus({ params }) {
+function SetFocus({ globals, params }) {
+  const { document } = globals;
   if (typeof params !== 'string') {
     throw new Error('SetFocus parameter must be a string.');
   }
-  document.getElementById(params).focus();
+  document.getElementById(params)?.focus?.();
 }
 
 export default SetFocus;
