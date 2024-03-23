@@ -34,6 +34,7 @@ function createContext({
   const context = {
     directories,
     entitlements,
+    jsMap: {},
     keyMap: {},
     logger,
     readConfigFile: createReadConfigFile({ directories }),
