@@ -30,19 +30,26 @@ const createChangeHandler =
     });
   };
 
+const calculateInitialState = (value) => {
+  const initialState = {
+    //Using || instead of ?? because 0 is not a valid value for current and pageSize
+    current: parseInt(value?.current) || state.current,
+    pageSize: parseInt(value?.pageSize) || state.pageSize,
+  };
+  initialState.skip = (initialState.current - 1) * initialState.pageSize;
+  return initialState;
+};
+
 const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
-  const [state, setState] = useState({
-    current: parseInt(value?.current) || 1,
-    pageSize: parseInt(value?.pageSize) || properties.pageSizeOptions?.[0] || 10,
-    skip: parseInt(value?.skip) || 0,
-  });
+  const [state, setState] = useState(() => calculateInitialState(value));
+
   useEffect(() => {
     if (JSON.stringify(value) !== JSON.stringify(state)) {
       const nextState = {
         current: parseInt(value?.current) || state.current,
         pageSize: parseInt(value?.pageSize) || state.pageSize,
-        skip: parseInt(value?.skip) || state.skip,
       };
+      nextState.skip = (nextState.current - 1) * nextState.pageSize;
       setState(nextState);
       methods.setValue(nextState);
     }
