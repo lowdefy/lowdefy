@@ -90,6 +90,7 @@ PaginationBlock.meta = {
   valueType: 'object',
   initValue: {
     current: 1,
+    pageSize: 10,
     skip: 0,
   },
   category: 'input',
