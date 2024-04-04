@@ -30,26 +30,30 @@ const createChangeHandler =
     });
   };
 
-const calculateInitialState = (value) => {
-  const initialState = {
-    //Using || instead of ?? because 0 is not a valid value for current and pageSize
-    current: parseInt(value?.current) || state.current,
-    pageSize: parseInt(value?.pageSize) || state.pageSize,
+const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
+  const state = {
+    current: type.isInt(value?.current) ? value?.current : defaultCurrent,
+    pageSize: type.isInt(value?.pageSize) ? value?.pageSize : defaultPageSize,
   };
-  initialState.skip = (initialState.current - 1) * initialState.pageSize;
-  return initialState;
+  state.skip = (state.current - 1) * state.pageSize;
+  return state;
 };
 
 const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
-  const [state, setState] = useState(() => calculateInitialState(value));
-
+  const [state, setState] = useState(() =>
+    calculateState({
+      defaultCurrent: 1,
+      defaultPageSize: properties.pageSizeOptions?.[0] ?? 10,
+      value,
+    })
+  );
   useEffect(() => {
     if (JSON.stringify(value) !== JSON.stringify(state)) {
-      const nextState = {
-        current: parseInt(value?.current) || state.current,
-        pageSize: parseInt(value?.pageSize) || state.pageSize,
-      };
-      nextState.skip = (nextState.current - 1) * nextState.pageSize;
+      const nextState = calculateState({
+        defaultCurrent: state.current,
+        defaultPageSize: state.pageSize,
+        value,
+      });
       setState(nextState);
       methods.setValue(nextState);
     }
@@ -84,18 +88,14 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
     />
   );
 };
-
 PaginationBlock.defaultProps = blockDefaultProps;
 PaginationBlock.meta = {
   valueType: 'object',
   initValue: {
     current: 1,
-    pageSize: 10,
-    skip: 0,
   },
   category: 'input',
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };
-
 export default PaginationBlock;
