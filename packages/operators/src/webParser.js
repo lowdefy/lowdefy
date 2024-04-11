@@ -64,6 +64,7 @@ class WebParser {
           globals: _internal.globals,
           home,
           input: inputs[this.context.id],
+          jsMap: this.context.jsMap,
           location: applyArrayIndices(arrayIndices, location),
           lowdefyGlobal,
           menus,

@@ -30,6 +30,7 @@ import actions from '../../build/plugins/actions.js';
 import blocks from '../../build/plugins/blocks.js';
 import icons from '../../build/plugins/icons.js';
 import operators from '../../build/plugins/operators/client.js';
+import jsMap from '../../build/plugins/operators/clientJsMap.js';
 
 const App = ({ auth, lowdefy }) => {
   const router = useRouter();
@@ -49,6 +50,7 @@ const App = ({ auth, lowdefy }) => {
           config={{
             rootConfig,
           }}
+          jsMap={jsMap}
           lowdefy={lowdefy}
           pageId={pageId}
           resetContext={resetContext}
