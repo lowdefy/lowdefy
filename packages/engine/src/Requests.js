@@ -89,6 +89,8 @@ class Requests {
 
   async fetch(request) {
     request.loading = true;
+    const startTime = Date.now();
+
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({
         blockId: request.blockId,
@@ -103,11 +105,15 @@ class Requests {
       );
       request.response = deserializedResponse;
       request.loading = false;
+      const endTime = Date.now();
+      request.responseTime = endTime - startTime;
       this.context._internal.update();
       return deserializedResponse;
     } catch (error) {
       request.error = error;
       request.loading = false;
+      const endTime = Date.now();
+      request.responseTime = endTime - startTime;
       this.context._internal.update();
       throw error;
     }
