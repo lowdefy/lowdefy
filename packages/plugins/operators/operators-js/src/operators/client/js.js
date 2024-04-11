@@ -17,21 +17,21 @@
 function js(operatorContext) {
   const { jsMap, operators, location, params } = operatorContext;
   try {
-    return jsMap[params.hash]({
-      actions: (params) => operators._actions({ ...operatorContext, params }),
-      event: (params) => operators._event({ ...operatorContext, params }),
-      input: (params) => operators._input({ ...operatorContext, params }),
-      location: (params) => operators._location({ ...operatorContext, params }),
-      lowdefyGlobal: (params) => operators._global({ ...operatorContext, params }),
-      request: (params) => operators._request({ ...operatorContext, params }),
-      state: (params) => operators._state({ ...operatorContext, params }),
-      urlQuery: (params) => operators._url_query({ ...operatorContext, params }),
-      user: (params) => operators._user({ ...operatorContext, params }),
+    return jsMap[params]({
+      actions: (p) => operators._actions({ ...operatorContext, params: p }),
+      event: (p) => operators._event({ ...operatorContext, params: p }),
+      input: (p) => operators._input({ ...operatorContext, params: p }),
+      location: (p) => operators._location({ ...operatorContext, params: p }),
+      lowdefyGlobal: (p) => operators._global({ ...operatorContext, params: p }),
+      request: (p) => operators._request({ ...operatorContext, params: p }),
+      state: (p) => operators._state({ ...operatorContext, params: p }),
+      urlQuery: (p) => operators._url_query({ ...operatorContext, params: p }),
+      user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
     throw new Error(
       `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
-        params.hash
+        params
       ].toString()}`
     );
   }

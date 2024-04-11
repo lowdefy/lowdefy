@@ -32,7 +32,7 @@ function makeHash({ jsMap, env, value }) {
     }
   }
   jsMap[env][hash] = mapDefinition.function;
-  return { hash, args: value.args };
+  return { _js: hash };
 }
 
 function JsMapParser({ input, jsMap, env }) {

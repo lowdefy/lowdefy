@@ -17,15 +17,15 @@
 function js(operatorContext) {
   const { jsMap, operators, location, params } = operatorContext;
   try {
-    return jsMap[params.hash]({
-      payload: (params) => operators._payload({ ...operatorContext, params }),
-      secrets: (params) => operators._secrets({ ...operatorContext, params }),
-      user: (params) => operators._user({ ...operatorContext, params }),
+    return jsMap[params]({
+      payload: (p) => operators._payload({ ...operatorContext, params: p }),
+      secrets: (p) => operators._secrets({ ...operatorContext, params: p }),
+      user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
     throw new Error(
       `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
-        params.hash
+        params
       ].toString()}`
     );
   }
