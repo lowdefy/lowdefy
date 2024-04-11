@@ -14,10 +14,21 @@
   limitations under the License.
 */
 
-import serverJsOperator from 'TOOD'; // TODO: from where to import the build output file?
-
-function js(args) {
-  return serverJsOperator[args.params](args);
+function js(operatorContext) {
+  const { jsMap, operators, location, params } = operatorContext;
+  try {
+    return jsMap[params.hash]({
+      payload: (params) => operators._payload({ ...operatorContext, params }),
+      secrets: (params) => operators._secrets({ ...operatorContext, params }),
+      user: (params) => operators._user({ ...operatorContext, params }),
+    });
+  } catch (error) {
+    throw new Error(
+      `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
+        params.hash
+      ].toString()}`
+    );
+  }
 }
 
 export default js;

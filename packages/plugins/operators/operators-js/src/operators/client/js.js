@@ -14,10 +14,27 @@
   limitations under the License.
 */
 
-import clientJsOperator from 'TOOD'; // TODO: from where to import the build output file?
-
-function js(args) {
-  return clientJsOperator[args.params](args);
+function js(operatorContext) {
+  const { jsMap, operators, location, params } = operatorContext;
+  try {
+    return jsMap[params.hash]({
+      actions: (params) => operators._actions({ ...operatorContext, params }),
+      event: (params) => operators._event({ ...operatorContext, params }),
+      input: (params) => operators._input({ ...operatorContext, params }),
+      location: (params) => operators._location({ ...operatorContext, params }),
+      lowdefyGlobal: (params) => operators._global({ ...operatorContext, params }),
+      request: (params) => operators._request({ ...operatorContext, params }),
+      state: (params) => operators._state({ ...operatorContext, params }),
+      urlQuery: (params) => operators._url_query({ ...operatorContext, params }),
+      user: (params) => operators._user({ ...operatorContext, params }),
+    });
+  } catch (error) {
+    throw new Error(
+      `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
+        params.hash
+      ].toString()}`
+    );
+  }
 }
 
 export default js;
