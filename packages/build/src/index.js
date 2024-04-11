@@ -50,7 +50,7 @@ import writeTypes from './build/writeTypes.js';
 
 async function build(options) {
   const context = createContext(options);
-  let components = await buildRefs({ context });
+  const components = await buildRefs({ context });
   testSchema({ components, context });
   buildApp({ components, context });
   validateConfig({ components, context });
@@ -59,23 +59,23 @@ async function build(options) {
   buildConnections({ components, context });
   buildPages({ components, context });
   buildMenu({ components, context });
+  buildJs({ components, context });
   addKeys({ components, context });
   buildTypes({ components, context });
   buildImports({ components, context });
-  components = buildJs({ components, context });
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });
   await writeConnections({ components, context });
   await writeRequests({ components, context });
   await writePages({ components, context });
-  await writeJs({ components, context });
   await writeConfig({ components, context });
   await writeGlobal({ components, context });
   await writeMaps({ components, context });
   await writeMenus({ components, context });
   await writeTypes({ components, context });
   await writePluginImports({ components, context });
+  await writeJs({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }

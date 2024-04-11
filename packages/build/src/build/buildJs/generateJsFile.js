@@ -19,7 +19,7 @@ import { nunjucksFunction } from '@lowdefy/nunjucks';
 const template = `
 export default {
   {% for hash in hashes -%}
-  {{ hash }}: ({{ functionPrototype }}) => { {{ map[hash] }} },
+  '{{ hash }}': ({{ functionPrototype }}) => { {{ map[hash] | safe }} },
   {% endfor -%}
 };`;
 

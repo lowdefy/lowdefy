@@ -14,35 +14,21 @@
   limitations under the License.
 */
 
-import getClientJs from './getClientJs.js';
 import generateJsFile from './generateJsFile.js';
 
-// parse components to see which hashes have been removed, the removed hashes are the server js, the remainder the client.
-async function writeJs({ components, context }) {
-  const allHashes = Object.keys(context.jsMap);
-  const clientHashes = getClientJs(components);
-  const clientJs = {};
-  const serverJs = {};
-  allHashes.forEach((hash) => {
-    if (clientHashes.includes(hash)) {
-      clientJs[hash] = context.jsMap[hash];
-    } else {
-      serverJs[hash] = context.jsMap[hash];
-    }
-  });
-
+async function writeJs({ context }) {
   await context.writeBuildArtifact(
-    'plugins/operators/clientJsOperator.js',
+    'plugins/operators/clientJsMap.js',
     generateJsFile({
-      map: clientJs,
-      functionPrototype: `{ actions, arrayIndices, input, lowdefyGlobal, pageId, requests, state, user }`,
+      map: context.jsMap.client,
+      functionPrototype: `{ actions, event, input, location, lowdefyGlobal, requests, state, urlQuery, user }`,
     })
   );
   await context.writeBuildArtifact(
-    'plugins/operators/serverJsOperator.js',
+    'plugins/operators/serverJsMap.js',
     generateJsFile({
-      map: serverJs,
-      functionPrototype: `{ arrayIndices, env, payload, secrets, user }`,
+      map: context.jsMap.server,
+      functionPrototype: `{ payload, secrets, user }`,
     })
   );
 }

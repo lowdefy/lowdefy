@@ -17,42 +17,41 @@
 import { serializer, type } from '@lowdefy/helpers';
 import crypto from 'crypto';
 
-class JsMapParser {
-  constructor({ jsMap }) {
-    this.jsMap = jsMap;
-    this.parse = this.parse.bind(this);
-    this.makeHash = this.makeHash.bind(this);
+function makeHash({ jsMap, env, value }) {
+  const mapDefinition = {};
+  if (type.isString(value)) {
+    mapDefinition.function = value;
   }
-
-  makeHash(jsDefinition) {
-    // could we use swc here to transpile / cleaanup js for further deduplication and to catch syntax errors at build time?
-    const hash = crypto.createHash('sha512').update(jsDefinition).digest('hex');
-    if (this.jsMap[hash]) {
-      // is this nesasery?
-      if (this.jsMap[hash] !== jsDefinition) {
-        throw new Error('Data of same hash does not match.');
-      }
+  if (!type.isString(mapDefinition.function)) {
+    throw new Error('_js operator expects the JavaScript function definition as a string.');
+  }
+  const hash = crypto.createHash('sha1').update(mapDefinition.function).digest('base64');
+  if (jsMap[env][hash]) {
+    if (jsMap[env][hash] !== mapDefinition.function) {
+      throw new Error('Data of same hash does not match.');
     }
-    this.jsMap[hash] = jsDefinition;
-    return hash;
   }
-  // TODO: consider including the ~k values in the map to point errors to function.
-  // might not parse becuase of ~k value in obj.
-  parse({ input, operatorName = '_js' }) {
-    const reviver = (_, value) => {
-      if (!type.isObject(value)) return value;
-      if (Object.keys(value).length !== 1) return value;
+  jsMap[env][hash] = mapDefinition.function;
+  return { hash, args: value.args };
+}
 
-      const key = Object.keys(value)[0];
-      if (key !== operatorName) return value;
-
-      if (!type.isString(value[key])) {
-        throw new Error('_js operator expects the JavaScript definition as a string.');
-      }
-      return this.makeHash(value[key]);
-    };
-    return serializer.copy(input, { reviver });
+function JsMapParser({ input, jsMap, env }) {
+  if (!jsMap[env]) {
+    jsMap[env] = {};
   }
+  const reviver = (_, value) => {
+    if (!type.isObject(value)) return value;
+    if (Object.keys(value).length !== 1) return value;
+
+    const key = Object.keys(value)[0];
+    if (key !== '_js') return value;
+
+    if (!type.isString(value[key])) {
+      throw new Error('_js operator expects the JavaScript definition as a string.');
+    }
+    return makeHash({ jsMap, env, value: value[key] });
+  };
+  return serializer.copy(input, { reviver });
 }
 
 export default JsMapParser;
