@@ -56,6 +56,7 @@ export { default as Paragraph } from './blocks/Paragraph/Paragraph.js';
 export { default as ParagraphInput } from './blocks/ParagraphInput/ParagraphInput.js';
 export { default as PasswordInput } from './blocks/PasswordInput/PasswordInput.js';
 export { default as PhoneNumberInput } from './blocks/PhoneNumberInput/PhoneNumberInput.js';
+export { default as Popover } from './blocks/Popover/Popover.js';
 export { default as Progress } from './blocks/Progress/Progress.js';
 export { default as RadioSelector } from './blocks/RadioSelector/RadioSelector.js';
 export { default as RatingSlider } from './blocks/RatingSlider/RatingSlider.js';
