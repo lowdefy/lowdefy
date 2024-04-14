@@ -1,0 +1,39 @@
+{
+  "name": "@lowdefy/vscode",
+  "displayName": "Lowdefy VSCode Extension",
+  "description": "A VSCode extension for Lowdefy YAML files.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "1.88.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "lowdefy-yaml",
+        "aliases": [
+          "lowdefy-yaml"
+        ],
+        "extensions": [
+          ".yaml",
+          ".yml"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lowdefy-yaml",
+        "scopeName": "lowdefy.js.yaml",
+        "path": "./syntaxes/lowdefy-yaml.tmLanguage.json"
+      },
+      {
+        "language": "jinja",
+        "scopeName": "source.jinja",
+        "path": "./syntaxes/jinja.tmLanguage.json"
+      }
+    ]
+  }
+}
