@@ -19,11 +19,11 @@ import schema from './schema.js';
 
 function AwsS3PresignedPostPolicy({ request, connection }) {
   const { accessKeyId, secretAccessKey, region, bucket } = connection;
-  const { acl, conditions, expires, key } = request;
+  const { acl, conditions, expires, key, fields } = request;
   const params = {
     Bucket: bucket,
     Fields: {
-      key,
+      key: key,
     },
   };
   if (conditions) {
@@ -35,6 +35,11 @@ function AwsS3PresignedPostPolicy({ request, connection }) {
   if (acl) {
     params.Fields.acl = acl;
   }
+  Object.keys(fields).forEach((field) => {
+    if (fields[field]) {
+      params.Fields[field] = fields[field];
+    }
+  });
   const s3 = new AWS.S3({ accessKeyId, secretAccessKey, region, bucket });
   return s3.createPresignedPost(params);
 }
