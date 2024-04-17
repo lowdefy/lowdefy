@@ -17,7 +17,6 @@
 import jsMapParser from './jsMapParser.js';
 
 function buildJs({ components, context }) {
-  console.log('AAA', components);
   components.pages = components.pages.map((page) => {
     const pageRequests = [...page.requests];
     delete page.requests;
