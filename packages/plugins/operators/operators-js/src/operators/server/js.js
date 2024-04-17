@@ -19,7 +19,7 @@ function js(operatorContext) {
   try {
     return jsMap[params]({
       payload: (p) => operators._payload({ ...operatorContext, params: p }),
-      secrets: (p) => operators._secrets({ ...operatorContext, params: p }),
+      secret: (p) => operators._secret({ ...operatorContext, params: p }),
       user: (p) => operators._user({ ...operatorContext, params: p }),
     });
   } catch (error) {
