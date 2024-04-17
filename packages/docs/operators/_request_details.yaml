@@ -16,10 +16,10 @@ _ref:
       The response includes the following fields:
 
       - `blockId: string`: The id of the block from which the request was initiated.
-      - `loading: boolean`: A boolean indicating if the request is still loading.
+      - `loading: boolean`: When `true`, the request is awaiting a response.
       - `payload: object`: The payload sent with the request.
       - `requestId: string`: The id of the request.
-      - `response: object`: The response returned by the request.
+      - `response: object`: The response returned by the request. `null` while `loading` is true.
       - `responseTime: number`: The time taken to get the response in milliseconds.
 
     arguments: |
