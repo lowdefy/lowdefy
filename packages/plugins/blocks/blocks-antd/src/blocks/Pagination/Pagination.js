@@ -55,7 +55,7 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
         value,
       });
       setState(nextState);
-      methods.setValue(nextState);
+      methods.setValue({ ...nextState });
     }
   }, [value]);
   const showTotal = type.isFunction(properties.showTotal)
