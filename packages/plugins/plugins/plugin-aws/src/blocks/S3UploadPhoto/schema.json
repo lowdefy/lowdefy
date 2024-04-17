@@ -4,6 +4,11 @@
     "type": "object",
     "required": ["s3PostPolicyRequestId"],
     "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the file input to be displayed instead of 'Upload image'.",
+        "default": "Upload image"
+      },
       "s3PostPolicyRequestId": {
         "type": "string",
         "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
@@ -44,6 +49,13 @@
         "type": "boolean",
         "default": false,
         "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt and the upload button is disabled after a file is uploaded."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to draggable area.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
