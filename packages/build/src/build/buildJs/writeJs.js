@@ -21,7 +21,7 @@ async function writeJs({ context }) {
     'plugins/operators/clientJsMap.js',
     generateJsFile({
       map: context.jsMap.client,
-      functionPrototype: `{ actions, event, input, location, lowdefyGlobal, requests, state, urlQuery, user }`,
+      functionPrototype: `{ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }`,
     })
   );
   await context.writeBuildArtifact(
