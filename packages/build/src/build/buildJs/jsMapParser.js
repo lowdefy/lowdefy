@@ -18,20 +18,8 @@ import { serializer, type } from '@lowdefy/helpers';
 import crypto from 'crypto';
 
 function makeHash({ jsMap, env, value }) {
-  const mapDefinition = {};
-  if (type.isString(value)) {
-    mapDefinition.function = value;
-  }
-  if (!type.isString(mapDefinition.function)) {
-    throw new Error('_js operator expects the JavaScript function definition as a string.');
-  }
-  const hash = crypto.createHash('sha1').update(mapDefinition.function).digest('base64');
-  if (jsMap[env][hash]) {
-    if (jsMap[env][hash] !== mapDefinition.function) {
-      throw new Error('Data of same hash does not match.');
-    }
-  }
-  jsMap[env][hash] = mapDefinition.function;
+  const hash = crypto.createHash('sha1').update(value).digest('base64');
+  jsMap[env][hash] = value;
   return { _js: hash };
 }
 
