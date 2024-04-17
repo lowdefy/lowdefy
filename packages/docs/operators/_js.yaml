@@ -1,0 +1,100 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/operators.yaml.njk
+  transformer: templates/operatorsMethodTransformer.js
+  vars:
+    pageId: _js
+    pageTitle: _js
+    filePath: operators/_js.yaml
+    experimental: true
+    types: |
+      ```
+      (function: string): any
+      ```
+    description: |
+      The `_js` operator enables the use of custom JavaScript logic within Lowdefy configuration files. The purpose of this operator is to facilitate quick integration of shorter, synchronous functions. Like other operators, these functions are evaluated every time a page is re-rendered.
+      For more complex logic, or when the use of external libraries is necessary, consider developing a [custom plugin](/plugins-introduction).
+
+      #### Using Lowdefy operators in JavaScript
+      Certain Lowdefy operators can be used inside of the JavaScript function block. These operators are available as functions and will take their standard arguments.
+
+      ###### Client JavaScript function prototype:
+      _Function parameters are passed to the operator method._
+      ```js
+      function ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) {
+        // Your JavaScript code here
+      };
+      ```
+
+      The function arguments available to the JavaScript function are:
+        - `actions: function`: Implements the [_actions](/_actions) operator.
+        - `event: function`: Implements the [_event](/_event) operator.
+        - `input: function`: Implements the [_input](/_input) operator.
+        - `location: function`: Implements the [_location](/_location) operator.
+        - `lowdefyGlobal: function`: Implements the [_global](/_global) operator.
+        - `request: function`: Implements the [_request](/_request) operator.
+        - `state: function`: Implements the [_state](/_state) operator.
+        - `urlQuery: function`: Implements the [_url_query](/_url_query) operator.
+        - `user: function`: Implements the [_user](/_user) operator.
+
+      ###### Server JavaScript function prototype:
+      _Function parameters are passed to the operator method._
+      ```js
+      function ({ payload, secrets, user }) {
+        // Your JavaScript code here
+      };
+      ```
+
+      The function arguments available to the JavaScript function are
+        - `payload: function`: Implements the [_payload](/_payload) operator.
+        - `secrets: function`: Implements the [_secret](/_secret) operator.
+        - `user: function`: Implements the [_user](/_user) operator.
+
+    arguments: |
+      ###### string
+      The JavaScript function to be executed.
+    examples: |
+      ###### Perform a calculation:
+      ```js
+      _js: |
+        let x = state('input_1');
+        let y = state('input_2');
+        return x + y;
+      ```
+
+      ###### Create custom logic based on data from a request:
+      ```js
+      _js: |
+        let products = request('get_products').data?.products ?? [];
+        let laptopsWithRatingGreaterThan4 = products.filter(product =>
+            product.category === "laptops" && product.rating > 4
+        );
+        let count = laptopsWithRatingGreaterThan4.length;
+        if (count > 3) {
+            return true;
+        }
+        return false;
+      ```
+
+      ###### Chain array methods on request data:
+      ```js 
+      _js: |
+        let products = request('get_products').data?.products ?? [];
+        let totalPriceOfPhones = products
+            .filter(product => product.category === "smartphones")
+            .reduce((acc, product) => acc + product.price, 0);
+        return totalPriceOfPhones;
+      ```
