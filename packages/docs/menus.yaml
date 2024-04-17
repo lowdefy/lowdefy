@@ -521,6 +521,9 @@
         - id: PageSiderMenu
           type: MenuLink
           pageId: PageSiderMenu
+        - id: Popover
+          type: MenuLink
+          pageId: Popover
         - id: Result
           type: MenuLink
           pageId: Result

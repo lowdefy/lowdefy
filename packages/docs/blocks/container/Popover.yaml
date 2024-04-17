@@ -34,9 +34,11 @@ _ref:
             title: Explains what happens.
           blocks:
             - id: settings
-              type: Icon
+              type: Button
               properties:
-                name: AiOutlinedSetting
+                title: Settings
+                icon: AiOutlineSetting
+                block: true
           areas:
             popover:
               blocks:
