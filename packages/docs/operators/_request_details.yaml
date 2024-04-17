@@ -11,7 +11,7 @@ _ref:
       (requestId: string): any
       ```
     description: |
-      The `_request_details` operator returns detailed information of a request. If the request has not yet been called, or is still executing, the returned value is `null`.
+      The `_request_details` operator returns detailed information of a request. If the request has not yet been called, the returned value is `null`.
 
       The response includes the following fields:
 

@@ -141,7 +141,7 @@ _ref:
 
                 ## _request operator
 
-                The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Read more about the `_request` operator [here](/_request). If you want some more detailed information about the request, you can use the [_request_details](/_request_details) operator.
+                The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Read more about the `_request` operator [here](/_request). For more detailed information about a request, the [_request_details](/_request_details) operator can be used.
 
                 ###### Using a request response:
                 ```yaml
