@@ -352,6 +352,9 @@
         - id: TitleInput
           type: MenuLink
           pageId: TitleInput
+        - id: TreeSelector
+          type: MenuLink
+          pageId: TreeSelector
         - id: WeekSelector
           type: MenuLink
           pageId: WeekSelector

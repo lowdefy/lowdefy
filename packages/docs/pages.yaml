@@ -73,6 +73,7 @@
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TitleInput.yaml
+- _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
 - _ref: blocks/display/AgGrid.yaml
