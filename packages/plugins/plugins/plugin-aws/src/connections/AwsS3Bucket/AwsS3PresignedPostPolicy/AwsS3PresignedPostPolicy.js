@@ -16,10 +16,11 @@
 
 import AWS from 'aws-sdk';
 import schema from './schema.js';
+import { type } from '@lowdefy/helpers';
 
 function AwsS3PresignedPostPolicy({ request, connection }) {
   const { accessKeyId, secretAccessKey, region, bucket } = connection;
-  const { acl, conditions, expires, key, fields } = request;
+  const { acl, conditions, expires, key, fields = {} } = request;
   const params = {
     Bucket: bucket,
     Fields: {
@@ -34,6 +35,9 @@ function AwsS3PresignedPostPolicy({ request, connection }) {
   }
   if (acl) {
     params.Fields.acl = acl;
+  }
+  if (type.isObject(fields) === false) {
+    throw new Error('properties.fields must be an object.');
   }
   Object.keys(fields).forEach((field) => {
     if (fields[field]) {
