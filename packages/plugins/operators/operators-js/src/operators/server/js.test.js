@@ -19,41 +19,21 @@ import js from './js.js';
 
 const rootLocation = 'root';
 const map = {
-  c1: ({ actions }) => {
-    return actions('a');
+  c1: ({ payload }) => {
+    return payload('a');
   },
-  c2: ({ event }) => {
-    return event('e');
+  c2: ({ secret }) => {
+    return secret('e');
   },
-  c3: ({ input }) => {
-    return input('i');
-  },
-  c4: ({ location }) => {
-    return location('l');
-  },
-  c5: ({ state }) => {
-    return state('s');
-  },
-  c6: ({ request }) => {
-    return request('r');
-  },
-  c7: ({ urlQuery }) => {
-    return urlQuery('uq');
-  },
-  c8: ({ user }) => {
-    return user('u');
+  c3: ({ user }) => {
+    return user('i');
   },
 };
 
 test('js default', async () => {
   const lowdefyOperators = {
-    _actions: jest.fn(),
-    _event: jest.fn(),
-    _input: jest.fn(),
-    _location: jest.fn(),
-    _state: jest.fn(),
-    _request: jest.fn(),
-    _url_query: jest.fn(),
+    _payload: jest.fn(),
+    _secret: jest.fn(),
     _user: jest.fn(),
   };
   const keys = Object.keys(map);
@@ -61,14 +41,9 @@ test('js default', async () => {
     js({ jsMap: map, operators: lowdefyOperators, location: rootLocation, params: key });
   });
 
-  expect(lowdefyOperators._actions.mock.calls[0][0]['params']).toEqual('a');
-  expect(lowdefyOperators._event.mock.calls[0][0]['params']).toEqual('e');
-  expect(lowdefyOperators._input.mock.calls[0][0]['params']).toEqual('i');
-  expect(lowdefyOperators._location.mock.calls[0][0]['params']).toEqual('l');
-  expect(lowdefyOperators._state.mock.calls[0][0]['params']).toEqual('s');
-  expect(lowdefyOperators._request.mock.calls[0][0]['params']).toEqual('r');
-  expect(lowdefyOperators._url_query.mock.calls[0][0]['params']).toEqual('uq');
-  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('u');
+  expect(lowdefyOperators._payload.mock.calls[0][0]['params']).toEqual('a');
+  expect(lowdefyOperators._secret.mock.calls[0][0]['params']).toEqual('e');
+  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('i');
 });
 
 test('js throw when invalid javascript function', async () => {
