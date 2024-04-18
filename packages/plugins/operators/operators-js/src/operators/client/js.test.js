@@ -20,28 +20,28 @@ import js from './js.js';
 const rootLocation = 'root';
 const map = {
   c1: ({ actions }) => {
-    return actions('_a');
+    return actions('a');
   },
   c2: ({ event }) => {
-    return event('_e');
+    return event('e');
   },
   c3: ({ input }) => {
-    return input('_i');
+    return input('i');
   },
   c4: ({ location }) => {
-    return location('_l');
+    return location('l');
   },
   c5: ({ state }) => {
-    return state('_s');
+    return state('s');
   },
   c6: ({ request }) => {
-    return request('_r');
+    return request('r');
   },
   c7: ({ urlQuery }) => {
-    return urlQuery('_uq');
+    return urlQuery('uq');
   },
   c8: ({ user }) => {
-    return user('_u');
+    return user('u');
   },
 };
 
@@ -61,14 +61,14 @@ test('js default', async () => {
     js({ jsMap: map, operators: lowdefyOperators, location: rootLocation, params: key });
   });
 
-  expect(lowdefyOperators._actions.mock.calls[0][0]['params']).toEqual('_a');
-  expect(lowdefyOperators._event.mock.calls[0][0]['params']).toEqual('_e');
-  expect(lowdefyOperators._input.mock.calls[0][0]['params']).toEqual('_i');
-  expect(lowdefyOperators._location.mock.calls[0][0]['params']).toEqual('_l');
-  expect(lowdefyOperators._state.mock.calls[0][0]['params']).toEqual('_s');
-  expect(lowdefyOperators._request.mock.calls[0][0]['params']).toEqual('_r');
-  expect(lowdefyOperators._url_query.mock.calls[0][0]['params']).toEqual('_uq');
-  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('_u');
+  expect(lowdefyOperators._actions.mock.calls[0][0]['params']).toEqual('a');
+  expect(lowdefyOperators._event.mock.calls[0][0]['params']).toEqual('e');
+  expect(lowdefyOperators._input.mock.calls[0][0]['params']).toEqual('i');
+  expect(lowdefyOperators._location.mock.calls[0][0]['params']).toEqual('l');
+  expect(lowdefyOperators._state.mock.calls[0][0]['params']).toEqual('s');
+  expect(lowdefyOperators._request.mock.calls[0][0]['params']).toEqual('r');
+  expect(lowdefyOperators._url_query.mock.calls[0][0]['params']).toEqual('uq');
+  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('u');
 });
 
 test('js throw when invalid javascript function', async () => {
