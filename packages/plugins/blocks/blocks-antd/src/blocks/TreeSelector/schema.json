@@ -38,11 +38,6 @@
         "default": true,
         "description": "Selectable if true."
       },
-      "multiple": {
-        "type": "boolean",
-        "default": false,
-        "description": "Allows selecting multiple nodes if true."
-      },
       "options": {
         "default": [],
         "oneOf": [

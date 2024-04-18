@@ -35,18 +35,17 @@ _ref:
               value: '2.1'
 
     description_content: |
-      The `TreeSelector` block allows a user to display, collapse and select a hierarchical list of nodes in a tree structure.
+      The `TreeSelector` block allows a user to display, collapse and select a single node from a hierarchical list in a tree structure.
 
       The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
     examples:
-      - title: Tree list of type and category with connecting line and multiple select.
+      - title: Tree list of type and category with connecting line and single select.
         block:
           id: tree_list_type_category
           type: TreeSelector
           properties:
             showLine: true
-            multiple: true
             options:
               - label: Type
                 value: type

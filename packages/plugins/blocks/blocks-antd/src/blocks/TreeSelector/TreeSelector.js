@@ -32,6 +32,15 @@ const transformData = (data, valueMap, prefix = '') => {
   });
 };
 
+const getValueKey = (value, valueMap) => {
+  for (const key in valueMap) {
+    if (JSON.stringify(value) === JSON.stringify(valueMap[key])) {
+      return key;
+    }
+  }
+  return null;
+};
+
 const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   const treeData = properties.options;
   const valueMap = {};
@@ -41,16 +50,13 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   useEffect(() => {
     if (value === null || (Array.isArray(value) && !value.length)) {
       setSelectedKeys(null);
+    } else {
+      setSelectedKeys([getValueKey(value, valueMap)]);
     }
   }, [value]);
 
   const onSelect = (selectedKeys) => {
-    methods.setValue(
-      selectedKeys
-        .map((key) => valueMap[key])
-        .flat()
-        .reverse()
-    );
+    methods.setValue(selectedKeys.map((key) => valueMap[key]).flat());
     methods.triggerEvent({ name: 'onChange' });
     setSelectedKeys(selectedKeys);
   };
@@ -62,7 +68,7 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
       defaultExpandAll={properties.defaultExpandAll}
       showLine={properties.showLine}
       selectable={properties.selectable}
-      multiple={properties.multiple}
+      multiple={false}
       content={content.options && content.options()}
       treeData={transformedData}
       onSelect={onSelect}
@@ -75,7 +81,7 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
 TreeSelector.defaultProps = blockDefaultProps;
 TreeSelector.meta = {
   category: 'input',
-  valueType: 'any',
+  valueType: 'array',
   icons: [],
   styles: ['blocks/TreeSelector/style.less'],
 };
