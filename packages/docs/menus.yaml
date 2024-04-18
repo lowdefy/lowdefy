@@ -832,6 +832,9 @@
         - id: _request
           type: MenuLink
           pageId: _request
+        - id: _request_details
+          type: MenuLink
+          pageId: _request_details
         - id: _secret
           type: MenuLink
           pageId: _secret
