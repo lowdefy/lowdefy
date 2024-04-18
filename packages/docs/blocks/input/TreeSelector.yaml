@@ -40,11 +40,13 @@ _ref:
       The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
     examples:
-      - title: Tree list of type and category
+      - title: Tree list of type and category with connecting line and multiple select.
         block:
           id: tree_list_type_category
           type: TreeSelector
           properties:
+            showLine: true
+            multiple: true
             options:
               - label: Type
                 value: type

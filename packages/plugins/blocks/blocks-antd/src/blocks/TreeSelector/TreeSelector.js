@@ -19,12 +19,13 @@ import { Tree } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const transformData = (data, valueMap, prefix = '') => {
-  return data.map(({ children, disabled, label, value }, i) => {
+  return data.map(({ children, disabled, disableCheckbox, label, value }, i) => {
     const key = `${prefix}-${i}`;
     valueMap[key] = prefix ? [...valueMap[prefix], value] : [value];
     return {
       children: children && transformData(children, valueMap, key),
       disabled,
+      disableCheckbox,
       key,
       renderTitle: label,
     };
@@ -35,29 +36,23 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   const treeData = properties.options;
   const valueMap = {};
   const transformedData = transformData(treeData, valueMap);
-  const [selectedKey, setSelectedKey] = useState(null);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
   useEffect(() => {
-    if (JSON.stringify(value) === JSON.stringify(selectedKey)) {
-      setSelectedKey(value);
-      methods.triggerEvent({ name: 'onChange' });
+    if (value === null || (Array.isArray(value) && !value.length)) {
+      setSelectedKeys(null);
     }
   }, [value]);
 
-  const onSelect = (selected) => {
-    const nextValue = selected
-      .map((key) => valueMap[key])
-      .flat()
-      .reverse();
-    if (nextValue.length === 0 || nextValue[0] === undefined) {
-      methods.setValue(null);
-      methods.triggerEvent({ name: 'onChange' });
-      setSelectedKey(null);
-      return;
-    }
-    methods.setValue(nextValue[0]);
+  const onSelect = (selectedKeys) => {
+    methods.setValue(
+      selectedKeys
+        .map((key) => valueMap[key])
+        .flat()
+        .reverse()
+    );
     methods.triggerEvent({ name: 'onChange' });
-    setSelectedKey(nextValue[0]);
+    setSelectedKeys(selectedKeys);
   };
   return (
     <Tree
@@ -65,12 +60,14 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
       checkable={properties.checkable}
       disabled={properties.disabled}
       defaultExpandAll={properties.defaultExpandAll}
-      showLine={true}
+      showLine={properties.showLine}
+      selectable={properties.selectable}
+      multiple={properties.multiple}
       content={content.options && content.options()}
       treeData={transformedData}
       onSelect={onSelect}
       titleRender={({ renderTitle }) => renderHtml({ html: renderTitle, methods })}
-      selectedKeys={selectedKey}
+      selectedKeys={selectedKeys}
     />
   );
 };
@@ -79,7 +76,7 @@ TreeSelector.defaultProps = blockDefaultProps;
 TreeSelector.meta = {
   category: 'input',
   valueType: 'any',
-  icons: ['AiOutlineDown', 'AiOutlineRight'],
+  icons: [],
   styles: ['blocks/TreeSelector/style.less'],
 };
 
