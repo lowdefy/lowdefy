@@ -1,0 +1,147 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: background_box
+type: Box
+properties:
+  style:
+    margin: auto
+    background: 'radial-gradient(farthest-corner at 30% 50%, #1990FF -80%, #1990FF -30%, rgba(0,0,0,0) 60%)'
+blocks:
+  - id: open_source_box
+    type: Box
+    style:
+      maxWidth: 1000px
+      margin: -60px auto
+      padding: 120px 20px
+    layout:
+      contentAlign: middle
+      contentGutter: 8
+    blocks:
+      - id: image
+        type: Img
+        layout:
+          span: 10
+          order: 1
+        style:
+          textAlign: right
+        properties:
+          src: ./images/05_OpenSource_001.png
+          style:
+            width: '100%'
+
+      - id: info_box
+        type: Box
+        layout:
+          span: 14
+          contentGutter: 16
+        blocks:
+          # TODO:
+          - id: open_source_content
+            type: Html
+            properties:
+              html: |
+                <h2>
+                  Lowdefy is a <br/><span style="color:white; text-shadow: #1990FF 1px 0 10px;">source available</span> framework
+                </h2>
+                <p>
+                  Build future proof apps that you can host anywhere with no lock-in.
+                </p>
+
+          - id: stats_box
+            type: Box
+            blocks:
+              - id: github_stars_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
+                      2.3K+
+                    </h3>
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
+                      Github Stars
+                    </p>
+
+              - id: apps_created_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
+                      24K+
+                    </h3>
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
+                      Apps Created
+                    </p>
+
+              - id: weekly_downloads_stat
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                properties:
+                  html: |
+                    <h3 style="color: white; text-shadow: #1990FF 1px 0 10px; margin-bottom: 0px">
+                      950+
+                    </h3>
+                    <p style="color: white; text-shadow: #1990FF 1px 0 10px; font-weight: 600;">
+                      Weekly Downloads
+                    </p>
+
+          - id: buttons_box
+            type: Box
+            layout:
+              contentGutter: 8
+            blocks:
+              - id: sponsor
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Sponsor
+                  icon:
+                    name: AiFillHeart
+                  shape: round
+                  color: '#E81E63'
+                  size: large
+                  href: https://opencollective.com/lowdefy-os
+              - id: github
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Star on Github
+                  icon: AiOutlineGithub
+                  shape: round
+                  size: large
+                  style:
+                    borderColor: black
+                  type: ghost
+                  href: https://github.com/lowdefy/lowdefy
+
+              - id: discord
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Join on Discord
+                  icon: FaDiscord
+                  shape: round
+                  size: large
+                  style:
+                    borderColor: black
+                  type: ghost
+                  href: https://discord.gg/WmcJgXt

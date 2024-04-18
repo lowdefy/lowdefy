@@ -141,6 +141,11 @@
         "default": "middle",
         "description": "Size of the block."
       },
+      "showCount": {
+        "type": "boolean",
+        "default": false,
+        "description": "Show text character count"
+      },
       "suffix": {
         "type": "string",
         "description": "Suffix text for the block, priority over suffixIcon."

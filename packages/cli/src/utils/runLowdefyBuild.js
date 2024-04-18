@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ async function runLowdefyBuild({ context, directory }) {
           LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
           LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
           LOWDEFY_LOG_LEVEL: context.options.logLevel,
+          LOWDEFY_LICENSE_ENTITLEMENTS: JSON.stringify(context.license.entitlements),
         },
       },
     });

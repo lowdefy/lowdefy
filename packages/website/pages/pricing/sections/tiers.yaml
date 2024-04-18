@@ -1,0 +1,184 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tiers_box
+type: Box
+layout:
+  contentJustify: center
+  contentAlign: bottom
+style:
+  '@media (max-width: 1300px)':
+    '#bl-free_tier, #bl-enterprise_tier, #bl-business_tier':
+      backgroundColor: rgba(256, 256, 256, 1)
+      height: 525px
+    '#bl-free_tier':
+      padding: 30px 10px 10px 40px
+      marginRight: 0px
+      order: 1
+    '#bl-enterprise_tier':
+      padding: 30px 10px 10px 40px
+      marginLeft: 0px
+      order: 2
+    '#bl-business_tier':
+      borderRadius: 40px
+      padding: 30px 40px 10px 40px
+      marginBottom: 20px
+      order: 0
+      marginLeft: 300px
+      marginRight: 300px
+    '#bl-features':
+      height: 300px
+  '@media (max-width: 768px)':
+    '#bl-free_tier, #bl-enterprise_tier, #bl-business_tier':
+      borderRadius: 40px
+      padding: 25px 10px 10px 40px
+      maxWidth: 400px
+      marginBottom: 20px
+    '#bl-business_tier':
+      order: 1
+blocks:
+  - id: free_tier
+    type: Box
+    style:
+      maxWidth: 360px
+      order: 0
+      marginBottom: 40px
+      marginRight: -10px
+      borderRadius: 40px 0px 0px 40px
+      padding: 20px 40px 20px 60px
+      backgroundColor: rgba(256, 256, 256, 0.5)
+      height: 650px
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Free
+      - id: price
+        type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
+        properties:
+          html: <b>No credit card required</b>
+      - id: features
+        type: Html
+        style:
+          fontSize: 14px
+          height: 370px
+        properties:
+          html: |
+            <p>All Business features available in development</p>
+            <ul>
+              <li>Unlimited pages and requests</li>
+              <li>Custom Lowdefy plugins from npm or local</li>
+              <li>Custom app themes & branding</li>
+              <li>Mobile responsive by default</li>
+              <li>Readable config Git source control in your repos</li>
+              <li>Multiple deployment environments</li>
+              <li>Community Support</li>
+            </ul>
+
+      - _ref: pages/pricing/sections/cta_buttons/free.yaml
+
+  # <li>Custom templates using config references</li>
+  # <li>Unlimited apps & users</li>
+  # <li>Unlimited public pages & Blocks</li>
+  # <li>Unlimited Connections & Requests</li>
+
+  - id: business_tier
+    type: Box
+    style:
+      maxWidth: 580px
+      marginBottom: 20px
+      order: 1
+      backgroundColor: rgba(256, 256, 256, 1)
+      borderRadius: 40px
+      padding: 50px 80px 80px 80px
+      height: 700px
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Business
+      - id: price
+        type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
+        properties:
+          html:
+            _nunjucks:
+              template: |
+                <b>${{ rates.per_user_per_hour }} per hour per user<br/><small>capped at ${{ rates.flat }} per user per month</small></b>
+              on:
+                rates:
+                  _ref:
+                    path: app_config.yaml
+                    key: rates
+      - id: features
+        type: Html
+        style:
+          fontSize: 14px
+          height: 370px
+        properties:
+          html: |
+            <p>Everything in the Free plan, plus</p>
+            <ul>
+              <li>Remove “Built with Lowdefy” branding</li>
+              <li>All Auth.js providers and adapters including OpenID Connect and custom SSO</li>
+              <li>Role based & granular access control (RBAC)</li>
+              <li>Invite only apps</li>
+              <li>Embed authenticated apps including JWT auth</li>
+              <li>Priority Support</li>
+            </ul>
+      - _ref: pages/pricing/sections/cta_buttons/business.yaml
+
+  - id: enterprise_tier
+    type: Box
+    style:
+      maxWidth: 360px
+      order: 2
+      marginBottom: 40px
+      marginLeft: -10px
+      borderRadius: 0px 40px 40px 0px
+      padding: 20px 40px 20px 60px
+      backgroundColor: rgba(256, 256, 256, 0.5)
+      height: 650px
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Enterprise
+      - id: price
+        type: Html
+        style:
+          marginBottom: 10px
+          height: 50px
+        properties:
+          html: <b>Custom Pricing</b>
+      - id: features
+        type: Html
+        style:
+          fontSize: 14px
+          height: 370px
+        properties:
+          html: |
+            <p>Everything in the Business plan, plus</p>
+            <ul>
+              <li>Air-gapped deployment</li>
+              <li>Enterprise support</li>
+              <li>Volume based discounts</li>
+              <li>Work with Lowdefy engineers to build your first app</li>
+            </ul>
+      - _ref: pages/pricing/sections/cta_buttons/enterprise.yaml

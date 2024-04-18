@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 
 import React, { useState } from 'react';
 
+import { ErrorBoundary } from '@lowdefy/block-utils';
+
 import CategorySwitch from './CategorySwitch.js';
-import ErrorBoundary from '../ErrorBoundary.js';
 import MountEvents from '../MountEvents.js';
 
 const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {

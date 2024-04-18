@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ function createAuthMethods(lowdefy, auth) {
   // login and logout are Lowdefy function that handle action params
   // signIn and signOut are the next-auth methods
   function login({ authUrl, callbackUrl, providerId, ...rest } = {}) {
-    if (type.isNone(providerId) && auth.authConfig.providers.length === 1) {
+    if (type.isNone(providerId) && auth.authConfig?.providers.length === 1) {
       providerId = auth.authConfig.providers[0].id;
     }
 

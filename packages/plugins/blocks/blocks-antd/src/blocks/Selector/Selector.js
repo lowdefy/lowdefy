@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -87,7 +87,11 @@ const Selector = ({
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-              notFoundContent={fetchState ? 'Loading' : 'Not found'}
+              notFoundContent={
+                fetchState
+                  ? properties.loadingPlaceholder || 'Loading'
+                  : properties.notFoundContent || 'Not found'
+              }
               onChange={(newVal) => {
                 methods.setValue(
                   type.isPrimitive(uniqueValueOptions[newVal])

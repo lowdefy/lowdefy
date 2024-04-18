@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -123,6 +123,7 @@ test('getRequestDetails params is true', async () => {
               payload: {},
               requestId: 'req_one',
               response: 1,
+              responseTime: 0,
             },
           ],
         },
@@ -188,6 +189,7 @@ test('getRequestDetails params is req_one', async () => {
             payload: {},
             requestId: 'req_one',
             response: 1,
+            responseTime: 0,
           },
         ],
         index: 1,
@@ -381,6 +383,7 @@ test('getRequestDetails params.all is true', async () => {
               payload: {},
               requestId: 'req_one',
               response: 1,
+              responseTime: 0,
             },
           ],
         },
@@ -524,6 +527,7 @@ test('getRequestDetails params.key is req_one', async () => {
             payload: {},
             requestId: 'req_one',
             response: 1,
+            responseTime: 0,
           },
         ],
         index: 1,

@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ _ref:
       (requestId: string): any
       ```
     description: |
-      The `_request` operator returns the response value of a request. If the request has not yet been call, or is still executing, the returned value is `null`. Dot notation and [block list indexes](/lists) are supported.
+      The `_request` operator returns the response value of a request. If the request has not yet been called, or is still executing, the returned value is `null`. Dot notation and [block list indexes](/lists) are supported. For more detailed information about a request, the [_request_details](/_request_details) operator can be used.
     arguments: |
       ###### string
       The id of the request.

@@ -1,0 +1,148 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pricing_calculator_box
+type: Box
+layout:
+  contentJustify: center
+style:
+  '@media (max-width: 768px)':
+    display: none
+events:
+  onMount:
+    - id: init_calculator
+      type: SetState
+      params:
+        monthly_users_lt_30: -0.2
+        session_durations: 0
+        monthly_users_gt_30: -0.2
+blocks:
+  - id: pricing_calculator_left_section
+    type: Box
+    style:
+      borderRadius: 40px 0px 0px 40px
+      padding: 60px 40px 80px 60px
+      backgroundColor: rgba(256,256,256,0.5)
+      flex: 0 1 700px
+      '@media (max-width: 1015px)':
+        flex: 0 1 525px
+    blocks:
+      _ref: pages/pricing/sections/pricing_calculator/sliders.yaml
+  - id: pricing_calculator_right_section
+    type: Box
+    layout:
+      contentDirection: column
+    style:
+      flex: 0 1 300px
+      '@media (max-width: 1015px)':
+        flex: 0 1 225px
+    blocks:
+      - id: pricing_calculator_right_top_section
+        type: Box
+        layout:
+          flex: 0 0 400px
+        style:
+          borderRadius: 0px 40px 0px 0px
+          backgroundColor: '#1965F3'
+          textAlign: right
+          paddingTop: 30px
+        blocks:
+          - id: pricing_breakdown_title
+            type: Title
+            style:
+              textAlign: center
+              marginBottom: 10px
+            properties:
+              content: Pricing Breakdown
+              color: white
+              level: 4
+          - id: pricing_breakdown
+            type: Html
+            style:
+              padding: 0px 50px
+              '@media (max-width: 1015px)':
+                padding: 0px 20px
+            properties:
+              html:
+                _nunjucks:
+                  template: |
+                    <div>
+                      <div style="text-align: center;"><b>Pro Rata Users</b></div>
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item"></div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">users</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_hours }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">hours</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.per_user_per_hour }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">$/hour/user</div>
+                      </div>
+                      <hr style="width: 100%; background-color: black; margin-top: -20px;">
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ usage_users_total }}</div>
+                        <div class="pricing-grid-item"></div>
+                      </div>
+                      <div style="text-align: center;"><b>Flat Rate Users</b></div>
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item"></div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_users }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">users</div>
+                        <div class="pricing-grid-item" style="justify-self: end;">x</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ rates.flat }}</div>
+                        <div class="pricing-grid-item" style="justify-self: start;">$/user</div>
+                      </div>
+                      <hr style="width: 100%; background-color: black; margin-top: -20px;">
+                      <div class="pricing-grid">
+                        <div class="pricing-grid-item" style="justify-self: end;">$</div>
+                        <div class="pricing-grid-item" style="justify-self: end; padding-right: 10px;">{{ flat_rate_total }}</div>
+                        <div class="pricing-grid-item"></div>
+                      </div>
+                    </div>
+                  on:
+                    usage_users:
+                      _if_none:
+                        - _state: pricing_calculator.usage_users
+                        - 0
+                    usage_users_hours:
+                      _state: session_durations
+                    usage_users_total:
+                      _if_none:
+                        - _state: pricing_calculator.usage_total
+                        - 0
+                    flat_rate_users:
+                      _if_none:
+                        - _state: pricing_calculator.flat_rate_users
+                        - 0
+                    flat_rate_total:
+                      _if_none:
+                        - _state: pricing_calculator.flat_rate_total
+                        - 0
+                    total:
+                      _state: pricing_calculator.total
+                    rates:
+                      _ref:
+                        path: app_config.yaml
+                        key: rates
+      - id: pricing_calculator_right_bottom_section
+        type: Box
+        layout:
+          flex: 0 0 200px
+        style:
+          backgroundColor: '#000000'
+          borderRadius: 0px 0px 40px 0px
+        blocks:
+          - _ref: pages/pricing/sections/pricing_calculator/total.yaml

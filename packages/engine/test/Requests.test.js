@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 
 import testContext from './testContext.js';
 
@@ -125,6 +125,7 @@ test('callRequest', async () => {
           arrayIndices: null,
           sum: 2,
         },
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -222,6 +223,7 @@ test('callRequests all requests', async () => {
         payload: {},
         requestId: 'req_error',
         response: null,
+        responseTime: expect.any(Number),
       },
     ],
     req_one: [
@@ -236,6 +238,7 @@ test('callRequests all requests', async () => {
         },
         requestId: 'req_one',
         response: 1,
+        responseTime: expect.any(Number),
       },
     ],
     req_two: [
@@ -245,6 +248,7 @@ test('callRequests all requests', async () => {
         payload: {},
         requestId: 'req_two',
         response: 2,
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -295,6 +299,7 @@ test('callRequests', async () => {
         },
         requestId: 'req_one',
         response: 1,
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -320,6 +325,7 @@ test('callRequest error', async () => {
         payload: {},
         requestId: 'req_error',
         response: null,
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -335,6 +341,7 @@ test('callRequest error', async () => {
         payload: {},
         requestId: 'req_error',
         response: null,
+        responseTime: expect.any(Number),
       },
       {
         blockId: 'block_id',
@@ -343,6 +350,7 @@ test('callRequest error', async () => {
         payload: {},
         requestId: 'req_error',
         response: null,
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -518,6 +526,7 @@ test('trigger request from event end to end and parse payload', async () => {
         },
         requestId: 'req_one',
         response: 1,
+        responseTime: expect.any(Number),
       },
     ],
   });
@@ -533,6 +542,7 @@ test('trigger request from event end to end and parse payload', async () => {
         },
         requestId: 'req_one',
         response: 1,
+        responseTime: expect.any(Number),
       },
       {
         blockId: 'button',
@@ -542,6 +552,7 @@ test('trigger request from event end to end and parse payload', async () => {
         },
         requestId: 'req_one',
         response: 1,
+        responseTime: expect.any(Number),
       },
     ],
   });

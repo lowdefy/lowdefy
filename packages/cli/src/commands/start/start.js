@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -15,13 +15,10 @@
 */
 
 import runStart from './runStart.js';
-import readDotEnv from '../../utils/readDotEnv.js';
-
 // TODO: Handle "spawn yarn ENOENT" error if no built server exists.
 
 async function build({ context }) {
   context.sendTelemetry({ sendTypes: true });
-  readDotEnv(context);
   const serverProcess = runStart({ context, directory: context.directories.server });
   context.print.succeed('Started server.');
   await serverProcess;

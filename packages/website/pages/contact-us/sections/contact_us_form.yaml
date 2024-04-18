@@ -1,0 +1,246 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: contact_us_form_box
+type: Box
+layout:
+  contentJustify: space-around
+  contentAlign: middle
+style:
+  margin: auto
+  background: 'radial-gradient(farthest-corner at 30% 50%, #1990FF -80%, #1990FF -30%, rgba(0,0,0,0) 70%)'
+blocks:
+  - id: sprite_box
+    type: Box
+    layout:
+      flex: 0 1 auto
+    style:
+      '@media (max-width: 950px)':
+        display: none
+    blocks:
+      - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Cloud-19.svg
+            style:
+              width: 100
+  - id: query_box
+    type: Box
+    layout:
+      contentDirection: row
+    style:
+      marginTop: -40
+      borderRadius: 40
+      maxWidth: 700
+      box-shadow: 0px 21px 80px rgba(15, 33, 51, 0.25)
+      background-color: white
+    visible:
+      _not:
+        _state: query_sent
+    blocks:
+      - id: left_query_box
+        type: Box
+        layout:
+          contentGutter: 16
+          flex: 0 0 300px
+          contentJustify: center
+        style:
+          backgroundColor: rgba(68, 132, 242, 1)
+          padding: 2rem
+          borderRadius: 40px 0px 0px 40px
+          marginRight: 16
+          '@media (max-width: 690px)':
+            display: none
+        blocks:
+          - _ref:
+              path: pages/home/components/sprite.yaml
+              vars:
+                svg: /images/logo_white_120.png
+                style:
+                  width: 120
+          - id: left_query_description
+            type: Html
+            properties:
+              html: |
+                <div style="font-size: 12px; color: white; text-align: center; margin-bottom: -20px;">
+                  <p>Build with Lowdefy now</p>
+                  <p>For support contact us on support@lowdefy.com</p>
+                </div>
+          - _ref:
+              path: pages/home/components/sprite.yaml
+              vars:
+                svg: /images/05_OpenSource_001.png
+                style:
+                  width: 200
+          - id: left_query_join_the_community
+            type: Html
+            properties:
+              html: |
+                <div style="font-size: 12px; color: white; text-align: center;">
+                  <p>Join the community</p>
+                </div>
+          - id: left_query_discord_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              hideTitle: true
+              icon: FaDiscord
+              shape: round
+              type: link
+              size: large
+              style:
+                color: white
+                border: 1px solid white
+                borderRadius: 100%
+                ':hover':
+                  border: 1px solid rgba(255,255,255,0.75)
+                  color: rgba(255,255,255,0.75)
+              href: https://discord.gg/WmcJgXt
+          - id: left_query_github_button
+            type: Button
+            layout:
+              flex: 0 1 auto
+            properties:
+              hideTitle: true
+              icon: AiOutlineGithub
+              type: link
+              size: large
+              style:
+                color: white
+                border: 1px solid white
+                borderRadius: 100%
+                ':hover':
+                  border: 1px solid rgba(255,255,255,0.75)
+                  color: rgba(255,255,255,0.75)
+              href: https://github.com/lowdefy/lowdefy
+      - id: right_query_box
+        type: Box
+        layout:
+          contentGutter: 16
+          contentDirection: column
+          flex: 0 0 380px
+        style:
+          padding: 2rem
+          '@media (max-width: 700px)':
+            flex: 1 0 auto
+        blocks:
+          - id: query.name
+            type: TextInput
+            required: true
+            properties:
+              title: Name
+              placeholder: Your name
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: email
+            type: TextInput
+            required: true
+            validate:
+              _ref: shared/validate_email.yaml
+            properties:
+              title: Email
+              placeholder: Your email address
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: query.message
+            type: TextArea
+            required: true
+            properties:
+              title: Message
+              rows: 5
+              placeholder: Your query message
+              size: large
+              inputStyle:
+                borderRadius: 10px
+          - id: query.subscribe
+            type: CheckboxSelector
+            properties:
+              label:
+                disabled: true
+              options:
+                - label: Subscribe to newsletter
+                  value: true
+          - id: query_send_box
+            type: Box
+            layout:
+              contentDirection: row-reverse
+            blocks:
+              - id: query.submit
+                type: Button
+                requests:
+                  - _ref: requests/insert_newsletter.yaml
+                  - _ref: requests/insert_query.yaml
+                  - _ref:
+                      path: requests/discord_message.yaml
+                      vars:
+                        message: 'New contact us query message from website'
+                layout:
+                  size: auto
+                properties:
+                  title: Submit
+                  size: large
+                  color: '#1990FF'
+                events:
+                  onClick:
+                    - id: validate
+                      type: Validate
+                      params:
+                        regex: ^query
+                    - id: post_data
+                      type: Request
+                      params:
+                        - insert_query
+                        - discord_message
+                    - id: post_data_newsletter
+                      type: Request
+                      params:
+                        - insert_newsletter
+                      skip:
+                        _not:
+                          _if_none:
+                            - _state: query.subscribe.0
+                            - false
+                    - id: set_query
+                      type: SetState
+                      params:
+                        query_sent: true
+  - id: query_sent_thank_you
+    type: Alert
+    visible:
+      _not:
+        _not:
+          _state: query_sent
+    properties:
+      message: Thank you! We'll be in contact soon 🙌
+      type: info
+    style:
+      padding: 3rem
+      maxWidth: 500
+  - id: sprite_box
+    type: Box
+    layout:
+      flex: 0 1 auto
+    style:
+      '@media (max-width: 950px)':
+        display: none
+    blocks:
+      - _ref:
+          path: pages/home/components/sprite.yaml
+          vars:
+            svg: /images/sprites/04_Sparkle-32.svg
+            style:
+              width: 100

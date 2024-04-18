@@ -1,0 +1,139 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: faq_box
+type: Box
+style:
+  maxWidth: 800px
+  margin: 60px auto
+blocks:
+  - id: faq_title
+    type: Html
+    properties:
+      html: |
+        <h2> Frequently Asked Questions </h2>
+
+  - id: faq_collapse
+    type: Collapse
+    properties:
+      expandIconPosition: right
+      panels:
+        - key: usage
+          title: How does Lowdefy measure usage? And who counts as a user?
+        - key: track
+          title: Does Lowdefy see your data to track usage?
+        - key: build
+          title: What can I build with Lowdefy?
+        - key: developer
+          title: Do I need to be a developer to build Lowdefy apps?
+        - key: deploy
+          title: How can I deploy my Lowdefy app? Is on-premise supported?
+        - key: keys
+          title: Can I use the same license key on multiple apps?
+        - key: mobile
+          title: Can I build a mobile app with Lowdefy?
+        - key: secure
+          title: Is Lowdefy secure?
+        - key: telemetry
+          title: What data does Lowdefy telemetry log?
+        - key: discounts
+          title: Any discounts for non-profits, students, educators or open-source projects?
+
+    areas:
+      usage:
+        blocks:
+          - id: usage_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Usage is measured per hour of activity per end-user.
+                An hourly session starts with a user-initiated action and lasts for the next 60 minutes, regardless of any activity during that period.
+                The usage meter kicks in only when there is explicit user activity, so open tabs in the background or minimised windows do not count towards usage.
+                Activity in multiple browser tabs count toward the same session, but activity on multiple devices count as separate sessions.
+
+      track:
+        blocks:
+          - id: track_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Lowdefy does not track any personally identifiable information.
+                Lowdefy uses a hash of identifying fields returned by the identity provider to identify unique users.
+                To track usage, Lowdefy periodically sends the user hash, a random device ID and session timestamps to our telemetry servers.
+                <br/><br/>
+                Lowdefy does not keep track of or send any of your app data to our telemetry servers.
+
+      build:
+        blocks:
+          - id: build_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Lowdefy can be used to build any web app - this website and our docs are built with Lowdefy. With that said, our platform is best suited for building internal work apps connected to your database or APIs. Think CRUD apps, workflow apps, CRMs, ticketing systems, approval apps, customer portals, dashboards, webforms with advanced logic and data integration, you can even embed Lowdefy apps into your existing apps and websites.
+
+      developer:
+        blocks:
+          - id: developer_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                No. However, Lowdefy is built for developers and requires a technical understanding of how web apps work and must be comfortable working with data. When building a Lowdefy app, a developer will need to write YAML or JSON config in a code editor such as VSCode, install Node.js on their machine, write database queries and trigger server requests to fetch data. Being proficient with Git source control will also be required when deploying using platforms like Vercel.
+
+      deploy:
+        blocks:
+          - id: deploy_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Lowdefy runs a Next.js app, thus you can deploy Lowdefy to any platform that supports Next.js deployment. As the maintainers of Next.js, Vercel will likely be the preferred hosting provider, but since Next.js apps are extremely popular, most hosting providers such as Netlify, Heroku, render.com, fly.io, DigitalOcean and others all include documentation to host Next.js apps. <br/><br/> For on-premise deployment, Lowdefy supports Docker deployment.
+
+      keys:
+        blocks:
+          - id: keys_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Yes you can use a license key for multiple apps.
+
+      mobile:
+        blocks:
+          - id: mobile_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Lowdefy apps are responsive by default and can be used as PWAs, but they are not native mobile apps neither are the blocks optimised for mobile, for example, the mobile experience for the DateSelector could be improved by using the native browser date selector.
+
+      secure:
+        blocks:
+          - id: secure_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Yes. We do the best in our means to make sure that Lowdefy apps are highly secure by default and we follow best practices where possible. One of the reasons that we made Lowdefy open-source is to further improve Lowdefy’s security by making all code available to the Lowdefy community to help identify potential security concerns. <br/><br/> It is also important to understand that when using custom Lowdefy plugins you need to be diligent to to avoid introducing security vulnerabilities into your apps, especially when importing third party packages.
+
+      telemetry:
+        blocks:
+          - id: telemetry_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Lowdefy does not track any personally identifiable information. Lowdefy uses a hash of identifying fields returned by the identity provider to identify unique users. To track usage, Lowdefy periodically sends the user hash, a random device ID and session timestamps to our telemetry servers. Lowdefy does not keep track of or send any of your app data to our telemetry servers. <br/><br/> Other than usage billing data, the Lowdefy CLI collects usage and error information to help us fix bugs, prioritise features, and understand how Lowdefy is being used. However the CLI telemetry can be disabled in the CLI. See the CLI docs for more details. We collect the following information: the CLI version, the Lowdefy version of your app, a random local app id, CLI command used, your IP address, error messages and stack traces for any errors.
+
+      discounts:
+        blocks:
+          - id: discounts_paragraph
+            type: Paragraph
+            properties:
+              content: |
+                Yes. Please reach out to us at hello@lowdefy.com to discuss your specific use case.

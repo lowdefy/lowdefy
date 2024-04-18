@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ _ref:
         type: MarkdownWithCode
         properties:
           content: |
-            Lowdefy plugins provides an interface to extend the platform functionality with custom javascript code. Plugins are installed into the Lowdefy app during the Lowdefy build process, and as a result is included as part of the Next.js build output. This enables plugin developers to use any npm packages when building Lowdefy plugins.
+            Lowdefy plugins provides an interface to extend the platform functionality with custom javascript code. Plugins are installed into the Lowdefy app during the Lowdefy build process, and as a result are included as part of the Next.js build output. This enables plugin developers to use any npm packages when building Lowdefy plugins.
 
-            Lowdefy plugins can be used to create custom blocks, connections, requests, action, operators and auth providers, adapters, callbacks and events. These plugins are written as standard npm modules, so community plugins can be published to npm, and the workspace and git protocols can be used for project specific or private plugins. Since plugins are npm packages most Javascript features and third-party npm packages can be used in plugins.
+            Lowdefy plugins can be used to create custom blocks, connections, requests, action, operators and auth providers, adapters, callbacks and events. These plugins are written as standard [npm modules](https://docs.npmjs.com/about-packages-and-modules#about-modules), so community plugins can be published to npm, and the workspace and git protocols can be used for project specific or private plugins. Since plugins are npm packages most Javascript features and third-party npm packages can be used in plugins.
 
             ## Using a plugin
 

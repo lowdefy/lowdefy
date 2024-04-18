@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,10 +23,19 @@ function setupLink(lowdefy) {
   const disabledLink = () => {};
   const newOriginLink = ({ url, query, newTab }) => {
     if (newTab) {
-      return window.open(`${url}${query ? `?${query}` : ''}`, '_blank').focus();
-    } else {
-      return window.location.assign(`${url}${query ? `?${query}` : ''}`);
+      const handle = window.open(`${url}${query ? `?${query}` : ''}`, '_blank');
+      if (!handle) {
+        lowdefy._internal.displayMessage({
+          content:
+            'A popup blocker may be preventing the application from opening the page. Approve the popup to continue.',
+          status: 'info',
+          duration: 10,
+        });
+        return;
+      }
+      return handle.focus();
     }
+    return window.location.assign(`${url}${query ? `?${query}` : ''}`);
   };
   const sameOriginLink = ({ newTab, pathname, query, setInput }) => {
     if (newTab) {

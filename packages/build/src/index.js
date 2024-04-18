@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import createPluginTypesMap from './utils/createPluginTypesMap.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
+import buildApp from './build/buildApp.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildImports from './build/buildImports/buildImports.js';
@@ -31,7 +32,6 @@ import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
-import validateApp from './build/validateApp.js';
 import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
 import writeApp from './build/writeApp.js';
@@ -50,7 +50,7 @@ async function build(options) {
   const context = createContext(options);
   const components = await buildRefs({ context });
   testSchema({ components, context });
-  validateApp({ components, context });
+  buildApp({ components, context });
   validateConfig({ components, context });
   addDefaultPages({ components, context });
   buildAuth({ components, context });

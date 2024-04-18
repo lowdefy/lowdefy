@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,24 +14,15 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-const getPageSize = ({ properties, value }) => {
-  if (type.isObject(value) && type.isNumber(value.pageSize)) {
-    return value.pageSize;
-  }
-  if (type.isArray(properties.pageSizeOptions)) {
-    return properties.pageSizeOptions[0];
-  }
-  return 10;
-};
-
 const createChangeHandler =
-  ({ eventName, methods }) =>
+  ({ eventName, methods, setState }) =>
   (current, pageSize) => {
+    setState({ current, pageSize, skip: (current - 1) * pageSize });
     methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
     methods.triggerEvent({
       name: eventName,
@@ -39,7 +30,34 @@ const createChangeHandler =
     });
   };
 
+const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
+  const state = {
+    current: type.isInt(value?.current) ? value?.current : defaultCurrent,
+    pageSize: type.isInt(value?.pageSize) ? value?.pageSize : defaultPageSize,
+  };
+  state.skip = (state.current - 1) * state.pageSize;
+  return state;
+};
+
 const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
+  const [state, setState] = useState(() =>
+    calculateState({
+      defaultCurrent: 1,
+      defaultPageSize: properties.pageSizeOptions?.[0] ?? 10,
+      value,
+    })
+  );
+  useEffect(() => {
+    if (JSON.stringify(value) !== JSON.stringify(state)) {
+      const nextState = calculateState({
+        defaultCurrent: state.current,
+        defaultPageSize: state.pageSize,
+        value,
+      });
+      setState(nextState);
+      methods.setValue({ ...nextState });
+    }
+  }, [value]);
   const showTotal = type.isFunction(properties.showTotal)
     ? properties.showTotal
     : (total, range) => {
@@ -56,9 +74,9 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
       id={blockId}
       disabled={properties.disabled || loading}
       hideOnSinglePage={properties.hideOnSinglePage}
-      onChange={createChangeHandler({ eventName: 'onChange', methods })}
-      onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods })}
-      pageSize={getPageSize({ properties, value })}
+      onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
+      onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods, setState })}
+      pageSize={state.pageSize}
       pageSizeOptions={properties.pageSizeOptions || [10, 20, 30, 40]}
       showQuickJumper={properties.showQuickJumper}
       showSizeChanger={properties.showSizeChanger}
@@ -66,26 +84,18 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
       simple={!!properties.simple}
       size={properties.size}
       total={properties.total !== undefined ? properties.total : 100}
-      current={
-        type.isNone(value) || !type.isObject(value) || !type.isNumber(value.current)
-          ? 1
-          : value.current
-      }
+      current={state.current}
     />
   );
 };
-
 PaginationBlock.defaultProps = blockDefaultProps;
 PaginationBlock.meta = {
   valueType: 'object',
   initValue: {
-    current: 0,
-    pageSize: 10,
-    skip: 0,
+    current: 1,
   },
   category: 'input',
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };
-
 export default PaginationBlock;

@@ -1,0 +1,92 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: total_box
+type: Box
+style:
+  marginTop: 50px
+  textAlign: center
+blocks:
+  - id: estimate_section
+    type: Box
+    layout:
+      contentJustify: center
+    visible:
+      _lt:
+        - _state: pricing_calculator.total
+        - 4000
+    blocks:
+      - id: total_estimate
+        type: Html
+        properties:
+          html:
+            _nunjucks:
+              template: |
+                <h5>
+                  <span style="color:#29D3CA;">Estimate: </span><span style="color:#FFFFFF;">{{ total }}</span>
+                </h5>
+              on:
+                total:
+                  _intl.numberFormat:
+                    on:
+                      _state:
+                        key: pricing_calculator.total
+                        default: 0
+                    locale: en-us
+                    options:
+                      style: currency
+                      currency: USD
+      - id: get_started_button
+        type: Button
+        layout:
+          flex: 0 0 auto
+        properties:
+          title: Get Started
+          shape: round
+          size: large
+          ghost: true
+          style:
+            border: '2px solid #FFF !important'
+            color: '#FFF !important'
+  - id: custom_price_section
+    type: Box
+    layout:
+      contentJustify: center
+    visible:
+      _gte:
+        - _state: pricing_calculator.total
+        - 4000
+    blocks:
+      - id: custom_price_title
+        type: Html
+        properties:
+          html: |
+            <h5 style="color:#FFFFFF;">Custom Pricing</h5>
+      - id: contact_us_button
+        type: Button
+        layout:
+          flex: 0 0 auto
+        properties:
+          title: Contact Us
+          shape: round
+          size: large
+          style:
+            background: 'linear-gradient(#000, #000) padding-box, linear-gradient(135deg, #1990FF, #29D3CA) border-box !important'
+            border: 2px solid transparent !important
+        events:
+          onClick:
+            - id: link_to_contact_us
+              type: Link
+              params:
+                pageId: contact-us

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@ const tagRender = (props, option, methods, components) => {
       methods={methods}
       onClose={onClose}
       properties={{
-        title: label,
+        title: label ?? '',
         ...(option?.tag ?? {}),
         closable,
-        style: { marginRight: 3, ...(option.tag?.style ?? {}) },
+        style: { marginRight: 3, ...(option?.tag?.style ?? {}) },
       }}
     />
   );
@@ -81,12 +81,18 @@ const MultipleSelector = ({
                 ((props) => tagRender(props, uniqueValueOptions[props.value], methods, { Icon }))
               }
               maxTagCount={properties.maxTagCount}
-              notFoundContent={fetchState ? 'Loading' : 'Not found'}
-              placeholder={get(properties, 'placeholder', { default: 'Select items' })}
+              notFoundContent={
+                fetchState
+                  ? properties.loadingPlaceholder || 'Loading'
+                  : properties.notFoundContent || 'Not found'
+              }
+              placeholder={
+                loading ? 'Loading...' : get(properties, 'placeholder', { default: 'Select items' })
+              }
               showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
               status={validation.status}
-              value={getValueIndex(value, uniqueValueOptions, true)}
+              value={loading ? [] : getValueIndex(value, uniqueValueOptions, true)}
               suffixIcon={
                 properties.suffixIcon && (
                   <Icon

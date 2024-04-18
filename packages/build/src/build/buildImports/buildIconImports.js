@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ const iconPackages = {
   'react-icons/io5': /"(Io[A-Z0-9]\w*)"/gm,
   'react-icons/lu': /"(Lu[A-Z0-9]\w*)"/gm,
   'react-icons/md': /"(Md[A-Z0-9]\w*)"/gm,
+  'react-icons/pi': /"(Pi[A-Z0-9]\w*)"/gm,
   'react-icons/ri': /"(Ri[A-Z0-9]\w*)"/gm,
   'react-icons/rx': /"(Rx[A-Z0-9]\w*)"/gm,
   'react-icons/si': /"(Si[A-Z0-9]\w*)"/gm,

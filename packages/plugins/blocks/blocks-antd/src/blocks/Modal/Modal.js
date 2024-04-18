@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ const ModalBlock = ({ blockId, content, events, methods, properties }) => {
         okButtonProps={properties.okButtonProps}
         okText={properties.okText ?? 'Ok'}
         okType={properties.okButtonType ?? 'primary'}
+        style={properties.style}
         title={renderHtml({ html: properties.title, methods })}
         visible={openState}
         width={properties.width}

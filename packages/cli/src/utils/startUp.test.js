@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -60,6 +60,13 @@ test('startUp, options empty', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
+    license: {
+      code: 'NO_LICENSE',
+      entitlements: [],
+      id: 'NO_LICENSE',
+      metadata: {},
+      timestamp: context.license.timestamp,
+    },
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
     pnpmCmd: context.pnpmCmd,
@@ -107,6 +114,13 @@ test('startUp, options undefined', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
+    license: {
+      code: 'NO_LICENSE',
+      entitlements: [],
+      id: 'NO_LICENSE',
+      metadata: {},
+      timestamp: context.license.timestamp,
+    },
     lowdefyVersion: 'lowdefyVersion',
     options: { cliConfig: true },
     pnpmCmd: context.pnpmCmd,
@@ -153,6 +167,13 @@ test('startUp, options configDirectory', async () => {
       dev: path.resolve(process.cwd(), './configDirectory/.lowdefy/dev'),
       server: path.resolve(process.cwd(), './configDirectory/.lowdefy/server'),
     },
+    license: {
+      code: 'NO_LICENSE',
+      entitlements: [],
+      id: 'NO_LICENSE',
+      metadata: {},
+      timestamp: context.license.timestamp,
+    },
     lowdefyVersion: 'lowdefyVersion',
     options: {
       cliConfig: true,
@@ -185,6 +206,13 @@ test('startUp, no lowdefyVersion returned', async () => {
       config: path.resolve(process.cwd()),
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
+    },
+    license: {
+      code: 'NO_LICENSE',
+      entitlements: [],
+      id: 'NO_LICENSE',
+      metadata: {},
+      timestamp: context.license.timestamp,
     },
     lowdefyVersion: undefined,
     options: {},
@@ -223,6 +251,13 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
       config: path.resolve(process.cwd()),
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
+    },
+    license: {
+      code: 'NO_LICENSE',
+      entitlements: [],
+      id: 'NO_LICENSE',
+      metadata: {},
+      timestamp: context.license.timestamp,
     },
     lowdefyVersion: undefined,
     options: {},

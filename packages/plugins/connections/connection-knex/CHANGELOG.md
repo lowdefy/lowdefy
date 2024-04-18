@@ -1,467 +1,272 @@
 # Change Log
 
+## 4.0.2
+
+### Patch Changes
+
+- @lowdefy/helpers@4.0.2
+
+## 4.0.1
+
+### Patch Changes
+
+- @lowdefy/helpers@4.0.1
+
+## 4.0.0
+
+### Patch Changes
+
+- @lowdefy/helpers@4.0.0
+
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+# [4.0.0-rc.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.14...v4.0.0-rc.15) (2023-12-05)
+
+**Note:** Version bump only for package @lowdefy/connection-knex
 
 # [4.0.0-rc.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.14) (2023-11-17)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.12...v4.0.0-rc.13) (2023-11-17)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-rc.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.11...v4.0.0-rc.12) (2023-10-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.10...v4.0.0-rc.11) (2023-10-06)
-
 
 ### Bug Fixes
 
-* **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
-* **deps:** Patch version updates for various deps. ([64068f3](https://github.com/lowdefy/lowdefy/commit/64068f38573113e9436d638489e9435ac7f45edf))
-* **deps:** Update dependency knex to v2.5.1 ([45045ba](https://github.com/lowdefy/lowdefy/commit/45045ba754f040bf763659c592721f0824a32205))
-* **deps:** Update dependency mssql to v10.0.1 ([491ab72](https://github.com/lowdefy/lowdefy/commit/491ab72d023ffa9ef673a8ce46ce4feeaaae96de))
-* **deps:** Update dependency pg to v8.11.3 ([40706a1](https://github.com/lowdefy/lowdefy/commit/40706a1886c421b6ba028a943178bdcc33fdcab8))
-
-
-
-
+- **deps:** Dependencies patch updates. ([adcd80a](https://github.com/lowdefy/lowdefy/commit/adcd80afe8c752e15c900b88eb4d9be8526c7bcd))
+- **deps:** Patch version updates for various deps. ([64068f3](https://github.com/lowdefy/lowdefy/commit/64068f38573113e9436d638489e9435ac7f45edf))
+- **deps:** Update dependency knex to v2.5.1 ([45045ba](https://github.com/lowdefy/lowdefy/commit/45045ba754f040bf763659c592721f0824a32205))
+- **deps:** Update dependency mssql to v10.0.1 ([491ab72](https://github.com/lowdefy/lowdefy/commit/491ab72d023ffa9ef673a8ce46ce4feeaaae96de))
+- **deps:** Update dependency pg to v8.11.3 ([40706a1](https://github.com/lowdefy/lowdefy/commit/40706a1886c421b6ba028a943178bdcc33fdcab8))
 
 # [4.0.0-rc.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.9...v4.0.0-rc.10) (2023-07-26)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.8...v4.0.0-rc.9) (2023-05-31)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-rc.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2023-05-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2023-03-24)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2023-03-20)
-
 
 ### Bug Fixes
 
-* **deps:** update dependency sqlite3 to v5.1.5 [security] ([cbc8b05](https://github.com/lowdefy/lowdefy/commit/cbc8b0580d71b9a8917e27e6b6f711dfdbaed402))
-
-
-
-
+- **deps:** update dependency sqlite3 to v5.1.5 [security] ([cbc8b05](https://github.com/lowdefy/lowdefy/commit/cbc8b0580d71b9a8917e27e6b6f711dfdbaed402))
 
 # [4.0.0-rc.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.4...v4.0.0-rc.5) (2023-02-24)
 
-
 ### Bug Fixes
 
-* **deps:** Update dependency knex to v2.4.2 ([e4b4942](https://github.com/lowdefy/lowdefy/commit/e4b4942a20f15f4b66c447253b01e0c39e283007))
-
-
-
-
+- **deps:** Update dependency knex to v2.4.2 ([e4b4942](https://github.com/lowdefy/lowdefy/commit/e4b4942a20f15f4b66c447253b01e0c39e283007))
 
 # [4.0.0-rc.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.3...v4.0.0-rc.4) (2023-02-21)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.2...v4.0.0-rc.3) (2023-02-21)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-rc.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.1...v4.0.0-rc.2) (2023-02-17)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-rc.1](https://github.com/lowdefy/lowdefy/compare/v4.0.0-rc.0...v4.0.0-rc.1) (2023-02-17)
-
 
 ### Bug Fixes
 
-* **deps:** Update connection driver minor versions. ([bbd43c1](https://github.com/lowdefy/lowdefy/commit/bbd43c139efbb8559c279c1eea635512dbdc026c))
-* **deps:** Update dependency knex to v2.3.0 ([0918690](https://github.com/lowdefy/lowdefy/commit/09186907c86cdbc5331a8b0caeca44c59805ae58))
-* **deps:** Update dependency mssql to 9.0.1 ([5016949](https://github.com/lowdefy/lowdefy/commit/5016949dd6557c914fc7ada768a0a4f1bf926bb3))
-* **tests:** Fix jest mocks for es modules in connections. ([e3fadb2](https://github.com/lowdefy/lowdefy/commit/e3fadb2e4fe3bb4948b5f12a752f9356f20e8eb7))
-
-
-
-
+- **deps:** Update connection driver minor versions. ([bbd43c1](https://github.com/lowdefy/lowdefy/commit/bbd43c139efbb8559c279c1eea635512dbdc026c))
+- **deps:** Update dependency knex to v2.3.0 ([0918690](https://github.com/lowdefy/lowdefy/commit/09186907c86cdbc5331a8b0caeca44c59805ae58))
+- **deps:** Update dependency mssql to 9.0.1 ([5016949](https://github.com/lowdefy/lowdefy/commit/5016949dd6557c914fc7ada768a0a4f1bf926bb3))
+- **tests:** Fix jest mocks for es modules in connections. ([e3fadb2](https://github.com/lowdefy/lowdefy/commit/e3fadb2e4fe3bb4948b5f12a752f9356f20e8eb7))
 
 # [4.0.0-rc.0](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.37...v4.0.0-rc.0) (2023-01-05)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.37](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.36...v4.0.0-alpha.37) (2022-12-07)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.36](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.35...v4.0.0-alpha.36) (2022-10-14)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.35](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.34...v4.0.0-alpha.35) (2022-10-05)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.34](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.33...v4.0.0-alpha.34) (2022-09-30)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.33](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.32...v4.0.0-alpha.33) (2022-09-22)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.32](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.31...v4.0.0-alpha.32) (2022-09-22)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.31](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.30...v4.0.0-alpha.31) (2022-09-21)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.30](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.29...v4.0.0-alpha.30) (2022-09-17)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.29](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.28...v4.0.0-alpha.29) (2022-09-13)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.28](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.27...v4.0.0-alpha.28) (2022-09-12)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.27](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.26...v4.0.0-alpha.27) (2022-09-08)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.26](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.25...v4.0.0-alpha.26) (2022-08-25)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.25](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.24...v4.0.0-alpha.25) (2022-08-23)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.24](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.23...v4.0.0-alpha.24) (2022-08-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.23](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.22...v4.0.0-alpha.23) (2022-08-03)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.22](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.21...v4.0.0-alpha.22) (2022-07-12)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.21](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.20...v4.0.0-alpha.21) (2022-07-11)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.20](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.19...v4.0.0-alpha.20) (2022-07-09)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.19](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.18...v4.0.0-alpha.19) (2022-07-06)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.18](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.17...v4.0.0-alpha.18) (2022-06-27)
 
-
-
 # [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
-
-
 
 # [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.14...v4.0.0-alpha.15) (2022-06-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.17](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.16...v4.0.0-alpha.17) (2022-06-24)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.16](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.15...v4.0.0-alpha.16) (2022-06-20)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.15](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.15) (2022-06-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.14](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.13...v4.0.0-alpha.14) (2022-06-19)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.13](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (2022-06-16)
-
 
 ### Bug Fixes
 
-* Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
-
+- Fix license typo. ([972acbb](https://github.com/lowdefy/lowdefy/commit/972acbb46b9b1113053797f82a41c5f9032dd8b0))
 
 ### Features
 
-* Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
-* Package Updates. ([0f9d8cd](https://github.com/lowdefy/lowdefy/commit/0f9d8cd89186e12c66e5f833c13c12472f52eaee))
-
-
-
-
+- Package updates. ([e024181](https://github.com/lowdefy/lowdefy/commit/e0241813d1276316f0f04897b664c43e24b11d23))
+- Package Updates. ([0f9d8cd](https://github.com/lowdefy/lowdefy/commit/0f9d8cd89186e12c66e5f833c13c12472f52eaee))
 
 # [4.0.0-alpha.12](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (2022-05-23)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.11](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (2022-05-20)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.10](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (2022-05-06)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.9](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (2022-05-06)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.8](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2022-03-16)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.7](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2022-02-21)
-
 
 ### Bug Fixes
 
-* **connection-knex:** Add license comments in schema files. ([916452b](https://github.com/lowdefy/lowdefy/commit/916452b8106668f8d5e65773863abfd122b46b95))
-* **connection-knex:** Fix connection-knex plugin structure to work with version 4. ([ffc9c35](https://github.com/lowdefy/lowdefy/commit/ffc9c351590921f0008192c4106ba4fab8c82e73))
-* **deps:** Update dependency knex to v1.0.1. ([26863fc](https://github.com/lowdefy/lowdefy/commit/26863fc41bacec7adbd24ced1331639d1334e169))
-* **deps:** Update dependency mssql to v8.0.1. ([6848ade](https://github.com/lowdefy/lowdefy/commit/6848ade275da966b829282f29f32303845fe9ac7))
-* Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
-
+- **connection-knex:** Add license comments in schema files. ([916452b](https://github.com/lowdefy/lowdefy/commit/916452b8106668f8d5e65773863abfd122b46b95))
+- **connection-knex:** Fix connection-knex plugin structure to work with version 4. ([ffc9c35](https://github.com/lowdefy/lowdefy/commit/ffc9c351590921f0008192c4106ba4fab8c82e73))
+- **deps:** Update dependency knex to v1.0.1. ([26863fc](https://github.com/lowdefy/lowdefy/commit/26863fc41bacec7adbd24ced1331639d1334e169))
+- **deps:** Update dependency mssql to v8.0.1. ([6848ade](https://github.com/lowdefy/lowdefy/commit/6848ade275da966b829282f29f32303845fe9ac7))
+- Fix V4 tests. ([d082d0c](https://github.com/lowdefy/lowdefy/commit/d082d0c335eb4426acadbf30a08de64266d9f004))
 
 ### BREAKING CHANGES
 
-* **deps:** The Knex driver has been updated to v1.0.1 which has some changes in the returned values. See https://github.com/knex/knex/releases.
-
-
-
-
+- **deps:** The Knex driver has been updated to v1.0.1 which has some changes in the returned values. See https://github.com/knex/knex/releases.
 
 # [4.0.0-alpha.6](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.5...v4.0.0-alpha.6) (2022-01-20)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.5](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.4...v4.0.0-alpha.5) (2021-11-27)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.4](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.3...v4.0.0-alpha.4) (2021-11-25)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.3](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.2...v4.0.0-alpha.3) (2021-11-25)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
-
-
-
-
 
 # [4.0.0-alpha.2](https://github.com/lowdefy/lowdefy/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2021-11-25)
 
 **Note:** Version bump only for package @lowdefy/connection-knex
 
-
-
-
-
 # [4.0.0-alpha.1](https://github.com/lowdefy/lowdefy/compare/v3.23.1...v4.0.0-alpha.1) (2021-11-25)
-
 
 ### Features
 
-* Convert knex, sendgrid and stripe connections to plugin structure. ([d0e751a](https://github.com/lowdefy/lowdefy/commit/d0e751af47b6f04ab9ace2256268f96116d8aaa8))
+- Convert knex, sendgrid and stripe connections to plugin structure. ([d0e751a](https://github.com/lowdefy/lowdefy/commit/d0e751af47b6f04ab9ace2256268f96116d8aaa8))

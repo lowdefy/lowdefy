@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -224,7 +224,6 @@ test('no blocks on page', () => {
       {
         id: 'page:1',
         auth: { public: true },
-        operators: [],
         pageId: '1',
         blockId: '1',
         type: 'Container',
@@ -292,7 +291,6 @@ test('nested blocks', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -365,7 +363,6 @@ describe('block areas', () => {
           id: 'page:page1',
           auth: { public: true },
           blockId: 'page1',
-          operators: [],
           pageId: 'page1',
           type: 'Container',
           requests: [],
@@ -406,7 +403,6 @@ describe('block areas', () => {
           id: 'page:1',
           auth: { public: true },
           blockId: '1',
-          operators: [],
           pageId: '1',
           type: 'Container',
           requests: [],
@@ -454,7 +450,6 @@ describe('block areas', () => {
           id: 'page:1',
           auth: { public: true },
           pageId: '1',
-          operators: [],
           blockId: '1',
           type: 'Container',
           requests: [],
@@ -509,7 +504,6 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: { public: true },
-          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Container',
@@ -571,7 +565,6 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: { public: true },
-          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Container',
@@ -641,7 +634,6 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: { public: true },
-          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Container',
@@ -727,7 +719,6 @@ describe('block areas', () => {
         {
           id: 'page:1',
           auth: { public: true },
-          operators: [],
           pageId: '1',
           blockId: '1',
           type: 'Container',
@@ -821,7 +812,6 @@ test('user defined skeleton', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -882,7 +872,6 @@ test('create unique block ids', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -954,7 +943,6 @@ test('different blockId counter for each page', () => {
       {
         id: 'page:page_1',
         auth: { public: true },
-        operators: [],
         pageId: 'page_1',
         blockId: 'page_1',
         type: 'Container',
@@ -979,7 +967,6 @@ test('different blockId counter for each page', () => {
       {
         id: 'page:page_2',
         auth: { public: true },
-        operators: [],
         pageId: 'page_2',
         blockId: 'page_2',
         type: 'Container',

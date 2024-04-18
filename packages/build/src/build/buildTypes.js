@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ function buildTypeClass(
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
       if (warnIfMissing) {
+        if (typeName === '_id') {
+          return;
+        }
         context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
         return;
       }
@@ -49,7 +52,12 @@ function buildTypes({ components, context }) {
   // Add loaders and basic
   basicTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
   loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
-  typeCounters.blocks.increment('Message'); // Used for DisplayMessage in @lowdefy/client
+  // Used for DisplayMessage in @lowdefy/client
+  typeCounters.blocks.increment('Message');
+  // Used by license-invalid page
+  typeCounters.blocks.increment('Button');
+  typeCounters.blocks.increment('Result');
+  typeCounters.operators.client.increment('_get');
 
   components.types = {
     actions: {},

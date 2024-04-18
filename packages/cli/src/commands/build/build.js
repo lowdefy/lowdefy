@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,16 +17,22 @@
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
-import readDotEnv from '../../utils/readDotEnv.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runLowdefyBuild from '../../utils/runLowdefyBuild.js';
 import runNextBuild from '../../utils/runNextBuild.js';
 
 async function build({ context }) {
   context.print.info('Starting build.');
-  readDotEnv(context);
+
   const directory = context.directories.server;
-  await getServer({ context, packageName: '@lowdefy/server', directory });
+
+  let packageName = '@lowdefy/server-community';
+
+  if (!context.options.communityEdition) {
+    packageName = '@lowdefy/server-enterprise';
+  }
+
+  await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });

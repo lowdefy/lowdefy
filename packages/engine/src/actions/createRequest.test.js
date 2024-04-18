@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -193,6 +193,7 @@ test('Request call all requests', async () => {
         payload: {},
         requestId: 'req_one',
         response: 1,
+        responseTime: 0,
       },
     ],
     req_two: [
@@ -204,6 +205,7 @@ test('Request call all requests', async () => {
         },
         requestId: 'req_two',
         response: 2,
+        responseTime: 0,
       },
     ],
   });
@@ -287,6 +289,7 @@ test('Request call array of requests', async () => {
         payload: {},
         requestId: 'req_one',
         response: 1,
+        responseTime: 0,
       },
     ],
     req_two: [
@@ -298,6 +301,7 @@ test('Request call array of requests', async () => {
         },
         requestId: 'req_two',
         response: 2,
+        responseTime: 0,
       },
     ],
   });
@@ -387,6 +391,7 @@ test('Request call request error', async () => {
       payload: {},
       requestId: 'req_error',
       response: null,
+      responseTime: 0,
     },
   ]);
   expect(res).toEqual({

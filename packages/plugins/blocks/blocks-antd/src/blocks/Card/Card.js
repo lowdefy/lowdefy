@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ const CardBlock = ({ blockId, content, properties, methods, events }) => (
     headStyle={methods.makeCssClass(properties.headerStyle, true)}
     bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
     bordered={properties.bordered}
+    cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}
     size={properties.size}

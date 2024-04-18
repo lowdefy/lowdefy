@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ _ref:
 
             ### package.json
 
-            Lowdefy plugin packages should be an [ECMAScript module](https://nodejs.org/api/esm.html#introduction). To configure a package as an ECMAScript module, the `type` field in the `package.json` file should be set to `"module"`.
+            Lowdefy plugin packages should be an [ECMAScript module](https://nodejs.org/api/esm.html#modules-ecmascript-modules). To configure a package as an ECMAScript module, the `type` field in the `package.json` file should be set to `"module"`.
 
-            Lowdefy uses the [`exports`](https://nodejs.org/api/packages.html#package-entry-points) package entry points to map to the `types.js` and plugin named export files.
+            Lowdefy uses the [`exports`](https://nodejs.org/api/packages.html#exports) package entry points to map to the `types.js` and plugin named export files.
 
             ```json
             {
@@ -162,7 +162,7 @@ _ref:
 
             Most types are written as standard Javascript functions, and blocks are written as React components. The function names should be in _CapitalCase_, except for operators which should be written in _snake_case_ and start with an underscore.
 
-            Lowdefy uses object destructing to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
+            Lowdefy uses object [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) to provide parameters to the type functions. These parameters include the parameters or properties defined by the user in the Lowdefy configuration. Any operators used in the configuration will be evaluated before it is passed to the type function. Other relevant metadata and helper functions are also passed to the plugin function.
 
       - _ref:
           path: templates/navigation_buttons.yaml

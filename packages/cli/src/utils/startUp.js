@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,19 +17,22 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import validateVersion from './validateVersion.js';
 import checkPnpmIsInstalled from './checkPnpmIsInstalled.js';
+import createPrint from './createPrint.js';
 import getCliJson from './getCliJson.js';
 import getDirectories from './getDirectories.js';
 import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
 import getSendTelemetry from './getSendTelemetry.js';
-import createPrint from './createPrint.js';
+import readDotEnv from './readDotEnv.js';
+import validateLicense from './validateLicense.js';
+import validateVersion from './validateVersion.js';
 
 async function startUp({ context, options = {}, command }) {
   context.command = command.name();
   context.commandLineOptions = options;
   context.configDirectory = path.resolve(options.configDirectory || process.cwd());
+  readDotEnv(context);
   context.requiresLowdefyYaml = !['init'].includes(command.name());
   const { cliConfig, lowdefyVersion, plugins } = await getLowdefyYaml(context);
   context.cliConfig = cliConfig;
@@ -47,7 +50,7 @@ async function startUp({ context, options = {}, command }) {
   context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   checkPnpmIsInstalled(context);
   await validateVersion(context);
-
+  context.license = await validateLicense(context);
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {

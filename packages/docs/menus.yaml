@@ -108,7 +108,7 @@
           pageId: menus
           properties:
             title: Menus
-        - id: layout
+        - id: layout-overview
           type: MenuLink
           pageId: layout-overview
           properties:
@@ -143,6 +143,11 @@
           pageId: cli
           properties:
             title: The CLI
+        - id: licenses
+          type: MenuLink
+          pageId: licenses
+          properties:
+            title: Licenses
 
     - id: deployment
       type: MenuGroup
@@ -209,16 +214,6 @@
           pageId: users-introduction
           properties:
             title: Introduction
-        - id: auth-providers
-          type: MenuLink
-          pageId: auth-providers
-          properties:
-            title: Providers
-        - id: login-and-logout
-          type: MenuLink
-          pageId: login-and-logout
-          properties:
-            title: Login and Logout
         - id: protected-pages
           type: MenuLink
           pageId: protected-pages
@@ -239,6 +234,16 @@
           pageId: auth-configuration
           properties:
             title: Configuration
+        - id: login-and-logout
+          type: MenuLink
+          pageId: login-and-logout
+          properties:
+            title: Login and Logout
+        - id: auth-providers
+          type: MenuLink
+          pageId: auth-providers
+          properties:
+            title: Providers
         - id: auth_provider_reference
           type: MenuGroup
           properties:
@@ -668,6 +673,9 @@
         - id: ScrollTo
           type: MenuLink
           pageId: ScrollTo
+        - id: SetFocus
+          type: MenuLink
+          pageId: SetFocus
         - id: SetGlobal
           type: MenuLink
           pageId: SetGlobal
@@ -824,6 +832,9 @@
         - id: _request
           type: MenuLink
           pageId: _request
+        - id: _request_details
+          type: MenuLink
+          pageId: _request_details
         - id: _secret
           type: MenuLink
           pageId: _secret

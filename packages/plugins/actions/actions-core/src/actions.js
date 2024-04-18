@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ export { default as Request } from './actions/Request.js';
 export { default as Reset } from './actions/Reset.js';
 export { default as ResetValidation } from './actions/ResetValidation.js';
 export { default as ScrollTo } from './actions/ScrollTo.js';
+export { default as SetFocus } from './actions/SetFocus.js';
 export { default as SetGlobal } from './actions/SetGlobal.js';
 export { default as SetState } from './actions/SetState.js';
 export { default as Throw } from './actions/Throw.js';

@@ -1,0 +1,34 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: enterprise_button
+type: Button
+style:
+  textAlign: center
+  '.ant-btn:hover':
+    background: linear-gradient(0deg, rgba(40, 211, 202, 0.75), rgba(68, 132, 242, 0.75))
+properties:
+  title: Contact Us
+  size: large
+  color: '#4484F2'
+  style:
+    width: 160
+    background: linear-gradient(0deg, rgb(40, 211, 202), rgb(68, 132, 242)) # #28D3CA #4484F2
+    border: 0px
+events:
+  onClick:
+    - id: link_to_contact_us
+      type: Link
+      params:
+        pageId: contact-us

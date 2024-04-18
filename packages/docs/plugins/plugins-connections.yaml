@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,7 +70,9 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Blocks
-            previous_page_id: plugins-blocks
+            # previous_page_title: Blocks
+            # previous_page_id: plugins-blocks
+            previous_page_title: Actions # while blocks doesn't exist
+            previous_page_id: plugins-actions
             next_page_title: Operators
             next_page_id: plugins-operators

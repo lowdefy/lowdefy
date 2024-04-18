@@ -24,6 +24,7 @@
 - _ref: concepts/custom-html.yaml
 - _ref: concepts/custom-styling.yaml
 - _ref: concepts/cli.yaml
+- _ref: concepts/licenses.yaml
 
 - _ref: deployment/docker.yaml
 - _ref: deployment/node-server.yaml
@@ -168,6 +169,7 @@
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
+- _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml
@@ -220,6 +222,7 @@
 - _ref: operators/_ref.yaml
 - _ref: operators/_regex.yaml
 - _ref: operators/_request.yaml
+- _ref: operators/_request_details.yaml
 - _ref: operators/_secret.yaml
 - _ref: operators/_state.yaml
 - _ref: operators/_string.yaml

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -45,16 +45,17 @@ function getNextAuthConfig({ authJson, logger, plugins, secrets }) {
     throw new Error(operatorErrors[0]);
   }
 
-  nextAuthConfig.adapter = createAdapter({ authConfig, plugins });
+  nextAuthConfig.adapter = createAdapter({ authConfig, logger, plugins });
   nextAuthConfig.callbacks = createCallbacks({ authConfig, logger, plugins });
   nextAuthConfig.events = createEvents({ authConfig, logger, plugins });
   nextAuthConfig.logger = createLogger({ logger });
-  nextAuthConfig.providers = createProviders({ authConfig, plugins });
+  nextAuthConfig.providers = createProviders({ authConfig, logger, plugins });
   nextAuthConfig.debug = authConfig.debug ?? logger?.isLevelEnabled('debug') === true;
   nextAuthConfig.pages = authConfig.authPages;
   nextAuthConfig.session = authConfig.session;
   nextAuthConfig.theme = authConfig.theme;
   nextAuthConfig.cookies = authConfig?.advanced?.cookies;
+  nextAuthConfig.originalRedirectCallback = nextAuthConfig.callbacks.redirect;
   initialized = true;
   return nextAuthConfig;
 }

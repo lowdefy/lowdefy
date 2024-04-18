@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -89,6 +89,8 @@ class Requests {
 
   async fetch(request) {
     request.loading = true;
+    const startTime = Date.now();
+
     try {
       const response = await this.context._internal.lowdefy._internal.callRequest({
         blockId: request.blockId,
@@ -103,11 +105,15 @@ class Requests {
       );
       request.response = deserializedResponse;
       request.loading = false;
+      const endTime = Date.now();
+      request.responseTime = endTime - startTime;
       this.context._internal.update();
       return deserializedResponse;
     } catch (error) {
       request.error = error;
       request.loading = false;
+      const endTime = Date.now();
+      request.responseTime = endTime - startTime;
       this.context._internal.update();
       throw error;
     }

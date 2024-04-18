@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import createSignInCallback from './createSignInCallback.js';
 
 function createCallbacks({ authConfig, logger, plugins }) {
   const callbacks = {
-    session: createSessionCallback({ authConfig, plugins }),
+    session: createSessionCallback({ authConfig, logger, plugins }),
   };
   const jwt = createJWTCallback({ authConfig, logger, plugins });
   if (jwt) callbacks.jwt = jwt;
 
-  const redirect = createRedirectCallback({ authConfig, plugins });
+  const redirect = createRedirectCallback({ authConfig, logger, plugins });
   if (redirect) callbacks.redirect = redirect;
 
   const signIn = createSignInCallback({ authConfig, plugins });

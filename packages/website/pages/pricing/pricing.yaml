@@ -1,0 +1,45 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: pricing
+type: Box
+properties:
+  title: Lowdefy - Pricing
+style:
+  backgroundColor: '#F7F7F7'
+  padding: 0px 8px
+layout:
+  contentJustify: center
+blocks:
+  - _ref: shared/header/header.yaml
+  - _ref: pages/pricing/sections/pay_for_what_you_use.yaml
+  - _ref: pages/pricing/sections/tiers.yaml
+  - _ref: shared/customers.yaml
+  - _ref: pages/pricing/sections/pricing_calculator/pricing_calculator.yaml
+  - _ref:
+      path: pages/pricing/sections/compare_features.yaml.njk
+      vars:
+        sections:
+          _ref: pages/pricing/sections/compare_features_info.yaml
+  - id: max_width
+    type: Box
+    layout:
+      contentJustify: center
+    style:
+      maxWidth: 1000px
+    blocks:
+      - _ref: pages/pricing/sections/faq.yaml
+      - _ref: shared/cta.yaml
+  - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

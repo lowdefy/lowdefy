@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ function createSignOutEvent({ authConfig, logger, plugins }) {
   });
 
   async function signOutEvent({ session, token }) {
-    const user = token?.user ?? session?.user;
+    const user = session?.user ?? token;
     logger.info({
       event: 'auth_sign_out',
       user: {

@@ -1,0 +1,381 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: compare_features_box
+type: Box
+style:
+  maxWidth: 1200px
+  margin: 60px auto
+  textAlign: center
+  '@media (max-width: 950px)':
+    display: none
+blocks:
+  - id: compare_features_title
+    type: Html
+    style:
+      textAlign: left
+    properties:
+      html: |
+        <h2> Compare Features </h2>
+
+  - id: compare_features_table
+    type: Box
+    blocks:
+      - id: plan_section
+        type: Box
+        layout:
+          contentJustify: end
+        blocks:
+          - id: top_box
+            type: Box
+            layout:
+              span: 18
+            style:
+              backgroundColor: '#FFFFFF80'
+              borderTopLeftRadius: 20px
+              borderTopRightRadius: 20px
+            blocks:
+              - id: plans_section
+                type: Html
+                layout:
+                  span: 8
+                properties:
+                  html: |
+                    <p style='margin-top: 2px;'>
+                      <span style='padding: 6px 20px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
+                        Plans
+                      </span>
+                    </p>
+
+      - id: plan_intros
+        type: Box
+        layout:
+          contentJustify: end
+        blocks:
+          - id: span_box
+            type: Box
+            layout:
+              span: 18
+            style:
+              backgroundColor: '#FFFFFF80'
+              paddingBottom: 16px
+            blocks:
+              - id: free_title
+                type: Html
+                layout:
+                  span: 8
+                properties:
+                  html: |
+                    <h2> Free </h2>
+                    <p> No credit card required </p>
+              - id: business_title
+                type: Html
+                layout:
+                  span: 8
+                properties:
+                  html:
+                    _nunjucks:
+                      template: |
+                        {% raw %}
+                        <h2> Business </h2>
+                        <p> ${{ rates.per_user_per_hour }} per user per hour<br/>
+                        <small> capped at ${{ rates.flat }} per user per month </small> </p>
+                        {% endraw %}
+                      on:
+                        rates:
+                          _ref:
+                            path: app_config.yaml
+                            key: rates
+              - id: enterprise_title
+                type: Html
+                layout:
+                  span: 8
+                properties:
+                  html: |
+                    <h2> Enterprise </h2>
+                    <p> Custom Pricing </p>
+
+      - id: cta_buttons
+        type: Box
+        layout:
+          contentJustify: end
+        blocks:
+          - id: span_box
+            type: Box
+            layout:
+              span: 18
+            style:
+              backgroundColor: '#FFFFFF80'
+              paddingBottom: 32px
+            blocks:
+              - id: free
+                type: Box
+                layout:
+                  span: 8
+                blocks:
+                  - _ref: pages/pricing/sections/cta_buttons/free.yaml
+              - id: business
+                type: Box
+                layout:
+                  span: 8
+                blocks:
+                  - _ref: pages/pricing/sections/cta_buttons/business.yaml
+              - id: enterprise
+                type: Box
+                layout:
+                  span: 8
+                blocks:
+                  - _ref: pages/pricing/sections/cta_buttons/enterprise.yaml
+
+      - id: top_cover
+        type: Box
+        layout:
+          contentJustify: end
+        style:
+          height: 30px
+          backgroundColor: '#FFFFFF80'
+          borderTopLeftRadius: 20px
+        blocks:
+          - id: black_cover
+            type: Box
+            layout:
+              span: 6
+            style:
+              backgroundColor: black
+              height: 30px
+              borderTopLeftRadius: 20px
+          - id: white_cover
+            type: Box
+            layout:
+              span: 18
+            style:
+              height: 30px
+      {% for section in sections %}
+      {% set outer_loop = loop %}
+      {% if section.section_name %}
+      - id: {{ section.section_id }}
+        type: Box
+        layout:
+          contentJustify: end
+        style:
+          backgroundColor: '#FFFFFF80'
+        blocks:
+          - id: row_placeholder
+            type: Html
+            layout:
+              span: 6
+            style:
+              backgroundColor: black
+            properties:
+              html: |
+                <span> </span>
+          - id: section_title
+            type: Html
+            layout:
+              span: 6
+            style:
+              borderRight: '2px solid #D9D9D9'
+            properties:
+              html: |
+                <hr align='right' style='width: 90%; background-color:#D9D9D9; margin-bottom: 0px'/hr>
+                <p style='margin-top: 1px;'>
+                  <span style='padding: 6px 20px; background-color: black; color: white; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px'>
+                    {{ section.section_name }}
+                  </span>
+                </p>
+          - id: business_placeholder
+            type: Html
+            layout:
+              span: 6
+            style:
+              borderRight: '2px solid #D9D9D9'
+            properties:
+              html: |
+                <hr style='width: 100%; background-color:#D9D9D9'/hr>
+                <span> </span>
+          - id: enterprise_placeholder
+            type: Html
+            layout:
+              span: 6
+            properties:
+              html: |
+                <hr align='left' style='width: 90%; text-align:left; background-color:#D9D9D9'/hr>
+                <span> </span>
+      {% endif %}
+
+      {% for row in section.rows %}
+      - id: {{ row.id }}_content
+        type: Box
+        style:
+          backgroundColor: '#FFFFFF80'
+        blocks:
+          - id: section_title
+            type: Box
+            layout:
+              span: 6
+              align: stretch
+            style:
+              textAlign: left
+              backgroundColor: black
+              display: flex
+              alignItems: center
+              height: 100px
+            blocks:
+              - id: content_tooltip
+                type: Tooltip
+                properties:
+                  title: {{ row.tooltip }}
+                  placement: right
+                blocks:
+                  - id: title
+                    type: Html
+                    properties:
+                      style:
+                        color: white
+                        padding: 16px
+                      html: <b>{{ row.title }}</b>
+
+          - id: free
+            type: Box
+            layout:
+              align: stretch
+              span: 6
+            style:
+              borderRight: '2px solid #D9D9D9'
+              display: flex
+              justifyContent: center
+              alignItems: center
+              height: 100px
+            blocks:
+              {% if row.free == true or row.free == false %}
+              - id: free_image
+                type: Img
+                style:
+                  padding: 16px
+                properties:
+                  width: 24px
+                  src:
+                    _if:
+                      test:
+                        _eq:
+                          - {{ row.free }}
+                          - true
+                      then: /images/free-true.svg
+                      else: /images/false.svg
+              {% else %}
+              - id: free_text
+                type: Html
+                style:
+                  padding: 16px
+                properties:
+                  html: {{ row.free }}
+              {% endif %}
+
+          - id: business
+            type: Box
+            layout:
+              align: stretch
+              span: 6
+            style:
+              borderRight: '2px solid #D9D9D9'
+              display: flex
+              justifyContent: center
+              alignItems: center
+              height: 100px
+            blocks:
+              {% if row.business == true or row.business == false %}
+              - id: business_image
+                type: Img
+                style:
+                  padding: 16px
+                properties:
+                  width: 24px
+                  src:
+                    _if:
+                      test:
+                        _eq:
+                          - {{ row.business }}
+                          - true
+                      then: /images/business-true.svg
+                      else: /images/false.svg
+              {% else %}
+              - id: business_text
+                type: Html
+                properties:
+                  style:
+                    padding: 16px
+                  html: {{ row.business }}
+              {% endif %}
+
+          - id: enterprise
+            type: Box
+            layout:
+              align: stretch
+              span: 6
+            style:
+              display: flex
+              justifyContent: center
+              alignItems: center
+              height: 100px
+            blocks:
+              {% if row.enterprise == true or row.enterprise == false %}
+              - id: enterprise_image
+                type: Img
+                style:
+                  padding: 16px
+                properties:
+                  width: 24px
+                  src:
+                    _if:
+                      test:
+                        _eq:
+                          - {{ row.enterprise }}
+                          - true
+                      then: /images/enterprise-true.svg
+                      else: /images/false.svg
+              {% else %}
+              - id: enterprise_text
+                type: Html
+                properties:
+                  style:
+                    padding: 16px
+                  html: {{ row.enterprise }}
+              {% endif %}
+      {% endfor %}
+      {% endfor %}
+      - id: bottom_cover
+        type: Box
+        layout:
+          contentJustify: end
+        style:
+          height: 30px
+          backgroundColor: '#FFFFFF80'
+          borderBottomLeftRadius: 20px
+          borderBottomRightRadius: 20px
+        blocks:
+          - id: black_cover
+            type: Box
+            layout:
+              span: 6
+            style:
+              backgroundColor: black
+              height: 30px
+              borderBottomLeftRadius: 20px
+          - id: white_cover
+            type: Box
+            layout:
+              span: 18
+            style:
+              height: 30px
+              borderBottomRightRadius: 20px

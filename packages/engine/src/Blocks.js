@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class Blocks {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
-      .substr(0, 5);
+      .substring(0, 5);
     this.areas = serializer.copy(areas || []);
     this.arrayIndices = arrayIndices;
     this.context = context;
@@ -344,7 +344,8 @@ class Blocks {
         const validation =
           block.requiredEval.output === false
             ? block.validate
-            : [requiredValidation, ...block.validate];
+            : [...block.validate, requiredValidation];
+
         block.validationEval = {
           output: {
             status: null,
@@ -387,7 +388,7 @@ class Blocks {
         if (validationWarning) {
           block.validationEval.output.status = 'warning';
         }
-        if (validationError) {
+        if (validationError && block.showValidation) {
           block.validationEval.output.status = 'error';
         }
 
@@ -514,8 +515,9 @@ class Blocks {
         if (
           block.visibleEval.output !== false &&
           block.validationEval.output &&
-          block.validationEval.output.status === 'error'
+          block.validationEval.output.errors.length > 0
         ) {
+          block.validationEval.output.status = 'error';
           result.push({
             blockId: block.blockId,
             validation: block.validationEval.output,
@@ -599,7 +601,10 @@ class Blocks {
           style: block.styleEval.output,
           validation: {
             ...(block.validationEval.output || {}),
-            status: block.showValidation ? (block.validationEval.output || {}).status : null,
+            status:
+              block.showValidation || block.validationEval.output?.status === 'warning'
+                ? block.validationEval.output?.status
+                : null,
           },
           value: type.isNone(block.value) ? null : block.value,
           visible: block.visibleEval.output,

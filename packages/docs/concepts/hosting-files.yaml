@@ -1,4 +1,4 @@
-# Copyright 2020-2023 Lowdefy, Inc
+# Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ _ref:
           content: |
             A Lowdefy app provides a convenient method to host __public__ files under the `/*` app route. Add content to be hosted publicly by creating a folder named `public` in the root of a Lowdefy project folder, next to the `lowdefy.yaml` file. Place the public content in this folder to host this content with your app.
 
-            All content in this folder will be publicly accessible at `{{ APP_URL }}/{{ FILE_PATH_NAME }}`. For example, the logo at the top of this page is hosted at [`https://docs.lowdefy.com/logo-light-theme.png`](http://localhost:3000/logo-light-theme.png). Sub-folders inside the public folder are supported.
+            All content in this folder will be publicly accessible at `{{ APP_URL }}/{{ FILE_PATH_NAME }}`. For example, the logo at the top of this page is hosted at [`https://docs.lowdefy.com/logo-light-theme.png`](http://docs.lowdefy.com/logo-light-theme.png). Sub-folders inside the public folder are supported.
 
             By default, the `public` folder of a Lowdefy app will serve some files which most apps need:
             - `apple-touch-icon.png`: A 180x180px png image file to be used as the apple PWA icon.

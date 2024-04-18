@@ -9,12 +9,14 @@
 
 .turbo
 
-packages/server/build/**
-packages/server-dev/build/**
+packages/servers/*/build/**
+packages/servers/*/public/**
+packages/servers/*/package.original.json
+
+
 !packages/docs/lowdefy.yaml
 !packages/docs/howto/**/lowdefy.yaml
 !packages/website/lowdefy.yaml
-packages/cli/server/**
 
 .DS_Store
 
@@ -29,15 +31,8 @@ packages/utils/node-utils/test/copyDirectory/**
 packages/utils/node-utils/test/copyFile/**
 
 app/**
-packages/server-dev/plugins/**
-packages/server/plugins/**
-
-packages/server-dev/public/**
-packages/server/public/**
-
-packages/server/package.original.json
-packages/server-dev/package.original.json
 
 packages/docs/public/sitemap.xml
+packages/website/public/sitemap.xml
 
 lerna-debug.log

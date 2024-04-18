@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,8 +20,9 @@ function createCheckDuplicateId({ message }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
   function checkDuplicateId({ id, blockId, eventId, menuId, pageId }) {
-    if (ids.has(id)) throw new Error(template({ id, blockId, eventId, menuId, pageId }));
-    ids.add(id);
+    if (ids.has(id.toLowerCase()))
+      throw new Error(template({ id, blockId, eventId, menuId, pageId }));
+    ids.add(id.toLowerCase());
   }
   return checkDuplicateId;
 }

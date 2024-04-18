@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2023 Lowdefy, Inc
+  Copyright 2020-2024 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
+
 import addUserFieldsToSession from './addUserFieldsToSession.js';
 import createCallbackPlugins from './createCallbackPlugins.js';
 
@@ -25,8 +27,12 @@ function createSessionCallback({ authConfig, plugins }) {
   });
 
   async function sessionCallback({ session, token, user }) {
+    const identifier = user
+      ? user.id ?? user.sub ?? user.email
+      : token.id ?? token.sub ?? token.email;
     if (token) {
       const {
+        id,
         sub,
         name,
         given_name,
@@ -49,6 +55,7 @@ function createSessionCallback({ authConfig, plugins }) {
         updated_at,
       } = token;
       session.user = {
+        id,
         sub,
         name,
         given_name,
@@ -86,6 +93,13 @@ function createSessionCallback({ authConfig, plugins }) {
         user,
       });
     }
+
+    // TODO: Should this be session.hashed_id or session.user.hashed_id
+    // Only session.user will be available using the _user operator
+    session.hashed_id = crypto
+      .createHash('sha256')
+      .update(identifier ?? '')
+      .digest('base64');
 
     return session;
   }

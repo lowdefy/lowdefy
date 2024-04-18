@@ -1,0 +1,152 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: lowdefy_v4_launch
+type: Box
+style:
+  maxWidth: 800px
+  margin: 60px auto
+layout:
+  contentJustify: center
+blocks:
+  - id: date
+    type: Html
+    style:
+      marginLeft: 10
+      fontSize: 12
+    properties:
+      html: |
+        <p>15 January 2024</p>
+  - id: lowdefy_v4_launch_image
+    type: Img
+    properties:
+      src: ./images/blogs/V4_Launch.jpg
+      style:
+        borderRadius: 20px
+        width: 100%
+        maxWidth: 800px
+  - id: content
+    type: DangerousMarkdown
+    style:
+      padding: 20px 0 40px 0
+    properties:
+      content: |
+        # Introducing <span class="gradient-text">Lowdefy V4</span>: The Easiest Config Webstack Built on Top of Next.js
+
+        We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
+
+        In this update, Lowdefy developers now enjoy faster app performance and improved functionality with custom code plugins.
+
+        ## New Features in Lowdefy V4
+
+          1. **Next.js build**: Lowdefy apps have been converted to run on top of the [Next.js](https://nextjs.org/) framework.
+          2. **All of Auth.js**: App authentication is now implemented by configuring any [Auth.js](https://authjs.dev/) supported providers, adapters and callbacks and events, all of which can be customized.
+          3. **Plugin extensibility**: Apps can now be extended with any [**npm**](https://www.npmjs.com/) or [**pnpm workspace**](https://pnpm.io/workspaces) plugins.
+          4. **Flexible Styling**: Change any of Ant Design's [more than 900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less).
+          5. **Better, Faster Rendering**: Reduced page loading times, better loading state management including easy configuration of loading skeletons where needed.
+
+        ### Built on top of Next.js
+
+        Lowdefy **V4** is now built on top of the popular [Next.js](https://nextjs.org) framework. You'll now have the benefits of the thriving Next.js ecosystem.
+
+        By adopting Next.js, Lowdefy **V4** gains access to industry leading web development practices, faster page load times, flexible and easy deployment options.
+
+        Next.js also comes with wealth of plugins and integrations that will help you extend and optimize your Lowdefy apps. As a result, you can expect enhanced performance and an improved developer experience when building your applications.
+
+        ### Flexible authentication secured with Auth.js
+
+        With over 700k daily npm installs, [Auth.js](https://authjs.dev/) is one of the most popular authentication solutions in the JavaScript ecosystem. Authentication in Lowdefy **V4** has been reengineered to support not only OpenID Connect identity providers, but also include more than 75 popular services (Google, Github, MS Active Directory, Auth0), email/passwordless/magic link auth, or other credentials using any customizible database adapter. This enables Lowdefy developers to build apps using any identity provider or implement niche authentication requirements such as [JWT token based authentication](https://github.com/lowdefy/lowdefy-example-jwt-auth).
+
+        In Lowdefy **V4** authentication configuration remains easy but powerful. Features such as public pages, role based access control, custom callbacks and configurable user objects enable Lowdefy developers to build applications for every business need. See the [user authentication section](https://docs.lowdefy.com/users-introduction) in our docs for more details regarding Lowdefy authentication.
+
+        ### Extensibility with npm and pnpm workspace plugins
+
+        Lowdefy **V4** introduces [plugins](https://docs.lowdefy.com/plugins-introduction), with full support for [**npm**](https://www.npmjs.com) and local [**pnpm workspace**](https://pnpm.io/workspaces) modules, making it easy to extend your apps with custom JavaScript Blocks, Connections, Requests, Actions, Operators, and Auth Adapters and Providers, all with build and deploy processes developers are familiar with.
+
+        Lowdefy plugins are packages installed in your project's Next.js `package.json`, thus forming part of the normal Next.js build process. While Lowdefy reduces the need for custom code, the new plugin mechanism allows developers to speed up and standardize application delivery by only coding the last mile of their application. The flexibility of **V4** plugins aims to solve the "brick wall" problem faced by many low-code frameworks, making it easy to customize applications with JavaScript.
+
+        ### Enhanced Styling and Rendering
+
+        In this Lowdefy upgrade we are bringing back the JavaScript build step to Lowdefy apps.
+
+        While the Webpack module federation of **V3** simplified the build process by using one build bundle for all apps and loading front-end dependencies at run time, it introduced other problems such as:
+        - large loading waterfalls
+        - complications for loading server side dependencies at runtime
+        - limitations on app specific build process optimizations and modifications
+
+        In Lowdefy **V4** the app-specific build step enables app-specific dependencies for bundles that can apply advanced features. For example, in **V4** any [Ant Design V4's +900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less) can be modified. We've introduced this change to help you build beautiful apps with ease.
+
+        In **V4** we've also re-engineered how loading states work and added loading skeletons on a block level. This gives you precise control of loading states *while* keeping application config simple, clean, and understandable.
+
+        We've also removed blocking loading elements to instead render only when defined, resulting in a much faster user experience. On our docs introduction page this results in a 5x faster time to first meaningful paint.
+
+        ## A Word on Lowdefy as a Company
+
+        Over the past 7 years our small team has focused on developing custom web applications for internal business processes of enterprise customers. These niche, high-value apps have given us the freedom to bootstrap Lowdefy as an Open-Source web framework. Lowdefy helped us speed up our onboarding process for new devs, and made both maintenance and enhancement of our many customer apps easy.
+
+        We've always been focused on building a sustainable business and staying small has given us the freedom to experiment with platform changes that would be difficult to do at scale. In the future, scaling with VC backing might make sense for us, but for now, we remain laser focused on developing Lowdefy to be the easiest way to create web apps for teams big and small.
+
+        ### Monetising The Value We Create
+
+        With that said, for us to build Lowdefy to it's full potential, it needs to grow beyond the needs of us as an app development agency. With the growth of the Lowdefy community, more than 25 000 apps have been built with Lowdefy. Lowdefy is becoming the tool of choice for developers who do not want to invest time learning the complex details of JavaScript and the web ecosystem, or for larger teams looking for an easy, secure and scalable way to publish maintainable business web apps.
+
+        Instead of building services like hosting, that other companies do really well, we have decided we should remain focused on the actual value Lowdefy provides. By charging for this, we also incentivise ourselves to build a better platform. Starting with Lowdefy **V4**, we are introducing a [capped usage based pricing](https://lowdefy.com/pricing) to Lowdefy apps that include authentication.
+
+        We believe this pricing model to best fit Lowdefy apps because:
+
+        - Predicting the maximum cost is easy as with popular user-based pricing models.
+        - Infrequent app users pay very little, thus allowing for the large infrequent user base use-case.
+        - This model scales to zero with no usage.
+        - It is easy to comprehend.
+
+        Ultimately we want our pricing model to align with the value Lowdefy creates, while being open to most use cases to promote Lowdefy adoption. Please see this [Github Community Discussion](https://github.com/lowdefy/lowdefy/discussions/1668) for more details regarding our license change and pricing decision.
+
+        ## Licensing Changes
+
+        Given the new pricing model we have changed how we license Lowdefy. Lowdefy is now available under three different software licenses. The majority of the project will remain licensed under the Apache License Version 2.0. The paid components of the project can be used under the [Lowdefy Commercial License](https://lowdefy.com/terms), which can be obtained by signing up for an account at [cloud.lowdefy.com](https://cloud.lowdefy.com). The paid components are also licensed under the Business Source License Version 1.1, a source available license that allows for non-production use and that converts to the Apache License Version 2.0 after 4 years.
+
+        For more information see [the licenses page](https://docs.lowdefy.com/licenses) in the Lowdefy docs.
+
+        ## Getting Started with Lowdefy V4
+
+        To start building applications with Lowdefy **V4**, check out our [documentation](https://docs.lowdefy.com) and explore the [plugins project example](https://github.com/lowdefy/lowdefy-example-plugins) for a pnpm monorepo / workspaces setup.
+
+        Don't forget to share your custom plugins with the Lowdefy community by publishing them to npm using `lowdefy` in the name and posting about it on our [Github Discussions](https://github.com/lowdefy/lowdefy/discussions).
+
+        We can't wait to see the amazing applications you'll create with Lowdefy **V4**! If you have any questions or feedback, feel free to reach out to us through [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) or join our [community on Discord](https://discord.gg/lowdefy).
+
+        Happy coding! 🎉
+
+  - id: author_block
+    type: Box
+    blocks:
+      - id: avatar
+        type: Avatar
+        layout:
+          flex: 1 0 40
+        properties:
+          size: 40
+          src: ./images/profiles/gervwyk.jpeg
+          alt: Gerrie
+      - id: details
+        type: Html
+        layout:
+          flex: 1 0 auto
+        style:
+          marginLeft: 10
+          fontSize: 12
+        properties:
+          html: |
+            <b>Gerrie van Wyk</b>
+            <p>15 January 2024</p>
