@@ -59,27 +59,3 @@ S3Download.meta = {
 };
 
 export default S3Download;
-
-// Block
-// id: query.download
-// type: S3Download
-// properties:
-//   s3GetPolicyRequestId: req_id
-//   fileList:
-//   _state: files.fileList
-
-// Request
-// id: req_id
-// connectionId: files-bucket
-// payload:
-//   name:
-//     _event: file.name
-//   key:
-//     _event: file.key
-//   type:
-//     _event: file.type
-// properties:
-//   key:
-//     _payload: key
-//   responseContentType:
-//     _payload: type

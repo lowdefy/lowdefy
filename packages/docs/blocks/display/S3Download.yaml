@@ -21,9 +21,9 @@ _ref:
     schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/schema.json
     filePath: blocks/display/S3Download.yaml
     description_content: |
-      The `S3Download` block allows a user to to download a files from AWS S3.
+      The `S3Download` block allows a user to download a files from AWS S3.
 
-      The `s3GetPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedGetPolicy`](/AWSS3) request. This request is called by the block when the user downloads a file, to create a policy that allows a file to be downloaded to AWS S3.
+      The `s3GetPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedGetPolicy`](/AWSS3) request. This request is called by the block when the user downloads a file, to create a policy that allows a file to be downloaded from AWS S3.
 
       If using files was uploaded using a S3Upload block, the `fileList` can be mapped to the `S3Download` block to allow the user to download the files, given that the correct `AwsS3PresignedGetPolicy` is in defined.
 

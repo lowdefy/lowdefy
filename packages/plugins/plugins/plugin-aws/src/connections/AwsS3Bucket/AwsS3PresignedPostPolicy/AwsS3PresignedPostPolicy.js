@@ -24,7 +24,7 @@ function AwsS3PresignedPostPolicy({ request, connection }) {
   const params = {
     Bucket: bucket,
     Fields: {
-      key: key,
+      key,
     },
   };
   if (conditions) {
