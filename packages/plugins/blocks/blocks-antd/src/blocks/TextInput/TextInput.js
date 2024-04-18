@@ -58,6 +58,7 @@ const TextInput = ({
               showCount={properties.showCount}
               status={validation.status}
               value={value}
+              type={properties.type}
               onChange={
                 onChange ||
                 ((event) => {
