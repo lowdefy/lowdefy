@@ -2,4 +2,4 @@
 '@lowdefy/blocks-antd': patch
 ---
 
-Add input types to TextInput
+Add `type` protperty to TextInput to set HTML5 input types.
