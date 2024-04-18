@@ -23,15 +23,10 @@ import { Upload } from 'antd';
 import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 
-const getDisabled = ({ properties, value }) => {
-  if (properties.disabled) return true;
-  return properties.singleFile && value && (value.fileList || []).length >= 1;
-};
-
 const S3UploadButtonBlock = ({ blockId, components, events, methods, properties, value }) => {
-  const [state, setFileList, setValue] = useFileList({
+  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
+    properties,
     methods,
-    multiple: properties.multiple,
     value,
   });
   const s3UploadRequest = getS3Upload({ methods, setFileList });
@@ -53,19 +48,18 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
       setValue(value);
     }
   }, [value]);
-  const disabled = getDisabled({ properties, value });
   return (
     <Upload
       accept={properties.accept ?? '*'}
+      beforeUpload={loadFileList}
       customRequest={s3UploadRequest}
-      disabled={disabled}
-      id={blockId}
-      multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
-      showUploadList={properties.showUploadList}
+      disabled={properties.disabled}
       fileList={state.fileList}
-      onRemove={async (file) => {
-        await setFileList({ event: 'onRemove', file });
-      }}
+      id={blockId}
+      maxCount={properties.maxCount}
+      multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
+      onRemove={removeFile}
+      showUploadList={properties.showUploadList}
       onChange={() => {
         methods.triggerEvent({ name: 'onChange' });
       }}
@@ -75,7 +69,7 @@ const S3UploadButtonBlock = ({ blockId, components, events, methods, properties,
         components={components}
         events={events}
         properties={{
-          disabled,
+          disabled: properties.disabled,
           icon: 'AiOutlineUpload',
           title: 'Upload',
           type: 'default',

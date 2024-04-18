@@ -16,6 +16,10 @@
         "type": "boolean",
         "description": "Disable the file input."
       },
+      "maxCount": {
+        "type": "number",
+        "description": "Maximum number of files that can be uploaded."
+      },
       "s3PostPolicyRequestId": {
         "type": "string",
         "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
@@ -54,7 +58,7 @@
       "singleFile": {
         "type": "boolean",
         "default": false,
-        "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt and the upload button is disabled after a file is uploaded."
+        "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt."
       },
       "style": {
         "type": "object",

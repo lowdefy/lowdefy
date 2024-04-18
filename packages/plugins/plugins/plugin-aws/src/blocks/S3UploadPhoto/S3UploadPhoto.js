@@ -23,9 +23,9 @@ import useFileList from '../utils/useFileList.js';
 import getS3Upload from '../utils/getS3Upload.js';
 
 const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, properties, value }) => {
-  const [state, setFileList, setValue] = useFileList({
+  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
+    properties,
     methods,
-    multiple: properties.multiple,
     value,
   });
   const [loading, setLoading] = useState(false);
@@ -51,18 +51,18 @@ const S3UploadPhoto = ({ blockId, components: { Icon }, events, methods, propert
   }, [value]);
   return (
     <Upload
-      listType="picture-card"
-      className="avatar-uploader"
       accept="image/*"
+      beforeUpload={loadFileList}
+      className="avatar-uploader"
       customRequest={s3UploadRequest}
-      maxCount={properties.maxCount}
-      id={blockId}
-      multiple={!properties.singleFile}
-      showUploadList={properties.showUploadList}
+      disabled={properties.disabled}
       fileList={state.fileList}
-      onRemove={async (file) => {
-        await setFileList({ event: 'onRemove', file });
-      }}
+      id={blockId}
+      listType="picture-card"
+      maxCount={properties.maxCount}
+      multiple={!properties.singleFile}
+      onRemove={removeFile}
+      showUploadList={properties.showUploadList}
       onChange={() => {
         methods.triggerEvent({ name: 'onChange' });
       }}

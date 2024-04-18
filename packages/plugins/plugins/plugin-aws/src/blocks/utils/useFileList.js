@@ -17,21 +17,32 @@
 import { useState } from 'react';
 import { type } from '@lowdefy/helpers';
 
-const checkedValue = (value) => ({
-  // eslint-disable-next-line no-nested-ternary
-  file: type.isObject(value?.file)
-    ? value.file
-    : type.isObject(value?.fileList?.[0])
-      ? value.fileList[0]
-      : null,
-  fileList: type.isArray(value?.fileList) ? value.fileList : [],
-});
+const useFileList = ({ properties, methods, value = {} }) => {
+  const checkedValue = (value) => {
+    let file = type.isObject(value?.file) ? value.file : null;
+    if (!file && type.isObject(value?.fileList?.[0])) {
+      file = value.fileList[0];
+    }
+    const fileList = type.isArray(value?.fileList) ? value.fileList : [];
+    if (properties.singleFile === true) {
+      fileList.splice(1);
+    }
+    if (type.isInt(properties.maxCount)) {
+      fileList.splice(properties.maxCount);
+    }
+    return {
+      file,
+      fileList,
+    };
+  };
 
-const useFileList = ({ methods, multiple, value = {} }) => {
   const [state, setState] = useState(checkedValue(value));
   const setValue = (stateValue) => {
-    setState(checkedValue(stateValue));
+    setState(() => {
+      return checkedValue(stateValue);
+    });
   };
+
   const setFileList = async ({ event, file, percent }) => {
     if (!file) {
       throw new Error('File is undefined in useFileList');
@@ -50,33 +61,62 @@ const useFileList = ({ methods, multiple, value = {} }) => {
       uid,
       url: file instanceof Blob || file instanceof File ? URL.createObjectURL(file) : null,
     };
-    let nextState = { file: fileObj, fileList: [...state.fileList] };
-
     switch (event) {
       case 'onProgress':
         fileObj.status = 'uploading';
         fileObj.percent = percent ?? fileObj.percent;
-        nextState.fileList = multiple !== false ? [fileObj, ...state.fileList] : [fileObj];
         break;
       case 'onSuccess':
         fileObj.status = 'done';
         fileObj.percent = 100;
-        nextState.fileList = multiple !== false ? [fileObj, ...state.fileList] : [fileObj];
         break;
       case 'onRemove':
         fileObj.status = 'removed';
-        nextState.fileList = state.fileList.filter((f) => f.uid !== fileObj.uid);
         break;
       default: // onError
         fileObj.status = 'error';
-        nextState.fileList = multiple !== false ? [fileObj, ...state.fileList] : [fileObj];
         break;
     }
+    state.fileList.splice(
+      state.fileList.findIndex((f) => f.uid === fileObj.uid),
+      1,
+      fileObj
+    );
+    const nextState = checkedValue({
+      file: fileObj,
+      fileList: state.fileList,
+    });
     await methods.triggerEvent({ name: event, event: nextState });
-    setState(nextState);
+    setValue(nextState);
     methods.setValue(nextState);
   };
-  return [state, setFileList, setValue];
+  const loadFileList = (file, nextFiles) => {
+    if (
+      properties.singleFile === true &&
+      nextFiles.filter((f) => type.isString(f.uid)).length > 1
+    ) {
+      return false;
+    }
+    if (
+      type.isInt(properties.maxCount) &&
+      nextFiles.filter((f) => type.isString(f.uid)).length > properties.maxCount
+    ) {
+      return false;
+    }
+    setValue({
+      file,
+      fileList: [...nextFiles, ...state.fileList],
+    });
+  };
+  const removeFile = (file) => {
+    state.fileList.splice(
+      state.fileList.findIndex((f) => f.uid === file.uid),
+      1
+    );
+    setValue(state);
+    methods.setValue(state);
+  };
+  return [state, loadFileList, setFileList, removeFile, setValue];
 };
 
 export default useFileList;

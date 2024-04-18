@@ -25,9 +25,9 @@ import getOnPaste from '../utils/getOnPaste.js';
 const { Dragger } = Upload;
 
 const S3UploadDragger = ({ blockId, methods, properties, value }) => {
-  const [state, setFileList, setValue] = useFileList({
+  const [state, loadFileList, setFileList, removeFile, setValue] = useFileList({
+    properties,
     methods,
-    multiple: properties.multiple,
     value,
   });
   const s3UploadRequest = getS3Upload({ methods, setFileList });
@@ -58,17 +58,17 @@ const S3UploadDragger = ({ blockId, methods, properties, value }) => {
     <div id={blockId} onPaste={onPaste}>
       <Dragger
         accept={properties.accept ?? '*'}
-        customRequest={s3UploadRequest}
+        beforeUpload={loadFileList}
         className={methods.makeCssClass([properties.style])}
+        customRequest={s3UploadRequest}
         disabled={properties.disabled}
+        fileList={state.fileList}
+        maxCount={properties.maxCount}
+        multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
+        onRemove={removeFile}
+        showUploadList={properties.showUploadList}
         onChange={() => {
           methods.triggerEvent({ name: 'onChange' });
-        }}
-        multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
-        showUploadList={properties.showUploadList}
-        fileList={state.fileList}
-        onRemove={async (file) => {
-          await setFileList({ event: 'onRemove', file });
         }}
       >
         <div className="ant-upload-hint">
