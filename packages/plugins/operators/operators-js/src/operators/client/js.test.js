@@ -71,13 +71,13 @@ test('js default', async () => {
   expect(lowdefyOperators.user.mock.calls[0][0]['params']).toEqual('u');
 });
 
-test('js throw when an invalid operator is given', async () => {
+test('js throw when invalid javascript function', async () => {
   const lowdefyOperators = {
-    notOperator: jest.fn(),
+    
   };
   const validMap = {
-    client: ({ notOperator }) => {
-      return notOperator('x');
+    client: () => {
+      return notFunction('x');
     },
   };
 
@@ -89,7 +89,7 @@ test('js throw when an invalid operator is given', async () => {
       params: 'client',
     })
   ).toThrow(
-    `Operator Error: notOperator is not a function at root. Received function: ({ notOperator })=>{
+    `Operator Error: notFunction is not a function at root. Received function: ({ notOperator })=>{
             return notOperator('x');
         }`
   );
