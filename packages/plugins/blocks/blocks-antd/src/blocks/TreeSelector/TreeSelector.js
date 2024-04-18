@@ -19,49 +19,46 @@ import { Tree } from 'antd';
 import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 
 const transformData = (data, valueMap, prefix = '') => {
-  return data.map(({ label, value, children }, i) => {
+  return data.map(({ children, disabled, label, value }, i) => {
     const key = `${prefix}-${i}`;
     valueMap[key] = prefix ? [...valueMap[prefix], value] : [value];
     return {
-      title: label.replace(/(<([^>]+)>)/gi, ' ').trim(),
-      renderTitle: label,
-      key,
       children: children && transformData(children, valueMap, key),
+      disabled,
+      key,
+      renderTitle: label,
     };
   });
 };
 
-const TreeSelector = ({
-  blockId,
-  properties,
-  content,
-  events,
-  methods,
-  components: { Icon },
-  value,
-}) => {
+const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   const treeData = properties.options;
   const valueMap = {};
   const transformedData = transformData(treeData, valueMap);
-  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [selectedKey, setSelectedKey] = useState(null);
 
   useEffect(() => {
-    if (value === null || (Array.isArray(value) && !value.length)) {
-      setSelectedKeys(null);
+    if (JSON.stringify(value) === JSON.stringify(selectedKey)) {
+      setSelectedKey(value);
+      methods.triggerEvent({ name: 'onChange' });
     }
   }, [value]);
 
-  const onSelect = (selectedKeys) => {
-    methods.setValue(
-      selectedKeys
-        .map((key) => valueMap[key])
-        .flat()
-        .reverse()
-    );
+  const onSelect = (selected) => {
+    const nextValue = selected
+      .map((key) => valueMap[key])
+      .flat()
+      .reverse();
+    if (nextValue.length === 0 || nextValue[0] === undefined) {
+      methods.setValue(null);
+      methods.triggerEvent({ name: 'onChange' });
+      setSelectedKey(null);
+      return;
+    }
+    methods.setValue(nextValue[0]);
     methods.triggerEvent({ name: 'onChange' });
-    setSelectedKeys(selectedKeys);
+    setSelectedKey(nextValue[0]);
   };
-  const [expandedKeys, setExpandedKeys] = useState([]);
   return (
     <Tree
       id={blockId}
@@ -69,22 +66,11 @@ const TreeSelector = ({
       disabled={properties.disabled}
       defaultExpandAll={properties.defaultExpandAll}
       showLine={true}
-      // if expanded switcherIcon AiOutlineDown, otherwise, AiOutlineRight
-      switcherIcon={
-        <Icon
-          blockId={`${blockId}_switcherIcon`}
-          events={events}
-          properties={expandedKeys.length > 0 ? 'AiOutlineDown' : 'AiOutlineRight'}
-        />
-      }
       content={content.options && content.options()}
       treeData={transformedData}
       onSelect={onSelect}
-      onExpand={(expandedKeys) => {
-        setExpandedKeys(expandedKeys);
-      }}
       titleRender={({ renderTitle }) => renderHtml({ html: renderTitle, methods })}
-      selectedKeys={selectedKeys}
+      selectedKeys={selectedKey}
     />
   );
 };
