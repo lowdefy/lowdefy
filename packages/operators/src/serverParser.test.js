@@ -84,6 +84,7 @@ test('operator returns value and removes ~k', () => {
           ],
           "arrayIndices": Array [],
           "env": undefined,
+          "jsMap": undefined,
           "location": "location",
           "methodName": undefined,
           "operatorPrefix": "_",
@@ -105,6 +106,7 @@ test('operator returns value and removes ~k', () => {
           },
           "parser": ServerParser {
             "env": undefined,
+            "jsMap": undefined,
             "operators": Object {
               "_error": [MockFunction],
               "_init": [MockFunction],
