@@ -111,9 +111,9 @@ test('buildJs connection functions', async () => {
       { id: 'c', requests: [] },
     ],
     connections: [
-      { id: 'c_a', style: { _js: 'return 3;' } },
-      { id: 'c_b', style: { _js: 'return 10;' } },
-      { id: 'c_c', style: { _js: 'return 3;' } },
+      { id: 'c_a', properties: { _js: 'return 3;' } },
+      { id: 'c_b', properties: { _js: 'return 10;' } },
+      { id: 'c_c', properties: { _js: 'return 3;' } },
     ],
   };
 
@@ -123,6 +123,11 @@ test('buildJs connection functions', async () => {
     { id: 'a', requests: [] },
     { id: 'b', requests: [] },
     { id: 'c', requests: [] },
+  ]);
+  expect(components.connections).toEqual([
+    { id: 'c_a', properties: { _js: 'WtH5rMtQ+z9CJ4qYRnNWpIpRrnk=' } },
+    { id: 'c_b', properties: { _js: 'h4uNNgee8PnSsXJuEXZQ7FSbnZY=' } },
+    { id: 'c_c', properties: { _js: 'WtH5rMtQ+z9CJ4qYRnNWpIpRrnk=' } },
   ]);
 
   expect(context.jsMap).toEqual({
