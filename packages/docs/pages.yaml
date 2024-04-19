@@ -73,6 +73,7 @@
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TitleInput.yaml
+- _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
 - _ref: blocks/display/AgGrid.yaml
@@ -127,6 +128,7 @@
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
+- _ref: blocks/container/Popover.yaml
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Sider.yaml
 - _ref: blocks/container/Span.yaml
