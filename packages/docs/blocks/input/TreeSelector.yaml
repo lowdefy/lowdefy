@@ -39,6 +39,8 @@ _ref:
 
       The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
+      The value in state is an array of values with the selected node value first followed by any parent node values.
+
     examples:
       - title: Tree list of type and category with connecting line and single select.
         block:

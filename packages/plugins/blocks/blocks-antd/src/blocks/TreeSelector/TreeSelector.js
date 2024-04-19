@@ -21,7 +21,7 @@ import { blockDefaultProps, renderHtml } from '@lowdefy/block-utils';
 const transformData = (data, valueMap, prefix = '') => {
   return data.map(({ children, disabled, disableCheckbox, label, value }, i) => {
     const key = `${prefix}-${i}`;
-    valueMap[key] = prefix ? [...valueMap[prefix], value] : [value];
+    valueMap[key] = prefix ? [value, ...valueMap[prefix]] : [value];
     return {
       children: children && transformData(children, valueMap, key),
       disabled,
@@ -32,13 +32,16 @@ const transformData = (data, valueMap, prefix = '') => {
   });
 };
 
-const getValueKey = (value, valueMap) => {
+const getValueKeys = (value, valueMap) => {
   for (const key in valueMap) {
     if (JSON.stringify(value) === JSON.stringify(valueMap[key])) {
-      return key;
+      return key
+        .split('-')
+        .slice(1)
+        .reduce((acc, curr, i) => [...acc, acc[i - 1] ? acc[i - 1] + '-' + curr : '-' + curr], []);
     }
   }
-  return null;
+  return [];
 };
 
 const TreeSelector = ({ blockId, properties, content, methods, value }) => {
@@ -46,13 +49,17 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   const valueMap = {};
   const transformedData = transformData(treeData, valueMap);
   const [selectedKeys, setSelectedKeys] = useState([]);
+  const [expandedKeys, setExpandedKeys] = useState([]);
 
   useEffect(() => {
+    let nextValue;
     if (value === null || (Array.isArray(value) && !value.length)) {
-      setSelectedKeys(null);
+      nextValue = [];
     } else {
-      setSelectedKeys([getValueKey(value, valueMap)]);
+      nextValue = getValueKeys(value, valueMap);
     }
+    setSelectedKeys([nextValue[nextValue.length - 1]]);
+    setExpandedKeys([...new Set([...nextValue.slice(0, nextValue.length - 1), ...expandedKeys])]);
   }, [value]);
 
   const onSelect = (selectedKeys) => {
@@ -60,6 +67,11 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
     methods.triggerEvent({ name: 'onChange' });
     setSelectedKeys(selectedKeys);
   };
+
+  const onExpand = (nextExpandedKeys) => {
+    setExpandedKeys(nextExpandedKeys);
+  };
+
   return (
     <Tree
       id={blockId}
@@ -72,8 +84,10 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
       content={content.options && content.options()}
       treeData={transformedData}
       onSelect={onSelect}
+      onExpand={onExpand}
       titleRender={({ renderTitle }) => renderHtml({ html: renderTitle, methods })}
       selectedKeys={selectedKeys}
+      expandedKeys={expandedKeys}
     />
   );
 };
