@@ -26,7 +26,7 @@ _ref:
       ```
     description: |
       The `_js` operator enables the use of custom JavaScript logic within Lowdefy configuration where operators are evaluated. The purpose of this operator is to facilitate quick implementation of fast, synchronous functions. Like other operators, these functions are evaluated during page render, thus slow functions can impact app performance.
-      For more advanced logic, or when the use of external depandancies are necessary, instead develop a [custom plugin](/plugins-introduction).
+      For more advanced logic, or when the use of external dependencies is necessary, instead develop a [custom plugin](/plugins-introduction).
 
       #### Using Lowdefy operators in JavaScript
       Certain Lowdefy operators can be used inside of the JavaScript function block. These operators are available as functions and will take their standard arguments.
