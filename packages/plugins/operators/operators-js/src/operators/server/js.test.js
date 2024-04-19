@@ -20,13 +20,13 @@ import js from './js.js';
 const rootLocation = 'root';
 const map = {
   c1: ({ payload }) => {
-    return payload('a');
+    return payload('p');
   },
   c2: ({ secret }) => {
-    return secret('e');
+    return secret('s');
   },
   c3: ({ user }) => {
-    return user('i');
+    return user('u');
   },
 };
 
@@ -41,9 +41,9 @@ test('js default', async () => {
     js({ jsMap: map, operators: lowdefyOperators, location: rootLocation, params: key });
   });
 
-  expect(lowdefyOperators._payload.mock.calls[0][0]['params']).toEqual('a');
-  expect(lowdefyOperators._secret.mock.calls[0][0]['params']).toEqual('e');
-  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('i');
+  expect(lowdefyOperators._payload.mock.calls[0][0]['params']).toEqual('p');
+  expect(lowdefyOperators._secret.mock.calls[0][0]['params']).toEqual('s');
+  expect(lowdefyOperators._user.mock.calls[0][0]['params']).toEqual('u');
 });
 
 test('js throw when invalid javascript function', async () => {
