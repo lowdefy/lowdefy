@@ -30,12 +30,12 @@ beforeEach(() => {
 test('writeJs', async () => {
   context.jsMap = {
     client: {
-      'PGqYgLcEpG/AkAZycfKEpwxXT7Y=': 'return 12;',
-      'tjmrJIhufQzEpj/iGu5AumDcrBQ=': 'return 1;',
+      A: 'return 12;',
+      B: 'return 1;',
     },
     server: {
-      'h4uNNgee8PnSsXJuEXZQ7FSbnZY=': 'return 10;',
-      'tjmrJIhufQzEpj/iGu5AumDcrBQ=': 'return 1;',
+      C: 'return 10;',
+      D: 'return 1;',
     },
   };
   await writeJs({ context });
@@ -44,16 +44,62 @@ test('writeJs', async () => {
       'plugins/operators/clientJsMap.js',
       `
 export default {
-  'PGqYgLcEpG/AkAZycfKEpwxXT7Y=': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 12; },
-  'tjmrJIhufQzEpj/iGu5AumDcrBQ=': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
+  'A': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 12; },
+  'B': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { return 1; },
   };`,
     ],
     [
       'plugins/operators/serverJsMap.js',
       `
 export default {
-  'h4uNNgee8PnSsXJuEXZQ7FSbnZY=': ({ payload, secrets, user }) => { return 10; },
-  'tjmrJIhufQzEpj/iGu5AumDcrBQ=': ({ payload, secrets, user }) => { return 1; },
+  'C': ({ payload, secrets, user }) => { return 10; },
+  'D': ({ payload, secrets, user }) => { return 1; },
+  };`,
+    ],
+  ]);
+});
+
+test('writeJs multiline', async () => {
+  context.jsMap = {
+    client: {
+      A: `const parts = input.split('-').filter(part => part);
+      return parts.reduce((acc, current, index) => {
+        const prefix = index === 0 ? '-' : acc[index - 1] + '-';
+        acc.push(prefix + current);
+        return acc;
+      }, []);`,
+    },
+    server: {
+      C: `let array = [1, 2, 3, 4, 5, 6];
+      if (array.length > 3) {
+        array.splice(3);
+      }
+      console.log(array);`,
+    },
+  };
+  await writeJs({ context });
+  expect(mockWriteBuildArtifact.mock.calls).toEqual([
+    [
+      'plugins/operators/clientJsMap.js',
+      `
+export default {
+  'A': ({ actions, event, input, location, lowdefyGlobal, request, state, urlQuery, user }) => { const parts = input.split('-').filter(part => part);
+      return parts.reduce((acc, current, index) => {
+        const prefix = index === 0 ? '-' : acc[index - 1] + '-';
+        acc.push(prefix + current);
+        return acc;
+      }, []); },
+  };`,
+    ],
+    [
+      'plugins/operators/serverJsMap.js',
+      `
+export default {
+  'C': ({ payload, secrets, user }) => { let array = [1, 2, 3, 4, 5, 6];
+      if (array.length > 3) {
+        array.splice(3);
+      }
+      console.log(array); },
   };`,
     ],
   ]);
