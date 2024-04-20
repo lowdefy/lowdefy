@@ -1,0 +1,86 @@
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the card."
+      },
+      "color": {
+        "type": "string",
+        "description": "Popover background color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "description": "Whether the popover is open by default.",
+        "default": false
+      },
+      "autoAdjustOverflow": {
+        "type": "boolean",
+        "description": "Whether to adjust popup placement automatically when popup is off screen",
+        "default": true
+      },
+      "placement": {
+        "type": "string",
+        "description": "Placement of the popover.",
+        "enum": [
+          "top",
+          "topLeft",
+          "topRight",
+          "left",
+          "leftTop",
+          "leftBottom",
+          "right",
+          "rightTop",
+          "rightBottom",
+          "bottom",
+          "bottomLeft",
+          "bottomRight"
+        ],
+        "default": "bottom"
+      },
+      "trigger": {
+        "type": "string",
+        "description": "Trigger mode which executes the popover.",
+        "enum": ["hover", "click", "focus"],
+        "default": "hover"
+      },
+      "zIndex": {
+        "type": "number",
+        "description": "Z-index of the popover."
+      },
+      "overlayInnerStyle": {
+        "type": "object",
+        "description": "Style of overlay inner div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "mouseEnterDelay": {
+        "type": "number",
+        "description": "Delay in milliseconds, before tooltip is shown on mouse enter.",
+        "default": 0.1
+      },
+      "mouseLeaveDelay": {
+        "type": "number",
+        "description": "Delay in milliseconds, before tooltip is hidden on mouse leave.",
+        "default": 0.1
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onOpenChange": {
+        "type": "array",
+        "description": "Trigger actions when visibility of the tooltip card is changed."
+      }
+    }
+  }
+}

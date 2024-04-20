@@ -30,21 +30,32 @@ const createChangeHandler =
     });
   };
 
+const calculateState = ({ defaultCurrent, defaultPageSize, value }) => {
+  const state = {
+    current: type.isInt(value?.current) ? value?.current : defaultCurrent,
+    pageSize: type.isInt(value?.pageSize) ? value?.pageSize : defaultPageSize,
+  };
+  state.skip = (state.current - 1) * state.pageSize;
+  return state;
+};
+
 const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
-  const [state, setState] = useState({
-    current: parseInt(value?.current) || 1,
-    pageSize: parseInt(value?.pageSize) || properties.pageSizeOptions?.[0] || 10,
-    skip: parseInt(value?.skip) || 0,
-  });
+  const [state, setState] = useState(() =>
+    calculateState({
+      defaultCurrent: 1,
+      defaultPageSize: properties.pageSizeOptions?.[0] ?? 10,
+      value,
+    })
+  );
   useEffect(() => {
     if (JSON.stringify(value) !== JSON.stringify(state)) {
-      const nextState = {
-        current: parseInt(value?.current) || state.current,
-        pageSize: parseInt(value?.pageSize) || state.pageSize,
-        skip: parseInt(value?.skip) || state.skip,
-      };
+      const nextState = calculateState({
+        defaultCurrent: state.current,
+        defaultPageSize: state.pageSize,
+        value,
+      });
       setState(nextState);
-      methods.setValue(nextState);
+      methods.setValue({ ...nextState });
     }
   }, [value]);
   const showTotal = type.isFunction(properties.showTotal)
@@ -77,17 +88,14 @@ const PaginationBlock = ({ blockId, loading, methods, properties, value }) => {
     />
   );
 };
-
 PaginationBlock.defaultProps = blockDefaultProps;
 PaginationBlock.meta = {
   valueType: 'object',
   initValue: {
     current: 1,
-    skip: 0,
   },
   category: 'input',
   icons: [],
   styles: ['blocks/Pagination/style.less'],
 };
-
 export default PaginationBlock;
