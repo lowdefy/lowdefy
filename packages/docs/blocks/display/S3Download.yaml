@@ -25,7 +25,7 @@ _ref:
 
       The `s3GetPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedGetPolicy`](/AWSS3) request. This request is called by the block when the user downloads a file, to create a policy that allows a file to be downloaded from AWS S3.
 
-      If using files was uploaded using a S3Upload block, the `fileList` can be mapped to the `S3Download` block to allow the user to download the files, given that the correct `AwsS3PresignedGetPolicy` is in defined.
+      If using files were uploaded using a S3Upload block, the `fileList` can be mapped to the `S3Download` block to allow the user to download the files, given the correct `AwsS3PresignedGetPolicy` is in defined.
 
       For the examples to work, a `AwsS3Bucket` connection is required. For example:
       ```yaml
@@ -43,7 +43,7 @@ _ref:
             write: true
       ````
 
-      > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
+      > The examples on this page are not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
     init_property_values:
       fileList:
         - key: 'example.pdf'
