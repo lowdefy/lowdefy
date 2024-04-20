@@ -58,6 +58,7 @@ const TextInput = ({
               showCount={properties.showCount}
               status={validation.status}
               value={value}
+              type={properties.type}
               onChange={
                 onChange ||
                 ((event) => {
@@ -76,7 +77,23 @@ const TextInput = ({
                   const cStart = event.target.selectionStart;
                   const cEnd = event.target.selectionEnd;
                   runAfterUpdate(() => {
-                    event.target.setSelectionRange(cStart, cEnd);
+                    // Allows for input types that don't support SelectionRange
+                    if (
+                      ![
+                        'email',
+                        'date',
+                        'datetime-local',
+                        'month',
+                        'number',
+                        'time',
+                        'week',
+                        'range',
+                        'color',
+                        'file',
+                      ].includes(properties.type)
+                    ) {
+                      event.target.setSelectionRange(cStart, cEnd);
+                    }
                   });
                 })
               }
