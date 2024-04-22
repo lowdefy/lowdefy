@@ -334,6 +334,9 @@
         - id: S3UploadButton
           type: MenuLink
           pageId: S3UploadButton
+        - id: S3UploadDragger
+          type: MenuLink
+          pageId: S3UploadDragger
         - id: S3UploadPhoto
           type: MenuLink
           pageId: S3UploadPhoto
@@ -433,6 +436,9 @@
         - id: Progress
           type: MenuLink
           pageId: Progress
+        - id: S3Download
+          type: MenuLink
+          pageId: S3Download
         - id: Skeleton
           type: MenuLink
           pageId: Skeleton

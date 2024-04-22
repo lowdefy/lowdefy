@@ -26,3 +26,45 @@ _ref:
       The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
 
       The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
+
+      For the examples to work, a `AwsS3Bucket` connection is required. For example:
+      ```yaml
+        connections:
+        - id: files
+          type: AwsS3Bucket
+          properties:
+            accessKeyId:
+              _secret: FILES_S3_ACCESS_KEY_ID
+            secretAccessKey:
+              _secret: FILES_S3_SECRET_ACCESS_KEY
+            region: af-south-1
+            bucket:
+              _secret: FILES_S3_BUCKET
+            write: true
+      ````
+
+      > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
+
+    examples:
+      - title: Basic S3UploadPhoto Example
+        block:
+          id: attach_files
+          type: S3UploadPhoto
+          properties:
+            s3PostPolicyRequestId: upload_file
+          requests:
+            - id: upload_file
+              type: AwsS3PresignedPostPolicy
+              connectionId: files
+              payload:
+                filename:
+                  _event: file.name
+              properties:
+                key:
+                  _nunjucks:
+                    template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
+                    on:
+                      now:
+                        _date: now
+                      filename:
+                        _payload: filename

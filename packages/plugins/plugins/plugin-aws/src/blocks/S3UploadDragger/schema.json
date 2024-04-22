@@ -4,21 +4,13 @@
     "type": "object",
     "required": ["s3PostPolicyRequestId"],
     "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the file input to be displayed on the draggable area."
+      },
       "accept": {
         "type": "string",
         "description": "File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept."
-      },
-      "button": {
-        "type": "object",
-        "description": "Button block properties.",
-        "default": {
-          "icon": "UploadOutlined",
-          "title": "Upload",
-          "type": "default"
-        },
-        "docs": {
-          "displayType": "button"
-        }
       },
       "disabled": {
         "type": "boolean",
@@ -55,8 +47,7 @@
                 }
               }
             ]
-          },
-          "getter": {}
+          }
         }
       },
       "showUploadList": {
@@ -68,6 +59,13 @@
         "type": "boolean",
         "default": false,
         "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to draggable area.",
+        "docs": {
+          "displayType": "yaml"
+        }
       }
     }
   },
@@ -77,10 +75,6 @@
       "onChange": {
         "type": "array",
         "description": "Triggered when the upload state is changing."
-      },
-      "onClick": {
-        "type": "array",
-        "description": "Triggered when the upload button is clicked."
       }
     }
   }
