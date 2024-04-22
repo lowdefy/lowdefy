@@ -39,7 +39,8 @@
     "build": "cp package.json package.original.json || copy package.json package.original.json",
     "start": "node manager/run.mjs",
     "lint": "next lint",
-    "next": "next"
+    "next": "next",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@lowdefy/actions-core": "4.0.2",

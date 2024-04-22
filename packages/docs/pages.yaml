@@ -67,12 +67,14 @@
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
 - _ref: blocks/input/TextArea.yaml
 - _ref: blocks/input/TextInput.yaml
 - _ref: blocks/input/TitleInput.yaml
+- _ref: blocks/input/TreeSelector.yaml
 - _ref: blocks/input/WeekSelector.yaml
 
 - _ref: blocks/display/AgGrid.yaml
@@ -96,6 +98,7 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
+- _ref: blocks/display/S3Download.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
 - _ref: blocks/display/SkeletonButton.yaml
@@ -127,6 +130,7 @@
 - _ref: blocks/container/Modal.yaml
 - _ref: blocks/container/PageHeaderMenu.yaml
 - _ref: blocks/container/PageSiderMenu.yaml
+- _ref: blocks/container/Popover.yaml
 - _ref: blocks/container/Result.yaml
 - _ref: blocks/container/Sider.yaml
 - _ref: blocks/container/Span.yaml
@@ -169,6 +173,7 @@
 - _ref: actions/Reset.yaml
 - _ref: actions/ResetValidation.yaml
 - _ref: actions/ScrollTo.yaml
+- _ref: actions/SetFocus.yaml
 - _ref: actions/SetGlobal.yaml
 - _ref: actions/SetState.yaml
 - _ref: actions/Throw.yaml
@@ -199,6 +204,7 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
+- _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
@@ -221,6 +227,7 @@
 - _ref: operators/_ref.yaml
 - _ref: operators/_regex.yaml
 - _ref: operators/_request.yaml
+- _ref: operators/_request_details.yaml
 - _ref: operators/_secret.yaml
 - _ref: operators/_state.yaml
 - _ref: operators/_string.yaml

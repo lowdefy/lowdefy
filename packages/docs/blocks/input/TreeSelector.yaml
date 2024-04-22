@@ -1,0 +1,69 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: TreeSelector
+    value_type: any
+    category: input
+    schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/schema.json
+    filePath: blocks/input/TreeSelector.yaml
+    init_state_values:
+      __type_block.properties.options: object[]
+      __object_arr_block.properties.options:
+        - label: Node 1
+          value: '1'
+          children:
+            - label: Node 1.1
+              value: '1.1'
+        - label: Node 2
+          value: '2'
+          children:
+            - label: Node 2.1
+              value: '2.1'
+
+    description_content: |
+      The `TreeSelector` block allows a user to display, collapse and select a single node from a hierarchical list in a tree structure.
+
+      The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+      The value in state is an array of values with the selected node value first followed by any parent node values.
+
+    examples:
+      - title: Tree list of type and category with connecting line and single select.
+        block:
+          id: tree_list_type_category
+          type: TreeSelector
+          properties:
+            showLine: true
+            options:
+              - label: Type
+                value: type
+                children:
+                  - label: One
+                    value: 1
+                  - label: Two
+                    value: 2
+                  - label: Three
+                    value: 3
+              - label: Category
+                value: category
+                children:
+                  - label: One
+                    value: 1
+                  - label: Two
+                    value: 2
+                  - label: Three
+                    value: 3

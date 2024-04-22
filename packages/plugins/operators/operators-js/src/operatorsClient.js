@@ -56,6 +56,7 @@ export { default as _event_log } from './operators/client/event_log.js';
 export { default as _event } from './operators/client/event.js';
 export { default as _global } from './operators/client/global.js';
 export { default as _input } from './operators/client/input.js';
+export { default as _js } from './operators/client/js.js';
 export { default as _location } from './operators/client/location.js';
 export { default as _media } from './operators/client/media.js';
 export { default as _menu } from './operators/client/menu.js';

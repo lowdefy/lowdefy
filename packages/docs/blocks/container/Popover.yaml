@@ -1,0 +1,56 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/template.yaml.njk
+  vars:
+    block_type: Popover
+    category: container
+    schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/schema.json
+    description_content: |
+      A popover container. Can be used to display extra information or options inside the popover.
+    init_state_values:
+      block.properties.title: Popover title
+    areas:
+      - content
+      - popover
+    examples:
+      - title: Popover menu
+        block:
+          id: button_ex
+          type: Popover
+          properties:
+            title: Explains what happens.
+          blocks:
+            - id: settings
+              type: Button
+              properties:
+                title: Settings
+                icon: AiOutlineSetting
+                block: true
+          areas:
+            popover:
+              blocks:
+                - id: profile
+                  type: Button
+                  properties:
+                    title: Profile
+                - id: admin
+                  type: Button
+                  properties:
+                    title: Admin
+                - id: logout
+                  type: Button
+                  properties:
+                    title: Logout

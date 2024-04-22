@@ -45,6 +45,13 @@ page:
                 - 'Environment: '
                 - _var: env
             type: info
+        {% if experimental %}
+        - id: experimental
+          type: Alert
+          properties:
+            message: 'This operator is experimental and may change in future versions.'
+            type: warning
+        {% endif %}
         - id: types
           type: Markdown
           style:

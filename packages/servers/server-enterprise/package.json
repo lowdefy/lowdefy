@@ -42,7 +42,8 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint",
-    "next": "next"
+    "next": "next",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@lowdefy/actions-core": "4.0.2",

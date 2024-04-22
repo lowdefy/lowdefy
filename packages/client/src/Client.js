@@ -30,6 +30,7 @@ const Client = ({
   auth,
   Components,
   config: rawConfig,
+  jsMap,
   lowdefy,
   resetContext = { reset: false, setReset: () => undefined },
   router,
@@ -69,6 +70,7 @@ const Client = ({
       <Context
         key={config.pageConfig.id}
         config={config.pageConfig}
+        jsMap={jsMap}
         lowdefy={lowdefy}
         resetContext={resetContext}
       >

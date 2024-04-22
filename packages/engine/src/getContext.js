@@ -57,6 +57,7 @@ const blockData = ({
 
 function getContext({
   config,
+  jsMap = {},
   lowdefy,
   resetContext = { reset: false, setReset: () => undefined },
 }) {
@@ -77,6 +78,7 @@ function getContext({
     id,
     pageId: config.pageId,
     eventLog: [],
+    jsMap,
     requests: {},
     state: {},
     _internal: {

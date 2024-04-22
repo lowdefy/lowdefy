@@ -129,7 +129,7 @@ _ref:
             - `conditions: object[] | string[][]`: Conditions to be enforced on the request. An array of objects, or condition arrays. See [here](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
             - `expires: number`: Number of seconds for which the policy should be valid.
             - `key: string`: __Required__ - Key (or filename) under which object will be stored. If another file is saved with the same key, that file will be overwritten, so a random string in this field is probably needed.
-
+            - `fields: object`: Fields to be included in the form. Useful for adding metadata to the object such as `Content-Type`. See [S3 POST policy](https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html).
 
             #### Examples
 
