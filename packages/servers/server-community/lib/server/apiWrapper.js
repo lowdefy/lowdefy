@@ -25,6 +25,7 @@ import fileCache from './fileCache.js';
 import logError from './log/logError.js';
 import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
+import jsMap from '../../build/plugins/operators/serverJsMap.js';
 
 const secrets = getSecretsFromEnv();
 
@@ -38,6 +39,7 @@ function apiWrapper(handler) {
       connections,
       fileCache,
       headers: req?.headers,
+      jsMap,
       logger: console,
       operators,
       req,

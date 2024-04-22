@@ -19,10 +19,11 @@ import { ServerParser } from '@lowdefy/operators';
 import { RequestError } from '../../context/errors.js';
 
 function evaluateOperators(
-  { operators, secrets, session },
+  { jsMap, operators, secrets, session },
   { connectionConfig, payload, requestConfig }
 ) {
   const operatorsParser = new ServerParser({
+    jsMap,
     operators,
     payload,
     secrets,

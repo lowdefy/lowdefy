@@ -25,6 +25,7 @@ import buildApp from './build/buildApp.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
 import buildImports from './build/buildImports/buildImports.js';
+import buildJs from './build/buildJs/buildJs.js';
 import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
@@ -32,17 +33,18 @@ import buildTypes from './build/buildTypes.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
-import validateConfig from './build/validateConfig.js';
 import updateServerPackageJson from './build/updateServerPackageJson.js';
+import validateConfig from './build/validateConfig.js';
 import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
-import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
 import writeGlobal from './build/writeGlobal.js';
+import writeJs from './build/buildJs/writeJs.js';
 import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
+import writePluginImports from './build/writePluginImports/writePluginImports.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
@@ -57,6 +59,7 @@ async function build(options) {
   buildConnections({ components, context });
   buildPages({ components, context });
   buildMenu({ components, context });
+  buildJs({ components, context });
   addKeys({ components, context });
   buildTypes({ components, context });
   buildImports({ components, context });
@@ -72,6 +75,7 @@ async function build(options) {
   await writeMenus({ components, context });
   await writeTypes({ components, context });
   await writePluginImports({ components, context });
+  await writeJs({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
 }
