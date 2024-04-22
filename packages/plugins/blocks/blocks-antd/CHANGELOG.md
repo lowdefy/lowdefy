@@ -1,5 +1,19 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+- f14270465: Add Popover and TreeSelector blocks.
+
+### Patch Changes
+
+- f571e90da: Bug fix for `Pagination` block initial `pageSize` value.
+- f9d00b4d3: Add `type` property to TextInput to set HTML5 input types.
+- 5b3ccc958: Fix Pagination block skip state value. The skip value is now calculated from current and pageSize values if block value is changed using SetState.
+  - @lowdefy/block-utils@4.1.0
+  - @lowdefy/helpers@4.1.0
+
 ## 4.0.2
 
 ### Patch Changes
