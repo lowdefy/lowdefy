@@ -1,5 +1,24 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+- 9c1f55fad: - Added `fields` property to `AwsS3PresignedPostPolicy`. Useful for setting `Content-Type` etc.
+  - Refactored `S3UploadPhoto` and `S3UploadButton`.
+  - Add `singleFile` and `maxCount` to `S3UploadPhoto` and `S3UploadButton` blocks.
+  - Added `S3UploadDragger` and `S3Download` blocks.
+
+### Patch Changes
+
+- Updated dependencies [f14270465]
+- Updated dependencies [f571e90da]
+- Updated dependencies [f9d00b4d3]
+- Updated dependencies [5b3ccc958]
+  - @lowdefy/blocks-antd@4.1.0
+  - @lowdefy/block-utils@4.1.0
+  - @lowdefy/helpers@4.1.0
+
 ## 4.0.2
 
 ### Patch Changes
