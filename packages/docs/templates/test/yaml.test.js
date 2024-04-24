@@ -481,7 +481,7 @@ test('yaml schemaYamlInObjectInArray propertiesFormTransformer', () => {
                 "padding": 0,
               },
               "size": "small",
-              "title": false,
+              "title": undefined,
             },
             "type": "Card",
           },
