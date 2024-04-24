@@ -316,7 +316,7 @@ function makeBlockDefinition({
         },
         properties: {
           size: 'small',
-          title: !labelDisabled && `${propertyName}:`,
+          title: !labelDisabled ? `${propertyName}:` : undefined,
           bodyStyle: { padding: 0 },
         },
       };
@@ -341,7 +341,7 @@ function makeBlockDefinition({
         },
         properties: {
           size: 'small',
-          title: !labelDisabled && `${propertyName}:`,
+          title: !labelDisabled ? `${propertyName}:` : undefined,
           itemStyle: { padding: 0 },
         },
       };
