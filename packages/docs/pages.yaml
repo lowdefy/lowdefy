@@ -67,6 +67,7 @@
 - _ref: blocks/input/RadioSelector.yaml
 - _ref: blocks/input/RatingSlider.yaml
 - _ref: blocks/input/S3UploadButton.yaml
+- _ref: blocks/input/S3UploadDragger.yaml
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
@@ -97,6 +98,7 @@
 - _ref: blocks/display/Notification.yaml
 - _ref: blocks/display/Paragraph.yaml
 - _ref: blocks/display/Progress.yaml
+- _ref: blocks/display/S3Download.yaml
 - _ref: blocks/display/Skeleton.yaml
 - _ref: blocks/display/SkeletonAvatar.yaml
 - _ref: blocks/display/SkeletonButton.yaml
@@ -202,6 +204,7 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
+- _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml

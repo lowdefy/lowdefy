@@ -160,6 +160,7 @@ test('operator returns value and removes ~k', () => {
             "pageId": "home.pageId",
           },
           "input": true,
+          "jsMap": undefined,
           "location": "location.1",
           "lowdefyGlobal": Object {
             "global": true,

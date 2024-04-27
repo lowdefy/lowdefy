@@ -14,5 +14,7 @@
   limitations under the License.
 */
 
+export { default as S3Download } from './blocks/S3Download/S3Download.js';
+export { default as S3UploadDragger } from './blocks/S3UploadDragger/S3UploadDragger.js';
 export { default as S3UploadButton } from './blocks/S3UploadButton/S3UploadButton.js';
 export { default as S3UploadPhoto } from './blocks/S3UploadPhoto/S3UploadPhoto.js';

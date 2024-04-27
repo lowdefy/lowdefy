@@ -19,6 +19,7 @@ import actions from '../../build/plugins/actions.js';
 import blocks from '../../build/plugins/blocks.js';
 import icons from '../../build/plugins/icons.js';
 import operators from '../../build/plugins/operators/client.js';
+import jsMap from '../../build/plugins/operators/clientJsMap.js';
 
 const Page = ({ auth, lowdefy, pageConfig, rootConfig }) => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const Page = ({ auth, lowdefy, pageConfig, rootConfig }) => {
         pageConfig,
         rootConfig,
       }}
+      jsMap={jsMap}
       lowdefy={lowdefy}
       router={router}
       types={{

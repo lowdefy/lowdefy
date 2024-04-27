@@ -19,8 +19,8 @@ import getContext from '@lowdefy/engine';
 
 import MountEvents from './MountEvents.js';
 
-const Context = ({ children, config, lowdefy, resetContext }) => {
-  const context = getContext({ config, lowdefy, resetContext });
+const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
+  const context = getContext({ config, jsMap, lowdefy, resetContext });
   return (
     <MountEvents
       context={context}
