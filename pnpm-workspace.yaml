@@ -3,3 +3,4 @@ packages:
   - packages/plugins/**
   - packages/servers/*
   - packages/utils/*
+  - packages/ides/*

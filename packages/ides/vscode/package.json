@@ -1,15 +1,46 @@
 {
-  "name": "@lowdefy/vscode",
-  "displayName": "Lowdefy VSCode Extension",
-  "description": "A VSCode extension for Lowdefy YAML files.",
-  "version": "0.0.1",
+  "name": "lowdefy-vscode",
+  "displayName": "Lowdefy Developer Tools",
+  "description": "Lowdefy Developer Tools",
+  "version": "4.0.2",
+  "publisher": "lowdefy",
   "engines": {
-    "vscode": "1.88.0"
+    "vscode": "^1.75.0"
   },
-  "categories": [
-    "Programming Languages"
+  "categories": [],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/.lowdefy"
   ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "lowdefy",
+          "title": "Lowdefy",
+          "icon": "media/lowdefy.svg"
+        }
+      ]
+    },
+    "views": {
+      "lowdefy": [
+        {
+          "id": "lowdefyAppTree",
+          "name": "App Tree",
+          "visibility": "visible"
+        },
+        {
+          "id": "lowdefyDataInspector",
+          "name": "Data Inspector",
+          "visibility": "visible"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "lowdefy-yaml",
@@ -21,19 +52,54 @@
           ".yml"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "nunjucks",
+        "aliases": [
+          "nunjucks"
+        ],
+        "extensions": [
+          ".njk"
+        ],
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
         "language": "lowdefy-yaml",
-        "scopeName": "lowdefy.js.yaml",
-        "path": "./syntaxes/lowdefy-yaml.tmLanguage.json"
+        "scopeName": "source.lowdefy.yaml",
+        "path": "./out/syntaxes/lowdefy.tmLanguage.json"
       },
       {
-        "language": "jinja",
-        "scopeName": "source.jinja",
-        "path": "./syntaxes/jinja.tmLanguage.json"
+        "language": "nunjucks",
+        "scopeName": "source.nunjucks",
+        "path": "./out/syntaxes/nunjucks.tmLanguage.json"
       }
     ]
-  }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "transpile-syntaxes": "node ./scripts/transpileSyntaxes.js",
+    "compile": "tsc -p ./ && pnpm run transpile-syntaxes",
+    "watch": "tsc -watch -p ./",
+    "watch:syntaxes": "nodemon -e json,yaml,yml --watch syntaxes --exec pnpm run transpile-syntaxes",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "8.0.0",
+    "@types/mocha": "10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "1.74.0",
+    "@typescript-eslint/eslint-plugin": "5.45.0",
+    "@typescript-eslint/parser": "5.45.0",
+    "@vscode/test-electron": "2.2.0",
+    "glob": "10.3.12",
+    "mocha": "10.1.0",
+    "nodemon": "3.1.0",
+    "typescript": "4.9.3",
+    "yaml": "2.4.1"
+  },
+  "dependencies": {}
 }
