@@ -1,12 +1,12 @@
 # string.unquoted.ref.operator.lowdefy.yaml
-layout:
+one:
   _ref: more.yaml
 # string.unquoted.path.ref.operator.lowdefy.yaml
-style:
+two:
   _ref:
     path: some.yaml
 # string.unquoted.path.ref.operator.lowdefy.yaml
-blocks:
+three:
   _ref:
     other: blue
     path: pages/components/card.yaml

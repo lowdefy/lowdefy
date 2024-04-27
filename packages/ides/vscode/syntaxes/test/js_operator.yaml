@@ -1,16 +1,16 @@
 # string.unquoted.js.operator.lowdefy.yaml
-fff:
+one:
   _js: const v = console.log('hello');
 # string.block.js.operator.lowdefy.yaml
-iii:
+two:
   _js: |
     const x = console.log("world");
-ddd:
+three:
   _js:
     ref: const v = console.log('hello');
-fff:
+four:
   _js: "const v = console.log('world');"
-ggg:
+five:
   _js: 'const v = console.log("world");'
-hhh: |
+six: |
   new Date();

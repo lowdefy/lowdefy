@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-const yaml = require('yaml');
+const yaml = require('js-yaml');
 const globSync = require('glob').globSync;
 
 // Function to convert a single YAML file to JSON
 function convertYamlToJson(filePath) {
   try {
     const yamlContent = fs.readFileSync(filePath, 'utf8');
-    const jsonData = yaml.parse(yamlContent);
+    const jsonData = yaml.load(yamlContent);
     const fileName = filePath
       .split('/')
       .pop()
