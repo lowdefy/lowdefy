@@ -79,3 +79,5 @@ seventeen:
     template: <span class="red"> if another {% if raw %}{{ node | safe }}{% endif %} wewfr</span>
     on:
       value: 10
+some_field:
+  some_value: key
