@@ -15,7 +15,6 @@ export class RefLinkProvider implements vscode.DocumentLinkProvider {
     const regexRef = /\s*(_ref|path):\s+(\S+)\n/g;
     let links: vscode.DocumentLink[] = [];
     let match;
-
     const activeAppRoot: vscode.Uri | undefined = this.context.workspaceState.get('activeAppRoot');
     if (!activeAppRoot) {
       return links;

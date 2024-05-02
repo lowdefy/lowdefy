@@ -9,7 +9,7 @@ two:
 thee:
   _nunjucks: |
     <div>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</div>
-# string.block.template.nunjucks.operator.lowdefy.yaml
+# _operator: string.block.template.nunjucks.operator.lowdefy.yaml
 four:
   _nunjucks:
     template: |

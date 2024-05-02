@@ -2,15 +2,19 @@
   "name": "lowdefy-vscode",
   "displayName": "Lowdefy Developer Tools",
   "description": "Lowdefy Developer Tools",
-  "version": "4.0.2",
+  "version": "4.0.2-alpha.2",
   "publisher": "lowdefy",
   "engines": {
     "vscode": "^1.75.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy"
+  },
   "categories": [],
   "main": "./out/extension.js",
   "activationEvents": [
-    "workspaceContains:**/.lowdefy"
+    "onLanguage:yaml"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -43,15 +47,14 @@
     },
     "languages": [
       {
-        "id": "lowdefy-yaml",
+        "id": "yaml-lowdefy",
         "aliases": [
-          "lowdefy-yaml"
+          "yaml-lowdefy"
         ],
         "extensions": [
           ".yaml",
           ".yml"
-        ],
-        "configuration": "./language-configuration.json"
+        ]
       },
       {
         "id": "nunjucks",
@@ -60,37 +63,40 @@
         ],
         "extensions": [
           ".njk"
-        ],
-        "configuration": "./language-configuration.json"
+        ]
       }
     ],
     "grammars": [
       {
-        "language": "lowdefy-yaml",
-        "scopeName": "source.lowdefy.yaml",
-        "path": "./out/syntaxes/lowdefy.tmLanguage.json"
+        "language": "yaml-lowdefy",
+        "scopeName": "source.yaml.lowdefy.injection",
+        "injectTo": [
+          "source.yaml"
+        ],
+        "path": "./syntaxes/yaml-lowdefy.injection.json"
       },
       {
         "language": "nunjucks",
         "scopeName": "source.nunjucks",
-        "path": "./out/syntaxes/nunjucks.tmLanguage.json"
+        "path": "./syntaxes/nunjucks.tmLanguage.json"
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
-    "transpile-syntaxes": "node ./scripts/transpileSyntaxes.js",
-    "compile": "tsc -p ./ && pnpm run transpile-syntaxes",
+    "transpile-syntaxes": "pnpx js-yaml syntaxes/yaml-lowdefy.injection.yaml > syntaxes/yaml-lowdefy.injection.json",
+    "compile": "pnpm run transpile-syntaxes && tsc -p ./",
+    "package": "pnpm run transpile-syntaxes && tsc -p ./ && vsce package",
     "watch": "tsc -watch -p ./",
-    "watch:syntaxes": "nodemon -e json,yaml,yml --watch syntaxes --exec pnpm run transpile-syntaxes",
+    "watch:syntaxes": "nodemon -e yaml --watch syntaxes --exec pnpm run transpile-syntaxes",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
     "@types/glob": "8.0.0",
-    "@types/mocha": "10.0.1",
     "@types/js-yaml": "4.0.9",
+    "@types/mocha": "10.0.1",
     "@types/node": "16.x",
     "@types/vscode": "1.74.0",
     "@typescript-eslint/eslint-plugin": "5.45.0",
@@ -100,7 +106,7 @@
     "js-yaml": "4.1.0",
     "mocha": "10.1.0",
     "nodemon": "3.1.0",
-    "typescript": "4.9.3"
-  },
-  "dependencies": {}
+    "typescript": "4.9.3",
+    "vsce": "2.15.0"
+  }
 }
