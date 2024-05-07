@@ -15,14 +15,14 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout, layoutParamsToArea } from '../../index.js';
+import { Area, BlockLayout } from '../../index.js';
 
 import Block from './Block.js';
 import Box from './Box.js';
 import Button from './Button.js';
 import Input from './Input.js';
-import Paragraph from './Paragraph.js';
 import List from './List.js';
+import Paragraph from './Paragraph.js';
 
 const Blocks = {
   Block,
@@ -67,14 +67,12 @@ const AutoBlock = ({ block, makeCssClass }) => {
       Object.keys(areas || {}).forEach((areaKey) => {
         content[areaKey] = (areaStyle) => (
           <Area
-            area={layoutParamsToArea({
-              area: areas[areaKey],
-              areaKey,
-              layout: block.layout,
-            })}
+            area={areas[areaKey]}
+            areaKey={areaKey}
             areaStyle={[areaStyle, areas[areaKey]?.style]}
             id={`${block.id}-${areaKey}${randomId()}`}
             key={`${block.id}-${areaKey}`}
+            layout={block.layout}
             makeCssClass={makeCssClass}
           >
             {(areas[areaKey].blocks || []).map((bl, i) => (
@@ -106,9 +104,9 @@ const BindAutoBlock = ({ block, state, makeCssClass }) => {
   return (
     <Loading id={`${block.id}-loading`} showLoading>
       <BlockLayout
+        blockStyle={block.style}
         id={`bl-${block.id}${randomId()}`}
         layout={block.layout}
-        blockStyle={block.style}
         makeCssClass={makeCssClass}
       >
         <AutoBlock block={block} state={state} makeCssClass={makeCssClass} />

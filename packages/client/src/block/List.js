@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
@@ -27,24 +27,22 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     Object.keys(SBlock.areas).forEach((areaKey) => {
       content[areaKey] = (areaStyle) => (
         <Area
+          area={block.eval.areas[areaKey]}
+          areaKey={areaKey}
+          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
           id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
           key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
-          area={layoutParamsToArea({
-            area: block.eval.areas[areaKey],
-            areaKey,
-            layout: block.eval.layout,
-          })}
-          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
+          layout={block.eval.layout}
           makeCssClass={makeCssClass}
         >
           {SBlock.areas[areaKey].blocks.map((bl) => (
             <Block
-              key={`ls-${bl.blockId}`}
-              Blocks={SBlock}
               block={bl}
+              Blocks={SBlock}
               context={context}
-              parentLoading={loading}
+              key={`ls-${bl.blockId}`}
               lowdefy={lowdefy}
+              parentLoading={loading}
             />
           ))}
         </Area>
@@ -54,8 +52,8 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
+      id={`bl-${block.blockId}`}
       layout={block.eval.layout}
       makeCssClass={makeCssClass}
     >
