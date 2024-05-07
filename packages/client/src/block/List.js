@@ -35,7 +35,6 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
             layout: block.eval.layout,
           })}
           areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           makeCssClass={makeCssClass}
         >
           {SBlock.areas[areaKey].blocks.map((bl) => (
@@ -57,7 +56,6 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     <BlockLayout
       id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
-      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       layout={block.eval.layout}
       makeCssClass={makeCssClass}
     >

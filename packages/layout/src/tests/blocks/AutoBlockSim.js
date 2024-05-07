@@ -42,7 +42,7 @@ const randomId = () => Math.random().toString().slice(3, 8);
 const Loading = ({ loading, children, showLoading = true }) =>
   loading && showLoading ? <span>Loading</span> : <>{children}</>;
 
-const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
+const AutoBlock = ({ block, makeCssClass }) => {
   const content = {};
   let areas;
   let Comp = Blocks[block.type];
@@ -73,18 +73,12 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
               layout: block.layout,
             })}
             areaStyle={[areaStyle, areas[areaKey]?.style]}
-            highlightBorders={highlightBorders}
             id={`${block.id}-${areaKey}${randomId()}`}
             key={`${block.id}-${areaKey}`}
             makeCssClass={makeCssClass}
           >
             {(areas[areaKey].blocks || []).map((bl, i) => (
-              <BindAutoBlock
-                key={`${bl.id}-${i}`}
-                block={bl}
-                makeCssClass={makeCssClass}
-                highlightBorders={highlightBorders}
-              />
+              <BindAutoBlock key={`${bl.id}-${i}`} block={bl} makeCssClass={makeCssClass} />
             ))}
           </Area>
         );
@@ -108,22 +102,16 @@ const AutoBlock = ({ block, makeCssClass, highlightBorders }) => {
   }
 };
 
-const BindAutoBlock = ({ block, state, makeCssClass, highlightBorders }) => {
+const BindAutoBlock = ({ block, state, makeCssClass }) => {
   return (
     <Loading id={`${block.id}-loading`} showLoading>
       <BlockLayout
         id={`bl-${block.id}${randomId()}`}
-        highlightBorders={highlightBorders}
         layout={block.layout}
         blockStyle={block.style}
         makeCssClass={makeCssClass}
       >
-        <AutoBlock
-          block={block}
-          state={state}
-          makeCssClass={makeCssClass}
-          highlightBorders={highlightBorders}
-        />
+        <AutoBlock block={block} state={state} makeCssClass={makeCssClass} />
       </BlockLayout>
     </Loading>
   );

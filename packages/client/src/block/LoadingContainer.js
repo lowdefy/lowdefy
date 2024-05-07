@@ -41,7 +41,6 @@ const LoadingContainer = ({
           layout: skeleton.layout ?? blockLayout,
         })}
         areaStyle={[areaStyle, skeleton.areas[areaKey]?.style]}
-        highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
         key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
         makeCssClass={makeCssClass}
@@ -61,7 +60,6 @@ const LoadingContainer = ({
   return (
     <BlockLayout
       blockStyle={skeleton.style ?? blockStyle}
-      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       id={`s-bl-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
       makeCssClass={makeCssClass}
