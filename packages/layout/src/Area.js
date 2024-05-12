@@ -26,7 +26,7 @@ const Area = ({ area = {}, areaKey, areaStyle, children, id, layout, makeCssClas
   return (
     <Row
       id={id}
-      align={area.align}
+      align={derivedArea.align}
       className={makeCssClass(areaStyle)}
       gutter={gutterSetup(derivedArea.gutter)}
       justify={derivedArea.justify}
