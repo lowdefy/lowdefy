@@ -1,8 +1,8 @@
 {
-  "name": "lowdefy-vscode",
+  "name": "@lowdefy/vscode",
   "displayName": "Lowdefy Developer Tools",
   "description": "Lowdefy Developer Tools",
-  "version": "4.0.2-alpha.3",
+  "version": "4.0.2",
   "publisher": "lowdefy",
   "engines": {
     "vscode": "^1.75.0"
