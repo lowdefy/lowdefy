@@ -11,22 +11,32 @@ export class RefLinkProvider implements vscode.DocumentLinkProvider {
     document: vscode.TextDocument,
     token: vscode.CancellationToken
   ): Promise<vscode.DocumentLink[] | undefined> {
-    const text = document.getText();
-    const regexRef = /\s*(_ref|path):\s+(\S+)\n/g;
     let links: vscode.DocumentLink[] = [];
-    let match;
-    const activeAppRoot: vscode.Uri | undefined = this.context.workspaceState.get('activeAppRoot');
-    if (!activeAppRoot) {
-      return links;
+    const activeAppRoot = this.context.workspaceState.get<string>('activeAppRoot');
+    const activeAppRootUri = vscode.Uri.file(activeAppRoot || '');
+    if (!activeAppRootUri.path) {
+      console.error('Active App Root path is not defined or invalid.');
+      return links; // Exit if no valid URI path
     }
+
+    const text = document.getText();
+    let match;
+    const regexRef = /[  -]*(_ref|path):\s+(\S+)\n/gm;
     while ((match = regexRef.exec(text)) !== null) {
       const filePath = match[2];
       const start = document.positionAt(match.index + match[0].indexOf(filePath));
       const end = start.translate(0, filePath.length);
       const range = new vscode.Range(start, end);
-
-      const uri = vscode.Uri.joinPath(activeAppRoot, filePath);
-      links.push(new vscode.DocumentLink(range, uri));
+      try {
+        const uri = vscode.Uri.joinPath(activeAppRootUri, filePath);
+        links.push(new vscode.DocumentLink(range, uri));
+      } catch (err) {
+        console.error(
+          `failed to define file path uri: ${filePath} activeAppRoot: ${activeAppRoot}`,
+          err
+        );
+        continue;
+      }
     }
     return links;
   }
