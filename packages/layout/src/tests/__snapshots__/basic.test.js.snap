@@ -5,7 +5,6 @@ exports[`Button 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-Button23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <button
       class="ant-btn ant-btn-default"
@@ -41,7 +40,6 @@ exports[`Input 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-Input23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <input
       class="ant-input"
@@ -58,7 +56,6 @@ exports[`Input 2`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
     id="bl-Input23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <input
       class="ant-input"
@@ -75,7 +72,6 @@ exports[`Paragraph span: 12 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-12"
     id="bl-Paragraph span: 1223456"
-    style="border: 1px dashed #8eccf5;"
   >
     <div
       id="Paragraph span: 1223456"
@@ -96,7 +92,6 @@ exports[`Paragraph style 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-Paragraph style23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <div
       id="Paragraph style23456"

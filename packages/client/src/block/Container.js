@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
@@ -27,25 +27,22 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   Object.keys(areas).forEach((areaKey, i) => {
     content[areaKey] = (areaStyle) => (
       <Area
+        area={block.eval.areas[areaKey]}
+        areaKey={areaKey}
+        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
         id={`ar-${block.blockId}-${areaKey}`}
         key={`ar-${block.blockId}-${areaKey}-${i}`}
-        area={layoutParamsToArea({
-          area: block.eval.areas[areaKey],
-          areaKey,
-          layout: block.eval.layout,
-        })}
-        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-        highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
+        layout={block.eval.layout}
         makeCssClass={makeCssClass}
       >
         {areas[areaKey].blocks.map((bl, k) => (
           <Block
-            key={`co-${bl.blockId}-${k}`}
-            Blocks={Blocks.subBlocks[block.id][0]}
             block={bl}
+            Blocks={Blocks.subBlocks[block.id][0]}
             context={context}
-            parentLoading={loading}
+            key={`co-${bl.blockId}-${k}`}
             lowdefy={lowdefy}
+            parentLoading={loading}
           />
         ))}
       </Area>
@@ -53,9 +50,8 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   });
   return (
     <BlockLayout
-      id={`bl-${block.blockId}`}
       blockStyle={block.eval.style}
-      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
+      id={`bl-${block.blockId}`}
       layout={block.eval.layout}
       makeCssClass={makeCssClass}
     >

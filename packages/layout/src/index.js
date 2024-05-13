@@ -16,6 +16,5 @@
 
 import Area from './Area.js';
 import BlockLayout from './BlockLayout.js';
-import layoutParamsToArea from './layoutParamsToArea.js';
 
-export { Area, BlockLayout, layoutParamsToArea };
+export { Area, BlockLayout };

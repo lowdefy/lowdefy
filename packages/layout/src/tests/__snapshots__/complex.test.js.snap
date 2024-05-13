@@ -17,7 +17,6 @@ exports[`Complex Example 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-Complex Example23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <div
       id="Complex Example23456"
@@ -25,12 +24,10 @@ exports[`Complex Example 1`] = `
       <div
         class="ant-row emotion-1"
         id="Complex Example-content23456"
-        style="border: 1px dashed red;"
       >
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-header23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="header23456"
@@ -38,12 +35,11 @@ exports[`Complex Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="header-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-heading23456"
-                style="flex: 1 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 1 0 auto;"
               >
                 <div
                   id="heading23456"
@@ -55,7 +51,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-feedback23456"
-                style="flex: 0 1 auto; align-self: center; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto; align-self: center;"
               >
                 <div
                   id="feedback23456"
@@ -70,7 +66,6 @@ exports[`Complex Example 1`] = `
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-tools23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="tools23456"
@@ -78,12 +73,11 @@ exports[`Complex Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="tools-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-search23456"
-                style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 0 auto;"
               >
                 <input
                   class="ant-input"
@@ -95,7 +89,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Assign23456"
-                style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 0 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -110,7 +104,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Reporter23456"
-                style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 0 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -125,7 +119,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Status23456"
-                style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 0 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -140,7 +134,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Type23456"
-                style="flex: 1 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 1 0 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -155,7 +149,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-advanced23456"
-                style="flex: 0 0 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 0 auto;"
               >
                 <div
                   id="advanced23456"
@@ -170,7 +164,6 @@ exports[`Complex Example 1`] = `
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-main23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="main23456"
@@ -178,12 +171,11 @@ exports[`Complex Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="main-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-list_main23456"
-                style="flex: 0 1 300px; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 300px;"
               >
                 <div
                   id="list_main23456"
@@ -191,12 +183,10 @@ exports[`Complex Example 1`] = `
                   <div
                     class="ant-row emotion-1"
                     id="list_main-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-list_tools23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="list_tools23456"
@@ -204,12 +194,11 @@ exports[`Complex Example 1`] = `
                         <div
                           class="ant-row emotion-1"
                           id="list_tools-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-0"
                             id="bl-Created23456"
-                            style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 1 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -224,7 +213,7 @@ exports[`Complex Example 1`] = `
                           <div
                             class="ant-col emotion-0"
                             id="bl-Fil23456"
-                            style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -239,7 +228,7 @@ exports[`Complex Example 1`] = `
                           <div
                             class="ant-col emotion-0"
                             id="bl-Ref23456"
-                            style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -257,7 +246,6 @@ exports[`Complex Example 1`] = `
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-list23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="list23456"
@@ -265,12 +253,10 @@ exports[`Complex Example 1`] = `
                         <div
                           class="ant-row emotion-1"
                           id="list-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_123456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -282,7 +268,6 @@ exports[`Complex Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_223456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -294,7 +279,6 @@ exports[`Complex Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_323456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -306,7 +290,6 @@ exports[`Complex Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_423456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -324,7 +307,7 @@ exports[`Complex Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-main_content23456"
-                style="flex: 1 1 200px; border: 1px dashed #8eccf5;"
+                style="flex: 1 1 200px;"
               >
                 <div
                   id="main_content23456"
@@ -332,12 +315,10 @@ exports[`Complex Example 1`] = `
                   <div
                     class="ant-row emotion-1"
                     id="main_content-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -351,7 +332,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-comment23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="comment23456"
@@ -359,12 +339,11 @@ The below config will fail for both the field on root and the field in the objec
                         <div
                           class="ant-row emotion-1"
                           id="comment-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-0"
                             id="bl-avatar23456"
-                            style="flex: 0 1 80px; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 80px;"
                           >
                             <div
                               class="emotion-26"
@@ -376,7 +355,7 @@ The below config will fail for both the field on root and the field in the objec
                           <div
                             class="ant-col emotion-0"
                             id="bl-input_comment23456"
-                            style="flex: 1 1 80px; border: 1px dashed #8eccf5;"
+                            style="flex: 1 1 80px;"
                           >
                             <input
                               class="ant-input"
@@ -394,7 +373,7 @@ The below config will fail for both the field on root and the field in the objec
               <div
                 class="ant-col emotion-0"
                 id="bl-sider23456"
-                style="flex: 0 1 200px; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 200px;"
               >
                 <div
                   id="sider23456"
@@ -402,12 +381,10 @@ The below config will fail for both the field on root and the field in the objec
                   <div
                     class="ant-row emotion-1"
                     id="sider-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -419,7 +396,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -431,7 +407,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -443,7 +418,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -481,7 +455,6 @@ exports[`Complex No Flex Field Example 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-Complex No Flex Field Example23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <div
       id="Complex No Flex Field Example23456"
@@ -489,12 +462,10 @@ exports[`Complex No Flex Field Example 1`] = `
       <div
         class="ant-row emotion-1"
         id="Complex No Flex Field Example-content23456"
-        style="border: 1px dashed red;"
       >
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-header23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="header23456"
@@ -502,12 +473,11 @@ exports[`Complex No Flex Field Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="header-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-heading23456"
-                style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 1 1 auto;"
               >
                 <div
                   id="heading23456"
@@ -519,7 +489,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-feedback23456"
-                style="flex: 0 1 auto; align-self: center; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto; align-self: center;"
               >
                 <div
                   id="feedback23456"
@@ -534,7 +504,6 @@ exports[`Complex No Flex Field Example 1`] = `
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-tools23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="tools23456"
@@ -542,12 +511,11 @@ exports[`Complex No Flex Field Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="tools-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-search23456"
-                style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto;"
               >
                 <input
                   class="ant-input"
@@ -559,7 +527,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Assign23456"
-                style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -574,7 +542,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Reporter23456"
-                style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -589,7 +557,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Status23456"
-                style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -604,7 +572,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-Type23456"
-                style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 1 1 auto;"
               >
                 <button
                   class="ant-btn ant-btn-default"
@@ -619,7 +587,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-advanced23456"
-                style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 auto;"
               >
                 <div
                   id="advanced23456"
@@ -634,7 +602,6 @@ exports[`Complex No Flex Field Example 1`] = `
         <div
           class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
           id="bl-main23456"
-          style="border: 1px dashed #8eccf5;"
         >
           <div
             id="main23456"
@@ -642,12 +609,11 @@ exports[`Complex No Flex Field Example 1`] = `
             <div
               class="ant-row emotion-1"
               id="main-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-0"
                 id="bl-list_main23456"
-                style="flex: 0 1 300px; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 300px;"
               >
                 <div
                   id="list_main23456"
@@ -655,12 +621,10 @@ exports[`Complex No Flex Field Example 1`] = `
                   <div
                     class="ant-row emotion-1"
                     id="list_main-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-list_tools23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="list_tools23456"
@@ -668,12 +632,11 @@ exports[`Complex No Flex Field Example 1`] = `
                         <div
                           class="ant-row emotion-1"
                           id="list_tools-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-0"
                             id="bl-Created23456"
-                            style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 1 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -688,7 +651,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           <div
                             class="ant-col emotion-0"
                             id="bl-Fil23456"
-                            style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -703,7 +666,7 @@ exports[`Complex No Flex Field Example 1`] = `
                           <div
                             class="ant-col emotion-0"
                             id="bl-Ref23456"
-                            style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 auto;"
                           >
                             <button
                               class="ant-btn ant-btn-default"
@@ -721,7 +684,6 @@ exports[`Complex No Flex Field Example 1`] = `
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-list23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="list23456"
@@ -729,12 +691,10 @@ exports[`Complex No Flex Field Example 1`] = `
                         <div
                           class="ant-row emotion-1"
                           id="list-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_123456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -746,7 +706,6 @@ exports[`Complex No Flex Field Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_223456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -758,7 +717,6 @@ exports[`Complex No Flex Field Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_323456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -770,7 +728,6 @@ exports[`Complex No Flex Field Example 1`] = `
                           <div
                             class="ant-col emotion-25 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                             id="bl-item_0_423456"
-                            style="border: 1px dashed #8eccf5;"
                           >
                             <div
                               class="emotion-26"
@@ -788,7 +745,7 @@ exports[`Complex No Flex Field Example 1`] = `
               <div
                 class="ant-col emotion-0"
                 id="bl-main_content23456"
-                style="flex: 1 1 200px; border: 1px dashed #8eccf5;"
+                style="flex: 1 1 200px;"
               >
                 <div
                   id="main_content23456"
@@ -796,12 +753,10 @@ exports[`Complex No Flex Field Example 1`] = `
                   <div
                     class="ant-row emotion-1"
                     id="main_content-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -815,7 +770,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-comment23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="comment23456"
@@ -823,12 +777,11 @@ The below config will fail for both the field on root and the field in the objec
                         <div
                           class="ant-row emotion-1"
                           id="comment-content23456"
-                          style="border: 1px dashed red;"
                         >
                           <div
                             class="ant-col emotion-0"
                             id="bl-avatar23456"
-                            style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 0 1 auto;"
                           >
                             <div
                               class="emotion-26"
@@ -840,7 +793,7 @@ The below config will fail for both the field on root and the field in the objec
                           <div
                             class="ant-col emotion-0"
                             id="bl-inputs_comment23456"
-                            style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
+                            style="flex: 1 1 auto;"
                           >
                             <input
                               class="ant-input"
@@ -858,7 +811,7 @@ The below config will fail for both the field on root and the field in the objec
               <div
                 class="ant-col emotion-0"
                 id="bl-sider23456"
-                style="flex: 0 1 200px; border: 1px dashed #8eccf5;"
+                style="flex: 0 1 200px;"
               >
                 <div
                   id="sider23456"
@@ -866,12 +819,10 @@ The below config will fail for both the field on root and the field in the objec
                   <div
                     class="ant-row emotion-1"
                     id="sider-content23456"
-                    style="border: 1px dashed red;"
                   >
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -883,7 +834,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -895,7 +845,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
@@ -907,7 +856,6 @@ The below config will fail for both the field on root and the field in the objec
                     <div
                       class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                       id="bl-content23456"
-                      style="border: 1px dashed #8eccf5;"
                     >
                       <div
                         id="content23456"
