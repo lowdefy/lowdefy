@@ -35,6 +35,11 @@ const AgGrid = ({ properties, methods, loading, events }) => {
 
   const memoDefaultColDef = useMemo(() => defaultColDef);
 
+  const getRowId = useCallback(
+    (params) => params.data[properties.rowId ?? '_id'] ?? JSON.stringify(params.data),
+    []
+  );
+
   const onRowClick = useCallback((event) => {
     if (events.onRowClick) {
       methods.triggerEvent({
@@ -159,6 +164,7 @@ const AgGrid = ({ properties, methods, loading, events }) => {
       modules={[ClientSideRowModelModule, CsvExportModule]}
       columnDefs={processColDefs(columnDefs, methods)}
       ref={gridRef}
+      getRowId={getRowId}
     />
   );
 };
