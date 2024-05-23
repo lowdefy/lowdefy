@@ -84,7 +84,6 @@ const LoadingBlock = ({
       return (
         <BlockLayout
           blockStyle={skeleton.style ?? blockStyle}
-          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           id={`s-bl-${blockId}-${skeleton.id}`}
           layout={skeleton.layout ?? blockLayout}
           makeCssClass={makeCssClass}

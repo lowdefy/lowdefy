@@ -21,88 +21,6 @@ exports[`align 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-align23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="align23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="align-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-One23456"
-          style="align-self: flex-start; border: 1px dashed #8eccf5;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="One23456"
-            type="button"
-          >
-            <span>
-              One23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-Two23456"
-          style="align-self: center; border: 1px dashed #8eccf5;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="Two23456"
-            type="button"
-          >
-            <span>
-              Two23456
-            </span>
-          </button>
-        </div>
-        <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-Three23456"
-          style="align-self: flex-end; border: 1px dashed #8eccf5;"
-        >
-          <button
-            class="ant-btn ant-btn-default"
-            id="Three23456"
-            type="button"
-          >
-            <span>
-              Three23456
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`align 2`] = `
-.emotion-1 {
-  height: 100px;
-}
-
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-.emotion-4 {
-  background: #40AA55;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-align23456"
   >
     <div
       id="align23456"
@@ -171,43 +89,6 @@ exports[`center content 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-center content23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="center content23456"
-    >
-      <div
-        class="ant-row ant-row-center emotion-1"
-        id="center content-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 0 1 800px; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`center content 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-center content23456"
   >
     <div
       id="center content23456"
@@ -235,59 +116,6 @@ exports[`center content 2`] = `
 `;
 
 exports[`grow 0 0 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-grow 0 023456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="grow 0 023456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="grow 0 0-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            grow: 0 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            grow: 0 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`grow 0 0 2`] = `
 .emotion-2 {
   background: #40a0FF;
 }
@@ -351,59 +179,6 @@ exports[`grow 0 1 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-grow 0 123456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="grow 0 123456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="grow 0 1-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            grow: 0 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            grow: 1 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`grow 0 1 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-grow 0 123456"
   >
     <div
       id="grow 0 123456"
@@ -443,59 +218,6 @@ exports[`grow 0 1 2`] = `
 `;
 
 exports[`grow 1 0 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-grow 1 023456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="grow 1 023456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="grow 1 0-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            grow: 1 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            grow: 0 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`grow 1 0 2`] = `
 .emotion-2 {
   background: #40a0FF;
 }
@@ -559,59 +281,6 @@ exports[`grow 1 1 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-grow 1 123456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="grow 1 123456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="grow 1 1-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            grow: 1 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 1 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            grow: 1 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`grow 1 1 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-grow 1 123456"
   >
     <div
       id="grow 1 123456"
@@ -663,59 +332,6 @@ exports[`offset 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-offset23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="offset23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="offset-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-20 ant-col-md-offset-4"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-offset-4"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`offset 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-offset23456"
   >
     <div
       id="offset23456"
@@ -753,76 +369,6 @@ exports[`offset 2`] = `
 `;
 
 exports[`offset push pull span 1`] = `
-.emotion-2 {
-  background: #40AA55;
-}
-
-.emotion-3 {
-  background: #40a0FF;
-}
-
-.emotion-4 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-offset push pull span23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="offset push pull span23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="offset push pull span-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-offset-2"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-push-1"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-md-pull-1"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`offset push pull span 2`] = `
 .emotion-2 {
   background: #40AA55;
 }
@@ -900,59 +446,6 @@ exports[`order 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-order23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="order23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="order-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-1"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-md-order-0"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`order 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-order23456"
   >
     <div
       id="order23456"
@@ -990,60 +483,6 @@ exports[`order 2`] = `
 `;
 
 exports[`pull 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-pull23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="pull23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="pull-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-pull-1"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`pull 2`] = `
 .emotion-2 {
   background: #40a0FF;
 }
@@ -1107,60 +546,6 @@ exports[`push 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-push23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="push23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="push-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-10 ant-col-md-push-1"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            ONE Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-10"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            TWO Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`push 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-  opacity: 0.5;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-push23456"
   >
     <div
       id="push23456"
@@ -1198,59 +583,6 @@ exports[`push 2`] = `
 `;
 
 exports[`shrink 1 1 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-shrink 1 123456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="shrink 1 123456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="shrink 1 1-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            shrink: 1 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 0 1 auto; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            shrink: 1 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`shrink 1 1 2`] = `
 .emotion-2 {
   background: #40a0FF;
 }
@@ -1314,59 +646,6 @@ exports[`size 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-size23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="size23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="size-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2"
-          id="bl-One23456"
-          style="flex: 0 1 200px; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            size: 200 - ONE Lorem ipsum dolor
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3"
-          id="bl-Two23456"
-          style="flex: 0 1 400px; border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            size: 400 - TWO Lorem ipsum dolor
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`size 2`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-size23456"
   >
     <div
       id="size23456"
@@ -1406,71 +685,6 @@ exports[`size 2`] = `
 `;
 
 exports[`span 1`] = `
-.emotion-2 {
-  background: #40a0FF;
-}
-
-.emotion-3 {
-  background: #FF4FaF;
-}
-
-<div>
-  <div
-    class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
-    id="bl-span23456"
-    style="border: 1px dashed #8eccf5;"
-  >
-    <div
-      id="span23456"
-    >
-      <div
-        class="ant-row emotion-1"
-        id="span-content23456"
-        style="border: 1px dashed red;"
-      >
-        <div
-          class="ant-col emotion-2 ant-col-xs-24 ant-col-sm-24 ant-col-md-4"
-          id="bl-One23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="One23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-3 ant-col-xs-24 ant-col-sm-24 ant-col-md-8"
-          id="bl-Two23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Two23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-        <div
-          class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-15"
-          id="bl-Three23456"
-          style="border: 1px dashed #8eccf5;"
-        >
-          <div
-            id="Three23456"
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`span 2`] = `
 .emotion-2 {
   background: #40a0FF;
 }

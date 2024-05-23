@@ -34,7 +34,6 @@ exports[`basic kanban 1`] = `
   <div
     class="ant-col emotion-0 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
     id="bl-basic kanban23456"
-    style="border: 1px dashed #8eccf5;"
   >
     <div
       id="basic kanban23456"
@@ -42,12 +41,11 @@ exports[`basic kanban 1`] = `
       <div
         class="ant-row emotion-1"
         id="basic kanban-content23456"
-        style="border: 1px dashed red;"
       >
         <div
           class="ant-col emotion-0"
           id="bl-list_023456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_023456"
@@ -55,12 +53,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_0-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_0_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -72,7 +68,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_0_223456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -84,7 +79,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_0_323456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -96,7 +90,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_0_423456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -111,7 +104,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_123456"
-          style="flex: 0 0 200px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 200px;"
         >
           <div
             id="list_123456"
@@ -119,12 +112,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_1-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_1_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -136,7 +127,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_1_423456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -151,7 +141,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_223456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_223456"
@@ -159,12 +149,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_2-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_2_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -176,7 +164,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_2_223456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -188,7 +175,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_2_323456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -203,7 +189,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_323456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_323456"
@@ -211,12 +197,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_3-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-28 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_3_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -228,7 +212,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_3_223456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -240,7 +223,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-32 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_3_323456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -252,7 +234,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_3_423456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -267,7 +248,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_423456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_423456"
@@ -275,12 +256,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_4-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_4_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -295,7 +274,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_523456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_523456"
@@ -303,12 +282,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_5-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_5_023456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -320,7 +297,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_5_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -335,7 +311,7 @@ exports[`basic kanban 1`] = `
         <div
           class="ant-col emotion-0"
           id="bl-list_623456"
-          style="flex: 0 0 400px; border: 1px dashed #8eccf5;"
+          style="flex: 0 0 400px;"
         >
           <div
             id="list_623456"
@@ -343,12 +319,10 @@ exports[`basic kanban 1`] = `
             <div
               class="ant-row emotion-3"
               id="list_6-content23456"
-              style="border: 1px dashed red;"
             >
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_6_023456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -360,7 +334,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_6_123456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -372,7 +345,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_6_223456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
@@ -384,7 +356,6 @@ exports[`basic kanban 1`] = `
               <div
                 class="ant-col emotion-4 ant-col-xs-24 ant-col-sm-24 ant-col-md-24"
                 id="bl-item_6_323456"
-                style="border: 1px dashed #8eccf5;"
               >
                 <div
                   class="emotion-5"
