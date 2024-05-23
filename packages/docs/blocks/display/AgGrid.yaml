@@ -109,7 +109,6 @@ _ref:
               - headerName: Viewer Reviews
                 field: viewerReviews
                 width: 160
-                type: numericColumn
       - title: 'Format dates with cellRenderer'
         block:
           id: my_table
@@ -138,7 +137,6 @@ _ref:
               - headerName: Date
                 field: date
                 width: 160
-                type: dateColumn
                 cellRenderer:
                   _function:
                     __moment.format:
@@ -171,7 +169,6 @@ _ref:
               - headerName: Total
                 field: total
                 width: 160
-                type: numericColumn
                 valueFormatter:
                   _function:
                     __intl.numberFormat:
@@ -206,7 +203,6 @@ _ref:
               - headerName: Viewer Reviews
                 field: viewerReviews
                 width: 160
-                type: numericColumn
           events:
             onRowClick:
               - id: set_selected
@@ -254,7 +250,6 @@ _ref:
               - headerName: Viewer Reviews
                 field: viewerReviews
                 width: 160
-                type: numericColumn
           events:
             onCellClick:
               - id: set_selected
@@ -276,6 +271,76 @@ _ref:
                   selection:
                     _yaml.stringify:
                       - _state: selected_cell
+      - title: 'Using rowId to preserve selection'
+        description: |
+          This example shows a table switching between two sets of data. Some rows are common between the data sets and the data rows have a unique identifier field `uniqueId` which we can use as the `rowId` field to ensure selection is preserved when switching the data sets. If no `rowId` is set and the row data does not contain an `id` or `_id` field, and the row data JSON stringified is used as the row id. This still works but may slightly impact performance.
+        block:
+          id: my_table
+          type: AgGridAlpine
+          properties:
+            height: 200
+            rowId: uniqueId
+            rowData:
+              _state: table_data
+            columnDefs:
+              - headerName: Unique ID
+                field: uniqueId
+                checkboxSelection: true
+              - headerName: Title
+                field: title
+              - headerName: Year
+                field: year
+        extra:
+          id: table_data_box
+          type: Box
+          events:
+            onMount:
+              - id: init_value
+                type: SetState
+                params:
+                  table_data:
+                    - title: One
+                      year: 2010
+                      uniqueId: 2010-1
+                    - title: Two
+                      year: 2011
+                      uniqueId: 2011-1
+          blocks:
+            - id: table_data
+              type: ButtonSelector
+              properties:
+                label:
+                  disabled: true
+                options:
+                  - label: Data Set 1
+                    value:
+                      - title: One
+                        year: 2010
+                        uniqueId: 2010-1
+                      - title: Two
+                        year: 2011
+                        uniqueId: 2011-1
+                  - label: Data Set 2
+                    value:
+                      - title: Three
+                        year: 2011
+                        uniqueId: 2011-2
+                      - title: One
+                        year: 2010
+                        uniqueId: 2010-1
+            - id: table_data_display
+              type: MarkdownWithCode
+              properties:
+                content:
+                  _nunjucks:
+                    template: |
+                      ```yaml
+                        {{ table_data | safe | indent(2) }}
+                      ```
+                    on:
+                      table_data:
+                        _yaml.stringify:
+                          - _state: table_data
       - title: 'Server-side filter and sort'
         description: |
           This example shows how you can filter your table data server-side by making use of AgGrid's built in filter and sort functionality and calling the `onFilterChanged` and `onSortChanged` events. In this example we use dummy data, but you would pass in `_request: table_request` to `properties.rowData`.
@@ -311,7 +376,6 @@ _ref:
               - headerName: Viewer Reviews
                 field: viewerReviews
                 width: 160
-                type: numericColumn
           events:
             onSortChanged:
               - id: set_table_sort
@@ -342,13 +406,6 @@ _ref:
           properties:
             content:
               _nunjucks:
-                on:
-                  sort:
-                    _yaml.stringify:
-                      - _state: table.sort
-                  filter:
-                    _yaml.stringify:
-                      - _state: table.filter
                 template: |
                   onSortChanged response (only `sort`, not `rows`):
                   ```yaml
@@ -425,3 +482,11 @@ _ref:
                                           then: 1
                                           else: -1
                   ```
+
+                on:
+                  sort:
+                    _yaml.stringify:
+                      - _state: table.sort
+                  filter:
+                    _yaml.stringify:
+                      - _state: table.filter
