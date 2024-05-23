@@ -30,7 +30,11 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const memoDefaultColDef = useMemo(() => defaultColDef);
 
   const getRowId = useCallback(
-    (params) => params.data[properties.rowId ?? '_id'] ?? JSON.stringify(params.data),
+    (params) =>
+      params.data[properties.rowId] ??
+      params.data.id ??
+      params.data._id ??
+      JSON.stringify(params.data),
     []
   );
 
@@ -91,7 +95,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         name: 'onFilterChanged',
         event: {
           rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
-          filter: this.gridApi.getFilterModel(),
+          filter: gridRef.current.api.getFilterModel(),
         },
       });
     }
