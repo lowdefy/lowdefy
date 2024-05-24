@@ -35,6 +35,15 @@ const AgGrid = ({ properties, methods, loading, events }) => {
 
   const memoDefaultColDef = useMemo(() => defaultColDef);
 
+  const getRowId = useCallback(
+    (params) =>
+      params.data[properties.rowId] ??
+      params.data.id ??
+      params.data._id ??
+      JSON.stringify(params.data),
+    []
+  );
+
   const onRowClick = useCallback((event) => {
     if (events.onRowClick) {
       methods.triggerEvent({
@@ -92,7 +101,7 @@ const AgGrid = ({ properties, methods, loading, events }) => {
         name: 'onFilterChanged',
         event: {
           rows: event.api.rowModel.rowsToDisplay.map((row) => row.data),
-          filter: this.gridApi.getFilterModel(),
+          filter: gridRef.current.api.getFilterModel(),
         },
       });
     }
@@ -159,6 +168,7 @@ const AgGrid = ({ properties, methods, loading, events }) => {
       modules={[ClientSideRowModelModule, CsvExportModule]}
       columnDefs={processColDefs(columnDefs, methods)}
       ref={gridRef}
+      getRowId={getRowId}
     />
   );
 };

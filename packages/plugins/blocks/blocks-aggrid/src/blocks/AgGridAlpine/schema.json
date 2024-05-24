@@ -14,6 +14,10 @@
           "type": "array",
           "description": "The list of data to display on the table."
         },
+        "rowId": {
+          "type": "string",
+          "description": "The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/)."
+        },
         "defaultColDef": {
           "type": "object",
           "description": "Column properties which get applied to all columns. See all (https://www.ag-grid.com/javascript-data-grid/column-properties/)."
