@@ -1,0 +1,24 @@
+# string.unquoted.nunjucks.operator.lowdefy.yaml
+one:
+  _nunjucks: <table>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</table>
+# string.block.nunjucks.yaml
+two:
+  _nunjucks: >
+    <i>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</i>
+# string.block.nunjucks.yaml
+thee:
+  _nunjucks: |
+    <div>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</div>
+# _operator: string.block.template.nunjucks.operator.lowdefy.yaml
+four:
+  _nunjucks:
+    template: |
+      <p>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</p>
+    on:
+      var: something
+# string.block.value.nunjucks.operator.lowdefy.yaml
+five:
+  _nunjucks:
+    template: <span class="red"> if another {% if raw %}{{ node | safe }}{% endif %} wewfr</span>
+    on:
+      value: 10

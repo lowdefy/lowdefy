@@ -1,0 +1,83 @@
+# operator.lowdefy.yaml
+one:
+  _mql.aggregate:
+    pipeline:
+      - $match:
+          _id: 1
+      - $project:
+          name: 1
+          age: 1
+# operator.lowdefy.yaml
+two:
+  _mql.aggregate:
+    pipeline:
+      - $match:
+          a:
+            _not:
+              _if_none:
+                - _state: one
+                - null
+      - $project:
+          name: 1
+          age: 1
+# operator.lowdefy.yaml
+three:
+  _js:
+    ref: const v = console.log('hello');
+# operator.lowdefy.yaml
+four:
+  _js: "const v = console.log('world');"
+five:
+  c: ss
+# operator.lowdefy.yaml
+siz:
+  _js: 'const v = console.log("world");'
+
+# string.unquoted.js.operator.lowdefy.yaml
+seven:
+  _js: const v = console.log('hello');
+# string.block.js.operator.lowdefy.yaml
+eight:
+  _js: |
+    const x = console.log("world");
+nine: |
+  new Date();
+# string.unquoted.ref.operator.lowdefy.yaml
+ten:
+  _ref: more.yaml
+# string.unquoted.path.ref.operator.lowdefy.yaml
+eleven:
+  _ref:
+    path: some.yaml
+# string.unquoted.path.ref.operator.lowdefy.yaml
+twelve:
+  _ref:
+    other: blue
+    path: pages/components/card.yaml
+    sd: one
+# string.unquoted.nunjucks.operator.lowdefy.yaml
+thirteen:
+  _nunjucks: <table>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</table>
+# string.block.nunjucks.yaml
+fourteen:
+  _nunjucks: >
+    <i>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</i>
+# string.block.nunjucks.yaml
+fifteen:
+  _nunjucks: |
+    <div>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</div>
+# string.block.template.nunjucks.operator.lowdefy.yaml
+sixteen:
+  _nunjucks:
+    template: |
+      <p>if another {% if raw %}{{ node | safe }}{% endif %} wewfr</p>
+    on:
+      var: something
+# string.block.value.nunjucks.operator.lowdefy.yaml
+seventeen:
+  _nunjucks:
+    template: <span class="red"> if another {% if raw %}{{ node | safe }}{% endif %} wewfr</span>
+    on:
+      value: 10
+some_field:
+  some_value: key

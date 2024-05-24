@@ -28,6 +28,7 @@ function startServer(context) {
     processOptions: {
       env: {
         ...process.env,
+        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         PORT: context.options.port,
       },
     },

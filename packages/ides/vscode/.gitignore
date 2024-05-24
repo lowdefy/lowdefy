@@ -1,0 +1,10 @@
+**/dist/*
+**/coverage/*
+**/node_modules/*
+**/.lowdefy/*
+**/.env
+**/out/*
+
+.turbo
+.DS_Store
+*.vsix
