@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.0
+
+### Patch Changes
+
+- Updated dependencies [d040e3005]
+  - @lowdefy/engine@4.1.0
+  - @lowdefy/layout@4.1.0
+  - @lowdefy/block-utils@4.1.0
+  - @lowdefy/helpers@4.1.0
+
 ## 4.0.2
 
 ### Patch Changes

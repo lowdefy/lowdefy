@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.1.0
+
+### Minor Changes
+
+- 221ba93c9: Add the `SetFocus` action that sets focus on a specified HTML element.
+
+### Patch Changes
+
+- @lowdefy/helpers@4.1.0
+
 ## 4.0.2
 
 ### Patch Changes

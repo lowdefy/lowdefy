@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.1.0
+
+### Patch Changes
+
+- d040e3005: Add a property called responseTime to the request object to measure response times of requests.
+  - @lowdefy/operators@4.1.0
+  - @lowdefy/helpers@4.1.0
+
 ## 4.0.2
 
 ### Patch Changes
