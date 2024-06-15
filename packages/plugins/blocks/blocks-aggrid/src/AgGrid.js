@@ -112,7 +112,6 @@ const AgGrid = ({ properties, methods, loading, events }) => {
 
   useEffect(() => {
     methods.registerMethod('exportDataAsCsv', (args) => gridRef.current.api.exportDataAsCsv(args));
-    methods.registerMethod('exportDataAsCsv', (args) => gridRef.current.api.exportDataAsCsv(args));
     methods.registerMethod('sizeColumnsToFit', () => gridRef.current.api.sizeColumnsToFit());
     methods.registerMethod('setFilterModel', (model) => gridRef.current.api.setFilterModel(model));
     methods.registerMethod('setQuickFilter', (value) => gridRef.current.api.setQuickFilter(value));
