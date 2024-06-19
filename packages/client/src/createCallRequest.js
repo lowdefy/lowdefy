@@ -17,11 +17,11 @@
 import request from './request.js';
 
 function createCallRequest({ basePath }) {
-  function callRequest({ pageId, payload, requestId }) {
+  function callRequest({ chunking, pageId, payload, requestId }) {
     return request({
       url: `${basePath}/api/request/${pageId}/${requestId}`,
       method: 'POST',
-      body: { payload },
+      body: { payload, chunking },
     });
   }
   return callRequest;

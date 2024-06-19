@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { getFromObject } from '@lowdefy/operators';
 
-import apiWrapper from '../../../../lib/server/apiWrapper.js';
-
-async function handler({ context, req, res }) {
-  if (req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
-  }
-  const { pageId, requestId } = req.query;
-  const { blockId, chunking, payload } = req.body;
-  context.logger.info({ event: 'call_request', pageId, requestId, blockId });
-  const response = await callRequest(context, { blockId, chunking, pageId, payload, requestId });
-  res.status(200).json(response);
+function _chunking({ location, params, chunking }) {
+  return getFromObject({
+    location,
+    object: chunking,
+    operator: '_chunking',
+    params,
+  });
 }
 
-export default apiWrapper(handler);
+export default _chunking;

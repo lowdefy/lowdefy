@@ -27,7 +27,7 @@ import getRequestConfig from './getRequestConfig.js';
 import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
-async function callRequest(context, { blockId, pageId, payload, requestId }) {
+async function callRequest(context, { blockId, chunking, pageId, payload, requestId }) {
   const { logger } = context;
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
@@ -37,6 +37,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
   const deserializedPayload = serializer.deserialize(payload);
+  const deserializedChunking = serializer.deserialize(chunking);
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
@@ -64,6 +65,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   });
   const response = await callRequestResolver(context, {
     blockId,
+    chunking: deserializedChunking,
     connectionProperties,
     payload: deserializedPayload,
     requestConfig,

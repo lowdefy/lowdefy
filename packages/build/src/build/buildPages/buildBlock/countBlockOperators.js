@@ -22,6 +22,7 @@ function countBlockOperators(block, { typeCounters }) {
   countOperators(webBlock, { counter: typeCounters.operators.client });
   (requests || []).forEach((request) => {
     countOperators(request.payload || {}, { counter: typeCounters.operators.client });
+    countOperators(request.chunking || {}, { counter: typeCounters.operators.client });
     countOperators(request.properties || {}, {
       counter: typeCounters.operators.server,
     });

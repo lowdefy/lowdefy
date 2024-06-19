@@ -28,7 +28,7 @@ async function writeJs({ context }) {
     'plugins/operators/serverJsMap.js',
     generateJsFile({
       map: context.jsMap.server,
-      functionPrototype: `{ payload, secrets, user }`,
+      functionPrototype: `{ chunking, payload, secrets, user }`,
     })
   );
 }

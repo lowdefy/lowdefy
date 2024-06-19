@@ -689,6 +689,12 @@ export default {
             type: 'Request "type" should be a string.',
           },
         },
+        chunking: {
+          type: 'object',
+          errorMessage: {
+            type: 'Request "chunking" should be an object.',
+          },
+        },
         connectionId: {
           type: 'string',
           errorMessage: {

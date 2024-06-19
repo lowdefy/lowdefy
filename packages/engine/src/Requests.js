@@ -66,11 +66,11 @@ class Requests {
       });
       throw error;
     }
-    const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
+    const { output: parsedRequest, errors: parserErrors } = this.context._internal.parser.parse({
       actions,
       event,
       arrayIndices,
-      input: requestConfig.payload,
+      input: requestConfig,
       location: requestId,
     });
     if (parserErrors.length > 0) {
@@ -78,8 +78,9 @@ class Requests {
     }
     const request = {
       blockId,
+      chunking: parsedRequest.chunking,
       loading: true,
-      payload,
+      payload: parsedRequest.payload,
       requestId,
       response: null,
     };
@@ -92,23 +93,46 @@ class Requests {
     const startTime = Date.now();
 
     try {
-      const response = await this.context._internal.lowdefy._internal.callRequest({
-        blockId: request.blockId,
-        pageId: this.context.pageId,
-        payload: serializer.serialize(request.payload),
-        requestId: request.requestId,
-      });
-      const deserializedResponse = serializer.deserialize(
-        get(response, 'response', {
-          default: null,
-        })
-      );
-      request.response = deserializedResponse;
+      let skip = 0;
+      let iter = 0;
+      const max = request.chunking?.max || 100;
+      const data = [];
+      let response, deserializedResponse, nextData;
+      do {
+        response = await this.context._internal.lowdefy._internal.callRequest({
+          blockId: request.blockId,
+          chunking: {
+            skip,
+            chunkSize: request.chunking?.chunkSize,
+          },
+          pageId: this.context.pageId,
+          payload: serializer.serialize(request.payload),
+          requestId: request.requestId,
+        });
+        deserializedResponse = serializer.deserialize(
+          get(response, 'response', {
+            default: null,
+          })
+        );
+        nextData = type.isString(request.chunking?.dataKey)
+          ? get(deserializedResponse, request.chunking.dataKey)
+          : deserializedResponse;
+        nextData = type.isArray(nextData) ? nextData : [nextData];
+        data.splice(data.length, 0, ...nextData);
+        skip = skip + request.chunking?.chunkSize;
+        iter++;
+      } while (nextData.length === request.chunking?.chunkSize && iter <= max);
+
+      nextData = type.isString(request.chunking?.dataKey)
+        ? get(deserializedResponse, request.chunking.dataKey)
+        : deserializedResponse;
+      nextData = type.isArray(nextData) ? nextData : [nextData];
+      request.response = response;
       request.loading = false;
       const endTime = Date.now();
       request.responseTime = endTime - startTime;
       this.context._internal.update();
-      return deserializedResponse;
+      return data;
     } catch (error) {
       request.error = error;
       request.loading = false;

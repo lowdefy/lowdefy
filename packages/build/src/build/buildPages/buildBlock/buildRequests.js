@@ -43,9 +43,13 @@ function buildRequest(request, pageContext) {
   typeCounters.requests.increment(request.type);
 
   if (type.isUndefined(request.payload)) request.payload = {};
+  if (type.isUndefined(request.chunking)) request.chunking = {};
 
   if (!type.isObject(request.payload)) {
     throw new Error(`Request "${request.id}" at page "${pageId}" payload should be an object.`);
+  }
+  if (!type.isObject(request.chunking)) {
+    throw new Error(`Request "${request.id}" at page "${pageId}" chunking should be an object.`);
   }
 
   request.auth = auth;

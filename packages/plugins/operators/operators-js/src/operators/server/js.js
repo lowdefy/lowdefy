@@ -18,6 +18,7 @@ function js(operatorContext) {
   const { jsMap, operators, location, params } = operatorContext;
   try {
     return jsMap[params]({
+      chunking: (p) => operators._chunking({ ...operatorContext, params: p }),
       payload: (p) => operators._payload({ ...operatorContext, params: p }),
       secret: (p) => operators._secret({ ...operatorContext, params: p }),
       user: (p) => operators._user({ ...operatorContext, params: p }),
