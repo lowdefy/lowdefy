@@ -174,7 +174,7 @@ _ref:
 
             ### MongoDBBulkWrite
 
-            The `MongoDBBulkWrite` request executes [bulkWrite operations](https://www.mongodb.com/docs/bulk-write-operations/#bulk-write-operations) in the collection specified in the connectionId.
+            The `MongoDBBulkWrite` request executes [bulkWrite operations](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#write-operations) in the collection specified in the connectionId.
 
             #### Properties
             - `operations: object[]`: __Required__ - Array containing all the bulkWrite operations for the execution.
