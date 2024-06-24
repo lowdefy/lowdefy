@@ -106,6 +106,7 @@ _ref:
 
             Request types:
               - MongoDBAggregation
+              - MongoDBBulkWrite
               - MongoDBDeleteMany
               - MongoDBDeleteOne
               - MongoDBFind
@@ -169,6 +170,85 @@ _ref:
                         score: 1
                     - $sort:
                         score: 1
+            ```
+
+            ### MongoDBBulkWrite
+
+            The `MongoDBBulkWrite` request executes [bulkWrite operations](https://www.mongodb.com/docs/bulk-write-operations/#bulk-write-operations) in the collection specified in the connectionId.
+
+            #### Properties
+            - `operations: object[]`: __Required__ - Array containing all the bulkWrite operations for the execution.
+              - `insertOne: object`:
+                - `document: object`: The document to be inserted.
+              - `deleteOne: object`:
+                - `filter: object`: __Required__ - The filter used to select the document to delete.
+                - `collation: object`: Specify collation settings for update operation.
+              - `deleteMany: object`:
+                - `filter: object`: __Required__ - The filter used to select the documents to delete.
+                - `collation: object`: Specify collation settings for update operation.
+              - `updateOne: object`:
+                - `filter: object`: __Required__ - The filter used to select the document to update.
+                - `update: object | object[]`: __Required__ - The update operations to be applied to the document.
+                - `upsert: object`: Insert document if no match is found.
+                - `arrayFilters: string[]`: Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
+                - `collation: object`: Specify collation settings for update operation.
+                - `hint: object | string`: 'An optional hint for query optimization.'
+              - `updateMany: object`:
+                - `filter: object`: __Required__ - The filter used to select the documents to update.
+                - `update: object | object[]`: __Required__ - The update operations to be applied to the documents.
+                - `upsert: object`: Insert document if no match is found.
+                - `arrayFilters: string[]`: Array filters for the [`$[<identifier>]`](https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/) array update operator.
+                - `collation: object`: Specify collation settings for update operation.
+                - `hint: object | string`: An optional hint for query optimization.
+              - `replaceOne: object`:
+                - `filter: object`: __Required__ - The filter used to select the document to replace.
+                - `replacement: object`: __Required__ - The document to be inserted.
+                - `upsert: object`: Insert document if no match is found.
+                - `collation: object`: Specify collation settings for update operation.
+                - `hint: object | string`: An optional hint for query optimization.
+            - `options: object`: Optional settings. See the [driver documentation](https://mongodb.github.io/node-mongodb-native/4.0/classes/collection.html#aggregate) for more information. Supported settings are:
+              - `ordered: boolean`: Default: `true` - A boolean specifying whether the mongod instance should perform an ordered or unordered operation execution.
+              - `writeConcern: object`: An object that expresses the write concern to use.
+
+            #### Examples
+
+            ###### Update pizzas:
+
+            ```yaml
+            requests:
+              - id: update_pizzas
+                type: MongoDBBulkWrite
+                connectionId: my_mongodb_collection_id
+                properties:
+                  operations:
+                    - insertOne:
+                        document:
+                          _id: 3
+                          type: "beef"
+                          size: "medium"
+                          price: 6
+                    - insertOne:
+                        document:
+                          _id: 4
+                          type: "sausage"
+                          size: "large"
+                          price: 10
+                    - updateOne:
+                        filter:
+                          type: "cheese"
+                          update:
+                            $set:
+                              price: 8
+                    - deleteOne:
+                        filter:
+                          type: "pepperoni"
+                    - replaceOne:
+                        filter:
+                          type: "vegan"
+                        replacement:
+                          type: "tofu"
+                          size: "small"
+                          price: 4
             ```
 
             ### MongoDBDeleteMany
