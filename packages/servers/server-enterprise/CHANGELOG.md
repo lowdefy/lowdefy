@@ -1,5 +1,24 @@
 # @lowdefy/server-enterprise
 
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+- Updated dependencies [a1f47d97c]
+  - @lowdefy/client@4.2.1
+  - @lowdefy/layout@4.2.1
+  - @lowdefy/api@4.2.1
+  - @lowdefy/actions-core@4.2.1
+  - @lowdefy/blocks-antd@4.2.1
+  - @lowdefy/blocks-basic@4.2.1
+  - @lowdefy/blocks-loaders@4.2.1
+  - @lowdefy/operators-js@4.2.1
+  - @lowdefy/plugin-next-auth@4.2.1
+  - @lowdefy/block-utils@4.2.1
+  - @lowdefy/helpers@4.2.1
+  - @lowdefy/node-utils@4.2.1
+
 ## 4.2.0
 
 ### Patch Changes
