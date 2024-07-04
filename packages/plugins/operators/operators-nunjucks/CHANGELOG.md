@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.2.0
+
+### Patch Changes
+
+- Updated dependencies [95663d1d5]
+  - @lowdefy/nunjucks@4.2.0
+  - @lowdefy/operators@4.2.0
+  - @lowdefy/helpers@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes
