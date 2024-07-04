@@ -19,9 +19,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies
-        run: pnpm i --frozen-lockfile
-
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
