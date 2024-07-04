@@ -25,7 +25,7 @@ const mockMath = Object.create(global.Math);
 mockMath.random = () => 0.123456789;
 global.Math = mockMath;
 
-const runExampleTests = (examples, options = { highlightBorders: true }) => {
+const runExampleTests = (examples) => {
   beforeEach(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -45,13 +45,7 @@ const runExampleTests = (examples, options = { highlightBorders: true }) => {
   examples.forEach((ex) => {
     test(ex.id, () => {
       const { container } = render(
-        <AutoBlockSim
-          block={ex}
-          state={{}}
-          areaKey="content"
-          makeCssClass={makeCssClass}
-          highlightBorders={options.highlightBorders}
-        />
+        <AutoBlockSim block={ex} state={{}} areaKey="content" makeCssClass={makeCssClass} />
       );
       expect(container).toMatchSnapshot();
     });

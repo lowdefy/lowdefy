@@ -21,11 +21,11 @@ const layoutParamsToArea = ({ areaKey, area = {}, layout = {} }) => {
     return area;
   }
   area.align = type.isNone(area.align) ? layout.contentAlign : area.align;
-  area.justify = type.isNone(area.justify) ? layout.contentJustify : area.justify;
   area.direction = type.isNone(area.direction) ? layout.contentDirection : area.direction;
-  area.wrap = type.isNone(area.wrap) ? layout.contentWrap : area.wrap;
-  area.overflow = type.isNone(area.overflow) ? layout.contentOverflow : area.overflow;
   area.gutter = type.isNone(area.gutter) ? layout.contentGutter : area.gutter;
+  area.justify = type.isNone(area.justify) ? layout.contentJustify : area.justify;
+  area.overflow = type.isNone(area.overflow) ? layout.contentOverflow : area.overflow;
+  area.wrap = type.isNone(area.wrap) ? layout.contentWrap : area.wrap;
   return area;
 };
 

@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-import Area from './Area.js';
-import BlockLayout from './BlockLayout.js';
+import { type } from '@lowdefy/helpers';
 
-export { Area, BlockLayout };
+const uniqueFilter = (arr) => {
+  if (!type.isArray(arr)) {
+    return arr;
+  }
+  return Array.from(new Set(arr));
+};
+
+export default uniqueFilter;

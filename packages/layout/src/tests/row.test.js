@@ -18,4 +18,3 @@ import row from './row.yaml';
 import runExampleTests from './runExampleTests.js';
 
 runExampleTests(row);
-runExampleTests(row, { highlightBorders: false });

@@ -70,7 +70,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.style}
-          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           layout={block.eval.layout}
           makeCssClass={makeCssClass}
         >
@@ -102,7 +101,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         <BlockLayout
           id={`bl-${block.blockId}`}
           blockStyle={block.eval.style}
-          highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
           layout={block.eval.layout}
           makeCssClass={makeCssClass}
         >

@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Area, BlockLayout, layoutParamsToArea } from '@lowdefy/layout';
+import { Area, BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 
 import LoadingBlock from './LoadingBlock.js';
@@ -35,15 +35,12 @@ const LoadingContainer = ({
   Object.keys(skeleton.areas).forEach((areaKey, i) => {
     content[areaKey] = (areaStyle) => (
       <Area
-        area={layoutParamsToArea({
-          area: skeleton.areas[areaKey],
-          areaKey,
-          layout: skeleton.layout ?? blockLayout,
-        })}
+        area={skeleton.areas[areaKey]}
+        areaKey={areaKey}
         areaStyle={[areaStyle, skeleton.areas[areaKey]?.style]}
-        highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
         id={`s-ar-${blockId}-${skeleton.id}-${areaKey}`}
         key={`s-ar-${blockId}-${skeleton.id}-${areaKey}-${i}`}
+        layout={skeleton.layout ?? blockLayout}
         makeCssClass={makeCssClass}
       >
         {skeleton.areas[areaKey].blocks.map((skl, k) => (
@@ -61,7 +58,6 @@ const LoadingContainer = ({
   return (
     <BlockLayout
       blockStyle={skeleton.style ?? blockStyle}
-      highlightBorders={lowdefy.lowdefyGlobal.highlightBorders}
       id={`s-bl-${blockId}-${skeleton.id}`}
       layout={skeleton.layout ?? blockLayout}
       makeCssClass={makeCssClass}
