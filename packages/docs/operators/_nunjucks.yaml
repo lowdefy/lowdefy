@@ -85,3 +85,35 @@ _ref:
       Returns:  `"1 Aug 2022"`
 
       The `_nunjucks` date filter formats dates using the [moment.js](/https://momentjs.com/docs/#/displaying/format/) library.
+
+      ###### Use the _nunjucks unique filter:
+
+      ```yaml
+      _nunjucks:
+        template: |
+          <div>
+            {% set uniqueArray = array | unique %}
+            {% for item in uniqueArray %}
+              <p>{{ item }}</p>
+            {% endfor %}
+          </div>
+        on:
+          array:
+            - South Africa
+            - New Zealand
+            - Australia
+            - South Africa
+            - Pakistan
+            - India
+            - India
+      ```
+      Returns:
+      ```html
+      <div>
+        <p>South Africa</p>
+        <p>New Zealand</p>
+        <p>Australia</p>
+        <p>Pakistan</p>
+        <p>India</p>
+      </div>
+      ```

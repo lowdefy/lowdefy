@@ -17,11 +17,13 @@
 import nunjucks from 'nunjucks';
 import { type } from '@lowdefy/helpers';
 import dateFilter from './dateFilter.js';
+import uniqueFilter from './uniqueFilter.js';
 
 // dateFilter.setDefaultFormat('YYYY-MM-DD');
 export const nunjucksEnv = new nunjucks.Environment();
 
 nunjucksEnv.addFilter('date', dateFilter);
+nunjucksEnv.addFilter('unique', uniqueFilter);
 
 const nunjucksTemplates = {};
 // slow
