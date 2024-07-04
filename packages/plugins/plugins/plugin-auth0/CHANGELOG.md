@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+
 ## 4.2.0
 
 ## 4.1.0

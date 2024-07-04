@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+- Updated dependencies [a1f47d97c]
+  - @lowdefy/blocks-antd@4.2.1
+  - @lowdefy/block-utils@4.2.1
+
 ## 4.2.0
 
 ### Patch Changes
