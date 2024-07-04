@@ -18,4 +18,3 @@ import col from './col.yaml';
 import runExampleTests from './runExampleTests.js';
 
 runExampleTests(col);
-runExampleTests(col, { highlightBorders: false });

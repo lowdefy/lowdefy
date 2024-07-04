@@ -32,7 +32,7 @@ const alignSelf = (align) => {
   return align;
 };
 
-const BlockLayout = ({ id, blockStyle, children, highlightBorders, layout = {}, makeCssClass }) => {
+const BlockLayout = ({ id, blockStyle, children, layout = {}, makeCssClass }) => {
   if (layout.disabled) {
     return (
       <div id={id} className={makeCssClass(blockStyle)}>
@@ -45,7 +45,6 @@ const BlockLayout = ({ id, blockStyle, children, highlightBorders, layout = {}, 
       {...deriveLayout(layout)}
       style={{
         alignSelf: alignSelf(layout.align),
-        border: highlightBorders && '1px dashed #8eccf5',
       }}
       id={id}
       className={makeCssClass(blockStyle)}

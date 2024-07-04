@@ -1,6 +1,6 @@
 {
   "name": "lowdefy",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "license": "Apache-2.0",
   "description": "Lowdefy CLI",
   "homepage": "https://lowdefy.com",
@@ -39,8 +39,8 @@
     "test": "FORCE_COLOR=3 node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.0.2",
-    "@lowdefy/node-utils": "4.0.2",
+    "@lowdefy/helpers": "4.1.0",
+    "@lowdefy/node-utils": "4.1.0",
     "axios": "1.6.2",
     "commander": "11.1.0",
     "decompress": "4.2.1",
