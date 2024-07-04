@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.2.0
+
+### Minor Changes
+
+- 143c83e7d: Add request type `MongoDBBulkWrite` to the MongoDB connection.
+
+### Patch Changes
+
+- @lowdefy/helpers@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.2.0
+
+### Patch Changes
+
+- 47d855918: Move layoutParamsToArea into Area component.
+- 47d855918: Remove highlightBorders from layout.
+- Updated dependencies [47d855918]
+- Updated dependencies [47d855918]
+  - @lowdefy/layout@4.2.0
+  - @lowdefy/engine@4.2.0
+  - @lowdefy/block-utils@4.2.0
+  - @lowdefy/helpers@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes

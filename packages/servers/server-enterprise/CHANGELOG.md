@@ -1,5 +1,24 @@
 # @lowdefy/server-enterprise
 
+## 4.2.0
+
+### Patch Changes
+
+- Updated dependencies [47d855918]
+- Updated dependencies [47d855918]
+  - @lowdefy/client@4.2.0
+  - @lowdefy/layout@4.2.0
+  - @lowdefy/api@4.2.0
+  - @lowdefy/actions-core@4.2.0
+  - @lowdefy/blocks-antd@4.2.0
+  - @lowdefy/blocks-basic@4.2.0
+  - @lowdefy/blocks-loaders@4.2.0
+  - @lowdefy/operators-js@4.2.0
+  - @lowdefy/plugin-next-auth@4.2.0
+  - @lowdefy/block-utils@4.2.0
+  - @lowdefy/helpers@4.2.0
+  - @lowdefy/node-utils@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes

@@ -1,5 +1,39 @@
 # Change Log
 
+## 4.2.0
+
+### Patch Changes
+
+- Updated dependencies [47d855918]
+- Updated dependencies [47d855918]
+  - @lowdefy/client@4.2.0
+  - @lowdefy/layout@4.2.0
+  - @lowdefy/api@4.2.0
+  - @lowdefy/build@4.2.0
+  - @lowdefy/operators-nunjucks@4.2.0
+  - @lowdefy/engine@4.2.0
+  - @lowdefy/connection-axios-http@4.2.0
+  - @lowdefy/actions-core@4.2.0
+  - @lowdefy/blocks-aggrid@4.2.0
+  - @lowdefy/blocks-antd@4.2.0
+  - @lowdefy/blocks-basic@4.2.0
+  - @lowdefy/blocks-color-selectors@4.2.0
+  - @lowdefy/blocks-echarts@4.2.0
+  - @lowdefy/blocks-loaders@4.2.0
+  - @lowdefy/blocks-markdown@4.2.0
+  - @lowdefy/blocks-qr@4.2.0
+  - @lowdefy/operators-change-case@4.2.0
+  - @lowdefy/operators-diff@4.2.0
+  - @lowdefy/operators-js@4.2.0
+  - @lowdefy/operators-moment@4.2.0
+  - @lowdefy/operators-mql@4.2.0
+  - @lowdefy/operators-uuid@4.2.0
+  - @lowdefy/operators-yaml@4.2.0
+  - @lowdefy/plugin-next-auth@4.2.0
+  - @lowdefy/block-utils@4.2.0
+  - @lowdefy/helpers@4.2.0
+  - @lowdefy/node-utils@4.2.0
+
 ## 4.1.0
 
 ### Patch Changes
