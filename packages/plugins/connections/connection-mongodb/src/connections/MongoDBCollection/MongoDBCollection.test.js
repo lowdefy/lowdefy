@@ -21,6 +21,7 @@ const schema = MongoDBCollection.schema;
 
 test('All requests are present', () => {
   expect(MongoDBCollection.requests.MongoDBAggregation).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBBulkWrite).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBDeleteMany).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBDeleteOne).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBFind).toBeDefined();
