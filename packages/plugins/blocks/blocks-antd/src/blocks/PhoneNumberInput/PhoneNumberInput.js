@@ -35,7 +35,6 @@ function getAllowedRegions({ allowedRegions, regions }) {
 
 function getDefaultRegion({ allowedRegions, defaultRegion, uniqueValueOptions }) {
   if (!defaultRegion) {
-    // if allowedRegions is an empty array, allowedRegions[0] would be undefined
     return getValueIndex(allowedRegions[0], uniqueValueOptions);
   }
 
@@ -74,14 +73,13 @@ function AddOnSelect({
       mode="single"
       notFoundContent={'Not found'}
       onChange={(newVal) => {
-        const input = value?.input;
-        const region = uniqueValueOptions[newVal].value;
-        // assumes that region is always defined and has a dial_code property
-        const phone_number = `${region.dial_code}${input}`;
+        const input = value?.input ?? '';
+        const region = uniqueValueOptions[newVal]?.value;
+        const phone_number = region?.dial_code ? `${region.dial_code}${input}` : input;
 
         methods.setValue({
           input,
-          region,
+          region: region ?? {},
           phone_number,
         });
 
@@ -209,9 +207,8 @@ const PhoneNumberInput = ({
                   input = input.replace(regex, properties.replaceInput.replacement ?? '');
                 }
 
-                const region = value.region;
-                // assumes value.region is always defined and has a dial_code property
-                const phone_number = `${region.dial_code}${input}`;
+                const region = value?.region ?? {};
+                const phone_number = region.dial_code ? `${region.dial_code}${input}` : input;
 
                 methods.setValue({
                   input,
