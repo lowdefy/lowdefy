@@ -17,6 +17,7 @@
 import React from 'react';
 import { Input, Select } from 'antd';
 import { blockDefaultProps } from '@lowdefy/block-utils';
+// import { type } from '@lowdefy/helpers';
 import regions from './regions.js';
 
 import Label from '../Label/Label.js';
@@ -74,12 +75,14 @@ function AddOnSelect({
       notFoundContent={'Not found'}
       onChange={(newVal) => {
         const input = value?.input ?? '';
-        const region = uniqueValueOptions[newVal]?.value;
+        const region = uniqueValueOptions[newVal]?.value ?? {};
         const phone_number = region?.dial_code ? `${region.dial_code}${input}` : input;
+        //? another implementation
+        // const phone_number = `${type.isObject(region) ? region.dial_code ?? '' : ''}${input}`;
 
         methods.setValue({
           input,
-          region: region ?? {},
+          region: region,
           phone_number,
         });
 
@@ -208,7 +211,11 @@ const PhoneNumberInput = ({
                 }
 
                 const region = value?.region ?? {};
-                const phone_number = `${value?.region?.dial_code ?? ''}${input}`;
+                const phone_number = region?.dial_code ? `${region.dial_code}${input}` : input;
+                //? another implementation
+                // const phone_number = `${
+                //   type.isObject(region) ? region.dial_code ?? '' : ''
+                // }${input}`;
 
                 methods.setValue({
                   input,
