@@ -82,7 +82,7 @@ function AddOnSelect({
 
         methods.setValue({
           input,
-          region: region,
+          region,
           phone_number,
         });
 
