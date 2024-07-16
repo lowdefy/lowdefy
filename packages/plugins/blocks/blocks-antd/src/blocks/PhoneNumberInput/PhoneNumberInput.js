@@ -208,7 +208,7 @@ const PhoneNumberInput = ({
                 }
 
                 const region = value?.region ?? {};
-                const phone_number = region.dial_code ? `${region.dial_code}${input}` : input;
+                const phone_number = `${value?.region?.dial_code ?? ''}${input}`;
 
                 methods.setValue({
                   input,
