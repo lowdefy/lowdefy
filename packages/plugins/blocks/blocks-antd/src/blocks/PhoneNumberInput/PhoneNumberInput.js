@@ -73,9 +73,9 @@ function AddOnSelect({
       mode="single"
       notFoundContent={'Not found'}
       onChange={(newVal) => {
-        const input = value?.input;
-        const region = uniqueValueOptions[newVal].value;
-        const phone_number = `${region.dial_code}${input}`;
+        const input = value?.input ?? '';
+        const region = uniqueValueOptions[newVal]?.value ?? {};
+        const phone_number = `${region?.dial_code ?? ''}${input}`;
 
         methods.setValue({
           input,
@@ -207,8 +207,8 @@ const PhoneNumberInput = ({
                   input = input.replace(regex, properties.replaceInput.replacement ?? '');
                 }
 
-                const region = value.region;
-                const phone_number = `${region.dial_code}${input}`;
+                const region = value?.region ?? {};
+                const phone_number = `${region?.dial_code ?? ''}${input}`;
 
                 methods.setValue({
                   input,

@@ -15,6 +15,7 @@
 */
 
 import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
+import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
@@ -29,6 +30,7 @@ export default {
   schema,
   requests: {
     MongoDBAggregation,
+    MongoDBBulkWrite,
     MongoDBDeleteMany,
     MongoDBDeleteOne,
     MongoDBFind,
