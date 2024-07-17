@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- e4ec43505: Fix undefined property access in PhoneNumberInput component
+  - @lowdefy/block-utils@4.2.2
+  - @lowdefy/helpers@4.2.2
+
 ## 4.2.1
 
 ### Patch Changes
