@@ -24,6 +24,8 @@ async function runStart({ context, directory }) {
     stdOutLineHandler: createStdOutLineHandler({ context }),
     processOptions: {
       cwd: directory,
+      // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
+      shell: process.platform === 'win32',
       env: {
         ...process.env,
         LOWDEFY_LOG_LEVEL: context.options.logLevel,
