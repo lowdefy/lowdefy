@@ -1,5 +1,25 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- @lowdefy/engine@4.2.2
+- @lowdefy/layout@4.2.2
+- @lowdefy/block-utils@4.2.2
+- @lowdefy/helpers@4.2.2
+
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+- Updated dependencies [a1f47d97c]
+  - @lowdefy/layout@4.2.1
+  - @lowdefy/engine@4.2.1
+  - @lowdefy/block-utils@4.2.1
+  - @lowdefy/helpers@4.2.1
+
 ## 4.2.0
 
 ### Patch Changes

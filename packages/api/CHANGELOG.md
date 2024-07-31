@@ -1,5 +1,29 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- @lowdefy/operators@4.2.2
+- @lowdefy/operators-js@4.2.2
+- @lowdefy/ajv@4.2.2
+- @lowdefy/helpers@4.2.2
+- @lowdefy/node-utils@4.2.2
+- @lowdefy/nunjucks@4.2.2
+
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+- Updated dependencies [a1f47d97c]
+  - @lowdefy/nunjucks@4.2.1
+  - @lowdefy/operators@4.2.1
+  - @lowdefy/operators-js@4.2.1
+  - @lowdefy/ajv@4.2.1
+  - @lowdefy/helpers@4.2.1
+  - @lowdefy/node-utils@4.2.1
+
 ## 4.2.0
 
 ### Patch Changes
