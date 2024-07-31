@@ -52,7 +52,7 @@ jobs:
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
-        if: ${{ steps.changesets.outputs.published }}
+        if: ${{ steps.changesets.outputs.published == 'true' }}
         with:
           tag_name: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
           draft: true
