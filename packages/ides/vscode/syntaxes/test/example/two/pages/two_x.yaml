@@ -1,0 +1,12 @@
+id: one_x
+type: Box
+properties:
+  _not:
+    _state: yyy
+code:
+  _ref: more.yaml
+blocks:
+  _ref:
+    other: blue
+    path: pages/components/card.yaml
+    sd: one
