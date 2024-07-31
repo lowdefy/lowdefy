@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.3.0
+
+### Patch Changes
+
+- @lowdefy/operators@4.3.0
+- @lowdefy/operators-js@4.3.0
+- @lowdefy/ajv@4.3.0
+- @lowdefy/helpers@4.3.0
+- @lowdefy/node-utils@4.3.0
+- @lowdefy/nunjucks@4.3.0
+
 ## 4.2.2
 
 ### Patch Changes
