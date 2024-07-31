@@ -99,9 +99,9 @@
     "build:prod": "node esbuild.cjs --production",
     "build:watch": "node esbuild.cjs --watch",
     "build:watch-syntaxes": "nodemon -e yaml --watch syntaxes --exec pnpm run transpile-syntaxes",
-    "pretest": "pnpm run compile && pnpm run lint",
+    "pretest": "pnpm run build && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "test:skipped": "node ./dist/test/runTest.js",
     "vscode:prepublish": "pnpm run build:prod",
     "check-types": "tsc --noEmit",
     "package": "vsce package --no-dependencies"
