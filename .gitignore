@@ -36,3 +36,5 @@ packages/docs/public/sitemap.xml
 packages/website/public/sitemap.xml
 
 lerna-debug.log
+
+*.vsix

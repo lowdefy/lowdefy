@@ -1,8 +1,9 @@
 {
-  "name": "@lowdefy/vscode",
+  "name": "lowdefy-vscode",
+  "version": "4.1.0",
+  "license": "Apache-2.0",
   "displayName": "Lowdefy Developer Tools",
   "description": "Lowdefy Developer Tools",
-  "version": "4.0.2",
   "publisher": "lowdefy",
   "engines": {
     "vscode": "^1.75.0"
@@ -12,7 +13,7 @@
     "url": "https://github.com/lowdefy/lowdefy"
   },
   "categories": [],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "activationEvents": [
     "onLanguage:yaml"
   ],
@@ -93,15 +94,17 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm run compile",
     "transpile-syntaxes": "pnpx js-yaml syntaxes/yaml-lowdefy.injection.yaml > syntaxes/yaml-lowdefy.injection.json",
-    "compile": "pnpm run transpile-syntaxes && tsc -p ./",
-    "package": "pnpm run transpile-syntaxes && tsc -p ./ && vsce package",
-    "watch": "tsc -watch -p ./",
-    "watch:syntaxes": "nodemon -e yaml --watch syntaxes --exec pnpm run transpile-syntaxes",
+    "build": "pnpm run transpile-syntaxes && node esbuild.cjs",
+    "build:prod": "node esbuild.cjs --production",
+    "build:watch": "node esbuild.cjs --watch",
+    "build:watch-syntaxes": "nodemon -e yaml --watch syntaxes --exec pnpm run transpile-syntaxes",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "pnpm run build:prod",
+    "check-types": "tsc --noEmit",
+    "package": "vsce package --no-dependencies"
   },
   "devDependencies": {
     "@types/glob": "8.0.0",
@@ -113,6 +116,7 @@
     "@typescript-eslint/eslint-plugin": "5.45.0",
     "@typescript-eslint/parser": "5.45.0",
     "@vscode/test-electron": "2.2.0",
+    "esbuild": "0.23.0",
     "glob": "10.3.12",
     "js-yaml": "4.1.0",
     "mocha": "10.1.0",
