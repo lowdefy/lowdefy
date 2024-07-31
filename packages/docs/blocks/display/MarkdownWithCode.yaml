@@ -28,7 +28,7 @@ _ref:
         ```
         Hmmm… 🤔
 
-        Fine the explanation [here](https://github.com/denysdovhan/wtfjs#math-with-true-and-false)
+        Find the explanation [here](https://github.com/denysdovhan/wtfjs#math-with-true-and-false)
 
     description_content: |
       Render markdown content with code highlighting support. Currently, the following languages are supported:
