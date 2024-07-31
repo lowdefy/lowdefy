@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.3.0
+
+### Patch Changes
+
+- @lowdefy/engine@4.3.0
+- @lowdefy/layout@4.3.0
+- @lowdefy/block-utils@4.3.0
+- @lowdefy/helpers@4.3.0
+
 ## 4.2.2
 
 ### Patch Changes
