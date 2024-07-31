@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-algolia",
-  "version": "4.2.0",
+  "version": "4.2.2",
   "license": "Apache-2.0",
   "description": "Algolia Lowdefy blocks.",
   "homepage": "https://lowdefy.com",
@@ -46,14 +46,14 @@
   },
   "dependencies": {
     "@docsearch/react": "3.5.2",
-    "@lowdefy/block-utils": "4.2.0",
+    "@lowdefy/block-utils": "4.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@emotion/jest": "11.10.5",
-    "@lowdefy/block-dev": "4.2.0",
-    "@lowdefy/jest-yaml-transform": "4.2.0",
+    "@lowdefy/block-dev": "4.2.2",
+    "@lowdefy/jest-yaml-transform": "4.2.2",
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
     "@swc/jest": "0.2.29",

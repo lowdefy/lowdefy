@@ -1,5 +1,21 @@
 # Change Log
 
+## 4.2.2
+
+### Patch Changes
+
+- @lowdefy/helpers@4.2.2
+- @lowdefy/node-utils@4.2.2
+
+## 4.2.1
+
+### Patch Changes
+
+- a1f47d97c: Fix Github actions release.
+- Updated dependencies [a1f47d97c]
+  - @lowdefy/helpers@4.2.1
+  - @lowdefy/node-utils@4.2.1
+
 ## 4.2.0
 
 ### Patch Changes
