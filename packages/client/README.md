@@ -1,3 +1,0 @@
-# @lowdefy/client
-
-Lowdefy Client
