@@ -1,7 +1,0 @@
-{
-  "extends": ["config:base", ":semanticPrefixChore"],
-  "baseBranches": ["develop"],
-  "dependencyDashboard": true,
-  "dependencyDashboardApproval": true,
-  "packageRules": []
-}

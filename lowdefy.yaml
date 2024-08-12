@@ -1,0 +1,122 @@
+lowdefy: 4.2.2
+
+name: Lowdefy starter
+connections:
+  - id: postgres
+    type: Knex
+    properties:
+      client: postgres
+      connection:
+        _secret: PG_CONNECTION_STRING
+      version: '7.2'
+      searchPath: 'public' 
+
+pages:
+  - id: docs
+    type: PageHeaderMenu
+    requests:
+      - id: KnexBuilder
+        type: KnexBuilder
+        connectionId: postgres
+        properties:
+          query: 
+            - select:
+                - '*'
+            - from:
+                - tb1
+            - limit: 
+                - 10
+      - id: KnexRaw
+        type: KnexRaw
+        connectionId: postgres
+        properties:
+          query: SELECT * FROM "tb1" limit 10;
+    blocks:
+      - id: trigger_button
+        type: Button
+        properties: 
+          title: Trigger Fetches
+        events: 
+          onClick:
+            - id: clicked_message 
+              type: DisplayMessage
+              params:
+                content: Button Clicked
+            - id: fetch_requests
+              type: Request
+              params:
+                - KnexBuilder
+                - KnexRaw
+      - id: agGridBlockRaw
+        type: AgGridAlpine
+        properties:
+          rowData:
+            _request: KnexBuilder
+          columnDefs:
+            - headerName: Number of Rooms
+              field: number_of_rooms
+            - headerName: Number of Bathrooms
+              field: number_of_bathrooms
+            - headerName: SqFt
+              field: sqft
+            - headerName: Location
+              field: location
+            - headerName: Days on Market
+              field: days_on_market
+            - headerName: Neighborhood
+              field: neighborhood
+            - headerName: Rental Price
+              field: rental_price
+            - headerName: Created At
+              field: created_at
+  - id: Query
+    type: PageHeaderMenu
+    requests:
+      - id: KnexBuilder
+        type: KnexBuilder
+        connectionId: postgres
+        properties:
+          query: 
+            - select:
+                - '*'
+            - from:
+                - tb1
+            - limit: 
+                - 10
+
+            
+      - id: KnexRaw
+        type: KnexRaw
+        connectionId: postgres
+        properties:
+          query: SELECT * FROM "tb1" limit 10;
+    blocks:
+      - id: trigger_button
+        type: Button
+        properties: 
+          title: Trigger Fetches
+        events: 
+          onClick:
+            - id: clicked_message 
+              type: DisplayMessage
+              params:
+                content: Button Clicked
+            - id: fetch_requests
+              type: Request
+              params:
+                - KnexBuilder
+                - KnexRaw   
+      - id: displayKnexBuilder
+        type: Descriptions
+        properties:
+          title: KnexBuilder Result
+          items:
+            - label: KnexBuilder
+              value: 
+                _json.stringify: 
+                  on: 
+                    _request: KnexBuilder
+                  options:
+                    stable: true # Ensures consistent string representation
+                    space: 3     # Indentation for readability
+

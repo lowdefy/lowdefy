@@ -1,1 +1,0 @@
-# Lowdefy Markdown blocks
