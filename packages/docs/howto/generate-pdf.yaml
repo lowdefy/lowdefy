@@ -1,0 +1,34 @@
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: generate-pdf
+    pageTitle: How to generate a PDF
+    section: Tutorial
+    filePath: howto/generate-pdf.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: 
+            _ref: howto/generate-pdf.md
+      - id: Twitter
+        type: Button
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: 
+            _ref: howto/pdf-tldr.md
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: 
+            _ref: howto/pdf-background.md
+      # - _ref:
+      #     path: templates/navigation_buttons.yaml
+      #     vars:
+      #       # previous_page_title: Blocks
+      #       # previous_page_id: plugins-blocks
+      #       previous_page_title: Actions # while blocks doesn't exist
+      #       previous_page_id: plugins-actions
+      #       next_page_title: Operators
+      #       next_page_id: plugins-operators

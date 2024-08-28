@@ -47,6 +47,11 @@
           pageId: tutorial-display-data-page
           properties:
             title: Display data
+        - id: generate-pdf
+          type: MenuLink
+          pageId: generate-pdf
+          properties:
+            title: How to Generate a PDF
         # - id: tutorial-deploy
         #   type: MenuLink
         #   pageId: tutorial-deploy
