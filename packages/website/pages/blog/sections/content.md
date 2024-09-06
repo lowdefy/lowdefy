@@ -1,3 +1,4 @@
+
 ## Ingrain
 
 Formerly known as Tongaat Hullett Starch (THS), Ingrain is Africa's largest producer of starch, glucose, and other high-quality ingredients.

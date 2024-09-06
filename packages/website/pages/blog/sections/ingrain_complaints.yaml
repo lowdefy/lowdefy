@@ -1,4 +1,3 @@
-
 # Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +27,8 @@ blocks:
       fontSize: 12
     properties:
       html: |
-        <p>15 January 2024</p>
-  - id: ingrain_complaints_image
+        <p>6 September 2024</p>
+  - id: lowdefy_v4_launch_image
     type: Img
     properties:
       src: ./images/blogs/V4_Launch.jpg
@@ -43,7 +42,8 @@ blocks:
       padding: 20px 0 40px 0
     properties:
       content: 
-        _ref: ./content.md
+        - _ref: pages/blog/sections/content.md
+
   - id: author_block
     type: Box
     blocks:
@@ -53,7 +53,7 @@ blocks:
           flex: 1 0 40
         properties:
           size: 40
-          src: ./images/profiles/kaamraan.jpeg
+          src: ./images/profiles/gervwyk.jpeg
           alt: Kaamraan
       - id: details
         type: Html

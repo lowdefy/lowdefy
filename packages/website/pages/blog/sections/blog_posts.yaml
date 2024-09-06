@@ -46,7 +46,7 @@ blocks:
       onClick:
         - id: link_to_post
           type: Link
-          params: /lowdefy-v4-launch
+          params: lowdefy-v4-launch
     blocks:
       - id: lowdefy_v4_launch_image
         type: Img
@@ -102,6 +102,78 @@ blocks:
             style:
               marginTop: 20
             properties:
-              href: /lowdefy-v4-launch
+              href: ingrain-complaints
+              title: Click to view
+              newTab: true
+  - id: ingrain_complaints_card
+    type: Card
+    layout:
+      contentGutter: 16
+    properties:
+      style:
+        '&:hover':
+          boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.1)
+          border: '1px solid var(--primary-color)'
+    events:
+      onClick:
+        - id: link_to_post
+          type: Link
+          params: ingrain-complaints
+    blocks:
+      - id: lowdefy_v4_launch_image
+        type: Img
+        layout:
+          flex: 1 0 250px
+          align: center
+        properties:
+          src: ./images/blogs/V4_Launch.jpg
+          style:
+            borderRadius: 10px
+            height: auto
+            maxWidth: 100%
+      - id: info_box
+        type: Box
+        layout:
+          flex: 1 0 400px
+          contentGutter: 8
+        blocks:
+          - id: lowdefy_v4_launch_info
+            type: Html
+            properties:
+              html: |
+                <h4>Ingrain Complaints</h4>
+                <p>Ingrain Complained and We Fixed Things</p>
+          - id: author_block
+            type: Box
+            layout:
+              flex: 1 0 auto
+            blocks:
+              - id: avatar
+                type: Avatar
+                layout:
+                  flex: 1 0 40
+                properties:
+                  size: 40
+                  src: ./images/profiles/gervwyk.jpeg
+                  alt: Kaamraan
+              - id: details
+                type: Html
+                layout:
+                  flex: 1 0 auto
+                style:
+                  marginLeft: 10
+                  fontSize: 12
+                properties:
+                  html: |
+                    <b>Kaamraan Raboobee</b>
+                    <p>6 September 2024</p>
+          - id: ingrain_complaints_anchor
+            type: Anchor
+            layout:
+              flex: 0 1 auto
+            style:
+              marginTop: 20
+            properties:
+              href: ingrain-complaints
               title: Click to view
               newTab: true
