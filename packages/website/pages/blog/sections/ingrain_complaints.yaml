@@ -36,13 +36,36 @@ blocks:
         borderRadius: 20px
         width: 100%
         maxWidth: 800px
+  #_________________Content Block_________________#
+  ### @Gerrie
+  
   - id: content
     type: DangerousMarkdown
     style:
       padding: 20px 0 40px 0
     properties:
-      content: 
-        - _ref: pages/blog/sections/content.md
+      content:
+        ### prints each referenced file with comma seperator
+        _ref: pages/blog/sections/compiled.yaml
+        
+        ### prints string "[object Object]"
+        # path: pages/blog/sections/content.md
+        # transformer: transformers/mdTransformer.js
+
+        ### prints string "[object Object]"
+        # path: pages/blog/sections/content.md
+        # transformer: transformers/mdTransformer.js
+        
+        ### prints content file without applying transformer
+        # _ref: pages/blog/sections/content.md
+        # transformer: transformers/mdTransformer.js
+
+        ### returns error
+        # _ref: 
+        #   path: pages/blog/sections/content.md
+        #   transformer: transformers/mdTransformer.js
+        
+  #_________________Content Block_________________#
 
   - id: author_block
     type: Box

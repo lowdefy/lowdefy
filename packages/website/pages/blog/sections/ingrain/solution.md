@@ -1,34 +1,3 @@
-```ldf
-- _ref: pages/blog/sections/ingrain/insights.md
-```
-
-## Ingrain
-
-Formerly known as Tongaat Hullett Starch (THS), Ingrain is Africa's largest producer of starch, glucose, and other high-quality ingredients.
-
-Decades of innovation and robust service delivery have made Ingrain a trusted partner to manufacturers of everything from food and beverages to pharmaceuticals and building materials.
-
-Ingrain realised that their complaints process lacked structure to reliably process customer support requirements. More than just a generic ticketing system, they needed to manage support case queries which requires a deeper investigation from multiple departments and roles within Ingrain.
-
-## Ingrain's Challenges
-Ingrain is composed of a number of departments, each with its own set of roles and procedures. Because Ingrain serves customers in the food and medical industries, doing an end-to-end investigation when customers experience product problems is paramount.
-
-Orchestrating case investigations across a business with multiple offices and factories has its challenges, all while maintaining a perfect audit history of all actions, comments and supporting documentation.
-
-A general purpose ticketing system may seem like a good solution, but off-the-shelf options cannot serve the department business process solution requirement such as:
-
-- Tracing the issue to the correct source
-- Assigning the right people to resolve the complaint
-- Tracking the progress in resolving the case
-- Documenting each step for reference and auditability
-- Updating the client at each step of the process
-- Following up with the customer to check if the corrective actions taken resolved the issue
-- Generating a PDF print out a summary report for each support case
-
-While some off-the-shelf platforms do allow for a degree of customisation, it would be challenging or even impossible to implement a solution that fits Ingrain's current business processes. Instead the company would need to adapt the fit of the off-the-shelf solution instead, introducing additional cost and change management requirements.
-
-Ingrain needed a bespoke platform built specifically around their needs that integrates into their goal of building a single view of all customer relationships.
-
 # Lowdefy's Solution
 The Lowdefy Solutions team designed a platform to improve the user experience (UX) for both the customers and the company to facilitate Ingrain's bespoke customer support case management process.
 
@@ -71,10 +40,4 @@ The solution allows the Ingrain team to reassign cases if someone goes on leave 
 
 Case management handover from a customer point of view is also made simple within the Ingrain customer portal. This helps customers with uninterrupted business continuity even when their own staff rotates and responsibilities shift.
 
-# Insights
 
-As a company with multiple products, departments and factories, Ingrain was faced with the challenge to develop a bespoke support case management system that goes beyond the scope and capabilities of off-the-shelf ticketing systems.
-
-Together with Ingrain's team, the Lowdefy Solutions team designed and developed a solution to facilitate the data linked business processes required to promptly address customer support queries from inception to resolution.
-
-With the improvement in automation, traceability and a deeper insight into the problems their customer are facing, Ingrain build towards improving customer loyalty.
