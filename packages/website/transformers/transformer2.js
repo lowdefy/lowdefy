@@ -1,12 +1,12 @@
 //____________________Example Transformer_______________________________//
 
-const transformer = (_, obj) => {
+const transformer = (markdownText, obj) => {
   const regex = new RegExp('```ldf\\n([\\s\\S]*?)\\n```$', 'gm');
   let counter = 0;
 
   const examples = {
     id: 'examples',
-    type: 'Box',
+    type: 'content',
     layout: {
       contentGutter: 16,
     },

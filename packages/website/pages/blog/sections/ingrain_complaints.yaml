@@ -28,10 +28,10 @@ blocks:
     properties:
       html: |
         <p>6 September 2024</p>
-  - id: lowdefy_v4_launch_image
+  - id: ingrain_complaints_image
     type: Img
     properties:
-      src: ./images/blogs/V4_Launch.jpg
+      src: ./images/blogs/Complaints.png
       style:
         borderRadius: 20px
         width: 100%
@@ -40,13 +40,16 @@ blocks:
   ### @Gerrie
   
   - id: content
-    type: DangerousMarkdown
+    type: Box
     style:
       padding: 20px 0 40px 0
-    properties:
-      content:
-        ### prints each referenced file with comma seperator
-        _ref: pages/blog/sections/compiled.yaml
+    blocks:
+      _ref:
+        path: pages/blog/sections/content.md
+        transformer: transformers/mdTransformer.js
+
+      ### prints each referenced file with comma seperator
+        # _ref: pages/blog/sections/compiled.yaml
         
         ### prints string "[object Object]"
         # path: pages/blog/sections/content.md
@@ -61,9 +64,12 @@ blocks:
         # transformer: transformers/mdTransformer.js
 
         ### returns error
-        # _ref: 
+        # _ref:
         #   path: pages/blog/sections/content.md
         #   transformer: transformers/mdTransformer.js
+
+        
+        
         
   #_________________Content Block_________________#
 
@@ -76,7 +82,7 @@ blocks:
           flex: 1 0 40
         properties:
           size: 40
-          src: ./images/profiles/gervwyk.jpeg
+          src: ./images/profiles/kaamraan.jpeg
           alt: Kaamraan
       - id: details
         type: Html
@@ -88,4 +94,4 @@ blocks:
         properties:
           html: |
             <b>Kaamraan Raboobee</b>
-            <p>04 September 2024</p>
+            <p>6 September 2024</p>

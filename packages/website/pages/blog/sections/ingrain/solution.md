@@ -1,3 +1,4 @@
+
 # Lowdefy's Solution
 The Lowdefy Solutions team designed a platform to improve the user experience (UX) for both the customers and the company to facilitate Ingrain's bespoke customer support case management process.
 

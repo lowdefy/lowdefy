@@ -1,7 +1,3 @@
-```ldf
-- _ref: pages/blog/sections/ingrain/insights.md
-```
-
 ## Ingrain
 
 Formerly known as Tongaat Hullett Starch (THS), Ingrain is Africa's largest producer of starch, glucose, and other high-quality ingredients.
@@ -28,6 +24,18 @@ A general purpose ticketing system may seem like a good solution, but off-the-sh
 While some off-the-shelf platforms do allow for a degree of customisation, it would be challenging or even impossible to implement a solution that fits Ingrain's current business processes. Instead the company would need to adapt the fit of the off-the-shelf solution instead, introducing additional cost and change management requirements.
 
 Ingrain needed a bespoke platform built specifically around their needs that integrates into their goal of building a single view of all customer relationships.
+
+```ldf
+id: insights
+type: Markdown
+style:
+  border: 2px solid red
+  text-align: center
+properties:
+  content: |
+    # Huh?
+    ## HHONH??
+```
 
 # Lowdefy's Solution
 The Lowdefy Solutions team designed a platform to improve the user experience (UX) for both the customers and the company to facilitate Ingrain's bespoke customer support case management process.
