@@ -1,0 +1,22 @@
+id: author_block
+type: Box
+blocks:
+  - id: avatar
+    type: Avatar
+    layout:
+      flex: 1 0 40
+    properties:
+      size: 40
+      src: ./images/profiles/kaamraan.jpeg
+      alt: Kaamraan
+  - id: details
+    type: Html
+    layout:
+      flex: 1 0 auto
+    style:
+      marginLeft: 10
+      fontSize: 12
+    properties:
+      html: |
+        <b>Kaamraan Raboobee</b>
+        <p>6 September 2024</p>

@@ -1,3 +1,4 @@
+
 # Copyright 2020-2024 Lowdefy, Inc
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: ingrain_complaints
+id: lowdefy_v4_launch
 type: Box
 style:
   maxWidth: 800px
@@ -27,52 +28,22 @@ blocks:
       fontSize: 12
     properties:
       html: |
-        <p>6 September 2024</p>
-  - id: ingrain_complaints_image
+        <p>15 January 2024</p>
+  - id: lowdefy_v4_launch_image
     type: Img
     properties:
-      src: ./images/blogs/Complaints.png
+      src: ./images/blogs/V4_Launch.jpg
       style:
         borderRadius: 20px
         width: 100%
         maxWidth: 800px
-  #_________________Content Block_________________#
-  ### @Gerrie
-  
   - id: content
-    type: Box
+    type: DangerousMarkdown
     style:
       padding: 20px 0 40px 0
-    blocks:
-      _ref:
-        path: pages/blog/sections/content.md
-        transformer: transformers/mdTransformer.js
-
-      ### prints each referenced file with comma seperator
-        # _ref: pages/blog/sections/compiled.yaml
-        
-        ### prints string "[object Object]"
-        # path: pages/blog/sections/content.md
-        # transformer: transformers/mdTransformer.js
-
-        ### prints string "[object Object]"
-        # path: pages/blog/sections/content.md
-        # transformer: transformers/mdTransformer.js
-        
-        ### prints content file without applying transformer
-        # _ref: pages/blog/sections/content.md
-        # transformer: transformers/mdTransformer.js
-
-        ### returns error
-        # _ref:
-        #   path: pages/blog/sections/content.md
-        #   transformer: transformers/mdTransformer.js
-
-        
-        
-        
-  #_________________Content Block_________________#
-
+    properties:
+      content: 
+        _ref: pages/blog/sections/v4-launch/content.md
   - id: author_block
     type: Box
     blocks:
@@ -82,8 +53,8 @@ blocks:
           flex: 1 0 40
         properties:
           size: 40
-          src: ./images/profiles/kaamraan.jpeg
-          alt: Kaamraan
+          src: ./images/profiles/gervwyk.jpeg
+          alt: Gerrie
       - id: details
         type: Html
         layout:
@@ -93,5 +64,5 @@ blocks:
           fontSize: 12
         properties:
           html: |
-            <b>Kaamraan Raboobee</b>
-            <p>6 September 2024</p>
+            <b>Gerrie van Wyk</b>
+            <p>15 January 2024</p>

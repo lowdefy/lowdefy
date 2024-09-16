@@ -12,24 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: ingrain-complaints
+id: ingrain_complaints
 type: Box
-properties:
-  title: Ingrain Customer Support Case Management
 style:
-  padding: 0px 8px
+  maxWidth: 800px
+  margin: 60px auto
 layout:
   contentJustify: center
 blocks:
-  - _ref: shared/header/header.yaml
-  - id: max_width
-    type: Box
-    layout:
-      contentJustify: center
+  - id: date
+    type: Html
     style:
-      maxWidth: 1000px
+      marginLeft: 10
+      fontSize: 12
+    properties:
+      html: |
+        <p>6 September 2024</p>
+  - id: ingrain_complaints_image
+    type: Img
+    properties:
+      src: ./images/blogs/Complaints.png
+      style:
+        borderRadius: 20px
+        width: 100%
+        maxWidth: 800px
+  - id: content
+    type: Box
+    style:
+      padding: 20px 0 40px 0
     blocks:
-      - _ref: pages/blog/sections/ingrain/postPage.yaml
-      - _ref: shared/cta.yaml
-  - _ref: shared/footer/footer.yaml
-  - _ref: shared/built_with_lowdefy.yaml
+      _ref:
+        resolver: resolvers/mdResolver.js
+        vars:
+          content:
+            _ref: pages/blog/sections/ingrain/content.md
+  - _ref: pages/blog/components/author.yaml
