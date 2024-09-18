@@ -12,24 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: ingrain-complaints
+id: blog
 type: Box
 properties:
-  title: Ingrain Customer Support Case Management
+  title: Lowdefy - Blog
 style:
   padding: 0px 8px
-layout:
-  contentJustify: center
 blocks:
   - _ref: shared/header/header.yaml
-  - id: max_width
-    type: Box
-    layout:
-      contentJustify: center
-    style:
-      maxWidth: 1000px
-    blocks:
-      - _ref: pages/blog/sections/ingrain/postPage.yaml
-      - _ref: shared/cta.yaml
+  - _ref: pages/blog/sections/all_posts.yaml
+  - _ref: pages/home/sections/examples.yaml
+  - _ref: shared/cta.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

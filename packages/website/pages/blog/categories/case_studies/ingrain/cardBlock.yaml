@@ -1,0 +1,42 @@
+id: card_block
+type: Box
+style:
+  paddingTop: 24px
+  paddingBottom: 24px
+layout:
+  # direction: column
+  # align: middle
+  contentGutter: 16
+blocks:
+
+  - id: solution_box
+    type: Box
+    blocks:
+      - _ref: pages/blog/categories/case_studies/ingrain/solutionsText.yaml
+
+      - id: card_box
+        type: Box
+        layout:
+          # justify: space-around
+          contentGutter: 16
+        blocks:
+          - _ref: 
+              path: pages/blog/components/card.yaml.njk
+              vars: 
+                id: card1
+                title: Customer Portal
+                description: Allows customers to view support case history and keep track of current cases
+    
+          - _ref:
+              path: pages/blog/components/card.yaml.njk
+              vars: 
+                id: card2
+                title: Role-based Access Control
+                description: Custom RBAC manages who needs to action what, at each step of the process
+
+          - _ref:
+              path: pages/blog/components/card.yaml.njk
+              vars: 
+                id: card3
+                title: Audit Trails
+                description: Every action is logged with supporting communication and documentation.

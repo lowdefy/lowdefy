@@ -1,5 +1,5 @@
 ```ldf
-_ref: pages/blog/sections/ingrain/header.yaml
+_ref: pages/blog/categories/case_studies/ingrain/header.yaml
 ```
 
 # Ingrain
@@ -32,7 +32,7 @@ Ingrain needed a bespoke platform built specifically around their needs that int
 
 # Lowdefy's Solution
 ```ldf
-_ref: pages/blog/sections/ingrain/cardBlock.yaml
+_ref: pages/blog/categories/case_studies/ingrain/cardBlock.yaml
 ```
 
 ## 1. Simplification

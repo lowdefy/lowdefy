@@ -7,8 +7,10 @@ blocks:
       flex: 1 0 40
     properties:
       size: 40
-      src: ./images/profiles/kaamraan.jpeg
-      alt: Kaamraan
+      src:
+        _var: img
+      alt:
+        _var: name
   - id: details
     type: Html
     layout:
@@ -18,5 +20,5 @@ blocks:
       fontSize: 12
     properties:
       html: |
-        <b>Kaamraan Raboobee</b>
-        <p>6 September 2024</p>
+        <b>{{ name }}</b>
+        <p>{{ date }}</p>

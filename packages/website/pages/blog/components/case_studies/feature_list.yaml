@@ -1,0 +1,19 @@
+id: info_box
+type: Box
+layout:
+  flex: 1 0 
+#   contentGutter: 24
+#   size: auto
+blocks:
+  - id: feature_box
+    type: Html
+    layout:
+      # size: auto
+      # justify: middle
+    style:
+      border-radius: 5px
+      # boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.25)
+      padding: 16px
+    properties:
+      html: 
+        _ref: ../ingrain/feature_list.html

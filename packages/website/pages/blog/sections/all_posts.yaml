@@ -12,38 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: ingrain_complaints
+id: blog_posts
 type: Box
 style:
   maxWidth: 800px
-  margin: 60px auto
+  margin: 5em auto
 layout:
   contentJustify: center
+  contentGutter: 16
 blocks:
-  - id: date
+  - id: blog_posts_header
     type: Html
     style:
-      marginLeft: 10
-      fontSize: 12
+      textAlign: center
     properties:
       html: |
-        <p>6 September 2024</p>
-  - id: ingrain_complaints_image
-    type: Img
-    properties:
-      src: ./images/blogs/Complaints.png
-      style:
-        borderRadius: 20px
-        width: 100%
-        maxWidth: 800px
-  - id: content
+        <h2>The Lowdefy <span class="gradient-text">Blog</span></h2>
+        <p>Read more about the latest Lowdefy updates, features, examples and news on how businesses and developers are building apps with Lowdefy.</p>
+        </br>
+        <h3>Recent Posts</h3>
+  - id: post_list
     type: Box
-    style:
-      padding: 20px 0 40px 0
-    blocks:
-      _ref:
-        resolver: resolvers/mdResolver.js
-        vars:
-          content:
-            _ref: pages/blog/sections/ingrain/content.md
-  - _ref: pages/blog/components/author.yaml
+    layout:
+      contentGutter: 20
+    blocks: 
+      - _ref: pages/blog/categories/case_studies/ingrain/post_preview.yaml

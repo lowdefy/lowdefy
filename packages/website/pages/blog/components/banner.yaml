@@ -1,0 +1,8 @@
+id: post_banner
+type: Img
+properties:
+  src: {{ posts.image }}
+  style:
+    borderRadius: 20px
+    width: 100%
+    maxWidth: 800px

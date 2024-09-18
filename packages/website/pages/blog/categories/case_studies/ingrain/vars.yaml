@@ -1,0 +1,19 @@
+author:
+  name: Kaamraan Raboobee
+  image: ./images/profiles/kaamraan.jpeg
+post:
+  title: Ingrain
+  slug: ingrain-complaints
+  description: post_description
+  image: ./images/blogs/Complaints.png
+  content: 
+    _ref:
+      resolver: resolvers/mdResolver.js
+      vars:
+        content:
+          _ref: pages/blog/categories/case_studies/ingrain/content.md
+           
+# company:
+#   name: company_name
+#   logo: company_image
+
