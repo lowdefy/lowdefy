@@ -1,9 +1,18 @@
 author:
   name: gerrie
+  image: ./images/profiles/gervwyk.jpeg
 post:
   id: lowdefy-v4-launch
+  slug: v4-launch
   category: releases
   title: Lowdefy V4 Launch
-  subtitle: When a Ticketing System is Not Enough
-  description: When a Ticketing System is Not Enough
+  subtitle: The Easiest Config Webstack Built on Top of Next.js
+  description: Faster performance and custom plugins
   image: ./images/blogs/V4_Launch.jpg
+  date: 15 January 2024
+content:    
+  _ref:
+    resolver: resolvers/mdResolver.js
+    vars:
+      content:
+        _ref: pages/blog/categories/releases/v4-launch/content.md

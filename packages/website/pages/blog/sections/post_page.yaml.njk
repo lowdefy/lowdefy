@@ -1,3 +1,6 @@
+{% set blog_root = 'pages/blog/categories' %}
+{% set post_path = [blog_root, post.category, post.slug] | join("/") %}
+{% set post_sections = ["post_header", "post_content", "post_footer"] %}
 
 id: post_page
 type: Box
@@ -7,30 +10,8 @@ style:
 layout:
   contentJustify: center
 blocks:
-  - _ref: pages/blog/categories/case_studies/ingrain/post_content.yaml
-  - _ref: pages/blog/categories/case_studies/ingrain/post_footer.yaml
+{% for section in post_sections %}
+  - _ref: {{ [post_path, section] | join("/") + ".yaml" }}
+  # - _ref: pages/blog/categories/case_studies/ingrain/post_page.yaml
+{% endfor %}
 
-
-  # - id: date
-  #   type: Html
-  #   style:
-  #     marginLeft: 10
-  #     fontSize: 12
-  #   properties:
-  #     html: |
-  #       <p>6 September 2024</p>
-  # - id: post_image
-  #   type: Img
-  #   properties:
-  #     src: 
-  #       _var: post_image
-  #     style:
-  #       borderRadius: 20px
-  #       width: 100%
-  #       maxWidth: 800px
-  # - id: content
-  #   type: Box
-  #   style:
-  #     padding: 20px 0 40px 0
-  #   content: 
-  #     _var: post_content

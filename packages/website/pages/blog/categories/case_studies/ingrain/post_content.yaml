@@ -1,6 +1,7 @@
 _ref:
   path: pages/blog/components/post_page/post_content.yaml
   vars:
+    _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
     content_file: 
       _ref: pages/blog/categories/case_studies/ingrain/content.md
 

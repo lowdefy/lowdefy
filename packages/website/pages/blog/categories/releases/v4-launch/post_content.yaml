@@ -1,7 +1,14 @@
 _ref:
-  path: pages/blog/sections/post_page.yaml.njk
+  path: pages/blog/components/post_page/post_content.yaml
   vars:
     _ref: pages/blog/categories/releases/v4-launch/vars.yaml
+    content_file: 
+      _ref: pages/blog/categories/releases/v4-launch/content.md
+
+# _ref:
+#   path: pages/blog/sections/post_page.yaml.njk
+#   vars:
+#     _ref: pages/blog/categories/releases/v4-launch/vars.yaml
 
 # id: lowdefy_v4_launch_card
 # type: Card

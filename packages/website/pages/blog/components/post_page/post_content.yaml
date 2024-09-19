@@ -1,34 +1,38 @@
-id: ingrain_complaints
+id: post_content
 type: Box
 style:
   maxWidth: 800px
-  margin: 60px auto
+  marginBottom: 60px
 layout:
   contentJustify: center
 blocks:
-  - id: date
-    type: Html
-    style:
-      marginLeft: 10
-      fontSize: 12
-    properties:
-      html: |
-        <p>6 September 2024</p>
-  - id: ingrain_complaints_image
+  - id: post_image
     type: Img
     properties:
-      src: ./images/blogs/Complaints.png
+      src: 
+        _var: post.image
       style:
         borderRadius: 20px
         width: 100%
         maxWidth: 800px
+  - id: date
+    type: Html
+    style:
+      marginTop: 10
+      marginLeft: 10
+      fontSize: 12
+    properties:
+      html: 
+        _var: post.date
   - id: content
     type: Box
     style:
       padding: 20px 0 40px 0
     blocks:
-      _ref:
-        resolver: resolvers/mdResolver.js
-        vars:
-          content:
-            _ref: pages/blog/categories/case_studies/ingrain/content.md
+      _var: content
+
+      # _ref:
+      #   resolver: resolvers/mdResolver.js
+      #   vars:
+      #     content:
+      #       _ref: pages/blog/categories/case_studies/ingrain/content.md

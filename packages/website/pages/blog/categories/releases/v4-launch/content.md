@@ -1,4 +1,3 @@
-# Introducing <span class="gradient-text">Lowdefy V4</span>: The Easiest Config Webstack Built on Top of Next.js
 
 We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
 
