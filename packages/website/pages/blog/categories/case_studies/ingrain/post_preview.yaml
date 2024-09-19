@@ -1,5 +1,5 @@
 _ref:
-  path: pages/blog/components/post_preview.yaml.njk
+  path: pages/blog/sections/post_preview.yaml.njk
   vars:
     _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
 # id: post_preview

@@ -22,14 +22,17 @@ layout:
   contentJustify: center
 blocks:
   - _ref: shared/header/header.yaml
-  - id: max_width
+  - id: post_container
     type: Box
     layout:
       contentJustify: center
     style:
       maxWidth: 1000px
     blocks:
-      - _ref: pages/blog/categories/case_studies/ingrain/post.yaml
+      - _ref: pages/blog/components/post_page/post_header.yaml
+      # - _ref: pages/blog/categories/case_studies/ingrain/post_content.yaml
+      - _ref: pages/blog/components/post_page/post_content.yaml
+      # - _ref: pages/blog/categories/case_studies/ingrain/post_footer.yaml
       - _ref: shared/cta.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

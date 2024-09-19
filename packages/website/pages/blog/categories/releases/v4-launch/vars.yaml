@@ -1,8 +1,9 @@
 author:
-  name: Gerrie van Wyk
-  image: ./images/profiles/gervwyk.jpeg
+  name: gerrie
 post:
+  id: lowdefy-v4-launch
+  category: releases
   title: Lowdefy V4 Launch
-  slug: lowdefy-v4-launch
-  description: post_description
+  subtitle: When a Ticketing System is Not Enough
+  description: When a Ticketing System is Not Enough
   image: ./images/blogs/V4_Launch.jpg

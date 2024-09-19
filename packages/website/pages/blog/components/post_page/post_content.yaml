@@ -1,4 +1,4 @@
-id: post_page
+id: ingrain_complaints
 type: Box
 style:
   maxWidth: 800px
@@ -14,10 +14,10 @@ blocks:
     properties:
       html: |
         <p>6 September 2024</p>
-  - id: post_image
+  - id: ingrain_complaints_image
     type: Img
     properties:
-      src: {{ post.image }}
+      src: ./images/blogs/Complaints.png
       style:
         borderRadius: 20px
         width: 100%
@@ -26,7 +26,7 @@ blocks:
     type: Box
     style:
       padding: 20px 0 40px 0
-    content: 
+    blocks:
       _ref:
         resolver: resolvers/mdResolver.js
         vars:

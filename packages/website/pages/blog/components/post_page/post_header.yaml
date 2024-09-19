@@ -1,0 +1,8 @@
+id: post_header
+type: Html
+style:
+  textAlign: center
+properties:
+  html: |
+    <h2 class="gradient-text">Customer Support Case Management</h2>
+    <h3>When a Ticketing System is Not Enough</h3>

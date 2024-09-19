@@ -29,7 +29,7 @@ blocks:
     style:
       maxWidth: 1000px
     blocks:
-      - _ref: pages/blog/categories/releases/v4-launch/post.yaml
+      - _ref: pages/blog/categories/releases/v4-launch/post_content.yaml
       - _ref: shared/cta.yaml
   - _ref: shared/footer/footer.yaml
   - _ref: shared/built_with_lowdefy.yaml

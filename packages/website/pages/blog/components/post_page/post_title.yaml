@@ -1,0 +1,7 @@
+id: post_title
+type: Html
+style:
+  textAlign: center
+properties:
+  html: 
+    _var: title
