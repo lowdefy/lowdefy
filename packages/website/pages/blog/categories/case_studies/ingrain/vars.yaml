@@ -1,4 +1,6 @@
 author:
+  # _ref: pages/blog/authors.yaml
+  id: kaamraan
   name: Kaamraan Raboobee
   image: ./images/profiles/kaamraan.jpeg
 post:

@@ -5,6 +5,8 @@
 #     name: Kaamraan Raboobee
 #     date: 6 September 2024
 
+
+
 id: author_block
 type: Box
 layout:
@@ -16,8 +18,14 @@ blocks:
       flex: 1 0 40
     properties:
       size: 40
-      src: {{ author.image }}
-      alt: {{ author.name }}
+      src: 
+        _ref: 
+          path: 'pages/blog/authors.yaml'
+          key: {{ author.id }}.image
+      alt: 
+        _ref: 
+          path: 'pages/blog/authors.yaml'
+          key: {{ author.id }}.name
   - id: details
     type: Html
     layout:
@@ -27,5 +35,5 @@ blocks:
       fontSize: 12
     properties:
       html: |
-        <b>{{ author.name }}</b>
+        <b>{{ author.id }}</b>
         <p>{{ post.date }}</p>

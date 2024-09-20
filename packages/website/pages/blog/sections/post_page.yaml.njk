@@ -1,8 +1,12 @@
-{% set blog_root = 'pages/blog/categories' %}
-{% set components = 'pages/blog/components/post_page' %}
-{% set post_path = [blog_root, post.category, post.slug] | join("/") %}
+{% set posts = 'pages/blog/categories' %}
+{% set components = 'pages/blog/components' %}
+
+{% set post_path = [posts, post.category, post.slug] | join("/") %}
 {% set content_path = [post_path, "content.md"] | join("/") %}
 {% set post_sections = ["post_header", "post_content", "post_footer"] %}
+
+{% set author_path = 'pages/blog/authors.yaml' %}
+# {% set vars = [post_path, "vars"] | join("/") + ".yaml" %}
 
 id: post_page
 type: Box
