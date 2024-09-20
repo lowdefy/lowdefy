@@ -18,6 +18,6 @@
 - _ref: pages/contact-us/contact-us.yaml
 - _ref: pages/terms/terms.yaml
 - _ref: pages/blog/sections/blog.yaml
-- _ref: pages/blog/categories/releases/lowdefy-v4-launch.yaml
+# - _ref: pages/blog/categories/releases/lowdefy-v4-launch.yaml
 - _ref: pages/blog/categories/case_studies/ingrain-complaints.yaml
 - _ref: pages/privacy-policy/privacy-policy.yaml
