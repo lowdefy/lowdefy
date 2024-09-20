@@ -22,7 +22,7 @@ layout:
   contentJustify: center
 blocks:
   - _ref: shared/header/header.yaml
-  - id: max_width
+  - id: post_container
     type: Box
     layout:
       contentJustify: center
