@@ -1,7 +1,7 @@
-_ref:
-  path: pages/blog/components/post_page/post_footer.yaml.njk
-  vars: 
-    _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
+# _ref:
+#   path: pages/blog/components/post_page/post_footer.yaml.njk
+#   vars: 
+#     _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
 
   # path: pages/blog/components/author.yaml.njk
   # vars:

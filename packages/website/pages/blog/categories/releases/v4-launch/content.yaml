@@ -13,56 +13,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: lowdefy_v4_launch
-type: Box
-style:
-  maxWidth: 800px
-  margin: 60px auto
-layout:
-  contentJustify: center
-blocks:
-  - id: date
-    type: Html
-    style:
-      marginLeft: 10
-      fontSize: 12
-    properties:
-      html: |
-        <p>15 January 2024</p>
-  - id: lowdefy_v4_launch_image
-    type: Img
-    properties:
-      src: ./images/blogs/V4_Launch.jpg
-      style:
-        borderRadius: 20px
-        width: 100%
-        maxWidth: 800px
-  - id: content
-    type: DangerousMarkdown
-    style:
-      padding: 20px 0 40px 0
-    properties:
-      content: 
-        _ref: pages/blog/sections/v4-launch/content.md
-  - id: author_block
-    type: Box
-    blocks:
-      - id: avatar
-        type: Avatar
-        layout:
-          flex: 1 0 40
-        properties:
-          size: 40
-          src: ./images/profiles/gervwyk.jpeg
-          alt: Gerrie
-      - id: details
-        type: Html
-        layout:
-          flex: 1 0 auto
-        style:
-          marginLeft: 10
-          fontSize: 12
-        properties:
-          html: |
-            <b>Gerrie van Wyk</b>
-            <p>15 January 2024</p>
+# id: lowdefy_v4_launch
+# type: Box
+# style:
+#   maxWidth: 800px
+#   margin: 60px auto
+# layout:
+#   contentJustify: center
+# blocks:
+#   - id: date
+#     type: Html
+#     style:
+#       marginLeft: 10
+#       fontSize: 12
+#     properties:
+#       html: |
+#         <p>15 January 2024</p>
+#   - id: lowdefy_v4_launch_image
+#     type: Img
+#     properties:
+#       src: ./images/blogs/V4_Launch.jpg
+#       style:
+#         borderRadius: 20px
+#         width: 100%
+#         maxWidth: 800px
+#   - id: content
+#     type: DangerousMarkdown
+#     style:
+#       padding: 20px 0 40px 0
+#     properties:
+#       content: 
+#         _ref: pages/blog/sections/v4-launch/content.md
+#   - id: author_block
+#     type: Box
+#     blocks:
+#       - id: avatar
+#         type: Avatar
+#         layout:
+#           flex: 1 0 40
+#         properties:
+#           size: 40
+#           src: ./images/profiles/gervwyk.jpeg
+#           alt: Gerrie
+#       - id: details
+#         type: Html
+#         layout:
+#           flex: 1 0 auto
+#         style:
+#           marginLeft: 10
+#           fontSize: 12
+#         properties:
+#           html: |
+#             <b>Gerrie van Wyk</b>
+#             # <p>15 January 2024</p>
