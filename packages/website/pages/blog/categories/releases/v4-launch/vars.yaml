@@ -10,9 +10,3 @@ post:
   description: Faster performance and custom plugins
   image: ./images/blogs/V4_Launch.jpg
   date: 15 January 2024
-content:    
-  _ref:
-    resolver: resolvers/mdResolver.js
-    vars:
-      content:
-        _ref: pages/blog/categories/releases/v4-launch/content.md
