@@ -1,3 +1,6 @@
+# {% set blog_root = 'pages/blog/categories' %}
+# {% set post_path = [blog_root, post.category, post.slug] | join("/") %}
+# {% set content_path = [post_path, "content.md"] | join("/") %}
 
 id: post_content
 type: Box
@@ -34,4 +37,4 @@ blocks:
         resolver: resolvers/mdResolver.js
         vars:
           content: 
-            _ref: pages/blog/categories/case_studies/ingrain/content.md
+            _ref: {{ content_path }}
