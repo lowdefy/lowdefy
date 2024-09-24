@@ -1,4 +1,0 @@
-_ref:
-  path: pages/blog/sections/post_preview.yaml.njk
-  vars:
-    _ref: pages/blog/categories/releases/v4-launch/vars.yaml

@@ -12,24 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: ingrain-complaints
-type: Box
-properties:
-  title: Ingrain Customer Support Case Management
-style:
-  padding: 0px 8px
-layout:
-  contentJustify: center
-blocks:
-  - _ref: shared/header/header.yaml
-  - id: post_container
-    type: Box
-    layout:
-      contentJustify: center
-    style:
-      maxWidth: 1000px
-    blocks:
-      - _ref: pages/blog/categories/case_studies/ingrain/post_page.yaml
-      - _ref: shared/cta.yaml
-  - _ref: shared/footer/footer.yaml
-  - _ref: shared/built_with_lowdefy.yaml
+_ref:
+  path: pages/blog/components/post_page/post_structure.yaml.njk
+  vars: 
+    _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
+

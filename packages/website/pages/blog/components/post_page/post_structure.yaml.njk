@@ -1,0 +1,28 @@
+{% set post_root = 'pages/blog/categories' %}
+{% set post_path = [post_root, post.category, post.slug] | join("/") %}
+{% set vars = [post_path, "vars"] | join("/") + ".yaml" %}
+
+id: {{ post.id }}
+type: Box
+properties:
+  title: {{ post.title }}
+style:
+  padding: 0px 8px
+layout:
+  contentJustify: center
+blocks:
+  - _ref: shared/header/header.yaml
+  - id: post_container
+    type: Box
+    layout:
+      contentJustify: center
+    style:
+      maxWidth: 1000px
+    blocks:
+      - _ref: 
+          path: pages/blog/components/post_page/post_page.yaml.njk
+          vars: 
+            _ref: {{ vars }}
+      - _ref: shared/cta.yaml
+  - _ref: shared/footer/footer.yaml
+  - _ref: shared/built_with_lowdefy.yaml

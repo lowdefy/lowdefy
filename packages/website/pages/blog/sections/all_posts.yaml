@@ -36,5 +36,8 @@ blocks:
     layout:
       contentGutter: 20
     blocks: 
-      - _ref: pages/blog/categories/case_studies/ingrain/post_preview.yaml
-      - _ref: pages/blog/categories/releases/v4-launch/post_preview.yaml
+      - _ref: 
+          pages/blog/components/post_preview/post_list.yaml.njk
+
+      # - _ref: pages/blog/categories/case_studies/ingrain/post_preview.yaml
+      # - _ref: pages/blog/categories/releases/v4-launch/post_preview.yaml

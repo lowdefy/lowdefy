@@ -1,8 +1,0 @@
-id: ingrain_complaints_image
-type: Img
-properties:
-  src: ./images/blogs/Complaints.png
-  style:
-    borderRadius: 20px
-    width: 100%
-    maxWidth: 800px

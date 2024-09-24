@@ -1,0 +1,21 @@
+{% set post_root = 'pages/blog/categories' %}
+
+{% set posts = [
+  { category: 'case_studies', slug: 'ingrain' },
+  { category: 'releases', slug: 'v4-launch' }
+  ]  
+%}
+
+id: post_list
+type: Box
+layout:
+  contentGutter: 20
+blocks: 
+{% for post in posts %}
+{% set post_vars = [post_root, post.category, post.slug, "vars.yaml"] | join("/") %}
+  - _ref:
+      path: pages/blog/components/post_preview/post_preview.yaml.njk
+      vars: 
+        _ref: {{ post_vars }}
+{% endfor %}
+
