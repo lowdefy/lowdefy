@@ -15,5 +15,5 @@
 _ref:
   path: pages/blog/components/post_page/post_structure.yaml.njk
   vars: 
-    _ref: pages/blog/categories/case_studies/ingrain/vars.yaml
+    _ref: pages/blog/categories/case_studies/ingrain-complaints/vars.yaml
 

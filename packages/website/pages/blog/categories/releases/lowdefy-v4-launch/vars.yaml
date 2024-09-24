@@ -1,5 +1,6 @@
 author:
-  name: gerrie
+  id: gerrie
+  name: Gerrie van Wyk
   image: ./images/profiles/gervwyk.jpeg
 post:
   id: lowdefy-v4-launch

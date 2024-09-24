@@ -4,15 +4,13 @@ style:
   paddingTop: 24px
   paddingBottom: 24px
 layout:
-  # direction: column
-  # align: middle
   contentGutter: 16
 blocks:
 
   - id: solution_box
     type: Box
     blocks:
-      - _ref: pages/blog/categories/case_studies/ingrain/solutionsText.yaml
+      - _ref: pages/blog/categories/case_studies/ingrain-complaints/solutionsText.yaml
 
       - id: card_box
         type: Box

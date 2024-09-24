@@ -1,8 +1,8 @@
 {% set post_root = 'pages/blog/categories' %}
 
-{% set posts = [
-  { category: 'case_studies', slug: 'ingrain' },
-  { category: 'releases', slug: 'v4-launch' }
+{% set categories = [
+  { category: 'case_studies', posts: 'ingrain-complaints' },
+  { category: 'releases', id: 'lowdefy-v4-launch' }
   ]  
 %}
 
@@ -12,7 +12,7 @@ layout:
   contentGutter: 20
 blocks: 
 {% for post in posts %}
-{% set post_vars = [post_root, post.category, post.slug, "vars.yaml"] | join("/") %}
+{% set post_vars = [post_root, post.category, post.id, "vars.yaml"] | join("/") %}
   - _ref:
       path: pages/blog/components/post_preview/post_preview.yaml.njk
       vars: 

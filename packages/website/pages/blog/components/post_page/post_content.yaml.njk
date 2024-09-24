@@ -1,5 +1,5 @@
 # {% set blog_root = 'pages/blog/categories' %}
-# {% set post_path = [blog_root, post.category, post.slug] | join("/") %}
+# {% set post_path = [blog_root, post.category, post.id] | join("/") %}
 # {% set content_path = [post_path, "content.md"] | join("/") %}
 
 id: post_content
@@ -10,6 +10,15 @@ style:
 layout:
   contentJustify: center
 blocks:
+
+  - id: post_header
+    type: Html
+    style:
+      textAlign: center
+    properties:
+      html: |
+        <h2 class="gradient-text">{{ post.title }}</h2>
+        <h3>{{ post.description }}</h3>
   - id: post_image
     type: Img
     properties:
@@ -38,3 +47,27 @@ blocks:
         vars:
           content: 
             _ref: {{ content_path }}
+  - id: post_footer
+    type: Box
+    layout:
+      flex: 1 0 auto
+    blocks:
+      - id: avatar
+        type: Avatar
+        layout:
+          flex: 1 0 40
+        properties:
+          size: 40
+          src: {{ author.image }}
+          alt: {{ author.name }}
+      - id: details
+        type: Html
+        layout:
+          flex: 1 0 auto
+        style:
+          marginLeft: 10
+          fontSize: 12
+        properties:
+          html: |
+            <b>{{ author.name }}</b>
+            <p>{{ post.date }}</p>

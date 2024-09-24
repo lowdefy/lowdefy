@@ -15,5 +15,5 @@
 _ref:
   path: pages/blog/components/post_page/post_structure.yaml.njk
   vars: 
-    _ref: pages/blog/categories/releases/v4-launch/vars.yaml
+    _ref: pages/blog/categories/releases/lowdefy-v4-launch/vars.yaml
 
