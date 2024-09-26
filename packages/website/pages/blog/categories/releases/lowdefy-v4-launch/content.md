@@ -1,4 +1,3 @@
-
 We're excited to announce Lowdefy V4, a full-stack web framework that simplifies building web applications, internal tools, admin panels, BI dashboards, and CRUD apps using YAML or JSON configuration files.
 
 In this update, Lowdefy developers now enjoy faster app performance and improved functionality with custom code plugins.
@@ -36,13 +35,14 @@ Lowdefy plugins are packages installed in your project's Next.js `package.json`,
 In this Lowdefy upgrade we are bringing back the JavaScript build step to Lowdefy apps.
 
 While the Webpack module federation of **V3** simplified the build process by using one build bundle for all apps and loading front-end dependencies at run time, it introduced other problems such as:
+
 - large loading waterfalls
 - complications for loading server side dependencies at runtime
 - limitations on app specific build process optimizations and modifications
 
 In Lowdefy **V4** the app-specific build step enables app-specific dependencies for bundles that can apply advanced features. For example, in **V4** any [Ant Design V4's +900 style variables](https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/themes/default.less) can be modified. We've introduced this change to help you build beautiful apps with ease.
 
-In **V4** we've also re-engineered how loading states work and added loading skeletons on a block level. This gives you precise control of loading states *while* keeping application config simple, clean, and understandable.
+In **V4** we've also re-engineered how loading states work and added loading skeletons on a block level. This gives you precise control of loading states _while_ keeping application config simple, clean, and understandable.
 
 We've also removed blocking loading elements to instead render only when defined, resulting in a much faster user experience. On our docs introduction page this results in a 5x faster time to first meaningful paint.
 
@@ -81,4 +81,3 @@ Don't forget to share your custom plugins with the Lowdefy community by publishi
 We can't wait to see the amazing applications you'll create with Lowdefy **V4**! If you have any questions or feedback, feel free to reach out to us through [Github Discussions](https://github.com/lowdefy/lowdefy/discussions) or join our [community on Discord](https://discord.gg/lowdefy).
 
 Happy coding! 🎉
-

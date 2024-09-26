@@ -5,14 +5,15 @@ async function mdResolver(refPath, vars) {
 
   const { content } = vars;
 
-  // edit the string here...
-  const regex = new RegExp('\`\`\`ldf\\n([\\s\\S]*?)\\n\`\`\`$', 'gm');
+  const regex = new RegExp('\`\`\`yaml (ldf\\n.*)\\n\`\`\`\\s*$', 'gm');
+
   let counter = 0;
 
-  const parsedMarkdown = content.split(regex).map((text, index) => {
+  const parsedMarkdown = content.split(regex).map((text) => {
     if (text.trim() !== '') {
-      if (index % 2 !== 0) {
-        return serializer.deserialize(YAML.parse(text, {}));
+
+      if (text.substring(0, 3) == 'ldf') {
+        return serializer.deserialize(YAML.parse(text.substring(3), {}));
       }
       return {
         id: `md_${++counter}`,
@@ -25,6 +26,7 @@ async function mdResolver(refPath, vars) {
   });
 
   const allEntries = parsedMarkdown.filter((object) => !!object);
+
   return allEntries;
 
 }

@@ -1,8 +1,10 @@
 kaamraan:
+  id: kaamraan
   name: Kaamraan Raboobee
   image: ./images/profiles/kaamraan.jpeg
 
 gerrie:
+  id: gerrie
   name: Gerrie
   image: ./images/profiles/gervwyk.jpeg
 

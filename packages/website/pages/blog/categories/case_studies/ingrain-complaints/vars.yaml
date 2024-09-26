@@ -2,6 +2,9 @@ author:
   id: kaamraan
   name: Kaamraan Raboobee
   image: ./images/profiles/kaamraan.jpeg
+  # _ref: 
+  #   path: pages/blog/authors.yaml
+  #   key: kaamraan
 post:
   id: ingrain-complaints
   slug: ingrain
@@ -11,3 +14,8 @@ post:
   description: When a Ticketing System is Not Enough
   image: ./images/blogs/Complaints.png
   date: 9 September 2024
+
+# _ref:
+#   resolver: resolvers/mdResolver.js
+#   vars: 
+#     _ref: pages/blog/categories/case_studies/ingrain-complaints/content.md

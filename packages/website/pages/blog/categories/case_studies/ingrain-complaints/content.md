@@ -8,7 +8,7 @@ Ingrain realised that their complaints process lacked structure to reliably proc
 
 ## Ingrain's Challenges
 
-Ingrain is composed of a number of departments, each with its own set of roles and procedures. Because Ingrain serves customers in the food and medical industries, doing an end-to-end investigation when customers experience product problems is paramount.
+ldf Ingrain is composed of a number of departments, each with its own set of roles and procedures. Because Ingrain serves customers in the food and medical industries, doing an end-to-end investigation when customers experience product problems is paramount.
 
 Orchestrating case investigations across a business with multiple offices and factories has its challenges, all while maintaining a perfect audit history of all actions, comments and supporting documentation.
 
@@ -28,7 +28,7 @@ Ingrain needed a bespoke platform built specifically around their needs that int
 
 # Lowdefy's Solution
 
-```ldf
+```yaml ldf
 _ref: pages/blog/categories/case_studies/ingrain-complaints/cardBlock.yaml
 ```
 
@@ -56,7 +56,7 @@ To assist Ingrain in rolling out an advanced support case resolution and investi
 
 ### Updating the Customer
 
-Once a complaint is logged, the solution generate a unique reference number, and the client would receive an in-app and email notifications on case updates, for example when relevant company representative have been assigned to the case.
+Once a complaint is logged, the solution generates a unique reference number, and the client receives an in-app and email notifications on case updates, for example when relevant company representative have been assigned to the case.
 
 Clients always have access their previous complaints, and the system can automatically generate a PDF summary document with a summary of the complaint and its resolution, or even allow the customer to reopen the case if necessary.
 
