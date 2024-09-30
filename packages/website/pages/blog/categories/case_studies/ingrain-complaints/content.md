@@ -4,13 +4,15 @@ Formerly known as Tongaat Hullett Starch (THS), Ingrain is Africa's largest prod
 
 Decades of innovation and robust service delivery have made Ingrain a trusted partner to manufacturers of everything from food and beverages to pharmaceuticals and building materials.
 
-Ingrain realised that their complaints process lacked structure to reliably process customer support requirements. More than just a generic ticketing system, they needed to manage support case queries which requires a deeper investigation from multiple departments and roles within Ingrain.
+Ingrain realised that their complaints process required more structure to reliably process customer support cases. More than just a generic ticketing system, they needed to manage support case queries which requires a deeper investigation from multiple departments and roles within Ingrain.
 
 ## Ingrain's Challenges
 
-ldf Ingrain is composed of a number of departments, each with its own set of roles and procedures. Because Ingrain serves customers in the food and medical industries, doing an end-to-end investigation when customers experience product problems is paramount.
+Ingrain, like many businesses, is composed of multiple departments, each with its own distinct roles and processes. What makes their situation unique is the variation in the numerous industries they serve.
 
-Orchestrating case investigations across a business with multiple offices and factories has its challenges, all while maintaining a perfect audit history of all actions, comments and supporting documentation.
+Given that Ingrain manufactures essential ingredients for products such as food, beverages and pharmaceuticals, it is essential that they are able to conduct a thorough, end-to-end investigation when a product issue arises.
+
+Orchestrating case investigations across a business with multiple locations and mills has its challenges, all while maintaining a perfect audit history of all actions, comments and supporting documentation.
 
 A general purpose ticketing system may seem like a good solution, but off-the-shelf options cannot serve the department business process solution requirement such as:
 
@@ -34,7 +36,7 @@ _ref: pages/blog/categories/case_studies/ingrain-complaints/cardBlock.yaml
 
 ## 1. Simplification
 
-The Lowdefy Solutions team built a customer portal app and team business app with a focus on an easy user experience (UX) for both Ingrain's team and its customers. This allows users to focus only on the tasks and information and required actions that applies to them.
+The Lowdefy Solutions team built a customer portal app and team business app with a focus on an easy user experience (UX) for both Ingrain's team and its customers. This allows users to focus only on the tasks, information and required actions that apply to them.
 
 ### Logging and Tracking Complaints
 
@@ -52,13 +54,13 @@ Each user action are logged for audit purposes and to provide process transparen
 
 ## 2. Automation
 
-To assist Ingrain in rolling out an advanced support case resolution and investigation strategy, processes were automated where ever possible to streamline internal workflows.
+To assist Ingrain in rolling out an advanced support case resolution and investigation strategy, processes were automated wherever possible to streamline internal workflows.
 
 ### Updating the Customer
 
 Once a complaint is logged, the solution generates a unique reference number, and the client receives an in-app and email notifications on case updates, for example when relevant company representative have been assigned to the case.
 
-Clients always have access their previous complaints, and the system can automatically generate a PDF summary document with a summary of the complaint and its resolution, or even allow the customer to reopen the case if necessary.
+Clients always have access to their previous complaints, and the system can automatically generate a PDF summary document with a summary of the complaint and its resolution, or even allow the customer to reopen the case if necessary.
 
 ### Streamlined Workflows
 
@@ -76,13 +78,13 @@ By collecting data with each case interaction a full recorded history paints a c
 
 ### Case Handover
 
-The solution allows the Ingrain team to reassign cases if someone goes on leave or is otherwise unavailable. Training new team members on the intricacies of their support case management processes are also simplified with a easy to use system that facilitates support cases each step of the way.
+The solution allows the Ingrain team to reassign cases if someone goes on leave or is otherwise unavailable. Training new team members on the intricacies of their support case management processes are also simplified with an easy-to-use system that facilitates support cases each step of the way.
 
 Case management handover from a customer point of view is also made simple within the Ingrain customer portal. This helps customers with uninterrupted business continuity even when their own staff rotates and responsibilities shift.
 
 # Insights
 
-As a company with multiple products, departments and factories, Ingrain was faced with the challenge to develop a bespoke support case management system that goes beyond the scope and capabilities of off-the-shelf ticketing systems.
+As a company with multiple products, departments and mills, Ingrain was faced with the challenge to develop a bespoke support case management system that goes beyond the scope and capabilities of off-the-shelf ticketing systems.
 
 Together with Ingrain's team, the Lowdefy Solutions team designed and developed a solution to facilitate the data linked business processes required to promptly address customer support queries from inception to resolution.
 
