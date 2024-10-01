@@ -1,3 +1,17 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 id: card_block
 type: Box
 style:
@@ -10,12 +24,17 @@ blocks:
   - id: solution_box
     type: Box
     blocks:
-      - _ref: pages/blog/categories/case_studies/ingrain-complaints/solutionsText.yaml
+      - id: solution
+        type: Html
+        style:
+          border-radius: 5px
+        properties:
+          html: |
+            The <span class="gradient-text"><strong>Lowdefy Solutions</strong></span> team designed a platform to improve the user experience (UX) for both the customers and the company to facilitate Ingrain's bespoke customer support case management process.
 
       - id: card_box
         type: Box
         layout:
-          # justify: space-around
           contentGutter: 16
         blocks:
           - _ref: 

@@ -18,7 +18,6 @@ license: Apache-2.0
 
 cli:
   disableTelemetry: true
-  # resolver: resolvers/mdResolver.js
   watchIgnore:
     - public/sitemap.xml
 config:

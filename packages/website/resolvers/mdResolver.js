@@ -46,9 +46,7 @@ async function mdResolver(refPath, vars) {
   });
 
   // returns array of all markdown and parsed ldf blocks
-  const allEntries = parsedMarkdown.filter((object) => !!object);
-
-  return allEntries;
+  return parsedMarkdown.filter((object) => !!object);
 
 }
 

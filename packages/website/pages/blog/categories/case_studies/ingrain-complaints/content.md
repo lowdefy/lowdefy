@@ -31,7 +31,7 @@ Ingrain needed a bespoke platform built specifically around their needs that int
 # Lowdefy's Solution
 
 ```yaml ldf
-_ref: pages/blog/categories/case_studies/ingrain-complaints/cardBlock.yaml
+_ref: pages/blog/categories/case_studies/ingrain-complaints/solutionsCardBlock.yaml
 ```
 
 ## 1. Simplification
