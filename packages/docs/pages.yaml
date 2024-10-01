@@ -1,4 +1,5 @@
 - _ref: introduction.yaml
+- _ref: howto/generate-pdf.yaml
 - _ref: tutorial/tutorial-start.yaml
 - _ref: tutorial/tutorial-create-page.yaml
 - _ref: tutorial/tutorial-add-blocks.yaml
