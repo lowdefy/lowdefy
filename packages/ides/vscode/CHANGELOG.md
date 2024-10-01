@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.3.0
+
+### Minor Changes
+
+- fe1347f6d: Init VSCode extension with syntax highlighting for yaml.
+
+### Patch Changes
+
+- fe1347f6d: VSCode extention to read activeAppRoot from local dev server for clickable \_ref links.
+
 ## 1.0.2
 
 ### Patch Changes

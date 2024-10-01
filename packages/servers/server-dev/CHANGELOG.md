@@ -1,5 +1,38 @@
 # Change Log
 
+## 4.3.0
+
+### Patch Changes
+
+- fe1347f6d: VSCode extention to read activeAppRoot from local dev server for clickable \_ref links.
+  - @lowdefy/api@4.3.0
+  - @lowdefy/build@4.3.0
+  - @lowdefy/client@4.3.0
+  - @lowdefy/engine@4.3.0
+  - @lowdefy/layout@4.3.0
+  - @lowdefy/actions-core@4.3.0
+  - @lowdefy/blocks-aggrid@4.3.0
+  - @lowdefy/blocks-antd@4.3.0
+  - @lowdefy/blocks-basic@4.3.0
+  - @lowdefy/blocks-color-selectors@4.3.0
+  - @lowdefy/blocks-echarts@4.3.0
+  - @lowdefy/blocks-loaders@4.3.0
+  - @lowdefy/blocks-markdown@4.3.0
+  - @lowdefy/blocks-qr@4.3.0
+  - @lowdefy/connection-axios-http@4.3.0
+  - @lowdefy/operators-change-case@4.3.0
+  - @lowdefy/operators-diff@4.3.0
+  - @lowdefy/operators-js@4.3.0
+  - @lowdefy/operators-moment@4.3.0
+  - @lowdefy/operators-mql@4.3.0
+  - @lowdefy/operators-nunjucks@4.3.0
+  - @lowdefy/operators-uuid@4.3.0
+  - @lowdefy/operators-yaml@4.3.0
+  - @lowdefy/plugin-next-auth@4.3.0
+  - @lowdefy/block-utils@4.3.0
+  - @lowdefy/helpers@4.3.0
+  - @lowdefy/node-utils@4.3.0
+
 ## 4.2.2
 
 ### Patch Changes

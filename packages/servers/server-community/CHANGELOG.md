@@ -1,5 +1,22 @@
 # Change Log
 
+## 4.3.0
+
+### Patch Changes
+
+- @lowdefy/api@4.3.0
+- @lowdefy/client@4.3.0
+- @lowdefy/layout@4.3.0
+- @lowdefy/actions-core@4.3.0
+- @lowdefy/blocks-antd@4.3.0
+- @lowdefy/blocks-basic@4.3.0
+- @lowdefy/blocks-loaders@4.3.0
+- @lowdefy/operators-js@4.3.0
+- @lowdefy/plugin-next-auth@4.3.0
+- @lowdefy/block-utils@4.3.0
+- @lowdefy/helpers@4.3.0
+- @lowdefy/node-utils@4.3.0
+
 ## 4.2.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.3.0
+
+### Patch Changes
+
+- @lowdefy/helpers@4.3.0
+- @lowdefy/node-utils@4.3.0
+
 ## 4.2.2
 
 ### Patch Changes

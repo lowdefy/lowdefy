@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/connection-redis",
-  "version": "4.2.2",
+  "version": "4.3.0",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -45,12 +45,12 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.2.2",
+    "@lowdefy/helpers": "4.3.0",
     "redis": "4.6.11"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
-    "@lowdefy/ajv": "4.2.2",
+    "@lowdefy/ajv": "4.3.0",
     "@swc/cli": "0.1.63",
     "@swc/core": "1.3.99",
     "@swc/jest": "0.2.29",
