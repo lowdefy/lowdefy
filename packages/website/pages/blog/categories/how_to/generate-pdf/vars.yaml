@@ -1,0 +1,13 @@
+author:
+  id: kaamraan
+  name: Kaamraan Raboobee
+  image: ./images/profiles/kaamraan.jpg
+post:
+  id: generate-pdf
+  slug: generate-pdf
+  category: how_to
+  title: How to Generate PDFs Using Lowdefy
+  subtitle: Extending Functionality with Custom Actions
+  description: Follow along as we create a custom action to generate PDF documents, directly from a Lowdefy app.
+  image: ./images/blogs/generate-pdf.jpg
+  date: 7 October 2024

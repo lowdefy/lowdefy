@@ -20,4 +20,5 @@
 - _ref: pages/blog/sections/blog.yaml
 - _ref: pages/blog/categories/releases/lowdefy-v4-launch.yaml
 - _ref: pages/blog/categories/case_studies/ingrain-complaints.yaml
+- _ref: pages/blog/categories/how_to/generate-pdf.yaml
 - _ref: pages/privacy-policy/privacy-policy.yaml

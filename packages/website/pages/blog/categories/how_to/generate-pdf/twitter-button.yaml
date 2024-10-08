@@ -1,0 +1,17 @@
+id: twitter-button
+type: Button
+style:
+  textAlign: center
+  paddingTop: 10px
+  paddingBottom: 10px
+properties:
+  title: Share this post
+  icon: UploadOutlined
+  color: '#6293F8'
+events:
+  onClick:
+    - id: share_twitter
+      type: Link
+      params:
+        newTab: true
+        url: https://twitter.com/intent/tweet?url=https%3A%2F%2Fdocs.lowdefy.com%2Fgenerate-pdf-document-from-data&text=Learn%20to%20generate%20pdf%20documents%20from%20data%20using%20@lowdefy%20-%20an%20open-source%2C%20self-hosted%2C%20low-code%20from%20work%20to%20build%20web%20apps%20and%20internal%20tools%20with%20ease.%20&hashtags=opensource%20%23selfhosted%20%23lowcode%20%23internaltools

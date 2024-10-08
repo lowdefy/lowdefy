@@ -1,0 +1,58 @@
+id: generate_invoice
+type: Button
+style:
+  textAlign: center
+properties:
+  title: Generate Invoice
+  icon: DownloadOutlined
+  color: '#6293F8'
+events:
+  onMount:
+    - id: init_data
+      type: SetState
+      params:
+        invoice:
+          id: '0030135'
+          account_id: 'A-11344'
+          inv_date:
+            _date: now
+          subtotal: 397.034
+          discount: -19.8517
+          vat: 59.5551
+          total: 436.7374
+          balance: 413.2330
+          customer:
+            name: Service Center
+            phone: +123-456-7890
+            vat_nmr: 12-333-4567
+            address: |
+              123 Main St.
+              Anytown
+              CA
+              US
+              9999
+          services:
+            - name: Hosting and Maintannce
+              qty: 1
+              price: 235.90
+              code: X12-33C
+            - name: Developer Hours
+              qty: 16
+              price: 60.345
+              code: X12-39A
+            - name: Designer Hours
+              qty: 4
+              price: 40.122
+              code: X12-21A
+            - name: Project Management
+              qty: 2
+              price: 60.667
+              code: X12-49A
+  onClick:
+    - id: generate_pdf
+      type: JsAction
+      params:
+        name: pdfMake
+        args:
+          _ref: howto/generatePdf/inv_template.yaml
+

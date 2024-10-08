@@ -1,0 +1,8 @@
+id: loom-video
+type: DangerousMarkdown
+properties:
+    DOMPurifyOptions:
+      ADD_TAGS:
+        - iframe
+    content: 
+      _ref: pages/blog/categories/how_to/generate-pdf/loom-video.html 

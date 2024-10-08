@@ -1,0 +1,5 @@
+
+_ref:
+  path: pages/blog/components/post_page/post_structure.yaml.njk
+  vars: 
+    _ref: pages/blog/categories/how_to/generate-pdf/vars.yaml

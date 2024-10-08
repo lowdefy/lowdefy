@@ -1,0 +1,652 @@
+
+# Copyright 2020-2021 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blog.yaml.njk
+  vars:
+    pageId: generate-pdf-document-from-data
+    pageTitle: How to generate PDFs using Lowdefy
+    section: How To
+    filePath: howto/generate-pdf.yaml
+    pageImage: /public/images/howto/header_generate_pdf.jpg
+    discussionsLink: https://github.com/lowdefy/lowdefy/discussions/889
+    authorProfile: /public/images/authors/gervwyk.jpeg
+    authorName: |
+      <div>Gerrie van Wyk</div>
+      <a href="https://twitter.com/gervwyk">Follow @gervwyk on Twitter</a>
+    articleLinks:
+      - title: Generate CSV in Lowdefy
+        pageId: generate-csv-files-from-data
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            It is possible to extend the functionality of Lowdefy beyond the framework's current capabilities by creating custom blocks, actions or operators. In this how-to example we will create a custom action to generate PDF documents client side or in the browser.
+
+            The full project folder for this how-to is available at:
+            https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
+
+            To see how this works, click this button to generate a PDF of an example invoice that will be discussed in this how-to.
+
+      - id: pdf_generate_button
+        type: Button
+        style:
+          textAlign: center
+        properties:
+          title: Generate & Download PDF
+          icon: DownloadOutlined
+          color: '#6293F8'
+        events:
+          onMount:
+            - id: init_data
+              type: SetState
+              params:
+                invoice:
+                  id: '0030135'
+                  account_id: 'A-11344'
+                  inv_date:
+                    _date: now
+                  subtotal: 397.034
+                  discount: -19.8517
+                  vat: 59.5551
+                  total: 436.7374
+                  balance: 413.2330
+                  customer:
+                    name: Service Center
+                    phone: +123-456-7890
+                    vat_nmr: 12-333-4567
+                    address: |
+                      123 Main St.
+                      Anytown
+                      CA
+                      US
+                      9999
+                  services:
+                    - name: Hosting and Maintannce
+                      qty: 1
+                      price: 235.90
+                      code: X12-33C
+                    - name: Developer Hours
+                      qty: 16
+                      price: 60.345
+                      code: X12-39A
+                    - name: Designer Hours
+                      qty: 4
+                      price: 40.122
+                      code: X12-21A
+                    - name: Project Management
+                      qty: 2
+                      price: 60.667
+                      code: X12-49A
+          onClick:
+            - id: generate_pdf
+              type: JsAction
+              params:
+                name: pdfMake
+                args:
+                  _ref: howto/generatePdf/inv_template.yaml
+
+      - id: md2
+        type: MarkdownWithCode
+        properties:
+          content: |
+            Now click this button to share this article on Twitter 😉
+      - id: twitter_button
+        type: Button
+        style:
+          textAlign: center
+        properties:
+          title: Share this post
+          icon: UploadOutlined
+          color: '#6293F8'
+        events:
+          onClick:
+            - id: share_twitter
+              type: Link
+              params:
+                newTab: true
+                url: https://twitter.com/intent/tweet?url=https%3A%2F%2Fdocs.lowdefy.com%2Fgenerate-pdf-document-from-data&text=Learn%20to%20generate%20pdf%20documents%20from%20data%20using%20@lowdefy%20-%20an%20open-source%2C%20self-hosted%2C%20low-code%20from%20work%20to%20build%20web%20apps%20and%20internal%20tools%20with%20ease.%20&hashtags=opensource%20%23selfhosted%20%23lowcode%20%23internaltools
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Generate PDF TLDR;
+
+            1. Select a client side PDF library and add the JavaScript to your Lowdefy app, we'll be using [pdfMake](https://github.com/bpampuch/pdfmake).
+            2. Register a [JsAction](/JsAction) method to generate the PDF document.
+            3. Load the custom JavaScript using a script tag.
+            4. Add a button with a onClick action to call the generate PDF method.
+            5. Define the content of your PDF and add data variables as needed.
+      - id: md_vid
+        type: DangerousMarkdown
+        properties:
+            DOMPurifyOptions:
+              ADD_TAGS:
+                - iframe
+            content: |
+              <div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/771948a63b0240238d7edb0d0a9a59e7" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+      - id: md2_1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Background
+
+            Generating PDFs are often required in workflow applications where data needs to be parsed into a document. These type of documents can be anything from quotes or invoices to contracts or even recipes. Making these documents represent the latest data, or exactly match the desired formatting can be tricky and time consuming. Auto generated PDFs are a great solution.
+
+            > This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
+            >  1) Create a empty folder.
+            >  2) Open your terminal or cmd and `cd` to your empty folder.
+            >  3) Run `npx lowdefy@latest init && npx lowdefy@latest dev` to initialize and start your Lowdefy app development server.
+
+            ## 1. Choosing a open-source PDF library
+
+            The power of open-source is mind blowing. There are a number of well tested, popular, easy to use and free PDF generating libraries that we can possibly use. We'll be using pdfMake since it is well documented, and simple configuration settings. Some of the popular ones are:
+              - [pdfMake](https://github.com/bpampuch/pdfmake)
+              - [JsPDF](https://github.com/MrRio/jsPDF)
+              - [PDFKit](https://github.com/foliojs/pdfkit)
+              - [Puppeteer](https://github.com/puppeteer/puppeteer)
+              - [PDF-lib](https://github.com/Hopding/pdf-lib)
+
+            > If you use open-source libraries to automate your business and save you time, please try to thank the maintainers by contributing where possible or simply providing sponsorship. Look for the sponsorship links usually found in the project readme files.
+
+            ## 2. Register a custom JavaScript Action
+
+            Lowdefy actions are triggered by page events, like `onClick` when a user clicks a button, or `onEnter` when the page loads. Lowdefy comes with a list of predefined actions, however, sometimes custom code is the best awnser. Let's create a custom action which will generate a PDF based on pdfMake config.
+
+            1) Create a `public` folder inside your Lowdefy working directory.
+            2) Since all content in the `public` folder is served by the Lowdefy server, simply create a `pdfMake.js` file inside the `public` folder.
+            3) Add this script to the file and save.
+
+            ###### /public/modules/pdfMake.js
+            ```js
+            import importUmd from './importUmd.js';
+            import vfs from './vfs_fonts.js';
+            const pdfMake = await importUmd(
+              `https://cdn.jsdelivr.net/npm/pdfmake@0.2.2/build/pdfmake.min.js`
+            );
+            const pdfMakeFn = async (
+              context,
+              filename,
+              docDefinition,
+              tableLayouts,
+              fonts
+            ) => {
+              await pdfMake
+                .createPdf(docDefinition, tableLayouts, fonts, vfs)
+                .download(filename);
+            };
+            window.lowdefy.registerJsAction('pdfMake', pdfMakeFn);
+            ```
+
+            This script does a few things, first, it imports [importUmd.js](/public/modules/importUmd.js) and the [vfs_fonts.js](/public/modules/vfs_fonts.js) file also from our `public` folder. Then it loads [pdfMake](https://cdn.jsdelivr.net/npm/pdfmake@0.2.2/build/pdfmake.min.js) from [jsdelivr](https://www.jsdelivr.com/). Then we create an async function `pdfMakeFn` which takes some parameters like the `filename` and `docDefinition` and passes it to pdfMake as it is being called.
+
+            Finally, it registers the `pdfMakeFn` function as a custom [JsAction](/JsAction) using `window.lowdefy.registerJsAction`. This gives our new method to the Lowdefy logic engine to use.
+
+            > IMPORTANT: We mentioned two additional files here. [`importUmd.js`](/public/modules/importUmd.js) is a helper function to load umd modules from a source, and [`vfs_fonts.js`](/public/modules/vfs_fonts.js) is a virtualized font which we provide to pdfMake. Download these files and copy them into your `public` folder.
+
+            ## 3. Load the custom JavaScript using a script tag
+
+            With our JavaScript ready, we need to load the JavaScript onto our page in order for it to be evaluated by the browser.
+
+            Create a `my_header.html` file inside your project route and add the following HTML:
+
+            ###### /my_header.html
+            ```html
+            <script defer type="module" src="/public/modules/pdfMake.js"></script>
+            ```
+
+            This loads the `pdfMake.js` module file into HTML.
+
+            Also, add the HTML file to your Lowdefy application header. To do this, use the `app.html.appendHead` Lowdefy config property. Your `lowdefy.yaml` file should look something like this:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            name: Generate a PDF
+            lowdefy: {{ version }}
+
+            app:
+              html:
+                appendHead:
+                  _ref: my_header.html
+            ```
+
+            Congratulations 🎉 your custom JSAction is now available in you Lowdefy app and ready to use.
+
+            Up until this part, this how-to has been very generic and will likely be the same for most apps using pdfMake to generate PDFs.
+
+            In the next part we'll configure our example app to generate a PDF.
+
+            ## 4. Generate a PDF when a button is clicked
+
+            Next, we want to add a button to the page, and when the button is clicked, our PDF will be generated and downloaded, client side.
+
+            Let's make this quick and simple, we'll change our Lowdefy config to:
+
+            ###### /lowdefy.yaml
+            ```yaml
+            name: Generate a PDF
+            lowdefy: 3.23.3
+
+            app:
+              html:
+                appendHead:
+                  _ref: my_header.html
+
+            pages:
+              - id: generate-a-pdf
+                type: PageHeaderMenu
+                blocks:
+                  - id: generate_pdf_button
+                    type: Button
+                    properties:
+                      title: Download PDF
+                      icon: DownloadOutlined
+                    events:
+                      onClick:
+                        - id: make_pdf
+                          type: JsAction
+                          params:
+                            name: pdfMake
+                            args:
+                              - my_file_name.pdf
+                              - pageMargins: 50
+                                defaultStyle:
+                                  fontSize: 10
+                                content:
+                                  - text: This pdf has been generated with Lowdefy and pdfMake.
+                                    bold: true
+            ```
+
+            When you run this app, you'll have a 'Download PDF' button, and when clicked, a pdf will be generated and downloaded. This example should work like the button below.
+
+      - id: make_pdf_button
+        type: Button
+        style:
+          textAlign: center
+        properties:
+          title: Download PDF
+          icon: DownloadOutlined
+        events:
+          onClick:
+            - id: make_pdf
+              type: JsAction
+              params:
+                name: pdfMake
+                args:
+                  - my_file_name.pdf
+                  - pageMargins: 50
+                    defaultStyle:
+                      fontSize: 10
+                    content:
+                      - text: This pdf has been generated with Lowdefy and pdfMake.
+                        bold: true
+      - id: md4
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## 4. Define the content of the PDF
+
+            Finally to demonstrate how powerful this can be, we'll build out our pdfMake config to generate an invoice. In practice we would request the account data from our database and then pass the data to pdfMake when the button is clicked. For this example, we'll just hard code the invoice data and set it to the page state. The full project folder for this example is available at: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
+
+            ###### /lowdefy.yaml
+            ```yaml
+            lowdefy: 3.23.3
+            name: Generate PDF from data with Lowdefy
+
+            app:
+              html:
+                appendHead:
+                  _ref: my_header.html
+
+            pages:
+              - id: example
+                type: PageHeaderMenu
+                properties:
+                  title: Example
+                events:
+                  onEnter:
+                    - id: init_data
+                      type: SetState
+                      params:
+                        invoice:
+                          id: '0030135'
+                          account_id: 'A-11344'
+                          inv_date:
+                            _date: now
+                          subtotal: 397.034
+                          discount: -19.8517
+                          vat: 59.5551
+                          total: 436.7374
+                          balance: 413.2330
+                          customer:
+                            name: Service Center
+                            phone: +123-456-7890
+                            vat_nmr: 12-333-4567
+                            address: |
+                              123 Main St.
+                              Anytown
+                              CA
+                              US
+                              9999
+                          services:
+                            - name: Hosting and Maintannce
+                              qty: 1
+                              price: 235.90
+                              code: X12-33C
+                            - name: Developer Hours
+                              qty: 16
+                              price: 60.345
+                              code: X12-39A
+                            - name: Designer Hours
+                              qty: 4
+                              price: 40.122
+                              code: X12-21A
+                            - name: Project Management
+                              qty: 2
+                              price: 60.667
+                              code: X12-49A
+                areas:
+                  content:
+                    justify: center
+                    blocks:
+                      - id: docs_button
+                        type: Button
+                        properties:
+                          size: large
+                          title: Generate Invoice
+                          color: '#1890ff'
+                        events:
+                          onClick:
+                            - id: make_pdf
+                              type: JsAction
+                              params:
+                                name: pdfMake
+                                args:
+                                  _ref: inv_template.yaml
+            ```
+
+            Note that we have split out the pdfMake config into a seperate file `inv_template.yaml`. This makes it more readible and the same template used in various parts of our app config. This is implemented using the [`_ref`](/_ref) operator.
+
+            ###### `/inv_template.yaml`
+            ```yaml
+            - _nunjucks:
+                on:
+                  _state: invoice
+                template: 'INV-{{ id }}-{{ inv_date | date("DD-MM-YYYY") }}.pdf'
+            - pageMargins: [50, 25, 50, 70]
+              defaultStyle:
+                fontSize: 10
+              images:
+                logo:
+                  _string.concat:
+                    - _location: origin
+                    - /public/logo_example.png
+              footer:
+                _function:
+                  - columns:
+                      - qr:
+                          _string.concat:
+                            - _location: origin
+                            - /invoice?id="
+                            - _state: invoice.id
+                            - '"'
+                        margin: [50, 0, 0, 0]
+                        fit: '64'
+                      - alignment: 'right'
+                        fontSize: 7
+                        margin: [0, 0, 50, 0]
+                        text:
+                          __nunjucks:
+                            template: 'Page {{ page }} of {{ total }}'
+                            on:
+                              page:
+                                __args: 0
+                              total:
+                                __args: 1
+              content:
+                - columns:
+                    - width: 'auto'
+                      margin: [0, 20, 0, 0]
+                      stack:
+                        - fontSize: 9
+                          text: |
+
+                        - fontSize: 7
+                          text: |
+                            Example Services Ltd.
+                            112 Street Name
+                            City, State 12345
+                            Country
+                            001-AB
+
+                            +00-1234-5566
+                            info@example.com
+
+                            Vat Number: 444 5555 0000
+
+                    - width: '*'
+                      text: ' '
+                    - width: 110
+                      stack:
+                        - width: 110
+                          image: logo
+                        - margin: [0, 5, 0, 0]
+                          alignment: right
+                          fontSize: 7
+                          text: |
+                            Example Services Ltd.
+                            Reg Number: 2001/22224/09
+
+                - margin: [0, 20, 0, 20]
+                  text: Customer Invoice
+                  bold: true
+                  alignment: center
+                  fontSize: 14
+                - columns:
+                    - width: 150
+                      bold: true
+                      text: |
+                        INVOICE NUMBER:
+                        DATE ISSUED:
+                        ACCOUNT NUMBER:
+                    - width: '*'
+                      text:
+                        _nunjucks:
+                          template: |
+                            {{ id }}
+                            {{ inv_date | date("YYYY/MM/DD") }}
+                            {{ account_id }}
+                          on:
+                            _state: invoice
+                    - width: 150
+                      bold: true
+                      text: |
+                        CUSTOMER:
+                        ADDRESS:
+                    - width: '*'
+                      text:
+                        _nunjucks:
+                          template: |
+                            {{ customer.name }}
+                            {{ customer.address }}
+                          on:
+                            _state: invoice
+
+                - layout: 'lightHorizontalLines'
+                  margin: [0, 10, 0, 0]
+                  table:
+                    widths: [70, '*', 70, 70, 70]
+                    headerRows: 1
+                    body:
+                      _json.parse:
+                        _nunjucks:
+                          on:
+                            services:
+                              _state: invoice.services
+                          template: |
+                            [
+                              [
+                                { "text": "ITEM CODE", "bold": true },
+                                { "text": "SERVICE", "bold": true },
+                                { "text": "UNIT PRICE", "bold": true, "alignment": "right"  },
+                                { "text": "QTY", "bold": true, "alignment": "right"  },
+                                { "text": "COST", "bold": true, "alignment": "right" }
+                              ],
+                              {% for item in services %}
+                              [
+                                "{{ loop.index }}: {{ item.code }}",
+                                "{{ item.name | safe }}",
+                                { "text": "{{ ( item.price / item.qty ).toFixed(2) }}", "alignment": "right"},
+                                { "text": "{{ item.qty }}", "alignment": "right"},
+                                { "text": "{{ item.price.toFixed(2) }}", "alignment": "right"}
+                                {% if loop.last %} ] {% else %} ], {% endif %}
+                              {% endfor %}
+                            ]
+                - layout: 'headerLineOnly'
+                  margin: [0, -5, 0, 0]
+                  table:
+                    widths: ['*', 70, 70, 70]
+                    headerRows: 1
+                    body:
+                      - - ''
+                        - ''
+                        - ''
+                        - ''
+                      - - ''
+                        - alignment: right
+                          text: 'Subtotal:'
+                        - ''
+                        - alignment: right
+                          text:
+                            _number.toFixed:
+                              - _state: invoice.subtotal
+                              - 2
+                      - - ''
+                        - alignment: right
+                          text: 'Discount (5%):'
+                        - ''
+                        - alignment: right
+                          text:
+                            _number.toFixed:
+                              - _state: invoice.discount
+                              - 2
+                      - - ''
+                        - alignment: right
+                          text: 'VAT (15%):'
+                        - ''
+                        - alignment: right
+                          text:
+                            _number.toFixed:
+                              - _state: invoice.vat
+                              - 2
+                      - - ''
+                        - alignment: right
+                          text: 'Total:'
+                        - ''
+                        - alignment: right
+                          text:
+                            _number.toFixed:
+                              - _state: invoice.total
+                              - 2
+                - layout: 'headerLineOnly'
+                  margin: [0, -5, 0, 0]
+                  table:
+                    widths: ['*', 70, 70, 70]
+                    headerRows: 1
+                    body:
+                      - - ''
+                        - ''
+                        - ''
+                        - ''
+                      - - ''
+                        - alignment: right
+                          bold: true
+                          text: 'BALANCE DUE:'
+                        - ''
+                        - alignment: right
+                          bold: true
+                          text:
+                            _number.toFixed:
+                              - _state: invoice.balance
+                              - 2
+            ```
+
+            The above example will generate a PDF invoice with a logo, a QR code, a footer, a header, a table with the invoice details, and a table with the invoice items. Click the button to see this in action.
+
+      - id: generate_invoice
+        type: Button
+        style:
+          textAlign: center
+        properties:
+          title: Generate Invoice
+          icon: DownloadOutlined
+          color: '#6293F8'
+        events:
+          onMount:
+            - id: init_data
+              type: SetState
+              params:
+                invoice:
+                  id: '0030135'
+                  account_id: 'A-11344'
+                  inv_date:
+                    _date: now
+                  subtotal: 397.034
+                  discount: -19.8517
+                  vat: 59.5551
+                  total: 436.7374
+                  balance: 413.2330
+                  customer:
+                    name: Service Center
+                    phone: +123-456-7890
+                    vat_nmr: 12-333-4567
+                    address: |
+                      123 Main St.
+                      Anytown
+                      CA
+                      US
+                      9999
+                  services:
+                    - name: Hosting and Maintannce
+                      qty: 1
+                      price: 235.90
+                      code: X12-33C
+                    - name: Developer Hours
+                      qty: 16
+                      price: 60.345
+                      code: X12-39A
+                    - name: Designer Hours
+                      qty: 4
+                      price: 40.122
+                      code: X12-21A
+                    - name: Project Management
+                      qty: 2
+                      price: 60.667
+                      code: X12-49A
+          onClick:
+            - id: generate_pdf
+              type: JsAction
+              params:
+                name: pdfMake
+                args:
+                  _ref: howto/generatePdf/inv_template.yaml
+      - id: md5
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## Conclusion
+
+            This how-to aims to demonstrate how easy custom JsActions in Lowdefy can be. With Lowdefy's ability to reference data and use JavaScript libraries like [pdfMake](https://github.com/bpampuch/pdfmake), Lowdefy becomes a superpower capable of even generating advanced PDFs with ease. Check out the project folder for this how-to and why not give it a try: https://github.com/lowdefy/lowdefy/tree/main/packages/docs/howto/generatePdf
