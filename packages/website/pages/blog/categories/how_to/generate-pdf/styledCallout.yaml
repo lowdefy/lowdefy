@@ -1,0 +1,15 @@
+id: callout
+type: DangerousHtml
+properties:
+  html: >
+    <div class="info-callout">
+    <h4>Note:</h4>
+      
+    This how-to assumes that you are already running a Lowdefy app locally in dev mode. If not:
+
+      <ol>
+        <li>Create a empty folder</li>
+        <li>Open your terminal or cmd and cd to your empty folder.</li>
+        <li>Run `npx lowdefy@latest init && npx lowdefy@latest dev` to initialize and start your Lowdefy app development server.</li>
+      </ol>
+    </div>

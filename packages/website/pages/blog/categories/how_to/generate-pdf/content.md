@@ -1,5 +1,9 @@
 # Actions and Events in Lowdefy
 
+```yaml ldf
+_ref: pages/blog/categories/how_to/generate-pdf/styledCallout.yaml
+```
+
 Lowdefy `actions` are triggered by page `events`.
 
 Lowdefy includes a list of predefined actions, like the ones below:
@@ -45,6 +49,8 @@ The example we'll be covering in this tutorial adds the functionality below:
 
 Click the button below for an example:
 
+@todo: replace with pdf button
+
 ```yaml ldf
 _ref: pages/blog/categories/how_to/generate-pdf/twitter-button.yaml
 ```
@@ -64,6 +70,8 @@ _ref: pages/blog/categories/how_to/generate-pdf/twitter-button.yaml
 3. Load the custom JavaScript using a script tag.
 4. Add a button with a onClick action to call the generate PDF method.
 5. Define the content of your PDF and add data variables as needed.
+
+@todo: styling
 
 ```yaml ldf
 _ref: pages/blog/categories/how_to/generate-pdf/loom-video.yaml
