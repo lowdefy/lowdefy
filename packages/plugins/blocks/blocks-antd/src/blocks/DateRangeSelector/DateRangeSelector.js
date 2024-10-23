@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { blockDefaultProps } from '@lowdefy/block-utils';
@@ -42,6 +42,7 @@ const DateRangeSelector = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Label
       blockId={blockId}
@@ -53,7 +54,7 @@ const DateRangeSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <RangePicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
@@ -63,7 +64,7 @@ const DateRangeSelector = ({
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM-DD'}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               separator={properties.separator ?? '~'}
               size={properties.size}
               status={validation.status}

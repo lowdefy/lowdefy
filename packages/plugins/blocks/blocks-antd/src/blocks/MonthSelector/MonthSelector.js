@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { blockDefaultProps } from '@lowdefy/block-utils';
@@ -36,6 +36,7 @@ const MonthSelector = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Label
       blockId={blockId}
@@ -47,7 +48,7 @@ const MonthSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <MonthPicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
@@ -57,7 +58,7 @@ const MonthSelector = ({
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM'}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder ?? 'Select Month'}
               size={properties.size}
               status={validation.status}
