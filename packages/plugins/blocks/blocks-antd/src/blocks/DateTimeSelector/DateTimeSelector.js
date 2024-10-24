@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { type } from '@lowdefy/helpers';
@@ -34,6 +34,7 @@ const DateTimeSelector = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   const timeUnit = !type.isString(properties.timeFormat)
     ? 'minute'
     : properties.timeFormat === 'HH:mm:ss'
@@ -63,7 +64,7 @@ const DateTimeSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <DatePicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
@@ -73,7 +74,7 @@ const DateTimeSelector = ({
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-MM-DD HH:mm'}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder ?? 'Select Date & Time'}
               showNow={properties.showNow}
               showToday={properties.showToday}
