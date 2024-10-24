@@ -1,5 +1,23 @@
 # Change Log
 
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [3e574857c]
+  - @lowdefy/blocks-antd@4.3.1
+  - @lowdefy/api@4.3.1
+  - @lowdefy/client@4.3.1
+  - @lowdefy/layout@4.3.1
+  - @lowdefy/actions-core@4.3.1
+  - @lowdefy/blocks-basic@4.3.1
+  - @lowdefy/blocks-loaders@4.3.1
+  - @lowdefy/operators-js@4.3.1
+  - @lowdefy/plugin-next-auth@4.3.1
+  - @lowdefy/block-utils@4.3.1
+  - @lowdefy/helpers@4.3.1
+  - @lowdefy/node-utils@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes

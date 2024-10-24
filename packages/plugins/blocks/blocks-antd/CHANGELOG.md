@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.3.1
+
+### Patch Changes
+
+- 3e574857c: Bug fix: Randomize popup dom element ids to better attach on block reuse on page.
+  - @lowdefy/block-utils@4.3.1
+  - @lowdefy/helpers@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes
