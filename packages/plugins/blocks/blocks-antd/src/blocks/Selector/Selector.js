@@ -37,6 +37,7 @@ const Selector = ({
   value,
 }) => {
   const [fetchState, setFetch] = useState(false);
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   const uniqueValueOptions = getUniqueValues(properties.options || []);
   return (
     <Label
@@ -49,14 +50,14 @@ const Selector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               mode="single"
               autoFocus={properties.autoFocus}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               disabled={properties.disabled || loading}
               placeholder={get(properties, 'placeholder', { default: 'Select item' })}
               status={validation.status}
