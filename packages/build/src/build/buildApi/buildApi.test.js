@@ -160,10 +160,10 @@ test('stage type not a string', () => {
     api: [
       {
         id: 'api1',
-        type: 'Container',
-        blocks: [
+        type: 'Api',
+        stages: [
           {
-            id: 'blockId',
+            id: 'stageId',
             type: 1,
           },
         ],
@@ -171,7 +171,7 @@ test('stage type not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Stage type is not a string at "blockId" on endpoint "api1". Received 1.'
+    'Stage type is not a string at "stageId" on endpoint "api1". Received 1.'
   );
 });
 
