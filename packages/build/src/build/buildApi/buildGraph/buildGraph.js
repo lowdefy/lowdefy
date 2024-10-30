@@ -17,16 +17,18 @@
 import { type } from '@lowdefy/helpers';
 import buildStage from './buildStage.js';
 import buildControl from './buildControl.js';
+import { validControlKey } from './controlKeys.js';
 
 function buildGraph(stage, pageContext) {
   if (type.isArray(stage)) {
-    stage.array.forEach((item) => {
       buildGraph(item, pageContext);
+    stage.forEach((item) => {
     });
   }
   if (type.isObject(stage)) {
     if (Object.keys(stage)[0]?.startsWith(':')) {
       buildControl(stage, pageContext);
+    if (validControlKey(Object.keys(stage))) {
     } else {
       buildStage(stage, pageContext);
     }
@@ -35,6 +37,9 @@ function buildGraph(stage, pageContext) {
   throw new Error(
     'Expected api stage to be of type object or array, found',
     JSON.stringify(type.kindOf(stage))
+    `Expected endpoint stage to be of type object or array, found ${JSON.stringify(
+      type.typeOf(stage)
+    )}`
   );
 }
 

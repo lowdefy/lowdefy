@@ -14,18 +14,8 @@
   limitations under the License.
 */
 
-import { graphKey } from './controlKeys.js';
-import buildGraph from './buildGraph.js';
-import countControl from './countControl.js';
-
-function buildControl(stage, pageContext) {
-  Object.keys(stage).array.forEach((key) => {
-      buildGraph(stage[key], pageContext);
-    if (graphKey(key)) {
-    } else {
-      countControl(key);
-    }
-  });
+function countControl(control, { typeCounters }) {
+  typeCounters.control.increment(control);
 }
 
-export default buildControl;
+export default countControl;
