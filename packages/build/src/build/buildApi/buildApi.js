@@ -20,11 +20,12 @@ import buildEndpoint from './buildEndpoint.js';
 
 function buildApi({ components, context }) {
   const api = type.isArray(components.api) ? components.api : [];
-  const checkDuplicateApiId = createCheckDuplicateId({
-    message: 'Duplicate apiId "{{ id }}".',
+  const checkDuplicateEndpointId = createCheckDuplicateId({
+    message: 'Duplicate endpointId "{{ id }}".',
   });
-  api.map((api, index) => buildEndpoint({ api, index, context, checkDuplicateApiId }));
-  api.id = `api:${api.apiId}`;
+  api.map((endpoint, index) =>
+    buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId })
+  );
 
   return components;
 }

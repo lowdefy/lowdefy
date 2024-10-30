@@ -50,7 +50,7 @@ test('buildApi api not an array', () => {
   });
 });
 
-test('api does not have an id', () => {
+test('endpoint does not have an id', () => {
   const components = {
     api: [
       {
@@ -58,10 +58,10 @@ test('api does not have an id', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Api id missing at api 0.');
+  expect(() => buildApi({ components, context })).toThrow('Endpoint id missing at endpoint 0.');
 });
 
-test('api id is not a string', () => {
+test('endpoint id is not a string', () => {
   const components = {
     api: [
       {
@@ -71,11 +71,11 @@ test('api id is not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Api id is not a string at api 0. Received true.'
+    'Endpoint id is not a string at endpoint 0. Received true.'
   );
 });
 
-test('Throw on duplicate api ids', () => {
+test('Throw on duplicate endpoint ids', () => {
   const components = {
     api: [
       {
@@ -88,10 +88,10 @@ test('Throw on duplicate api ids', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Duplicate apiId "api_1".');
+  expect(() => buildApi({ components, context })).toThrow('Duplicate endpointId "api_1".');
 });
 
-test('request does not have an id', () => {
+test('stage does not have an id', () => {
   const components = {
     api: [
       {
@@ -105,97 +105,75 @@ test('request does not have an id', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Stage id missing at api "api1".');
+  expect(() => buildApi({ components, context })).toThrow('Stage id missing at endpoint "api1".');
 });
 
-// test('block id is not a string', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 'Api',
-//         stages: [
-//           {
-//             id: true,
-//             type: 'MongoDBUpdateOne',
-//           },
-//         ],
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Stage id is not a string at api "api1". Received true.'
-//   );
-// });
+test('stage id is not a string', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        stages: [
+          {
+            id: true,
+            type: 'MongoDBUpdateOne',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Stage id is not a string at endpoint "api1". Received true.'
+  );
+});
 
-// test('api type missing', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Block type is not defined at "api1" on api "api1".'
-//   );
-// });
+test('api type missing', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint type is not defined at "api1" on endpoint "api1".'
+  );
+});
 
-// test('block type missing', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 'Container',
-//         auth,
-//         blocks: [
-//           {
-//             id: 'blockId',
-//           },
-//         ],
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Block type is not defined at "blockId" on api "api1".'
-//   );
-// });
+test('api type not a string', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 1,
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Endpoint type is not a string at "api1" on endpoint "api1". Received 1.'
+  );
+});
 
-// test('api type not a string', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 1,
-//         auth,
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Block type is not a string at "api1" on api "api1". Received 1.'
-//   );
-// });
-
-// test('block type not a string', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 'Container',
-//         auth,
-//         blocks: [
-//           {
-//             id: 'blockId',
-//             type: 1,
-//           },
-//         ],
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Block type is not a string at "blockId" on api "api1". Received 1.'
-//   );
-// });
+test('stage type not a string', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Container',
+        blocks: [
+          {
+            id: 'blockId',
+            type: 1,
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Stage type is not a string at "blockId" on endpoint "api1". Received 1.'
+  );
+});
 
 // test('no blocks on api', () => {
 //   const components = {

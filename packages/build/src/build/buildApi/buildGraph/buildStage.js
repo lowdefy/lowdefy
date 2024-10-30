@@ -20,10 +20,10 @@ import validateStage from './validateStage.js';
 import setStageId from './setStageId.js';
 import countStageTypes from './countStageTypes.js';
 
-function buildStage(stage, pageContext) {
-  validateStage(stage, pageContext);
-  setStageId(stage, pageContext);
-  countStageTypes(stage, pageContext);
+function buildStage(stage, endpointContext) {
+  validateStage(stage, endpointContext);
+  setStageId(stage, endpointContext);
+  countStageTypes(stage, endpointContext);
 }
 
 export default buildStage;

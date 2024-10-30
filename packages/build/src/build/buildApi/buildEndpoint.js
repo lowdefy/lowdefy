@@ -16,32 +16,25 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
 import createCounter from '../../utils/createCounter.js';
 import buildGraph from './buildGraph/buildGraph.js';
+import validateEndpoint from './validateEndpoint.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
-function buildEndpoint({ api, index, context, checkDuplicateApiId }) {
-  // API Stuff
-  if (type.isUndefined(api.id)) {
-    throw new Error(`Api id missing at api ${index}.`);
-  }
-  if (!type.isString(api.id)) {
-    throw new Error(`Api id is not a string at api ${index}. Received ${JSON.stringify(api.id)}.`);
-  }
-  checkDuplicateApiId({ id: api.id });
-  api.apiId = api.id;
+function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
+  validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
+  endpoint.endpointId = endpoint.id;
 
-  buildGraph(api.stages, {
+  buildGraph(endpoint.stages, {
     stageIdCounter: createCounter(),
     checkDuplicateStageId: createCheckDuplicateId({
-      message: 'Duplicate stageId "{{ id }}" on api "{{ apiId }}"',
+      message: 'Duplicate stageId "{{ id }}" on endpoint "{{ endpointId }}"',
     }),
-    apiId: api.apiId,
+    endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
   });
 
-  api.id = `api:${api.apiId}`;
+  endpoint.id = `endpoint:${endpoint.endpointId}`;
 }
 
 export default buildEndpoint;

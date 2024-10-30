@@ -18,10 +18,10 @@ import { graphKey } from './controlKeys.js';
 import buildGraph from './buildGraph.js';
 import countControl from './countControl.js';
 
-function buildControl(stage, pageContext) {
+function buildControl(stage, endpointContext) {
   Object.keys(stage).array.forEach((key) => {
-      buildGraph(stage[key], pageContext);
     if (graphKey(key)) {
+      buildGraph(stage[key], endpointContext);
     } else {
       countControl(key);
     }

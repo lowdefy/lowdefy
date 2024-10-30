@@ -19,28 +19,25 @@ import buildStage from './buildStage.js';
 import buildControl from './buildControl.js';
 import { validControlKey } from './controlKeys.js';
 
-function buildGraph(stage, pageContext) {
+function buildGraph(stage, endpointContext) {
   if (type.isArray(stage)) {
-      buildGraph(item, pageContext);
     stage.forEach((item) => {
+      buildGraph(item, endpointContext);
     });
   }
   if (type.isObject(stage)) {
-    if (Object.keys(stage)[0]?.startsWith(':')) {
-      buildControl(stage, pageContext);
     if (validControlKey(Object.keys(stage))) {
+      buildControl(stage, endpointContext);
     } else {
-      buildStage(stage, pageContext);
+      buildStage(stage, endpointContext);
     }
   }
-
-  throw new Error(
-    'Expected api stage to be of type object or array, found',
-    JSON.stringify(type.kindOf(stage))
-    `Expected endpoint stage to be of type object or array, found ${JSON.stringify(
-      type.typeOf(stage)
-    )}`
-  );
+  // TODO: thrown even when previous errors should throw
+  // throw new Error(
+  //   `Expected endpoint stage to be of type object or array, found ${JSON.stringify(
+  //     type.typeOf(stage)
+  //   )} lksjdf§:w`
+  // );
 }
 
 export default buildGraph;

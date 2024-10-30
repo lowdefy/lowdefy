@@ -16,44 +16,48 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateStage(stage, { apiId, checkDuplicateStageId }) {
+function validateStage(stage, { endpointId, checkDuplicateStageId }) {
   if (!type.isObject(stage)) {
     throw new Error(
-      `Expected stage to be an object on endpoint "${apiId}". Received ${JSON.stringify(stage)}.`
+      `Expected stage to be an object on endpoint "${endpointId}". Received ${JSON.stringify(
+        stage
+      )}.`
     );
   }
   if (type.isUndefined(stage.id)) {
-    throw new Error(`Stage id missing at endpoint "${apiId}".`);
+    throw new Error(`Stage id missing at endpoint "${endpointId}".`);
   }
   if (!type.isString(stage.id)) {
     throw new Error(
-      `Stage id is not a string at endpoint "${apiId}". Received ${JSON.stringify(stage.id)}.`
+      `Stage id is not a string at endpoint "${endpointId}". Received ${JSON.stringify(stage.id)}.`
     );
   }
   if (stage.id.includes('.')) {
-    throw new Error(`Stage id "${stage.id}" at api "${apiId}" should not include a period (".").`);
+    throw new Error(
+      `Stage id "${stage.id}" at api "${endpointId}" should not include a period (".").`
+    );
   }
   if (type.isNone(stage.type)) {
-    throw new Error(`Stage type is not defined at "${stage.id}" on endpoint "${apiId}".`);
+    throw new Error(`Stage type is not defined at "${stage.id}" on endpoint "${endpointId}".`);
   }
   if (!type.isString(stage.type)) {
     throw new Error(
       `Stage type is not a string at "${
         stage.id
-      }" on endpoint "${apiId}". Received ${JSON.stringify(stage.type)}.`
+      }" on endpoint "${endpointId}". Received ${JSON.stringify(stage.type)}.`
     );
   }
   if (!type.isNone(stage.connectionId)) {
     if (!type.isString(stage)) {
       throw new Error(
-        `Stage connectionId is not a string at endpoint "${apiId}". Received ${JSON.stringify(
+        `Stage connectionId is not a string at endpoint "${endpointId}". Received ${JSON.stringify(
           stage.connectionId
         )}.`
       );
     }
   }
 
-  checkDuplicateStageId({ id: stage.id, apiId });
+  checkDuplicateStageId({ id: stage.id, endpointId });
 }
 
 export default validateStage;
