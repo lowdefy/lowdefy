@@ -67,7 +67,7 @@ const MultipleSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
