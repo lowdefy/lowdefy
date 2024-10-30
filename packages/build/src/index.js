@@ -24,6 +24,7 @@ import addKeys from './build/addKeys.js';
 import buildApp from './build/buildApp.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
+import buildApi from './build/buildApi/buildApi.js';
 import buildImports from './build/buildImports/buildImports.js';
 import buildJs from './build/buildJs/buildJs.js';
 import buildMenu from './build/buildMenu.js';
@@ -57,6 +58,7 @@ async function build(options) {
   addDefaultPages({ components, context });
   buildAuth({ components, context });
   buildConnections({ components, context });
+  buildApi({ components, context });
   buildPages({ components, context });
   buildMenu({ components, context });
   buildJs({ components, context });

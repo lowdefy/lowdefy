@@ -14,19 +14,8 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import buildEndpoint from './buildEndpoint.js';
-
-function buildApi({ components, context }) {
-  const api = type.isArray(components.api) ? components.api : [];
-  const checkDuplicateApiId = createCheckDuplicateId({
-    message: 'Duplicate apiId "{{ id }}".',
-  });
-  api.map((api, index) => buildEndpoint({ api, index, context, checkDuplicateApiId }));
-  api.id = `api:${api.apiId}`;
-
-  return components;
+function countStageTypes(stage, { typeCounters }) {
+  typeCounters.stages.increment(stage.type);
 }
 
-export default buildApi;
+export default countStageTypes;

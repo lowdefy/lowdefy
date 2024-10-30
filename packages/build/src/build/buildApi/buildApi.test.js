@@ -27,10 +27,6 @@ const logger = {
   log: mockLog,
 };
 
-const auth = {
-  public: true,
-};
-
 const context = testContext({ logger });
 
 beforeEach(() => {
@@ -58,8 +54,7 @@ test('api does not have an id', () => {
   const components = {
     api: [
       {
-        type: 'Container',
-        auth,
+        type: 'Api',
       },
     ],
   };
@@ -71,8 +66,7 @@ test('api id is not a string', () => {
     api: [
       {
         id: true,
-        type: 'Container',
-        auth,
+        type: 'Api',
       },
     ],
   };
@@ -86,55 +80,51 @@ test('Throw on duplicate api ids', () => {
     api: [
       {
         id: 'api_1',
-        type: 'Container',
-        auth,
+        type: 'Api',
       },
       {
         id: 'api_1',
-        type: 'Container',
-        auth,
+        type: 'Api',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow('Duplicate apiId "api_1".');
 });
 
-// test('block does not have an id', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 'Container',
-//         auth,
-//         blocks: [
-//           {
-//             type: 'Input',
-//           },
-//         ],
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow('Block id missing at api "api1".');
-// });
+test('request does not have an id', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        stages: [
+          {
+            type: 'MongoDBInsertOne',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow('Stage id missing at api "api1".');
+});
 
 // test('block id is not a string', () => {
 //   const components = {
 //     api: [
 //       {
 //         id: 'api1',
-//         type: 'Container',
-//         auth,
-//         blocks: [
+//         type: 'Api',
+//         stages: [
 //           {
 //             id: true,
-//             type: 'Input',
+//             type: 'MongoDBUpdateOne',
 //           },
 //         ],
 //       },
 //     ],
 //   };
 //   expect(() => buildApi({ components, context })).toThrow(
-//     'Block id is not a string at api "api1". Received true.'
+//     'Stage id is not a string at api "api1". Received true.'
 //   );
 // });
 
@@ -143,7 +133,6 @@ test('Throw on duplicate api ids', () => {
 //     api: [
 //       {
 //         id: 'api1',
-//         auth,
 //       },
 //     ],
 //   };

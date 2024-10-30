@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import buildEndpoint from './buildEndpoint.js';
+import { controlKeys } from './controlKeys.js';
+import buildGraph from './buildGraph.js';
 
-function buildApi({ components, context }) {
-  const api = type.isArray(components.api) ? components.api : [];
-  const checkDuplicateApiId = createCheckDuplicateId({
-    message: 'Duplicate apiId "{{ id }}".',
+function buildControl(stage, pageContext) {
+  Object.keys(stage).array.forEach((key) => {
+    if (controlKeys[key]?.graph.includes(key)) {
+      buildGraph(stage[key], pageContext);
+    } else {
+      //Count control operators
+    }
   });
-  api.map((api, index) => buildEndpoint({ api, index, context, checkDuplicateApiId }));
-  api.id = `api:${api.apiId}`;
-
-  return components;
 }
 
-export default buildApi;
+export default buildControl;

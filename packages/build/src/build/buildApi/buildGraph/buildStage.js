@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 /*
   Copyright 2020-2024 Lowdefy, Inc
 
@@ -14,19 +16,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import buildEndpoint from './buildEndpoint.js';
+import validateStage from './validateStage.js';
+import setStageId from './setStageId.js';
+import countStageTypes from './countStageTypes.js';
 
-function buildApi({ components, context }) {
-  const api = type.isArray(components.api) ? components.api : [];
-  const checkDuplicateApiId = createCheckDuplicateId({
-    message: 'Duplicate apiId "{{ id }}".',
-  });
-  api.map((api, index) => buildEndpoint({ api, index, context, checkDuplicateApiId }));
-  api.id = `api:${api.apiId}`;
-
-  return components;
+function buildStage(stage, pageContext) {
+  validateStage(stage, pageContext);
+  setStageId(stage, pageContext);
+  countStageTypes(stage, pageContext);
 }
 
-export default buildApi;
+export default buildStage;

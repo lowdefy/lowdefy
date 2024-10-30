@@ -15,18 +15,27 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
-import buildEndpoint from './buildEndpoint.js';
+import buildStage from './buildStage.js';
+import buildControl from './buildControl.js';
 
-function buildApi({ components, context }) {
-  const api = type.isArray(components.api) ? components.api : [];
-  const checkDuplicateApiId = createCheckDuplicateId({
-    message: 'Duplicate apiId "{{ id }}".',
-  });
-  api.map((api, index) => buildEndpoint({ api, index, context, checkDuplicateApiId }));
-  api.id = `api:${api.apiId}`;
+function buildGraph(stage, pageContext) {
+  if (type.isArray(stage)) {
+    stage.array.forEach((item) => {
+      buildGraph(item, pageContext);
+    });
+  }
+  if (type.isObject(stage)) {
+    if (Object.keys(stage)[0]?.startsWith(':')) {
+      buildControl(stage, pageContext);
+    } else {
+      buildStage(stage, pageContext);
+    }
+  }
 
-  return components;
+  throw new Error(
+    'Expected api stage to be of type object or array, found',
+    JSON.stringify(type.kindOf(stage))
+  );
 }
 
-export default buildApi;
+export default buildGraph;
