@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2024 Lowdefy, Inc
 
@@ -15,17 +13,3 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-
-import validateStage from './validateStage.js';
-import setStageId from './setStageId.js';
-import countStageTypes from './countStageTypes.js';
-
-function buildStage(stage, endpointContext) {
-  validateStage(stage, endpointContext);
-  setStageId(stage, endpointContext);
-  countStageTypes(stage, endpointContext);
-
-  endpointContext.stages.push(stage);
-}
-
-export default buildStage;

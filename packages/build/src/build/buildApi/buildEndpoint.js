@@ -25,16 +25,19 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
   endpoint.endpointId = endpoint.id;
 
+  const stages = [];
   buildGraph(endpoint.stages, {
     stageIdCounter: createCounter(),
     checkDuplicateStageId: createCheckDuplicateId({
       message: 'Duplicate stageId "{{ id }}" on endpoint "{{ endpointId }}"',
     }),
     endpointId: endpoint.endpointId,
+    stages,
     typeCounters: context.typeCounters,
   });
 
   endpoint.id = `endpoint:${endpoint.endpointId}`;
+  endpoint.stages = stages;
 }
 
 export default buildEndpoint;

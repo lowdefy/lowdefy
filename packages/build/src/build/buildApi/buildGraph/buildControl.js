@@ -23,6 +23,7 @@ function buildControl(stage, endpointContext) {
     if (graphKey(key)) {
       buildGraph(stage[key], endpointContext);
     } else {
+      // TODO: Validate required or optional
       countControl(key);
     }
   });

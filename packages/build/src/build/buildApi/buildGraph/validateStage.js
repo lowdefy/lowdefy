@@ -24,6 +24,9 @@ function validateStage(stage, { endpointId, checkDuplicateStageId }) {
       )}.`
     );
   }
+  if (Object.keys(stage).length === 0) {
+    throw new Error(`Stage is not defined at endpoint "${endpointId}"`);
+  }
   if (type.isUndefined(stage.id)) {
     throw new Error(`Stage id missing at endpoint "${endpointId}".`);
   }

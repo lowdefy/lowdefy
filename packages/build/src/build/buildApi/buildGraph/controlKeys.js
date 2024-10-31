@@ -35,11 +35,13 @@ const controlKeys = {
     graph: [':default', ':switch.$.:then'],
     optional: [':switch.$.then'],
   },
+  // Action maybe?
   ':log': { required: [':log'], graph: [] },
   ':setState': { required: [':setState'], graph: [], optional: [] },
+  //
   ':return': { required: [':return'], graph: [], optional: [] },
-  ':foreach': { required: [':foreach', ':do', ':as'], graph: [], optional: [] },
-  ':while': { required: [':while', ':do'], graph: [], optional: [] },
+  ':foreach': { required: [':foreach', ':do', ':as'], graph: [':do'], optional: [] },
+  ':while': { required: [':while', ':do'], graph: [':do'], optional: [] },
 };
 
 function graphKey(key) {

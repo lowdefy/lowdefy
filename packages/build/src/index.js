@@ -71,6 +71,7 @@ async function build(options) {
   await writeConnections({ components, context });
   await writeRequests({ components, context });
   await writePages({ components, context });
+  //TODO: writeApi and update build types and build counters to use
   await writeConfig({ components, context });
   await writeGlobal({ components, context });
   await writeMaps({ components, context });

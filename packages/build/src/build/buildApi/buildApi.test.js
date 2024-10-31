@@ -175,45 +175,55 @@ test('stage type not a string', () => {
   );
 });
 
-// test('no blocks on api', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: '1',
-//         type: 'Container',
-//         auth,
-//       },
-//     ],
-//   };
-//   const res = buildApi({ components, context });
-//   expect(res).toEqual({
-//     api: [
-//       {
-//         id: 'api:1',
-//         auth: { public: true },
-//         apiId: '1',
-//         blockId: '1',
-//         type: 'Container',
-//         requests: [],
-//       },
-//     ],
-//   });
-// });
+test('no stages on api endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: '1',
+        type: 'Api',
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:1',
+        endpointId: '1',
+        type: 'Api',
+        stages: [],
+      },
+    ],
+  });
+});
 
-// test('blocks not an array', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'api1',
-//         type: 'Container',
-//         blocks: 'block_1',
-//       },
-//     ],
-//   };
-//   expect(() => buildApi({ components, context })).toThrow(
-//     'Blocks at api1 on api api1 is not an array. Received "block_1"'
-//   );
-// });
+test('empty stages object on api endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: '1',
+        type: 'Api',
+        stages: {},
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow('Stage is not defined at endpoint "1"');
+});
+
+test('stages not an array or object', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        stages: '',
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Blocks at api1 on api api1 is not an array. Received "block_1"'
+  );
+});
 
 // test('block not an object', () => {
 //   const components = {

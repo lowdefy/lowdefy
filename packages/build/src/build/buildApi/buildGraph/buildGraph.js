@@ -32,11 +32,11 @@ function buildGraph(stage, endpointContext) {
       buildStage(stage, endpointContext);
     }
   }
-  // TODO: thrown even when previous errors should throw
+  // TODO: Affects duplicate endpoint error
   // throw new Error(
-  //   `Expected endpoint stage to be of type object or array, found ${JSON.stringify(
-  //     type.typeOf(stage)
-  //   )} lksjdf§:w`
+  //   `Stages at ${endpointContext.endpointId} on endpoint ${
+  //     endpointContext.endpointId
+  //   } is not an array or object. Received ${JSON.stringify(type.typeOf(stage))}`
   // );
 }
 
