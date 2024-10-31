@@ -69,6 +69,7 @@
     "@lowdefy/operators-nunjucks": "4.3.0",
     "@lowdefy/operators-uuid": "4.3.0",
     "@lowdefy/operators-yaml": "4.3.0",
+    "@lowdefy/plugin-aws": "4.3.0",
     "@lowdefy/plugin-next-auth": "4.3.0",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",

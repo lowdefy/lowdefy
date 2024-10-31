@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import createCallAPI from './createCallAPI.js';
 import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
 import createIcon from './createIcon.js';
@@ -54,6 +55,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy.inputs = {};
     lowdefy.lowdefyGlobal = config.rootConfig.lowdefyGlobal;
 
+    lowdefy._internal.callAPI = createCallAPI(lowdefy);
     lowdefy._internal.auth = createAuthMethods(lowdefy, auth);
     lowdefy._internal.callRequest = createCallRequest(lowdefy);
     lowdefy._internal.components.Link = createLinkComponent(lowdefy, Components.Link);
