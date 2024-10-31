@@ -37,7 +37,9 @@ function buildRoutine(subRoutine, endpointContext) {
   throw new Error(
     `Routine at ${endpointContext.endpointId} on endpoint ${
       endpointContext.endpointId
-    } is not an array or object. Received ${JSON.stringify(subRoutine)}`
+    } is not an array or object. Received "${
+      type.isString(subRoutine) ? subRoutine : JSON.stringify(subRoutine)
+    }"`
   );
 }
 

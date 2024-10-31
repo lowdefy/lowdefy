@@ -58,6 +58,20 @@ test('no routine on api endpoint', () => {
   const components = {
     api: [
       {
+        id: 'api1',
+        type: 'Api',
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Routine at api1 on endpoint api1 is not an array or object. Received "undefined"'
+  );
+});
+
+test('empty routine on api endpoint', () => {
+  const components = {
+    api: [
+      {
         id: '1',
         type: 'Api',
         routine: [],
