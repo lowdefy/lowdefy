@@ -19,26 +19,26 @@ import buildStage from './buildStage.js';
 import buildControl from './buildControl.js';
 import { validControlKey } from './controlKeys.js';
 
-function buildGraph(stage, endpointContext) {
-  if (type.isArray(stage)) {
-    stage.forEach((item) => {
-      buildGraph(item, endpointContext);
+function buildRoutine(subRoutine, endpointContext) {
+  if (type.isArray(subRoutine)) {
+    subRoutine.forEach((item) => {
+      buildRoutine(item, endpointContext);
     });
     return;
   }
-  if (type.isObject(stage)) {
-    if (validControlKey(Object.keys(stage))) {
-      buildControl(stage, endpointContext);
+  if (type.isObject(subRoutine)) {
+    if (validControlKey(Object.keys(subRoutine))) {
+      buildControl(subRoutine, endpointContext);
     } else {
-      buildStage(stage, endpointContext);
+      buildStage(subRoutine, endpointContext);
     }
     return;
   }
   throw new Error(
-    `Stages at ${endpointContext.endpointId} on endpoint ${
+    `Routine at ${endpointContext.endpointId} on endpoint ${
       endpointContext.endpointId
-    } is not an array or object. Received ${JSON.stringify(stage)}`
+    } is not an array or object. Received ${JSON.stringify(subRoutine)}`
   );
 }
 
-export default buildGraph;
+export default buildRoutine;

@@ -17,13 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 function validateStage(stage, { endpointId, checkDuplicateStageId }) {
-  if (!type.isObject(stage)) {
-    throw new Error(
-      `Expected stage to be an object on endpoint "${endpointId}". Received ${JSON.stringify(
-        stage
-      )}.`
-    );
-  }
   if (Object.keys(stage).length === 0) {
     throw new Error(`Stage is not defined at endpoint "${endpointId}"`);
   }

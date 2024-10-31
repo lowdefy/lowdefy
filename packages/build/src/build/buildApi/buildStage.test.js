@@ -40,7 +40,7 @@ test('stage type not a string', () => {
       {
         id: 'api1',
         type: 'Api',
-        stages: [
+        routine: [
           {
             id: 'stageId',
             type: 1,
@@ -54,13 +54,13 @@ test('stage type not a string', () => {
   );
 });
 
-test('no stages on api endpoint', () => {
+test('no routine on api endpoint', () => {
   const components = {
     api: [
       {
         id: '1',
         type: 'Api',
-        stages: [],
+        routine: [],
       },
     ],
   };
@@ -77,30 +77,30 @@ test('no stages on api endpoint', () => {
   });
 });
 
-test('empty stages object on api endpoint', () => {
+test('empty routine object on api endpoint', () => {
   const components = {
     api: [
       {
         id: '1',
         type: 'Api',
-        stages: {},
+        routine: {},
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow('Stage is not defined at endpoint "1"');
 });
 
-test('stages not an array or object', () => {
+test('routine not an array or object', () => {
   const components = {
     api: [
       {
         id: 'api1',
         type: 'Api',
-        stages: 'api1',
+        routine: 'api1',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Stages at api1 on endpoint api1 is not an array or object. Received "api1"'
+    'Routine at api1 on endpoint api1 is not an array or object. Received "api1"'
   );
 });

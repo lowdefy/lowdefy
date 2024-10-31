@@ -15,13 +15,13 @@
 */
 
 import { graphKey } from './controlKeys.js';
-import buildGraph from './buildGraph.js';
+import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
 
-function buildControl(stage, endpointContext) {
-  Object.keys(stage).array.forEach((key) => {
+function buildControl(control, endpointContext) {
+  Object.keys(control).array.forEach((key) => {
     if (graphKey(key)) {
-      buildGraph(stage[key], endpointContext);
+      buildRoutine(control[key], endpointContext);
     } else {
       // TODO: Validate required or optional
       countControl(key);

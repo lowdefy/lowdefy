@@ -17,7 +17,7 @@
 */
 
 import createCounter from '../../utils/createCounter.js';
-import buildGraph from './buildGraph/buildGraph.js';
+import buildRoutine from './buildRoutine/buildRoutine.js';
 import validateEndpoint from './validateEndpoint.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
@@ -26,7 +26,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   endpoint.endpointId = endpoint.id;
 
   const stages = [];
-  buildGraph(endpoint.stages, {
+  buildRoutine(endpoint.routine, {
     stageIdCounter: createCounter(),
     checkDuplicateStageId: createCheckDuplicateId({
       message: 'Duplicate stageId "{{ id }}" on endpoint "{{ endpointId }}"',
@@ -38,6 +38,7 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
 
   endpoint.id = `endpoint:${endpoint.endpointId}`;
   endpoint.stages = stages;
+  delete endpoint.routine;
 }
 
 export default buildEndpoint;

@@ -81,12 +81,12 @@ test('Throw on duplicate endpoint ids', () => {
       {
         id: 'api_1',
         type: 'Api',
-        stages: [],
+        routine: [],
       },
       {
         id: 'api_1',
         type: 'Api',
-        stages: [],
+        routine: [],
       },
     ],
   };
@@ -99,7 +99,7 @@ test('stage does not have an id', () => {
       {
         id: 'api1',
         type: 'Api',
-        stages: [
+        routine: [
           {
             type: 'MongoDBInsertOne',
           },
@@ -116,7 +116,7 @@ test('stage id is not a string', () => {
       {
         id: 'api1',
         type: 'Api',
-        stages: [
+        routine: [
           {
             id: true,
             type: 'MongoDBUpdateOne',
