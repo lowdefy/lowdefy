@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 import buildStage from './buildStage.js';
 import buildControl from './buildControl.js';
-import { validControlKey } from './controlKeys.js';
 
 function buildRoutine(subRoutine, endpointContext) {
   if (type.isArray(subRoutine)) {
@@ -27,7 +26,7 @@ function buildRoutine(subRoutine, endpointContext) {
     return;
   }
   if (type.isObject(subRoutine)) {
-    if (validControlKey(Object.keys(subRoutine))) {
+    if (Object.keys(subRoutine)[0]?.startsWith(':')) {
       buildControl(subRoutine, endpointContext);
     } else {
       buildStage(subRoutine, endpointContext);

@@ -17,13 +17,14 @@
 import { graphKey } from './controlKeys.js';
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
+import validateControl from './validateControl.js';
 
 function buildControl(control, endpointContext) {
-  Object.keys(control).array.forEach((key) => {
+  validateControl(control, endpointContext);
+  Object.keys(control).forEach((key) => {
     if (graphKey(key)) {
       buildRoutine(control[key], endpointContext);
     } else {
-      // TODO: Validate required or optional
       countControl(key);
     }
   });
