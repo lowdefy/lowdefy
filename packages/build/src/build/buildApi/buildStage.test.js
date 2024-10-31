@@ -34,6 +34,43 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
+test('stage does not have an id', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [
+          {
+            type: 'MongoDBInsertOne',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow('Stage id missing at endpoint "api1".');
+});
+
+test('stage id is not a string', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [
+          {
+            id: true,
+            type: 'MongoDBUpdateOne',
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Stage id is not a string at endpoint "api1". Received true.'
+  );
+});
+
 test('stage type not a string', () => {
   const components = {
     api: [
@@ -54,27 +91,46 @@ test('stage type not a string', () => {
   );
 });
 
-test('no routine on api endpoint', () => {
+test('throw on duplicate stage ids', () => {
   const components = {
     api: [
       {
         id: 'api1',
         type: 'Api',
+        routine: [
+          {
+            id: 'stage_1',
+            type: 'MongoDBInsertOne',
+          },
+          {
+            id: 'stage_1',
+            type: 'MongoDBInsertOne',
+          },
+        ],
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Routine at api1 on endpoint api1 is not an array or object. Received "undefined"'
+    'Duplicate stageId "stage_1" on endpoint "api1"'
   );
 });
 
-test('empty routine on api endpoint', () => {
+test('valid stage config', () => {
   const components = {
     api: [
       {
-        id: '1',
+        id: 'api1',
         type: 'Api',
-        routine: [],
+        routine: [
+          {
+            id: 'stage_1',
+            type: 'MongoDBInsertOne',
+          },
+          {
+            id: 'stage_2',
+            type: 'MongoDBUpdateOne',
+          },
+        ],
       },
     ],
   };
@@ -82,39 +138,84 @@ test('empty routine on api endpoint', () => {
   expect(res).toEqual({
     api: [
       {
-        id: 'endpoint:1',
-        endpointId: '1',
+        id: 'endpoint:api1',
+        endpointId: 'api1',
         type: 'Api',
-        stages: [],
+        stages: [
+          {
+            id: 'stage:api1:stage_1',
+            endpointId: 'api1',
+            stageId: 'stage_1',
+            type: 'MongoDBInsertOne',
+          },
+          {
+            id: 'stage:api1:stage_2',
+            endpointId: 'api1',
+            stageId: 'stage_2',
+            type: 'MongoDBUpdateOne',
+          },
+        ],
       },
     ],
   });
 });
 
-test('empty routine object on api endpoint', () => {
-  const components = {
-    api: [
-      {
-        id: '1',
-        type: 'Api',
-        routine: {},
-      },
-    ],
-  };
-  expect(() => buildApi({ components, context })).toThrow('Stage is not defined at endpoint "1"');
-});
-
-test('routine not an array or object', () => {
+test('valid stage config nested array', () => {
   const components = {
     api: [
       {
         id: 'api1',
         type: 'Api',
-        routine: 'api1',
+        routine: [
+          [
+            {
+              id: 'stage_1',
+              type: 'MongoDBInsertOne',
+            },
+          ],
+          [
+            { id: 'stage_2', type: 'MongoDBUpdateOne' },
+            [{ id: 'stage_3', type: 'MongoDBAggregation' }],
+          ],
+          [[[{ id: 'stage_4', type: 'MongoDBInsertMany' }]]],
+        ],
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow(
-    'Routine at api1 on endpoint api1 is not an array or object. Received "api1"'
-  );
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:api1',
+        endpointId: 'api1',
+        type: 'Api',
+        stages: [
+          {
+            id: 'stage:api1:stage_1',
+            endpointId: 'api1',
+            stageId: 'stage_1',
+            type: 'MongoDBInsertOne',
+          },
+          {
+            id: 'stage:api1:stage_2',
+            endpointId: 'api1',
+            stageId: 'stage_2',
+            type: 'MongoDBUpdateOne',
+          },
+          {
+            id: 'stage:api1:stage_3',
+            endpointId: 'api1',
+            stageId: 'stage_3',
+            type: 'MongoDBAggregation',
+          },
+          {
+            id: 'stage:api1:stage_4',
+            endpointId: 'api1',
+            stageId: 'stage_4',
+            type: 'MongoDBInsertMany',
+          },
+        ],
+      },
+    ],
+  });
 });

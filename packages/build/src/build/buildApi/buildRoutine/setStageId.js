@@ -18,7 +18,6 @@ function setStageId(stage, { endpointId, stageIdCounter }) {
   stage.stageId = stage.id;
   stage.endpointId = endpointId;
   stage.id = `stage:${endpointId}:${stage.stageId}`;
-  stageIdCounter.increment(stage.stageId);
 }
 
 export default setStageId;

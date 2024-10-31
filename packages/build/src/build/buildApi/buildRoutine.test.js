@@ -34,88 +34,67 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('buildApi no api', () => {
-  const components = {};
-  const res = buildApi({ components, context });
-  expect(res.api).toBe(undefined);
+test('no routine on api endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Routine at api1 on endpoint api1 is not an array or object. Received "undefined"'
+  );
 });
 
-test('buildApi api not an array', () => {
+test('empty routine on api endpoint', () => {
   const components = {
-    api: 'api',
+    api: [
+      {
+        id: '1',
+        type: 'Api',
+        routine: [],
+      },
+    ],
   };
   const res = buildApi({ components, context });
   expect(res).toEqual({
-    api: 'api',
+    api: [
+      {
+        id: 'endpoint:1',
+        endpointId: '1',
+        type: 'Api',
+        stages: [],
+      },
+    ],
   });
 });
 
-test('endpoint does not have an id', () => {
+test('empty routine object on api endpoint', () => {
   const components = {
     api: [
       {
+        id: '1',
         type: 'Api',
+        routine: {},
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Endpoint id missing at endpoint 0.');
+  expect(() => buildApi({ components, context })).toThrow('Stage is not defined at endpoint "1"');
 });
 
-test('endpoint id is not a string', () => {
-  const components = {
-    api: [
-      {
-        id: true,
-        type: 'Api',
-      },
-    ],
-  };
-  expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint id is not a string at endpoint 0. Received true.'
-  );
-});
-
-test('throw on duplicate endpoint ids', () => {
-  const components = {
-    api: [
-      {
-        id: 'api_1',
-        type: 'Api',
-        routine: [],
-      },
-      {
-        id: 'api_1',
-        type: 'Api',
-        routine: [],
-      },
-    ],
-  };
-  expect(() => buildApi({ components, context })).toThrow('Duplicate endpointId "api_1".');
-});
-
-test('api type missing', () => {
+test('routine not an array or object', () => {
   const components = {
     api: [
       {
         id: 'api1',
+        type: 'Api',
+        routine: 'api1',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint type is not defined at "api1" on endpoint "api1".'
-  );
-});
-
-test('api type not a string', () => {
-  const components = {
-    api: [
-      {
-        id: 'api1',
-        type: 1,
-      },
-    ],
-  };
-  expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint type is not a string at "api1" on endpoint "api1". Received 1.'
+    'Routine at api1 on endpoint api1 is not an array or object. Received "api1"'
   );
 });

@@ -53,7 +53,7 @@ function validateStage(stage, { endpointId, checkDuplicateStageId }) {
     }
   }
 
-  checkDuplicateStageId({ id: stage.id, endpointId });
+  checkDuplicateStageId({ id: stage.id, eventId: endpointId });
 }
 
 export default validateStage;
