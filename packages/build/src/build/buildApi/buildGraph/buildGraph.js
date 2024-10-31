@@ -24,6 +24,7 @@ function buildGraph(stage, endpointContext) {
     stage.forEach((item) => {
       buildGraph(item, endpointContext);
     });
+    return;
   }
   if (type.isObject(stage)) {
     if (validControlKey(Object.keys(stage))) {
@@ -31,13 +32,13 @@ function buildGraph(stage, endpointContext) {
     } else {
       buildStage(stage, endpointContext);
     }
+    return;
   }
-  // TODO: Affects duplicate endpoint error
-  // throw new Error(
-  //   `Stages at ${endpointContext.endpointId} on endpoint ${
-  //     endpointContext.endpointId
-  //   } is not an array or object. Received ${JSON.stringify(type.typeOf(stage))}`
-  // );
+  throw new Error(
+    `Stages at ${endpointContext.endpointId} on endpoint ${
+      endpointContext.endpointId
+    } is not an array or object. Received ${JSON.stringify(stage)}`
+  );
 }
 
 export default buildGraph;
