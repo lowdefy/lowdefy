@@ -139,3 +139,16 @@ test('nested array', async () => {
   ]);
   expect(res.response).toEqual(null);
 });
+
+test('unknown control', async () => {
+  const routine = {
+    ':unknown': {
+      id: 'test_request',
+      type: 'TestRequest',
+      properties: {
+        response: 'test',
+      },
+    },
+  };
+  expect(async () => await runTest({ routine })).rejects.toThrow('TODO: unknown control');
+});
