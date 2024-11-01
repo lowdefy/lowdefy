@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// import { callRequest } from '@lowdefy/api';
+// import { callAPI } from '@lowdefy/api';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 

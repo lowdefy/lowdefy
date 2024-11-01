@@ -14,8 +14,52 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { get, serializer } from '@lowdefy/helpers';
 
+// function createCallAPI(context) {
+//   return async function callAPI({ params, blockId, event }) {
+//     console.log('CallAPICLASS', params, blockId, event);
+
+//     if (!context.apiResponses[params.endpoint]) {
+//       context.apiResponses[params.endpoint] = [];
+//     }
+
+//     const api = {
+//       ...params,
+//       blockId,
+//     };
+
+//     context.apiResponses[api.endpoint].unshift(api);
+
+//     console.log('FETCH', api);
+//     api.loading = true;
+//     api.success = null;
+//     const startTime = Date.now();
+
+//     const { response, success } = await context._internal.lowdefy._internal.callAPI({
+//       blockId: api.blockId,
+//       pageId: context.pageId,
+//       payload: serializer.serialize(api.payload),
+//       endpointId: api.endpoint,
+//     });
+//     console.log('RESPONSE', response);
+
+//     const deserializedResponse = serializer.deserialize(
+//       get(response, 'response', {
+//         default: null,
+//       })
+//     );
+
+//     api.response = deserializedResponse;
+//     api.success = success;
+//     api.loading = false;
+//     const endTime = Date.now();
+//     api.responseTime = endTime - startTime;
+//     context._internal.update();
+
+//     return deserializedResponse;
+//   }
+// }
 class API {
   constructor(context) {
     this.context = context;
@@ -31,36 +75,49 @@ class API {
 
   async callAPI({ params, blockId, event }) {
     console.log('CallAPICLASS', params, blockId, event);
-    // const apiConfig = this.apiConfig[endPointId];
-    // if (!this.context.api[endPointId]) {
-    //   this.context.api[endPointId] = [];
-    // }
-    // if (!apiConfig) {
-    //   const error = new Error(`Configuration Error: API ${endPointId} not defined on page.`);
-    //   this.context.api[endPointId].unshift({
-    //     error,
-    //     loading: false,
-    //     response: null,
-    //   });
-    //   throw error;
-    // }
+
+    if (!this.context.apiResponses[params.endpoint]) {
+      this.context.apiResponses[params.endpoint] = [];
+    }
 
     const api = {
       ...params,
       blockId,
     };
 
+    this.context.apiResponses[api.endpoint].unshift(api);
+
     await this.fetch(api);
   }
+
   async fetch(api) {
     console.log('FETCH', api);
-    const response = await this.context._internal.lowdefy._internal.callAPI({
+    api.loading = true;
+    api.success = null;
+    const startTime = Date.now();
+
+    const { response, success } = await this.context._internal.lowdefy._internal.callAPI({
       blockId: api.blockId,
       pageId: this.context.pageId,
       payload: serializer.serialize(api.payload),
       endpointId: api.endpoint,
     });
     console.log('RESPONSE', response);
+
+    // const deserializedResponse = serializer.deserialize(
+    //   get(response, 'response', {
+    //     default: null,
+    //   })
+    // );
+
+    api.response = response;
+    api.success = success;
+    api.loading = false;
+    const endTime = Date.now();
+    api.responseTime = endTime - startTime;
+    this.context._internal.update();
+
+    return response;
   }
 }
 

@@ -80,6 +80,7 @@ function getContext({
     pageId: config.pageId,
     eventLog: [],
     jsMap,
+    apiResponses: {},
     requests: {},
     state: {},
     _internal: {

@@ -58,6 +58,7 @@ class WebParser {
           actions,
           args,
           arrayIndices,
+          apiResponses: this.context.apiResponses,
           basePath,
           event,
           eventLog: this.context.eventLog,
