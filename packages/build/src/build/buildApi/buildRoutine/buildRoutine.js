@@ -32,7 +32,6 @@ function buildRoutine(subRoutine, endpointContext) {
       //add second condition to check valid control
       buildStage(subRoutine, endpointContext);
     }
-    endpointContext.routine.push(subRoutine);
     return;
   }
   throw new Error(

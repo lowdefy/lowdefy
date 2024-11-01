@@ -16,15 +16,15 @@
 
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
-import { validateControl, graphKey } from './controlTypes.js';
+import { validateControl, routineKey } from './controlTypes.js';
 
 function buildControl(control, endpointContext) {
-  validateControl(control, endpointContext);
+  const controlType = validateControl(control, endpointContext);
   Object.keys(control).forEach((key) => {
-    if (graphKey(key)) {
+    if (routineKey(controlType, key)) {
       buildRoutine(control[key], endpointContext);
     } else {
-      countControl(key);
+      countControl(key, endpointContext);
     }
   });
 }

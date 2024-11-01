@@ -15,7 +15,7 @@
 */
 
 function countControl(control, { typeCounters }) {
-  typeCounters.control.increment(control);
+  typeCounters.controls.increment(control);
 }
 
 export default countControl;

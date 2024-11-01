@@ -45,7 +45,7 @@ test('invalid control', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Invalid control type for endpoint api1. Received ":invalid"'
+    'Invalid control type(s) for endpoint api1. Received "[":invalid"]"'
   );
 });
 
@@ -64,7 +64,7 @@ test('missing required controls', () => {
   );
 });
 
-test('found invalid controls', () => {
+test('throw more than one control', () => {
   const components = {
     api: [
       {
@@ -75,6 +75,51 @@ test('found invalid controls', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Invalid control type(s) for endpoint api1. Received [":try",":catch"]'
+    'More than one control type found for endpoint api1. Received [":if",":try"]'
+  );
+});
+
+test('throw invalid control with a valid control', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: { ':if': true, ':then': [], ':invalid': [], ':catch': 'error' },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Invalid control type(s) for endpoint api1. Received [":invalid",":catch"]'
+  );
+});
+
+test('throw switch not an array', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: { ':switch': true },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Type given for :switch control is invalid at endpoint api1. Received true'
+  );
+});
+
+test('throw missing :case for :switch control', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: { ':switch': [{ ':then': {} }] },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Missing required control type(s) for endpoint api1. Missing [":case"]'
   );
 });

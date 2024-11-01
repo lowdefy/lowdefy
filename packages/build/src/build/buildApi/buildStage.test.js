@@ -115,7 +115,7 @@ test('throw on duplicate stage ids', () => {
   );
 });
 
-test('valid stage config', () => {
+test('valid routine stage config', () => {
   const components = {
     api: [
       {
@@ -160,7 +160,7 @@ test('valid stage config', () => {
   });
 });
 
-test('valid stage config nested array', () => {
+test('valid routine stage config nested array', () => {
   const components = {
     api: [
       {
@@ -190,30 +190,42 @@ test('valid stage config nested array', () => {
         endpointId: 'api1',
         type: 'Api',
         routine: [
-          {
-            id: 'stage:api1:stage_1',
-            endpointId: 'api1',
-            stageId: 'stage_1',
-            type: 'MongoDBInsertOne',
-          },
-          {
-            id: 'stage:api1:stage_2',
-            endpointId: 'api1',
-            stageId: 'stage_2',
-            type: 'MongoDBUpdateOne',
-          },
-          {
-            id: 'stage:api1:stage_3',
-            endpointId: 'api1',
-            stageId: 'stage_3',
-            type: 'MongoDBAggregation',
-          },
-          {
-            id: 'stage:api1:stage_4',
-            endpointId: 'api1',
-            stageId: 'stage_4',
-            type: 'MongoDBInsertMany',
-          },
+          [
+            {
+              id: 'stage:api1:stage_1',
+              endpointId: 'api1',
+              stageId: 'stage_1',
+              type: 'MongoDBInsertOne',
+            },
+          ],
+          [
+            {
+              id: 'stage:api1:stage_2',
+              endpointId: 'api1',
+              stageId: 'stage_2',
+              type: 'MongoDBUpdateOne',
+            },
+            [
+              {
+                id: 'stage:api1:stage_3',
+                endpointId: 'api1',
+                stageId: 'stage_3',
+                type: 'MongoDBAggregation',
+              },
+            ],
+          ],
+          [
+            [
+              [
+                {
+                  id: 'stage:api1:stage_4',
+                  endpointId: 'api1',
+                  stageId: 'stage_4',
+                  type: 'MongoDBInsertMany',
+                },
+              ],
+            ],
+          ],
         ],
       },
     ],

@@ -21,47 +21,63 @@ import countControl from './countControl.js';
 const controlTypes = {
   ':try': {
     required: [':try'],
-    graph: [':try', ':catch', ':finally'],
+    routine: [':try', ':catch', ':finally'],
     optional: [':catch', ':finally'],
   },
   ':parallel': {
     required: [':parallel'],
-    graph: [':parallel'],
+    routine: [':parallel'],
     optional: [],
   },
   ':if': {
     required: [':if', ':then'],
-    graph: [':then', ':else'],
+    routine: [':then', ':else'],
     optional: [':else'],
   },
   ':switch': {
-    required: [':switch'],
-    graph: [':default'],
-    optional: [],
+    required: [':switch', ':case', ':then'],
+    routine: [':default', ':then'],
+    optional: [':default'],
   },
   // Action maybe?
-  ':log': { required: [':log'], graph: [] },
-  ':setState': { required: [':setState'], graph: [], optional: [] },
+  ':log': { required: [':log'], routine: [] },
+  ':setState': { required: [':setState'], routine: [], optional: [] },
   //
-  ':return': { required: [':return'], graph: [], optional: [] },
-  ':throw': { required: [':throw'], graph: [], optional: [] },
+  ':return': { required: [':return'], routine: [], optional: [] },
+  ':throw': { required: [':throw'], routine: [], optional: [] },
 
-  ':foreach': { required: [':foreach', ':do', ':as'], graph: [':do'], optional: [] },
-  ':while': { required: [':while', ':do'], graph: [':do'], optional: [] },
-  ':case': { required: [':case', ':then'], graph: [':then'], optional: [] },
+  ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
+  ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },
 };
 
-function getAdditionalKeys(keys) {
-  return keys.filter((item) => !controlTypes[keys[0]].required.includes(item));
+function getAdditionalKeys(controlType, keys) {
+  return keys.filter((item) => !controlTypes[controlType].required.includes(item));
 }
 
-function getMissingRequiredControls(controlType, keys) {
-  return controlTypes[keys[controlType]].required.filter((item) => !keys.includes(item));
+function checkMissingRequiredControls({ controlType, keys }, { endpointId }) {
+  const missingControls = controlTypes[controlType].required.filter((item) => !keys.includes(item));
+  if (missingControls.length > 0) {
+    throw new Error(
+      `Missing required control type(s) for endpoint ${endpointId}. Missing ${JSON.stringify(
+        missingControls
+      )}`
+    );
+  }
 }
 
-function getInvalidControls(controlType, keys) {
-  const additionalKeys = getAdditionalKeys(keys);
-  return additionalKeys.filter((item) => !controlTypes[controlType].optional.includes(item));
+function checkInvalidControls({ controlType, keys }, { endpointId }) {
+  const additionalControls = getAdditionalKeys(controlType, keys);
+  const invalidControls = additionalControls.filter(
+    (item) => !controlTypes[controlType].optional.includes(item)
+  );
+
+  if (invalidControls.length > 0) {
+    throw new Error(
+      `Invalid control type(s) for endpoint ${endpointId}. Received ${JSON.stringify(
+        invalidControls
+      )}`
+    );
+  }
 }
 
 function handleSwitch(control, endpointContext) {
@@ -74,13 +90,18 @@ function handleSwitch(control, endpointContext) {
     );
   }
 
-  switchArray.forEach((switchObj) => {
-    validateControl(switchObj, endpointContext);
-    Object.keys.forEach((key) => {
-      if (graphKey(key)) {
-        buildRoutine(control[key], endpointContext);
+  switchArray.forEach((caseObj) => {
+    const input = {
+      controlType: ':switch',
+      keys: [':switch', ...Object.keys(caseObj)],
+    };
+    checkMissingRequiredControls(input, endpointContext);
+    checkInvalidControls(input, endpointContext);
+    Object.keys(caseObj).forEach((key) => {
+      if (routineKey(':switch', key)) {
+        buildRoutine(caseObj[key], endpointContext);
       } else {
-        countControl(key);
+        countControl(key, endpointContext);
       }
     });
   });
@@ -89,36 +110,35 @@ function handleSwitch(control, endpointContext) {
 function validateControl(control, endpointContext) {
   const keys = Object.keys(control);
   const intersection = keys.filter((item) => Object.keys(controlTypes).includes(item));
-  if (intersection.length !== 1) {
-    throw new Error(`More than one control type found. Received ${JSON.stringify(intersection)}`);
+  if (intersection.length === 0) {
+    throw new Error(
+      `Invalid control type(s) for endpoint ${
+        endpointContext.endpointId
+      }. Received "${JSON.stringify(keys)}"`
+    );
+  }
+  if (intersection.length > 1) {
+    throw new Error(
+      `More than one control type found for endpoint ${
+        endpointContext.endpointId
+      }. Received ${JSON.stringify(intersection)}`
+    );
   }
 
   const controlType = intersection[0];
   if (controlType === ':switch') {
     handleSwitch(control, endpointContext);
+    return controlType;
   }
 
-  const missingRequiredControls = getMissingRequiredControls(controlType, keys);
-  if (missingRequiredControls.length > 0) {
-    throw new Error(
-      `Missing required control type(s) for endpoint ${
-        endpointContext.endpointId
-      }. Missing ${JSON.stringify(missingRequiredControls)}`
-    );
-  }
+  checkMissingRequiredControls({ controlType, keys }, endpointContext);
+  checkInvalidControls({ controlType, keys }, endpointContext);
 
-  const invalidControls = getInvalidControls(controlType, keys);
-  if (invalidControls.length > 0) {
-    throw new Error(
-      `Invalid control type(s) for endpoint ${
-        endpointContext.endpointId
-      }. Received ${JSON.stringify(invalidControls)}`
-    );
-  }
+  return controlType;
 }
 
-function graphKey(key) {
-  return controlTypes[key]?.graph.includes(key);
+function routineKey(controlType, key) {
+  return controlTypes[controlType]?.routine.includes(key);
 }
 
-export { graphKey, validateControl };
+export { routineKey, validateControl };

@@ -25,19 +25,16 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
   endpoint.endpointId = endpoint.id;
 
-  const routine = [];
   buildRoutine(endpoint.routine, {
     stageIdCounter: createCounter(),
     checkDuplicateStageId: createCheckDuplicateId({
       message: 'Duplicate stageId "{{ id }}" on endpoint "{{ eventId }}"',
     }),
     endpointId: endpoint.endpointId,
-    routine,
     typeCounters: context.typeCounters,
   });
 
   endpoint.id = `endpoint:${endpoint.endpointId}`;
-  endpoint.routine = routine;
 }
 
 export default buildEndpoint;

@@ -98,3 +98,116 @@ test('routine not an array or object', () => {
     'Routine at api1 on endpoint api1 is not an array or object. Received "api1"'
   );
 });
+
+// Routines with stages and controls working
+test('valid routine with :if', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [
+          {
+            ':if': true,
+            ':then': { id: 'then_stage_1', type: 'MongoDBInsertOne' },
+            ':else': { id: 'else_stage_2', type: 'MongoDBUpdateOne' },
+          },
+          { id: 'stage_3', type: 'MongoDBAggregation' },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:api1',
+        type: 'Api',
+        endpointId: 'api1',
+        routine: [
+          {
+            ':if': true,
+            ':then': {
+              id: 'stage:api1:then_stage_1',
+              endpointId: 'api1',
+              stageId: 'then_stage_1',
+              type: 'MongoDBInsertOne',
+            },
+            ':else': {
+              id: 'stage:api1:else_stage_2',
+              endpointId: 'api1',
+              stageId: 'else_stage_2',
+              type: 'MongoDBUpdateOne',
+            },
+          },
+          {
+            id: 'stage:api1:stage_3',
+            endpointId: 'api1',
+            stageId: 'stage_3',
+            type: 'MongoDBAggregation',
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test('valid routine with :switch', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [
+          {
+            ':switch': [
+              { ':case': 1, ':then': { id: 'case_1_stage_1', type: 'MongoDBInsertOne' } },
+              { ':case': 2, ':then': { id: 'case_2_stage_2', type: 'MongoDBUpdateOne' } },
+            ],
+            ':default': { id: 'default_stage_3', type: 'MongoDBAggregation' },
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:api1',
+        type: 'Api',
+        endpointId: 'api1',
+        routine: [
+          {
+            ':switch': [
+              {
+                ':case': 1,
+                ':then': {
+                  id: 'stage:api1:case_1_stage_1',
+                  endpointId: 'api1',
+                  stageId: 'case_1_stage_1',
+                  type: 'MongoDBInsertOne',
+                },
+              },
+              {
+                ':case': 2,
+                ':then': {
+                  id: 'stage:api1:case_2_stage_2',
+                  endpointId: 'api1',
+                  stageId: 'case_2_stage_2',
+                  type: 'MongoDBUpdateOne',
+                },
+              },
+            ],
+            ':default': {
+              id: 'stage:api1:default_stage_3',
+              endpointId: 'api1',
+              stageId: 'default_stage_3',
+              type: 'MongoDBAggregation',
+            },
+          },
+        ],
+      },
+    ],
+  });
+});
