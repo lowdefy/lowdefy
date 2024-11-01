@@ -65,7 +65,7 @@ test('empty routine on api endpoint', () => {
         id: 'endpoint:1',
         endpointId: '1',
         type: 'Api',
-        stages: [],
+        routine: [],
       },
     ],
   });

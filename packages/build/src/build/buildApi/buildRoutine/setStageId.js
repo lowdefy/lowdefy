@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function setStageId(stage, { endpointId, stageIdCounter }) {
+function setStageId(stage, { endpointId }) {
   stage.stageId = stage.id;
   stage.endpointId = endpointId;
   stage.id = `stage:${endpointId}:${stage.stageId}`;

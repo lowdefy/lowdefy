@@ -24,8 +24,6 @@ function buildStage(stage, endpointContext) {
   validateStage(stage, endpointContext);
   setStageId(stage, endpointContext);
   countStageTypes(stage, endpointContext);
-
-  endpointContext.stages.push(stage);
 }
 
 export default buildStage;

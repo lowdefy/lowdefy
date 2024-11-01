@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import { graphKey } from './controlKeys.js';
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
-import validateControl from './validateControl.js';
+import { validateControl, graphKey } from './controlTypes.js';
 
 function buildControl(control, endpointContext) {
   validateControl(control, endpointContext);

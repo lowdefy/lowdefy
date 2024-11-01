@@ -141,7 +141,7 @@ test('valid stage config', () => {
         id: 'endpoint:api1',
         endpointId: 'api1',
         type: 'Api',
-        stages: [
+        routine: [
           {
             id: 'stage:api1:stage_1',
             endpointId: 'api1',
@@ -189,7 +189,7 @@ test('valid stage config nested array', () => {
         id: 'endpoint:api1',
         endpointId: 'api1',
         type: 'Api',
-        stages: [
+        routine: [
           {
             id: 'stage:api1:stage_1',
             endpointId: 'api1',
