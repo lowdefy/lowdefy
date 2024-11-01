@@ -27,7 +27,7 @@ async function handler({ context, req, res }) {
   // const { blockId, payload } = req.body;
   // context.logger.info({ event: 'call_api', pageId, requestId, blockId });
   // const response = await callRequest(context, { blockId, pageId, payload, requestId });
-  // res.status(200).json(response);
+  res.status(200).json({ response: { success: true } });
 }
 
 export default apiWrapper(handler);
