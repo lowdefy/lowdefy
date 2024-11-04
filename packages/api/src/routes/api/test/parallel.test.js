@@ -266,7 +266,39 @@ test('multiple returns in parallel', async () => {
       response: null,
     },
   ]);
-  expect(res.response).toEqual({ message: 'first return in parallel' }); // unsure
+  expect(res.response).toEqual({ message: 'first return in parallel' });
+});
+
+test('multiple returns in parallel with wait before first return', async () => {
+  const routine = [
+    {
+      ':parallel': [
+        [
+          {
+            id: 'test_request_wait_30',
+            type: 'TestRequestWait',
+            properties: {
+              ms: 30,
+            },
+          },
+          { ':return': { message: 'first return in parallel with wait' } },
+        ],
+        { ':return': { message: 'second return in parallel' } },
+      ],
+    },
+  ];
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'test_request_wait_30',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: null,
+    },
+  ]);
+  expect(res.response).toEqual({ message: 'first return in parallel with wait' });
 });
 
 test('if in parallel', async () => {
