@@ -18,18 +18,18 @@ import { type } from '@lowdefy/helpers';
 import buildStep from './buildStep.js';
 import buildControl from './buildControl.js';
 
-function buildRoutine(subRoutine, endpointContext) {
-  if (type.isArray(subRoutine)) {
-    subRoutine.forEach((item) => {
+function buildRoutine(routine, endpointContext) {
+  if (type.isArray(routine)) {
+    routine.forEach((item) => {
       buildRoutine(item, endpointContext);
     });
     return;
   }
-  if (type.isObject(subRoutine)) {
-    if (Object.keys(subRoutine)[0]?.startsWith(':')) {
-      buildControl(subRoutine, endpointContext);
+  if (type.isObject(routine)) {
+    if (Object.keys(routine)[0]?.startsWith(':')) {
+      buildControl(routine, endpointContext);
     } else {
-      buildStep(subRoutine, endpointContext);
+      buildStep(routine, endpointContext);
     }
     return;
   }
@@ -37,7 +37,7 @@ function buildRoutine(subRoutine, endpointContext) {
     `Routine at ${endpointContext.endpointId} on endpoint ${
       endpointContext.endpointId
     } is not an array or object. Received "${
-      type.isString(subRoutine) ? subRoutine : JSON.stringify(subRoutine)
+      type.isString(routine) ? routine : JSON.stringify(routine)
     }"`
   );
 }
