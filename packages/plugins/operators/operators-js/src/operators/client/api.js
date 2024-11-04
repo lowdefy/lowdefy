@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
+import { get, serializer, type } from '@lowdefy/helpers';
 
-function _api({ arrayIndices, params, apiResponses, location }) {
+function _api({ params, apiResponses, location }) {
+  console.log('_api', { params, apiResponses, location });
   if (!type.isString(params)) {
     throw new Error(
       `Operator Error: _api accepts a string value. Received: ${JSON.stringify(
@@ -24,19 +25,26 @@ function _api({ arrayIndices, params, apiResponses, location }) {
       )} at ${location}.`
     );
   }
-  // const splitKey = params.split('.');
-  // const [endpoint, ...keyParts] = splitKey;
-  // if (endpoint in apiResponses && !apiResponses[endpoint][0].loading) {
-  //   if (splitKey.length === 1) {
-  //     return serializer.copy(apiResponses[endpoint][0].response);
-  //   }
-  //   const key = keyParts.reduce((acc, value) => (acc === '' ? value : acc.concat('.', value)), '');
-  //   return get(apiResponses[endpoint][0].response, applyArrayIndices(arrayIndices, key), {
-  //     copy: true,
-  //     default: null,
-  //   });
-  // }
-  return apiResponses[params][0].response;
+
+  const splitKey = params.split('.');
+  const [endpoint, ...keyParts] = splitKey;
+
+  if (endpoint in apiResponses && !apiResponses[endpoint][0].loading) {
+    const success = apiResponses[endpoint][0].success;
+    const baseKey = success ? 'response' : 'error';
+
+    if (splitKey.length === 1) {
+      return serializer.copy(apiResponses[endpoint][0][baseKey]);
+    }
+
+    const key = keyParts.join('.');
+    return get(apiResponses[endpoint][0][baseKey], key, {
+      copy: true,
+      default: null,
+    });
+  }
+
+  return null;
 }
 
 export default _api;
