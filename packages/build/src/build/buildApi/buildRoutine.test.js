@@ -38,13 +38,13 @@ test('no routine on api endpoint', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_no_routine',
         type: 'Api',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Routine at api1 on endpoint api1 is not an array or object. Received "undefined"'
+    'Routine at test_no_routine on endpoint test_no_routine is not an array or object. Received "undefined"'
   );
 });
 
@@ -52,7 +52,7 @@ test('empty routine on api endpoint', () => {
   const components = {
     api: [
       {
-        id: '1',
+        id: 'test_empty_routine',
         type: 'Api',
         routine: [],
       },
@@ -62,8 +62,8 @@ test('empty routine on api endpoint', () => {
   expect(res).toEqual({
     api: [
       {
-        id: 'endpoint:1',
-        endpointId: '1',
+        id: 'endpoint:test_empty_routine',
+        endpointId: 'test_empty_routine',
         type: 'Api',
         routine: [],
       },
@@ -75,27 +75,29 @@ test('empty routine object on api endpoint', () => {
   const components = {
     api: [
       {
-        id: '1',
+        id: 'test_empty_routine_object',
         type: 'Api',
         routine: {},
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Step is not defined at endpoint "1"');
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step is not defined at endpoint "test_empty_routine_object"'
+  );
 });
 
 test('routine not an array or object', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_routine_not_array',
         type: 'Api',
-        routine: 'api1',
+        routine: 'invalid_type',
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Routine at api1 on endpoint api1 is not an array or object. Received "api1"'
+    'Routine at test_routine_not_array on endpoint test_routine_not_array is not an array or object. Received "invalid_type"'
   );
 });
 
@@ -104,7 +106,7 @@ test('valid routine with :if', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_valid_if',
         type: 'Api',
         routine: [
           {
@@ -121,28 +123,28 @@ test('valid routine with :if', () => {
   expect(res).toEqual({
     api: [
       {
-        id: 'endpoint:api1',
+        id: 'endpoint:test_valid_if',
         type: 'Api',
-        endpointId: 'api1',
+        endpointId: 'test_valid_if',
         routine: [
           {
             ':if': true,
             ':then': {
-              id: 'step:api1:then_step_1',
-              endpointId: 'api1',
+              id: 'step:test_valid_if:then_step_1',
+              endpointId: 'test_valid_if',
               stepId: 'then_step_1',
               type: 'MongoDBInsertOne',
             },
             ':else': {
-              id: 'step:api1:else_step_2',
-              endpointId: 'api1',
+              id: 'step:test_valid_if:else_step_2',
+              endpointId: 'test_valid_if',
               stepId: 'else_step_2',
               type: 'MongoDBUpdateOne',
             },
           },
           {
-            id: 'step:api1:step_3',
-            endpointId: 'api1',
+            id: 'step:test_valid_if:step_3',
+            endpointId: 'test_valid_if',
             stepId: 'step_3',
             type: 'MongoDBAggregation',
           },
@@ -156,7 +158,7 @@ test('valid routine with :switch', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_valid_switch',
         type: 'Api',
         routine: [
           {
@@ -174,17 +176,17 @@ test('valid routine with :switch', () => {
   expect(res).toEqual({
     api: [
       {
-        id: 'endpoint:api1',
+        id: 'endpoint:test_valid_switch',
         type: 'Api',
-        endpointId: 'api1',
+        endpointId: 'test_valid_switch',
         routine: [
           {
             ':switch': [
               {
                 ':case': 1,
                 ':then': {
-                  id: 'step:api1:case_1_step_1',
-                  endpointId: 'api1',
+                  id: 'step:test_valid_switch:case_1_step_1',
+                  endpointId: 'test_valid_switch',
                   stepId: 'case_1_step_1',
                   type: 'MongoDBInsertOne',
                 },
@@ -192,16 +194,16 @@ test('valid routine with :switch', () => {
               {
                 ':case': 2,
                 ':then': {
-                  id: 'step:api1:case_2_step_2',
-                  endpointId: 'api1',
+                  id: 'step:test_valid_switch:case_2_step_2',
+                  endpointId: 'test_valid_switch',
                   stepId: 'case_2_step_2',
                   type: 'MongoDBUpdateOne',
                 },
               },
             ],
             ':default': {
-              id: 'step:api1:default_step_3',
-              endpointId: 'api1',
+              id: 'step:test_valid_switch:default_step_3',
+              endpointId: 'test_valid_switch',
               stepId: 'default_step_3',
               type: 'MongoDBAggregation',
             },
