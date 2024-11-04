@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
+import callAPIHandler from '../callAPIHandler.js';
+
 function createCallAPI({ blockId, context, event }) {
   return function callAPI(params) {
-    return context._internal.API.callAPI({
+    console.log('createCallAPI', blockId, context, event, params);
+    return callAPIHandler(context, {
       blockId,
       context,
       event,

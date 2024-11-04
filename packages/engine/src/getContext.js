@@ -16,7 +16,6 @@
 
 import { WebParser } from '@lowdefy/operators';
 
-import API from './API.js';
 import Actions from './Actions.js';
 import Blocks from './Blocks.js';
 import Requests from './Requests.js';
@@ -80,7 +79,6 @@ function getContext({
     pageId: config.pageId,
     eventLog: [],
     jsMap,
-    apiResponses: {},
     requests: {},
     state: {},
     _internal: {
@@ -93,7 +91,6 @@ function getContext({
   _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
-  _internal.API = new API(ctx);
   _internal.Requests = new Requests(ctx);
   _internal.RootBlocks = new Blocks({
     areas: { root: { blocks: [_internal.rootBlock] } },

@@ -15,7 +15,6 @@
 */
 
 import Actions from './Actions.js';
-import API from './API.js';
 import Blocks from './Blocks.js';
 import createLink from './createLink.js';
 import Events from './Events.js';
@@ -24,6 +23,6 @@ import State from './State.js';
 
 import getContext from './getContext.js';
 
-export { Actions, API, Blocks, createLink, Events, Requests, State };
+export { Actions, Blocks, createLink, Events, Requests, State };
 
 export default getContext;

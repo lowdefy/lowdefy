@@ -37,7 +37,7 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
-    const { basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
+    const { apiResponses, basePath, home, inputs, lowdefyGlobal, menus, pageId, user, _internal } =
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
@@ -58,7 +58,7 @@ class WebParser {
           actions,
           args,
           arrayIndices,
-          apiResponses: this.context.apiResponses,
+          apiResponses,
           basePath,
           event,
           eventLog: this.context.eventLog,

@@ -50,7 +50,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       router,
       updaters: {},
     };
-    // lowdefy.apiResponses = {};
+    lowdefy.apiResponses = {};
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
