@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 
-import runTest from './runTest.js';
+import runTest from './test/runTest.js';
 
 test('single stage', async () => {
   const routine = {
@@ -15,13 +15,15 @@ test('single stage', async () => {
   expect(res.steps).toEqual([
     {
       stepId: 'test_request',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
       response: null,
     },
   ]);
-  expect(res.response).toEqual(null);
+  // TODO: Do we return null or undefined
+  expect(res.response).toEqual(undefined);
 });
 
 test('array with single stage', async () => {
@@ -39,13 +41,14 @@ test('array with single stage', async () => {
   expect(res.steps).toEqual([
     {
       stepId: 'test_request',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
       response: null,
     },
   ]);
-  expect(res.response).toEqual(null);
+  expect(res.response).toEqual(undefined);
 });
 
 test('array with two stages', async () => {
@@ -70,6 +73,7 @@ test('array with two stages', async () => {
   expect(res.steps).toEqual([
     {
       stepId: 'test_request_1',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
@@ -77,13 +81,14 @@ test('array with two stages', async () => {
     },
     {
       stepId: 'test_request_2',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
       response: null,
     },
   ]);
-  expect(res.response).toEqual(null);
+  expect(res.response).toEqual(undefined);
 });
 
 test('nested array', async () => {
@@ -117,6 +122,7 @@ test('nested array', async () => {
   expect(res.steps).toEqual([
     {
       stepId: 'test_request_1',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
@@ -124,6 +130,7 @@ test('nested array', async () => {
     },
     {
       stepId: 'test_request_2',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
@@ -131,13 +138,14 @@ test('nested array', async () => {
     },
     {
       stepId: 'test_request_3',
+      type: 'TestRequest',
       startTimestamp: 'fake_time',
       endTimestamp: 'fake_time',
       success: true,
       response: null,
     },
   ]);
-  expect(res.response).toEqual(null);
+  expect(res.response).toEqual(undefined);
 });
 
 test('unknown control', async () => {

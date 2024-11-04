@@ -14,21 +14,24 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-import recRunRoutine from './recRunRoutine.js';
+import controlIf from './controlIf.js';
+import controlTry from './controlTry.js';
 
-function runRoutine(context, { routine }) {
-  // const state = {};
-  const { error, response, status } = recRunRoutine(context, { routine });
-
-  const success = !['error', 'reject'].includes(status);
-
-  return {
-    error: serializer.serialize(error),
-    response: serializer.serialize(response),
-    status: success ? 'success' : status,
-    success,
-  };
+function notImplemented(context) {
+  context.logger.debug({ event: 'debug_control_not_implemented' });
 }
 
-export default runRoutine;
+const controlHandlers = {
+  ':break': notImplemented,
+  ':foreach': notImplemented,
+  ':if': controlIf,
+  ':log': notImplemented,
+  ':parallel': notImplemented,
+  ':return': notImplemented,
+  ':setState': notImplemented,
+  ':switch': notImplemented,
+  ':try': controlTry,
+  ':while': notImplemented,
+};
+
+export default controlHandlers;

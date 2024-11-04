@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 
-import runTest from './runTest.js';
+import runTest from '../test/runTest.js';
 
 test('first case holds', async () => {
   const routine = {
