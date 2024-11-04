@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
-import { get, serializer } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 
-async function callAPIHandler(context, { params, blockId, event }) {
-  console.log('CallAPICLASS', params, blockId, event, context);
-
+async function callAPIHandler(context, { params, blockId }) {
   if (!context._internal.lowdefy.apiResponses[params.endpointId]) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
   }
@@ -30,33 +28,39 @@ async function callAPIHandler(context, { params, blockId, event }) {
 
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
 
-  console.log('FETCH', api);
   api.loading = true;
   api.success = null;
   const startTime = Date.now();
 
-  const { response, success } = await context._internal.lowdefy._internal.callAPI({
-    blockId: api.blockId,
-    pageId: context.pageId,
-    payload: serializer.serialize(api.payload),
-    endpointId: api.endpointId,
-  });
-  console.log('RESPONSE', response);
+  try {
+    const { error, response, status, success } = await context._internal.lowdefy._internal.callAPI({
+      blockId: api.blockId,
+      pageId: context.pageId,
+      payload: serializer.serialize(api.payload),
+      endpointId: api.endpointId,
+    });
 
-  const deserializedResponse = serializer.deserialize(
-    get(response, 'response', {
-      default: null,
-    })
-  );
+    api.error = serializer.deserialize(error);
+    api.loading = false;
+    api.response = serializer.deserialize(response);
+    api.status = status;
+    api.success = success;
+    const endTime = Date.now();
+    api.responseTime = endTime - startTime;
+    context._internal.update();
+  } catch (error) {
+    api.error = error;
+    api.loading = false;
+    api.response = null;
+    api.status = 'error';
+    api.success = false;
+    const endTime = Date.now();
+    api.responseTime = endTime - startTime;
+    context._internal.update();
+    throw error;
+  }
 
-  api.response = deserializedResponse;
-  api.success = success;
-  api.loading = false;
-  const endTime = Date.now();
-  api.responseTime = endTime - startTime;
-  context._internal.update();
-
-  return deserializedResponse;
+  return api;
 }
 
 export default callAPIHandler;

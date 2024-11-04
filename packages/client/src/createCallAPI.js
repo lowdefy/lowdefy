@@ -17,8 +17,7 @@
 import request from './request.js';
 
 function createCallAPI({ basePath }) {
-  function callAPI({ blockId, pageId, payload, endpointId }) {
-    console.log('CallAPI', blockId, pageId, payload, endpointId);
+  function callAPI({ payload, endpointId }) {
     return request({
       url: `${basePath}/api/endpoints/${endpointId}`,
       method: 'POST',

@@ -17,7 +17,6 @@
 import { applyArrayIndices, get, serializer, type } from '@lowdefy/helpers';
 
 function _api({ arrayIndices, params, apiResponses, location }) {
-  console.log('API_operator', arrayIndices, params, apiResponses, location);
   if (!type.isString(params)) {
     throw new Error(
       `Operator Error: _api accepts a string value. Received: ${JSON.stringify(
@@ -37,7 +36,6 @@ function _api({ arrayIndices, params, apiResponses, location }) {
   //     default: null,
   //   });
   // }
-  console.log('API_operator2', apiResponses[params][0].response);
   return apiResponses[params][0].response;
 }
 
