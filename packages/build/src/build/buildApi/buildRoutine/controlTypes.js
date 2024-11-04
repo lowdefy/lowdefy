@@ -29,6 +29,7 @@ const controlTypes = {
     routine: [':parallel'],
     optional: [],
   },
+
   ':if': {
     required: [':if', ':then'],
     routine: [':then', ':else'],
@@ -39,15 +40,16 @@ const controlTypes = {
     routine: [':default', ':then'],
     optional: [':default'],
   },
-  // Action maybe?
-  ':log': { required: [':log'], routine: [] },
-  ':setState': { required: [':setState'], routine: [], optional: [] },
-  //
-  ':return': { required: [':return'], routine: [], optional: [] },
-  ':throw': { required: [':throw'], routine: [], optional: [] },
 
   ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
   ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },
+
+  ':log': { required: [':log'], routine: [] },
+  ':setState': { required: [':setState'], routine: [], optional: [] },
+
+  ':return': { required: [':return'], routine: [], optional: [] },
+  ':throw': { required: [':throw'], routine: [], optional: [] },
+  ':reject': { required: [':reject'], routine: [], optional: [] },
 };
 
 function getAdditionalKeys(controlType, keys) {
