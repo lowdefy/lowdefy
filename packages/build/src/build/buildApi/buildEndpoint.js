@@ -16,7 +16,6 @@
   limitations under the License.
 */
 
-import createCounter from '../../utils/createCounter.js';
 import buildRoutine from './buildRoutine/buildRoutine.js';
 import validateEndpoint from './validateEndpoint.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
@@ -26,7 +25,6 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   endpoint.endpointId = endpoint.id;
 
   buildRoutine(endpoint.routine, {
-    stageIdCounter: createCounter(),
     checkDuplicateStageId: createCheckDuplicateId({
       message: 'Duplicate stageId "{{ id }}" on endpoint "{{ eventId }}"',
     }),
