@@ -15,7 +15,7 @@
 */
 
 function countStepTypes(step, { typeCounters }) {
-  typeCounters.steps.increment(step.type);
+  typeCounters.requests.increment(step.type);
 }
 
 export default countStepTypes;
