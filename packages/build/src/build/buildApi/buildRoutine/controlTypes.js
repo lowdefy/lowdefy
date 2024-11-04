@@ -20,37 +20,34 @@ import countControl from './countControl.js';
 import countOperators from '../../../utils/countOperators.js';
 
 const controlTypes = {
-  ':try': {
-    required: [':try'],
-    routine: [':try', ':catch', ':finally'],
-    optional: [':catch', ':finally'],
-  },
-  ':parallel': {
-    required: [':parallel'],
-    routine: [':parallel'],
-    optional: [],
-  },
-
+  ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
   ':if': {
     required: [':if', ':then'],
     routine: [':then', ':else'],
     optional: [':else'],
   },
+  ':log': { required: [':log'], routine: [], optional: [] },
+  ':parallel': {
+    required: [':parallel'],
+    routine: [':parallel'],
+    optional: [],
+  },
+  ':reject': { required: [':reject'], routine: [], optional: [] },
+  ':return': { required: [':return'], routine: [], optional: [] },
+  ':setState': { required: [':setState'], routine: [], optional: [] },
   ':switch': {
     required: [':switch', ':case', ':then'],
     routine: [':default', ':then'],
     optional: [':default'],
   },
-
-  ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
-  ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },
-
-  ':log': { required: [':log'], routine: [], optional: [] },
-  ':setState': { required: [':setState'], routine: [], optional: [] },
-
-  ':return': { required: [':return'], routine: [], optional: [] },
   ':throw': { required: [':throw'], routine: [], optional: [] },
-  ':reject': { required: [':reject'], routine: [], optional: [] },
+  ':try': {
+    required: [':try'],
+    routine: [':try', ':catch', ':finally'],
+    optional: [':catch', ':finally'],
+  },
+
+  ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },
 };
 
 function getAdditionalKeys(controlType, keys) {
