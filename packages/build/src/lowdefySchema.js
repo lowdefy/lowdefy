@@ -467,6 +467,21 @@ export default {
         },
       },
     },
+    endpoint: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      routine: {
+        anyOf: [
+          {
+            type: 'array',
+          },
+          {
+            type: 'object',
+          },
+        ],
+      },
+    },
     connection: {
       type: 'object',
       additionalProperties: false,
@@ -803,6 +818,15 @@ export default {
       },
       errorMessage: {
         type: 'App "connections" should be an array.',
+      },
+    },
+    api: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/endpoint',
+      },
+      errorMessage: {
+        type: 'App "api" should be an array.',
       },
     },
     menus: {
