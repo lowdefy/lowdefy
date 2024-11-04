@@ -213,3 +213,60 @@ test('valid routine with :switch', () => {
     ],
   });
 });
+
+test('valid routine with :try object', () => {
+  const components = {
+    api: [
+      {
+        id: 'test_valid_try',
+        type: 'Api',
+        routine: {
+          ':try': [
+            { id: 'try_step_1', type: 'MongoDBUpdateMany' },
+            { id: 'try_step_2', type: 'MongoDBInsertMany' },
+          ],
+          ':catch': { id: 'catch_step_1', type: 'MongoDBInsertOne' },
+          ':finally': { id: 'finally_step_1', type: 'MongoDBUpdateOne' },
+        },
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        id: 'endpoint:test_valid_try',
+        type: 'Api',
+        endpointId: 'test_valid_try',
+        routine: {
+          ':try': [
+            {
+              id: 'step:test_valid_try:try_step_1',
+              endpointId: 'test_valid_try',
+              stepId: 'try_step_1',
+              type: 'MongoDBUpdateMany',
+            },
+            {
+              id: 'step:test_valid_try:try_step_2',
+              endpointId: 'test_valid_try',
+              stepId: 'try_step_2',
+              type: 'MongoDBInsertMany',
+            },
+          ],
+          ':catch': {
+            id: 'step:test_valid_try:catch_step_1',
+            endpointId: 'test_valid_try',
+            stepId: 'catch_step_1',
+            type: 'MongoDBInsertOne',
+          },
+          ':finally': {
+            id: 'step:test_valid_try:finally_step_1',
+            endpointId: 'test_valid_try',
+            stepId: 'finally_step_1',
+            type: 'MongoDBUpdateOne',
+          },
+        },
+      },
+    ],
+  });
+});
