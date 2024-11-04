@@ -29,7 +29,6 @@ function buildRoutine(subRoutine, endpointContext) {
     if (Object.keys(subRoutine)[0]?.startsWith(':')) {
       buildControl(subRoutine, endpointContext);
     } else {
-      //add second condition to check valid control
       buildStep(subRoutine, endpointContext);
     }
     return;

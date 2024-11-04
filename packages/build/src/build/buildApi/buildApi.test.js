@@ -34,20 +34,20 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('buildApi no api', () => {
+test('no api defined', () => {
   const components = {};
   const res = buildApi({ components, context });
   expect(res.api).toBe(undefined);
 });
 
-test('buildApi api not an array', () => {
+test('api is not an array', () => {
   const components = {
     api: 'api',
   };
   expect(() => buildApi({ components, context })).toThrow('Api is not an array. Received "api".');
 });
 
-test('endpoint does not have an id', () => {
+test('api endpoint does not have an id', () => {
   const components = {
     api: [
       {
@@ -58,7 +58,7 @@ test('endpoint does not have an id', () => {
   expect(() => buildApi({ components, context })).toThrow('Endpoint id missing at endpoint 0.');
 });
 
-test('endpoint id is not a string', () => {
+test('api endpoint id is not a string', () => {
   const components = {
     api: [
       {
@@ -72,7 +72,7 @@ test('endpoint id is not a string', () => {
   );
 });
 
-test('throw on duplicate endpoint ids', () => {
+test('duplicate api endpoint ids', () => {
   const components = {
     api: [
       {
