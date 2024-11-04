@@ -70,6 +70,7 @@ function buildTypes({ components, context }) {
     blocks: {},
     connections: {},
     requests: {},
+    api: {},
     operators: {
       client: {},
       server: {},
@@ -123,6 +124,13 @@ function buildTypes({ components, context }) {
     definitions: context.typesMap.connections,
     store: components.types.connections,
     typeClass: 'Connection',
+  });
+
+  buildTypeClass(context, {
+    counter: typeCounters.requests,
+    definitions: context.typesMap.api,
+    store: components.types.api,
+    typeClass: 'Api',
   });
 
   buildTypeClass(context, {

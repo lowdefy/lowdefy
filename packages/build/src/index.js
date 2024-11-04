@@ -40,6 +40,7 @@ import writeApp from './build/writeApp.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
 import writeConnections from './build/writeConnections.js';
+import writeApi from './build/writeApi.js';
 import writeGlobal from './build/writeGlobal.js';
 import writeJs from './build/buildJs/writeJs.js';
 import writeMaps from './build/writeMaps.js';
@@ -69,9 +70,9 @@ async function build(options) {
   await writeApp({ components, context });
   await writeAuth({ components, context });
   await writeConnections({ components, context });
+  await writeApi({ components, context });
   await writeRequests({ components, context });
   await writePages({ components, context });
-  //TODO: writeApi and update build types and build counters to use
   await writeConfig({ components, context });
   await writeGlobal({ components, context });
   await writeMaps({ components, context });
