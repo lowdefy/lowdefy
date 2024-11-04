@@ -270,3 +270,52 @@ test('valid routine with :try object', () => {
     ],
   });
 });
+
+test('count operators', () => {
+  const components = {
+    api: [
+      {
+        id: 'test_count_operators',
+        type: 'Api',
+        routine: [
+          {
+            ':if': {
+              _not: {
+                _user: 'registered',
+              },
+            },
+            ':then': [
+              {
+                id: 'register_user',
+                type: 'MongoDBInsertOne',
+              },
+              {
+                id: 'event_register_user',
+                type: 'MongoDBInsertOne',
+                properties: { payload: { user_id: { _step: 'register_user.insertedId' } } },
+              },
+            ],
+          },
+          {
+            ':if': { _payload: 'return_default' },
+            ':then': {
+              ':return': null,
+            },
+            ':else': {
+              ':return': {
+                _step: 'register_user.insertedId',
+              },
+            },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({
+    _step: 2,
+    _not: 1,
+    _user: 1,
+    _payload: 1,
+  });
+});

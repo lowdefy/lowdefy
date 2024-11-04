@@ -53,14 +53,14 @@ test('missing required controls', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_missing_control',
         type: 'Api',
         routine: { ':if': true },
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Missing required control type(s) for endpoint api1. Missing [":then"]'
+    'Missing required control type(s) for endpoint test_missing_control. Missing [":then"]'
   );
 });
 
@@ -68,14 +68,14 @@ test('throw more than one control', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_multiple_controls',
         type: 'Api',
         routine: { ':if': true, ':then': [], ':try': [], ':catch': 'error' },
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'More than one control type found for endpoint api1. Received [":if",":try"]'
+    'More than one control type found for endpoint test_multiple_controls. Received [":if",":try"]'
   );
 });
 
@@ -83,14 +83,14 @@ test('throw invalid control with a valid control', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_invalid_control',
         type: 'Api',
         routine: { ':if': true, ':then': [], ':invalid': [], ':catch': 'error' },
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Invalid control type(s) for endpoint api1. Received [":invalid",":catch"]'
+    'Invalid control type(s) for endpoint test_invalid_control. Received [":invalid",":catch"]'
   );
 });
 
@@ -98,14 +98,14 @@ test('throw switch not an array', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_invalid_switch',
         type: 'Api',
         routine: { ':switch': true },
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Type given for :switch control is invalid at endpoint api1. Received true'
+    'Type given for :switch control is invalid at endpoint test_invalid_switch. Received true'
   );
 });
 
@@ -113,13 +113,56 @@ test('throw missing :case for :switch control', () => {
   const components = {
     api: [
       {
-        id: 'api1',
+        id: 'test_missing_case',
         type: 'Api',
         routine: { ':switch': [{ ':then': {} }] },
       },
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Missing required control type(s) for endpoint api1. Missing [":case"]'
+    'Missing required control type(s) for endpoint test_missing_case. Missing [":case"]'
   );
+});
+
+test('count controls', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1',
+        type: 'Api',
+        routine: [
+          {
+            ':try': [
+              { ':try': { ':try': { id: 'test_count_controls', type: 'MongoDBUpdateOne' } } },
+            ],
+            ':catch': {
+              ':if': true,
+              ':then': {
+                ':if': false,
+                ':then': [
+                  { id: 'then_step_1', type: 'MongoDBInsertOne' },
+                  { ':setState': { result: { _step: 'then_step_1' } } },
+                ],
+              },
+              ':else': [{ id: 'else_step_1', type: 'MongoDBUpdateMany' }],
+            },
+            ':finally': {
+              ':return': 'return value',
+            },
+          },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.controls.getCounts()).toEqual({
+    ':try': 3,
+    ':catch': 1,
+    ':finally': 1,
+    ':if': 2,
+    ':then': 2,
+    ':else': 1,
+    ':return': 1,
+    ':setState': 1,
+  });
 });

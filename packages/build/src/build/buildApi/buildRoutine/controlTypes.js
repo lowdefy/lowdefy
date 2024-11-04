@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
+import countOperators from '../../../utils/countOperators.js';
 
 const controlTypes = {
   ':try': {
@@ -44,7 +45,7 @@ const controlTypes = {
   ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
   ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },
 
-  ':log': { required: [':log'], routine: [] },
+  ':log': { required: [':log'], routine: [], optional: [] },
   ':setState': { required: [':setState'], routine: [], optional: [] },
 
   ':return': { required: [':return'], routine: [], optional: [] },
@@ -103,6 +104,7 @@ function handleSwitch(control, endpointContext) {
       if (routineKey(':switch', key)) {
         buildRoutine(caseObj[key], endpointContext);
       } else {
+        countOperators(caseObj[key], { counter: endpointContext.typeCounters.operators.server });
         countControl(key, endpointContext);
       }
     });

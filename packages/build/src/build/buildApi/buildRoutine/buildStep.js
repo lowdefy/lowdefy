@@ -19,9 +19,11 @@
 import validateStep from './validateStep.js';
 import setStepId from './setStepId.js';
 import countStepTypes from './countStepTypes.js';
+import countOperators from '../../../utils/countOperators.js';
 
 function buildStep(step, endpointContext) {
   validateStep(step, endpointContext);
+  countOperators(step.properties ?? {}, { counter: endpointContext.typeCounters.operators.server });
   setStepId(step, endpointContext);
   countStepTypes(step, endpointContext);
 }

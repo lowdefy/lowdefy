@@ -17,13 +17,16 @@
 import buildRoutine from './buildRoutine.js';
 import countControl from './countControl.js';
 import { validateControl, routineKey } from './controlTypes.js';
+import countOperators from '../../../utils/countOperators.js';
 
 function buildControl(control, endpointContext) {
   const controlType = validateControl(control, endpointContext);
   Object.keys(control).forEach((key) => {
     if (routineKey(controlType, key)) {
+      countControl(key, endpointContext);
       buildRoutine(control[key], endpointContext);
     } else {
+      countOperators(control[key], { counter: endpointContext.typeCounters.operators.server });
       countControl(key, endpointContext);
     }
   });
