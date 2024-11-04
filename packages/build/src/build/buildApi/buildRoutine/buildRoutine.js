@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import buildStage from './buildStage.js';
+import buildStep from './buildStep.js';
 import buildControl from './buildControl.js';
 
 function buildRoutine(subRoutine, endpointContext) {
@@ -30,7 +30,7 @@ function buildRoutine(subRoutine, endpointContext) {
       buildControl(subRoutine, endpointContext);
     } else {
       //add second condition to check valid control
-      buildStage(subRoutine, endpointContext);
+      buildStep(subRoutine, endpointContext);
     }
     return;
   }

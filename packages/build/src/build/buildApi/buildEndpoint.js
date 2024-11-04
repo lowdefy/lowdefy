@@ -25,8 +25,8 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   endpoint.endpointId = endpoint.id;
 
   buildRoutine(endpoint.routine, {
-    checkDuplicateStageId: createCheckDuplicateId({
-      message: 'Duplicate stageId "{{ id }}" on endpoint "{{ eventId }}"',
+    checkDuplicateStepId: createCheckDuplicateId({
+      message: 'Duplicate stepId "{{ id }}" on endpoint "{{ eventId }}"',
     }),
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,

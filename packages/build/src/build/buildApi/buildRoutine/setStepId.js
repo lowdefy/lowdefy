@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-function setStageId(stage, { endpointId }) {
-  stage.stageId = stage.id;
-  stage.endpointId = endpointId;
-  stage.id = `stage:${endpointId}:${stage.stageId}`;
+function setStepId(step, { endpointId }) {
+  step.stepId = step.id;
+  step.endpointId = endpointId;
+  step.id = `step:${endpointId}:${step.stepId}`;
 }
 
-export default setStageId;
+export default setStepId;

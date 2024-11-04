@@ -34,7 +34,7 @@ beforeEach(() => {
   mockLog.mockReset();
 });
 
-test('stage does not have an id', () => {
+test('step does not have an id', () => {
   const components = {
     api: [
       {
@@ -48,10 +48,10 @@ test('stage does not have an id', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Stage id missing at endpoint "api1".');
+  expect(() => buildApi({ components, context })).toThrow('Step id missing at endpoint "api1".');
 });
 
-test('stage id is not a string', () => {
+test('step id is not a string', () => {
   const components = {
     api: [
       {
@@ -67,11 +67,11 @@ test('stage id is not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Stage id is not a string at endpoint "api1". Received true.'
+    'Step id is not a string at endpoint "api1". Received true.'
   );
 });
 
-test('stage type not a string', () => {
+test('step type not a string', () => {
   const components = {
     api: [
       {
@@ -79,7 +79,7 @@ test('stage type not a string', () => {
         type: 'Api',
         routine: [
           {
-            id: 'stageId',
+            id: 'stepId',
             type: 1,
           },
         ],
@@ -87,11 +87,11 @@ test('stage type not a string', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Stage type is not a string at "stageId" on endpoint "api1". Received 1.'
+    'Step type is not a string at "stepId" on endpoint "api1". Received 1.'
   );
 });
 
-test('throw on duplicate stage ids', () => {
+test('throw on duplicate step ids', () => {
   const components = {
     api: [
       {
@@ -99,11 +99,11 @@ test('throw on duplicate stage ids', () => {
         type: 'Api',
         routine: [
           {
-            id: 'stage_1',
+            id: 'step_1',
             type: 'MongoDBInsertOne',
           },
           {
-            id: 'stage_1',
+            id: 'step_1',
             type: 'MongoDBInsertOne',
           },
         ],
@@ -111,11 +111,11 @@ test('throw on duplicate stage ids', () => {
     ],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Duplicate stageId "stage_1" on endpoint "api1"'
+    'Duplicate stepId "step_1" on endpoint "api1"'
   );
 });
 
-test('valid routine stage config', () => {
+test('valid routine step config', () => {
   const components = {
     api: [
       {
@@ -123,11 +123,11 @@ test('valid routine stage config', () => {
         type: 'Api',
         routine: [
           {
-            id: 'stage_1',
+            id: 'step_1',
             type: 'MongoDBInsertOne',
           },
           {
-            id: 'stage_2',
+            id: 'step_2',
             type: 'MongoDBUpdateOne',
           },
         ],
@@ -143,15 +143,15 @@ test('valid routine stage config', () => {
         type: 'Api',
         routine: [
           {
-            id: 'stage:api1:stage_1',
+            id: 'step:api1:step_1',
             endpointId: 'api1',
-            stageId: 'stage_1',
+            stepId: 'step_1',
             type: 'MongoDBInsertOne',
           },
           {
-            id: 'stage:api1:stage_2',
+            id: 'step:api1:step_2',
             endpointId: 'api1',
-            stageId: 'stage_2',
+            stepId: 'step_2',
             type: 'MongoDBUpdateOne',
           },
         ],
@@ -160,7 +160,7 @@ test('valid routine stage config', () => {
   });
 });
 
-test('valid routine stage config nested array', () => {
+test('valid routine step config nested array', () => {
   const components = {
     api: [
       {
@@ -169,15 +169,15 @@ test('valid routine stage config nested array', () => {
         routine: [
           [
             {
-              id: 'stage_1',
+              id: 'step_1',
               type: 'MongoDBInsertOne',
             },
           ],
           [
-            { id: 'stage_2', type: 'MongoDBUpdateOne' },
-            [{ id: 'stage_3', type: 'MongoDBAggregation' }],
+            { id: 'step_2', type: 'MongoDBUpdateOne' },
+            [{ id: 'step_3', type: 'MongoDBAggregation' }],
           ],
-          [[[{ id: 'stage_4', type: 'MongoDBInsertMany' }]]],
+          [[[{ id: 'step_4', type: 'MongoDBInsertMany' }]]],
         ],
       },
     ],
@@ -192,24 +192,24 @@ test('valid routine stage config nested array', () => {
         routine: [
           [
             {
-              id: 'stage:api1:stage_1',
+              id: 'step:api1:step_1',
               endpointId: 'api1',
-              stageId: 'stage_1',
+              stepId: 'step_1',
               type: 'MongoDBInsertOne',
             },
           ],
           [
             {
-              id: 'stage:api1:stage_2',
+              id: 'step:api1:step_2',
               endpointId: 'api1',
-              stageId: 'stage_2',
+              stepId: 'step_2',
               type: 'MongoDBUpdateOne',
             },
             [
               {
-                id: 'stage:api1:stage_3',
+                id: 'step:api1:step_3',
                 endpointId: 'api1',
-                stageId: 'stage_3',
+                stepId: 'step_3',
                 type: 'MongoDBAggregation',
               },
             ],
@@ -218,9 +218,9 @@ test('valid routine stage config nested array', () => {
             [
               [
                 {
-                  id: 'stage:api1:stage_4',
+                  id: 'step:api1:step_4',
                   endpointId: 'api1',
-                  stageId: 'stage_4',
+                  stepId: 'step_4',
                   type: 'MongoDBInsertMany',
                 },
               ],

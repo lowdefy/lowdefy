@@ -40,7 +40,7 @@ test('invalid control', () => {
       {
         id: 'api1',
         type: 'Api',
-        routine: { ':invalid': 'stage' },
+        routine: { ':invalid': 'step' },
       },
     ],
   };

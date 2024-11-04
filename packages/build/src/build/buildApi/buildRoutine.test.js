@@ -81,7 +81,7 @@ test('empty routine object on api endpoint', () => {
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Stage is not defined at endpoint "1"');
+  expect(() => buildApi({ components, context })).toThrow('Step is not defined at endpoint "1"');
 });
 
 test('routine not an array or object', () => {
@@ -99,7 +99,7 @@ test('routine not an array or object', () => {
   );
 });
 
-// Routines with stages and controls working
+// Routines with steps and controls working
 test('valid routine with :if', () => {
   const components = {
     api: [
@@ -109,10 +109,10 @@ test('valid routine with :if', () => {
         routine: [
           {
             ':if': true,
-            ':then': { id: 'then_stage_1', type: 'MongoDBInsertOne' },
-            ':else': { id: 'else_stage_2', type: 'MongoDBUpdateOne' },
+            ':then': { id: 'then_step_1', type: 'MongoDBInsertOne' },
+            ':else': { id: 'else_step_2', type: 'MongoDBUpdateOne' },
           },
-          { id: 'stage_3', type: 'MongoDBAggregation' },
+          { id: 'step_3', type: 'MongoDBAggregation' },
         ],
       },
     ],
@@ -128,22 +128,22 @@ test('valid routine with :if', () => {
           {
             ':if': true,
             ':then': {
-              id: 'stage:api1:then_stage_1',
+              id: 'step:api1:then_step_1',
               endpointId: 'api1',
-              stageId: 'then_stage_1',
+              stepId: 'then_step_1',
               type: 'MongoDBInsertOne',
             },
             ':else': {
-              id: 'stage:api1:else_stage_2',
+              id: 'step:api1:else_step_2',
               endpointId: 'api1',
-              stageId: 'else_stage_2',
+              stepId: 'else_step_2',
               type: 'MongoDBUpdateOne',
             },
           },
           {
-            id: 'stage:api1:stage_3',
+            id: 'step:api1:step_3',
             endpointId: 'api1',
-            stageId: 'stage_3',
+            stepId: 'step_3',
             type: 'MongoDBAggregation',
           },
         ],
@@ -161,10 +161,10 @@ test('valid routine with :switch', () => {
         routine: [
           {
             ':switch': [
-              { ':case': 1, ':then': { id: 'case_1_stage_1', type: 'MongoDBInsertOne' } },
-              { ':case': 2, ':then': { id: 'case_2_stage_2', type: 'MongoDBUpdateOne' } },
+              { ':case': 1, ':then': { id: 'case_1_step_1', type: 'MongoDBInsertOne' } },
+              { ':case': 2, ':then': { id: 'case_2_step_2', type: 'MongoDBUpdateOne' } },
             ],
-            ':default': { id: 'default_stage_3', type: 'MongoDBAggregation' },
+            ':default': { id: 'default_step_3', type: 'MongoDBAggregation' },
           },
         ],
       },
@@ -183,26 +183,26 @@ test('valid routine with :switch', () => {
               {
                 ':case': 1,
                 ':then': {
-                  id: 'stage:api1:case_1_stage_1',
+                  id: 'step:api1:case_1_step_1',
                   endpointId: 'api1',
-                  stageId: 'case_1_stage_1',
+                  stepId: 'case_1_step_1',
                   type: 'MongoDBInsertOne',
                 },
               },
               {
                 ':case': 2,
                 ':then': {
-                  id: 'stage:api1:case_2_stage_2',
+                  id: 'step:api1:case_2_step_2',
                   endpointId: 'api1',
-                  stageId: 'case_2_stage_2',
+                  stepId: 'case_2_step_2',
                   type: 'MongoDBUpdateOne',
                 },
               },
             ],
             ':default': {
-              id: 'stage:api1:default_stage_3',
+              id: 'step:api1:default_step_3',
               endpointId: 'api1',
-              stageId: 'default_stage_3',
+              stepId: 'default_step_3',
               type: 'MongoDBAggregation',
             },
           },

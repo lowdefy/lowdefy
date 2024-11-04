@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 /*
   Copyright 2020-2024 Lowdefy, Inc
 
@@ -14,8 +16,14 @@
   limitations under the License.
 */
 
-function countStageTypes(stage, { typeCounters }) {
-  typeCounters.stages.increment(stage.type);
+import validateStep from './validateStep.js';
+import setStepId from './setStepId.js';
+import countStepTypes from './countStepTypes.js';
+
+function buildStep(step, endpointContext) {
+  validateStep(step, endpointContext);
+  setStepId(step, endpointContext);
+  countStepTypes(step, endpointContext);
 }
 
-export default countStageTypes;
+export default buildStep;

@@ -42,7 +42,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
-      stages: createCounter(),
+      steps: createCounter(),
       controls: createCounter(),
       operators: {
         client: createCounter(),
