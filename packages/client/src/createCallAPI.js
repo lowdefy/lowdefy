@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-import Actions from './Actions.js';
-import Blocks from './Blocks.js';
-import createLink from './createLink.js';
-import Events from './Events.js';
-import Requests from './Requests.js';
-import State from './State.js';
+import request from './request.js';
 
-import getContext from './getContext.js';
+function createCallAPI({ basePath }) {
+  function callAPI({ payload, endpointId }) {
+    return request({
+      url: `${basePath}/api/endpoints/${endpointId}`,
+      method: 'POST',
+      body: { payload },
+    });
+  }
+  return callAPI;
+}
 
-export { Actions, Blocks, createLink, Events, Requests, State };
-
-export default getContext;
+export default createCallAPI;

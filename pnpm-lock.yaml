@@ -1989,6 +1989,9 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 4.3.0
         version: link:../../plugins/operators/operators-yaml
+      '@lowdefy/plugin-aws':
+        specifier: 4.3.0
+        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
         specifier: 4.3.0
         version: link:../../plugins/plugins/plugin-next-auth

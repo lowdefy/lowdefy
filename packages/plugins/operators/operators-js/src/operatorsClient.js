@@ -49,6 +49,7 @@ export { default as _type } from './operators/shared/type.js';
 export { default as _uri } from './operators/shared/uri.js';
 export { default as _user } from './operators/shared/user.js';
 
+export { default as _api } from './operators/client/api.js';
 export { default as _index } from './operators/client/_index.js';
 export { default as _actions } from './operators/client/actions.js';
 export { default as _base64 } from './operators/client/base64.js';

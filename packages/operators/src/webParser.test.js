@@ -30,6 +30,7 @@ const arrayIndices = [1];
 const context = {
   _internal: {
     lowdefy: {
+      apiResponses: {},
       basePath: 'basePath',
       inputs: { id: true },
       lowdefyGlobal: { global: true },
@@ -123,6 +124,7 @@ test('operator returns value and removes ~k', () => {
               "actions": true,
             },
           ],
+          "apiResponses": Object {},
           "args": Array [
             Object {
               "args": true,
@@ -210,6 +212,7 @@ test('operator returns value and removes ~k', () => {
                       },
                     },
                   },
+                  "apiResponses": Object {},
                   "basePath": "basePath",
                   "home": Object {
                     "configured": false,
