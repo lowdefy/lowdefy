@@ -15,9 +15,9 @@
 */
 
 function setStepId(step, { endpointId }) {
-  step.stepId = step.id;
+  step.requestId = step.id;
   step.endpointId = endpointId;
-  step.id = `step:${endpointId}:${step.stepId}`;
+  step.id = `request:${endpointId}:${step.requestId}`;
 }
 
 export default setStepId;
