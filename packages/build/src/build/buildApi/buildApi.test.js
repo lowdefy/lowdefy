@@ -90,6 +90,20 @@ test('duplicate api endpoint ids', () => {
   expect(() => buildApi({ components, context })).toThrow('Duplicate endpointId "api_1".');
 });
 
+test('api endpoint id contains "."', () => {
+  const components = {
+    api: [
+      {
+        id: 'api1.test',
+        type: 1,
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    `Endpoint id "api1.test" at endpoint "api1.test" should not include a period (".").`
+  );
+});
+
 test('api type missing', () => {
   const components = {
     api: [

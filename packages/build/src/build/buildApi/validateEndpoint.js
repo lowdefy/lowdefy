@@ -9,6 +9,11 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
       `Endpoint id is not a string at endpoint ${index}. Received ${JSON.stringify(endpoint.id)}.`
     );
   }
+  if (endpoint.id.includes('.')) {
+    throw new Error(
+      `Endpoint id "${endpoint.id}" at endpoint "${endpoint.id}" should not include a period (".").`
+    );
+  }
   if (type.isUndefined(endpoint.type)) {
     throw new Error(
       `Endpoint type is not defined at "${endpoint.id}" on endpoint "${endpoint.id}".`
