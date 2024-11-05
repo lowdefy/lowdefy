@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import recRunRoutine from '../recRunRoutine.js';
+import runRoutine from '../runRoutine.js';
 
 async function controlTry(context, { control }) {
   context.logger.debug({
     event: 'debug_control_try',
   });
 
-  const res = await recRunRoutine(context, { routine: control[':try'] });
+  const res = await runRoutine(context, { routine: control[':try'] });
 
   if (res.status === 'error') {
     context.logger.debug({
       event: 'debug_control_catch',
     });
-    await recRunRoutine(context, { routine: control[':catch'] });
+    await runRoutine(context, { routine: control[':catch'] });
   }
 }
 
