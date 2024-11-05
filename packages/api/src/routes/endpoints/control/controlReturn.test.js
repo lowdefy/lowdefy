@@ -15,9 +15,12 @@ test('return null', async () => {
   const routine = {
     ':return': null,
   };
-  const { res } = await runTest({ routine });
+  const { res, context } = await runTest({ routine });
   expect(res.status).toBe('return');
   expect(res.response).toEqual(null);
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_return', response: null }],
+  ]);
 });
 
 test('return at end of routine', async () => {
@@ -42,9 +45,36 @@ test('return at end of routine', async () => {
       },
     },
   ];
-  const { res } = await runTest({ routine });
+  const { res, context } = await runTest({ routine });
   expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'Successful' });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_1',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_2',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'Successful' } }],
+  ]);
 });
 
 test('return in the middle of routine', async () => {
