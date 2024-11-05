@@ -15,41 +15,41 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import callRequest from '../request/callRequest.js';
+import callRequest from './callRequest.js';
 
 import controlHandlers from './control/controlHandlers.js';
 
-async function handleRequest(context, { step }) {
+async function handleRequest(context, { request }, { blockId, pageId, payload }) {
   const requestResult = await callRequest(context, {
-    // get from endpoint
-    blockId: step.blockId,
-    pageId: step.pageId,
-    payload: step.payload,
-
-    requestId: step.requestId,
+    blockId,
+    pageId,
+    payload,
+    requestId: request.requestId,
+    request,
   });
   context.logger.debug({
-    event: 'debug_start_step',
-    step,
+    event: 'debug_start_request',
+    request,
   });
+  return requestResult;
 }
 
-function handleControl(context, { control }) {
+async function handleControl(context, { control }) {
   for (const [key, handler] of Object.entries(controlHandlers)) {
     if (key in control) {
-      return handler(context, { control });
+      return await handler(context, { control });
     }
   }
   throw new Error('Unexpected control.', { cause: control });
 }
 
-async function runRoutine(context, { routine }) {
+async function runRoutine(context, { routine }, endpoint) {
   if (type.isObject(routine)) {
-    if (routine.id?.startWith?.('request:')) {
-      await handleRequest(context, { step: routine });
+    if (routine.id?.startsWith?.('request:')) {
+      await handleRequest(context, { request: routine }, endpoint);
       return { status: 'continue' };
     }
-    return handleControl(context, { control: routine });
+    return await handleControl(context, { control: routine });
   }
   if (type.isArray(routine)) {
     for (const item of routine) {
