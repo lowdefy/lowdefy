@@ -27,14 +27,13 @@ const logger = {
   log: mockLog,
 };
 
-const context = testContext({ logger });
-
 beforeEach(() => {
   mockLogWarn.mockReset();
   mockLog.mockReset();
 });
 
 test('step does not have an id', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -54,6 +53,7 @@ test('step does not have an id', () => {
 });
 
 test('step id is not a string', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -74,6 +74,7 @@ test('step id is not a string', () => {
 });
 
 test('step type not a string', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -94,6 +95,7 @@ test('step type not a string', () => {
 });
 
 test('throw on duplicate step ids', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -118,6 +120,7 @@ test('throw on duplicate step ids', () => {
 });
 
 test('valid routine step config', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -163,6 +166,7 @@ test('valid routine step config', () => {
 });
 
 test('valid routine step config nested array', () => {
+  const context = testContext({ logger });
   const components = {
     api: [
       {
@@ -234,32 +238,33 @@ test('valid routine step config nested array', () => {
   });
 });
 
-// test('count steps', () => {
-//   const components = {
-//     api: [
-//       {
-//         id: 'test_count_steps',
-//         type: 'Api',
-//         routine: [
-//           [
-//             {
-//               id: 'step_1',
-//               type: 'MongoDBInsertOne',
-//             },
-//           ],
-//           [
-//             { id: 'step_2', type: 'MongoDBUpdateOne' },
-//             [{ id: 'step_3', type: 'MongoDBAggregation' }],
-//           ],
-//           [[[{ id: 'step_4', type: 'MongoDBInsertOne' }]]],
-//         ],
-//       },
-//     ],
-//   };
-//   buildApi({ components, context });
-//   expect(context.typeCounters.requests.getCounts()).toEqual({
-//     MongoDBInsertOne: 2,
-//     MongoDBUpdateOne: 1,
-//     MongoDBAggregation: 1,
-//   });
-// });
+test('count steps', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_count_steps',
+        type: 'Api',
+        routine: [
+          [
+            {
+              id: 'step_1',
+              type: 'MongoDBInsertOne',
+            },
+          ],
+          [
+            { id: 'step_2', type: 'MongoDBUpdateOne' },
+            [{ id: 'step_3', type: 'MongoDBAggregation' }],
+          ],
+          { id: 'step_4', type: 'MongoDBInsertOne' },
+        ],
+      },
+    ],
+  };
+  buildApi({ components, context });
+  expect(context.typeCounters.requests.getCounts()).toEqual({
+    MongoDBInsertOne: 2,
+    MongoDBUpdateOne: 1,
+    MongoDBAggregation: 1,
+  });
+});

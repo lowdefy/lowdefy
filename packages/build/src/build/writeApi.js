@@ -17,7 +17,7 @@ import { type, serializer } from '@lowdefy/helpers';
 
 async function writeEndpoint({ endpoint, context }) {
   await context.writeBuildArtifact(
-    `api/${endpoint.endpointId}/${endpoint.endpointId}.json`,
+    `api/${endpoint.endpointId}.json`,
     serializer.serializeToString(endpoint ?? {})
   );
 }

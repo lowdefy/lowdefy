@@ -128,13 +128,6 @@ function buildTypes({ components, context }) {
 
   buildTypeClass(context, {
     counter: typeCounters.requests,
-    definitions: context.typesMap.api,
-    store: components.types.api,
-    typeClass: 'Api',
-  });
-
-  buildTypeClass(context, {
-    counter: typeCounters.requests,
     definitions: context.typesMap.requests,
     store: components.types.requests,
     typeClass: 'Request',
