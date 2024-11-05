@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import { get, serializer, type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 function _api({ params, apiResponses, location }) {
-  console.log('_api', { params, apiResponses, location });
   if (!type.isString(params)) {
     throw new Error(
       `Operator Error: _api accepts a string value. Received: ${JSON.stringify(
@@ -30,15 +29,8 @@ function _api({ params, apiResponses, location }) {
   const [endpoint, ...keyParts] = splitKey;
 
   if (endpoint in apiResponses && !apiResponses[endpoint][0].loading) {
-    const success = apiResponses[endpoint][0].success;
-    const baseKey = success ? 'response' : 'error';
-
-    if (splitKey.length === 1) {
-      return serializer.copy(apiResponses[endpoint][0][baseKey]);
-    }
-
     const key = keyParts.join('.');
-    return get(apiResponses[endpoint][0][baseKey], key, {
+    return get(apiResponses[endpoint][0], key, {
       copy: true,
       default: null,
     });
