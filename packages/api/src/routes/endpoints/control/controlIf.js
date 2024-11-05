@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import recRunRoutine from '../recRunRoutine.js';
+import runRoutine from '../runRoutine.js';
 
 async function controlIf(context, { control }) {
   // TODO: evaluate operators
@@ -32,13 +32,14 @@ async function controlIf(context, { control }) {
     if (!control[':then']) {
       throw new Error('Invalid :if - missing :then.');
     }
-    return recRunRoutine(context, { routine: control[':then'] });
+    return runRoutine(context, { routine: control[':then'] });
   } else if (control[':else']) {
     context.logger.debug({
       event: 'debug_control_if_run_else',
     });
-    return recRunRoutine(context, { routine: control[':else'] });
+    return runRoutine(context, { routine: control[':else'] });
   }
+  return { status: 'continue' };
 }
 
 export default controlIf;

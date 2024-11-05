@@ -20,24 +20,24 @@ import callRequest from '../request/callRequest.js';
 import controlHandlers from './control/controlHandlers.js';
 
 async function handleRequest(context, { step }) {
-  const requestResult = await callRequest(context, {
-    // get from endpoint
-    blockId: step.blockId,
-    pageId: step.pageId,
-    payload: step.payload,
+  // const requestResult = await callRequest(context, {
+  //   // get from endpoint
+  //   blockId: step.blockId,
+  //   pageId: step.pageId,
+  //   payload: step.payload,
 
-    requestId: step.requestId,
-  });
+  //   requestId: step.requestId,
+  // });
   context.logger.debug({
     event: 'debug_start_step',
     step,
   });
 }
 
-function handleControl(context, { control }) {
+async function handleControl(context, { control }) {
   for (const [key, handler] of Object.entries(controlHandlers)) {
     if (key in control) {
-      return handler(context, { control });
+      return await handler(context, { control });
     }
   }
   throw new Error('Unexpected control.', { cause: control });
@@ -45,11 +45,11 @@ function handleControl(context, { control }) {
 
 async function runRoutine(context, { routine }) {
   if (type.isObject(routine)) {
-    if (routine.id?.startWith?.('request:')) {
+    if (routine.id?.startsWith?.('request:')) {
       await handleRequest(context, { step: routine });
       return { status: 'continue' };
     }
-    return handleControl(context, { control: routine });
+    return await handleControl(context, { control: routine });
   }
   if (type.isArray(routine)) {
     for (const item of routine) {
