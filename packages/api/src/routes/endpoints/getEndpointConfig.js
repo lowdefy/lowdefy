@@ -16,7 +16,7 @@
 
 import { ConfigurationError } from '../../context/errors.js';
 
-async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
+async function getEndpointConfig({ logger, readConfigFile }, endpointId) {
   const request = await readConfigFile(`api/${endpointId}.json`);
   if (!request) {
     const err = new ConfigurationError(`API Endpoint "${endpointId}" does not exist.`);

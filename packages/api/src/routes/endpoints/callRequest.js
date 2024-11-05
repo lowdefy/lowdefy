@@ -30,11 +30,11 @@ async function callRequest(context, { blockId, pageId, payload, requestId, reque
   const { logger } = context;
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = request;
-  const connectionConfig = await getConnectionConfig(context, { requestConfig });
-  authorizeRequest(context, { requestConfig });
+  const connectionConfig = await getConnectionConfig(context, requestConfig);
+  authorizeRequest(context, requestConfig);
 
-  const connection = getConnection(context, { connectionConfig });
-  const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  const connection = getConnection(context, connectionConfig);
+  const requestResolver = getRequestResolver(context, connection, requestConfig);
   const deserializedPayload = serializer.deserialize(payload);
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
