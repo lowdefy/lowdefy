@@ -130,3 +130,26 @@ test('api type not a string', () => {
     'Endpoint type is not a string at "api1" on endpoint "api1". Received 1.'
   );
 });
+
+test('valid api endpoint', () => {
+  const components = {
+    api: [
+      {
+        id: 'valid_api1',
+        type: 'Api',
+        routine: [],
+      },
+    ],
+  };
+  const res = buildApi({ components, context });
+  expect(res).toEqual({
+    api: [
+      {
+        endpointId: 'valid_api1',
+        id: 'endpoint:valid_api1',
+        routine: [],
+        type: 'Api',
+      },
+    ],
+  });
+});
