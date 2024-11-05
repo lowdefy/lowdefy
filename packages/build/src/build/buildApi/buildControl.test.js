@@ -146,9 +146,9 @@ test('count controls', () => {
               },
               ':else': [{ id: 'else_step_1', type: 'MongoDBUpdateMany' }],
             },
-            ':finally': {
-              ':return': 'return value',
-            },
+          },
+          {
+            ':return': 'return value',
           },
         ],
       },
@@ -158,7 +158,6 @@ test('count controls', () => {
   expect(context.typeCounters.controls.getCounts()).toEqual({
     ':try': 3,
     ':catch': 1,
-    ':finally': 1,
     ':if': 2,
     ':then': 2,
     ':else': 1,
