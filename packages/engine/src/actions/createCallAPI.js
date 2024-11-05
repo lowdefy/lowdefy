@@ -20,7 +20,6 @@ function createCallAPI({ blockId, context }) {
   return function callAPI(params) {
     return callAPIHandler(context, {
       blockId,
-      context,
       params,
     });
   };
