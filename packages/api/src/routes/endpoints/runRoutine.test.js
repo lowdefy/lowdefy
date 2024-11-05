@@ -160,3 +160,9 @@ test('unknown control', async () => {
   };
   expect(async () => await runTest({ routine })).rejects.toThrow('TODO: unknown control');
 });
+
+test.todo('_payload operator');
+test.todo('_state operator');
+test.todo('_secrets operator');
+test.todo('_user operator');
+test.todo('_js operator');

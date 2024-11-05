@@ -44,23 +44,28 @@ async function handleControl(context, control) {
 }
 
 async function runRoutine(context, routine, endpoint) {
-  if (type.isObject(routine)) {
-    if (routine.id?.startsWith?.('request:')) {
-      await handleRequest(context, routine, endpoint);
+  try {
+    if (type.isObject(routine)) {
+      if (routine.id?.startsWith?.('request:')) {
+        await handleRequest(context, routine, endpoint);
+        return { status: 'continue' };
+      }
+      return await handleControl(context, routine);
+    }
+    if (type.isArray(routine)) {
+      for (const item of routine) {
+        const res = await runRoutine(context, item, endpoint);
+        if (['return', 'error', 'reject'].includes(res.status)) {
+          return res;
+        }
+      }
       return { status: 'continue' };
     }
-    return await handleControl(context, routine);
+    throw new Error('Invalid routine', { cause: { routine } });
+  } catch (error) {
+    context.logger.error(error);
+    return { status: 'error', error };
   }
-  if (type.isArray(routine)) {
-    for (const item of routine) {
-      const res = await runRoutine(context, item, endpoint);
-      if (['return', 'error', 'reject'].includes(res.status)) {
-        return res;
-      }
-    }
-    return { status: 'continue' };
-  }
-  throw new Error('Invalid routine', { cause: { routine } });
 }
 
 export default runRoutine;

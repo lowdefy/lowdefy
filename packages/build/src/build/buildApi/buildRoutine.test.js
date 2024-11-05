@@ -111,10 +111,10 @@ test('valid routine with :if', () => {
         routine: [
           {
             ':if': true,
-            ':then': { id: 'then_step_1', type: 'MongoDBInsertOne' },
-            ':else': { id: 'else_step_2', type: 'MongoDBUpdateOne' },
+            ':then': { id: 'then_step_1', type: 'MongoDBInsertOne', connectionId: 'connection' },
+            ':else': { id: 'else_step_2', type: 'MongoDBUpdateOne', connectionId: 'connection' },
           },
-          { id: 'step_3', type: 'MongoDBAggregation' },
+          { id: 'step_3', type: 'MongoDBAggregation', connectionId: 'connection' },
         ],
       },
     ],
@@ -130,23 +130,26 @@ test('valid routine with :if', () => {
           {
             ':if': true,
             ':then': {
-              id: 'step:test_valid_if:then_step_1',
+              id: 'request:test_valid_if:then_step_1',
               endpointId: 'test_valid_if',
-              stepId: 'then_step_1',
+              requestId: 'then_step_1',
               type: 'MongoDBInsertOne',
+              connectionId: 'connection',
             },
             ':else': {
-              id: 'step:test_valid_if:else_step_2',
+              id: 'request:test_valid_if:else_step_2',
               endpointId: 'test_valid_if',
-              stepId: 'else_step_2',
+              requestId: 'else_step_2',
               type: 'MongoDBUpdateOne',
+              connectionId: 'connection',
             },
           },
           {
-            id: 'step:test_valid_if:step_3',
+            id: 'request:test_valid_if:step_3',
             endpointId: 'test_valid_if',
-            stepId: 'step_3',
+            requestId: 'step_3',
             type: 'MongoDBAggregation',
+            connectionId: 'connection',
           },
         ],
       },
@@ -163,10 +166,28 @@ test('valid routine with :switch', () => {
         routine: [
           {
             ':switch': [
-              { ':case': 1, ':then': { id: 'case_1_step_1', type: 'MongoDBInsertOne' } },
-              { ':case': 2, ':then': { id: 'case_2_step_2', type: 'MongoDBUpdateOne' } },
+              {
+                ':case': 1,
+                ':then': {
+                  id: 'case_1_step_1',
+                  type: 'MongoDBInsertOne',
+                  connectionId: 'connection',
+                },
+              },
+              {
+                ':case': 2,
+                ':then': {
+                  id: 'case_2_step_2',
+                  type: 'MongoDBUpdateOne',
+                  connectionId: 'connection',
+                },
+              },
             ],
-            ':default': { id: 'default_step_3', type: 'MongoDBAggregation' },
+            ':default': {
+              id: 'default_step_3',
+              type: 'MongoDBAggregation',
+              connectionId: 'connection',
+            },
           },
         ],
       },
@@ -185,27 +206,30 @@ test('valid routine with :switch', () => {
               {
                 ':case': 1,
                 ':then': {
-                  id: 'step:test_valid_switch:case_1_step_1',
+                  id: 'request:test_valid_switch:case_1_step_1',
                   endpointId: 'test_valid_switch',
-                  stepId: 'case_1_step_1',
+                  requestId: 'case_1_step_1',
                   type: 'MongoDBInsertOne',
+                  connectionId: 'connection',
                 },
               },
               {
                 ':case': 2,
                 ':then': {
-                  id: 'step:test_valid_switch:case_2_step_2',
+                  id: 'request:test_valid_switch:case_2_step_2',
                   endpointId: 'test_valid_switch',
-                  stepId: 'case_2_step_2',
+                  requestId: 'case_2_step_2',
                   type: 'MongoDBUpdateOne',
+                  connectionId: 'connection',
                 },
               },
             ],
             ':default': {
-              id: 'step:test_valid_switch:default_step_3',
+              id: 'request:test_valid_switch:default_step_3',
               endpointId: 'test_valid_switch',
-              stepId: 'default_step_3',
+              requestId: 'default_step_3',
               type: 'MongoDBAggregation',
+              connectionId: 'connection',
             },
           },
         ],
@@ -222,11 +246,10 @@ test('valid routine with :try object', () => {
         type: 'Api',
         routine: {
           ':try': [
-            { id: 'try_step_1', type: 'MongoDBUpdateMany' },
-            { id: 'try_step_2', type: 'MongoDBInsertMany' },
+            { id: 'try_step_1', type: 'MongoDBUpdateMany', connectionId: 'connection' },
+            { id: 'try_step_2', type: 'MongoDBInsertMany', connectionId: 'connection' },
           ],
-          ':catch': { id: 'catch_step_1', type: 'MongoDBInsertOne' },
-          ':finally': { id: 'finally_step_1', type: 'MongoDBUpdateOne' },
+          ':catch': { id: 'catch_step_1', type: 'MongoDBInsertOne', connectionId: 'connection' },
         },
       },
     ],
@@ -241,29 +264,26 @@ test('valid routine with :try object', () => {
         routine: {
           ':try': [
             {
-              id: 'step:test_valid_try:try_step_1',
+              id: 'request:test_valid_try:try_step_1',
               endpointId: 'test_valid_try',
-              stepId: 'try_step_1',
+              requestId: 'try_step_1',
               type: 'MongoDBUpdateMany',
+              connectionId: 'connection',
             },
             {
-              id: 'step:test_valid_try:try_step_2',
+              id: 'request:test_valid_try:try_step_2',
               endpointId: 'test_valid_try',
-              stepId: 'try_step_2',
+              requestId: 'try_step_2',
               type: 'MongoDBInsertMany',
+              connectionId: 'connection',
             },
           ],
           ':catch': {
-            id: 'step:test_valid_try:catch_step_1',
+            id: 'request:test_valid_try:catch_step_1',
             endpointId: 'test_valid_try',
-            stepId: 'catch_step_1',
+            requestId: 'catch_step_1',
             type: 'MongoDBInsertOne',
-          },
-          ':finally': {
-            id: 'step:test_valid_try:finally_step_1',
-            endpointId: 'test_valid_try',
-            stepId: 'finally_step_1',
-            type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
           },
         },
       },
@@ -288,10 +308,12 @@ test('count operators', () => {
               {
                 id: 'register_user',
                 type: 'MongoDBInsertOne',
+                connectionId: 'connection',
               },
               {
                 id: 'event_register_user',
                 type: 'MongoDBInsertOne',
+                connectionId: 'connection',
                 properties: { payload: { user_id: { _step: 'register_user.insertedId' } } },
               },
             ],

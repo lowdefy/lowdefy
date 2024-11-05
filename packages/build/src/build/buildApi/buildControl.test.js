@@ -133,22 +133,32 @@ test('count controls', () => {
         routine: [
           {
             ':try': [
-              { ':try': { ':try': { id: 'test_count_controls', type: 'MongoDBUpdateOne' } } },
+              {
+                ':try': {
+                  ':try': {
+                    id: 'test_count_controls',
+                    type: 'MongoDBUpdateOne',
+                    connectionId: 'connection',
+                  },
+                },
+              },
             ],
             ':catch': {
               ':if': true,
               ':then': {
                 ':if': false,
                 ':then': [
-                  { id: 'then_step_1', type: 'MongoDBInsertOne' },
+                  { id: 'then_step_1', type: 'MongoDBInsertOne', connectionId: 'connection' },
                   { ':setState': { result: { _step: 'then_step_1' } } },
                 ],
               },
-              ':else': [{ id: 'else_step_1', type: 'MongoDBUpdateMany' }],
+              ':else': [
+                { id: 'else_step_1', type: 'MongoDBUpdateMany', connectionId: 'connection' },
+              ],
             },
-            ':finally': {
-              ':return': 'return value',
-            },
+          },
+          {
+            ':return': 'return value',
           },
         ],
       },
@@ -158,7 +168,6 @@ test('count controls', () => {
   expect(context.typeCounters.controls.getCounts()).toEqual({
     ':try': 3,
     ':catch': 1,
-    ':finally': 1,
     ':if': 2,
     ':then': 2,
     ':else': 1,

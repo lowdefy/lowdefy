@@ -42,6 +42,7 @@ test('step does not have an id', () => {
         routine: [
           {
             type: 'MongoDBInsertOne',
+            connectionId: 'connection',
           },
         ],
       },
@@ -63,6 +64,7 @@ test('step id is not a string', () => {
           {
             id: true,
             type: 'MongoDBUpdateOne',
+            connectionId: 'connection',
           },
         ],
       },
@@ -84,6 +86,7 @@ test('step type not a string', () => {
           {
             id: 'stepId',
             type: 1,
+            connectionId: 'connection',
           },
         ],
       },
@@ -105,10 +108,12 @@ test('throw on duplicate step ids', () => {
           {
             id: 'step_1',
             type: 'MongoDBInsertOne',
+            connectionId: 'connection',
           },
           {
             id: 'step_1',
             type: 'MongoDBInsertOne',
+            connectionId: 'connection',
           },
         ],
       },
@@ -119,52 +124,37 @@ test('throw on duplicate step ids', () => {
   );
 });
 
-test('valid routine step config', () => {
+test('no connectionId on step', () => {
   const context = testContext({ logger });
   const components = {
     api: [
       {
-        id: 'test_valid_routine_steps',
+        id: 'test_no_connectionId',
         type: 'Api',
-        routine: [
-          {
-            id: 'step_1',
-            type: 'MongoDBInsertOne',
-          },
-          {
-            id: 'step_2',
-            type: 'MongoDBUpdateOne',
-          },
-        ],
+        routine: [{ id: 'step_id', type: 'MongoDBUpdateOne' }],
       },
     ],
   };
-  const res = buildApi({ components, context });
-  expect(res).toEqual({
-    api: [
-      {
-        id: 'endpoint:test_valid_routine_steps',
-        endpointId: 'test_valid_routine_steps',
-        type: 'Api',
-        routine: [
-          {
-            id: 'step:test_valid_routine_steps:step_1',
-            endpointId: 'test_valid_routine_steps',
-            stepId: 'step_1',
-            type: 'MongoDBInsertOne',
-          },
-          {
-            id: 'step:test_valid_routine_steps:step_2',
-            endpointId: 'test_valid_routine_steps',
-            stepId: 'step_2',
-            type: 'MongoDBUpdateOne',
-          },
-        ],
-      },
-    ],
-  });
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step connectionId missing at endpoint "test_no_connectionId".'
+  );
 });
 
+test('connectionId is not a string', () => {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'test_no_connectionId',
+        type: 'Api',
+        routine: [{ id: 'step_id', type: 'MongoDBUpdateOne', connectionId: false }],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step connectionId is not a string at endpoint "test_no_connectionId". Received false.'
+  );
+});
 test('valid routine step config nested array', () => {
   const context = testContext({ logger });
   const components = {
@@ -177,13 +167,14 @@ test('valid routine step config nested array', () => {
             {
               id: 'step_1',
               type: 'MongoDBInsertOne',
+              connectionId: 'connection',
             },
           ],
           [
-            { id: 'step_2', type: 'MongoDBUpdateOne' },
-            [{ id: 'step_3', type: 'MongoDBAggregation' }],
+            { id: 'step_2', type: 'MongoDBUpdateOne', connectionId: 'connection' },
+            [{ id: 'step_3', type: 'MongoDBAggregation', connectionId: 'connection' }],
           ],
-          [[[{ id: 'step_4', type: 'MongoDBInsertMany' }]]],
+          [[[{ id: 'step_4', type: 'MongoDBInsertMany', connectionId: 'connection' }]]],
         ],
       },
     ],
@@ -198,25 +189,28 @@ test('valid routine step config nested array', () => {
         routine: [
           [
             {
-              id: 'step:test_valid_routine_steps_nested:step_1',
+              id: 'request:test_valid_routine_steps_nested:step_1',
               endpointId: 'test_valid_routine_steps_nested',
-              stepId: 'step_1',
+              requestId: 'step_1',
               type: 'MongoDBInsertOne',
+              connectionId: 'connection',
             },
           ],
           [
             {
-              id: 'step:test_valid_routine_steps_nested:step_2',
+              id: 'request:test_valid_routine_steps_nested:step_2',
               endpointId: 'test_valid_routine_steps_nested',
-              stepId: 'step_2',
+              requestId: 'step_2',
               type: 'MongoDBUpdateOne',
+              connectionId: 'connection',
             },
             [
               {
-                id: 'step:test_valid_routine_steps_nested:step_3',
+                id: 'request:test_valid_routine_steps_nested:step_3',
                 endpointId: 'test_valid_routine_steps_nested',
-                stepId: 'step_3',
+                requestId: 'step_3',
                 type: 'MongoDBAggregation',
+                connectionId: 'connection',
               },
             ],
           ],
@@ -224,10 +218,11 @@ test('valid routine step config nested array', () => {
             [
               [
                 {
-                  id: 'step:test_valid_routine_steps_nested:step_4',
+                  id: 'request:test_valid_routine_steps_nested:step_4',
                   endpointId: 'test_valid_routine_steps_nested',
-                  stepId: 'step_4',
+                  requestId: 'step_4',
                   type: 'MongoDBInsertMany',
+                  connectionId: 'connection',
                 },
               ],
             ],
@@ -250,13 +245,14 @@ test('count steps', () => {
             {
               id: 'step_1',
               type: 'MongoDBInsertOne',
+              connectionId: 'connection',
             },
           ],
           [
-            { id: 'step_2', type: 'MongoDBUpdateOne' },
-            [{ id: 'step_3', type: 'MongoDBAggregation' }],
+            { id: 'step_2', type: 'MongoDBUpdateOne', connectionId: 'connection' },
+            [{ id: 'step_3', type: 'MongoDBAggregation', connectionId: 'connection' }],
           ],
-          { id: 'step_4', type: 'MongoDBInsertOne' },
+          { id: 'step_4', type: 'MongoDBInsertOne', connectionId: 'connection' },
         ],
       },
     ],

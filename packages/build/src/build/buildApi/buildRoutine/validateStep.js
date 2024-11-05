@@ -43,14 +43,15 @@ function validateStep(step, { endpointId, checkDuplicateStepId }) {
       }" on endpoint "${endpointId}". Received ${JSON.stringify(step.type)}.`
     );
   }
-  if (!type.isNone(step.connectionId)) {
-    if (!type.isString(step)) {
-      throw new Error(
-        `Step connectionId is not a string at endpoint "${endpointId}". Received ${JSON.stringify(
-          step.connectionId
-        )}.`
-      );
-    }
+  if (type.isUndefined(step.connectionId)) {
+    throw new Error(`Step connectionId missing at endpoint "${endpointId}".`);
+  }
+  if (!type.isString(step.connectionId)) {
+    throw new Error(
+      `Step connectionId is not a string at endpoint "${endpointId}". Received ${JSON.stringify(
+        step.connectionId
+      )}.`
+    );
   }
 
   checkDuplicateStepId({ id: step.id, eventId: endpointId });
