@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { serializer } from '@lowdefy/helpers';
+import { type, serializer } from '@lowdefy/helpers';
 
 async function writeEndpoint({ endpoint, context }) {
   await context.writeBuildArtifact(
@@ -23,6 +23,10 @@ async function writeEndpoint({ endpoint, context }) {
 }
 
 async function writeApi({ components, context }) {
+  if (type.isNone(components.api)) return;
+  if (!type.isArray(components.api)) {
+    throw new Error(`Api is not an array.`);
+  }
   const writePromises = components.api.map((endpoint) => writeEndpoint({ endpoint, context }));
   return Promise.all(writePromises);
 }
