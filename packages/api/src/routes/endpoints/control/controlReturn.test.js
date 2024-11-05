@@ -7,7 +7,7 @@ test('single return', async () => {
     ':return': true,
   };
   const { res } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(res.response).toEqual(true);
 });
 
@@ -16,7 +16,7 @@ test('return null', async () => {
     ':return': null,
   };
   const { res } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(res.response).toEqual(null);
 });
 
@@ -43,7 +43,7 @@ test('return at end of routine', async () => {
     },
   ];
   const { res } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'Successful' });
 });
 
@@ -70,7 +70,7 @@ test('return in the middle of routine', async () => {
     },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -115,7 +115,7 @@ test('multiple returns in routine', async () => {
     },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -159,7 +159,7 @@ test('truthy guard statement return', async () => {
     { ':return': { message: 'made it to the end' } },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'returned by guard statement' });
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
@@ -205,7 +205,7 @@ test('falsy guard statement return', async () => {
     { ':return': { message: 'made it to the end' } },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('return');
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'made it to the end' });
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
