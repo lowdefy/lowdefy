@@ -471,15 +471,35 @@ export default {
       type: 'object',
       additionalProperties: false,
       required: ['id', 'type'],
-      routine: {
-        anyOf: [
-          {
-            type: 'array',
+      properties: {
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "id" should be a string.',
           },
-          {
-            type: 'object',
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "type" should be a string.',
           },
-        ],
+        },
+        routine: {
+          anyOf: [
+            {
+              type: 'array',
+              errorMessage: {
+                type: 'Api endpoint "routine" should be an array or object.',
+              },
+            },
+            {
+              type: 'object',
+              errorMessage: {
+                type: 'Api endpoint "routine" should be an array or object.',
+              },
+            },
+          ],
+        },
       },
     },
     connection: {
