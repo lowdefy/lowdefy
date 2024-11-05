@@ -133,18 +133,28 @@ test('count controls', () => {
         routine: [
           {
             ':try': [
-              { ':try': { ':try': { id: 'test_count_controls', type: 'MongoDBUpdateOne' } } },
+              {
+                ':try': {
+                  ':try': {
+                    id: 'test_count_controls',
+                    type: 'MongoDBUpdateOne',
+                    connectionId: 'connection',
+                  },
+                },
+              },
             ],
             ':catch': {
               ':if': true,
               ':then': {
                 ':if': false,
                 ':then': [
-                  { id: 'then_step_1', type: 'MongoDBInsertOne' },
+                  { id: 'then_step_1', type: 'MongoDBInsertOne', connectionId: 'connection' },
                   { ':setState': { result: { _step: 'then_step_1' } } },
                 ],
               },
-              ':else': [{ id: 'else_step_1', type: 'MongoDBUpdateMany' }],
+              ':else': [
+                { id: 'else_step_1', type: 'MongoDBUpdateMany', connectionId: 'connection' },
+              ],
             },
           },
           {
