@@ -17,11 +17,11 @@
 import request from './request.js';
 
 function createCallAPI({ basePath }) {
-  function callAPI({ payload, endpointId }) {
+  function callAPI({ payload, endpointId, pageId, blockId }) {
     return request({
       url: `${basePath}/api/endpoints/${endpointId}`,
       method: 'POST',
-      body: { payload },
+      body: { payload, pageId, blockId },
     });
   }
   return callAPI;
