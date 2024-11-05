@@ -52,6 +52,7 @@ function createContext({
       blocks: createCounter(),
       connections: createCounter(),
       requests: createCounter(),
+      controls: createCounter(),
       operators: {
         client: createCounter(),
         server: createCounter(),
