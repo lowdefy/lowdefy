@@ -16,7 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-async function callAPIHandler(context, { params, blockId }) {
+async function callAPIHandler(context, { blockId, params }) {
   if (!context._internal.lowdefy.apiResponses[params.endpointId]) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
   }
@@ -30,6 +30,7 @@ async function callAPIHandler(context, { params, blockId }) {
 
   api.loading = true;
   api.success = null;
+  api.pageId = context.pageId;
   const startTime = Date.now();
 
   try {

@@ -14,21 +14,16 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-import recRunRoutine from './recRunRoutine.js';
+import { ConfigurationError } from '../../context/errors.js';
 
-function runRoutine(context, { routine }) {
-  // const state = {};
-  const { error, response, status } = recRunRoutine(context, { routine });
-
-  const success = !['error', 'reject'].includes(status);
-
-  return {
-    error: serializer.serialize(error),
-    response: serializer.serialize(response),
-    status: success ? 'success' : status,
-    success,
-  };
+async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
+  const request = await readConfigFile(`api/${endpointId}.json`);
+  if (!request) {
+    const err = new ConfigurationError(`API Endpoint "${endpointId}" does not exist.`);
+    logger.debug({ params: { endpointId }, err }, err.message);
+    throw err;
+  }
+  return request;
 }
 
-export default runRoutine;
+export default getEndpointConfig;
