@@ -76,18 +76,20 @@ test('duplicate api endpoint ids', () => {
   const components = {
     api: [
       {
-        id: 'api_1',
+        id: 'test_duplicate_id',
         type: 'Api',
         routine: [],
       },
       {
-        id: 'api_1',
+        id: 'test_duplicate_id',
         type: 'Api',
         routine: [],
       },
     ],
   };
-  expect(() => buildApi({ components, context })).toThrow('Duplicate endpointId "api_1".');
+  expect(() => buildApi({ components, context })).toThrow(
+    'Duplicate endpointId "test_duplicate_id".'
+  );
 });
 
 test('api endpoint id contains "."', () => {
