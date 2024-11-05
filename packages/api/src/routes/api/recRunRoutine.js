@@ -38,7 +38,7 @@ async function recRunRoutine(context, { routine }) {
   if (type.isObject(routine)) {
     if (routine.type) {
       await handleStep(context, { step: routine });
-      return { status: 'step_done' };
+      return { status: 'continue' };
     }
     return handleControl(context, { control: routine });
   }
@@ -49,7 +49,7 @@ async function recRunRoutine(context, { routine }) {
         return res;
       }
     }
-    return { status: 'step_done' };
+    return { status: 'continue' };
   }
   throw new Error('Invalid routine', { cause: { routine } });
 }

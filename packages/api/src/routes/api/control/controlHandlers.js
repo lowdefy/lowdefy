@@ -22,14 +22,15 @@ function notImplemented(context) {
 }
 
 const controlHandlers = {
-  ':break': notImplemented,
   ':foreach': notImplemented,
   ':if': controlIf,
   ':log': notImplemented,
   ':parallel': notImplemented,
+  ':reject': notImplemented,
   ':return': notImplemented,
   ':setState': notImplemented,
   ':switch': notImplemented,
+  ':throw': notImplemented,
   ':try': controlTry,
   ':while': notImplemented,
 };

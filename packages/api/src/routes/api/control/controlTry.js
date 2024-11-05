@@ -21,9 +21,9 @@ async function controlTry(context, { control }) {
     event: 'debug_control_try',
   });
 
-  const { status } = await recRunRoutine(context, { routine: control[':try'] });
+  const res = await recRunRoutine(context, { routine: control[':try'] });
 
-  if (status === 'error') {
+  if (res.status === 'error') {
     context.logger.debug({
       event: 'debug_control_catch',
     });
