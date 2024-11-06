@@ -43,8 +43,8 @@ const controlTypes = {
   ':throw': { required: [':throw'], routine: [], optional: [] },
   ':try': {
     required: [':try'],
-    routine: [':try', ':catch'],
-    optional: [':catch'],
+    routine: [':try', ':catch', ':finally'],
+    optional: [':catch', ':finally'],
   },
 
   ':while': { required: [':while', ':do'], routine: [':do'], optional: [] },

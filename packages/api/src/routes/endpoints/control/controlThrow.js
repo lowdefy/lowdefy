@@ -14,18 +14,21 @@
   limitations under the License.
 */
 
-async function controlReturn(context, { control }) {
+async function controlThrow(context, { control }) {
   const { evaluateOperators } = context;
-  const response = evaluateOperators({ input: control[':return'], location: 'TODO' });
 
-  context.logger.debug({
-    event: 'debug_control_return',
-    response,
+  const message = evaluateOperators({ input: control[':throw'], location: 'TODO' });
+  const cause = evaluateOperators({ input: control[':cause'], location: 'TODO' });
+  const error = new Error(message, { cause });
+
+  context.logger.error({
+    event: 'error_control_throw',
+    error,
   });
+
   return {
-    status: 'return',
-    response,
+    status: 'error',
+    error,
   };
 }
-
-export default controlReturn;
+export default controlThrow;
