@@ -15,23 +15,23 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import callRequest from '../request/callRequest.js';
 
+import callRequest from './callRequest.js';
 import controlHandlers from './control/controlHandlers.js';
 
-async function handleRequest(context, { step }) {
-  // const requestResult = await callRequest(context, {
-  //   // get from endpoint
-  //   blockId: step.blockId,
-  //   pageId: step.pageId,
-  //   payload: step.payload,
-
-  //   requestId: step.requestId,
-  // });
-  context.logger.debug({
-    event: 'debug_start_step',
-    step,
+async function handleRequest(context, { blockId, pageId, payload, request }) {
+  const requestResult = await callRequest(context, {
+    blockId,
+    pageId,
+    payload,
+    request,
+    requestId: request.requestId,
   });
+  context.logger.debug({
+    event: 'debug_start_request',
+    request,
+  });
+  return requestResult;
 }
 
 async function handleControl(context, { control }) {
@@ -43,18 +43,24 @@ async function handleControl(context, { control }) {
   throw new Error('Unexpected control.', { cause: control });
 }
 
-async function runRoutine(context, { routine }) {
+async function runRoutine(context, { blockId, endpointId, pageId, payload, routine }) {
   try {
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
-        await handleRequest(context, { step: routine });
+        await handleRequest(context, { blockId, endpointId, pageId, payload, request: routine });
         return { status: 'continue' };
       }
-      return handleControl(context, { control: routine });
+      return await handleControl(context, { control: routine });
     }
     if (type.isArray(routine)) {
       for (const item of routine) {
-        const res = await runRoutine(context, { routine: item });
+        const res = await runRoutine(context, {
+          blockId,
+          endpointId,
+          pageId,
+          payload,
+          routine: item,
+        });
         if (['return', 'error', 'reject'].includes(res.status)) {
           return res;
         }
