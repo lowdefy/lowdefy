@@ -46,7 +46,7 @@ test('throw at end of routine', async () => {
   ];
   const { res, context } = await runTest({ routine });
   const error = new Error('Error has occurred');
-  expect(res.status).toBe('error');
+  expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([
     [
@@ -143,7 +143,7 @@ test('multiple throws in routine', async () => {
   ];
   const { res, context } = await runTest({ routine });
   const error = new Error('Multiple throws in a routine');
-  expect(res.status).toBe('error');
+  expect(res.status).toEqual('error');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -188,7 +188,7 @@ test('truthy guard statement throw', async () => {
   ];
   const { res, context } = await runTest({ routine });
   const error = new Error('Error in guard statement');
-  expect(res.status).toBe('error');
+  expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
@@ -226,7 +226,7 @@ test('throw in a try block with catch return', async () => {
     },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toBe('return');
+  expect(res.status).toEqual('return');
   expect(res.response).toEqual({ message: 'Error was caught' });
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_try' }],
@@ -264,7 +264,7 @@ test('throw in a try block with missing catch', async () => {
   ];
   const { res, context } = await runTest({ routine });
   const error = new Error('Error occurred at the end');
-  expect(res.status).toBe('error');
+  expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_try' }],
@@ -303,7 +303,7 @@ test('throw in a try block with error in finally', async () => {
   ];
   const { res, context } = await runTest({ routine });
   const error = new Error('Error in finally');
-  expect(res.status).toBe('error');
+  expect(res.status).toEqual('error');
   expect(res.error).toEqual(error);
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_try' }],
