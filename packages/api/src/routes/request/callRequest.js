@@ -27,8 +27,11 @@ import getRequestConfig from './getRequestConfig.js';
 import getRequestResolver from './getRequestResolver.js';
 import validateSchemas from './validateSchemas.js';
 
+import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+
 async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
+
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
@@ -36,13 +39,14 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
-  const deserializedPayload = serializer.deserialize(payload);
 
+  const deserializedPayload = serializer.deserialize(payload);
+  context.evaluateOperators = createEvaluateOperators(context, { payload: deserializedPayload });
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
-    payload: deserializedPayload,
     requestConfig,
   });
+
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,
