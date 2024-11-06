@@ -6,9 +6,8 @@ test('single return', async () => {
   const routine = {
     ':return': true,
   };
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([]); // add step for return?
+  const { res } = await runTest({ routine });
+  expect(res.status).toBe('return');
   expect(res.response).toEqual(true);
 });
 
@@ -16,23 +15,25 @@ test('return null', async () => {
   const routine = {
     ':return': null,
   };
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([]);
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
   expect(res.response).toEqual(null);
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_return', response: null }],
+  ]);
 });
 
 test('return at end of routine', async () => {
   const routine = [
     {
-      id: 'test_request_1',
+      id: 'request:test_request_1',
       type: 'TestRequestWait',
       properties: {
         ms: 10,
       },
     },
     {
-      id: 'test_request_2',
+      id: 'request:test_request_2',
       type: 'TestRequestWait',
       properties: {
         ms: 10,
@@ -44,31 +45,42 @@ test('return at end of routine', async () => {
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_1',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-    {
-      stepId: 'test_request_2',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-  ]);
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'Successful' });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_1',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_2',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'Successful' } }],
+  ]);
 });
 
 test('return in the middle of routine', async () => {
   const routine = [
     {
-      id: 'test_request_1',
+      id: 'request:test_request_1',
       type: 'TestRequestWait',
       properties: {
         ms: 10,
@@ -80,23 +92,29 @@ test('return in the middle of routine', async () => {
       },
     },
     {
-      id: 'test_request_2',
+      id: 'request:test_request_2',
       type: 'TestRequestWait',
       properties: {
         ms: 10,
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_1',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_1',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'Successful' } }],
   ]);
   expect(res.response).toEqual({ message: 'Successful' });
 });
@@ -104,7 +122,7 @@ test('return in the middle of routine', async () => {
 test('multiple returns in routine', async () => {
   const routine = [
     {
-      id: 'test_request_1',
+      id: 'request:test_request_1',
       type: 'TestRequestWait',
       properties: {
         ms: 10,
@@ -126,16 +144,22 @@ test('multiple returns in routine', async () => {
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_1',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_1',
+          type: 'TestRequestWait',
+          properties: {
+            ms: 10,
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'First' } }],
   ]);
   expect(res.response).toEqual({ message: 'First' });
 });
@@ -146,7 +170,7 @@ test('truthy guard statement return', async () => {
       ':if': true,
       ':then': [
         {
-          id: 'test_request_guard_statement',
+          id: 'request:test_request_guard_statement',
           type: 'TestRequest',
           properties: {
             response: 'guard statement',
@@ -156,7 +180,7 @@ test('truthy guard statement return', async () => {
       ],
     },
     {
-      id: 'test_request_end',
+      id: 'request:test_request_end',
       type: 'TestRequest',
       properties: {
         response: 'end',
@@ -164,18 +188,26 @@ test('truthy guard statement return', async () => {
     },
     { ':return': { message: 'made it to the end' } },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_guard_statement',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'guard statement',
-    },
-  ]);
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'returned by guard statement' });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if_run_then' }],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_guard_statement',
+          type: 'TestRequest',
+          properties: {
+            response: 'guard statement',
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'returned by guard statement' } }],
+  ]);
 });
 
 test('falsy guard statement return', async () => {
@@ -184,7 +216,7 @@ test('falsy guard statement return', async () => {
       ':if': false,
       ':then': [
         {
-          id: 'test_request_guard_statement',
+          id: 'request:test_request_guard_statement',
           type: 'TestRequest',
           properties: {
             response: 'guard statement',
@@ -194,7 +226,7 @@ test('falsy guard statement return', async () => {
       ],
     },
     {
-      id: 'test_request_end',
+      id: 'request:test_request_end',
       type: 'TestRequest',
       properties: {
         response: 'end',
@@ -202,48 +234,25 @@ test('falsy guard statement return', async () => {
     },
     { ':return': { message: 'made it to the end' } },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_end',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'end',
-    },
-  ]);
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
   expect(res.response).toEqual({ message: 'made it to the end' });
-});
-
-test('error thrown in routine', async () => {
-  const routine = [
-    {
-      id: 'test_error_1',
-      type: 'TestRequestError',
-      properties: {
-        throw: true,
-        message: 'bad',
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_end',
+          type: 'TestRequest',
+          properties: {
+            response: 'end',
+          },
+        },
       },
-    },
-    {
-      ':return': {
-        message: 'successful',
-      },
-    },
-  ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(false);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_error_1',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: false,
-      response: null,
-    },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'made it to the end' } }],
   ]);
-  expect(res.response).toEqual({ error: { message: 'bad' } });
 });
 
 test('deep nested return', async () => {
@@ -252,7 +261,7 @@ test('deep nested return', async () => {
       ':if': true,
       ':then': [
         {
-          id: 'test_request_first_if',
+          id: 'request:test_request_first_if',
           type: 'TestRequest',
           properties: {
             response: 'first if',
@@ -262,7 +271,7 @@ test('deep nested return', async () => {
           ':if': true,
           ':then': [
             {
-              id: 'test_request_second_if',
+              id: 'request:test_request_second_if',
               type: 'TestRequest',
               properties: {
                 response: 'second if',
@@ -283,23 +292,38 @@ test('deep nested return', async () => {
     },
     { ':return': { message: 'made it to the end' } },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_first_if',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'first if',
-    },
-    {
-      stepId: 'test_request_first_if',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'second if',
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toBe('return');
+  expect(res.response).toEqual({ message: 'returned by first if' });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if_run_then' }],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_first_if',
+          type: 'TestRequest',
+          properties: {
+            response: 'first if',
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_if_run_then' }],
+    [
+      {
+        event: 'debug_start_step',
+        step: {
+          id: 'request:test_request_second_if',
+          type: 'TestRequest',
+          properties: {
+            response: 'second if',
+          },
+        },
+      },
+    ],
+    [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
   ]);
-  expect(res.response).toEqual({ message: 'returned by second if' });
 });

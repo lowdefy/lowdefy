@@ -48,6 +48,7 @@ async function controlIf(context, { control }) {
     });
     return runRoutine(context, { routine: control[':else'] });
   }
+  return { status: 'continue' };
 }
 
 export default controlIf;

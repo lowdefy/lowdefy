@@ -23,7 +23,7 @@ test.only('if condition is true', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -77,7 +77,7 @@ test('if condition is false', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -131,7 +131,7 @@ test('if condition is truthy', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -185,7 +185,7 @@ test('if condition is falsey', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -239,7 +239,7 @@ test('if condition is null', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -295,7 +295,7 @@ test('if condition operators are evaluated', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -342,7 +342,7 @@ test('if condition is false with no else', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -370,7 +370,7 @@ test('if condition is true with no else', async () => {
     },
   };
   const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
+  expect(res.status).toBe('continue');
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {

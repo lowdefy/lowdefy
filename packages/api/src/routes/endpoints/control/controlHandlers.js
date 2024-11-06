@@ -16,6 +16,7 @@
 
 import controlIf from './controlIf.js';
 import controlTry from './controlTry.js';
+import controlReturn from './controlReturn.js';
 
 function notImplemented(context) {
   context.logger.debug({ event: 'debug_control_not_implemented' });
@@ -27,7 +28,7 @@ const controlHandlers = {
   ':log': notImplemented,
   ':parallel': notImplemented,
   ':reject': notImplemented,
-  ':return': notImplemented,
+  ':return': controlReturn,
   ':setState': notImplemented,
   ':switch': notImplemented,
   ':throw': notImplemented,
