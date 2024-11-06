@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.3.2
+
+### Patch Changes
+
+- efefb8ca0: Fix elementId on MultipleSelector.
+  - @lowdefy/block-utils@4.3.2
+  - @lowdefy/helpers@4.3.2
+
 ## 4.3.1
 
 ### Patch Changes
