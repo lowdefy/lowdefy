@@ -14,17 +14,18 @@
   limitations under the License.
 */
 
+import controlFor from './controlFor.js';
 import controlIf from './controlIf.js';
-import controlTry from './controlTry.js';
 import controlReturn from './controlReturn.js';
 import controlThrow from './controlThrow.js';
+import controlTry from './controlTry.js';
 
 function notImplemented(context) {
   context.logger.debug({ event: 'debug_control_not_implemented' });
 }
 
 const controlHandlers = {
-  ':foreach': notImplemented,
+  ':for': controlFor,
   ':if': controlIf,
   ':log': notImplemented,
   ':parallel': notImplemented,

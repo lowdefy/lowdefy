@@ -20,7 +20,7 @@ import countControl from './countControl.js';
 import countOperators from '../../../utils/countOperators.js';
 
 const controlTypes = {
-  ':foreach': { required: [':foreach', ':do', ':as'], routine: [':do'], optional: [] },
+  ':for': { required: [':for', ':in', ':do'], routine: [':do'], optional: [] },
   ':if': {
     required: [':if', ':then'],
     routine: [':then', ':else'],
