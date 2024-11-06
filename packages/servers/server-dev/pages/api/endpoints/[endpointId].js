@@ -16,8 +16,6 @@
 
 import { callEndpoint } from '@lowdefy/api';
 
-import { serializer } from '@lowdefy/helpers';
-
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 
 async function handler({ context, req, res }) {
@@ -29,12 +27,6 @@ async function handler({ context, req, res }) {
   context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
   res.status(200).json(response);
-  // res.status(200).json({
-  //   response: serializer.serialize('Your Quote has been generated successfully.'),
-  //   success: true,
-  //   status: 'success',
-  //   error: serializer.serialize(undefined),
-  // });
 }
 
 export default apiWrapper(handler);
