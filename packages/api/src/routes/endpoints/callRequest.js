@@ -16,7 +16,6 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-import authorizeRequest from '../request/authorizeRequest.js';
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import checkConnectionWrite from '../request/checkConnectionWrite.js';
@@ -28,18 +27,16 @@ import validateSchemas from '../request/validateSchemas.js';
 
 async function callRequest(context, { blockId, pageId, payload, request, requestId }) {
   const { logger } = context;
-  logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
-  const requestConfig = request;
-  const connectionConfig = await getConnectionConfig(context, requestConfig);
-  authorizeRequest(context, requestConfig);
 
-  const connection = getConnection(context, connectionConfig);
-  const requestResolver = getRequestResolver(context, connection, requestConfig);
-  const deserializedPayload = serializer.deserialize(payload);
+  logger.debug({ event: 'debug_api_call_request', blockId, pageId, requestId });
+  const requestConfig = request;
+  const connectionConfig = await getConnectionConfig(context, { requestConfig });
+
+  const connection = getConnection(context, { connectionConfig });
+  const requestResolver = getRequestResolver(context, { connection, requestConfig });
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
-    payload: deserializedPayload,
     requestConfig,
   });
   checkConnectionRead(context, {
@@ -64,7 +61,7 @@ async function callRequest(context, { blockId, pageId, payload, request, request
   const response = await callRequestResolver(context, {
     blockId,
     connectionProperties,
-    payload: deserializedPayload,
+    payload,
     requestConfig,
     requestProperties,
     requestResolver,

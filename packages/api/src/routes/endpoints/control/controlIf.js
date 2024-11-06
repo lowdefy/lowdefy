@@ -17,16 +17,10 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlIf(context, { control }) {
-  const { logger, operatorsParser } = context;
+  const { logger, evaluateOperators } = context;
 
-  const { output: evaluatedIf, errors } = operatorsParser.parse({
-    input: control[':if'],
-    location: 'TODO:',
-  });
-  if (errors.length > 0) {
-    logger.error(errors[0]);
-    throw new Error(errors[0]);
-  }
+  const evaluatedIf = evaluateOperators({ input: control[':if'], location: 'TODO:' });
+
   logger.debug({
     event: 'debug_control_if',
     condition: {
