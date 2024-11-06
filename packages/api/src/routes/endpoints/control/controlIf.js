@@ -17,16 +17,25 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlIf(context, { control }) {
-  // TODO: evaluate operators
-  context.logger.debug({
+  const { logger, operatorsParser } = context;
+
+  const { output: evaluatedIf, errors } = operatorsParser.parse({
+    input: control[':if'],
+    location: 'TODO:',
+  });
+  if (errors.length > 0) {
+    logger.error(errors[0]);
+    throw new Error(errors[0]);
+  }
+  logger.debug({
     event: 'debug_control_if',
     condition: {
       input: control[':if'],
-      evaluated: control[':if'],
+      evaluated: evaluatedIf,
     },
   });
-  if (control[':if']) {
-    context.logger.debug({
+  if (evaluatedIf) {
+    logger.debug({
       event: 'debug_control_if_run_then',
     });
     if (!control[':then']) {
@@ -34,7 +43,7 @@ async function controlIf(context, { control }) {
     }
     return runRoutine(context, { routine: control[':then'] });
   } else if (control[':else']) {
-    context.logger.debug({
+    logger.debug({
       event: 'debug_control_if_run_else',
     });
     return runRoutine(context, { routine: control[':else'] });

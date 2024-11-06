@@ -2,11 +2,11 @@
 
 import runTest from '../test/runTest.js';
 
-test('if condition is true', async () => {
+test.only('if condition is true', async () => {
   const routine = {
     ':if': true,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -14,7 +14,7 @@ test('if condition is true', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -43,7 +43,7 @@ test('if condition is true', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_true',
+          id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -60,7 +60,7 @@ test('if condition is false', async () => {
   const routine = {
     ':if': false,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -68,7 +68,7 @@ test('if condition is false', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -97,7 +97,7 @@ test('if condition is false', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_false',
+          id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -114,7 +114,7 @@ test('if condition is truthy', async () => {
   const routine = {
     ':if': 1,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -122,7 +122,7 @@ test('if condition is truthy', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -151,7 +151,7 @@ test('if condition is truthy', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_true',
+          id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -168,7 +168,7 @@ test('if condition is falsey', async () => {
   const routine = {
     ':if': 0,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -176,7 +176,7 @@ test('if condition is falsey', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -205,7 +205,7 @@ test('if condition is falsey', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_false',
+          id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -222,7 +222,7 @@ test('if condition is null', async () => {
   const routine = {
     ':if': null,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -230,7 +230,7 @@ test('if condition is null', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -259,7 +259,7 @@ test('if condition is null', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_false',
+          id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -278,7 +278,7 @@ test('if condition operators are evaluated', async () => {
       _eq: [1, 2],
     },
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -286,7 +286,7 @@ test('if condition operators are evaluated', async () => {
       },
     },
     ':else': {
-      id: 'request:test_request_false',
+      id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -317,7 +317,7 @@ test('if condition operators are evaluated', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_false',
+          id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
@@ -334,7 +334,7 @@ test('if condition is false with no else', async () => {
   const routine = {
     ':if': false,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       properties: {
         response: 'Was true',
@@ -361,7 +361,7 @@ test('if condition is true with no else', async () => {
   const routine = {
     ':if': true,
     ':then': {
-      id: 'request:test_request_true',
+      id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
       connectionId: 'test',
       properties: {
@@ -390,7 +390,7 @@ test('if condition is true with no else', async () => {
       {
         event: 'debug_start_step',
         step: {
-          id: 'request:test_request_true',
+          id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
           connectionId: 'test',
           properties: {
