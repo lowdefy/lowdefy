@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-async function controlReturn(context, { control }) {
+async function controlReject(context, { control }) {
   const { evaluateOperators } = context;
   const response = evaluateOperators({ input: control[':reject'], location: 'TODO' });
 
@@ -28,4 +28,4 @@ async function controlReturn(context, { control }) {
   };
 }
 
-export default controlReturn;
+export default controlReject;
