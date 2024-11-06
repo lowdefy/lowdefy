@@ -2,11 +2,11 @@ import { jest } from '@jest/globals';
 
 import runTest from '../test/runTest.js';
 
-test('single switch', async () => {
+test('single switch case', async () => {
   const routine = {
     ':switch': [
       {
-        ':case': true,
+        ':case': false,
         ':then': [
           {
             id: 'request:test_endpoint:test_request_true',
@@ -19,8 +19,9 @@ test('single switch', async () => {
         ],
       },
     ],
+    ':default': [{ ':return': { message: 'default case' } }],
   };
   const { res } = await runTest({ routine });
-  expect(res.status).toEqual('reject');
-  expect(res.response).toEqual(true);
+  expect(res.status).toEqual('return');
+  expect(res.response).toEqual({ message: 'default case' });
 });

@@ -25,6 +25,6 @@ async function controlSwitch(context, { control }) {
       return runRoutine(context, { routine: caseObj[':then'] });
     }
   }
-  return runRoutine(control[':default'] ?? []);
+  return runRoutine(context, { routine: control[':default'] ?? [] });
 }
 export default controlSwitch;
