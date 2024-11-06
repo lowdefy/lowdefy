@@ -10,8 +10,8 @@ function testContext({ payload }) {
       debug: jest.fn(),
       info: jest.fn(),
       warn: jest.fn(),
-      error: console.error,
-      // error: jest.fn(),
+      // error: console.error,
+      error: jest.fn(),
     },
     // TODO: Maybe import @lowdefy/operators-js/server
     operators: {

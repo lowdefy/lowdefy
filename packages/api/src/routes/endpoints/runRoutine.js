@@ -20,6 +20,10 @@ import callRequest from './callRequest.js';
 import controlHandlers from './control/controlHandlers.js';
 
 async function handleRequest(context, { blockId, pageId, payload, request }) {
+  context.logger.debug({
+    event: 'debug_start_request',
+    request,
+  });
   const requestResult = await callRequest(context, {
     blockId,
     pageId,
@@ -28,10 +32,10 @@ async function handleRequest(context, { blockId, pageId, payload, request }) {
     requestId: request.requestId,
   });
   context.logger.debug({
-    event: 'debug_start_request',
-    request,
+    event: 'debug_end_request',
+    requestResult,
   });
-  return requestResult;
+  return { status: 'continue' };
 }
 
 async function handleControl(context, { control }) {
@@ -47,8 +51,13 @@ async function runRoutine(context, { blockId, endpointId, pageId, payload, routi
   try {
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
-        await handleRequest(context, { blockId, endpointId, pageId, payload, request: routine });
-        return { status: 'continue' };
+        return await handleRequest(context, {
+          blockId,
+          endpointId,
+          pageId,
+          payload,
+          request: routine,
+        });
       }
       return await handleControl(context, { control: routine });
     }

@@ -14,21 +14,21 @@
   limitations under the License.
 */
 
-function evaluateOperators({ evaluateOperators }, { connectionConfig, requestConfig }) {
-  const connectionProperties = evaluateOperators({
-    input: connectionConfig.properties || {},
-    location: connectionConfig.connectionId,
-  });
+async function controlThrow(context, { control }) {
+  const { evaluateOperators } = context;
 
-  const requestProperties = evaluateOperators({
-    input: requestConfig.properties || {},
-    location: requestConfig.requestId,
+  const message = evaluateOperators({ input: control[':throw'], location: 'TODO' });
+  const cause = evaluateOperators({ input: control[':cause'], location: 'TODO' });
+  const error = new Error(message, { cause });
+
+  context.logger.error({
+    event: 'error_control_throw',
+    error,
   });
 
   return {
-    connectionProperties,
-    requestProperties,
+    status: 'error',
+    error,
   };
 }
-
-export default evaluateOperators;
+export default controlThrow;

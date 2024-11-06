@@ -15,13 +15,16 @@
 */
 
 async function controlReturn(context, { control }) {
+  const { evaluateOperators } = context;
+  const response = evaluateOperators({ input: control[':return'], location: 'TODO' });
+
   context.logger.debug({
     event: 'debug_control_return',
-    response: control[':return'],
+    response,
   });
   return {
     status: 'return',
-    response: control[':return'], //TODO: Evaluate operators here
+    response,
   };
 }
 
