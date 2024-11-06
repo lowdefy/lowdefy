@@ -30,7 +30,7 @@ async function callRequest(context, { blockId, pageId, payload, request, request
   const { logger } = context;
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = request;
-  const connectionConfig = await getConnectionConfig(context, requestConfig);
+  const connectionConfig = await getConnectionConfig(context, { requestConfig });
   authorizeRequest(context, requestConfig);
 
   const connection = getConnection(context, connectionConfig);
