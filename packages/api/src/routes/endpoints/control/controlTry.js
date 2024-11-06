@@ -21,14 +21,27 @@ async function controlTry(context, { control }) {
     event: 'debug_control_try',
   });
 
-  const res = await runRoutine(context, { routine: control[':try'] });
+  let res = await runRoutine(context, { routine: control[':try'] });
 
   if (res.status === 'error') {
-    context.logger.debug({
-      event: 'debug_control_catch',
-    });
-    await runRoutine(context, { routine: control[':catch'] });
+    if (control[':catch']) {
+      context.logger.debug({
+        event: 'debug_control_catch',
+      });
+      res = await runRoutine(context, { routine: control[':catch'] });
+    }
   }
+  if (control[':finally']) {
+    context.logger.debug({
+      event: 'debug_control_finally',
+    });
+    const finallyRes = await runRoutine(context, { routine: control[':finally'] });
+    if (finallyRes.status !== 'continue') {
+      res = finallyRes;
+    }
+  }
+
+  return res;
 }
 
 export default controlTry;
