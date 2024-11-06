@@ -19,13 +19,13 @@ import { type } from '@lowdefy/helpers';
 import callRequest from './callRequest.js';
 import controlHandlers from './control/controlHandlers.js';
 
-async function handleRequest(context, { request }, { blockId, pageId, payload }) {
+async function handleRequest(context, { blockId, pageId, payload, request }) {
   const requestResult = await callRequest(context, {
     blockId,
     pageId,
     payload,
-    requestId: request.requestId,
     request,
+    requestId: request.requestId,
   });
   context.logger.debug({
     event: 'debug_start_request',
@@ -43,26 +43,24 @@ async function handleControl(context, { control }) {
   throw new Error('Unexpected control.', { cause: control });
 }
 
-async function runRoutine(context, { routine }, { blockId, endpointId, pageId, payload }) {
+async function runRoutine(context, { blockId, endpointId, pageId, payload, routine }) {
   try {
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
-        await handleRequest(
-          context,
-          { request: routine },
-          { blockId, endpointId, pageId, payload }
-        );
+        await handleRequest(context, { blockId, endpointId, pageId, payload, request: routine });
         return { status: 'continue' };
       }
       return await handleControl(context, { control: routine });
     }
     if (type.isArray(routine)) {
       for (const item of routine) {
-        const res = await runRoutine(
-          context,
-          { routine: item },
-          { blockId, endpointId, pageId, payload }
-        );
+        const res = await runRoutine(context, {
+          blockId,
+          endpointId,
+          pageId,
+          payload,
+          routine: item,
+        });
         if (['return', 'error', 'reject'].includes(res.status)) {
           return res;
         }

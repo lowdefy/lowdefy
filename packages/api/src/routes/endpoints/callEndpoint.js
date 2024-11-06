@@ -11,16 +11,13 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   context.state = {};
   context.operatorsParser = getOperatorsParser(context, { payload });
   try {
-    const { error, response, status } = await runRoutine(
-      context,
-      { routine: endpointConfig.routine },
-      {
-        blockId,
-        endpointId,
-        pageId,
-        payload,
-      }
-    );
+    const { error, response, status } = await runRoutine(context, {
+      blockId,
+      endpointId,
+      pageId,
+      payload,
+      routine: endpointConfig.routine,
+    });
     const success = !['error', 'reject'].includes(status);
 
     return {

@@ -26,7 +26,7 @@ import getConnectionConfig from '../request/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import validateSchemas from '../request/validateSchemas.js';
 
-async function callRequest(context, { blockId, pageId, payload, requestId, request }) {
+async function callRequest(context, { blockId, pageId, payload, request, requestId }) {
   const { logger } = context;
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = request;
