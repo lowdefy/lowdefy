@@ -25,53 +25,27 @@ const secrets = {
 const defaultReadConfigImp =
   ({
     connectionConfig = {
-      id: 'connection:testConnection',
+      id: 'connection:test',
       type: 'TestConnection',
-      connectionId: 'testConnection',
-      properties: {
-        connectionProperty: 'connectionProperty',
-      },
+      connectionId: 'test',
     },
-    // requestConfig = {
-    //   id: 'request:pageId:requestId',
-    //   type: 'TestRequest',
-    //   requestId: 'requestId',
-    //   pageId: 'pageId',
-    //   connectionId: 'testConnection',
-    //   auth: { public: true },
-    //   properties: {
-    //     requestProperty: 'requestProperty',
-    //   },
-    // },
   } = {}) =>
   (path) => {
-    if (path === 'connections/testConnection.json') {
+    if (path === 'connections/test.json') {
       return connectionConfig;
     }
-    // if (path === 'pages/pageId/requests/requestId.json') {
-    //   return requestConfig;
-    // }
     return null;
   };
 
-const defaultResolverImp = ({ request, connection }) => ({
-  request,
-  connection,
-});
+// const defaultResolverImp = ({ request }) => request?.response;
 const mockReadConfigFile = jest.fn().mockImplementation(defaultReadConfigImp());
-const mockTestRequest = jest
-  .fn((properties) => {
-    return properties.response;
-  })
-  .mockImplementation(defaultResolverImp);
-const mockTestRequestError = jest
-  .fn((properties) => {
-    throw new Error(properties.message);
-  })
-  .mockImplementation(defaultResolverImp);
-const mockTestRequestWait = jest
-  .fn((properties) => wait(properties.ms))
-  .mockImplementation(defaultResolverImp);
+const mockTestRequest = jest.fn((request) => {
+  return request.request.response;
+});
+const mockTestRequestError = jest.fn((request) => {
+  throw new Error(request.request.message);
+});
+const mockTestRequestWait = jest.fn((request) => wait(request.request.ms));
 
 mockTestRequest.schema = {};
 mockTestRequestError.schema = {};
@@ -92,14 +66,7 @@ mockTestRequestWait.meta = {
 
 const connections = {
   TestConnection: {
-    schema: {
-      type: 'object',
-      properties: {
-        schemaPropString: {
-          type: 'string',
-        },
-      },
-    },
+    schema: {},
     requests: {
       TestRequest: mockTestRequest,
       TestRequestError: mockTestRequestError,
@@ -170,7 +137,6 @@ async function runTest({ routine, payload = {} }) {
     items: {},
   };
   const res = await runRoutine(context, routineContext, { routine });
-  console.log({ res });
   return { res, context };
 }
 
