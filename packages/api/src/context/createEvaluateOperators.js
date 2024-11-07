@@ -11,10 +11,10 @@ function createEvaluateOperators(context) {
     state,
     user,
   });
-
-  function evaluateOperators({ input, location }) {
+  function evaluateOperators({ input, items, location }) {
     const { output, errors } = operatorsParser.parse({
       input,
+      items,
       location,
     });
     if (errors.length > 0) {

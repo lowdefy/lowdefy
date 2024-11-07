@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-function evaluateOperators({ evaluateOperators }, { connectionConfig, requestConfig }) {
+function evaluateOperators({ evaluateOperators }, { connectionConfig, items, requestConfig }) {
   const connectionProperties = evaluateOperators({
     input: connectionConfig.properties || {},
     location: connectionConfig.connectionId,
@@ -22,6 +22,7 @@ function evaluateOperators({ evaluateOperators }, { connectionConfig, requestCon
 
   const requestProperties = evaluateOperators({
     input: requestConfig.properties || {},
+    items,
     location: requestConfig.requestId,
   });
 

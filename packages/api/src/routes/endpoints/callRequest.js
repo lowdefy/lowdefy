@@ -27,6 +27,7 @@ import validateSchemas from '../request/validateSchemas.js';
 
 async function callRequest(context, routineContext, { request, requestId }) {
   const { logger } = context;
+  const { items } = routineContext;
 
   logger.debug({ event: 'debug_api_call_request', requestId });
   const requestConfig = request;
@@ -37,6 +38,7 @@ async function callRequest(context, routineContext, { request, requestId }) {
 
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
+    items,
     requestConfig,
   });
   checkConnectionRead(context, {

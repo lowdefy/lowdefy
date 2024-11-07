@@ -17,9 +17,8 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, items, jsMap, operators, payload, secrets, user, verbose }) {
+  constructor({ env, jsMap, operators, payload, secrets, user, verbose }) {
     this.env = env;
-    this.items = items;
     this.jsMap = jsMap;
     this.operators = operators;
     this.parse = this.parse.bind(this);
@@ -31,7 +30,7 @@ class ServerParser {
 
   // TODO: Look at logging here
   // TODO: Remove console.error = () => {}; from tests
-  parse({ args, input, location, operatorPrefix = '_' }) {
+  parse({ args, input, items, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -59,7 +58,7 @@ class ServerParser {
           args,
           arrayIndices: [],
           env: this.env,
-          items: this.items,
+          items,
           jsMap: this.jsMap,
           location,
           methodName,

@@ -20,7 +20,6 @@ import callRequest from './callRequest.js';
 import controlHandlers from './control/controlHandlers.js';
 
 async function handleRequest(context, routineContext, { request }) {
-  console.log(context.payload);
   context.logger.debug({
     event: 'debug_start_request',
     request,
