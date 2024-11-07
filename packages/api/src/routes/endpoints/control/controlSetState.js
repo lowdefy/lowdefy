@@ -7,10 +7,8 @@ function controlSetState(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_set_state',
-    condition: {
-      input: control[':set_state'],
-      evaluated: evaluatedSetState,
-    },
+    input: control[':set_state'],
+    evaluated: evaluatedSetState,
   });
 
   Object.entries(evaluatedSetState).forEach(([key, value]) => {
