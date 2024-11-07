@@ -26,10 +26,8 @@ test('two steps in parallel', async () => {
     ],
   };
   const { res, context } = await runTest({ routine });
-  console.log('result', res);
   expect(res.status).toEqual('continue');
   expect(res.response).toEqual(undefined);
-  console.log(getRequestLogs(context.logger.debug.mock.calls));
 });
 
 test('steps after parallel', async () => {
@@ -63,7 +61,6 @@ test('steps after parallel', async () => {
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('continue');
   expect(res.response).toEqual(undefined);
-  console.log(getRequestLogs(context.logger.debug.mock.calls));
 });
 
 test('steps before and after parallel', async () => {
