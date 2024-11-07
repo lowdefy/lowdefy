@@ -25,10 +25,10 @@ import getConnectionConfig from '../request/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import validateSchemas from '../request/validateSchemas.js';
 
-async function callRequest(context, { blockId, pageId, payload, request, requestId }) {
+async function callRequest(context, routineContext, { request, requestId }) {
   const { logger } = context;
 
-  logger.debug({ event: 'debug_api_call_request', blockId, pageId, requestId });
+  logger.debug({ event: 'debug_api_call_request', requestId });
   const requestConfig = request;
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
 
@@ -59,9 +59,10 @@ async function callRequest(context, { blockId, pageId, payload, request, request
     requestProperties,
   });
   const response = await callRequestResolver(context, {
-    blockId,
+    blockId: context.blockId,
     connectionProperties,
-    payload,
+    pageId: context.pageId,
+    payload: context.payload,
     requestConfig,
     requestProperties,
     requestResolver,

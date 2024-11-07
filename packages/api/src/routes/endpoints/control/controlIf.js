@@ -16,7 +16,7 @@
 
 import runRoutine from '../runRoutine.js';
 
-async function controlIf(context, { control }) {
+async function controlIf(context, routineContext, { control }) {
   const { logger, evaluateOperators } = context;
 
   const evaluatedIf = evaluateOperators({ input: control[':if'], location: 'TODO:' });
@@ -35,12 +35,12 @@ async function controlIf(context, { control }) {
     if (!control[':then']) {
       throw new Error('Invalid :if - missing :then.');
     }
-    return runRoutine(context, { routine: control[':then'] });
+    return runRoutine(context, routineContext, { routine: control[':then'] });
   } else if (control[':else']) {
     logger.debug({
       event: 'debug_control_if_run_else',
     });
-    return runRoutine(context, { routine: control[':else'] });
+    return runRoutine(context, routineContext, { routine: control[':else'] });
   }
   return { status: 'continue' };
 }

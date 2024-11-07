@@ -16,26 +16,26 @@
 
 import runRoutine from '../runRoutine.js';
 
-async function controlTry(context, { control }) {
+async function controlTry(context, routineContext, { control }) {
   context.logger.debug({
     event: 'debug_control_try',
   });
 
-  let res = await runRoutine(context, { routine: control[':try'] });
+  let res = await runRoutine(context, routineContext, { routine: control[':try'] });
 
   if (res.status === 'error') {
     if (control[':catch']) {
       context.logger.debug({
         event: 'debug_control_catch',
       });
-      res = await runRoutine(context, { routine: control[':catch'] });
+      res = await runRoutine(context, routineContext, { routine: control[':catch'] });
     }
   }
   if (control[':finally']) {
     context.logger.debug({
       event: 'debug_control_finally',
     });
-    const finallyRes = await runRoutine(context, { routine: control[':finally'] });
+    const finallyRes = await runRoutine(context, routineContext, { routine: control[':finally'] });
     if (finallyRes.status !== 'continue') {
       res = finallyRes;
     }

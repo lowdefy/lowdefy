@@ -1,7 +1,7 @@
 import { ServerParser } from '@lowdefy/operators';
 
-function createEvaluateOperators(context, { payload }) {
-  const { jsMap, operators, secrets, state, user } = context;
+function createEvaluateOperators(context) {
+  const { jsMap, operators, payload, secrets, state, user } = context;
 
   const operatorsParser = new ServerParser({
     jsMap,
@@ -11,6 +11,7 @@ function createEvaluateOperators(context, { payload }) {
     state,
     user,
   });
+
   function evaluateOperators({ input, location }) {
     const { output, errors } = operatorsParser.parse({
       input,
