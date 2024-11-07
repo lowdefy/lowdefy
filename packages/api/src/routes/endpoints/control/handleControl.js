@@ -16,13 +16,15 @@
 
 import controlFor from './controlFor.js';
 import controlIf from './controlIf.js';
+import controlParallelFor from './controlParallelFor.js';
+import controlParallel from './controlParallel.js';
+import controlReject from './controlReject.js';
 import controlReturn from './controlReturn.js';
 import controlSetState from './controlSetState.js';
+import controlSwitch from './controlSwitch.js';
 import controlThrow from './controlThrow.js';
 import controlTry from './controlTry.js';
-import controlReject from './controlReject.js';
-import controlSwitch from './controlSwitch.js';
-import controlParallel from './controlParallel.js';
+
 
 function notImplemented(context) {
   context.logger.debug({ event: 'debug_control_not_implemented' });
@@ -32,7 +34,8 @@ const controlHandlers = {
   ':for': controlFor,
   ':if': controlIf,
   ':log': notImplemented,
-  ':parallel': controlParallel,
+  ':parallel_for': controlParallelFor,
+  ':parallel': notImplemented,
   ':reject': controlReject,
   ':return': controlReturn,
   ':set_state': controlSetState,
