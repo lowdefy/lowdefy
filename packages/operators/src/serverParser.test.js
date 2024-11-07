@@ -84,6 +84,7 @@ test('operator returns value and removes ~k', () => {
           ],
           "arrayIndices": Array [],
           "env": undefined,
+          "items": undefined,
           "jsMap": undefined,
           "location": "location",
           "methodName": undefined,

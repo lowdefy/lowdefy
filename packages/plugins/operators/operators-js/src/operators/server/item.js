@@ -14,22 +14,15 @@
   limitations under the License.
 */
 
-function evaluateOperators({ evaluateOperators }, { connectionConfig, items, requestConfig }) {
-  const connectionProperties = evaluateOperators({
-    input: connectionConfig.properties || {},
-    location: connectionConfig.connectionId,
-  });
+import { getFromObject } from '@lowdefy/operators';
 
-  const requestProperties = evaluateOperators({
-    input: requestConfig.properties || {},
-    items,
-    location: requestConfig.requestId,
+function _item({ location, params, items }) {
+  return getFromObject({
+    location,
+    object: items,
+    operator: '_item',
+    params,
   });
-
-  return {
-    connectionProperties,
-    requestProperties,
-  };
 }
 
-export default evaluateOperators;
+export default _item;

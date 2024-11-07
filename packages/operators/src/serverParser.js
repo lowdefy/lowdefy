@@ -31,8 +31,7 @@ class ServerParser {
 
   // TODO: Look at logging here
   // TODO: Remove console.error = () => {}; from tests
-
-  parse({ args, input, location, operatorPrefix = '_' }) {
+  parse({ args, input, items, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -60,6 +59,7 @@ class ServerParser {
           args,
           arrayIndices: [],
           env: this.env,
+          items,
           jsMap: this.jsMap,
           location,
           methodName,
