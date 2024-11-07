@@ -17,6 +17,7 @@
 import controlIf from './controlIf.js';
 import controlTry from './controlTry.js';
 import controlReturn from './controlReturn.js';
+import controlSetState from './controlSetState.js';
 import controlThrow from './controlThrow.js';
 
 function notImplemented(context) {
@@ -30,7 +31,7 @@ const controlHandlers = {
   ':parallel': notImplemented,
   ':reject': notImplemented,
   ':return': controlReturn,
-  ':setState': notImplemented,
+  ':set_state': controlSetState,
   ':switch': notImplemented,
   ':throw': controlThrow,
   ':try': controlTry,
