@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import checkConnectionWrite from '../request/checkConnectionWrite.js';
@@ -25,10 +23,13 @@ import getConnectionConfig from '../request/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import validateSchemas from '../request/validateSchemas.js';
 
-async function callRequest(context, { blockId, pageId, payload, request, requestId }) {
+async function handleRequest(context, routineContext, { request }) {
   const { logger } = context;
 
-  logger.debug({ event: 'debug_api_call_request', blockId, pageId, requestId });
+  logger.debug({
+    event: 'debug_start_request',
+    request,
+  });
   const requestConfig = request;
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
 
@@ -58,20 +59,20 @@ async function callRequest(context, { blockId, pageId, payload, request, request
     requestResolver,
     requestProperties,
   });
-  const response = await callRequestResolver(context, {
-    blockId,
+  const requestResult = await callRequestResolver(context, {
+    blockId: context.blockId,
     connectionProperties,
-    payload,
+    pageId: context.pageId,
+    payload: context.payload,
     requestConfig,
     requestProperties,
     requestResolver,
   });
-  return {
-    id: requestConfig.id,
-    success: true,
-    type: requestConfig.type,
-    response: serializer.serialize(response),
-  };
+  context.logger.debug({
+    event: 'debug_end_request',
+    requestResult,
+  });
+  return { status: 'continue' };
 }
 
-export default callRequest;
+export default handleRequest;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-async function controlThrow(context, { control }) {
+async function controlThrow(context, routineContext, { control }) {
   const { evaluateOperators } = context;
 
   const message = evaluateOperators({ input: control[':throw'], location: 'TODO' });

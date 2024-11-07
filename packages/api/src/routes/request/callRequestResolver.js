@@ -18,14 +18,22 @@ import { RequestError } from '../../context/errors.js';
 
 async function callRequestResolver(
   { logger },
-  { blockId, connectionProperties, payload, requestConfig, requestProperties, requestResolver }
+  {
+    blockId,
+    connectionProperties,
+    pageId,
+    payload,
+    requestConfig,
+    requestProperties,
+    requestResolver,
+  }
 ) {
   try {
     const response = await requestResolver({
       blockId,
       connection: connectionProperties,
       connectionId: requestConfig.connectionId,
-      pageId: requestConfig.pageId,
+      pageId,
       payload,
       request: requestProperties,
       requestId: requestConfig.requestId,

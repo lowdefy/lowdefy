@@ -69,6 +69,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const response = await callRequestResolver(context, {
     blockId,
     connectionProperties,
+    pageId,
     payload: deserializedPayload,
     requestConfig,
     requestProperties,

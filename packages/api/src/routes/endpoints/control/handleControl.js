@@ -17,6 +17,7 @@
 import controlIf from './controlIf.js';
 import controlTry from './controlTry.js';
 import controlReturn from './controlReturn.js';
+import controlSetState from './controlSetState.js';
 import controlThrow from './controlThrow.js';
 import controlReject from './controlReject.js';
 import controlSwitch from './controlSwitch.js';
@@ -32,11 +33,20 @@ const controlHandlers = {
   ':parallel': notImplemented,
   ':reject': controlReject,
   ':return': controlReturn,
-  ':setState': notImplemented,
+  ':set_state': controlSetState,
   ':switch': controlSwitch,
   ':throw': controlThrow,
   ':try': controlTry,
   ':while': notImplemented,
 };
 
-export default controlHandlers;
+async function handleControl(context, routineContext, { control }) {
+  for (const [key, handler] of Object.entries(controlHandlers)) {
+    if (key in control) {
+      return await handler(context, routineContext, { control });
+    }
+  }
+  throw new Error('Unexpected control.', { cause: control });
+}
+
+export default handleControl;
