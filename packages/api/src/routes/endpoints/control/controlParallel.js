@@ -16,7 +16,7 @@
 
 import runRoutine from '../runRoutine.js';
 
-async function controlParallel(context, { control }) {
+async function controlParallel(context, routineContext, { control }) {
   const { logger } = context;
   logger.debug({
     event: 'debug_control_parallel',
@@ -28,7 +28,7 @@ async function controlParallel(context, { control }) {
         event: 'debug_control_parallel_start',
         start: Date.now(),
       });
-      return runRoutine(context, { routine: subRoutine });
+      return runRoutine(context, routineContext, { routine: subRoutine });
     })
   );
 

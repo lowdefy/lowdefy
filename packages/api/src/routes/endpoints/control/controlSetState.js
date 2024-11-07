@@ -2,8 +2,13 @@ import { set } from '@lowdefy/helpers';
 
 function controlSetState(context, routineContext, { control }) {
   const { logger, evaluateOperators } = context;
+  const { items } = routineContext;
 
-  const evaluatedSetState = evaluateOperators({ input: control[':set_state'], location: 'TODO:' });
+  const evaluatedSetState = evaluateOperators({
+    input: control[':set_state'],
+    items,
+    location: 'TODO:',
+  });
 
   logger.debug({
     event: 'debug_control_set_state',

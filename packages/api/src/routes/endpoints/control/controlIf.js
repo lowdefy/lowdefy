@@ -18,8 +18,9 @@ import runRoutine from '../runRoutine.js';
 
 async function controlIf(context, routineContext, { control }) {
   const { logger, evaluateOperators } = context;
+  const { items } = routineContext;
 
-  const evaluatedIf = evaluateOperators({ input: control[':if'], location: 'TODO:' });
+  const evaluatedIf = evaluateOperators({ input: control[':if'], items, location: 'TODO:' });
 
   logger.debug({
     event: 'debug_control_if',
