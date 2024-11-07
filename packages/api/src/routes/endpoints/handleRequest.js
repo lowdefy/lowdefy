@@ -70,6 +70,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
     requestResolver,
   });
+  context.steps[request.requestId] = requestResult;
   context.logger.debug({
     event: 'debug_end_request',
     requestResult,

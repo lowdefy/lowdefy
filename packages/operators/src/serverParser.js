@@ -17,7 +17,7 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, jsMap, operators, payload, secrets, state, user, verbose }) {
+  constructor({ env, jsMap, operators, payload, secrets, state, steps, user, verbose }) {
     this.env = env;
     this.jsMap = jsMap;
     this.operators = operators;
@@ -25,6 +25,7 @@ class ServerParser {
     this.payload = payload;
     this.secrets = secrets;
     this.state = state;
+    this.steps = steps;
     this.user = user;
     this.verbose = verbose;
   }
@@ -71,6 +72,7 @@ class ServerParser {
           runtime: 'node',
           secrets: this.secrets,
           state: this.state,
+          steps: this.steps,
           user: this.user,
         });
         return res;

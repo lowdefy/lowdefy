@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import createAuthorize from './createAuthorize.js';
-import createReadConfigFile from './createReadConfigFile.js';
+import { getFromObject } from '@lowdefy/operators';
 
-function createApiContext(context) {
-  context.state = {};
-  context.steps = {};
-  context.user = context?.session?.user;
-
-  context.authorize = createAuthorize(context);
-  context.readConfigFile = createReadConfigFile(context);
+function _step({ location, params, steps }) {
+  return getFromObject({
+    location,
+    object: steps,
+    operator: '_step',
+    params,
+  });
 }
 
-export default createApiContext;
+export default _step;
