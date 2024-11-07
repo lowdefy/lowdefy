@@ -23,7 +23,7 @@ async function controlSwitch(context, { control }) {
     event: 'debug_control_switch',
   });
   for (const caseObj of cases) {
-    const evaluatedCase = evaluateOperators(caseObj[':case']);
+    const evaluatedCase = evaluateOperators({ input: caseObj[':case'], location: 'TODO' });
     logger.debug({
       event: 'debug_control_switch_case',
       case: {
