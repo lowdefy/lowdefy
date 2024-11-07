@@ -1,4 +1,4 @@
-// import { jest } from '@jest/globals';
+import { jest } from '@jest/globals';
 
 import runTest from '../test/runTest.js';
 
@@ -7,70 +7,57 @@ try catch with successful try √
 try catch with unsuccessful try √
 try only, successful √
 try only, fail √
-
-try catch with unsuccessful try and catch fail
-test throw in try
-test reject in try
+try with finally, without catch, successful try √
+try with finally, without catch, unsuccessful try √
+try catch finally, try pass √
+try catch finally, try fail √
+catch without try √
+finally without try √
 */
 
-test.only('try catch with successful try', async () => {
+test('try catch with successful try', async () => {
   const routine = {
     ':try': {
-      id: 'request:test_endpoint:try_pass',
+      id: 'try_pass',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Success',
       },
     },
     ':catch': {
-      id: 'request:test_endpoint:test_request_error',
+      id: 'test_request_error',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Do this if fail',
       },
     },
   };
-  const { res, context } = await runTest({ routine });
-  expect(res.status).toEqual('continue');
-  expect(context.logger.debug.mock.calls).toEqual([
-    [
-      {
-        event: 'debug_control_try',
-      },
-    ],
-    [
-      {
-        event: 'debug_start_step',
-        step: {
-          id: 'request:test_endpoint:try_pass',
-          type: 'TestRequest',
-          connectionId: 'test',
-          properties: {
-            response: 'Success',
-          },
-        },
-      },
-    ],
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'try_pass',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Success',
+    },
   ]);
-  expect(res.response).toEqual(undefined);
+  expect(res.response).toEqual('Success');
 });
 
 test('try catch with unsuccessful try', async () => {
   const routine = {
     ':try': {
-      id: 'request:test_endpoint:try_fail',
+      id: 'try_fail',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Try and fail',
       },
     },
     ':catch': {
-      id: 'request:test_endpoint:test_request_error',
+      id: 'test_request_error',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Fallback thing',
       },
@@ -80,9 +67,8 @@ test('try catch with unsuccessful try', async () => {
   expect(res.success).toBe(true);
   expect(res.steps).toEqual([
     {
-      id: 'request:test_endpoint:test_request_error',
+      id: 'test_request_error',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Fallback thing',
       },
@@ -94,9 +80,8 @@ test('try catch with unsuccessful try', async () => {
 test('try only, success', async () => {
   const routine = {
     ':try': {
-      id: 'request:test_endpoint:try_pass',
+      id: 'try_pass',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Success',
       },
@@ -119,13 +104,196 @@ test('try only, success', async () => {
 test('try only, fail', async () => {
   const routine = {
     ':try': {
-      id: 'request:test_endpoint:try_fail',
+      id: 'try_fail',
       type: 'TestRequest',
-      connectionId: 'test',
       properties: {
         response: 'Success',
       },
     },
   };
   expect(async () => await runTest({ routine })).rejects.toThrow('TODO: uncaught error'); // ??
+});
+
+test('try with finally, try pass', async () => {
+  const routine = {
+    ':try': {
+      id: 'try_pass',
+      type: 'TestRequest',
+      properties: {
+        response: 'Success',
+      },
+    },
+    ':finally': {
+      id: 'test_request_finally',
+      type: 'TestRequest',
+      properties: {
+        response: 'Always do this',
+      },
+    },
+  };
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'try_pass',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Success',
+    },
+    {
+      stepId: 'test_request_finally',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Always do this',
+    },
+  ]);
+  expect(res.response).toEqual(null); //??
+});
+test('try with finally, try fail', async () => {
+  const routine = {
+    ':try': {
+      id: 'try_fail',
+      type: 'TestRequest',
+      properties: {
+        response: 'Try and fail',
+      },
+    },
+    ':finally': {
+      id: 'test_request_finally',
+      type: 'TestRequest',
+      properties: {
+        response: 'Always do this',
+      },
+    },
+  };
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'test_request_finally',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Always do this',
+    },
+  ]);
+  expect(res.response).toEqual(null); //??
+});
+
+test('try catch finally, try pass', async () => {
+  const routine = {
+    ':try': {
+      id: 'try_pass',
+      type: 'TestRequest',
+      properties: {
+        response: 'Success',
+      },
+    },
+    ':catch': {
+      id: 'catch_backup',
+      type: 'TestRequest',
+      properties: {
+        response: 'Do this if fail',
+      },
+    },
+    ':finally': {
+      id: 'test_request_finally',
+      type: 'TestRequest',
+      properties: {
+        response: 'Always do this',
+      },
+    },
+  };
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'try_pass',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Success',
+    },
+    {
+      stepId: 'test_request_finally',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Always do this',
+    },
+  ]);
+  expect(res.response).toEqual(null); //??
+});
+
+test('try catch finally, try fail', async () => {
+  const routine = {
+    ':try': {
+      id: 'try_fail',
+      type: 'TestRequest',
+      properties: {
+        response: 'Try and fail',
+      },
+    },
+    ':catch': {
+      id: 'catch_backup',
+      type: 'TestRequest',
+      properties: {
+        response: 'Do this if fail',
+      },
+    },
+    ':finally': {
+      id: 'test_request_finally',
+      type: 'TestRequest',
+      properties: {
+        response: 'Always do this',
+      },
+    },
+  };
+  const res = await runTest({ routine });
+  expect(res.success).toBe(true);
+  expect(res.steps).toEqual([
+    {
+      stepId: 'catch_backup',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Do this if fail',
+    },
+    {
+      stepId: 'test_request_finally',
+      startTimestamp: 'fake_time',
+      endTimestamp: 'fake_time',
+      success: true,
+      response: 'Always do this',
+    },
+  ]);
+  expect(res.response).toEqual(null); //??
+});
+
+test('catch without try', async () => {
+  const routine = {
+    ':catch': {
+      id: 'catch_no_try',
+      type: 'TestRequest',
+      properties: {
+        response: 'INVALID',
+      },
+    },
+  };
+  expect(async () => await runTest({ routine })).rejects.toThrow('TODO: No :try specified'); // ??
+});
+
+test('finally without try', async () => {
+  const routine = {
+    ':finally': {
+      id: 'finally_no_try',
+      type: 'TestRequest',
+      properties: {
+        response: 'INVALID',
+      },
+    },
+  };
+  expect(async () => await runTest({ routine })).rejects.toThrow('TODO: No :try specified'); // ??
 });
