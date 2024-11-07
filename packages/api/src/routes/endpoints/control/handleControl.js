@@ -40,4 +40,13 @@ const controlHandlers = {
   ':while': notImplemented,
 };
 
-export default controlHandlers;
+async function handleControl(context, routineContext, { control }) {
+  for (const [key, handler] of Object.entries(controlHandlers)) {
+    if (key in control) {
+      return await handler(context, routineContext, { control });
+    }
+  }
+  throw new Error('Unexpected control.', { cause: control });
+}
+
+export default handleControl;
