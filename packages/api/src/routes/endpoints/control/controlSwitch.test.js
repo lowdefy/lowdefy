@@ -104,6 +104,36 @@ test('switch with passing case at the end', async () => {
   ]);
 });
 
+test('switch with all cases passing', async () => {
+  const routine = {
+    ':switch': [
+      {
+        ':case': true,
+        ':then': [{ ':return': { message: 'Case 1 passed' } }],
+      },
+      {
+        ':case': true,
+        ':then': [{ ':return': { message: 'Case 2 passed' } }],
+      },
+      {
+        ':case': true,
+        ':then': [{ ':return': { message: 'Case 3 passed' } }],
+      },
+    ],
+    ':default': [{ ':return': { message: 'default case' } }],
+  };
+  const { res, context } = await runTest({ routine });
+  const expectedRes = { message: 'Case 1 passed' };
+  expect(res.status).toEqual('return');
+  expect(res.response).toEqual(expectedRes);
+  expect(context.logger.debug.mock.calls).toEqual([
+    [{ event: 'debug_control_switch' }],
+    [{ event: 'debug_control_switch_case', case: { input: true, evaluated: true } }],
+    [{ event: 'debug_control_switch_run_then' }],
+    [{ event: 'debug_control_return', response: expectedRes }],
+  ]);
+});
+
 test('switch with passing default case', async () => {
   const routine = {
     ':switch': [

@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-async function controlReject(context, { control }) {
+async function controlReject(context, routineContext, { control }) {
   const { evaluateOperators } = context;
-  const response = evaluateOperators({ input: control[':reject'], location: 'TODO' });
+  const { items } = routineContext;
+  const response = evaluateOperators({ input: control[':reject'], items, location: 'TODO' });
 
   context.logger.debug({
     event: 'debug_control_reject',
