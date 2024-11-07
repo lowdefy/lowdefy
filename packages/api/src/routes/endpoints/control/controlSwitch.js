@@ -17,14 +17,34 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlSwitch(context, { control }) {
-  // const { logger, evaluateOperators } = context;
+  const { logger, evaluateOperators } = context;
   const cases = control[':switch'];
+  logger.debug({
+    event: 'debug_control_switch',
+  });
   for (const caseObj of cases) {
-    const evaluatedCase = caseObj[':case']; //TODO: Evaluate operators
+    const evaluatedCase = evaluateOperators(caseObj[':case']);
+    logger.debug({
+      event: 'debug_control_switch_case',
+      case: {
+        input: caseObj[':case'],
+        evaluated: evaluatedCase,
+      },
+    });
     if (evaluatedCase) {
+      logger.debug({
+        event: 'debug_control_switch_run_then',
+      });
+      if (!caseObj[':then']) {
+        throw new Error('Invalid switch :case - missing :then');
+      }
       return runRoutine(context, { routine: caseObj[':then'] });
     }
   }
-  return runRoutine(context, { routine: control[':default'] ?? [] });
+  if (control[':default']) {
+    logger.debug({ event: 'debug_control_switch_run_default' });
+    return runRoutine(context, { routine: control[':default'] });
+  }
+  return { status: 'continue' };
 }
 export default controlSwitch;
