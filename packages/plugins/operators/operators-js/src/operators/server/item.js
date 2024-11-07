@@ -14,18 +14,15 @@
   limitations under the License.
 */
 
-async function controlReturn(context, routineContext, { control }) {
-  const { evaluateOperators } = context;
-  const response = evaluateOperators({ input: control[':return'], location: 'TODO' });
+import { getFromObject } from '@lowdefy/operators';
 
-  context.logger.debug({
-    event: 'debug_control_return',
-    response,
+function _item({ location, params, items }) {
+  return getFromObject({
+    location,
+    object: items,
+    operator: '_item',
+    params,
   });
-  return {
-    status: 'return',
-    response,
-  };
 }
 
-export default controlReturn;
+export default _item;
