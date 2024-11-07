@@ -69,13 +69,14 @@ async function controlParallelFor(context, routineContext, { control }) {
 
   const results = await Promise.all(promises);
 
-  for (const res of results) {
-    if (res?.status != 'continue') {
-      return res;
-    }
-  }
+  const resultsMap = { error: [], reject: [], return: [], continue: [] };
+  results.forEach((res) => (resultsMap[res.status] = [...resultsMap[res.status], res]));
 
-  return { status: 'continue' };
+  return (
+    resultsMap.error?.[0] ??
+    resultsMap.reject?.[0] ??
+    resultsMap.return?.[0] ?? { status: 'continue' }
+  );
 }
 
 export default controlParallelFor;
