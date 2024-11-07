@@ -32,6 +32,7 @@ const controlTypes = {
     routine: [':parallel'],
     optional: [],
   },
+  ':parallel_for': { required: [':parallel_for', ':in', ':do'], routine: [':do'], optional: [] },
   ':reject': { required: [':reject'], routine: [], optional: [] },
   ':return': { required: [':return'], routine: [], optional: [] },
   ':set_state': { required: [':set_state'], routine: [], optional: [] },
