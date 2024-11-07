@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-async function controlReturn(context, { control }) {
+async function controlReturn(context, routineContext, { control }) {
   const { evaluateOperators } = context;
   const response = evaluateOperators({ input: control[':return'], location: 'TODO' });
 
