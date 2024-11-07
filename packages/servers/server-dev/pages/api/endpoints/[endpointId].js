@@ -24,7 +24,7 @@ async function handler({ context, req, res }) {
   }
   const { endpointId } = req.query;
   const { blockId, payload, pageId } = req.body;
-  // context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
+  context.logger.info({ event: 'call_api_endpoint', blockId, endpointId, pageId });
   const response = await callEndpoint(context, { blockId, endpointId, pageId, payload });
   res.status(200).json(response);
 }

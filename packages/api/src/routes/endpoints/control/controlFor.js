@@ -22,7 +22,6 @@ async function controlFor(context, routineContext, { control }) {
 
   logger.debug({
     event: 'debug_control_for',
-    items,
   });
 
   const itemName = control[':for'];
