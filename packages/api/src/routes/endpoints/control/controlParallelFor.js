@@ -16,46 +16,46 @@
 
 import runRoutine from '../runRoutine.js';
 
-async function controlFor(context, routineContext, { control }) {
+async function controlParallelFor(context, routineContext, { control }) {
   const { logger, evaluateOperators } = context;
   const { items } = routineContext;
 
-  const itemName = control[':for'];
+  const itemName = control[':parallel_for'];
   if (!itemName) {
-    throw new Error('Invalid :for - missing variable name in :for.');
+    throw new Error('Invalid :parallel_for - missing variable name in :parallel_for.');
   }
 
   const array = evaluateOperators({
     input: control[':in'],
     items,
-    location: 'controlFor',
+    location: 'controlParallelFor',
   });
 
   logger.debug({
-    event: 'debug_control_for',
+    event: 'debug_control_parallel',
     array,
     itemName,
   });
 
   if (!Array.isArray(array)) {
-    throw new Error('Invalid :for - evaluated :in to non-array.');
+    throw new Error('Invalid :parallel_for - evaluated :in to non-array.');
   }
 
   if (!control[':do']) {
-    throw new Error('Invalid :for - missing :do.');
+    throw new Error('Invalid :parallel_for - missing :do.');
   }
 
-  for (const item of array) {
+  const promises = array.map((item) => {
     const updatedItems = { ...items, [itemName]: item };
 
     logger.debug({
-      event: 'debug_control_for_iteration',
+      event: 'debug_control_parallel_iteration',
       itemName: itemName,
       value: item,
       items: updatedItems,
     });
 
-    const res = await runRoutine(
+    return runRoutine(
       context,
       {
         ...routineContext,
@@ -65,7 +65,11 @@ async function controlFor(context, routineContext, { control }) {
         routine: control[':do'],
       }
     );
+  });
 
+  const results = await Promise.all(promises);
+
+  for (const res of results) {
     if (res?.status != 'continue') {
       return res;
     }
@@ -74,4 +78,4 @@ async function controlFor(context, routineContext, { control }) {
   return { status: 'continue' };
 }
 
-export default controlFor;
+export default controlParallelFor;
