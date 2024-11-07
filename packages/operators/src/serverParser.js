@@ -17,19 +17,21 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class ServerParser {
-  constructor({ env, payload, secrets, user, operators, verbose, jsMap }) {
+  constructor({ env, jsMap, operators, payload, secrets, state, user, verbose }) {
     this.env = env;
     this.jsMap = jsMap;
     this.operators = operators;
+    this.parse = this.parse.bind(this);
     this.payload = payload;
     this.secrets = secrets;
+    this.state = state;
     this.user = user;
-    this.parse = this.parse.bind(this);
     this.verbose = verbose;
   }
 
   // TODO: Look at logging here
   // TODO: Remove console.error = () => {}; from tests
+
   parse({ args, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
@@ -68,6 +70,7 @@ class ServerParser {
           payload: this.payload,
           runtime: 'node',
           secrets: this.secrets,
+          state: this.state,
           user: this.user,
         });
         return res;

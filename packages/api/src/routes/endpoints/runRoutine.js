@@ -16,58 +16,22 @@
 
 import { type } from '@lowdefy/helpers';
 
-import callRequest from './callRequest.js';
-import controlHandlers from './control/controlHandlers.js';
+import handleRequest from './handleRequest.js';
+import handleControl from './control/handleControl.js';
 
-async function handleRequest(context, { blockId, pageId, payload, request }) {
-  context.logger.debug({
-    event: 'debug_start_request',
-    request,
-  });
-  const requestResult = await callRequest(context, {
-    blockId,
-    pageId,
-    payload,
-    request,
-    requestId: request.requestId,
-  });
-  context.logger.debug({
-    event: 'debug_end_request',
-    requestResult,
-  });
-  return { status: 'continue' };
-}
-
-async function handleControl(context, { control }) {
-  for (const [key, handler] of Object.entries(controlHandlers)) {
-    if (key in control) {
-      return await handler(context, { control });
-    }
-  }
-  throw new Error('Unexpected control.', { cause: control });
-}
-
-async function runRoutine(context, { blockId, endpointId, pageId, payload, routine }) {
+async function runRoutine(context, routineContext, { routine }) {
   try {
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
-        return await handleRequest(context, {
-          blockId,
-          endpointId,
-          pageId,
-          payload,
+        return await handleRequest(context, routineContext, {
           request: routine,
         });
       }
-      return await handleControl(context, { control: routine });
+      return await handleControl(context, routineContext, { control: routine });
     }
     if (type.isArray(routine)) {
       for (const item of routine) {
-        const res = await runRoutine(context, {
-          blockId,
-          endpointId,
-          pageId,
-          payload,
+        const res = await runRoutine(context, routineContext, {
           routine: item,
         });
         if (['return', 'error', 'reject'].includes(res.status)) {
@@ -76,7 +40,7 @@ async function runRoutine(context, { blockId, endpointId, pageId, payload, routi
       }
       return { status: 'continue' };
     }
-    throw new Error('Invalid routine', { cause: { routine } });
+    throw new Error('Invalid routine.', { cause: { routine } });
   } catch (error) {
     context.logger.error(error);
     return { status: 'error', error };
