@@ -34,7 +34,7 @@ const controlTypes = {
   },
   ':reject': { required: [':reject'], routine: [], optional: [] },
   ':return': { required: [':return'], routine: [], optional: [] },
-  ':setState': { required: [':setState'], routine: [], optional: [] },
+  ':set_state': { required: [':set_state'], routine: [], optional: [] },
   ':switch': {
     required: [':switch', ':case', ':then'],
     routine: [':default', ':then'],

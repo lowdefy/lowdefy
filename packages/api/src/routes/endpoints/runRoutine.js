@@ -16,33 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-import callRequest from './callRequest.js';
-import controlHandlers from './control/controlHandlers.js';
-
-async function handleRequest(context, routineContext, { request }) {
-  context.logger.debug({
-    event: 'debug_start_request',
-    request,
-  });
-  const requestResult = await callRequest(context, routineContext, {
-    request,
-    requestId: request.requestId,
-  });
-  context.logger.debug({
-    event: 'debug_end_request',
-    requestResult,
-  });
-  return { status: 'continue' };
-}
-
-async function handleControl(context, routineContext, { control }) {
-  for (const [key, handler] of Object.entries(controlHandlers)) {
-    if (key in control) {
-      return await handler(context, routineContext, { control });
-    }
-  }
-  throw new Error('Unexpected control.', { cause: control });
-}
+import handleRequest from './handleRequest.js';
+import handleControl from './control/handleControl.js';
 
 async function runRoutine(context, routineContext, { routine }) {
   try {
