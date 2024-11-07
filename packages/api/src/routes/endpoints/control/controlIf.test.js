@@ -1,5 +1,3 @@
-// import { jest } from '@jest/globals';
-
 import runTest from '../test/runTest.js';
 
 test('if condition is true', async () => {
