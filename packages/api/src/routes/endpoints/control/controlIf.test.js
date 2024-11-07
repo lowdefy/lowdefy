@@ -48,7 +48,21 @@ test.only('if condition is true', async () => {
           id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
           connectionId: 'testConnection',
+          requestId: 'requestId',
           properties: {
+            response: 'Was true',
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: {
+          connection: {
+            connectionProperty: 'connectionProperty',
+          },
+          request: {
             response: 'Was true',
           },
         },
