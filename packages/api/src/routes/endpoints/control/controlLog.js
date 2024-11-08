@@ -22,7 +22,8 @@ async function controlLog(context, routineContext, { control }) {
 
   logger.debug({ event: 'debug_control_log' });
   const log = evaluateOperators({ input: control[':log'], items, location: 'TODO:' });
-  const logLevel = control[':level'] ?? 'info';
+  const logLevel =
+    evaluateOperators({ input: control[':level'], items, location: 'TODO:' }) ?? 'info';
 
   if (!type.isObject(log) && !type.isString(log)) {
     throw new Error(`Unrecognised type for :log. Received ${log}.`);
