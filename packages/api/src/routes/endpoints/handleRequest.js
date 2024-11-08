@@ -62,10 +62,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
   });
   const requestResult = await callRequestResolver(context, {
-    blockId: context.blockId,
     connectionProperties,
-    pageId: context.pageId,
-    payload: context.payload,
     requestConfig,
     requestProperties,
     requestResolver,

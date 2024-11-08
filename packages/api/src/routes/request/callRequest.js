@@ -32,6 +32,11 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const { logger } = context;
 
+  context.blockId = blockId;
+  context.pageId = pageId;
+  context.payload = serializer.deserialize(payload);
+  context.evaluateOperators = createEvaluateOperators(context);
+
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, { requestConfig });
@@ -40,8 +45,6 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
 
-  const deserializedPayload = serializer.deserialize(payload);
-  context.evaluateOperators = createEvaluateOperators(context, { payload: deserializedPayload });
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     requestConfig,
@@ -67,10 +70,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestProperties,
   });
   const response = await callRequestResolver(context, {
-    blockId,
     connectionProperties,
-    pageId,
-    payload: deserializedPayload,
     requestConfig,
     requestProperties,
     requestResolver,
