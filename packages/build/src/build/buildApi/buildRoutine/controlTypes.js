@@ -26,7 +26,7 @@ const controlTypes = {
     routine: [':then', ':else'],
     optional: [':else'],
   },
-  ':log': { required: [':log'], routine: [], optional: [] },
+  ':log': { required: [':log'], routine: [], optional: [':level'] },
   ':parallel': {
     required: [':parallel'],
     routine: [':parallel'],
