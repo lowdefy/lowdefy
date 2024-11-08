@@ -27,6 +27,12 @@ async function validateAuthConfig({ components }) {
   if (!type.isObject(components.auth)) {
     throw new Error('lowdefy.auth is not an object.');
   }
+  if (type.isNone(components.auth.api)) {
+    components.auth.api = {};
+  }
+  if (type.isNone(components.auth.api.roles)) {
+    components.auth.api.roles = {};
+  }
   if (type.isNone(components.auth.authPages)) {
     components.auth.authPages = {};
   }
@@ -57,20 +63,9 @@ async function validateAuthConfig({ components }) {
     data: components.auth,
   });
 
-  if (
-    (components.auth.pages.protected === true && components.auth.pages.public === true) ||
-    (type.isArray(components.auth.pages.protected) && type.isArray(components.auth.pages.public))
-  ) {
-    throw new Error(
-      'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
-    );
-  }
-  if (components.auth.pages.protected === false) {
-    throw new Error('Protected pages can not be set to false.');
-  }
-  if (components.auth.pages.public === false) {
-    throw new Error('Public pages can not be set to false.');
-  }
+  validateMutualExclusivity('api');
+  validateMutualExclusivity('pages');
+
   return components;
 }
 

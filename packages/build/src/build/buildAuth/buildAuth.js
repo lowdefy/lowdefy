@@ -18,6 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 import buildAuthPlugins from './buildAuthPlugins.js';
+import buildApiAuth from './buildApiAuth.js';
 import buildPageAuth from './buildPageAuth.js';
 import validateAuthConfig from './validateAuthConfig.js';
 
@@ -43,6 +44,8 @@ function buildAuth({ components, context }) {
 
   validateAuthConfig({ components });
   components.auth.configured = configured;
+  console.log(components.auth);
+  // buildApiAuth({ components });
   buildPageAuth({ components });
   buildAuthPlugins({ components, context });
 
