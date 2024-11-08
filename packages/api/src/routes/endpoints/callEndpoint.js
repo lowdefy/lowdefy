@@ -1,8 +1,9 @@
 import { serializer } from '@lowdefy/helpers';
 
-import runRoutine from './runRoutine.js';
-import getEndpointConfig from './getEndpointConfig.js';
+import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
+import getEndpointConfig from './getEndpointConfig.js';
+import runRoutine from './runRoutine.js';
 
 async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   const { logger } = context;
@@ -15,6 +16,8 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
 
   logger.debug({ event: 'debug_endpoint', blockId, endpointId, pageId, payload });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
+
+  authorizeApiEndpoint(context, { endpointConfig });
 
   const routineContext = {
     items: {},
