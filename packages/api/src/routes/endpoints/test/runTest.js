@@ -37,7 +37,6 @@ const defaultReadConfigImp =
     return null;
   };
 
-// const defaultResolverImp = ({ request }) => request?.response;
 const mockReadConfigFile = jest.fn().mockImplementation(defaultReadConfigImp());
 const mockTestRequest = jest.fn((request) => {
   return request.request.response;
@@ -100,37 +99,6 @@ function createTextContext({ payload }) {
 
   return context;
 }
-// TODO: Use '../../../test/testContext.js' ?
-// function testContext({ payload }) {
-//   const context = {
-//     logger: {
-//       debug: jest.fn(),
-//       info: jest.fn(),
-//       warn: jest.fn(),
-//       // error: console.error,
-//       error: jest.fn(),
-//     },
-//     // TODO: Maybe import @lowdefy/operators-js/server
-//     operators: {
-//       _eq: ({ params }) => params[0] === params[1],
-//       _test_error: ({ params }) => {
-//         throw new Error(params);
-//         // TODO: _state
-//         // TODO: _payload
-//       },
-//     },
-//     jsMap: {},
-//     secrets: {
-//       TEST_SECRET: 'shhhhh',
-//     },
-//     user: {
-//       id: 'test_user_id',
-//     },
-//   };
-//   context.operatorsParser = getOperatorsParser(context, { payload });
-//   return context;
-// }
-
 async function runTest({ routine, payload = {} }) {
   const context = createTextContext({ payload });
   const routineContext = {
