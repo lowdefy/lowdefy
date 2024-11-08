@@ -312,7 +312,7 @@ test('throw in a try block with catch return', async () => {
   ]);
 });
 
-test.only('throw in a try block with missing catch', async () => {
+test('throw in a try block with missing catch', async () => {
   const routine = [
     {
       ':try': [
@@ -347,6 +347,12 @@ test.only('throw in a try block with missing catch', async () => {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
   ]);
@@ -390,6 +396,12 @@ test('throw in a try block with error in finally', async () => {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
     [{ event: 'debug_control_catch' }],
@@ -439,6 +451,12 @@ test('throw in try block with cause', async () => {
         },
       },
     ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
+      },
+    ],
   ]);
   expect(context.logger.error.mock.calls).toEqual([[{ event: 'error_control_throw', error }]]);
 });
@@ -479,6 +497,12 @@ test('throw in try block with empty catch', async () => {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
     [{ event: 'debug_control_catch' }],
@@ -522,6 +546,12 @@ test('throw in try block with return in finally block', async () => {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
     [{ event: 'debug_control_finally' }],
@@ -578,6 +608,12 @@ test('throw in try block with request in finally block', async () => {
         },
       },
     ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
+      },
+    ],
     [{ event: 'debug_control_finally' }],
     [
       {
@@ -591,6 +627,12 @@ test('throw in try block with request in finally block', async () => {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
   ]);
