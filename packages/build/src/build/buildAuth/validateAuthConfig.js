@@ -20,6 +20,8 @@ import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import lowdefySchema from '../../lowdefySchema.js';
 
+import validateMutualExclusivity from './validateMutualExclusivity.js';
+
 async function validateAuthConfig({ components }) {
   if (type.isNone(components.auth)) {
     components.auth = {};
@@ -63,8 +65,8 @@ async function validateAuthConfig({ components }) {
     data: components.auth,
   });
 
-  validateMutualExclusivity('api');
-  validateMutualExclusivity('pages');
+  validateMutualExclusivity({ components, entity: 'api' });
+  validateMutualExclusivity({ components, entity: 'pages' });
 
   return components;
 }

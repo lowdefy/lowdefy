@@ -44,8 +44,7 @@ function buildAuth({ components, context }) {
 
   validateAuthConfig({ components });
   components.auth.configured = configured;
-  console.log(components.auth);
-  // buildApiAuth({ components });
+  buildApiAuth({ components });
   buildPageAuth({ components });
   buildAuthPlugins({ components, context });
 

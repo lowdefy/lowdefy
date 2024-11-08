@@ -22,9 +22,7 @@ import getProtectedApi from './getProtectedApi.js';
 
 function buildApiAuth({ components }) {
   const protectedApiEndpoints = getProtectedApi({ components });
-  console.log(protectedApiEndpoints);
   const apiRoles = getApiRoles({ components });
-  console.log(apiRoles);
   let configPublicApi = [];
   if (type.isArray(components.auth.api.public)) {
     configPublicApi = components.auth.api.public;
