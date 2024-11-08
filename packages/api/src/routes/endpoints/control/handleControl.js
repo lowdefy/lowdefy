@@ -16,6 +16,7 @@
 
 import controlFor from './controlFor.js';
 import controlIf from './controlIf.js';
+import controlLog from './controlLog.js';
 import controlParallel from './controlParallel.js';
 import controlParallelFor from './controlParallelFor.js';
 import controlReject from './controlReject.js';
@@ -32,7 +33,7 @@ function notImplemented(context) {
 const controlHandlers = {
   ':for': controlFor,
   ':if': controlIf,
-  ':log': notImplemented,
+  ':log': controlLog,
   ':parallel_for': controlParallelFor,
   ':parallel': controlParallel,
   ':reject': controlReject,
