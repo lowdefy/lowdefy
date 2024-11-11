@@ -144,3 +144,33 @@ test('multiple logs', async () => {
   ]);
   expect(context.logger.error.mock.calls).toEqual([[{ message: 'Error test' }]]);
 });
+
+test('evaluate operators log message', async () => {
+  const routine = [
+    {
+      ':log': { message: { '_string.toUpperCase': 'uppercase log message' } },
+      ':level': 'info',
+    },
+  ];
+  const { res, context } = await runTest({ routine });
+
+  expect(res.status).toEqual('continue');
+  expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
+  expect(context.logger.info.mock.calls).toEqual([[{ message: 'UPPERCASE LOG MESSAGE' }]]);
+});
+
+test('evaluate operators log level', async () => {
+  const routine = [
+    {
+      ':log': { message: 'Test log level evaluate operators' },
+      ':level': { '_string.toLowerCase': 'INFO' },
+    },
+  ];
+  const { res, context } = await runTest({ routine });
+
+  expect(res.status).toEqual('continue');
+  expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
+  expect(context.logger.info.mock.calls).toEqual([
+    [{ message: 'Test log level evaluate operators' }],
+  ]);
+});
