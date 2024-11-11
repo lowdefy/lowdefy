@@ -1,5 +1,3 @@
-import { jest } from '@jest/globals';
-
 import runTest from '../test/runTest.js';
 
 test('single return', async () => {
@@ -28,6 +26,8 @@ test('return at end of routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -35,6 +35,8 @@ test('return at end of routine', async () => {
     {
       id: 'request:test_request_2',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_2',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -46,15 +48,17 @@ test('return at end of routine', async () => {
     },
   ];
   const { res, context } = await runTest({ routine });
-  expect(res.status).toBe('return');
+  expect(res.status).toEqual('return');
   expect(res.response).toEqual({ message: 'Successful' });
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -63,17 +67,36 @@ test('return at end of routine', async () => {
     ],
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_end_request',
+      },
+    ],
+    [
+      {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_2',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_2',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
       },
     ],
-    [{ event: 'debug_control_return', response: { message: 'Successful' } }],
+    [
+      {
+        event: 'debug_end_request',
+      },
+    ],
+    [
+      {
+        event: 'debug_control_return',
+        response: {
+          message: 'Successful',
+        },
+      },
+    ],
   ]);
 });
 
@@ -82,6 +105,8 @@ test('return in the middle of routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -94,6 +119,8 @@ test('return in the middle of routine', async () => {
     {
       id: 'request:test_request_2',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_2',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -104,14 +131,21 @@ test('return in the middle of routine', async () => {
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'Successful' } }],
@@ -124,6 +158,8 @@ test('multiple returns in routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -149,14 +185,21 @@ test('multiple returns in routine', async () => {
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'First' } }],
@@ -172,6 +215,8 @@ test('truthy guard statement return', async () => {
         {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
@@ -182,6 +227,8 @@ test('truthy guard statement return', async () => {
     {
       id: 'request:test_request_end',
       type: 'TestRequest',
+      requestId: 'request:test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -196,14 +243,22 @@ test('truthy guard statement return', async () => {
     [{ event: 'debug_control_if_run_then' }],
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'guard statement',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by guard statement' } }],
@@ -218,6 +273,8 @@ test('falsy guard statement return', async () => {
         {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
@@ -228,6 +285,8 @@ test('falsy guard statement return', async () => {
     {
       id: 'request:test_request_end',
       type: 'TestRequest',
+      requestId: 'request:test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -241,14 +300,22 @@ test('falsy guard statement return', async () => {
     [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_end',
           type: 'TestRequest',
+          requestId: 'request:test_request_end',
+          connectionId: 'test',
           properties: {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'made it to the end' } }],
@@ -263,6 +330,8 @@ test('deep nested return', async () => {
         {
           id: 'request:test_request_first_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_first_if',
+          connectionId: 'test',
           properties: {
             response: 'first if',
           },
@@ -273,6 +342,8 @@ test('deep nested return', async () => {
             {
               id: 'request:test_request_second_if',
               type: 'TestRequest',
+              requestId: 'request:test_request_second_if',
+              connectionId: 'test',
               properties: {
                 response: 'second if',
               },
@@ -286,6 +357,8 @@ test('deep nested return', async () => {
     {
       id: 'test_request_end',
       type: 'TestRequest',
+      requestId: 'test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -300,28 +373,44 @@ test('deep nested return', async () => {
     [{ event: 'debug_control_if_run_then' }],
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_first_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_first_if',
+          connectionId: 'test',
           properties: {
             response: 'first if',
           },
         },
       },
     ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'first if',
+      },
+    ],
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
     [{ event: 'debug_control_if_run_then' }],
     [
       {
-        event: 'debug_start_step',
-        step: {
+        event: 'debug_start_request',
+        request: {
           id: 'request:test_request_second_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_second_if',
+          connectionId: 'test',
           properties: {
             response: 'second if',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'second if',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
