@@ -1,5 +1,18 @@
-import { jest } from '@jest/globals';
+/*
+  Copyright 2020-2024 Lowdefy, Inc
 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 import runTest from '../test/runTest.js';
 
 //TODO Implement wait requests
@@ -12,6 +25,8 @@ test('two steps in parallel', async () => {
       {
         id: 'request:test_request_wait_30',
         type: 'TestRequestWait',
+        requestId: 'request:test_request_wait_30',
+        connectionId: 'test',
         properties: {
           ms: 30,
         },
@@ -19,6 +34,8 @@ test('two steps in parallel', async () => {
       {
         id: 'request:test_request_wait_10',
         type: 'TestRequestWait',
+        requestId: 'request:test_request_wait_10',
+        connectionId: 'test',
         properties: {
           ms: 10,
         },
@@ -37,6 +54,8 @@ test('steps after parallel', async () => {
         {
           id: 'request:test_request_wait_30',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_30',
+          connectionId: 'test',
           properties: {
             ms: 30,
           },
@@ -44,6 +63,8 @@ test('steps after parallel', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -53,6 +74,8 @@ test('steps after parallel', async () => {
     {
       id: 'request:test_request_after_parallel',
       type: 'TestRequest',
+      requestId: 'request:test_request_after_parallel',
+      connectionId: 'test',
       properties: {
         response: 'after parallel',
       },
@@ -68,6 +91,8 @@ test('steps before and after parallel', async () => {
     {
       id: 'request:test_request_before_parallel',
       type: 'TestRequest',
+      requestId: 'request:test_request_before_parallel',
+      connectionId: 'test',
       properties: {
         response: 'before parallel',
       },
@@ -77,6 +102,8 @@ test('steps before and after parallel', async () => {
         {
           id: 'request:test_request_wait_30',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_30',
+          connectionId: 'test',
           properties: {
             ms: 30,
           },
@@ -84,6 +111,8 @@ test('steps before and after parallel', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -93,6 +122,8 @@ test('steps before and after parallel', async () => {
     {
       id: 'request:test_request_after_parallel',
       type: 'TestRequest',
+      requestId: 'request:test_request_after_parallel',
+      connectionId: 'test',
       properties: {
         response: 'after parallel',
       },
@@ -111,6 +142,8 @@ test('return in parallel', async () => {
         {
           id: 'request:test_request_wait_30',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_30',
+          connectionId: 'test',
           properties: {
             ms: 30,
           },
@@ -118,18 +151,13 @@ test('return in parallel', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
       ],
-    },
-    {
-      stepId: 'request:test_request_after_parallel',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'after parallel',
     },
   ];
   const { res } = await runTest({ routine });
@@ -146,6 +174,8 @@ test('multiple returns in parallel', async () => {
         {
           id: 'request:test_request_wait_30',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_30',
+          connectionId: 'test',
           properties: {
             ms: 30,
           },
@@ -153,18 +183,13 @@ test('multiple returns in parallel', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
       ],
-    },
-    {
-      stepId: 'request:test_request_after_parallel',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: 'after parallel',
     },
   ];
   const { res } = await runTest({ routine });
@@ -180,6 +205,8 @@ test('multiple returns in parallel with wait before first return', async () => {
           {
             id: 'request:test_request_wait_30',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_30',
+            connectionId: 'test',
             properties: {
               ms: 30,
             },
@@ -204,6 +231,8 @@ test('if in parallel', async () => {
           ':then': {
             id: 'request:test_request_wait_40',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_40',
+            connectionId: 'test',
             properties: {
               ms: 40,
             },
@@ -211,6 +240,8 @@ test('if in parallel', async () => {
           ':else': {
             id: 'request:test_request_wait_50',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_50',
+            connectionId: 'test',
             properties: {
               ms: 50,
             },
@@ -219,6 +250,8 @@ test('if in parallel', async () => {
         {
           id: 'request:test_request_wait_30',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_30',
+          connectionId: 'test',
           properties: {
             ms: 30,
           },
@@ -226,6 +259,8 @@ test('if in parallel', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -247,6 +282,8 @@ test('parallel with return and throw', async () => {
           {
             id: 'request:test_request_wait_40',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_40',
+            connectionId: 'test',
             properties: {
               ms: 40,
             },
@@ -256,6 +293,8 @@ test('parallel with return and throw', async () => {
         {
           id: 'request:test_request_wait_50',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_50',
+          connectionId: 'test',
           properties: {
             ms: 50,
           },
@@ -264,6 +303,8 @@ test('parallel with return and throw', async () => {
           {
             id: 'request:test_request_wait_30',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_30',
+            connectionId: 'test',
             properties: {
               ms: 30,
             },
@@ -273,6 +314,8 @@ test('parallel with return and throw', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -293,6 +336,8 @@ test('parallel with reject and throw', async () => {
           {
             id: 'request:test_request_wait_40',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_40',
+            connectionId: 'test',
             properties: {
               ms: 40,
             },
@@ -302,6 +347,8 @@ test('parallel with reject and throw', async () => {
         {
           id: 'request:test_request_wait_50',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_50',
+          connectionId: 'test',
           properties: {
             ms: 50,
           },
@@ -310,6 +357,8 @@ test('parallel with reject and throw', async () => {
           {
             id: 'request:test_request_wait_30',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_30',
+            connectionId: 'test',
             properties: {
               ms: 30,
             },
@@ -319,6 +368,8 @@ test('parallel with reject and throw', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -339,6 +390,8 @@ test('parallel with return and reject', async () => {
           {
             id: 'request:test_request_wait_40',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_40',
+            connectionId: 'test',
             properties: {
               ms: 40,
             },
@@ -348,6 +401,8 @@ test('parallel with return and reject', async () => {
         {
           id: 'request:test_request_wait_50',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_50',
+          connectionId: 'test',
           properties: {
             ms: 50,
           },
@@ -356,6 +411,8 @@ test('parallel with return and reject', async () => {
           {
             id: 'request:test_request_wait_30',
             type: 'TestRequestWait',
+            requestId: 'request:test_request_wait_30',
+            connectionId: 'test',
             properties: {
               ms: 30,
             },
@@ -365,6 +422,8 @@ test('parallel with return and reject', async () => {
         {
           id: 'request:test_request_wait_10',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_wait_10',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
