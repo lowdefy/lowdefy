@@ -481,9 +481,12 @@ test('if condition is true with no else', async () => {
 });
 
 // TODO: NOt catching err in test
-test.skip('missing :then', async () => {
+test('missing :then', async () => {
   const routine = {
     ':if': true,
   };
-  await expect(runTest({ routine })).rejects.toThrow('TODO: Missing :then');
+  const { res } = await runTest({ routine });
+  expect(res.status).toBe('error');
+  expect(res.error.message).toEqual('Invalid :if - missing :then.');
+  // await expect(runTest({ routine })).rejects.toThrow('TODO: Missing :then');
 });
