@@ -118,14 +118,14 @@ _ref:
       </div>
       ```
 
-      ###### Make use of the _nunjucks link filter:
+      ###### Make use of the _nunjucks urlQuery filter:
 
       ```yaml
       _nunjucks:
-        template: {{ url | link(urlQuery) | safe }}
+        template: {{ url | urlQuery(params) | safe }}
         on:
           url: www.lowdefy.com
-          urlQuery:
+          params:
             id: 1234
             type: example
       ```

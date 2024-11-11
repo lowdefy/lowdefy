@@ -15,51 +15,51 @@
 */
 
 import nunjucks from 'nunjucks';
-import linkFilter from './linkFilter.js';
+import urlQueryFilter from './urlQueryFilter.js';
 
 export const nunjucksEnv = new nunjucks.Environment();
-nunjucksEnv.addFilter('link', linkFilter);
+nunjucksEnv.addFilter('urlQuery', urlQueryFilter);
 
-describe('linkFilter', () => {
+describe('urlQueryFilter', () => {
   test('should return only url', () => {
     const input = {
       url: 'test',
     };
-    const output = linkFilter(input.url);
+    const output = urlQueryFilter(input.url);
     expect(output).toEqual('test');
   });
 
   test('should return url with query parameters', () => {
     const input = {
       url: 'test',
-      urlQuery: {
+      params: {
         a: 1,
         b: 'b',
       },
     };
-    const output = linkFilter(input.url, input.urlQuery);
+    const output = urlQueryFilter(input.url, input.params);
     expect(output).toEqual('test?a=1&b=b');
   });
 
   test('should return undefined when no url provided', () => {
-    const output = linkFilter();
+    const output = urlQueryFilter();
     expect(output).toEqual(undefined);
   });
 
   test('should return undefined when null url provided', () => {
     const input = {
       url: null,
-      urlQuery: {
+      params: {
         a: 1,
         b: 'b',
       },
     };
-    const output = linkFilter(input.url, input.urlQuery);
+    const output = urlQueryFilter(input.url, input.params);
     expect(output).toEqual(undefined);
   });
 
-  test('should install link filter in nunjucks and return url', () => {
-    const templateString = '{{ url | link }}';
+  test('should install urlQuery filter in nunjucks and return url', () => {
+    const templateString = '{{ url | urlQuery }}';
     const input = {
       url: 'test',
     };
@@ -67,11 +67,11 @@ describe('linkFilter', () => {
     expect(output).toBe('test');
   });
 
-  test('should install link filter in nunjucks and return url with query parameters separated by &', () => {
-    const templateString = '{{ url | link(urlQuery) | safe }}';
+  test('should install urlQuery filter in nunjucks and return url with query parameters separated by &', () => {
+    const templateString = '{{ url | urlQuery(params) | safe }}';
     const input = {
       url: 'test',
-      urlQuery: {
+      params: {
         a: 1,
         b: 'b',
       },
@@ -80,11 +80,11 @@ describe('linkFilter', () => {
     expect(output).toBe('test?a=1&b=b');
   });
 
-  test('should install link filter in nunjucks and return url with query parameters separated by &amp;', () => {
-    const templateString = '{{ url | link(urlQuery) }}';
+  test('should install urlQuery filter in nunjucks and return url with query parameters separated by &amp;', () => {
+    const templateString = '{{ url | urlQuery(params) }}';
     const input = {
       url: 'test',
-      urlQuery: {
+      params: {
         a: 1,
         b: 'b',
       },
