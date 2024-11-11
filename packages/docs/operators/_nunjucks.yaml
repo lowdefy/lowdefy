@@ -117,3 +117,17 @@ _ref:
         <p>India</p>
       </div>
       ```
+
+      ###### Make use of the _nunjucks link filter:
+
+      ```yaml
+      _nunjucks:
+        template: {{ url | link(urlQuery) | safe }}
+        on:
+          url: www.lowdefy.com
+          urlQuery:
+            id: 1234
+            type: example
+      ```
+
+      Returns: `"www.lowdefy.com?id=1234&type=example"`
