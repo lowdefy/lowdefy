@@ -21,8 +21,6 @@ const operators = {
   _api,
 };
 
-const arrayIndices = [1];
-
 const context = {
   _internal: {
     lowdefy: {
@@ -105,7 +103,7 @@ console.error = () => {};
 test('_api response by id', () => {
   const input = { _api: 'string.response' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('api String');
   expect(res.errors).toEqual([]);
 });
@@ -113,7 +111,7 @@ test('_api response by id', () => {
 test('_api success status by id', () => {
   const input = { _api: 'string.status' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('success');
   expect(res.errors).toEqual([]);
 });
@@ -121,14 +119,14 @@ test('_api success status by id', () => {
 test('_api error by id', () => {
   const input = { _api: 'erroneous.error' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ message: 'error message' });
 });
 
 test('_api true gives null', () => {
   const input = { _api: true };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -140,14 +138,14 @@ test('_api true gives null', () => {
 test('_api return first element', () => {
   const input = { _api: 'arr.response' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual({ a: 'api_a1' });
 });
 
 test('_api null', () => {
   const input = { _api: null };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
   expect(res.errors).toMatchInlineSnapshot(`
     Array [
@@ -159,7 +157,7 @@ test('_api null', () => {
 test('_api dot notation', () => {
   const input = { _api: 'obj.response.key' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual('value');
   expect(res.errors).toEqual([]);
 });
@@ -167,7 +165,7 @@ test('_api dot notation', () => {
 test('_api dot notation returns null if ', () => {
   const input = { _api: 'returnsNull.key' };
   const parser = new WebParser({ context, operators });
-  const res = parser.parse({ input, location: 'locationId', arrayIndices });
+  const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual(null);
   expect(res.errors).toEqual([]);
 });
