@@ -16,7 +16,7 @@
 
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-const linkFilter = (url, urlQuery) => {
+const urlQueryFilter = (url, urlQuery) => {
   const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
 
   if (type.isString(url)) {
@@ -26,4 +26,4 @@ const linkFilter = (url, urlQuery) => {
   return undefined;
 };
 
-export default linkFilter;
+export default urlQueryFilter;
