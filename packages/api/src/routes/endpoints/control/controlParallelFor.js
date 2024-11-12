@@ -45,7 +45,7 @@ async function controlParallelFor(context, routineContext, { control }) {
     throw new Error('Invalid :parallel_for - missing :do.');
   }
 
-  const promises = array.map((item) => {
+  const promises = array.map((item, index) => {
     const updatedItems = { ...items, [itemName]: item };
 
     logger.debug({
@@ -59,6 +59,7 @@ async function controlParallelFor(context, routineContext, { control }) {
       context,
       {
         ...routineContext,
+        arrayIndices: [...routineContext.arrayIndices, index],
         items: updatedItems,
       },
       {

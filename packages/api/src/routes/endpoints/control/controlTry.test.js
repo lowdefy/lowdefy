@@ -15,6 +15,7 @@
 */
 
 import { RequestError } from '../../../context/errors.js';
+
 import runTest from '../test/runTest.js';
 
 test('try catch with successful try', async () => {
