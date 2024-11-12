@@ -24,7 +24,6 @@ test('basic info log', async () => {
     ':level': 'info',
   };
   const { res, context } = await runTest({ routine });
-  console.log('result', res);
   expect(res.status).toEqual('continue');
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
   expect(context.logger.info.mock.calls).toEqual([[{ message: 'Testing log info' }]]);
@@ -58,6 +57,16 @@ test('basic error log', async () => {
   expect(context.logger.error.mock.calls).toEqual([[{ message: 'Testing log error' }]]);
 });
 
+test('log is not a string', async () => {
+  const routine = {
+    ':log': true,
+  };
+  const { res, context } = await runTest({ routine });
+
+  expect(res.status).toEqual('error');
+  expect(res.error).toEqual(new Error('Unrecognised type for :log. Received true.'));
+  expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
+});
 test('log level is not a string', async () => {
   const routine = {
     ':log': {

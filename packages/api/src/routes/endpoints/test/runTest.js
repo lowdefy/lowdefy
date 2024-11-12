@@ -2,18 +2,14 @@ import { jest } from '@jest/globals';
 import { wait } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
-import runRoutine from '../runRoutine.js';
-// import getOperatorsParser from '../getOperatorsParser.js';
 import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
+import runRoutine from '../runRoutine.js';
 import testContext from '../../../test/testContext.js';
-const { _date, _eq, _payload, _secret, _user } = operatorsServer;
+
+// const { _date, _eq, _payload, _secret, _user } = operatorsServer;
 
 const operators = {
-  _date,
-  _eq,
-  _payload,
-  _secret,
-  _user,
+  ...operatorsServer,
   _error: () => {
     throw new Error('Test error.');
   },
@@ -92,6 +88,7 @@ function createTextContext({ payload }) {
     session: { user: { id: 'id' } },
   });
   context.payload = payload;
+  context.steps = {};
   context.blockId = 'blockId';
   context.pageId = 'pageId';
   context.endpointId = 'endpointId';

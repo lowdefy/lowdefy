@@ -1,4 +1,18 @@
-import { jest } from '@jest/globals';
+/*
+  Copyright 2020-2024 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
 
 import runTest from '../test/runTest.js';
 
@@ -28,6 +42,8 @@ test('reject at end of routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -35,6 +51,8 @@ test('reject at end of routine', async () => {
     {
       id: 'request:test_request_2',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_2',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -55,6 +73,8 @@ test('reject at end of routine', async () => {
         request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
@@ -63,14 +83,26 @@ test('reject at end of routine', async () => {
     ],
     [
       {
+        event: 'debug_end_request',
+      },
+    ],
+    [
+      {
         event: 'debug_start_request',
         request: {
           id: 'request:test_request_2',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_2',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'Rejected' } }],
@@ -82,6 +114,8 @@ test('reject in the middle of routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -94,6 +128,8 @@ test('reject in the middle of routine', async () => {
     {
       id: 'request:test_request_2',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_2',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -108,10 +144,17 @@ test('reject in the middle of routine', async () => {
         request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'Rejected' } }],
@@ -124,6 +167,8 @@ test('multiple rejects in routine', async () => {
     {
       id: 'request:test_request_1',
       type: 'TestRequestWait',
+      requestId: 'request:test_request_1',
+      connectionId: 'test',
       properties: {
         ms: 10,
       },
@@ -153,10 +198,17 @@ test('multiple rejects in routine', async () => {
         request: {
           id: 'request:test_request_1',
           type: 'TestRequestWait',
+          requestId: 'request:test_request_1',
+          connectionId: 'test',
           properties: {
             ms: 10,
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'First' } }],
@@ -172,6 +224,8 @@ test('truthy guard statement reject', async () => {
         {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
@@ -182,6 +236,8 @@ test('truthy guard statement reject', async () => {
     {
       id: 'request:test_request_end',
       type: 'TestRequest',
+      requestId: 'request:test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -200,10 +256,18 @@ test('truthy guard statement reject', async () => {
         request: {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'guard statement',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'rejected by guard statement' } }],
@@ -218,6 +282,8 @@ test('falsy guard statement reject', async () => {
         {
           id: 'request:test_request_guard_statement',
           type: 'TestRequest',
+          requestId: 'request:test_request_guard_statement',
+          connectionId: 'test',
           properties: {
             response: 'guard statement',
           },
@@ -228,6 +294,8 @@ test('falsy guard statement reject', async () => {
     {
       id: 'request:test_request_end',
       type: 'TestRequest',
+      requestId: 'request:test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -245,10 +313,18 @@ test('falsy guard statement reject', async () => {
         request: {
           id: 'request:test_request_end',
           type: 'TestRequest',
+          requestId: 'request:test_request_end',
+          connectionId: 'test',
           properties: {
             response: 'end',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'end',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'made it to the end' } }],
@@ -262,6 +338,8 @@ test('reject in a try catch block', async () => {
         {
           id: 'request:test_request_try_reject',
           type: 'TestRequest',
+          requestId: 'request:test_request_try_reject',
+          connectionId: 'test',
           properties: {
             response: 'try_reject_block',
           },
@@ -282,10 +360,18 @@ test('reject in a try catch block', async () => {
         request: {
           id: 'request:test_request_try_reject',
           type: 'TestRequest',
+          requestId: 'request:test_request_try_reject',
+          connectionId: 'test',
           properties: {
             response: 'try_reject_block',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'try_reject_block',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'reject in try block' } }],
@@ -300,6 +386,8 @@ test('deep nested reject', async () => {
         {
           id: 'request:test_request_first_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_first_if',
+          connectionId: 'test',
           properties: {
             response: 'first if',
           },
@@ -310,6 +398,8 @@ test('deep nested reject', async () => {
             {
               id: 'request:test_request_second_if',
               type: 'TestRequest',
+              requestId: 'request:test_request_second_if',
+              connectionId: 'test',
               properties: {
                 response: 'second if',
               },
@@ -323,6 +413,8 @@ test('deep nested reject', async () => {
     {
       id: 'test_request_end',
       type: 'TestRequest',
+      requestId: 'test_request_end',
+      connectionId: 'test',
       properties: {
         response: 'end',
       },
@@ -341,10 +433,18 @@ test('deep nested reject', async () => {
         request: {
           id: 'request:test_request_first_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_first_if',
+          connectionId: 'test',
           properties: {
             response: 'first if',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'first if',
       },
     ],
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
@@ -355,10 +455,18 @@ test('deep nested reject', async () => {
         request: {
           id: 'request:test_request_second_if',
           type: 'TestRequest',
+          requestId: 'request:test_request_second_if',
+          connectionId: 'test',
           properties: {
             response: 'second if',
           },
         },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        requestResult: 'second if',
       },
     ],
     [{ event: 'debug_control_reject', response: { info: 'rejected by first if' } }],

@@ -25,6 +25,7 @@ test('single switch case', async () => {
           {
             id: 'request:test_endpoint:test_request_true',
             type: 'TestRequest',
+            requestId: 'request:test_endpoint:test_request_true',
             connectionId: 'test',
             properties: {
               response: 'Was true',
