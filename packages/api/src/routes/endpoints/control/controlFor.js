@@ -45,7 +45,7 @@ async function controlFor(context, routineContext, { control }) {
     throw new Error('Invalid :for - missing :do.');
   }
 
-  for (const item of array) {
+  for (const [index, item] of array.entries()) {
     const updatedItems = { ...items, [itemName]: item };
 
     logger.debug({
@@ -59,6 +59,7 @@ async function controlFor(context, routineContext, { control }) {
       context,
       {
         ...routineContext,
+        arrayIndices: [...routineContext.arrayIndices, index],
         items: updatedItems,
       },
       {

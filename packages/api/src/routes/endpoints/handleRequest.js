@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import addStepResult from './addStepResult.js';
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import checkConnectionWrite from '../request/checkConnectionWrite.js';
@@ -61,16 +62,19 @@ async function handleRequest(context, routineContext, { request }) {
     requestResolver,
     requestProperties,
   });
-  const requestResult = await callRequestResolver(context, {
+  const result = await callRequestResolver(context, {
     connectionProperties,
     requestConfig,
     requestProperties,
     requestResolver,
   });
-  context.steps[request.requestId] = requestResult;
+
+  addStepResult(context, routineContext, { result, stepId: request.requestId });
+
   context.logger.debug({
     event: 'debug_end_request',
-    requestResult,
+    id: requestConfig.id,
+    result,
   });
   return { status: 'continue' };
 }

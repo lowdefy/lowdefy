@@ -100,6 +100,7 @@ async function runTest({ routine, payload = {} }) {
   const context = createTextContext({ payload });
   const routineContext = {
     items: {},
+    arrayIndices: [],
   };
   const res = await runRoutine(context, routineContext, { routine });
   return { res, context };
