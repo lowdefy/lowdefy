@@ -21,7 +21,7 @@ test('if condition is true', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -30,7 +30,7 @@ test('if condition is true', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -61,7 +61,7 @@ test('if condition is true', async () => {
           id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
           connectionId: 'test',
-          requestId: 'request:test_endpoint:test_request_true',
+          requestId: 'test_request_true',
           properties: {
             response: 'Was true',
           },
@@ -71,7 +71,8 @@ test('if condition is true', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was true',
+        id: 'request:test_endpoint:test_request_true',
+        result: 'Was true',
       },
     ],
   ]);
@@ -84,7 +85,7 @@ test('if condition is false', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -93,7 +94,7 @@ test('if condition is false', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_false',
+      requestId: 'test_request_false',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -123,7 +124,7 @@ test('if condition is false', async () => {
         request: {
           id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_false',
+          requestId: 'test_request_false',
           connectionId: 'test',
           properties: {
             response: 'Was false',
@@ -134,7 +135,8 @@ test('if condition is false', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was false',
+        id: 'request:test_endpoint:test_request_false',
+        result: 'Was false',
       },
     ],
   ]);
@@ -147,7 +149,7 @@ test('if condition is truthy', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -156,7 +158,7 @@ test('if condition is truthy', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_false',
+      requestId: 'test_request_false',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -186,7 +188,7 @@ test('if condition is truthy', async () => {
         request: {
           id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_true',
+          requestId: 'test_request_true',
           connectionId: 'test',
           properties: {
             response: 'Was true',
@@ -197,7 +199,8 @@ test('if condition is truthy', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was true',
+        id: 'request:test_endpoint:test_request_true',
+        result: 'Was true',
       },
     ],
   ]);
@@ -210,7 +213,7 @@ test('if condition is falsey', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -219,7 +222,7 @@ test('if condition is falsey', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_false',
+      requestId: 'test_request_false',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -249,7 +252,7 @@ test('if condition is falsey', async () => {
         request: {
           id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_false',
+          requestId: 'test_request_false',
           connectionId: 'test',
           properties: {
             response: 'Was false',
@@ -260,7 +263,8 @@ test('if condition is falsey', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was false',
+        id: 'request:test_endpoint:test_request_false',
+        result: 'Was false',
       },
     ],
   ]);
@@ -273,7 +277,7 @@ test('if condition is null', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -282,7 +286,7 @@ test('if condition is null', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_false',
+      requestId: 'test_request_false',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -312,7 +316,7 @@ test('if condition is null', async () => {
         request: {
           id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_false',
+          requestId: 'test_request_false',
           connectionId: 'test',
           properties: {
             response: 'Was false',
@@ -323,7 +327,8 @@ test('if condition is null', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was false',
+        id: 'request:test_endpoint:test_request_false',
+        result: 'Was false',
       },
     ],
   ]);
@@ -338,7 +343,7 @@ test('if condition operators are evaluated', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -347,7 +352,7 @@ test('if condition operators are evaluated', async () => {
     ':else': {
       id: 'request:test_endpoint:test_request_false',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_false',
+      requestId: 'test_request_false',
       connectionId: 'test',
       properties: {
         response: 'Was false',
@@ -379,7 +384,7 @@ test('if condition operators are evaluated', async () => {
         request: {
           id: 'request:test_endpoint:test_request_false',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_false',
+          requestId: 'test_request_false',
           connectionId: 'test',
           properties: {
             response: 'Was false',
@@ -390,7 +395,8 @@ test('if condition operators are evaluated', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was false',
+        id: 'request:test_endpoint:test_request_false',
+        result: 'Was false',
       },
     ],
   ]);
@@ -403,7 +409,7 @@ test('if condition is false with no else', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -432,7 +438,7 @@ test('if condition is true with no else', async () => {
     ':then': {
       id: 'request:test_endpoint:test_request_true',
       type: 'TestRequest',
-      requestId: 'request:test_endpoint:test_request_true',
+      requestId: 'test_request_true',
       connectionId: 'test',
       properties: {
         response: 'Was true',
@@ -462,7 +468,7 @@ test('if condition is true with no else', async () => {
         request: {
           id: 'request:test_endpoint:test_request_true',
           type: 'TestRequest',
-          requestId: 'request:test_endpoint:test_request_true',
+          requestId: 'test_request_true',
           connectionId: 'test',
           properties: {
             response: 'Was true',
@@ -473,7 +479,8 @@ test('if condition is true with no else', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'Was true',
+        id: 'request:test_endpoint:test_request_true',
+        result: 'Was true',
       },
     ],
   ]);
@@ -488,5 +495,4 @@ test('missing :then', async () => {
   const { res } = await runTest({ routine });
   expect(res.status).toBe('error');
   expect(res.error.message).toEqual('Invalid :if - missing :then.');
-  // await expect(runTest({ routine })).rejects.toThrow('TODO: Missing :then');
 });

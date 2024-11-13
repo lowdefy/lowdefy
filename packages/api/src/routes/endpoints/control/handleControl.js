@@ -26,10 +26,6 @@ import controlSwitch from './controlSwitch.js';
 import controlThrow from './controlThrow.js';
 import controlTry from './controlTry.js';
 
-function notImplemented(context) {
-  context.logger.debug({ event: 'debug_control_not_implemented' });
-}
-
 const controlHandlers = {
   ':for': controlFor,
   ':if': controlIf,
@@ -42,7 +38,7 @@ const controlHandlers = {
   ':switch': controlSwitch,
   ':throw': controlThrow,
   ':try': controlTry,
-  ':while': notImplemented,
+  // ':while': notImplemented,
 };
 
 async function handleControl(context, routineContext, { control }) {

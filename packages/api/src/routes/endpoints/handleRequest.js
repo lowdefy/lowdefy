@@ -73,6 +73,7 @@ async function handleRequest(context, routineContext, { request }) {
 
   context.logger.debug({
     event: 'debug_end_request',
+    id: requestConfig.id,
     result,
   });
   return { status: 'continue' };

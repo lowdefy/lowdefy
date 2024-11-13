@@ -18,49 +18,80 @@ import runTest from './test/runTest.js';
 
 test('single stage', async () => {
   const routine = {
-    id: 'test_request',
-    type: 'TestRequestWait',
+    requestId: 'test_request',
+    type: 'TestRequest',
+    id: 'request:test_endpoint:test_request',
+    connectionId: 'test',
     properties: {
-      ms: 10,
+      response: 1,
     },
   };
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 1 });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_request',
+        request: {
+          id: 'request:test_endpoint:test_request',
+          type: 'TestRequest',
+          requestId: 'test_request',
+          connectionId: 'test',
+          properties: {
+            response: 1,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request',
+        result: 1,
+      },
+    ],
   ]);
-  // TODO: Do we return null or undefined
   expect(res.response).toEqual(undefined);
 });
 
 test('array with single stage', async () => {
   const routine = [
     {
-      id: 'test_request',
-      type: 'TestRequestWait',
+      requestId: 'test_request',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:test_request',
+      connectionId: 'test',
       properties: {
-        ms: 10,
+        response: 1,
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request: 1 });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_request',
+        request: {
+          id: 'request:test_endpoint:test_request',
+          type: 'TestRequest',
+          requestId: 'test_request',
+          connectionId: 'test',
+          properties: {
+            response: 1,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request',
+        result: 1,
+      },
+    ],
   ]);
   expect(res.response).toEqual(undefined);
 });
@@ -68,39 +99,70 @@ test('array with single stage', async () => {
 test('array with two stages', async () => {
   const routine = [
     {
-      id: 'test_request_1',
-      type: 'TestRequestWait',
+      requestId: 'test_request_1',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:test_request_1',
+      connectionId: 'test',
       properties: {
-        ms: 10,
+        response: 1,
       },
     },
     {
-      id: 'test_request_2',
-      type: 'TestRequestWait',
+      requestId: 'test_request_2',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:test_request_2',
+      connectionId: 'test',
       properties: {
-        ms: 10,
+        response: 2,
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_1',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-    {
-      stepId: 'test_request_2',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request_1: 1, test_request_2: 2 });
+  expect(context.logger.debug.mock.calls).toEqual([
+    [
+      {
+        event: 'debug_start_request',
+        request: {
+          id: 'request:test_endpoint:test_request_1',
+          type: 'TestRequest',
+          requestId: 'test_request_1',
+          connectionId: 'test',
+          properties: {
+            response: 1,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_1',
+        result: 1,
+      },
+    ],
+    [
+      {
+        event: 'debug_start_request',
+        request: {
+          id: 'request:test_endpoint:test_request_2',
+          type: 'TestRequest',
+          requestId: 'test_request_2',
+          connectionId: 'test',
+          properties: {
+            response: 2,
+          },
+        },
+      },
+    ],
+    [
+      {
+        event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_2',
+        result: 2,
+      },
+    ],
   ]);
   expect(res.response).toEqual(undefined);
 });
@@ -109,70 +171,55 @@ test('nested array', async () => {
   const routine = [
     [
       {
-        id: 'test_request_1',
-        type: 'TestRequestWait',
+        requestId: 'test_request_1',
+        type: 'TestRequest',
+        id: 'request:test_endpoint:test_request_1',
+        connectionId: 'test',
         properties: {
-          ms: 10,
+          response: 1,
         },
       },
       {
-        id: 'test_request_2',
-        type: 'TestRequestWait',
+        requestId: 'test_request_2',
+        type: 'TestRequest',
+        id: 'request:test_endpoint:test_request_2',
+        connectionId: 'test',
         properties: {
-          ms: 10,
+          response: 2,
         },
       },
     ],
     {
-      id: 'test_request_3',
-      type: 'TestRequestWait',
+      requestId: 'test_request_3',
+      type: 'TestRequest',
+      id: 'request:test_endpoint:test_request_3',
+      connectionId: 'test',
       properties: {
-        ms: 10,
+        response: 3,
       },
     },
   ];
-  const res = await runTest({ routine });
-  expect(res.success).toBe(true);
-  expect(res.steps).toEqual([
-    {
-      stepId: 'test_request_1',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-    {
-      stepId: 'test_request_2',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-    {
-      stepId: 'test_request_3',
-      type: 'TestRequest',
-      startTimestamp: 'fake_time',
-      endTimestamp: 'fake_time',
-      success: true,
-      response: null,
-    },
-  ]);
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(context.steps).toEqual({ test_request_1: 1, test_request_2: 2, test_request_3: 3 });
   expect(res.response).toEqual(undefined);
 });
 
 test('unknown control', async () => {
   const routine = {
     ':unknown': {
-      id: 'test_request',
+      requestId: 'test_request',
       type: 'TestRequest',
+      id: 'request:test_endpoint:test_request_3',
+      connectionId: 'test',
       properties: {
         response: 'test',
       },
     },
   };
-  expect(async () => await runTest({ routine })).rejects.toThrow('TODO: unknown control');
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error).toEqual(new Error('Unexpected control.'));
 });
 
 test.todo('_payload operator');

@@ -40,18 +40,18 @@ test('return null', async () => {
 test('return at end of routine', async () => {
   const routine = [
     {
-      id: 'request:test_request_1',
+      id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'request:test_request_1',
+      requestId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
       },
     },
     {
-      id: 'request:test_request_2',
+      id: 'request:test_endpoint:test_request_2',
       type: 'TestRequestWait',
-      requestId: 'request:test_request_2',
+      requestId: 'test_request_2',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -71,9 +71,9 @@ test('return at end of routine', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_1',
+          id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'request:test_request_1',
+          requestId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -84,15 +84,16 @@ test('return at end of routine', async () => {
     [
       {
         event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_1',
       },
     ],
     [
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_2',
+          id: 'request:test_endpoint:test_request_2',
           type: 'TestRequestWait',
-          requestId: 'request:test_request_2',
+          requestId: 'test_request_2',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -103,6 +104,7 @@ test('return at end of routine', async () => {
     [
       {
         event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_2',
       },
     ],
     [
@@ -119,9 +121,9 @@ test('return at end of routine', async () => {
 test('return in the middle of routine', async () => {
   const routine = [
     {
-      id: 'request:test_request_1',
+      id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'request:test_request_1',
+      requestId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -133,9 +135,9 @@ test('return in the middle of routine', async () => {
       },
     },
     {
-      id: 'request:test_request_2',
+      id: 'request:test_endpoint:test_request_2',
       type: 'TestRequestWait',
-      requestId: 'request:test_request_2',
+      requestId: 'test_request_2',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -149,9 +151,9 @@ test('return in the middle of routine', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_1',
+          id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'request:test_request_1',
+          requestId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -162,6 +164,7 @@ test('return in the middle of routine', async () => {
     [
       {
         event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_1',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'Successful' } }],
@@ -172,9 +175,9 @@ test('return in the middle of routine', async () => {
 test('multiple returns in routine', async () => {
   const routine = [
     {
-      id: 'request:test_request_1',
+      id: 'request:test_endpoint:test_request_1',
       type: 'TestRequestWait',
-      requestId: 'request:test_request_1',
+      requestId: 'test_request_1',
       connectionId: 'test',
       properties: {
         ms: 10,
@@ -203,9 +206,9 @@ test('multiple returns in routine', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_1',
+          id: 'request:test_endpoint:test_request_1',
           type: 'TestRequestWait',
-          requestId: 'request:test_request_1',
+          requestId: 'test_request_1',
           connectionId: 'test',
           properties: {
             ms: 10,
@@ -216,6 +219,7 @@ test('multiple returns in routine', async () => {
     [
       {
         event: 'debug_end_request',
+        id: 'request:test_endpoint:test_request_1',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'First' } }],
@@ -229,9 +233,9 @@ test('truthy guard statement return', async () => {
       ':if': true,
       ':then': [
         {
-          id: 'request:test_request_guard_statement',
+          id: 'request:test_endpoint:test_request_guard_statement',
           type: 'TestRequest',
-          requestId: 'request:test_request_guard_statement',
+          requestId: 'test_request_guard_statement',
           connectionId: 'test',
           properties: {
             response: 'guard statement',
@@ -241,9 +245,9 @@ test('truthy guard statement return', async () => {
       ],
     },
     {
-      id: 'request:test_request_end',
+      id: 'request:test_endpoint:test_request_end',
       type: 'TestRequest',
-      requestId: 'request:test_request_end',
+      requestId: 'test_request_end',
       connectionId: 'test',
       properties: {
         response: 'end',
@@ -261,9 +265,9 @@ test('truthy guard statement return', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_guard_statement',
+          id: 'request:test_endpoint:test_request_guard_statement',
           type: 'TestRequest',
-          requestId: 'request:test_request_guard_statement',
+          requestId: 'test_request_guard_statement',
           connectionId: 'test',
           properties: {
             response: 'guard statement',
@@ -274,7 +278,8 @@ test('truthy guard statement return', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'guard statement',
+        id: 'request:test_endpoint:test_request_guard_statement',
+        result: 'guard statement',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by guard statement' } }],
@@ -287,9 +292,9 @@ test('falsy guard statement return', async () => {
       ':if': false,
       ':then': [
         {
-          id: 'request:test_request_guard_statement',
+          id: 'request:test_endpoint:test_request_guard_statement',
           type: 'TestRequest',
-          requestId: 'request:test_request_guard_statement',
+          requestId: 'test_request_guard_statement',
           connectionId: 'test',
           properties: {
             response: 'guard statement',
@@ -299,9 +304,9 @@ test('falsy guard statement return', async () => {
       ],
     },
     {
-      id: 'request:test_request_end',
+      id: 'request:test_endpoint:test_request_end',
       type: 'TestRequest',
-      requestId: 'request:test_request_end',
+      requestId: 'test_request_end',
       connectionId: 'test',
       properties: {
         response: 'end',
@@ -318,9 +323,9 @@ test('falsy guard statement return', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_end',
+          id: 'request:test_endpoint:test_request_end',
           type: 'TestRequest',
-          requestId: 'request:test_request_end',
+          requestId: 'test_request_end',
           connectionId: 'test',
           properties: {
             response: 'end',
@@ -331,7 +336,8 @@ test('falsy guard statement return', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'end',
+        id: 'request:test_endpoint:test_request_end',
+        result: 'end',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'made it to the end' } }],
@@ -344,9 +350,9 @@ test('deep nested return', async () => {
       ':if': true,
       ':then': [
         {
-          id: 'request:test_request_first_if',
+          id: 'request:test_endpoint:test_request_first_if',
           type: 'TestRequest',
-          requestId: 'request:test_request_first_if',
+          requestId: 'test_request_first_if',
           connectionId: 'test',
           properties: {
             response: 'first if',
@@ -356,9 +362,9 @@ test('deep nested return', async () => {
           ':if': true,
           ':then': [
             {
-              id: 'request:test_request_second_if',
+              id: 'request:test_endpoint:test_request_second_if',
               type: 'TestRequest',
-              requestId: 'request:test_request_second_if',
+              requestId: 'test_request_second_if',
               connectionId: 'test',
               properties: {
                 response: 'second if',
@@ -391,9 +397,9 @@ test('deep nested return', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_first_if',
+          id: 'request:test_endpoint:test_request_first_if',
           type: 'TestRequest',
-          requestId: 'request:test_request_first_if',
+          requestId: 'test_request_first_if',
           connectionId: 'test',
           properties: {
             response: 'first if',
@@ -404,7 +410,8 @@ test('deep nested return', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'first if',
+        id: 'request:test_endpoint:test_request_first_if',
+        result: 'first if',
       },
     ],
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
@@ -413,9 +420,9 @@ test('deep nested return', async () => {
       {
         event: 'debug_start_request',
         request: {
-          id: 'request:test_request_second_if',
+          id: 'request:test_endpoint:test_request_second_if',
           type: 'TestRequest',
-          requestId: 'request:test_request_second_if',
+          requestId: 'test_request_second_if',
           connectionId: 'test',
           properties: {
             response: 'second if',
@@ -426,7 +433,8 @@ test('deep nested return', async () => {
     [
       {
         event: 'debug_end_request',
-        requestResult: 'second if',
+        id: 'request:test_endpoint:test_request_second_if',
+        result: 'second if',
       },
     ],
     [{ event: 'debug_control_return', response: { message: 'returned by first if' } }],
