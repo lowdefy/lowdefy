@@ -126,3 +126,6 @@ test('Nested arrayIndices, undefined values for missing indices', () => {
     step_id: [undefined, undefined, [undefined, undefined, undefined, 'Result']],
   });
 });
+
+// TODO: How does undefined serialize?
+// TODO: Test setting values on top of previous set undefined values
