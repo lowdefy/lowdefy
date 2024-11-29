@@ -18,16 +18,12 @@
 
 import buildRoutine from './buildRoutine/buildRoutine.js';
 import validateEndpoint from './validateEndpoint.js';
-import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 
 function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId }) {
   validateEndpoint({ endpoint, index, checkDuplicateEndpointId });
   endpoint.endpointId = endpoint.id;
 
   buildRoutine(endpoint.routine, {
-    checkDuplicateStepId: createCheckDuplicateId({
-      message: 'Duplicate stepId "{{ id }}" on endpoint "{{ eventId }}"',
-    }),
     endpointId: endpoint.endpointId,
     typeCounters: context.typeCounters,
   });

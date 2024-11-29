@@ -97,32 +97,34 @@ test('step type not a string', () => {
   );
 });
 
-test('throw on duplicate step ids', () => {
-  const context = testContext({ logger });
-  const components = {
-    api: [
-      {
-        id: 'test_duplicate_step_ids',
-        type: 'Api',
-        routine: [
-          {
-            id: 'step_1',
-            type: 'MongoDBInsertOne',
-            connectionId: 'connection',
-          },
-          {
-            id: 'step_1',
-            type: 'MongoDBInsertOne',
-            connectionId: 'connection',
-          },
-        ],
-      },
-    ],
-  };
-  expect(() => buildApi({ components, context })).toThrow(
-    'Duplicate stepId "step_1" on endpoint "test_duplicate_step_ids"'
-  );
-});
+// Removed for now because step might be used in mutually exclusive branches of a routine (if or switch)
+
+// test('throw on duplicate step ids', () => {
+//   const context = testContext({ logger });
+//   const components = {
+//     api: [
+//       {
+//         id: 'test_duplicate_step_ids',
+//         type: 'Api',
+//         routine: [
+//           {
+//             id: 'step_1',
+//             type: 'MongoDBInsertOne',
+//             connectionId: 'connection',
+//           },
+//           {
+//             id: 'step_1',
+//             type: 'MongoDBInsertOne',
+//             connectionId: 'connection',
+//           },
+//         ],
+//       },
+//     ],
+//   };
+//   expect(() => buildApi({ components, context })).toThrow(
+//     'Duplicate stepId "step_1" on endpoint "test_duplicate_step_ids"'
+//   );
+// });
 
 test('no connectionId on step', () => {
   const context = testContext({ logger });

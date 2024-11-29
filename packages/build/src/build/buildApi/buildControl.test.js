@@ -149,7 +149,7 @@ test('count controls', () => {
                 ':if': false,
                 ':then': [
                   { id: 'then_step_1', type: 'MongoDBInsertOne', connectionId: 'connection' },
-                  { ':setState': { result: { _step: 'then_step_1' } } },
+                  { ':set_state': { result: { _step: 'then_step_1' } } },
                 ],
               },
               ':else': [
@@ -172,6 +172,6 @@ test('count controls', () => {
     ':then': 2,
     ':else': 1,
     ':return': 1,
-    ':setState': 1,
+    ':set_state': 1,
   });
 });
