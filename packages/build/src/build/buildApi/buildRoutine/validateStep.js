@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function validateStep(step, { endpointId, checkDuplicateStepId }) {
+function validateStep(step, { endpointId }) {
   if (Object.keys(step).length === 0) {
     throw new Error(`Step is not defined at endpoint "${endpointId}"`);
   }
@@ -53,8 +53,6 @@ function validateStep(step, { endpointId, checkDuplicateStepId }) {
       )}.`
     );
   }
-
-  checkDuplicateStepId({ id: step.id, eventId: endpointId });
 }
 
 export default validateStep;
