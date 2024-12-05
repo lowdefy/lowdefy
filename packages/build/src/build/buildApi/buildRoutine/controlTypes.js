@@ -33,7 +33,7 @@ const controlTypes = {
     optional: [],
   },
   ':parallel_for': { required: [':parallel_for', ':in', ':do'], routine: [':do'], optional: [] },
-  ':reject': { required: [':reject'], routine: [], optional: [] },
+  ':reject': { required: [':reject'], routine: [], optional: [':cause'] },
   ':return': { required: [':return'], routine: [], optional: [] },
   ':set_state': { required: [':set_state'], routine: [], optional: [] },
   ':switch': {
@@ -41,7 +41,7 @@ const controlTypes = {
     routine: [':default', ':then'],
     optional: [':default'],
   },
-  ':throw': { required: [':throw'], routine: [], optional: [] },
+  ':throw': { required: [':throw'], routine: [], optional: [':cause'] },
   ':try': {
     required: [':try'],
     routine: [':try', ':catch', ':finally'],

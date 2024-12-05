@@ -32,22 +32,15 @@ async function callAPIHandler(context, { blockId, params }) {
   };
   context._internal.lowdefy.apiResponses[api.endpointId].unshift(api);
 
+  let apiResponse;
+
   try {
-    const { error, response, status, success } = await context._internal.lowdefy._internal.callAPI({
+    apiResponse = await context._internal.lowdefy._internal.callAPI({
       blockId: api.blockId,
       pageId: context.pageId,
       payload: serializer.serialize(api.payload),
       endpointId: api.endpointId,
     });
-
-    api.error = serializer.deserialize(error);
-    api.loading = false;
-    api.response = serializer.deserialize(response);
-    api.status = status;
-    api.success = success;
-    api.endTimestamp = new Date();
-    api.responseTime = api.endTimestamp - api.startTimestamp;
-    context._internal.update();
   } catch (error) {
     api.error = error;
     api.loading = false;
@@ -58,6 +51,22 @@ async function callAPIHandler(context, { blockId, params }) {
     api.responseTime = api.endTimestamp - api.startTimestamp;
     context._internal.update();
     throw error;
+  }
+
+  const { error, response, status, success } = apiResponse;
+
+  api.error = serializer.deserialize(error);
+  api.loading = false;
+  api.response = serializer.deserialize(response);
+  api.status = status;
+  api.success = success;
+  api.endTimestamp = new Date();
+  api.responseTime = api.endTimestamp - api.startTimestamp;
+
+  context._internal.update();
+
+  if (!success) {
+    throw serializer.deserialize(error);
   }
 
   return api;
