@@ -1,5 +1,31 @@
 # Change Log
 
+## 4.3.2
+
+### Patch Changes
+
+- @lowdefy/operators@4.3.2
+- @lowdefy/blocks-basic@4.3.2
+- @lowdefy/blocks-loaders@4.3.2
+- @lowdefy/operators-js@4.3.2
+- @lowdefy/ajv@4.3.2
+- @lowdefy/helpers@4.3.2
+- @lowdefy/node-utils@4.3.2
+- @lowdefy/nunjucks@4.3.2
+
+## 4.3.1
+
+### Patch Changes
+
+- @lowdefy/operators@4.3.1
+- @lowdefy/blocks-basic@4.3.1
+- @lowdefy/blocks-loaders@4.3.1
+- @lowdefy/operators-js@4.3.1
+- @lowdefy/ajv@4.3.1
+- @lowdefy/helpers@4.3.1
+- @lowdefy/node-utils@4.3.1
+- @lowdefy/nunjucks@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes
