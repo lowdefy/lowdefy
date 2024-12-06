@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@lowdefy/block-utils": "4.3.2",
-    "echarts": "5.4.3",
+    "echarts": "5.5.1",
     "echarts-for-react": "3.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
