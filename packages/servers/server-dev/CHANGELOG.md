@@ -1,5 +1,40 @@
 # Change Log
 
+## 4.4.0
+
+### Patch Changes
+
+- a491106b7: Fix spawnProcess options on Windows
+- Updated dependencies [bcfbb1a9b]
+- Updated dependencies [1a81e100e]
+  - @lowdefy/blocks-antd@4.4.0
+  - @lowdefy/blocks-echarts@4.4.0
+  - @lowdefy/api@4.4.0
+  - @lowdefy/build@4.4.0
+  - @lowdefy/operators-nunjucks@4.4.0
+  - @lowdefy/blocks-color-selectors@4.4.0
+  - @lowdefy/engine@4.4.0
+  - @lowdefy/connection-axios-http@4.4.0
+  - @lowdefy/client@4.4.0
+  - @lowdefy/layout@4.4.0
+  - @lowdefy/actions-core@4.4.0
+  - @lowdefy/blocks-aggrid@4.4.0
+  - @lowdefy/blocks-basic@4.4.0
+  - @lowdefy/blocks-loaders@4.4.0
+  - @lowdefy/blocks-markdown@4.4.0
+  - @lowdefy/blocks-qr@4.4.0
+  - @lowdefy/operators-change-case@4.4.0
+  - @lowdefy/operators-diff@4.4.0
+  - @lowdefy/operators-js@4.4.0
+  - @lowdefy/operators-moment@4.4.0
+  - @lowdefy/operators-mql@4.4.0
+  - @lowdefy/operators-uuid@4.4.0
+  - @lowdefy/operators-yaml@4.4.0
+  - @lowdefy/plugin-next-auth@4.4.0
+  - @lowdefy/block-utils@4.4.0
+  - @lowdefy/helpers@4.4.0
+  - @lowdefy/node-utils@4.4.0
+
 ## 4.3.2
 
 ### Patch Changes

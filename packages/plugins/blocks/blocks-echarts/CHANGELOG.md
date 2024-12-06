@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.4.0
+
+### Patch Changes
+
+- 1a81e100e: Update echarts dependecy to 5.5.1
+  - @lowdefy/block-utils@4.4.0
+
 ## 4.3.2
 
 ### Patch Changes
