@@ -2,4 +2,4 @@
 '@lowdefy/blocks-echarts': patch
 ---
 
-Update ehcarts dependecy to 5.5.1
+Update echarts dependecy to 5.5.1
