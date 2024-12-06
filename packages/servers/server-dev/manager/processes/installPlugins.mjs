@@ -20,6 +20,9 @@ function installPlugins({ logger, packageManagerCmd }) {
   return async () => {
     logger.info({ print: 'spin' }, 'Installing plugins...');
     await spawnProcess({
+      processOptions: {
+        shell: process.platform === 'win32',
+      },
       command: packageManagerCmd,
       args: ['install', '--no-frozen-lockfile'],
       stdOutLineHandler: (line) => logger.debug(line),
