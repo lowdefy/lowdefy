@@ -92,7 +92,7 @@
     "webpack": "5.89.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": "18 || 20"
   },
   "publishConfig": {
     "access": "public"

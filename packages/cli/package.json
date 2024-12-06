@@ -59,7 +59,7 @@
     "jest": "28.1.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": "18 || 20"
   },
   "publishConfig": {
     "access": "public"

@@ -77,7 +77,7 @@
     "yargs": "17.7.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": "18 || 20"
   },
   "publishConfig": {
     "access": "public"
