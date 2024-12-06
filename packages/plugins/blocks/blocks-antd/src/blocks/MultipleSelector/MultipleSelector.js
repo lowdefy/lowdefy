@@ -71,6 +71,7 @@ const MultipleSelector = ({
             <Select
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
+              autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
