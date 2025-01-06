@@ -21,4 +21,10 @@
 - _ref: pages/blog/categories/releases/lowdefy-v4-launch.yaml
 - _ref: pages/blog/categories/case_studies/ingrain-complaints.yaml
 - _ref: pages/blog/categories/how_to/generate-pdf.yaml
+- _ref: pages/blog/categories/forms/TextInput.yaml
+- _ref: pages/blog/categories/forms/checkbox-radio.yaml
+- _ref: pages/blog/categories/forms/connections-requests.yaml
+- _ref: pages/blog/categories/forms/date-time.yaml
+- _ref: pages/blog/categories/forms/file-upload.yaml
+- _ref: pages/blog/categories/forms/selector.yaml
 - _ref: pages/privacy-policy/privacy-policy.yaml

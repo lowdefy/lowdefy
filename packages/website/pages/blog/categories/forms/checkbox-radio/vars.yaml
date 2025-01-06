@@ -1,0 +1,14 @@
+author:
+  id: kaamraan
+  name: Kaamraan Raboobee
+  image: ./images/profiles/kaamraan.jpg
+post:
+  id: checkbox-radio
+  slug: checkbox-radio
+  category: forms
+  title: Input Blocks in Lowdefy Forms - Part 2
+  subtitle: Checkbox and Radio Selector Blocks in Lowdefy
+  description: Learn how to implement Checkbox and Radio Selector blocks in Lowdefy forms 
+  image: ./images/blogs/generate-pdf.jpg
+  date: 15 December 2024
+
