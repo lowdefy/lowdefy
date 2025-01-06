@@ -55,6 +55,7 @@ const MultipleSelector = ({
   value,
 }) => {
   const [fetchState, setFetch] = useState(false);
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   const uniqueValueOptions = getUniqueValues(properties.options ?? []);
   return (
     <Label
@@ -66,15 +67,16 @@ const MultipleSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
+              autoClearSearchValue={properties.autoClearSearchValue}
               autoFocus={properties.autoFocus}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               disabled={properties.disabled || loading}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               mode="multiple"
               tagRender={
                 properties.renderTags &&

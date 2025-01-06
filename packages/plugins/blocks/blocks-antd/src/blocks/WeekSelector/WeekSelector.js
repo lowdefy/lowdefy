@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { DatePicker } from 'antd';
 import { type } from '@lowdefy/helpers';
@@ -36,6 +36,7 @@ const WeekSelector = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Label
       blockId={blockId}
@@ -47,7 +48,7 @@ const WeekSelector = ({
       content={{
         content: () => (
           <div className={methods.makeCssClass({ width: '100%' })}>
-            <div id={`${blockId}_popup`} />
+            <div id={`${blockId}_${elementId}_popup`} />
             <WeekPicker
               id={`${blockId}_input`}
               allowClear={properties.allowClear !== false}
@@ -57,7 +58,7 @@ const WeekSelector = ({
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-wo'}
-              getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               placeholder={properties.placeholder ?? 'Select Week'}
               size={properties.size}
               status={validation.status}

@@ -1,5 +1,21 @@
 # Change Log
 
+## 4.3.2
+
+### Patch Changes
+
+- Updated dependencies [efefb8ca0]
+  - @lowdefy/blocks-antd@4.3.2
+  - @lowdefy/block-utils@4.3.2
+
+## 4.3.1
+
+### Patch Changes
+
+- Updated dependencies [3e574857c]
+  - @lowdefy/blocks-antd@4.3.1
+  - @lowdefy/block-utils@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes

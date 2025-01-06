@@ -45,16 +45,16 @@ jobs:
       - name: Package VS Code Extention
         run: pnpm --filter lowdefy-vscode package
 
-      - name: Print changesets steps context
-        env:
-          CONTEXT: ${{ toJson(steps.changesets) }}
-        run: echo "$CONTEXT"
+      #
+      # - name: Print changesets steps context
+      #   env:
+      #     CONTEXT: ${{ toJson(steps.changesets) }}
+      #   run: echo "$CONTEXT"
 
       - name: Create Github Release
         uses: softprops/action-gh-release@v2
-        if: ${{ steps.changesets.outputs.published == 'true' }}
+        if: ${{ github.head_ref == 'changeset-release/main' }}
         with:
-          tag_name: ${{ format('v{0}', fromJSON(steps.changesets.outputs.publishedPackages)[0].version) }}
           draft: true
           files: |
             lowdefy-vscode-*.vsix

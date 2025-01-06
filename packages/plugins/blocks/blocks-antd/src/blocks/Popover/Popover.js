@@ -14,21 +14,22 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 import { Popover } from 'antd';
 
 const PopoverBlock = ({ blockId, content, methods, properties }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Popover
       id={blockId}
       {...properties}
       content={content.popover && content.popover()}
       onOpenChange={() => methods.triggerEvent({ name: 'onOpenChange' })}
-      getPopupContainer={() => document.getElementById(`${blockId}_popup`)}
+      getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
     >
       {content.content && content.content()}
-      <div id={`${blockId}_popup`} />
+      <div id={`${blockId}_${elementId}_popup`} />
     </Popover>
   );
 };

@@ -18,12 +18,14 @@ import nunjucks from 'nunjucks';
 import { type } from '@lowdefy/helpers';
 import dateFilter from './dateFilter.js';
 import uniqueFilter from './uniqueFilter.js';
+import urlQueryFilter from './urlQueryFilter.js';
 
 // dateFilter.setDefaultFormat('YYYY-MM-DD');
 export const nunjucksEnv = new nunjucks.Environment();
 
 nunjucksEnv.addFilter('date', dateFilter);
 nunjucksEnv.addFilter('unique', uniqueFilter);
+nunjucksEnv.addFilter('urlQuery', urlQueryFilter);
 
 const nunjucksTemplates = {};
 // slow
