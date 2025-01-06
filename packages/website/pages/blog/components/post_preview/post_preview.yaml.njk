@@ -1,0 +1,88 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: post_preview
+type: Card
+layout:
+  contentGutter: 16
+properties:
+  style:
+    '&:hover':
+      boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.1)
+      border: '1px solid var(--primary-color)'
+events:
+  onClick:
+    - id: link_to_post
+      type: Link
+      params: {{ post.id }}
+blocks:
+  - id: {{ post.id }}_image
+    type: Img
+    layout:
+      flex: 1 0 250px
+      align: center
+    properties:
+      src: {{ post.image }}
+      style:
+        borderRadius: 10px
+        height: auto
+        maxWidth: 100%
+  - id: info_box
+    type: Box
+    layout:
+      flex: 1 0 400px
+      contentGutter: 8
+    blocks:
+      - id: {{ post.id }}-info
+        type: Html
+        properties:
+          html: |
+            <h4>{{ post.title }}</h4>
+            <p>{{ post.description }}</p>
+
+      - id: author_block
+        type: Box
+        layout:
+          flex: 1 0 auto
+        blocks:
+          - id: avatar
+            type: Avatar
+            layout:
+              flex: 1 0 40
+            properties:
+              size: 40
+              src: {{ author.image }}
+              alt: {{ author.name }}
+          - id: details
+            type: Html
+            layout:
+              flex: 1 0 auto
+            style:
+              marginLeft: 10
+              fontSize: 12
+            properties:
+              html: |
+                <b>{{ author.name }}</b>
+                <p>{{ post.date }}</p>
+      - id: {{ post.id }}anchor
+        type: Anchor
+        layout:
+          flex: 0 1 auto
+        style:
+          marginTop: 20
+        properties:
+          href: {{ post.id }}
+          title: Click to view
+          newTab: true
+

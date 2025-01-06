@@ -12,16 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-id: blog
+{% set post_root = 'pages/blog/categories' %}
+
+{% set posts = [
+  { category: 'forms', id: 'textInput' },
+  { category: 'forms', id: 'connections-requests' }
+  ]  
+%}
+
+id: post_list
 type: Box
-properties:
-  title: Lowdefy - Blog
-style:
-  padding: 0px 8px
-blocks:
-  - _ref: shared/header/header.yaml
-  - _ref: pages/blog/sections/blog_posts.yaml
-  - _ref: pages/home/sections/examples.yaml
-  - _ref: shared/cta.yaml
-  - _ref: shared/footer/footer.yaml
-  - _ref: shared/built_with_lowdefy.yaml
+layout:
+  contentGutter: 20
+blocks: 
+{% for post in posts %}
+{% set post_vars = [post_root, post.category, post.id, "vars.yaml"] | join("/") %}
+  - _ref:
+      path: pages/blog/components/post_preview/post_preview.yaml.njk
+      vars: 
+        _ref: {{ post_vars }}
+{% endfor %}
+

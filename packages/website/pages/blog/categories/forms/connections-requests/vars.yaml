@@ -1,0 +1,13 @@
+author:
+  id: kaamraan
+  name: Kaamraan Raboobee
+  image: ./images/profiles/kaamraan.jpg
+post:
+  id: connections-requests
+  slug: connections-requests
+  category: forms
+  title: Input Blocks in Lowdefy Forms - Part 6
+  subtitle: Connections and Requests in Lowdefy
+  description: Learn how to implement Connections and Requests in Lowdefy forms 
+  image: ./images/blogs/generate-pdf.jpg
+  date: 15 December 2024

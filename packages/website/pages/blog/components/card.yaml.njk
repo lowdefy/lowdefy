@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- _ref: pages/home/home.yaml
-- _ref: pages/pricing/pricing.yaml
-- _ref: pages/contact-us/contact-us.yaml
-- _ref: pages/terms/terms.yaml
-- _ref: pages/blog/sections/blog.yaml
-- _ref: pages/blog/categories/forms/TextInput.yaml
-- _ref: pages/blog/categories/forms/connections-requests.yaml
-- _ref: pages/privacy-policy/privacy-policy.yaml
+id:
+  _var: id
+type: Markdown
+layout:
+  span: 8
+properties:
+  style:
+    border-radius: 5px
+    boxShadow: 0px 5px 8px -3px rgba(0,0,0,0.25)
+    padding: 1em
+  content: |
+    ***{{ title }}***
+    {{ description }}

@@ -1,0 +1,6 @@
+_ref:
+  path: pages/blog/components/post_page/post_structure.yaml.njk
+  vars: 
+    _ref: pages/blog/categories/forms/connections-requests/vars.yaml
+
+
