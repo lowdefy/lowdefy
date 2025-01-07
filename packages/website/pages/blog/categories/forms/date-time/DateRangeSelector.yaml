@@ -1,0 +1,7 @@
+id:  date_range_selector
+type: DateRangeSelector
+properties:
+  label: 
+    title: Date Range
+
+

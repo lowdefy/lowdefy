@@ -19,4 +19,5 @@
 - _ref: pages/blog/sections/blog.yaml
 - _ref: pages/blog/categories/forms/TextInput.yaml
 - _ref: pages/blog/categories/forms/connections-requests.yaml
+- _ref: pages/blog/categories/forms/date-time.yaml
 - _ref: pages/privacy-policy/privacy-policy.yaml

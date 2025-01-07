@@ -12,7 +12,7 @@ This series will provide more detail on each of these blocks and more, starting 
 
 Text boxes are a lot more useful than one may think.
 
-Let's consider a form with 5 TextInput blocks.
+Let's consider a form with 4 TextInput blocks.
 The same type of block can be used for the following:
 
 ```yaml ldf
@@ -44,9 +44,6 @@ blocks:
     type: TextInput
     properties:
       type: password
-
-  - id: phone_number
-    type: PhoneNumberInput
 ```
 
 Changing just a single property on each block gives them entirely different functionality.

@@ -1,0 +1,6 @@
+id:  date_selector
+type: DateSelector
+properties:
+  label: 
+    title: Date
+

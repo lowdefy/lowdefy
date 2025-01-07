@@ -22,7 +22,3 @@ blocks:
     type: TextInput
     properties:
       type: password
-
-  - id: Phone Number
-    type: PhoneNumberInput
-

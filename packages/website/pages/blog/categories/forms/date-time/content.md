@@ -54,6 +54,10 @@ For these relatively rare instances, Lowdefy includes the MonthSelector and Week
 
 Naturally, the DateRangeSelector allows the user to select start and end dates.
 
+```yaml ldf
+_ref: pages/blog/categories/forms/date-time/DateRangeSelector.yaml
+```
+
 Lowdefy's implementation of this field opens 2 calendars simultaneously, with carefully designed UI and UX.
 After selecting the start date, the selector autofocuses on the second calendar.
 Hovering over a date adds a dotted outline around extended ranges, and contrasting highlighting when reducing the selected range.
