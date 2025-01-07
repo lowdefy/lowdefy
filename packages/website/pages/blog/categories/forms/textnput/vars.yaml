@@ -3,8 +3,8 @@ author:
   name: Kaamraan Raboobee
   image: ./images/profiles/kaamraan.jpg
 post:
-  id: textInput
-  slug: textInput
+  id: TextInput
+  slug: TextInput
   category: forms
   title: Input Blocks in Lowdefy Forms - Part 1
   subtitle: Managing Text Input in Lowdefy Forms
