@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.4.0
+
+### Patch Changes
+
+- Updated dependencies [156fa7f2e]
+- Updated dependencies [729a9780a]
+  - @lowdefy/nunjucks@4.4.0
+  - @lowdefy/ajv@4.4.0
+  - @lowdefy/operators@4.4.0
+  - @lowdefy/blocks-basic@4.4.0
+  - @lowdefy/blocks-loaders@4.4.0
+  - @lowdefy/operators-js@4.4.0
+  - @lowdefy/helpers@4.4.0
+  - @lowdefy/node-utils@4.4.0
+
 ## 4.3.2
 
 ### Patch Changes

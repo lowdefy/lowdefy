@@ -1,5 +1,13 @@
 # Change Log
 
+## 4.4.0
+
+### Patch Changes
+
+- Updated dependencies [156fa7f2e]
+- Updated dependencies [729a9780a]
+  - @lowdefy/nunjucks@4.4.0
+
 ## 4.3.2
 
 ### Patch Changes

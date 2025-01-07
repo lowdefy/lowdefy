@@ -1,5 +1,16 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- bcfbb1a9b: Add autoClearSearchValue property to MultipleSelector block.
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.4.0
+- @lowdefy/helpers@4.4.0
+
 ## 4.3.2
 
 ### Patch Changes
