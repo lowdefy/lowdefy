@@ -5,12 +5,31 @@
 
 @primary-color: #1990ff;
 @border-radius-base: 20px;
+
 :root {
   --primary-color: @primary-color;
 }
 
 @min768: ~'(min-width: 768px)';
 @min992: ~'(min-width: 992px)';
+
+.text_row {
+  padding: 1rem;
+}
+
+#text_form {
+
+  & [id^="bl-"] {
+    .text_row();
+  }
+
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 2px solid grey;
+  border-radius: 1rem;
+  width: 80%;
+  max-width: 500px;
+}
 
 html,
 body {
@@ -21,7 +40,9 @@ body {
 // https://typescale.com/?size=17&scale=1.250&text=Abc&font=Inter&fontweight=800&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false
 html {
   font-size: 103%;
-} /*18px*/
+}
+
+/*18px*/
 
 body {
   font-family: Inter, sans-serif;
