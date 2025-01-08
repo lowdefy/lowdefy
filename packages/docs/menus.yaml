@@ -889,6 +889,45 @@
         - id: _yaml
           type: MenuLink
           pageId: _yaml
+    - id: controls-menu-group
+      type: MenuGroup
+      properties:
+        title: Controls
+        icon: MdAltRoute
+      links:
+        - id: :for
+          type: MenuLink
+          pageId: :for
+        - id: :if
+          type: MenuLink
+          pageId: :if
+        - id: :log
+          type: MenuLink
+          pageId: :log
+        - id: :parallel
+          type: MenuLink
+          pageId: :parallel
+        - id: :parallel_for
+          type: MenuLink
+          pageId: :parallel_for
+        - id: :reject
+          type: MenuLink
+          pageId: :reject
+        - id: :set_state
+          type: MenuLink
+          pageId: :set_state
+        - id: :switch
+          type: MenuLink
+          pageId: :switch
+        - id: :throw
+          type: MenuLink
+          pageId: :throw
+        - id: :try
+          type: MenuLink
+          pageId: :try
+        - id: :while
+          type: MenuLink
+          pageId: :while
     - id: migration
       type: MenuGroup
       properties:

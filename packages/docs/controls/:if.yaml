@@ -1,0 +1,28 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# TODO
+_ref:
+  path: templates/controls.yaml.njk
+  vars:
+    pageId: :if
+    pageTitle: :if
+    filePath: controls/:if.yaml
+    description: |
+      The `:if` control runs the routine defined in the `:then` property if the`:if` property is `true`, and it's `:else` property if it is `false`. Generally other operators are used to evaluate the `:if` property.
+    schema: |
+      - `:if: boolean`: __Required__ - The boolean result of a test or value.
+      - `:then: routine`: __Required__ - The routine to follow if the value defined in the `:if` clause is truthy.
+      - `:else: routine`: The routine to follow if the value defined in the `:if` clause is falsy.
+    examples: |
+      ###### Example
