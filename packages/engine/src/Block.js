@@ -233,7 +233,6 @@ class Block {
     return areasClass;
   };
 
-  // TODO: Review
   reset = (parentSubAreas, initWithState) => {
     this.update = true;
     this.showValidation = false;
