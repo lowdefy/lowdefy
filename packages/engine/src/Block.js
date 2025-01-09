@@ -293,56 +293,23 @@ class Block {
     if (visibleParent === false) {
       this.visibleEval.output = false;
     } else {
-      this.visibleEval = this.context._internal.parser.parse({
-        input: this.visible,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      }); // run parser on index combinations to get visible value object
+      this.visibleEval = this.parse(this.visible);
     }
     if (beforeVisible !== this.visibleEval.output) {
       repeat.value = true;
     }
 
-    // TODO: Move into this.eval object
     if (this.visibleEval.output !== false) {
-      this.propertiesEval = this.context._internal.parser.parse({
-        input: this.properties,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      this.requiredEval = this.context._internal.parser.parse({
-        input: this.required,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
+      this.propertiesEval = this.parse(this.properties);
+      this.requiredEval = this.parse(this.required);
 
       this.validateEval();
 
-      this.styleEval = this.context._internal.parser.parse({
-        input: this.style,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      this.layoutEval = this.context._internal.parser.parse({
-        input: this.layout,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      this.loadingEval = this.context._internal.parser.parse({
-        input: this.loading,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      this.skeletonEval = this.context._internal.parser.parse({
-        input: this.skeleton,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
-      this.areasLayoutEval = this.context._internal.parser.parse({
-        input: this.areasLayout,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
+      this.styleEval = this.parse(this.style);
+      this.layoutEval = this.parse(this.layout);
+      this.loadingEval = this.parse(this.loading);
+      this.skeletonEval = this.parse(this.skeleton);
+      this.areasLayoutEval = this.parse(this.areasLayout);
     }
 
     if (this.isContainer() || this.isList()) {
@@ -355,6 +322,14 @@ class Block {
       this.update = true;
       this.before = after;
     }
+  };
+
+  parse = (input) => {
+    return this.context._internal.parser.parse({
+      input,
+      location: this.blockId,
+      arrayIndices: this.arrayIndices,
+    });
   };
 
   validateEval = () => {
