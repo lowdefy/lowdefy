@@ -18,7 +18,6 @@ import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
 import Areas from './Areas.js';
-import Blocks from './Blocks.js';
 import Requests from './Requests.js';
 import State from './State.js';
 
