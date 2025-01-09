@@ -354,11 +354,8 @@ class Block {
     let validationError = false;
     let validationWarning = false;
     validation.forEach((test) => {
-      const parsed = this.context._internal.parser.parse({
-        input: test,
-        location: this.blockId,
-        arrayIndices: this.arrayIndices,
-      });
+      const parsed = this.parse(test);
+
       // for parser errors
       if (parsed.errors.length > 0) {
         this.validationEval.output.errors.push(parsed.output.message);
