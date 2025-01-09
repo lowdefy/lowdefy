@@ -430,27 +430,21 @@ class Block {
     });
   };
 
-  updateState = () => {
-    // block is not visible and not container
-    if (this.visibleEval.output === false && !this.isContainer()) return 'delete';
+  shouldDelete = () => {
+    // block is not visible
+    if (this.visibleEval.output === false) return true;
 
     // block is visible
-    if (this.visibleEval.output !== false) {
-      if (this.isContainer() || this.isList()) {
-        if (this.subAreas && this.subAreas.length > 0) {
-          this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
-        } else {
-          this.context._internal.State.set(
-            this.blockId,
-            type.enforceType(this.meta.valueType, null)
-          );
-          return 'set';
-        }
-      } else if (this.isInput()) {
-        this.context._internal.State.set(this.blockId, this.value);
-        return 'set';
+    if (this.isContainer() || this.isList()) {
+      if (this.subAreas && this.subAreas.length > 0) {
+        this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
+      } else {
+        this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
       }
+    } else if (this.isInput()) {
+      this.context._internal.State.set(this.blockId, this.value);
     }
+    return false;
   };
 
   updateArrayIndices = () => {

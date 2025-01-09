@@ -81,31 +81,23 @@ class Areas {
   };
 
   updateState = () => {
-    const toSet = new Set();
     const toDelete = new Set();
     this.loopBlocks((block) => {
-      if (!block.visibleEval.output && block.isContainer()) {
+      if (block.visibleEval.output === false && block.isContainer()) {
         block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
       }
-      // TODO: Make better
-      const op = block.updateState();
-      if (op === 'set') {
-        toSet.add(block.blockId);
-      } else if (op === 'delete') {
-        toDelete.add(block.blockId);
-      }
+      if (block.shouldDelete()) toDelete.add(block.blockId);
+      else toDelete.delete(block.blockId); // if the block is visible at least once in the config, do not delete
     });
     toDelete.forEach((field) => {
-      if (!toSet.has(field)) {
-        this.context._internal.State.del(field);
-      }
+      this.context._internal.State.del(field);
     });
   };
 
   recContainerDelState = (toDelete) => {
     this.loopBlocks((block) => {
       if (block.isContainer()) {
-        this.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
+        block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
       } else {
         toDelete.add(block.blockId);
       }
