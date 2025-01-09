@@ -20,7 +20,7 @@ import Areas from './Areas.js';
 
 class Block {
   constructor(
-    { context, arrayIndices, subAreas },
+    { context, arrayIndices },
     {
       id,
       blockId,
@@ -39,7 +39,6 @@ class Block {
   ) {
     this.context = context;
     this.arrayIndices = arrayIndices;
-    this.subAreas = subAreas?.[id]; //TODO: Check if required
 
     this.idPattern = id;
     this.blockIdPattern = blockId;
@@ -75,12 +74,7 @@ class Block {
         `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
       );
     }
-    if (
-      this.meta?.category !== 'container' &&
-      this.meta?.category !== 'display' &&
-      this.meta?.category !== 'input' &&
-      this.meta?.category !== 'list'
-    ) {
+    if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {
       throw new Error(
         `Block type ${this.type}.meta.category must be either "container", "display", "input" or "list".`
       );
@@ -134,13 +128,9 @@ class Block {
           this.arrayIndices.concat([i + 1])
         );
       });
-      const areas = new Areas({
-        arrayIndices: this.arrayIndices.concat([0]),
-        areas: this.areas,
-        context: this.context,
-      });
-      areas.init({});
-      this.subAreas.unshift(areas);
+      this.subAreas.unshift(
+        this.newAreas({ arrayIndices: this.arrayIndices.concat([0]), initState: {} })
+      );
       this.context._internal.State.set(this.blockId, undefined);
       // set area block and sub areas values undefined, so as not to pass values to new blocks
       this.subAreas[0].recSetUndefined();
@@ -149,13 +139,12 @@ class Block {
     };
 
     this.pushItem = () => {
-      const areas = new Areas({
-        arrayIndices: this.arrayIndices.concat([this.subAreas.length]),
-        areas: this.areas,
-        context: this.context,
-      });
-      areas.init({});
-      this.subAreas.push(areas);
+      this.subAreas.push(
+        this.newAreas({
+          arrayIndices: this.arrayIndices.concat([this.subAreas.length]),
+          initState: {},
+        })
+      );
       this.update = true;
       this.context._internal.update();
     };
@@ -217,20 +206,31 @@ class Block {
   };
 
   isDisplay = () => {
-    return this.meta.category === 'display';
+    return this.meta?.category === 'display';
   };
   isList = () => {
-    return this.meta.category === 'list';
+    return this.meta?.category === 'list';
   };
   isInput = () => {
-    return this.meta.category === 'input';
+    return this.meta?.category === 'input';
   };
   isContainer = () => {
-    return this.meta.category === 'container';
+    return this.meta?.category === 'container';
   };
 
   registerMethod = (methodName, method) => {
     this.methods[methodName] = method;
+  };
+
+  newAreas = ({ arrayIndices, initState }) => {
+    const areasClass = new Areas({
+      arrayIndices,
+      areas: this.areas,
+      context: this.context,
+    });
+    areasClass.init(initState);
+
+    return areasClass;
   };
 
   // TODO: Review
@@ -254,13 +254,12 @@ class Block {
         if (type.isArray(blockValue)) {
           blockValue.forEach((item, i) => {
             if (!this.subAreas[i]) {
-              const areas = new Areas({
-                arrayIndices: this.arrayIndices.concat([i]),
-                areas: this.areas,
-                context: this.context,
-              });
-              areas.init(initWithState);
-              this.subAreas.push(areas);
+              this.subAreas.push(
+                this.newAreas({
+                  arrayIndices: this.arrayIndices.concat([i]),
+                  initState: initWithState,
+                })
+              );
             } else {
               this.subAreas[i].reset(initWithState);
             }
@@ -276,13 +275,9 @@ class Block {
         parentSubAreas[this.id] = this.subAreas;
       }
       if (!this.subAreas[0]) {
-        const areas = new Areas({
-          arrayIndices: this.arrayIndices,
-          areas: this.areas,
-          context: this.context,
-        });
-        areas.init(initWithState);
-        this.subAreas.push(areas);
+        this.subAreas.push(
+          this.newAreas({ arrayIndices: this.arrayIndices, initState: initWithState })
+        );
       } else {
         this.subAreas[0].reset(initWithState);
       }

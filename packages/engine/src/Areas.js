@@ -32,6 +32,7 @@ class Areas {
     this.recCount = 0;
     this.subAreas = {};
   }
+
   init = (initState) => {
     this.initAreaBlocks();
     this.loopBlocks((block) => {
@@ -134,7 +135,7 @@ class Areas {
   getValidateRec = (match, result) => {
     this.loopBlocks((block) => {
       const getValidate = block.getValidate(match);
-      if (getValidate) result.push(getValidate);
+      if (!type.isNone(getValidate)) result.push(getValidate);
     });
 
     this.loopSubAreas((subAreasClass) => subAreasClass.getValidateRec(match, result));
