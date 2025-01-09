@@ -17,6 +17,7 @@
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
+import Areas from './Areas.js';
 import Blocks from './Blocks.js';
 import Requests from './Requests.js';
 import State from './State.js';
@@ -92,7 +93,7 @@ function getContext({
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
-  _internal.RootBlocks = new Blocks({
+  _internal.RootBlocks = new Areas({
     areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });

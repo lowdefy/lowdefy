@@ -53,16 +53,18 @@ class Blocks {
 
   loopBlocks(fn) {
     if (type.isObject(this.areas)) {
-      Object.keys(this.areas).forEach((key) => {
-        if (type.isArray(this.areas[key].blocks)) {
-          this.areas[key].blocks.forEach(fn);
+      Object.values(this.areas).forEach((areaArray) => {
+        if (type.isArray(areaArray.blocks)) {
+          areaArray.blocks.forEach(fn);
         }
       });
     }
   }
 
   init(initState) {
+    console.log('Initializing blocks: ', this.areas);
     this.loopBlocks((block) => {
+      console.log('Creating block: ', block.blockId);
       block.idPattern = block.id;
       block.blockIdPattern = block.blockId;
       block.id = applyArrayIndices(this.arrayIndices, block.idPattern);
@@ -433,14 +435,15 @@ class Blocks {
     });
     return repeat;
   }
-
   updateState() {
     const toSet = new Set();
     const toDelete = new Set();
     this.loopBlocks((block) => {
       if (block.visibleEval.output !== false) {
+        // block is visible
         if (block.meta.category === 'container' || block.meta.category === 'list') {
           if (this.subBlocks[block.id] && this.subBlocks[block.id].length > 0) {
+            // go into subBlocks and update state
             this.subBlocks[block.id].forEach((blockClass) => {
               blockClass.updateState();
             });
@@ -456,10 +459,12 @@ class Blocks {
           this.context._internal.State.set(block.blockId, block.value);
         }
       } else if (block.meta.category === 'container') {
+        // delete state of all children blocks that are not visible
         this.subBlocks[block.id].forEach((blockClass) => {
           blockClass.recContainerDelState(toDelete);
         });
       } else {
+        // delete block that is not visible and is not container
         toDelete.add(block.blockId);
       }
     });
@@ -587,6 +592,7 @@ class Blocks {
   }
 
   setBlocksCache() {
+    // Rename to renderBlocks
     this.loopBlocks((block) => {
       if (block.update) {
         block.update = false;
@@ -612,11 +618,14 @@ class Blocks {
         this.context._internal.lowdefy._internal.updateBlock(block.id);
       }
     });
-    Object.keys(this.subBlocks).forEach((subKey) => {
-      this.subBlocks[subKey].forEach((subBlock) => {
-        subBlock.setBlocksCache();
-      });
+    Object.values(this.subBlocks).forEach((subBlockArray) => {
+      subBlockArray.forEach((subBlock) => subBlock.setBlocksCache());
     });
+    // Object.keys(this.subBlocks).forEach((subKey) => {
+    //   this.subBlocks[subKey].forEach((subBlock) => {
+    //     subBlock.setBlocksCache();
+    //   });
+    // });
   }
 }
 

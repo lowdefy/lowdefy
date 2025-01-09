@@ -74,8 +74,8 @@ test('two blocks with same id should have the same value', async () => {
     lowdefy,
     pageConfig,
   });
-  const swtch1 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.content.blocks[0];
-  const swtch2 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.content.blocks[1];
+  const swtch1 = context._internal.RootBlocks.subAreas['page:root'][0].areas.content.blocks[0];
+  const swtch2 = context._internal.RootBlocks.subAreas['page:root'][0].areas.content.blocks[1];
   expect(swtch1.value).toBe(false);
   expect(swtch2.value).toBe(false);
   expect(context.state).toEqual({ swtch1: false });

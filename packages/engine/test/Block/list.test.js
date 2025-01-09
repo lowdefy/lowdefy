@@ -247,14 +247,14 @@ test('list block no init unshift item to start', async () => {
     pageConfig,
   });
   const { list, root } = context._internal.RootBlocks.map;
-  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
+  const BlocksContainingList = context._internal.RootBlocks.subAreas[root.id][0];
 
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ list: [{ text: null }] });
   const text0 = context._internal.RootBlocks.map['list.0.text'];
-  const ListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
+  const ListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
 
   text0.setValue('first');
   expect(context.state).toEqual({ list: [{ text: 'first' }] });
@@ -265,8 +265,8 @@ test('list block no init unshift item to start', async () => {
   expect(ListSubblocks0.arrayIndices).toEqual([1]);
 
   // get new references to Blocks classes at index 0 and 1
-  const NewListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
-  const NewListSubblocks1 = BlocksContainingList.subBlocks[list.id][1];
+  const NewListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
+  const NewListSubblocks1 = BlocksContainingList.subAreas[list.id][1];
 
   expect(NewListSubblocks0.arrayIndices).toEqual([0]);
   expect(NewListSubblocks1.arrayIndices).toEqual([1]);
@@ -301,7 +301,7 @@ test('list block no init unshift item to start, block id not in array', async ()
     pageConfig,
   });
   const { list, root } = context._internal.RootBlocks.map;
-  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
+  const BlocksContainingList = context._internal.RootBlocks.subAreas[root.id][0];
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ other: [null] });
@@ -310,8 +310,8 @@ test('list block no init unshift item to start, block id not in array', async ()
   expect(context.state).toEqual({ other: ['first'] });
   list.unshiftItem();
 
-  const NewListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
-  const NewListSubblocks1 = BlocksContainingList.subBlocks[list.id][1];
+  const NewListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
+  const NewListSubblocks1 = BlocksContainingList.subAreas[list.id][1];
 
   expect(NewListSubblocks0.arrayIndices).toEqual([0]);
   expect(NewListSubblocks1.arrayIndices).toEqual([1]);
@@ -1001,8 +1001,8 @@ test('list block with init remove item of first item and more than two values', 
   list.removeItem(0);
   expect(context.state).toEqual({ list: [{ text: '1' }, { text: '2' }] });
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootBlocks.subAreas[context._internal.RootBlocks.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
   expect(listSubblocksList[0].arrayIndices).toEqual([0]);
   expect(listSubblocksList[1].arrayIndices).toEqual([1]);
   expect(listSubblocksList.length).toEqual(2);
@@ -1040,8 +1040,8 @@ test('list block remove item, add item does not have previous item value ', asyn
   });
   const { list } = context._internal.RootBlocks.map;
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootBlocks.subAreas[context._internal.RootBlocks.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }] });
   list.removeItem(0);
@@ -1086,8 +1086,8 @@ test('list block with init remove item and set existing item values', async () =
   const text0 = context._internal.RootBlocks.map['list.0.text'];
   const text2 = context._internal.RootBlocks.map['list.2.text'];
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootBlocks.subAreas[context._internal.RootBlocks.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }, { text: '1' }, { text: '2' }] });
   expect(listSubblocksList[0].arrayIndices).toEqual([0]);
@@ -1145,8 +1145,8 @@ test('primitive list block with init remove item', async () => {
   const num3 = context._internal.RootBlocks.map['list.3'];
   const num5 = context._internal.RootBlocks.map['list.5'];
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootBlocks.subAreas[context._internal.RootBlocks.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   const B3 = listSubblocksList[3];
   const B4 = listSubblocksList[4];

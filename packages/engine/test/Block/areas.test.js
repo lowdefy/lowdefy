@@ -102,8 +102,8 @@ test('parse values across areas with same block id and visible switching block t
     pageConfig,
   });
   const { hide1, hide2 } = context._internal.RootBlocks.map;
-  const swtch1 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.key1.blocks[0];
-  const swtch2 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.key2.blocks[0];
+  const swtch1 = context._internal.RootBlocks.subAreas['page:root'][0].areas.key1.blocks[0];
+  const swtch2 = context._internal.RootBlocks.subAreas['page:root'][0].areas.key2.blocks[0];
   expect(swtch1.visibleEval.output).toBe(true);
   expect(swtch2.visibleEval.output).toBe(true);
   expect(context.state).toEqual({ swtch: false, hide1: false, hide2: false });

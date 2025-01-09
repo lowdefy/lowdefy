@@ -20,7 +20,7 @@ import Areas from './Areas.js';
 
 class Block {
   constructor(
-    areaContext,
+    { context, arrayIndices, subAreas },
     {
       id,
       blockId,
@@ -33,15 +33,18 @@ class Block {
       style,
       validate,
       visible,
-      type,
+      type: blockType,
       areas,
     }
   ) {
-    this.areaContext = areaContext;
+    this.context = context;
+    this.arrayIndices = arrayIndices;
+    this.subAreas = subAreas?.[id];
+
     this.idPattern = id;
     this.blockIdPattern = blockId;
-    this.id = applyArrayIndices(areaContext.arrayIndices, this.idPattern);
-    this.blockId = applyArrayIndices(areaContext.arrayIndices, this.blockIdPattern);
+    this.id = applyArrayIndices(this.arrayIndices, this.idPattern);
+    this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
 
     this.events = type.isNone(events) ? {} : events;
     this.layout = type.isNone(layout) ? {} : layout;
@@ -52,15 +55,9 @@ class Block {
     this.style = type.isNone(style) ? {} : style;
     this.validate = type.isNone(validate) ? [] : validate;
     this.visible = type.isNone(visible) ? true : visible;
-    this.type = type;
+    this.type = blockType;
     this.areas = areas;
-    this.areasLayout = type.isNone(areas)
-      ? {}
-      : Object.keys(this.areas).forEach((key) => {
-          // eslint-disable-next-line no-unused-vars
-          const { blocks, ...areaLayout } = this.areas[key];
-          this.areasLayout[key] = { ...areaLayout };
-        });
+
     this.areasLayoutEval = {};
     this.layoutEval = {};
     this.loadingEval = {};
@@ -72,10 +69,10 @@ class Block {
     this.visibleEval = {};
 
     try {
-      this.meta = areaContext.context._internal.lowdefy._internal.blockComponents[type].meta;
+      this.meta = this.context._internal.lowdefy._internal.blockComponents[this.type].meta;
     } catch (error) {
       throw new Error(
-        `Block type ${type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
+        `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
       );
     }
     if (
@@ -85,177 +82,443 @@ class Block {
       this.meta?.category !== 'list'
     ) {
       throw new Error(
-        `Block type ${type}.meta.category must be either "container", "display", "input" or "list".`
+        `Block type ${this.type}.meta.category must be either "container", "display", "input" or "list".`
       );
+    }
+
+    if (!type.isNone(areas)) {
+      this.areasLayout = {};
+      Object.keys(areas).forEach((key) => {
+        // eslint-disable-next-line no-unused-vars
+        const { blocks, ...areaLayout } = areas[key];
+        this.areasLayout[key] = { ...areaLayout };
+      });
+    } else {
+      this.areasLayout = {};
     }
 
     this.methods = {};
 
-    // bind to current instance
-    this.registerMethod = this.registerMethod.bind(this);
-    this.triggerEvent = this.triggerEvent.bind(this);
-    this.registerEvent = this.registerEvent.bind(this);
-    this.reset = this.reset.bind(this);
-    this.initBlockContainer = this.initBlockContainer.bind(this);
-
-    // TODO: input and list block categories
+    if (this.isList()) {
+      this._initList();
+    }
+    if (this.isInput()) {
+      this._initInput();
+    }
 
     this.Events = new Events({
-      arrayIndices: areaContext.arrayIndices,
+      arrayIndices: this.arrayIndices,
       block: this,
-      context: areaContext.context,
+      context: this.context,
     });
+
+    this.triggerEvent = this.Events.triggerEvent;
+    this.registerEvent = this.Events.registerEvent;
   }
 
-  registerMethod(methodName, method) {
+  _initInput = () => {
+    this.setValue = (value) => {
+      this.value = type.enforceType(this.meta.valueType, value);
+      this.context._internal.State.set(this.blockId, this.value);
+      this.update = true;
+      this.context._internal.update();
+    };
+  };
+
+  _initList = () => {
+    // TODO: to initialize new object in array, the new value should be passed by method to unshiftItem and pushItem
+    this.unshiftItem = () => {
+      this.loopSubAreas((areasClass, i) => {
+        areasClass.recUpdateArrayIndices(
+          this.arrayIndices.concat([i]),
+          this.arrayIndices.concat([i + 1])
+        );
+      });
+      const areas = new Areas({
+        arrayIndices: this.arrayIndices.concat([0]),
+        areas: this.areas,
+        context: this.context,
+      });
+      areas.init({});
+      this.subAreas.unshift(areas);
+      this.context._internal.State.set(this.blockId, undefined);
+      // set area block and sub areas values undefined, so as not to pass values to new blocks
+      this.subAreas[0].recSetUndefined();
+      this.update = true;
+      this.context._internal.update();
+    };
+
+    this.pushItem = () => {
+      const areas = new Areas({
+        arrayIndices: this.arrayIndices.concat([this.subAreas.length]),
+        areas: this.areas,
+        context: this.context,
+      });
+      areas.init({});
+      this.subAreas.push(areas);
+      this.update = true;
+      this.context._internal.update();
+    };
+
+    this.removeItem = (index) => {
+      this.context._internal.State.removeItem(this.blockId, index);
+      const lastArea = this.subAreas[this.subAreas.length - 1];
+      lastArea.recRemoveBlocksFromMap();
+      const largerAreas = this.subAreas.slice(index + 1);
+      largerAreas.forEach((areasClass, i) => {
+        areasClass.recUpdateArrayIndices(
+          this.arrayIndices.concat([index + i + 1]),
+          this.arrayIndices.concat([index + i])
+        );
+      });
+      this.subAreas.splice(index, 1);
+
+      this.update = true;
+      this.context._internal.update();
+    };
+
+    this.moveItemUp = (index) => {
+      if (index === 0) return;
+      this.context._internal.State.swapItems(this.blockId, index - 1, index);
+      this.subAreas[index - 1].recUpdateArrayIndices(
+        this.arrayIndices.concat([index - 1]),
+        this.arrayIndices.concat([index])
+      );
+      this.subAreas[index].recUpdateArrayIndices(
+        this.arrayIndices.concat([index]),
+        this.arrayIndices.concat([index - 1])
+      );
+      swap(this.subAreas, index - 1, index);
+      this.update = true;
+      this.context._internal.update();
+    };
+
+    this.moveItemDown = (index) => {
+      if (index === this.subAreas.length - 1) return;
+      this.context._internal.State.swapItems(this.blockId, index, index + 1);
+      this.subAreas[index + 1].recUpdateArrayIndices(
+        this.arrayIndices.concat([index + 1]),
+        this.arrayIndices.concat([index])
+      );
+      this.subAreas[index].recUpdateArrayIndices(
+        this.arrayIndices.concat([index]),
+        this.arrayIndices.concat([index + 1])
+      );
+      swap(this.subAreas, index, index + 1);
+      this.update = true;
+      this.context._internal.update();
+    };
+  };
+
+  loopSubAreas = (fn) => {
+    if (this.subAreas) {
+      this.subAreas.forEach(fn);
+    }
+  };
+
+  isDisplay = () => {
+    return this.meta.category === 'display';
+  };
+  isList = () => {
+    return this.meta.category === 'list';
+  };
+  isInput = () => {
+    return this.meta.category === 'input';
+  };
+  isContainer = () => {
+    return this.meta.category === 'container';
+  };
+
+  registerMethod = (methodName, method) => {
     this.methods[methodName] = method;
-  }
-  triggerEvent() {
-    this.Events.triggerEvent();
-  }
-  registerEvent() {
-    this.Events.registerEvent();
-  }
+  };
 
-  reset(initWithState) {
+  // TODO: Review
+  reset = (parentSubAreas, initWithState) => {
     this.update = true;
     this.showValidation = false;
-    if (this.meta.category === 'container') {
-      this.initBlockContainer(initWithState);
-    }
-    // TODO: input and list block categories
-  }
+    if (this.isInput() || this.isList()) {
+      let blockValue = get(initWithState, this.blockId);
+      if (type.isUndefined(blockValue)) {
+        blockValue = type.isUndefined(this.meta.initValue)
+          ? type.enforceType(this.meta.valueType, null)
+          : this.meta.initValue;
 
-  initBlockContainer(initState) {
-    //TODO: Rename subBlocks to area?
-    if (!type.isArray(this.subBlocks)) {
-      this.subBlocks = [];
+        this.context._internal.State.set(this.blockId, blockValue);
+      }
+      if (this.isList()) {
+        if (!type.isArray(this.subAreas)) {
+          this.subAreas = [];
+          parentSubAreas[this.id] = this.subAreas;
+        }
+        if (type.isArray(blockValue)) {
+          blockValue.forEach((item, i) => {
+            if (!this.subAreas[i]) {
+              const areas = new Areas({
+                arrayIndices: this.arrayIndices.concat([i]),
+                areas: this.areas,
+                context: this.context,
+              });
+              areas.init(initWithState);
+              this.subAreas.push(areas);
+            } else {
+              this.subAreas[i].reset(initWithState);
+            }
+          });
+          this.subAreas.splice(blockValue.length);
+        }
+      } else {
+        this.value = blockValue;
+      }
+    } else if (this.isContainer()) {
+      if (!type.isArray(this.subAreas)) {
+        this.subAreas = [];
+        parentSubAreas[this.id] = this.subAreas;
+      }
+      if (!this.subAreas[0]) {
+        const areas = new Areas({
+          arrayIndices: this.arrayIndices,
+          areas: this.areas,
+          context: this.context,
+        });
+        areas.init(initWithState);
+        this.subAreas.push(areas);
+      } else {
+        this.subAreas[0].reset(initWithState);
+      }
     }
-    if (!this.subBlocks[0]) {
-      this.subBlocks.push(new Areas(this.areaContext.arrayIndices, this.areas, initState));
-    } else {
-      this.subBlocks[0].reset(initState);
-    }
-  }
+  };
 
-  recEval(visibleParent, repeat) {
+  evaluate = (visibleParent, repeat) => {
+    if (this.isInput()) {
+      const stateValue = get(this.context.state, this.blockId);
+      this.value = type.isUndefined(stateValue) ? this.value : stateValue;
+    }
     const beforeVisible = this.visibleEval ? this.visibleEval.output : true;
     if (visibleParent === false) {
       this.visibleEval.output = false;
     } else {
-      this.visibleEval = this.areaContext.context._internal.parser.parse({
+      this.visibleEval = this.context._internal.parser.parse({
         input: this.visible,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
-      });
+        arrayIndices: this.arrayIndices,
+      }); // run parser on index combinations to get visible value object
     }
     if (beforeVisible !== this.visibleEval.output) {
       repeat.result = true;
     }
 
-    // only evaluate visible blocks
+    // TODO: Move into this.eval object
     if (this.visibleEval.output !== false) {
-      this.propertiesEval = this.areaContext.context._internal.parser.parse({
+      this.propertiesEval = this.context._internal.parser.parse({
         input: this.properties,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      this.requiredEval = this.areaContext.context._internal.parser.parse({
+      this.requiredEval = this.context._internal.parser.parse({
         input: this.required,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      const requiredValidation = {
-        pass: { _not: { _type: 'none' } },
-        status: 'error',
-        message: type.isString(this.requiredEval.output)
-          ? this.requiredEval.output
-          : 'This field is required',
-      };
-      const validation =
-        this.requiredEval.output === false ? this.validate : [...this.validate, requiredValidation];
 
-      this.validationEval = {
-        output: {
-          status: null,
-          errors: [],
-          warnings: [],
-        },
-        errors: [],
-      };
-      let validationError = false;
-      let validationWarning = false;
-      validation.forEach((test) => {
-        const parsed = this.areaContext.context._internal.parser.parse({
-          input: test,
-          location: this.blockId,
-          arrayIndices: this.areaContext.arrayIndices,
-        });
-        // for parser errors
-        if (parsed.errors.length > 0) {
-          this.validationEval.output.errors.push(parsed.output.message);
-          this.validationEval.errors.push(parsed.errors);
-          validationError = true;
-          return;
-        }
-        // failed validation
-        if (!parsed.output.pass) {
-          // no status indication on validation tests defaults to error
-          if (!test.status || test.status === 'error') {
-            this.validationEval.output.errors.push(parsed.output.message);
-            validationError = true;
-          }
-          if (test.status === 'warning') {
-            this.validationEval.output.warnings.push(parsed.output.message);
-            validationWarning = true;
-          }
-        }
-      });
-      if (validation.length > 0) {
-        this.validationEval.output.status = 'success';
-      }
-      if (validationWarning) {
-        this.validationEval.output.status = 'warning';
-      }
-      if (validationError && this.showValidation) {
-        this.validationEval.output.status = 'error';
-      }
+      this.validateEval();
 
-      this.styleEval = this.areaContext.context._internal.parser.parse({
+      this.styleEval = this.context._internal.parser.parse({
         input: this.style,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      this.layoutEval = this.areaContext.context._internal.parser.parse({
+      this.layoutEval = this.context._internal.parser.parse({
         input: this.layout,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      this.loadingEval = this.areaContext.context._internal.parser.parse({
+      this.loadingEval = this.context._internal.parser.parse({
         input: this.loading,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      this.skeletonEval = this.areaContext.context._internal.parser.parse({
+      this.skeletonEval = this.context._internal.parser.parse({
         input: this.skeleton,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
-      this.areasLayoutEval = this.areaContext.context._internal.parser.parse({
+      this.areasLayoutEval = this.context._internal.parser.parse({
         input: this.areasLayout,
         location: this.blockId,
-        arrayIndices: this.areaContext.arrayIndices,
+        arrayIndices: this.arrayIndices,
       });
+    }
 
-      if (this.meta.category === 'container' || this.meta.category === 'list') {
-        if (this.subBlocks?.length > 0) {
-          this.subBlocks.forEach((areaClass) => {
-            repeat = areaClass.recEval(this.visibleEval.output) || repeat;
-          });
+    if (this.isContainer() || this.isList()) {
+      this.loopSubAreas((areasClass) => {
+        repeat.result = areasClass.recEval(this.visibleEval.output) || repeat.result;
+      });
+    }
+    const after = this.evalToString();
+    if (this.before !== after) {
+      this.update = true;
+      this.before = after;
+    }
+  };
+
+  validateEval = () => {
+    const requiredValidation = {
+      pass: { _not: { _type: 'none' } },
+      status: 'error',
+      message: type.isString(this.requiredEval.output)
+        ? this.requiredEval.output
+        : 'This field is required',
+    };
+    const validation =
+      this.requiredEval.output === false ? this.validate : [...this.validate, requiredValidation];
+
+    this.validationEval = {
+      output: {
+        status: null,
+        errors: [],
+        warnings: [],
+      },
+      errors: [],
+    };
+    let validationError = false;
+    let validationWarning = false;
+    validation.forEach((test) => {
+      const parsed = this.context._internal.parser.parse({
+        input: test,
+        location: this.blockId,
+        arrayIndices: this.arrayIndices,
+      });
+      // for parser errors
+      if (parsed.errors.length > 0) {
+        this.validationEval.output.errors.push(parsed.output.message);
+        this.validationEval.errors.push(parsed.errors);
+        validationError = true;
+        return;
+      }
+      // failed validation
+      if (!parsed.output.pass) {
+        // no status indication on validation tests defaults to error
+        if (!test.status || test.status === 'error') {
+          this.validationEval.output.errors.push(parsed.output.message);
+          validationError = true;
+        }
+        if (test.status === 'warning') {
+          this.validationEval.output.warnings.push(parsed.output.message);
+          validationWarning = true;
         }
       }
+    });
+    if (validation.length > 0) {
+      this.validationEval.output.status = 'success';
     }
-  }
+    if (validationWarning) {
+      this.validationEval.output.status = 'warning';
+    }
+    if (validationError && this.showValidation) {
+      this.validationEval.output.status = 'error';
+    }
+  };
+
+  evalToString = () => {
+    return serializer.serializeToString({
+      areasLayoutEval: this.areasLayoutEval,
+      layoutEval: this.layoutEval,
+      loadingEval: this.loadingEval,
+      propertiesEval: this.propertiesEval,
+      requiredEval: this.requiredEval,
+      skeletonEval: this.skeletonEval,
+      styleEval: this.styleEval,
+      validationEval: this.validationEval,
+      value: this.value,
+      visibleEval: this.visibleEval,
+    });
+  };
+
+  updateState = () => {
+    // block is not visible and not container
+    if (this.visibleEval.output === false && !this.isContainer()) return 'delete';
+
+    // block is visible
+    if (this.visibleEval.output !== false) {
+      if (this.isContainer() || this.isList()) {
+        if (this.subAreas && this.subAreas.length > 0) {
+          this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
+        } else {
+          this.context._internal.State.set(
+            this.blockId,
+            type.enforceType(this.meta.valueType, null)
+          );
+          return 'set';
+        }
+      } else if (this.isInput()) {
+        this.context._internal.State.set(this.blockId, this.value);
+        return 'set';
+      }
+    }
+  };
+
+  updateArrayIndices = () => {
+    this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
+    this.context._internal.RootBlocks.map[this.blockId] = this;
+  };
+
+  getValidate = (match) => {
+    if (!match(this.blockId)) return null;
+
+    this.showValidation = true;
+    this.update = true;
+    if (
+      this.visibleEval.output !== false &&
+      this.validationEval.output &&
+      this.validationEval.output.errors.length > 0
+    ) {
+      this.validationEval.output.status = 'error';
+      return {
+        blockId: this.blockId,
+        validation: this.validationEval.output,
+      };
+    }
+
+    return null;
+  };
+
+  deleteFromMap = () => {
+    delete this.context._internal.RootBlocks.map[this.blockId];
+  };
+
+  resetValidation = (match) => {
+    if (!match(this.blockId)) return;
+
+    this.showValidation = false;
+    this.update = true;
+  };
+
+  render = () => {
+    if (!this.update) return;
+
+    this.update = false;
+    this.eval = {
+      areas: this.areasLayoutEval.output,
+      events: type.isNone(this.Events.events) ? null : this.Events.events,
+      properties: this.propertiesEval.output,
+      loading: this.loadingEval.output,
+      skeleton: this.skeletonEval.output,
+      required: this.requiredEval.output,
+      layout: this.layoutEval.output,
+      style: this.styleEval.output,
+      validation: {
+        ...(this.validationEval.output || {}),
+        status:
+          this.showValidation || this.validationEval.output?.status === 'warning'
+            ? this.validationEval.output?.status
+            : null,
+      },
+      value: type.isNone(this.value) ? null : this.value,
+      visible: this.visibleEval.output,
+    };
+    this.context._internal.lowdefy._internal.updateBlock(this.id);
+  };
 }
 
 export default Block;

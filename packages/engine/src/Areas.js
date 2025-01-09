@@ -16,57 +16,171 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, get, serializer, swap, type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
+import Block from './Block.js';
 
 class Areas {
-  // TODO: Have separate class for single area and different class for Areas
   constructor({ arrayIndices = [], areas, context }) {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substring(0, 5);
-    this.areas = serializer.copy(areas || {});
+    this.areas = serializer.copy(areas || []);
     this.arrayIndices = arrayIndices;
     this.context = context;
     this.map = {};
     this.recCount = 0;
-    this.blocks = {};
-
-    // bind current instance
-    this.getValidateRec = this.getValidateRec.bind(this);
-    this.init = this.init.bind(this);
-    this.newBlocks = this.newBlocks.bind(this);
-    this.recContainerDelState = this.recContainerDelState.bind(this);
-    this.recEval = this.recEval.bind(this);
-    this.recRemoveBlocksFromMap = this.recRemoveBlocksFromMap.bind(this);
-    this.recSetUndefined = this.recSetUndefined.bind(this);
-    this.recUpdateArrayIndices = this.recUpdateArrayIndices.bind(this);
-    this.reset = this.reset.bind(this);
-    this.resetValidation = this.resetValidation.bind(this);
-    this.resetValidationRec = this.resetValidationRec.bind(this);
-    this.setBlocksCache = this.setBlocksCache.bind(this);
-    this.update = this.update.bind(this);
-    this.updateState = this.updateState.bind(this);
-    this.updateStateFromRoot = this.updateStateFromRoot.bind(this);
-    this.validate = this.validate.bind(this);
+    this.subAreas = {};
   }
+  init = (initState) => {
+    this.initAreaBlocks();
+    this.loopBlocks((block) => {
+      this.context._internal.RootBlocks.map[block.blockId] = block;
+    });
+    this.reset(initState);
+  };
 
-  loopBlocks(fn) {
+  initAreaBlocks = () => {
     if (type.isObject(this.areas)) {
-      Object.keys(this.areas).forEach((key) => {
-        if (type.isArray(this.areas[key].blocks)) {
-          this.areas[key].blocks.forEach(fn);
+      Object.keys(this.areas).forEach((areaKey) => {
+        const blocks = this.areas[areaKey].blocks.map((areaBlock) => {
+          return new Block(this, areaBlock);
+        });
+        this.areas[areaKey].blocks = blocks;
+      });
+    }
+  };
+
+  loopBlocks = (fn) => {
+    if (type.isObject(this.areas)) {
+      Object.values(this.areas).forEach((areaArray) => {
+        if (type.isArray(areaArray.blocks)) {
+          areaArray.blocks.forEach(fn);
         }
       });
     }
-  }
+  };
 
-  reset(initWithState) {
+  loopSubAreas = (fn) => {
+    Object.values(this.subAreas).forEach((subAreasArray) => {
+      subAreasArray.forEach(fn);
+    });
+  };
+
+  reset = (initWithState) => {
     const initState = serializer.copy(initWithState || this.context.state);
     this.loopBlocks((block) => {
-      block.reset(initState);
+      block.reset(this.subAreas, initState);
     });
-  }
+  };
+
+  recEval = (visibleParent) => {
+    let repeat = { result: false };
+    this.loopBlocks((block) => block.evaluate(visibleParent, repeat));
+    return repeat.result;
+  };
+
+  updateState = () => {
+    const toSet = new Set();
+    const toDelete = new Set();
+    this.loopBlocks((block) => {
+      // TODO: Make better
+      if (!block.visibleEval.output && block.isContainer()) {
+        block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
+      }
+      const op = block.updateState();
+      if (op === 'set') {
+        toSet.add(block.blockId);
+      } else if (op === 'delete') {
+        toDelete.add(block.blockId);
+      }
+    });
+    toDelete.forEach((field) => {
+      if (!toSet.has(field)) {
+        this.context._internal.State.del(field);
+      }
+    });
+  };
+
+  recContainerDelState = (toDelete) => {
+    this.loopBlocks((block) => {
+      if (block.isContainer()) {
+        this.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
+      } else {
+        toDelete.add(block.blockId);
+      }
+    });
+  };
+
+  updateStateFromRoot = () => {
+    const repeat = this.recEval(true);
+    this.updateState();
+    if (repeat && this.recCount < 20) {
+      this.recCount += 1;
+      this.updateStateFromRoot();
+    }
+    this.recCount = 0;
+  };
+
+  recUpdateArrayIndices = (oldIndices, newIndices) => {
+    newIndices.forEach((index, i) => {
+      this.arrayIndices[i] = newIndices[i];
+    });
+    this.loopBlocks((block) => block.updateArrayIndices());
+    this.loopSubAreas((subAreasClass) =>
+      subAreasClass.recUpdateArrayIndices(oldIndices, newIndices)
+    );
+  };
+
+  getValidateRec = (match, result) => {
+    this.loopBlocks((block) => {
+      const getValidate = block.getValidate(match);
+      if (getValidate) result.push(getValidate);
+    });
+
+    this.loopSubAreas((subAreasClass) => subAreasClass.getValidateRec(match, result));
+    return result;
+  };
+
+  recSetUndefined = () => {
+    this.loopBlocks((block) => {
+      this.context._internal.State.set(block.blockId, undefined);
+    });
+
+    this.loopSubAreas((subAreasClass) => subAreasClass.recSetUndefined());
+  };
+
+  recRemoveBlocksFromMap = () => {
+    this.loopBlocks((block) => block.deleteFromMap());
+    this.loopSubAreas((subAreasClass) => subAreasClass.recRemoveBlocksFromMap());
+  };
+
+  validate = (match) => {
+    this.updateStateFromRoot(); // update to recalculate validationEval to raise block errors
+    const validationErrors = this.getValidateRec(match, []); // get all relevant raised block errors and set showValidation
+    this.renderBlocks(); // update cache to render
+    return validationErrors;
+  };
+
+  resetValidationRec = (match) => {
+    this.loopBlocks((block) => block.resetValidation(match));
+    this.loopSubAreas((subAreasClass) => subAreasClass.resetValidationRec(match));
+  };
+
+  resetValidation = (match) => {
+    this.resetValidationRec(match);
+    this.renderBlocks();
+  };
+
+  update = () => {
+    this.updateStateFromRoot(); // update all the blocks
+    this.renderBlocks(); // finally update cache
+  };
+
+  renderBlocks = () => {
+    this.loopBlocks((block) => block.render());
+    this.loopSubAreas((subAreasClass) => subAreasClass.renderBlocks());
+  };
 }
 
 export default Areas;
