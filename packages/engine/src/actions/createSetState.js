@@ -21,7 +21,7 @@ function createSetState({ arrayIndices, context }) {
     Object.keys(params).forEach((key) => {
       context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
     });
-    context._internal.RootBlocks.reset();
+    context._internal.RootAreas.reset();
     context._internal.update();
   };
 }

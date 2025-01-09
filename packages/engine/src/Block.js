@@ -418,7 +418,7 @@ class Block {
 
   updateArrayIndices = () => {
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
-    this.context._internal.RootBlocks.map[this.blockId] = this;
+    this.context._internal.RootAreas.map[this.blockId] = this;
   };
 
   getValidate = (match) => {
@@ -442,7 +442,7 @@ class Block {
   };
 
   deleteFromMap = () => {
-    delete this.context._internal.RootBlocks.map[this.blockId];
+    delete this.context._internal.RootAreas.map[this.blockId];
   };
 
   resetValidation = (match) => {

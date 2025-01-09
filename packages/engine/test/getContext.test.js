@@ -100,9 +100,9 @@ test('memoize context and reset', () => {
   const c1 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
   const c2 = getContext({ config, lowdefy, resetContext: { reset: false, setReset: () => {} } });
   expect(c1).toBe(c2);
-  expect(c1._internal.RootBlocks.id).toEqual(c2._internal.RootBlocks.id);
+  expect(c1._internal.RootAreas.id).toEqual(c2._internal.RootAreas.id);
   const c3 = getContext({ config, lowdefy, resetContext: { reset: true, setReset: () => {} } });
-  expect(c1._internal.RootBlocks.id).not.toEqual(c3._internal.RootBlocks.id);
+  expect(c1._internal.RootAreas.id).not.toEqual(c3._internal.RootAreas.id);
 });
 
 test('create context', () => {
@@ -116,7 +116,7 @@ test('create context', () => {
   const context = getContext({ config, lowdefy, resetContext });
   expect(context._internal.Actions).toBeDefined();
   expect(context._internal.Requests).toBeDefined();
-  expect(context._internal.RootBlocks).toBeDefined();
+  expect(context._internal.RootAreas).toBeDefined();
   expect(context._internal.State).toBeDefined();
   expect(context._internal.runOnInit).toBeDefined();
   expect(context._internal.runOnInitAsync).toBeDefined();

@@ -36,7 +36,7 @@ class Areas {
   init = (initState) => {
     this.initAreaBlocks();
     this.loopBlocks((block) => {
-      this.context._internal.RootBlocks.map[block.blockId] = block;
+      this.context._internal.RootAreas.map[block.blockId] = block;
     });
     this.reset(initState);
   };

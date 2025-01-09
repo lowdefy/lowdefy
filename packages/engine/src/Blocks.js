@@ -71,7 +71,7 @@ class Blocks {
       // map is not a direct reference to all blocks, blocks with duplicate ids will be overwritten in map
       // which can cause issues with ambiguous config during call method since it will call only the method
       // of the last initialized block for the referenced id.
-      this.context._internal.RootBlocks.map[block.blockId] = block;
+      this.context._internal.RootAreas.map[block.blockId] = block;
       block.events = type.isNone(block.events) ? {} : block.events;
       block.layout = type.isNone(block.layout) ? {} : block.layout;
       block.loading = type.isNone(block.loading) ? false : block.loading;
@@ -501,7 +501,7 @@ class Blocks {
     });
     this.loopBlocks((block) => {
       block.blockId = applyArrayIndices(this.arrayIndices, block.blockIdPattern);
-      this.context._internal.RootBlocks.map[block.blockId] = block;
+      this.context._internal.RootAreas.map[block.blockId] = block;
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
@@ -549,7 +549,7 @@ class Blocks {
 
   recRemoveBlocksFromMap() {
     this.loopBlocks((block) => {
-      delete this.context._internal.RootBlocks.map[block.blockId];
+      delete this.context._internal.RootAreas.map[block.blockId];
     });
     Object.keys(this.subBlocks).forEach((subKey) => {
       this.subBlocks[subKey].forEach((subBlock) => {
