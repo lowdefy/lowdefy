@@ -39,7 +39,7 @@ class Block {
   ) {
     this.context = context;
     this.arrayIndices = arrayIndices;
-    this.subAreas = subAreas?.[id];
+    this.subAreas = subAreas?.[id]; //TODO: Check if required
 
     this.idPattern = id;
     this.blockIdPattern = blockId;
@@ -305,7 +305,7 @@ class Block {
       }); // run parser on index combinations to get visible value object
     }
     if (beforeVisible !== this.visibleEval.output) {
-      repeat.result = true;
+      repeat.value = true;
     }
 
     // TODO: Move into this.eval object
@@ -352,7 +352,7 @@ class Block {
 
     if (this.isContainer() || this.isList()) {
       this.loopSubAreas((areasClass) => {
-        repeat.result = areasClass.recEval(this.visibleEval.output) || repeat.result;
+        repeat.value = areasClass.recEval(this.visibleEval.output) || repeat.value;
       });
     }
     const after = this.evalToString();

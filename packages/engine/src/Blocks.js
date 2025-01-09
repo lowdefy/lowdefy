@@ -62,9 +62,7 @@ class Blocks {
   }
 
   init(initState) {
-    console.log('Initializing blocks: ', this.areas);
     this.loopBlocks((block) => {
-      console.log('Creating block: ', block.blockId);
       block.idPattern = block.id;
       block.blockIdPattern = block.blockId;
       block.id = applyArrayIndices(this.arrayIndices, block.idPattern);

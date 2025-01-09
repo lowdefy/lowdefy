@@ -40,12 +40,11 @@ class Areas {
     this.reset(initState);
   };
 
+  // Replace Area blocks array with Block instances
   initAreaBlocks = () => {
     if (type.isObject(this.areas)) {
       Object.keys(this.areas).forEach((areaKey) => {
-        const blocks = this.areas[areaKey].blocks.map((areaBlock) => {
-          return new Block(this, areaBlock);
-        });
+        const blocks = this.areas[areaKey].blocks.map((areaBlock) => new Block(this, areaBlock));
         this.areas[areaKey].blocks = blocks;
       });
     }
@@ -75,19 +74,19 @@ class Areas {
   };
 
   recEval = (visibleParent) => {
-    let repeat = { result: false };
+    let repeat = { value: false };
     this.loopBlocks((block) => block.evaluate(visibleParent, repeat));
-    return repeat.result;
+    return repeat.value;
   };
 
   updateState = () => {
     const toSet = new Set();
     const toDelete = new Set();
     this.loopBlocks((block) => {
-      // TODO: Make better
       if (!block.visibleEval.output && block.isContainer()) {
         block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
       }
+      // TODO: Make better
       const op = block.updateState();
       if (op === 'set') {
         toSet.add(block.blockId);
