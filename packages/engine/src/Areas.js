@@ -44,9 +44,9 @@ class Areas {
   // Replace Area blocks array with Block instances
   initAreaBlocks = () => {
     if (type.isObject(this.areas)) {
-      Object.keys(this.areas).forEach((areaKey) => {
-        const blocks = this.areas[areaKey].blocks.map((areaBlock) => new Block(this, areaBlock));
-        this.areas[areaKey].blocks = blocks;
+      Object.values(this.areas).forEach((area) => {
+        const blocks = area.blocks.map((areaBlock) => new Block(this, areaBlock));
+        area.blocks = blocks;
       });
     }
   };
