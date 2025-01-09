@@ -430,11 +430,9 @@ class Block {
     });
   };
 
-  shouldDelete = () => {
-    // block is not visible
+  shouldDeleteState = () => {
     if (this.visibleEval.output === false) return true;
 
-    // block is visible
     if (this.isContainer() || this.isList()) {
       if (this.subAreas && this.subAreas.length > 0) {
         this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
