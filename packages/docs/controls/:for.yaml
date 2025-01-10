@@ -20,15 +20,9 @@ _ref:
     filePath: controls/:for.yaml
     description: |
       The `:for` control implements a for loop within a routine.
-      The routine defined in the `:do` property is executed for each item within the array defined in the `:in` property. This routine is executed sequentially for each item in the array.
-      The value of the current array item can be accessed using the `_item` operator with the item key set in the `:for` property. This operator is only available within the `:for` and `:parallel_for` controls.
-      Mimics the below js syntax:
-      ```
-      for (key in array) {
-        // do
-      }
-      ```
-    schema: |
+      The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed sequentially for each item in the array.
+      The value of the current array item can be accessed using the `_item` operator with the item key set by the `:for` key. This operator is only available within the `:for` and `:parallel_for` controls.
+    controlKeys: |
       - `:for: string`: __Required__ - Used to define the key that can be used to access the value of the array item of the current iteration.
       - `:in: array`: __Required__ - Used to define the array of data to iterate over.
       - `:do: routine`: __Required__ - Used to define the routine that will be executed for each array item.

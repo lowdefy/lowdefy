@@ -19,8 +19,8 @@ _ref:
     pageTitle: :log
     filePath: controls/:log.yaml
     description: |
-      The `:log` control
-    schema: |
+      The `:log` control logs input to the server console.
+    controlKeys: |
       - `:log: any`: __Required__
       - `:level: number`:
     examples: |

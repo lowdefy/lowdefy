@@ -19,9 +19,11 @@ _ref:
     pageTitle: :parallel_for
     filePath: controls/:parallel_for.yaml
     description: |
-      The `:parallel_for` control
-    schema: |
-      - `:parallel_for: any`: __Required__
+      The `:parallel_for` control implements a parallel for loop within a routine.
+      The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed for each item in the array in parallel.
+      The value of the current array item can be accessed using the `_item` operator with the item key set by the `:parallel_for` key. This operator is only available within the `:for` and `:parallel_for` controls.
+    controlKeys: |
+      - `:parallel_for: string`: __Required__
       - `:in: any`: __Required__
       - `:do: routine`: __Required__
     examples: |

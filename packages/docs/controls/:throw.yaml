@@ -19,8 +19,8 @@ _ref:
     pageTitle: :throw
     filePath: controls/:throw.yaml
     description: |
-      The `:throw` control
-    schema: |
+      The `:throw` control is used to return with and error and will throw an error in the server console.
+    controlKeys: |
       - `:throw: any`: __Required__
       - `:cause: any`:
     examples: |

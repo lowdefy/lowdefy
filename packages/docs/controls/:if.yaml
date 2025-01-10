@@ -19,10 +19,10 @@ _ref:
     pageTitle: :if
     filePath: controls/:if.yaml
     description: |
-      The `:if` control runs the routine defined in the `:then` property if the`:if` property is `true`, and it's `:else` property if it is `false`. Generally other operators are used to evaluate the `:if` property.
-    schema: |
+      The `:if` control runs the routine defined using the `:then` key if the result of the test is `true`, and it's `:else` property if the result is `false`. The test is defined using the `:if` key. Generally other operators are used to evaluate the test.
+    controlKeys: |
       - `:if: boolean`: __Required__ - The boolean result of a test or value.
-      - `:then: routine`: __Required__ - The routine to follow if the value defined in the `:if` clause is truthy.
-      - `:else: routine`: The routine to follow if the value defined in the `:if` clause is falsy.
+      - `:then: routine`: __Required__ - The routine to follow if the test result is true.
+      - `:else: routine`: The routine to follow if the test result is false.
     examples: |
       ###### Example

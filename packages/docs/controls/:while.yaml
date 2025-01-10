@@ -19,9 +19,9 @@ _ref:
     pageTitle: :while
     filePath: controls/:while.yaml
     description: |
-      The `:while` control
-    schema: |
-      - `:while: any`: __Required__
+      The `:while` control implements a while loop within a routine. The routine defined in the `:do` key will be repeated as long as the test defined using the `:while` key is true.
+    controlKeys: |
+      - `:while: boolean`: __Required__
       - `:do: routine`: __Required__
     examples: |
       ###### Example

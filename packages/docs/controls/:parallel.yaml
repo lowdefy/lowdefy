@@ -19,8 +19,8 @@ _ref:
     pageTitle: :parallel
     filePath: controls/:parallel.yaml
     description: |
-      The `:parallel` control
-    schema: |
-      - `:parallel: routine`: __Required__
+      The `:parallel` control executes the array of given routine objects is parallel with one another. The control only completes once all defined controls have been completed.
+    controlKeys: |
+      - `:parallel: array`: __Required__
     examples: |
       ###### Example
