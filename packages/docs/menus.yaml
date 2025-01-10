@@ -643,6 +643,9 @@
         title: Actions
         icon: AiOutlineThunderbolt
       links:
+        - id: CallAPI
+          type: MenuLink
+          pageId: CallAPI
         - id: CallMethod
           type: MenuLink
           pageId: CallMethod

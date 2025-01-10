@@ -159,6 +159,7 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
+- _ref: actions/CallAPI.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
