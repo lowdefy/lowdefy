@@ -19,9 +19,9 @@ _ref:
     pageTitle: :reject
     filePath: controls/:reject.yaml
     description: |
-      The `:reject` control is used as a return an error to the client. This should be used when a user error has occurred. This control will return an error, and this will stop the execution of any controls that are defined after it.
+      The `:reject` control is used as a return an error to the client. This should be used when a user error has occurred. This control will return an error, and this will stop the execution of any routine steps that are defined after it.
     controlKeys: |
-      - `:reject: any`: __Required__
+      - `:reject: any`: __Required__ - The value that will be returned in the response object of the API call result.
       - `:cause: any`:
     examples: |
       ###### Example

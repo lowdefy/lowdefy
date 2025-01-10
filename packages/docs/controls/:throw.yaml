@@ -21,7 +21,7 @@ _ref:
     description: |
       The `:throw` control is used to return with and error and will throw an error in the server console.
     controlKeys: |
-      - `:throw: any`: __Required__
-      - `:cause: any`:
+      - `:throw: string`: __Required__ - The message that will be returned in the error object of the API call response.
+      - `:cause: any`: Additional metadata that will be returned with the error message.
     examples: |
       ###### Example

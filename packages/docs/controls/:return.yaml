@@ -19,8 +19,8 @@ _ref:
     pageTitle: :return
     filePath: controls/:return.yaml
     description: |
-      The `:return` control stops the execution of the routine/ApiCall and returns with any given data. Returns as successful.
+      The `:return` control ends the execution of the routine/ApiCall and returns with any given data. Returns as successful.
     controlKeys: |
-      - `:return: any`: __Required__
+      - `:return: any`: __Required__ - The value that will be returned in the response object of the API call result.
     examples: |
       ###### Example

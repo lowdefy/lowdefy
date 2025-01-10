@@ -21,7 +21,7 @@ _ref:
     description: |
       The `:log` control logs input to the server console.
     controlKeys: |
-      - `:log: any`: __Required__
-      - `:level: number`:
+      - `:log: any`: __Required__ - The value to be log to the console.
+      - `:level: string`: Level of log. One of info, warn, error.
     examples: |
       ###### Example

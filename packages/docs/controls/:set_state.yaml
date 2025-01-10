@@ -22,6 +22,6 @@ _ref:
       The `:set_state` control is used to set state within the api server context. It takes an object as parameters, and sets each of those values to the server `state` object.
       Server state can be accessed by using the `_state` operator. This state does not contain any of the client state.
     controlKeys: |
-      - `:set_state: any`: __Required__
+      - `:set_state: any`: __Required__ - Object to be saved to server state.
     examples: |
       ###### Example

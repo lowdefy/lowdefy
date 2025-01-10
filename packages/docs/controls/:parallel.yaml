@@ -21,6 +21,6 @@ _ref:
     description: |
       The `:parallel` control executes the array of given routine objects is parallel with one another. The control only completes once all defined controls have been completed.
     controlKeys: |
-      - `:parallel: array`: __Required__
+      - `:parallel: step[]`: __Required__ - An array of routine steps that will be executed in parallel.
     examples: |
       ###### Example

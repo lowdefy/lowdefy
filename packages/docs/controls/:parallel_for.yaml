@@ -23,8 +23,8 @@ _ref:
       The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed for each item in the array in parallel.
       The value of the current array item can be accessed using the `_item` operator with the item key set by the `:parallel_for` key. This operator is only available within the `:for` and `:parallel_for` controls.
     controlKeys: |
-      - `:parallel_for: string`: __Required__
-      - `:in: any`: __Required__
-      - `:do: routine`: __Required__
+      - `:parallel_for: string`: __Required__ - Used to define the key that can be used to access the value of the array item of the executing iteration.
+      - `:in: any`: __Required__ - Used to define the array of data to iterate over.
+      - `:do: routine`: __Required__ - Used to define the routine that will be executed for each array item in parallel.
     examples: |
       ###### Example

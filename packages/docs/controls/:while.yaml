@@ -21,7 +21,7 @@ _ref:
     description: |
       The `:while` control implements a while loop within a routine. The routine defined in the `:do` key will be repeated as long as the test defined using the `:while` key is true.
     controlKeys: |
-      - `:while: boolean`: __Required__
-      - `:do: routine`: __Required__
+      - `:while: boolean`: __Required__ - The test that will determine whether or not the defined routine should execute again.
+      - `:do: routine`: __Required__ - The routine to run while the test condition holds.
     examples: |
       ###### Example
