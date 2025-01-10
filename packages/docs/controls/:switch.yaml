@@ -26,4 +26,31 @@ _ref:
           - `:then: routine`: __Required__ - The routine to execute if the test is `true`.
       - `:default: routine`:  The routine to execute if all the `:case` tests are `false`.
     examples: |
-      ###### Example
+      ###### Simple Example
+      ```
+      - :set_state:
+          a: 1
+      - :switch:
+          - :case:
+              _eq:
+                - _state: a
+                - 0
+            :then:
+              :log: 0
+          - :case:
+              _eq:
+                - _state: a
+                - 1
+            :then:
+              :log: 1
+          :case:
+              _eq:
+                - _state: a
+                - 2
+            :then:
+              :log: 2
+        :default:
+          :log: default
+      ```
+      Logs:
+      `1`

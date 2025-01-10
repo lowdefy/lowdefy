@@ -24,4 +24,28 @@ _ref:
       - `:while: boolean`: __Required__ - The test that will determine whether or not the defined routine should execute again.
       - `:do: routine`: __Required__ - The routine to run while the test condition holds.
     examples: |
-      ###### Example
+      ###### Simple Example
+      ```
+      - :set_state:
+          count: 0
+      - :while:
+          _lt:
+            - _state: count
+            - 5
+        :do:
+          - :log:
+              _item: count
+          - :set_state:
+              count:
+                _sum:
+                  - _state: count
+                  - 1
+      ```
+      Logs:
+      ```
+      0
+      1
+      2
+      3
+      4
+      ```

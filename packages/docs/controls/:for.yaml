@@ -27,4 +27,20 @@ _ref:
       - `:in: array`: __Required__ - Used to define the array of data to iterate over.
       - `:do: routine`: __Required__ - Used to define the routine that will be executed for each array item.
     examples: |
-      ###### Example
+      ###### Simple Example
+      ```
+      - :for: count
+        :in:
+          - 1
+          - 2
+          - 3
+        :do:
+          :log:
+            _item: count
+      ```
+      Logs:
+      ```
+        1
+        2
+        3
+      ```

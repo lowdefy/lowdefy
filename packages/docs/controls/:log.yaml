@@ -24,4 +24,9 @@ _ref:
       - `:log: any`: __Required__ - The value to be log to the console.
       - `:level: string`: Level of log. One of info, warn, error.
     examples: |
-      ###### Example
+      ###### Simple Example
+      ```
+      :log: 'New Log Message'
+      ```
+      Logs:
+      `New Log Message`

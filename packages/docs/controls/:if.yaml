@@ -25,4 +25,13 @@ _ref:
       - `:then: routine`: __Required__ - The routine to execute if the test result is true.
       - `:else: routine`: The routine to execute if the test result is false.
     examples: |
-      ###### Example
+      ###### Simple Example
+      ```
+      :if: true
+      :then:
+        :log: 'Test was true'
+      :else:
+        :log: 'Test was false'
+      ```
+      Logs:
+      `Test was true`

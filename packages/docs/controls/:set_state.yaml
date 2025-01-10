@@ -25,3 +25,11 @@ _ref:
       - `:set_state: any`: __Required__ - Object to be saved to server state.
     examples: |
       ###### Example
+      ```
+      - :set_state:
+          best_paper_company: "Dunder Mifflin"
+      - :log:
+          _state: best_paper_company
+      ```
+      Logs:
+      `Dunder Mifflin`
