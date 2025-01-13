@@ -18,6 +18,10 @@ _ref:
     pageId: :log
     pageTitle: :log
     filePath: controls/:log.yaml
+    types: |
+      ```
+      ({:log: any, :level: string}): void
+      ```
     description: |
       The `:log` control logs input to the server console.
     controlKeys: |

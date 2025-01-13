@@ -18,6 +18,10 @@ _ref:
     pageId: :try
     pageTitle: :try
     filePath: controls/:try.yaml
+    types: |
+      ```
+      ({:try: routine, :catch: routine, :finally: routine}): void
+      ```
     description: |
       If one control in the routine chain defined in the `:try` key fails by throwing an error, the steps in the list following the failed control will not be executed. To handle any errors thrown by a routine element, a routine can be provided using `catch` key.
       The routine defined using the `:finally` key will be run regardless of whether or not the routine throws an error.

@@ -18,6 +18,10 @@ _ref:
     pageId: :parallel_for
     pageTitle: :parallel_for
     filePath: controls/:parallel_for.yaml
+    types: |
+      ```
+      ({:parallel_for: string, :in: any[], :do: routine}): void
+      ```
     description: |
       The `:parallel_for` control implements a parallel for loop within a routine.
       The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed for each item in the array in parallel.

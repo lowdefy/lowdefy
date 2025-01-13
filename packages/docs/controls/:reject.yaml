@@ -18,6 +18,10 @@ _ref:
     pageId: :reject
     pageTitle: :reject
     filePath: controls/:reject.yaml
+    types: |
+      ```
+      ({:reject: string, :cause: any}): void
+      ```
     description: |
       The `:reject` control is used as a return an error to the client. This should be used when a user error has occurred. This control will return an error, and this will stop the execution of any routine steps that are defined after it.
     controlKeys: |

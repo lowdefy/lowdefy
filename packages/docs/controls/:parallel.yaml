@@ -18,6 +18,10 @@ _ref:
     pageId: :parallel
     pageTitle: :parallel
     filePath: controls/:parallel.yaml
+    types: |
+      ```
+      ({:parallel: step[]}): void
+      ```
     description: |
       The `:parallel` control executes the array of given routine objects is parallel with one another. The control only completes once all defined controls have been completed.
     controlKeys: |

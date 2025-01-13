@@ -18,6 +18,10 @@ _ref:
     pageId: :return
     pageTitle: :return
     filePath: controls/:return.yaml
+    types: |
+      ```
+      ({:return: any}): void
+      ```
     description: |
       The `:return` control ends the execution of the routine/ApiCall and returns with any given data. Returns as successful.
     controlKeys: |

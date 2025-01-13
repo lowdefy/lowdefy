@@ -18,6 +18,10 @@ _ref:
     pageId: :while
     pageTitle: :while
     filePath: controls/:while.yaml
+    types: |
+      ```
+      ({:while: boolean, :do: routine}): void
+      ```
     description: |
       The `:while` control implements a while loop within a routine. The routine defined in the `:do` key will be repeated as long as the test defined using the `:while` key is true.
     controlKeys: |

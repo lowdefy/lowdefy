@@ -18,6 +18,10 @@ _ref:
     pageId: :switch
     pageTitle: :switch
     filePath: controls/:switch.yaml
+    types: |
+      ```
+      ({:switch: [{:case: boolean, :then: routine], :default: routine}): void
+      ```
     description: |
       The `:switch` control evaluates an array of conditions and executes the routine defined by the `:then` key of the first item for which the `:case` key evaluates to `true`. If no condition evaluates to `true`, the routine defined in the `default` key is executed.
     controlKeys: |

@@ -18,6 +18,10 @@ _ref:
     pageId: :if
     pageTitle: :if
     filePath: controls/:if.yaml
+    types: |
+      ```
+      ({:if: boolean, :then: routine, :else: routine}): void
+      ```
     description: |
       The `:if` control runs the routine defined using the `:then` key if the result of the test is `true`, and the `:else` key if the result is `false`. The test is defined using the `:if` key. Generally other operators are used to evaluate the test.
     controlKeys: |

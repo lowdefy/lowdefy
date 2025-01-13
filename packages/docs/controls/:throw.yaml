@@ -18,6 +18,10 @@ _ref:
     pageId: :throw
     pageTitle: :throw
     filePath: controls/:throw.yaml
+    types: |
+      ```
+      ({:throw: string, :cause: any}): void
+      ```
     description: |
       The `:throw` control is used to return with and error and will throw an error in the server console.
     controlKeys: |
