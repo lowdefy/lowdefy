@@ -1,24 +1,72 @@
-id: text_form
+id: code_row
 type: Box
 blocks:
-  - id: First Name
-    type: TextInput
-    properties:
-      type: text
 
-  - id: Last Name
-    type: TextInput
-    required: true
+  - id: markdown_code
+    type: MarkdownWithCode
     properties:
-      type: text
+      content: |
+        ```yaml
+        - id: First Name
+          type: TextInput
+          properties:
+            type: text
 
-  - id: Email Address
-    type: TextInput
-    required: true
-    properties:
-      type: email
+        - id: Last Name
+          type: TextInput
+          required: true
+          properties:
+            type: text
 
-  - id: Password
-    type: TextInput
-    properties:
-      type: password
+        - id: Email Address
+          type: TextInput
+          required: true
+          properties:
+            type: email
+
+        - id: Password
+          type: TextInput
+          properties:
+            type: password
+        ```
+
+  - id: text_form_column
+    type: Box
+    layout: 
+      span: 16
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Actual Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: First Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Last Name
+            type: TextInput
+            layout: 
+              span: 12
+            required: true
+            properties:
+              type: text
+
+          - id: Email Address
+            type: TextInput
+            required: true
+            properties:
+              type: email
+
+          - id: Password
+            type: TextInput
+            properties:
+              type: password

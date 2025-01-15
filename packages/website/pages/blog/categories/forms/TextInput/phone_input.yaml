@@ -1,5 +1,20 @@
-id: text_form
+id: code_row
 type: Box
 blocks:
-  - id: Phone Number
+  - id: markdown_code
+    type: MarkdownWithCode
+    properties:
+      content: |
+        ```yaml
+        - id: Phone Number
+          type: PhoneNumberInput
+          properties:
+            label: 
+              title: Phone Number
+        ```
+
+  - id: phone_number
     type: PhoneNumberInput
+    properties:
+      label: 
+        title: Phone Number
