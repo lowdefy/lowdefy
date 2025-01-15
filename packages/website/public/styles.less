@@ -4,7 +4,7 @@
 }
 
 @primary-color: #1990ff;
-@border-radius-base: 20px;
+@border-radius-base: 5px;
 
 :root {
   --primary-color: @primary-color;
@@ -23,7 +23,42 @@
   padding: 1rem;
 }
 
-#text_form,
+#bl-code_row {
+  margin: 1rem auto;
+}
+
+#ar-code_row-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+#ar-text_form_column-content {
+  flex: 1;
+  gap: 1rem;
+}
+
+#bl-text_form {
+  padding: 1.5rem;
+  border: 1px solid @primary-color;
+  border-radius: @border-radius-base;
+}
+
+#bl-markdown_code {
+  flex: 0;
+
+  & pre {
+    margin-bottom: 0;
+  }
+}
+
+#bl-phone_number {
+  flex: 1;
+}
+
+// #text_form,
 #date_time_selector,
 #date_selector,
 #date_range_selector {
@@ -34,7 +69,7 @@
 
   margin: 1rem auto;
   padding: 1rem;
-  border: 2px solid grey;
+  border: 1px solid @primary-color;
   border-radius: 1rem;
   width: 80%;
   max-width: 500px;
@@ -48,9 +83,6 @@ body {
 }
 
 // https://typescale.com/?size=17&scale=1.250&text=Abc&font=Inter&fontweight=800&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false
-html {
-  font-size: 103%;
-}
 
 /*18px*/
 
