@@ -1,0 +1,87 @@
+id: form_state
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout:
+      span: 12
+    properties:
+      content: |
+        ```yaml
+        - id: Name
+          type: TextInput
+          properties:
+            type: text
+            placeholder: John
+
+        - id: Surname
+          type: TextInput
+          properties:
+            type: text
+            placeholder: Smith
+
+          - id: Username
+            type: Html
+            properties:
+              html:
+                _string.concat:
+                  - '<b>Username: </b></br>'
+                  - _string.charAt:
+                      on:
+                        _if_none:
+                          - _state: Name
+                          - "John"
+                      index: 0
+                  - _if_none:
+                      - _state: Surname
+                      - "Smith"
+        ```
+
+  - id: username_state
+    type: Card
+    layout: 
+      span: 12
+      align: middle
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: Name
+            type: TextInput
+            properties:
+              type: text
+              placeholder: John
+
+          - id: Surname
+            type: TextInput
+            properties:
+              type: text
+              placeholder: Smith
+
+          - id: Username
+            type: Html
+            properties:
+              html:
+                _string.concat:
+                  - '<b>Username: </b></br>'
+                  - _string.charAt:
+                      on:
+                        _if_none:
+                          - _state: Name
+                          - "John"
+                      index: 0
+                  - _if_none:
+                      - _state: Surname
+                      - "Smith"
+

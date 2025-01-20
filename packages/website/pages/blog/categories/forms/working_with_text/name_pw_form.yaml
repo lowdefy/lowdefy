@@ -1,0 +1,70 @@
+id: name_and_password_input
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout:
+      span: 8
+    properties:
+      content: |
+        ```yaml
+          - id: First Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Last Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Password
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: password
+        ```
+
+  - id: name_and_password_render
+    type: Card
+    layout: 
+      span: 16
+      align: middle
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: First Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Last Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Password
+            type: TextInput
+            properties:
+              type: password

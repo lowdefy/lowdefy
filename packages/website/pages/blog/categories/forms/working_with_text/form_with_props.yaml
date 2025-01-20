@@ -1,0 +1,85 @@
+id: form_with_props
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout:
+      span: 8
+    properties:
+      content: |
+        ```yaml
+        - id: Name
+          type: TextInput
+          layout: 
+            span: 12
+          properties:
+            type: text
+            disabled: true
+            label:
+              colon: false
+
+        - id: Surname
+          type: TextInput
+          layout: 
+            span: 12
+          properties:
+            type: text
+            maxLength: 8
+            label:
+              align: right
+              colon: false
+
+        - id: Message
+          type: TextArea
+          properties:
+            label:
+              colon: false
+        ```
+
+  - id: name_and_password_with_props
+    type: Card
+    layout: 
+      span: 16
+      align: middle
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+              disabled: true
+              label:
+                colon: false
+
+          - id: Surname
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+              maxLength: 8
+              label:
+                align: right
+                colon: false
+
+          - id: Message
+            type: TextArea
+            properties:
+              allowClear: true
+              label:
+                colon: false

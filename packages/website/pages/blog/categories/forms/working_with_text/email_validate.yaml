@@ -1,0 +1,83 @@
+id: email_validation
+type: Box
+layout: 
+  contentGutter: 16
+  gutter: 16
+blocks:
+
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout: 
+      span: 16
+    properties:
+      content: |
+        ```yaml
+          - id: email
+            type: TextInput
+            validate:
+              - message: Please enter an email address.
+                status: error
+                pass:
+                  _ne:
+                    - _state: email
+                    - null
+              - message: Please provide a valid email address.
+                status: error
+                pass:
+                  _regex: '^[a-zA-Z]+@[a-zA-Z]+\.{1}[a-zA-Z]{2,}$'
+            properties:
+              title: email
+          - id: submit_button
+            type: Button
+            properties:
+              title: Submit
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+        ```
+
+  - id: email_render
+    type: Card
+    layout: 
+      span: 8
+      align: middle
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: email
+            type: TextInput
+            required: true
+            validate:
+              - message: Please enter an email address.
+                status: error
+                pass:
+                  _ne:
+                    - _state: email
+                    - null
+              - message: Please provide a valid email address.
+                status: error
+                pass:
+                  _regex: '^[a-zA-Z0-9]+@[a-zA-Z]+\.{1}[a-zA-Z]{2,}$'
+            properties:
+              title: email
+          - id: submit_button
+            type: Button
+            properties:
+              title: Submit
+              block: true
+              type: primary # button with primary color
+              icon: AiOutlineSave
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+

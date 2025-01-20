@@ -1,0 +1,146 @@
+id: code_row
+type: Box
+blocks:
+
+  - id: markdown_code
+    type: MarkdownWithCode
+    properties:
+      content: |
+        ```yaml
+          - id: First Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Last Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: email
+            type: TextInput
+            validate:
+              - message: Please enter a email address.
+                status: error
+                pass:
+                  _ne:
+                    - _state: email
+                    - null
+              - message: Please provide a valid email address.
+                status: error
+                pass:
+                  _regex: '^(([^<>()\[\]\\.,;:\s@"]+...'
+            properties:
+              title: email
+
+          - id: Password
+            type: TextInput
+            properties:
+              type: password
+          - id: reset_button
+            type: Button
+            layout:
+              span: 12 
+            properties:
+              title: Reset
+              block: true 
+              icon: AiOutlineClear
+            events:
+              onClick:
+                - id: reset
+                  type: Reset 
+          - id: submit_button
+            type: Button
+            layout:
+              span: 12 
+            properties:
+              title: Submit
+              block: true
+              type: primary 
+              icon: AiOutlineSave
+            events:
+              onClick:
+                - id: validate
+                  type: Validate
+        ```
+
+  - id: text_form_column
+    type: Box
+    layout: 
+      span: 16
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: text_form
+        type: Box
+        layout: 
+          contentGutter: 16
+        blocks:
+          - id: First Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: Last Name
+            type: TextInput
+            layout: 
+              span: 12
+            properties:
+              type: text
+
+          - id: email
+            type: TextInput
+            required: true
+            validate:
+              - message: Please enter an email address.
+                status: error
+                pass:
+                  _ne:
+                    - _state: email
+                    - null
+              - message: Please provide a valid email address.
+                status: error
+                pass:
+                  _regex: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+                  # _regex: '^(((?<exc>[^<>()\[\]\\.,;:\s@"]+)\.*(?&exc))|(".+"))@(\[((?<ip>[0-9]{1,3})\.){3}(?&ip)]|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+            properties:
+              title: email
+
+          - id: Password
+            type: TextInput
+            properties:
+              type: password
+          - id: reset_button
+            type: Button
+            layout:
+              span: 12 
+            properties:
+              title: Reset
+              block: true # Make the button fill all the space available to it
+              icon: AiOutlineClear
+            events:
+              onClick:
+                - id: reset
+                  type: Reset # Make the button a plain button
+          - id: submit_button
+            type: Button
+            layout:
+              span: 12 
+            properties:
+              title: Submit
+              block: true
+              type: primary # button with primary color
+              icon: AiOutlineSave
+            events:
+              onClick:
+                - id: validate
+                  type: Validate

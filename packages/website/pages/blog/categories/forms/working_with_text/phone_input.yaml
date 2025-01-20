@@ -1,0 +1,65 @@
+id: phone_input
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout:
+      align: middle
+      span: 8
+    properties:
+      content: |
+        ```yaml
+        - id: phone_default
+          type: PhoneNumberInput
+          properties:
+            label: 
+              title: Phone Number
+
+        - id: phone_custom_region
+          type: PhoneNumberInput
+          properties:
+            defaultRegion: ZA
+            allowedRegions:
+              - BW
+              - ZA
+              - MZ
+              - NA
+              - ZW
+            label: 
+              title: Phone Number
+        ```
+
+  - id: phone_column
+    type: Card
+    layout: 
+      align: middle
+      contentGutter: 16
+      gutter: 16
+      span: 16
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: phone_default
+        type: PhoneNumberInput
+        properties:
+          label: 
+            title: Phone Number
+
+      - id: phone_custom_region
+        type: PhoneNumberInput
+        properties:
+          defaultRegion: ZA
+          allowedRegions:
+            - BW
+            - ZA
+            - MZ
+            - NA
+            - ZW
+          label: 
+            title: Phone Number
