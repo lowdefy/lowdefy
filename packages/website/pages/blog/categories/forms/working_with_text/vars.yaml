@@ -6,8 +6,8 @@ post:
   id: working_with_text
   slug: working-with-text
   category: forms
-  title: Input Blocks in Lowdefy Forms - Part 1
-  subtitle: Managing Text Input in Lowdefy Forms
+  title: Building Forms in Lowdefy - Part 1
+  subtitle: Text Input
   description: Learn how to implement text input blocks in Lowdefy forms 
   image: ./images/blogs/form-text-input.jpg
   date: 15 December 2024

@@ -1,4 +1,4 @@
-id: date_range_input
+id: date_input
 type: Box
 layout:
   contentGutter: 16
@@ -12,11 +12,17 @@ blocks:
     properties:
       content: |
         ```yaml
-        - id: date_range
-          type: DateRangeSelector
+        - id: date_only
+          type: DateSelector
           properties:
             label: 
-              title: Date Range
+              title: Date
+
+        - id: date_time
+          type: DateTimeSelector
+          properties:
+            label: 
+              title: Date and Time
         ```
 
   - id: date_column
@@ -32,8 +38,14 @@ blocks:
         properties:
           content: |
             ### Rendered Output
-      - id: date_range
-        type: DateRangeSelector
+      - id: date_only
+        type: DateSelector
         properties:
           label: 
-            title: Date Range
+            title: Date
+
+      - id: date_time
+        type: DateTimeSelector
+        properties:
+          label: 
+            title: Date and Time
