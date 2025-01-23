@@ -3,6 +3,9 @@ type: Box
 layout:
   contentGutter: 16
   gutter: 16
+style: 
+  marginTop: 1rem
+  marginBottom: 1rem
 blocks:
   - id: markdown_code
     type: MarkdownWithCode

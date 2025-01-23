@@ -45,6 +45,11 @@ _ref: pages/blog/categories/forms/date-time/DateAndTimeSelectors.yaml
 ```
 
 The date and time formats can also be configured, meaning the date can be presented as 28/12/24 or 2024-12-28, for example.
+
+```yaml ldf
+_ref: pages/blog/categories/forms/date-time/DateFormat.yaml
+```
+
 This also means that the minute and second columns can be omitted, removing them from both display and selection.
 
 ## DateRangeSelector
@@ -77,6 +82,22 @@ _ref: pages/blog/categories/forms/date-time/FilterCompare.yaml
 ```
 
 By default, the minute options increment in steps of 5, while the second block has been configured for 15-minute increments.
+
+### Disabled Dates
+
+In many cases, users should be prevented from selecting certain dates and date ranges.
+
+Each Lowdefy Date block has a property to set these dates as required.
+
+```yaml ldf
+_ref: pages/blog/categories/forms/date-time/DisabledDates.yaml
+```
+
+The block above has been configured to prevent the user from selecting the first week of February.
+
+> Note:  
+> Date values are set to UTC by default, meaning the timezone must be set as required.
+> To ensure the local timezone is used,
 
 ## Learn More
 

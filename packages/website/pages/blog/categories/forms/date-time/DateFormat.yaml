@@ -1,4 +1,4 @@
-id: date_input
+id: date_formats
 type: Box
 layout:
   contentGutter: 16
@@ -11,44 +11,45 @@ blocks:
     type: MarkdownWithCode
     layout:
       align: middle
-      span: 8
+      span: 12
     properties:
       content: |
         ```yaml
-        - id: date_only
+        - id: date_format_block
           type: DateSelector
           properties:
+            format:
+              _state: date_format_selector
             label: 
               title: Date
-
-        - id: date_time
-          type: DateTimeSelector
-          properties:
-            label: 
-              title: Date and Time
         ```
 
-  - id: date_column
+  - id: date_format_column
     type: Card
     layout: 
       align: middle
       contentGutter: 16
       gutter: 16
-      span: 16
+      span: 12
     blocks:
       - id: form_description
         type: Markdown
         properties:
           content: |
             ### Rendered Output
-      - id: date_only
+      - id: date_format_block
         type: DateSelector
         properties:
+          format:
+            _state: date_format_selector
           label: 
             title: Date
 
-      - id: date_time
-        type: DateTimeSelector
+      - id: date_format_selector
+        type: ButtonSelector
         properties:
-          label: 
-            title: Date and Time
+          options:
+            - value: 'YYYY-MM-DD'
+            - value: 'MM/DD/YYYY'
+          label:
+            title: Format

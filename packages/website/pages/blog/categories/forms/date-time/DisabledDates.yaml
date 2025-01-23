@@ -1,4 +1,4 @@
-id: date_input
+id: disabled_dates
 type: Box
 layout:
   contentGutter: 16
@@ -11,44 +11,40 @@ blocks:
     type: MarkdownWithCode
     layout:
       align: middle
-      span: 8
+      span: 12
     properties:
       content: |
         ```yaml
-        - id: date_only
-          type: DateSelector
+        - id: disabled_dates_block
+          type: DateRangeSelector
           properties:
+            disabledDates:
+              ranges:
+              - - _date: 2025-02-02
+                - _date: 2025-02-08
             label: 
-              title: Date
-
-        - id: date_time
-          type: DateTimeSelector
-          properties:
-            label: 
-              title: Date and Time
+              title: Date Range
         ```
 
-  - id: date_column
+  - id: disabled_dates_column
     type: Card
     layout: 
       align: middle
       contentGutter: 16
       gutter: 16
-      span: 16
+      span: 12
     blocks:
       - id: form_description
         type: Markdown
         properties:
           content: |
             ### Rendered Output
-      - id: date_only
-        type: DateSelector
+      - id: disabled_dates_block
+        type: DateRangeSelector
         properties:
+          disabledDates:
+            ranges:
+              - - _date: 2025-02-02
+                - _date: 2025-02-08
           label: 
-            title: Date
-
-      - id: date_time
-        type: DateTimeSelector
-        properties:
-          label: 
-            title: Date and Time
+            title: Date Range
