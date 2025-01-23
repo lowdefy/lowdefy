@@ -1,4 +1,34 @@
-id: upload-button
-type: S3UploadButton
+id: code_row
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout: 
+      span: 12
+      align: middle
+    properties:
+      content: |
+        ```yaml
+        - id: upload-button
+          type: S3UploadButton
+        ```
+
+  - id: button_column
+    type: Card
+    layout: 
+      span: 12
+      align: middle
+      contentGutter: 16
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: upload-button
+        type: S3UploadButton
 
 

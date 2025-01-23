@@ -6,8 +6,8 @@ post:
   id: connections-requests
   slug: connections-requests
   category: forms
-  title: Input Blocks in Lowdefy Forms - Part 6
-  subtitle: Connections and Requests in Lowdefy
+  title: Building Forms in Lowdefy - Part 3
+  subtitle: Connections and Requests
   description: Learn how to implement Connections and Requests in Lowdefy forms 
   image: ./images/blogs/generate-pdf.jpg
   date: 15 December 2024

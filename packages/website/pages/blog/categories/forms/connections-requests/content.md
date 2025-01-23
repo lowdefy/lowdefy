@@ -1,16 +1,24 @@
-# Working with Forms in Lowdefy
+# Building Forms in Lowdefy
 
-## Pt. 6: Connections and Requests
+## Pt. 2: Connections & Requests
 
 Lowdefy's input blocks have excellent functionality out of the box, but a large part of what makes Lowdefy so powerful is Connections.
 
-In a Lowdefy app you can integrate with other services like API's or databases using Connections and Requests.
+Lowdefy apps can integrate with other services like APIs or databases using Connections and Requests.
 
 Connections configure the settings to the external service, and often contain parameters like connection strings, URLs and secrets like passwords or API keys.
 
 Requests are used to interact with the connection, such as inserting a data record, executing a query or calling an API end-point.
 
 File management is a great example to illustrate the power of Connections in Lowdefy.
+
+## File Management
+
+In addition to general text input, users may need to upload files.
+
+Whether to provide a scan of an identity document or a signed PDF document, it is important that your forms are able to handle these requirements.
+
+Lowdefy features blocks with Amazon S3 integration to store files uploaded by users.
 
 ## Amazon S3
 
@@ -35,9 +43,47 @@ Lowdefy's integration with S3 uses presigned links, which allow access to privat
 
 Lowdefy has two types of Requests to facilitate this:
 
-1. AwsS3PresignedGetObject, which is used to get a download link for an object in S3.
+1. `AwsS3PresignedGetObject`, which is used to get a download link for an object in S3.
 
-2. AwsS3PresignedPostPolicy, which is used to create a policy to allow file upload to S3.
+2. `AwsS3PresignedPostPolicy`, which is used to create a policy to allow file upload to S3.
+
+## S3UploadButton
+
+Lowdefy's file upload blocks include upload buttons, drag & drop dialog boxes, and image upload fields.
+
+These blocks provide the standard UI and UX that users are familiar with.
+
+The S3UploadButton opens the file system dialog when clicked, and is presented as a button with an icon and "Upload" text.
+
+```yaml ldf
+_ref: pages/blog/categories/forms/file-upload/upload-button.yaml
+```
+
+It is a very compact block, taking up little space on the form
+
+## S3UploadDragger
+
+When the file upload is the main focus, drag and drop is the better option.
+
+The S3UploadDragger can still be clicked like the S3UploadButton, but it also allows the user to drag and drop files immediately.
+
+```yaml ldf
+_ref: pages/blog/categories/forms/file-upload/upload-dragger.yaml
+```
+
+This field also takes up more space on the page, drawing in the users attention.
+
+## S3UploadPhoto
+
+With the functionality of this button is very similar to the standard upload button, this block fills a common requirement within file upload.
+
+The block clearly indicates to the user that the field is specifically for images, and is preconfigured to accept image files only.
+
+```yaml ldf
+_ref: pages/blog/categories/forms/file-upload/upload-photo.yaml
+```
+
+Not only does this make user experience more intuitive, but it makes configuration much more convenient for the developer as well.
 
 ## Learn More
 

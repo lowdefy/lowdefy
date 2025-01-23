@@ -1,0 +1,54 @@
+id: filter_comparison
+type: Box
+layout:
+  contentGutter: 16
+  gutter: 16
+blocks:
+  - id: markdown_code
+    type: MarkdownWithCode
+    layout:
+      align: middle
+      span: 12
+    properties:
+      content: |
+        ```yaml
+        - id: default_time
+          type: DateTimeSelector
+          properties:
+            label: 
+              title: Default Time Selector
+
+        - id: time_with_steps
+          type: DateTimeSelector
+          properties:
+            minuteStep: 15
+            label: 
+              title: Time with Steps
+        ```
+
+  - id: vs_column
+    type: Card
+    layout: 
+      align: middle
+      contentGutter: 16
+      gutter: 16
+      span: 12
+    blocks:
+      - id: form_description
+        type: Markdown
+        properties:
+          content: |
+            ### Rendered Output
+      - id: default_time
+        type: DateTimeSelector
+        properties:
+          label: 
+            title: Default Time Selector
+
+      - id: time_with_steps
+        type: DateTimeSelector
+        properties:
+          minuteStep: 15
+          label: 
+            title: Time with Steps
+
