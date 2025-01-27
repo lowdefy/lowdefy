@@ -1,6 +1,6 @@
 # Working with Forms in Lowdefy
 
-## Pt. 3: Date and Time
+## Pt. 2: Date and Time
 
 Textboxes and checkboxes are the fundamental requirements in web form design.
 

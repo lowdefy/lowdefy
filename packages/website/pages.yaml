@@ -17,7 +17,6 @@
 - _ref: pages/contact-us/contact-us.yaml
 - _ref: pages/terms/terms.yaml
 - _ref: pages/blog/sections/blog.yaml
-- _ref: pages/blog/categories/forms/TextInput.yaml
 - _ref: pages/blog/categories/forms/working_with_text.yaml
 - _ref: pages/blog/categories/forms/file-upload.yaml
 - _ref: pages/blog/categories/forms/connections-requests.yaml
