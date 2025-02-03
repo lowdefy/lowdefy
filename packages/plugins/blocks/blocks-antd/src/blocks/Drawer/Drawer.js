@@ -19,7 +19,7 @@ import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-async function handleClose({ methods, rename, setOpen }) {
+const handleClose = async ({ methods, rename, setOpen }) => {
   const response = await methods.triggerEvent({
     name: get(rename, 'events.onClose', { default: 'onClose' }),
   });
@@ -27,23 +27,23 @@ async function handleClose({ methods, rename, setOpen }) {
     return;
   }
   setOpen(false);
-}
+};
 
-function handleOpen({ methods, rename, setOpen }) {
+const handleOpen = ({ methods, rename, setOpen }) => {
   methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
   setOpen(true);
-}
+};
 
-function handleToggle({ openState, methods, rename, setOpen }) {
+const handleToggle = ({ openState, methods, rename, setOpen }) => {
   methods.triggerEvent({ name: get(rename, 'events.onToggle', { default: 'onToggle' }) });
   if (openState) {
     handleClose({ methods, rename, setOpen });
   } else {
     handleOpen({ methods, rename, setOpen });
   }
-}
+};
 
-function handleAfterOpenChange({ drawerOpen, methods, rename }) {
+const handleAfterOpenChange = ({ drawerOpen, methods, rename }) => {
   methods.triggerEvent({
     name: get(rename, 'events.afterOpenChange', { default: 'afterOpenChange' }),
     event: { drawerOpen },
@@ -53,15 +53,15 @@ function handleAfterOpenChange({ drawerOpen, methods, rename }) {
       name: get(rename, 'events.afterClose', { default: 'afterClose' }),
     });
   }
-}
+};
 
-function setOpenState({ open, methods, rename, setOpen }) {
+const setOpenState = ({ open, methods, rename, setOpen }) => {
   if (open) {
     handleOpen({ methods, rename, setOpen });
   } else {
     handleClose({ methods, rename, setOpen });
   }
-}
+};
 
 const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose }) => {
   const [openState, setOpen] = useState(false);
