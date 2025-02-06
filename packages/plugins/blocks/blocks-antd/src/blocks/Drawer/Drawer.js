@@ -70,7 +70,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
       handleToggle({ openState, methods, rename, setOpen })
     );
     methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
-      setOpenState({ open, methods, rename, setOpen })
+      setOpenState({ open: Boolean(open), methods, rename, setOpen })
     );
   });
 
