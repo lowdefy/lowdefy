@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- 156fa7f2e: Add 'link' filter to the nunjucks operator.
+
+### Patch Changes
+
+- 729a9780a: Rename nunjucks link filter to urlQuery.
+  - @lowdefy/helpers@4.4.0
+
+## 4.3.2
+
+### Patch Changes
+
+- @lowdefy/helpers@4.3.2
+
+## 4.3.1
+
+### Patch Changes
+
+- @lowdefy/helpers@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes

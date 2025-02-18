@@ -1,5 +1,32 @@
 # Change Log
 
+## 4.4.0
+
+### Minor Changes
+
+- bcfbb1a9b: Add autoClearSearchValue property to MultipleSelector block.
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.4.0
+- @lowdefy/helpers@4.4.0
+
+## 4.3.2
+
+### Patch Changes
+
+- efefb8ca0: Fix elementId on MultipleSelector.
+  - @lowdefy/block-utils@4.3.2
+  - @lowdefy/helpers@4.3.2
+
+## 4.3.1
+
+### Patch Changes
+
+- 3e574857c: Bug fix: Randomize popup dom element ids to better attach on block reuse on page.
+  - @lowdefy/block-utils@4.3.1
+  - @lowdefy/helpers@4.3.1
+
 ## 4.3.0
 
 ### Patch Changes

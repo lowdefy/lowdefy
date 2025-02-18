@@ -14,14 +14,16 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
+import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
-async function clearTestMongoDb({ collection }) {
-  const client = new MongoClient(process.env.MONGO_URL);
-  await client.connect();
-  const db = client.db();
-  await db.collection(collection).deleteMany({});
-  await client.close();
-}
+const urlQueryFilter = (url, urlQuery) => {
+  const query = type.isNone(urlQuery) ? '' : `${urlQueryFn.stringify(urlQuery)}`;
 
-export default clearTestMongoDb;
+  if (type.isString(url)) {
+    return `${url}${query ? `?${query}` : ''}`;
+  }
+
+  return undefined;
+};
+
+export default urlQueryFilter;

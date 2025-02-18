@@ -9,6 +9,11 @@
         "default": true,
         "description": "Allow the user to clear the selected value, sets the value to null."
       },
+      "autoClearSearchValue": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether the current search will be cleared on selecting an item."
+      },
       "autoFocus": {
         "type": "boolean",
         "default": false,

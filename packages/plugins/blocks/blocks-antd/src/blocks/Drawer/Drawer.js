@@ -19,27 +19,61 @@ import { Drawer } from 'antd';
 import { get } from '@lowdefy/helpers';
 import { blockDefaultProps } from '@lowdefy/block-utils';
 
-const triggerSetOpen = ({ state, setOpen, methods, rename }) => {
-  if (!state) {
-    methods.triggerEvent({ name: get(rename, 'events.onClose', { default: 'onClose' }) });
+const handleClose = async ({ methods, rename, setOpen }) => {
+  const response = await methods.triggerEvent({
+    name: get(rename, 'events.onClose', { default: 'onClose' }),
+  });
+  if (response.success === false || response.bounced === true) {
+    return;
   }
-  if (state) {
-    methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
-  }
+  setOpen(false);
+};
+
+const handleOpen = ({ methods, rename, setOpen }) => {
+  methods.triggerEvent({ name: get(rename, 'events.onOpen', { default: 'onOpen' }) });
+  setOpen(true);
+};
+
+const handleToggle = ({ openState, methods, rename, setOpen }) => {
   methods.triggerEvent({ name: get(rename, 'events.onToggle', { default: 'onToggle' }) });
-  setOpen(state);
+  if (openState) {
+    handleClose({ methods, rename, setOpen });
+  } else {
+    handleOpen({ methods, rename, setOpen });
+  }
+};
+
+const handleAfterOpenChange = ({ drawerOpen, methods, rename }) => {
+  methods.triggerEvent({
+    name: get(rename, 'events.afterOpenChange', { default: 'afterOpenChange' }),
+    event: { drawerOpen },
+  });
+  if (!drawerOpen) {
+    methods.triggerEvent({
+      name: get(rename, 'events.afterClose', { default: 'afterClose' }),
+    });
+  }
+};
+
+const setOpenState = ({ open, methods, rename, setOpen }) => {
+  if (open) {
+    handleOpen({ methods, rename, setOpen });
+  } else {
+    handleClose({ methods, rename, setOpen });
+  }
 };
 
 const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose }) => {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
-      triggerSetOpen({ state: !openState, setOpen, methods, rename })
+      handleToggle({ openState, methods, rename, setOpen })
     );
     methods.registerMethod(get(rename, 'methods.setOpen', { default: 'setOpen' }), ({ open }) =>
-      triggerSetOpen({ state: !!open, setOpen, methods, rename })
+      setOpenState({ open: Boolean(open), methods, rename, setOpen })
     );
   });
+
   return (
     <Drawer
       id={blockId}
@@ -49,7 +83,7 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
       mask={properties.mask}
       maskClosable={properties.maskClosable}
       title={properties.title}
-      visible={openState}
+      open={openState}
       width={properties.width}
       height={properties.height}
       zIndex={properties.zIndex}
@@ -57,14 +91,14 @@ const DrawerBlock = ({ blockId, content, properties, methods, rename, onClose })
       keyboard={properties.keyboard}
       onClose={
         onClose ||
-        (async () => {
-          const response = await methods.triggerEvent({ name: 'onClose' });
-          if (response.success === false) return;
-          if (response.bounced !== true) {
-            triggerSetOpen({ state: false, setOpen, methods, rename });
-          }
-        })
+        (() =>
+          handleClose({
+            methods,
+            rename,
+            setOpen,
+          }))
       }
+      afterOpenChange={(drawerOpen) => handleAfterOpenChange({ drawerOpen, methods, rename })}
       drawerStyle={methods.makeCssClass(properties.drawerStyle, true)}
       headerStyle={methods.makeCssClass(properties.headerStyle, true)}
       bodyStyle={methods.makeCssClass(properties.bodyStyle, true)}
