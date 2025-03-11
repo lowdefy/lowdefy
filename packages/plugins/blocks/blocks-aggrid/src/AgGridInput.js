@@ -30,12 +30,28 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const memoDefaultColDef = useMemo(() => defaultColDef);
 
   const getRowId = useCallback(
-    (params) =>
-      params.data[properties.rowId] ??
-      params.data.id ??
-      params.data._id ??
-      JSON.stringify(params.data),
-    []
+    (params) => {
+      if (properties.rowId && params.data[properties.rowId] !== undefined)
+        return params.data[properties.rowId];
+      if (params.data.id !== undefined) return params.data.id;
+      if (params.data._id !== undefined) return params.data._id;
+      if (!params.data.__id) {
+        const rowDataCopy = { ...params.data };
+        delete rowDataCopy.__id;
+        const str = JSON.stringify(rowDataCopy);
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = (hash << 5) - hash + str.charCodeAt(i);
+          hash = hash & hash;
+        }
+        Object.defineProperty(params.data, '__id', {
+          value: `row_${Math.abs(hash).toString(16)}`,
+          enumerable: false,
+        });
+      }
+      return params.data.__id;
+    },
+    [properties.rowId]
   );
 
   const onRowClick = useCallback((event) => {
@@ -45,7 +61,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         event: {
           row: event.data,
           selected: gridRef.current.api.getSelectedRows(),
-          index: parseInt(event.node.id),
           rowIndex: event.rowIndex,
         },
       });
@@ -58,7 +73,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
         event: {
           cell: { column: event.colDef.field, value: event.value },
           colId: event.column.colId,
-          index: parseInt(event.node.id),
           row: event.data,
           rowIndex: event.rowIndex,
           selected: gridRef.current.api.getSelectedRows(),
@@ -72,7 +86,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
       methods.triggerEvent({
         name: 'onRowSelected',
         event: {
-          index: parseInt(event.node.id),
           row: event.data,
           rowIndex: event.rowIndex,
           selected: gridRef.current.api.getSelectedRows(),
@@ -115,14 +128,13 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
 
   const onCellValueChanged = useCallback(
     (event) => {
-      rowData[parseInt(event.node.id)][event.colDef.field] = event.newValue;
+      rowData[event.rowIndex][event.colDef.field] = event.newValue;
       methods.setValue(rowData);
       setRowData(rowData);
       methods.triggerEvent({
         name: 'onCellValueChanged',
         event: {
           field: event.colDef.field,
-          index: parseInt(event.node.id),
           newRowData: rowData,
           newValue: event.newValue,
           oldValue: event.oldValue,
