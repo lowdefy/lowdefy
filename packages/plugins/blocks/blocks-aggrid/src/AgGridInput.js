@@ -20,6 +20,7 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 import { CsvExportModule } from '@ag-grid-community/csv-export';
 
 import processColDefs from './processColDefs.js';
+import assignRowId from './assignRowId.js';
 
 const AgGridInput = ({ properties, methods, loading, events, value }) => {
   const { quickFilterValue, columnDefs, defaultColDef, ...someProperties } = properties;
@@ -33,23 +34,7 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
     (params) => {
       if (properties.rowId && params.data[properties.rowId] !== undefined)
         return params.data[properties.rowId];
-      if (params.data.id !== undefined) return params.data.id;
-      if (params.data._id !== undefined) return params.data._id;
-      if (!params.data.__id) {
-        const rowDataCopy = { ...params.data };
-        delete rowDataCopy.__id;
-        const str = JSON.stringify(rowDataCopy);
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          hash = (hash << 5) - hash + str.charCodeAt(i);
-          hash = hash & hash;
-        }
-        Object.defineProperty(params.data, '__id', {
-          value: `row_${Math.abs(hash).toString(16)}`,
-          enumerable: false,
-        });
-      }
-      return params.data.__id;
+      return assignRowId(params);
     },
     [properties.rowId]
   );
@@ -209,6 +194,8 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
       setRowData(value);
     }
   }, [value]);
+
+  console.log(value);
 
   if (quickFilterValue && quickFilterValue === '') {
     gridRef.current.api.setQuickFilter(quickFilterValue); // check if empty string matches all
