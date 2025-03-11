@@ -195,8 +195,6 @@ const AgGridInput = ({ properties, methods, loading, events, value }) => {
     }
   }, [value]);
 
-  console.log(value);
-
   if (quickFilterValue && quickFilterValue === '') {
     gridRef.current.api.setQuickFilter(quickFilterValue); // check if empty string matches all
   }
