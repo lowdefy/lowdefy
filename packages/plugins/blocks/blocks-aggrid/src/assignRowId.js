@@ -1,21 +1,31 @@
+/*
+  Copyright 2021 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 const assignRowId = (params) => {
   if (params.data.id !== undefined) return params.data.id;
   if (params.data._id !== undefined) return params.data._id;
-  if (!params.data.__id) {
+  if (!params.data.__rid) {
     const rowDataCopy = { ...params.data };
-    delete rowDataCopy.__id;
-    const str = JSON.stringify(rowDataCopy);
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = (hash << 5) - hash + str.charCodeAt(i);
-      hash = hash & hash;
-    }
-    Object.defineProperty(params.data, '__id', {
-      value: `row_${Math.abs(hash).toString(16)}`,
+    delete rowDataCopy.__rid;
+    Object.defineProperty(params.data, '__rid', {
+      value: Math.random(),
       enumerable: false,
     });
   }
-  return params.data.__id;
+  return params.data.__rid;
 };
 
 export default assignRowId;
