@@ -41,6 +41,11 @@ const createIcon = (Icons) => {
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
   const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
+    const formatTitle = (title) => {
+      let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
+      return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
+    };
+
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
@@ -53,7 +58,7 @@ const createIcon = (Icons) => {
       }),
       rotate: propertiesObj.rotate,
       color: propertiesObj.color,
-      title: propertiesObj.name,
+      title: propertiesObj.title ?? formatTitle(propertiesObj.name),
       size: propertiesObj.size,
       // twoToneColor: propertiesObj.color, // TODO: track https://github.com/react-icons/react-icons/issues/508
       ...omit(props, lowdefyProps),
