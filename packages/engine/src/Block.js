@@ -205,17 +205,24 @@ class Block {
     }
   };
 
+  isHybrid = () => {
+    return this.meta?.category === 'hybrid';
+  };
   isDisplay = () => {
+    if (this.isHybrid()) return this.meta.categories.includes('display');
     return this.meta?.category === 'display';
   };
   isList = () => {
+    if (this.isHybrid()) return this.meta.categories.includes('list');
     return this.meta?.category === 'list';
   };
   isInput = () => {
-    return this.meta?.category === 'input' || this.meta?.category === 'input-content';
+    if (this.isHybrid()) return this.meta.categories.includes('input');
+    return this.meta?.category === 'input';
   };
   isContainer = () => {
-    return this.meta?.category === 'container' || this.meta?.category === 'input-content';
+    if (this.isHybrid()) return this.meta.categories.includes('container');
+    return this.meta?.category === 'container';
   };
 
   registerMethod = (methodName, method) => {

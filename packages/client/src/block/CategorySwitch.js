@@ -19,7 +19,7 @@ import { BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
-import InputContent from './InputContent.js';
+import Hybrid from './Hybrid.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
@@ -97,9 +97,9 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
           />
         </BlockLayout>
       );
-    case 'input-content':
+    case 'hybrid':
       return (
-        <InputContent
+        <Hybrid
           block={block}
           Blocks={Blocks}
           Component={Component}
