@@ -212,10 +212,10 @@ class Block {
     return this.meta?.category === 'list';
   };
   isInput = () => {
-    return this.meta?.category === 'input';
+    return this.meta?.category === 'input' || this.meta?.category === 'input-content';
   };
   isContainer = () => {
-    return this.meta?.category === 'container';
+    return this.meta?.category === 'container' || this.meta?.category === 'input-content';
   };
 
   registerMethod = (methodName, method) => {
@@ -268,7 +268,8 @@ class Block {
       } else {
         this.value = blockValue;
       }
-    } else if (this.isContainer()) {
+    }
+    if (this.isContainer()) {
       if (!type.isArray(this.subAreas)) {
         this.subAreas = [];
         parentSubAreas[this.id] = this.subAreas;
@@ -410,7 +411,8 @@ class Block {
       } else {
         this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
       }
-    } else if (this.isInput()) {
+    }
+    if (this.isInput()) {
       this.context._internal.State.set(this.blockId, this.value);
     }
     return false;

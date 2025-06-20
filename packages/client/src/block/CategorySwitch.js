@@ -19,6 +19,7 @@ import { BlockLayout } from '@lowdefy/layout';
 import { makeCssClass } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import InputContent from './InputContent.js';
 import Container from './Container.js';
 import List from './List.js';
 import LoadingBlock from './LoadingBlock.js';
@@ -40,6 +41,10 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
         skeleton={block.eval.skeleton}
       />
     );
+  }
+
+  if (Component.meta.category === 'input-content') {
+    console.log('Block is input-content', block.blockId);
   }
 
   switch (Component.meta.category) {
@@ -95,6 +100,17 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
             value={block.value}
           />
         </BlockLayout>
+      );
+    case 'input-content':
+      return (
+        <InputContent
+          block={block}
+          Blocks={Blocks}
+          Component={Component}
+          context={context}
+          loading={loading}
+          lowdefy={lowdefy}
+        />
       );
     default:
       return (
