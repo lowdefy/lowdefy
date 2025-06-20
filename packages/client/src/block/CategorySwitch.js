@@ -43,10 +43,6 @@ const CategorySwitch = ({ block, Blocks, context, loading, lowdefy }) => {
     );
   }
 
-  if (Component.meta.category === 'input-content') {
-    console.log('Block is input-content', block.blockId);
-  }
-
   switch (Component.meta.category) {
     case 'list':
       return (
