@@ -15,14 +15,13 @@
 */
 
 import Actions from './Actions.js';
-import Events from './Events.js';
 import Areas from './Areas.js';
-import createLink from './createLink.js';
+import Events from './Events.js';
 import Requests from './Requests.js';
 import State from './State.js';
-
+import createLink from './createLink.js';
 import getContext from './getContext.js';
 
-export { Actions, Events, Areas, createLink, Requests, State };
+export { Actions, Areas, Events, Requests, State, createLink };
 
 export default getContext;
