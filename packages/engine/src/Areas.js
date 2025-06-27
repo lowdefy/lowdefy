@@ -82,19 +82,19 @@ class Areas {
 
   updateState = () => {
     const toDelete = new Set();
+    const toSet = new Set(); // If block with duplicate blockId is visible, we preserve the state for it.
     this.loopBlocks((block) => {
-      if (block.shouldDeleteState()) {
+      if (!block.isVisible()) {
         if (block.isContainer()) {
           block.loopSubAreas((subAreasClass) => subAreasClass.recContainerDelState(toDelete));
         }
         toDelete.add(block.blockId);
       } else {
-        // if the block is visible at least once in the config, do not delete
-        toDelete.delete(block.blockId);
+        block.updateState(toSet);
       }
     });
     toDelete.forEach((field) => {
-      this.context._internal.State.del(field);
+      if (!toSet.has(field)) this.context._internal.State.del(field);
     });
   };
 

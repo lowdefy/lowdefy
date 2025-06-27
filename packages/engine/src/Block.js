@@ -409,12 +409,13 @@ class Block {
     });
   };
 
-  shouldDeleteState = () => {
-    if (this.visibleEval.output === false) return true;
+  updateState = (toSet) => {
+    if (!this.isVisible()) return;
 
     if (this.isContainer() || this.isList()) {
       if (this.subAreas && this.subAreas.length > 0) {
         this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
+        return; // Don't add to set
       } else {
         this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
       }
@@ -422,7 +423,11 @@ class Block {
     if (this.isInput()) {
       this.context._internal.State.set(this.blockId, this.value);
     }
-    return false;
+    toSet.add(this.blockId);
+  };
+
+  isVisible = () => {
+    return this.visibleEval.output !== false;
   };
 
   updateArrayIndices = () => {
