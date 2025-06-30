@@ -74,9 +74,15 @@ class Block {
         `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
       );
     }
-    if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {
+    if (
+      !this.isContainer() &&
+      !this.isDisplay() &&
+      !this.isInput() &&
+      !this.isList() &&
+      !this.isInputContainer()
+    ) {
       throw new Error(
-        `Block type ${this.type}.meta.category must be either "container", "display", "input" or "list".`
+        `Block type ${this.type}.meta.category must be either "container", "display", "input", "list", or "input-container".`
       );
     }
 
@@ -96,7 +102,7 @@ class Block {
     if (this.isList()) {
       this._initList();
     }
-    if (this.isInput()) {
+    if (this.isInput() || this.isInputContainer()) {
       this._initInput();
     }
 
@@ -205,24 +211,20 @@ class Block {
     }
   };
 
-  isHybrid = () => {
-    return this.meta?.category === 'hybrid';
-  };
   isDisplay = () => {
-    if (this.isHybrid()) return this.meta.categories.includes('display');
     return this.meta?.category === 'display';
   };
   isList = () => {
-    if (this.isHybrid()) return this.meta.categories.includes('list');
     return this.meta?.category === 'list';
   };
   isInput = () => {
-    if (this.isHybrid()) return this.meta.categories.includes('input');
     return this.meta?.category === 'input';
   };
   isContainer = () => {
-    if (this.isHybrid()) return this.meta.categories.includes('container');
     return this.meta?.category === 'container';
+  };
+  isInputContainer = () => {
+    return this.meta?.category === 'input-container';
   };
 
   registerMethod = (methodName, method) => {
@@ -243,7 +245,7 @@ class Block {
   reset = (parentSubAreas, initWithState) => {
     this.update = true;
     this.showValidation = false;
-    if (this.isInput() || this.isList()) {
+    if (this.isInput() || this.isList() || this.isInputContainer()) {
       let blockValue = get(initWithState, this.blockId);
       if (type.isUndefined(blockValue)) {
         blockValue = type.isUndefined(this.meta.initValue)
@@ -276,7 +278,7 @@ class Block {
         this.value = blockValue;
       }
     }
-    if (this.isContainer()) {
+    if (this.isContainer() || this.isInputContainer()) {
       if (!type.isArray(this.subAreas)) {
         this.subAreas = [];
         parentSubAreas[this.id] = this.subAreas;
@@ -292,7 +294,7 @@ class Block {
   };
 
   evaluate = (visibleParent, repeat) => {
-    if (this.isInput()) {
+    if (this.isInput() || this.isInputContainer()) {
       const stateValue = get(this.context.state, this.blockId);
       this.value = type.isUndefined(stateValue) ? this.value : stateValue;
     }
@@ -319,7 +321,7 @@ class Block {
       this.areasLayoutEval = this.parse(this.areasLayout);
     }
 
-    if (this.isContainer() || this.isList()) {
+    if (this.isContainer() || this.isList() || this.isInputContainer()) {
       this.loopSubAreas((areasClass) => {
         repeat.value = areasClass.recEval(this.visibleEval.output) || repeat.value;
       });
@@ -412,7 +414,7 @@ class Block {
   updateState = (toSet) => {
     if (!this.isVisible()) return;
 
-    if (this.isContainer() || this.isList()) {
+    if (this.isContainer() || this.isList() || this.isInputContainer()) {
       if (this.subAreas && this.subAreas.length > 0) {
         this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
         return; // Don't add to set
@@ -420,7 +422,7 @@ class Block {
         this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
       }
     }
-    if (this.isInput()) {
+    if (this.isInput() || this.isInputContainer()) {
       this.context._internal.State.set(this.blockId, this.value);
     }
     toSet.add(this.blockId);

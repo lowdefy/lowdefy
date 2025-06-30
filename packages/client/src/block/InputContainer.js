@@ -20,37 +20,33 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
 
-const Hybrid = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const content = {};
-  const contentList = [];
   // eslint-disable-next-line prefer-destructuring
-  const SBlocks = Blocks.subAreas[block.id];
-  SBlocks.forEach((SBlock) => {
-    Object.keys(SBlock.areas).forEach((areaKey, i) => {
-      content[areaKey] = (areaStyle) => (
-        <Area
-          area={block.eval.areas[areaKey]}
-          areaKey={areaKey}
-          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-          id={`ar-${block.blockId}-${areaKey}`}
-          key={`ar-${block.blockId}-${areaKey}-${i}`}
-          layout={block.eval.layout}
-          makeCssClass={makeCssClass}
-        >
-          {SBlock.areas[areaKey].blocks.map((bl, k) => (
-            <Block
-              block={bl}
-              Blocks={Blocks.subAreas[block.id][0]}
-              context={context}
-              key={`co-${bl.blockId}-${k}`}
-              lowdefy={lowdefy}
-              parentLoading={loading}
-            />
-          ))}
-        </Area>
-      );
-    });
-    contentList.push({ ...content });
+  const areas = Blocks.subAreas[block.id][0].areas;
+  Object.keys(areas).forEach((areaKey, i) => {
+    content[areaKey] = (areaStyle) => (
+      <Area
+        area={block.eval.areas[areaKey]}
+        areaKey={areaKey}
+        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
+        id={`ar-${block.blockId}-${areaKey}`}
+        key={`ar-${block.blockId}-${areaKey}-${i}`}
+        layout={block.eval.layout}
+        makeCssClass={makeCssClass}
+      >
+        {areas[areaKey].blocks.map((bl, k) => (
+          <Block
+            block={bl}
+            Blocks={Blocks.subAreas[block.id][0]}
+            context={context}
+            key={`co-${bl.blockId}-${k}`}
+            lowdefy={lowdefy}
+            parentLoading={loading}
+          />
+        ))}
+      </Area>
+    );
   });
   return (
     <BlockLayout
@@ -78,7 +74,6 @@ const Hybrid = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         content={content}
         events={block.eval.events}
         key={block.blockId}
-        list={contentList}
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
@@ -91,4 +86,4 @@ const Hybrid = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   );
 };
 
-export default Hybrid;
+export default InputContainer;
