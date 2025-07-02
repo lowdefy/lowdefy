@@ -74,12 +74,7 @@ class Block {
         `Block type ${this.type} not found at ${this.blockId}. Check your plugins to make sure the block is installed. For more info, see https://docs.lowdefy.com/plugins.`
       );
     }
-    if (
-      !this.isContainer() &&
-      !this.isDisplay() &&
-      !this.isInput() &&
-      !this.isList()
-    ) {
+    if (!this.isContainer() && !this.isDisplay() && !this.isInput() && !this.isList()) {
       throw new Error(
         `Block type ${this.type}.meta.category must be either "container", "display", "input", "list", or "input-container".`
       );
