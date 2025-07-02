@@ -42,7 +42,9 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "4.4.0"
+    "@lowdefy/helpers": "4.4.0",
+    "glob": "11.0.3",
+    "js-yaml": "4.1.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
