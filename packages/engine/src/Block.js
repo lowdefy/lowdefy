@@ -78,8 +78,7 @@ class Block {
       !this.isContainer() &&
       !this.isDisplay() &&
       !this.isInput() &&
-      !this.isList() &&
-      !this.isInputContainer()
+      !this.isList()
     ) {
       throw new Error(
         `Block type ${this.type}.meta.category must be either "container", "display", "input", "list", or "input-container".`
@@ -102,7 +101,7 @@ class Block {
     if (this.isList()) {
       this._initList();
     }
-    if (this.isInput() || this.isInputContainer()) {
+    if (this.isInput()) {
       this._initInput();
     }
 
@@ -218,13 +217,10 @@ class Block {
     return this.meta?.category === 'list';
   };
   isInput = () => {
-    return this.meta?.category === 'input';
+    return this.meta?.category === 'input' || this.meta?.category === 'input-container';
   };
   isContainer = () => {
-    return this.meta?.category === 'container';
-  };
-  isInputContainer = () => {
-    return this.meta?.category === 'input-container';
+    return this.meta?.category === 'container' || this.meta?.category === 'input-container';
   };
 
   registerMethod = (methodName, method) => {
@@ -245,7 +241,7 @@ class Block {
   reset = (parentSubAreas, initWithState) => {
     this.update = true;
     this.showValidation = false;
-    if (this.isInput() || this.isList() || this.isInputContainer()) {
+    if (this.isInput() || this.isList()) {
       let blockValue = get(initWithState, this.blockId);
       if (type.isUndefined(blockValue)) {
         blockValue = type.isUndefined(this.meta.initValue)
@@ -278,7 +274,7 @@ class Block {
         this.value = blockValue;
       }
     }
-    if (this.isContainer() || this.isInputContainer()) {
+    if (this.isContainer()) {
       if (!type.isArray(this.subAreas)) {
         this.subAreas = [];
         parentSubAreas[this.id] = this.subAreas;
@@ -294,7 +290,7 @@ class Block {
   };
 
   evaluate = (visibleParent, repeat) => {
-    if (this.isInput() || this.isInputContainer()) {
+    if (this.isInput()) {
       const stateValue = get(this.context.state, this.blockId);
       this.value = type.isUndefined(stateValue) ? this.value : stateValue;
     }
@@ -321,7 +317,7 @@ class Block {
       this.areasLayoutEval = this.parse(this.areasLayout);
     }
 
-    if (this.isContainer() || this.isList() || this.isInputContainer()) {
+    if (this.isContainer() || this.isList()) {
       this.loopSubAreas((areasClass) => {
         repeat.value = areasClass.recEval(this.visibleEval.output) || repeat.value;
       });
@@ -414,7 +410,7 @@ class Block {
   updateState = (toSet) => {
     if (!this.isVisible()) return;
 
-    if (this.isContainer() || this.isList() || this.isInputContainer()) {
+    if (this.isContainer() || this.isList()) {
       if (this.subAreas && this.subAreas.length > 0) {
         this.loopSubAreas((subAreasClass) => subAreasClass.updateState());
         return; // Don't add to set
@@ -422,7 +418,7 @@ class Block {
         this.context._internal.State.set(this.blockId, type.enforceType(this.meta.valueType, null));
       }
     }
-    if (this.isInput() || this.isInputContainer()) {
+    if (this.isInput()) {
       this.context._internal.State.set(this.blockId, this.value);
     }
     toSet.add(this.blockId);
