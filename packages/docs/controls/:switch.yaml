@@ -1,0 +1,60 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# TODO
+_ref:
+  path: templates/controls.yaml.njk
+  vars:
+    pageId: :switch
+    pageTitle: :switch
+    filePath: controls/:switch.yaml
+    types: |
+      ```
+      ({:switch: [{:case: boolean, :then: routine], :default: routine}): void
+      ```
+    description: |
+      The `:switch` control evaluates an array of conditions and executes the routine defined by the `:then` key of the first item for which the `:case` key evaluates to `true`. If no condition evaluates to `true`, the routine defined in the `default` key is executed.
+    controlKeys: |
+      - `:switch: array`: __Required__
+          - `:case: boolean`: __Required__ - The boolean result of a test.
+          - `:then: routine`: __Required__ - The routine to execute if the test is `true`.
+      - `:default: routine`:  The routine to execute if all the `:case` tests are `false`.
+    examples: |
+      ###### Simple Example
+      ```
+      - :set_state:
+          a: 1
+      - :switch:
+          - :case:
+              _eq:
+                - _state: a
+                - 0
+            :then:
+              :log: 0
+          - :case:
+              _eq:
+                - _state: a
+                - 1
+            :then:
+              :log: 1
+          :case:
+              _eq:
+                - _state: a
+                - 2
+            :then:
+              :log: 2
+        :default:
+          :log: default
+      ```
+      Logs:
+      `1`

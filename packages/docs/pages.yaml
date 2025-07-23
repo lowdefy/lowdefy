@@ -160,6 +160,7 @@
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
 
+- _ref: actions/CallAPI.yaml
 - _ref: actions/CallMethod.yaml
 - _ref: actions/CopyToClipboard.yaml
 - _ref: actions/DisplayMessage.yaml
@@ -184,6 +185,7 @@
 
 - _ref: operators/_actions.yaml
 - _ref: operators/_and.yaml
+- _ref: operators/_api.yaml
 - _ref: operators/_args.yaml
 - _ref: operators/_array.yaml
 - _ref: operators/_base64.yaml
@@ -242,6 +244,18 @@
 - _ref: operators/_uuid.yaml
 - _ref: operators/_var.yaml
 - _ref: operators/_yaml.yaml
+
+- _ref: controls/:for.yaml
+- _ref: controls/:if.yaml
+- _ref: controls/:log.yaml
+- _ref: controls/:parallel.yaml
+- _ref: controls/:parallel_for.yaml
+- _ref: controls/:reject.yaml
+- _ref: controls/:set_state.yaml
+- _ref: controls/:switch.yaml
+- _ref: controls/:throw.yaml
+- _ref: controls/:try.yaml
+- _ref: controls/:while.yaml
 
 - _ref: migration/v3-to-v4.yaml
 
