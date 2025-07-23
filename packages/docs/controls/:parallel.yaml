@@ -20,11 +20,63 @@ _ref:
     filePath: controls/:parallel.yaml
     types: |
       ```
-      ({:parallel: step[]}): void
+      ({:parallel: routine[]}): void
       ```
     description: |
-      The `:parallel` control executes the array of given routine objects is parallel with one another. The control only completes once all defined controls have been completed.
+      The `:parallel` control executes multiple independent routines simultaneously. It waits for all routines to complete before proceeding.
     controlKeys: |
-      - `:parallel: step[]`: __Required__ - An array of routine steps that will be executed in parallel.
+      - `:parallel: routine[]`: __Required__ - An array of routines that will be executed in parallel.
     examples: |
-      ###### Example
+      ###### Fetch from multiple sources in parallel
+
+      ```yaml
+      routine:
+        - :parallel:
+            - id: fetch_user_stats
+              type: MongoDBAggregation
+              connectionId: users
+              properties:
+                pipeline:
+                  - $match:
+                      accountId:
+                        _payload: accountId
+                  - $group:
+                      _id: null
+                      totalUsers: { $sum: 1 }
+                      activeUsers:
+                        $sum:
+                          $cond: [{ $eq: ['$status', 'active'] }, 1, 0]
+
+            - id: fetch_revenue
+              type: KnexRaw
+              connectionId: analytics_db
+              properties:
+                query: |
+                  SELECT
+                    SUM(amount) as total_revenue,
+                    COUNT(*) as transaction_count
+                  FROM transactions
+                  WHERE account_id = :accountId
+                    AND created_at >= NOW() - INTERVAL '30 days'
+                parameters:
+                  accountId:
+                    _payload: accountId
+
+            - id: fetch_tickets
+              type: AxiosHttp
+              connectionId: tickets_api
+              properties:
+                url: '/tickets'
+                method: get
+                params:
+                  organization_id:
+                    _payload: accountId
+                  status: 'open'
+        - :return:
+            user_stats:
+              _step: fetch_user_stats
+            revenue:
+              _step: revenue
+            tickets:
+              _step: fetch_tickets
+      ```

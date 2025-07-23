@@ -23,19 +23,71 @@ _ref:
       ({:if: boolean, :then: routine, :else: routine}): void
       ```
     description: |
-      The `:if` control runs the routine defined using the `:then` key if the result of the test is `true`, and the `:else` key if the result is `false`. The test is defined using the `:if` key. Generally other operators are used to evaluate the test.
+      The `:if` control executes different routines based on a boolean condition. It evaluates the condition and runs the `:then` branch if true, or the optional `:else` branch if false. Generally other operators are used to evaluate the test.
     controlKeys: |
       - `:if: boolean`: __Required__ - The boolean result of a test or value.
       - `:then: routine`: __Required__ - The routine to execute if the test result is true.
       - `:else: routine`: The routine to execute if the test result is false.
     examples: |
       ###### Simple Example
-      ```
-      :if: true
-      :then:
-        :log: 'Test was true'
-      :else:
-        :log: 'Test was false'
+      ```yaml
+      routine:
+        - :if: true
+          :then:
+            :log: 'Test was true'
+          :else:
+            :log: 'Test was false'
       ```
       Logs:
       `Test was true`
+
+      ###### Set User Features
+      ```yaml
+      routine:
+        - :if:
+            _eq:
+              - _payload: userType
+              - 'premium'
+          :then:
+            - :set_state:
+                discount: 0.2
+                features: ['unlimited', 'priority_support']
+          :else:
+            - :set_state:
+                discount: 0
+                features: ['basic']
+      ```
+
+      ###### Optional Fraud Check
+
+      ```yaml
+      routines:
+        - :if:
+            _gte:
+              - _payload: orderAmount
+              - 1000
+          :then:
+            - :log: 'High-value order detected, applying fraud checks'
+            - id: fraudCheck
+              type: FraudDetectionAPI
+              connectionId: fraud_service
+              properties:
+                amount:
+                  _payload: orderAmount
+                customerId:
+                  _payload: customerId
+            - :if:
+                _step: fraudCheck.riskScore
+                _gt: 0.7
+              :then:
+                :reject: 'Order flagged for manual review'
+        - id: create_payment_intent
+          type: StripeRequest
+          connectionId: stripe
+          properties:
+            paymentIntents:
+              create:
+                - amount: 2000
+                  currency: eur
+                  payment_method_types: [ card ]
+      ```

@@ -23,7 +23,7 @@ _ref:
       ({:for: string, :in: any[], :do: routine}): void
       ```
     description: |
-      The `:for` control implements a for loop within a routine.
+      The `:for` control iterates over an array, executing a routine for each item sequentially.
       The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed sequentially for each item in the array.
       The value of the current array item can be accessed using the `_item` operator with the item key set by the `:for` key. This operator is only available within the `:for` and `:parallel_for` controls.
     controlKeys: |
@@ -32,7 +32,7 @@ _ref:
       - `:do: routine`: __Required__ - Used to define the routine that will be executed for each array item.
     examples: |
       ###### Simple Example
-      ```
+      ```yaml
       - :for: count
         :in:
           - 1
@@ -47,4 +47,73 @@ _ref:
         1
         2
         3
+      ```
+
+      ###### Calculate Order Total
+
+      ```yaml
+      - :set_state:
+          orderTotal: 0
+
+      - :for: item
+        :in:
+          _payload: orderItems
+        :do:
+          - :set_state:
+              itemTotal:
+                _math.multiply:
+                  - _item: item.price
+                  - _item: item.quantity
+
+          - :set_state:
+              orderTotal:
+                _math.add:
+                  - _state: orderTotal
+                  - _state: itemTotal
+
+          - :log:
+              _string.concat:
+                - _item: item.name
+                - ' x '
+                - _item: item.quantity
+                - ' = $'
+                - _state: itemTotal
+
+      - :return:
+          total:
+            _state: orderTotal
+      ```
+
+      ###### Setting Active Users in MongoDB
+
+      ```yaml
+      - id: get_active_users
+        type: MongoDBAggregation
+        connection: activity_log
+        properties:
+          - $match:
+              $expr:
+                $gte:
+                  - $timestamp
+                  - $dateTrunc:
+                      date: $$NOW
+                      unit: day
+          - $group:
+              _id: $user_id
+      - :for: user
+        :in:
+          _step: get_active_users
+        :do:
+          - id: updateUserStatus
+            type: MongoDBUpdateOne
+            connectionId: users
+            properties:
+              filter:
+                _id:
+                  _item: user._id
+              update:
+                $set:
+                  last_processed:
+                    _date: now
+                  status: 'active'
       ```
