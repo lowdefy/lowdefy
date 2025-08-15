@@ -88,6 +88,7 @@ _ref:
             The auth object is used to configure user authentication, and has the following properties:
 
             - `adapter: object`: Configure a database adapter.
+            - `api: object`: Configure which APIs should be protected.
             - `authPages: object`: Configure pages like the sign in page used by authentication flows.
             - `callbacks: object[]`: Configure callback functions.
             - `debug: boolean`: Can be set to false to disable auth debugging if the log level is set to debug.
@@ -125,6 +126,26 @@ _ref:
 
             See more about how menu objects are used and defined [here](/menus).
 
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
+            ## APIs
+
+            API objects define server-side endpoints that execute routines - sequences of steps and control structures that run on the server with access to connections, secrets, and server-side operators.
+
+            Each API should have an `id` that is unique among all APIs in the app. Each API is called from the client using the [`CallAPI`](/CallAPI) action with the `endpointId` parameter matching the API's id.
+
+            APIs must have a `routine` that defines the execution logic. The routine executes sequentially by default and returns a response to the client through [`:return`](/:return) or [`:reject`](/:reject) control statements.
+
+            If `auth` configuration is set on an API, it controls access permissions - APIs can be made `public: true` for unauthenticated access, or restricted to specific user `roles`. By default, APIs require authentication and respect the same authorization rules as pages.
+
+            See the [APIs documentation](/lowdefy-api) for more information on how to use and define them.
+
+      - id: md3
+        type: MarkdownWithCode
+        properties:
+          content: |
             ## Pages
 
             Pages in a Lowdefy app are actually just blocks, the building blocks of a Lowdefy app, with a few extra restrictions and features.
