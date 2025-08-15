@@ -36,6 +36,11 @@ const ControlledListBlock = ({
     methods.registerMethod('removeItem', methods.removeItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
   });
+  if (list.length < (properties.minItems ?? 0)) {
+    for (let i = 0; i < (properties.minItems ?? 0) - list.length; i++) {
+      methods.pushItem({});
+    }
+  }
   const styles = {
     header: {
       display: 'flex',
@@ -77,7 +82,12 @@ const ControlledListBlock = ({
                   type: 'default',
                   ...properties.addItemButton,
                 }}
-                onClick={() => methods.unshiftItem()}
+                onClick={() => {
+                  methods.unshiftItem();
+                  if (list.length - 1 < (properties.minItems ?? 0)) {
+                    methods.pushItem({});
+                  }
+                }}
               />
             )}
           </div>
@@ -112,7 +122,8 @@ const ControlledListBlock = ({
           key={`${blockId}_${i}`}
           className={methods.makeCssClass([styles.item, properties.itemStyle])}
           extra={
-            !properties.hideRemoveButton && [
+            !properties.hideRemoveButton &&
+            list.length > (properties.minItems ?? 0) && [
               // eslint-disable-next-line react/jsx-key
               <Icon
                 blockId={`${blockId}_${i}_remove_icon`}
@@ -128,7 +139,12 @@ const ControlledListBlock = ({
                     ...(properties.removeItemIcon?.style ? properties.removeItemIcon.style : {}),
                   },
                 }}
-                onClick={() => methods.removeItem(i)}
+                onClick={() => {
+                  methods.removeItem(i);
+                  if (list.length - 1 < (properties.minItems ?? 0)) {
+                    methods.pushItem({});
+                  }
+                }}
               />,
             ]
           }
