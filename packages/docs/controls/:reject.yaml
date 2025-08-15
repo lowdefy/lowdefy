@@ -33,15 +33,15 @@ _ref:
       ```yaml
       - id: check_inventory
         type: MongoDBFindOne
-        connectionId: products_db
+        connectionId: products-db
         properties:
           filter:
-            productId:
-              _payload: productId
+            product_id:
+              _payload: product_id
       - :if:
           _lt:
             - _step: check_inventory.quantity
-            - _payload: requestedQuantity
+            - _payload: requested_quantity
         :then:
           :reject: "Insufficient inventory. Only {{ _step.check_inventory.quantity }} items available"
       ```
@@ -55,10 +55,10 @@ _ref:
         :then:
           :reject: "Please verify your email before proceeding"
           :cause:
-            userId:
+            user_id:
               _step: get_user._id
             email:
               _step: get_user.email
-            accountCreatedAt:
-              _step: get_user.createdAt
+            account_created_at:
+              _step: get_user.created_at
       ```

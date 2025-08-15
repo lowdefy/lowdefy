@@ -31,17 +31,17 @@ _ref:
     examples: |
       ###### Update Multiple Users
       ```yaml
-      - :parallel_for: userId
+      - :parallel_for: user_id
         :in:
-          _payload: userIds
+          _payload: user_ids
         :do:
           id: update_last_seen
           type: MongoDBUpdateOne
-          connectionId: users_db
+          connectionId: users-db
           properties:
             filter:
               _id:
-                _item: userId
+                _item: user_id
             update:
               $set:
                 last_seen:

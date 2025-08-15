@@ -57,7 +57,7 @@ _ref:
               _not:
                 _eq:
                   - _payload: password
-                  - _payload: confirmPassword
+                  - _payload: confirm_password
             :then:
               :reject: "Passwords do not match"
         :default: []
@@ -68,7 +68,7 @@ _ref:
       ```yaml
       - id: get_user_subscription
         type: MongoDBFindOne
-        connectionId: subscriptions_db
+        connectionId: subscriptions-db
         properties:
           filter:
             user_id:

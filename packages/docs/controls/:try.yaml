@@ -30,4 +30,73 @@ _ref:
       - `:catch: routine`: The routine to execute if any step in the routine defined errors.
       - `:finally: routine`: The routine to be run regardless of the out come of the initial routine.
     examples: |
-      ###### Example
+      ###### Try external API with fallback
+      ```yaml
+      - :try:
+          - id: get_weather
+            type: AxiosHttp
+            connectionId: weather-api
+            properties:
+              url: /current
+              params:
+                city:
+                  _payload: city
+        :catch:
+          - id: get_default_weather
+            type: MongoDBFindOne
+            connectionId: weather-cache
+            properties:
+              filter:
+                city:
+                  _payload: city
+      - :return:
+          weather:
+            _if:
+              test:
+                _step: get_weather
+              then:
+                _step: get_weather.data
+              else:
+                _step: get_default_weather
+      ```
+
+      ###### Try database operation with fallback
+      ```yaml
+      - :try:
+          - id: update_user
+            type: MongoDBUpdateOne
+            connectionId: database
+            properties:
+              filter:
+                _id:
+                  _payload: user._id
+              update:
+                $set:
+                  last_login:
+                    _date: now
+        :catch:
+          - :log:
+              message: 'Database update failed, creating new user record'
+              user_id:
+                _payload: user._id
+            :level: warn
+          - id: create_user
+            type: MongoDBInsertOne
+            connectionId: database
+            properties:
+              doc:
+                _id:
+                  _payload: user._id
+                last_login:
+                  _date: now
+                created_at:
+                  _date: now
+        :finally:
+          - :log:
+              message: 'User login process completed'
+            :level: info
+      - :return:
+          success: true
+          user_id:
+            _payload: user._id
+      ```

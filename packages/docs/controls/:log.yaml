@@ -54,7 +54,7 @@ _ref:
       - :log:
           message: Multiple failed attempts
           attempts:
-            _payload: attemptCount
+            _payload: attempt_count
           user:
             _user: id
         :level: warn

@@ -924,6 +924,9 @@
         - id: :reject
           type: MenuLink
           pageId: :reject
+        - id: :return
+          type: MenuLink
+          pageId: :return
         - id: :set_state
           type: MenuLink
           pageId: :set_state

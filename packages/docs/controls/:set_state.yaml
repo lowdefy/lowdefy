@@ -44,7 +44,7 @@ _ref:
                   - _item: product.price
               count:
                 _sum:
-                  - _state: processedCount
+                  - _state: processed_count
                   - 1
       - :return:
           total:

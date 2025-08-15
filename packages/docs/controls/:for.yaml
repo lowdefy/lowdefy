@@ -50,26 +50,25 @@ _ref:
       ```
 
       ###### Calculate Order Total
-
       ```yaml
       - :set_state:
-          orderTotal: 0
+          order_total: 0
 
       - :for: item
         :in:
-          _payload: orderItems
+          _payload: order_items
         :do:
           - :set_state:
-              itemTotal:
+              item_total:
                 _math.multiply:
                   - _item: item.price
                   - _item: item.quantity
 
           - :set_state:
-              orderTotal:
+              order_total:
                 _math.add:
-                  - _state: orderTotal
-                  - _state: itemTotal
+                  - _state: order_total
+                  - _state: item_total
 
           - :log:
               _string.concat:
@@ -77,34 +76,34 @@ _ref:
                 - ' x '
                 - _item: item.quantity
                 - ' = $'
-                - _state: itemTotal
+                - _state: item_total
 
       - :return:
           total:
-            _state: orderTotal
+            _state: order_total
       ```
 
       ###### Setting Active Users in MongoDB
-
       ```yaml
       - id: get_active_users
         type: MongoDBAggregation
-        connection: activity_log
+        connectionId: activity-log
         properties:
-          - $match:
-              $expr:
-                $gte:
-                  - $timestamp
-                  - $dateTrunc:
-                      date: $$NOW
-                      unit: day
-          - $group:
-              _id: $user_id
+          pipeline:
+            - $match:
+                $expr:
+                  $gte:
+                    - $timestamp
+                    - $dateTrunc:
+                        date: $$NOW
+                        unit: day
+            - $group:
+                _id: $user_id
       - :for: user
         :in:
           _step: get_active_users
         :do:
-          - id: updateUserStatus
+          - id: update_user_status
             type: MongoDBUpdateOne
             connectionId: users
             properties:
