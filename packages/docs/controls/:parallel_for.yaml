@@ -23,12 +23,27 @@ _ref:
       ({:parallel_for: string, :in: any[], :do: routine}): void
       ```
     description: |
-      The `:parallel_for` control implements a parallel for loop within a routine.
-      The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed for each item in the array in parallel.
-      The value of the current array item can be accessed using the `_item` operator with the item key set by the `:parallel_for` key. This operator is only available within the `:for` and `:parallel_for` controls.
+      The `:parallel_for` control executes a routine for each item in an array simultaneously. Each iteration has access to its array item through the `_item` operator using the key specified in `:parallel_for`. Unlike sequential `:for`, all iterations start at the same time, making it ideal for processing independent items where order doesn't matter. The control waits for all iterations to complete before continuing, unless an error, rejection, or return occurs.
     controlKeys: |
       - `:parallel_for: string`: __Required__ - Used to define the key that can be used to access the value of the array item of the executing iteration.
       - `:in: any`: __Required__ - Used to define the array of data to iterate over.
       - `:do: routine`: __Required__ - Used to define the routine that will be executed for each array item in parallel.
     examples: |
-      ###### Example
+      ###### Update Multiple Users
+      ```yaml
+      - :parallel_for: userId
+        :in:
+          _payload: userIds
+        :do:
+          id: update_last_seen
+          type: MongoDBUpdateOne
+          connectionId: users_db
+          properties:
+            filter:
+              _id:
+                _item: userId
+            update:
+              $set:
+                last_seen:
+                  _date: now
+      ```

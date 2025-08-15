@@ -148,6 +148,11 @@
           pageId: licenses
           properties:
             title: Licenses
+        - id: lowdefy-api
+          type: MenuLink
+          pageId: lowdefy-api
+          properties:
+            title: APIs
 
     - id: deployment
       type: MenuGroup

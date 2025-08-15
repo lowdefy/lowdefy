@@ -22,8 +22,8 @@ async function controlReject(context, routineContext, { control }) {
   const cause = evaluateOperators({ input: control[':cause'], items, location: 'TODO' });
   const error = new Error(message, { cause });
 
-  context.logger.debug({
-    event: 'debug_control_reject',
+  context.logger.warn({
+    event: 'warn_control_reject',
     error,
   });
   return {

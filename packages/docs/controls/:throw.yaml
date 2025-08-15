@@ -23,9 +23,9 @@ _ref:
       ({:throw: string, :cause: any}): void
       ```
     description: |
-      The `:throw` control is used to return with and error and will throw an error in the server console.
+      The `:throw` control creates a system error that immediately stops routine execution and returns with an "error" status. Unlike `:reject` which handles expected user errors, `:throw` is designed for unexpected system failures, programming errors, or critical issues that require attention. The key difference is that `:throw` can be caught and handled by `:try`/`:catch` blocks, while `:reject` cannot. This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
     controlKeys: |
-      - `:throw: string`: __Required__ - The message that will be returned in the error object of the API call response.
+      - `:throw: string`: __Required__ - The error message that will be returned in the response object of the API call result.
       - `:cause: any`: Additional metadata that will be returned with the error message.
     examples: |
       ###### Example

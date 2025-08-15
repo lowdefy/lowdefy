@@ -23,8 +23,55 @@ _ref:
       ({:return: any}): void
       ```
     description: |
-      The `:return` control ends the execution of the routine/ApiCall and returns with any given data. Returns as successful.
+      The `:return` control immediately ends the execution of an API endpoint routine and returns a successful response with the specified data. Any routine steps after a `:return` are not executed. The control accepts any value type (objects, arrays, strings, numbers, null) and marks the API call as successful. When used within conditional controls like `:if` or `:switch`, it provides a way to exit early with a success status and return data to the client.
     controlKeys: |
       - `:return: any`: __Required__ - The value that will be returned in the response object of the API call result.
     examples: |
-      ###### Example
+      ###### Return Step Result
+
+      ```yaml
+      - id: get_company
+        type: MongoDBInsertOne
+        connectionId: companies
+        properties:
+          query:
+            _id:
+              _payload: company_id
+      - :return:
+          _step: get_company
+      ```
+
+      ###### Switch with multiple returns
+
+      ```yaml
+      - id: get_user_subscription
+        type: MongoDBFindOne
+        connectionId: subscriptions_db
+        properties:
+          filter:
+            user_id:
+              _user: id
+      - :switch:
+          - :case:
+              _not:
+                _step: get_user_subscription
+            :then:
+              :return:
+                plan: "free"
+                features: ["basic_access"]
+                limit: 10
+          - :case:
+              _eq:
+                - _step: get_user_subscription.type
+                - "premium"
+            :then:
+              :return:
+                plan: "premium"
+                features: ["full_access", "priority_support", "api_access"]
+                limit: -1
+        :default:
+          :return:
+            plan: "standard"
+            features: ["standard_access", "email_support"]
+            limit: 100
+      ```

@@ -23,38 +23,77 @@ _ref:
       ({:switch: [{:case: boolean, :then: routine], :default: routine}): void
       ```
     description: |
-      The `:switch` control evaluates an array of conditions and executes the routine defined by the `:then` key of the first item for which the `:case` key evaluates to `true`. If no condition evaluates to `true`, the routine defined in the `default` key is executed.
+      The `:switch` control evaluates multiple conditions sequentially and executes the routine for the first matching case. Each case in the `:switch` array contains a `:case` condition and a `:then` routine. The control evaluates conditions from top to bottom, executing only the first matching case's `:then` block. If no cases match, the optional `:default` routine is executed. This control is ideal for handling multiple mutually exclusive conditions more elegantly than nested `:if` statements.
+
     controlKeys: |
       - `:switch: array`: __Required__
           - `:case: boolean`: __Required__ - The boolean result of a test.
           - `:then: routine`: __Required__ - The routine to execute if the test is `true`.
       - `:default: routine`:  The routine to execute if all the `:case` tests are `false`.
     examples: |
-      ###### Simple Example
-      ```
-      - :set_state:
-          a: 1
+      ###### Validation
+      ```yaml
       - :switch:
           - :case:
-              _eq:
-                - _state: a
-                - 0
+              _not:
+                _payload: email
             :then:
-              :log: 0
+              :reject: "Email is required"
+          - :case:
+              _not:
+                _regex:
+                  - _payload: email
+                  - "^[^@]+@[^@]+\\.[^@]+$"
+            :then:
+              :reject: "Invalid email format"
+          - :case:
+              _lt:
+                - _string.length:
+                    _payload: password
+                - 8
+            :then:
+              :reject: "Password must be at least 8 characters"
+          - :case:
+              _not:
+                _eq:
+                  - _payload: password
+                  - _payload: confirmPassword
+            :then:
+              :reject: "Passwords do not match"
+        :default: []
+      ```
+
+      ###### Switch with multiple returns
+
+      ```yaml
+      - id: get_user_subscription
+        type: MongoDBFindOne
+        connectionId: subscriptions_db
+        properties:
+          filter:
+            user_id:
+              _user: id
+      - :switch:
+          - :case:
+              _not:
+                _step: get_user_subscription
+            :then:
+              :return:
+                plan: "free"
+                features: ["basic_access"]
+                limit: 10
           - :case:
               _eq:
-                - _state: a
-                - 1
+                - _step: get_user_subscription.type
+                - "premium"
             :then:
-              :log: 1
-          :case:
-              _eq:
-                - _state: a
-                - 2
-            :then:
-              :log: 2
+              :return:
+                plan: "premium"
+                features: ["full_access", "priority_support", "api_access"]
+                limit: -1
         :default:
-          :log: default
+          :return:
+            plan: "standard"
+            features: ["standard_access", "email_support"]
+            limit: 100
       ```
-      Logs:
-      `1`

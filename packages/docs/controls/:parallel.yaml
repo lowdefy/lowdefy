@@ -23,7 +23,7 @@ _ref:
       ({:parallel: routine[]}): void
       ```
     description: |
-      The `:parallel` control executes multiple independent routines simultaneously. It waits for all routines to complete before proceeding.
+      The `:parallel` control executes multiple independent routines simultaneously. All routines within the `:parallel` array are started at the same time and the control waits for all of them to complete before continuing. If any routine returns with an error, rejection, or explicit return, the parallel control will exit early with that status (prioritizing errors first, then rejections, then returns).
     controlKeys: |
       - `:parallel: routine[]`: __Required__ - An array of routines that will be executed in parallel.
     examples: |
