@@ -138,7 +138,7 @@ _ref:
 
             APIs must have a `routine` that defines the execution logic. The routine executes sequentially by default and returns a response to the client through [`:return`](/:return) or [`:reject`](/:reject) control statements.
 
-            If `auth` configuration is set on an API, it controls access permissions - APIs can be made `public: true` for unauthenticated access, or restricted to specific user `roles`. By default, APIs require authentication and respect the same authorization rules as pages.
+            By default, APIs are public and can be accessed without authentication, just like pages. To require authentication or restrict access to specific roles, APIs must be configured in the `auth` section of your `lowdefy.yaml` file. Protected APIs can use the [`_user`](/_user) operator to access authenticated user information.
 
             See the [APIs documentation](/lowdefy-api) for more information on how to use and define them.
 
