@@ -82,12 +82,7 @@ const ControlledListBlock = ({
                   type: 'default',
                   ...properties.addItemButton,
                 }}
-                onClick={() => {
-                  methods.unshiftItem();
-                  if (list.length - 1 < (properties.minItems ?? 0)) {
-                    methods.pushItem({});
-                  }
-                }}
+                onClick={() => methods.unshiftItem()}
               />
             )}
           </div>
@@ -139,12 +134,7 @@ const ControlledListBlock = ({
                     ...(properties.removeItemIcon?.style ? properties.removeItemIcon.style : {}),
                   },
                 }}
-                onClick={() => {
-                  methods.removeItem(i);
-                  if (list.length - 1 < (properties.minItems ?? 0)) {
-                    methods.pushItem({});
-                  }
-                }}
+                onClick={() => methods.removeItem(i)}
               />,
             ]
           }
