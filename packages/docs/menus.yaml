@@ -98,6 +98,11 @@
           pageId: page-and-app-state
           properties:
             title: Page and App State
+        - id: lowdefy-api
+          type: MenuLink
+          pageId: lowdefy-api
+          properties:
+            title: APIs
         - id: references-and-templates
           type: MenuLink
           pageId: references-and-templates
@@ -148,11 +153,6 @@
           pageId: licenses
           properties:
             title: Licenses
-        - id: lowdefy-api
-          type: MenuLink
-          pageId: lowdefy-api
-          properties:
-            title: APIs
 
     - id: deployment
       type: MenuGroup
@@ -219,11 +219,11 @@
           pageId: users-introduction
           properties:
             title: Introduction
-        - id: protected-pages
+        - id: protected-pages-apis
           type: MenuLink
-          pageId: protected-pages
+          pageId: protected-pages-apis
           properties:
-            title: Protected Pages
+            title: Protected Pages and APIs
         - id: roles
           type: MenuLink
           pageId: roles

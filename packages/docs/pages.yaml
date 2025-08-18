@@ -40,7 +40,7 @@
 - _ref: users/users-introduction.yaml
 - _ref: users/auth-providers.yaml
 - _ref: users/login-and-logout.yaml
-- _ref: users/protected-pages.yaml
+- _ref: users/protected-pages-apis.yaml
 - _ref: users/roles.yaml
 - _ref: users/user-object.yaml
 - _ref: users/auth-configuration.yaml

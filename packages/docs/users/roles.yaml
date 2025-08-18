@@ -65,7 +65,7 @@ _ref:
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
-            previous_page_title: Protected Pages
-            previous_page_id: protected-pages
+            previous_page_title: Protected Pages and APIs
+            previous_page_id: protected-pages-apis
             next_page_title: User Object
             next_page_id: user-object
