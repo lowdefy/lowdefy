@@ -24,6 +24,9 @@ test('validateAuthConfig no auth defined', async () => {
   const result = await validateAuthConfig({ components, context });
   expect(result).toEqual({
     auth: {
+      api: {
+        roles: {},
+      },
       authPages: {},
       callbacks: [],
       events: [],
@@ -79,7 +82,7 @@ test('validateAuthConfig config error when both protected and public pages are b
     },
   };
   await expect(validateAuthConfig({ components, context })).rejects.toThrow(
-    'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
+    'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.'
   );
 });
 
@@ -93,7 +96,7 @@ test('validateAuthConfig config error when both protected and public pages are t
     },
   };
   await expect(validateAuthConfig({ components, context })).rejects.toThrow(
-    'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and visa versa.'
+    'Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.'
   );
 });
 

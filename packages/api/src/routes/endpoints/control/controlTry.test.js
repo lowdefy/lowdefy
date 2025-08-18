@@ -119,7 +119,7 @@ test('try catch with unsuccessful try', async () => {
       {
         err: new RequestError('Try and fail'),
         params: {
-          id: 'request:test_endpoint:try_fail',
+          id: 'try_fail',
           type: 'TestRequestError',
         },
       },
@@ -238,7 +238,7 @@ test('try only, fail', async () => {
       {
         err: new RequestError('Try and fail'),
         params: {
-          id: 'request:test_endpoint:try_fail',
+          id: 'try_fail',
           type: 'TestRequestError',
         },
       },
@@ -374,7 +374,7 @@ test('try with finally, try fail', async () => {
       {
         err: new RequestError('Try and fail'),
         params: {
-          id: 'request:test_endpoint:try_fail',
+          id: 'try_fail',
           type: 'TestRequestError',
         },
       },
@@ -555,7 +555,7 @@ test('try catch finally, try fail', async () => {
       {
         err: new RequestError('Try and fail'),
         params: {
-          id: 'request:test_endpoint:try_fail',
+          id: 'try_fail',
           type: 'TestRequestError',
         },
       },
@@ -673,7 +673,7 @@ test('try catch finally, try and catch fail', async () => {
       {
         err: new RequestError('Try and fail'),
         params: {
-          id: 'request:test_endpoint:try_fail',
+          id: 'try_fail',
           type: 'TestRequestError',
         },
       },
@@ -702,7 +702,7 @@ test('try catch finally, try and catch fail', async () => {
       {
         err: new RequestError('Fallback thing fail'),
         params: {
-          id: 'request:test_endpoint:catch_error',
+          id: 'catch_error',
           type: 'TestRequestError',
         },
       },
@@ -794,9 +794,7 @@ test('try catch with throw in try', async () => {
 test('try catch with reject in try', async () => {
   const routine = {
     ':try': {
-      ':reject': {
-        info: 'Rejected',
-      },
+      ':reject': 'Rejected',
     },
     ':catch': {
       id: 'request:test_endpoint:catch_error',
@@ -816,7 +814,6 @@ test('try catch with reject in try', async () => {
         event: 'debug_control_try',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'Rejected' } }],
   ]);
-  expect(res.response).toEqual({ info: 'Rejected' });
+  expect(res.error).toEqual(new Error('Rejected'));
 });

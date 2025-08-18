@@ -63,10 +63,11 @@ test('log is not a string', async () => {
   };
   const { res, context } = await runTest({ routine });
 
-  expect(res.status).toEqual('error');
-  expect(res.error).toEqual(new Error('Unrecognised type for :log. Received true.'));
+  expect(res.status).toEqual('continue');
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
+  expect(context.logger.info.mock.calls).toEqual([[true]]);
 });
+
 test('log level is not a string', async () => {
   const routine = {
     ':log': {

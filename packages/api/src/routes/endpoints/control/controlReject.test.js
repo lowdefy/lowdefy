@@ -18,23 +18,23 @@ import runTest from '../test/runTest.js';
 
 test('single reject', async () => {
   const routine = {
-    ':reject': true,
+    ':reject': 'Rejected',
   };
-  const { res } = await runTest({ routine });
+  const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual(true);
+  expect(context.logger.warn.mock.calls).toEqual([
+    [{ event: 'warn_control_reject', error: new Error('Rejected') }],
+  ]);
+  expect(res.error).toEqual(new Error('Rejected'));
 });
 
 test('reject null', async () => {
   const routine = {
     ':reject': null,
   };
-  const { res, context } = await runTest({ routine });
+  const { res } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual(null);
-  expect(context.logger.debug.mock.calls).toEqual([
-    [{ event: 'debug_control_reject', response: null }],
-  ]);
+  expect(res.error).toEqual(new Error(null));
 });
 
 test('reject at end of routine', async () => {
@@ -58,14 +58,12 @@ test('reject at end of routine', async () => {
       },
     },
     {
-      ':reject': {
-        info: 'Rejected',
-      },
+      ':reject': 'Rejected',
     },
   ];
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'Rejected' });
+  expect(res.error).toEqual(new Error('Rejected'));
   expect(context.logger.debug.mock.calls).toEqual([
     [
       {
@@ -107,7 +105,6 @@ test('reject at end of routine', async () => {
         id: 'request:test_endpoint:test_request_2',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'Rejected' } }],
   ]);
 });
 
@@ -123,9 +120,7 @@ test('reject in the middle of routine', async () => {
       },
     },
     {
-      ':reject': {
-        info: 'Rejected',
-      },
+      ':reject': 'Rejected',
     },
     {
       id: 'request:test_endpoint:test_request_2',
@@ -160,9 +155,8 @@ test('reject in the middle of routine', async () => {
         id: 'request:test_endpoint:test_request_1',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'Rejected' } }],
   ]);
-  expect(res.response).toEqual({ info: 'Rejected' });
+  expect(res.error).toEqual(new Error('Rejected'));
 });
 
 test('multiple rejects in routine', async () => {
@@ -177,19 +171,13 @@ test('multiple rejects in routine', async () => {
       },
     },
     {
-      ':reject': {
-        info: 'First',
-      },
+      ':reject': 'First',
     },
     {
-      ':reject': {
-        info: 'Second',
-      },
+      ':reject': 'Second',
     },
     {
-      ':reject': {
-        info: 'Third',
-      },
+      ':reject': 'Third',
     },
   ];
   const { res, context } = await runTest({ routine });
@@ -215,9 +203,8 @@ test('multiple rejects in routine', async () => {
         id: 'request:test_endpoint:test_request_1',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'First' } }],
   ]);
-  expect(res.response).toEqual({ info: 'First' });
+  expect(res.error).toEqual(new Error('First'));
 });
 
 test('truthy guard statement reject', async () => {
@@ -234,7 +221,7 @@ test('truthy guard statement reject', async () => {
             response: 'guard statement',
           },
         },
-        { ':reject': { info: 'rejected by guard statement' } },
+        { ':reject': 'rejected by guard statement' },
       ],
     },
     {
@@ -246,11 +233,11 @@ test('truthy guard statement reject', async () => {
         response: 'end',
       },
     },
-    { ':reject': { info: 'made it to the end' } },
+    { ':reject': 'made it to the end' },
   ];
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'rejected by guard statement' });
+  expect(res.error).toEqual(new Error('rejected by guard statement'));
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
     [{ event: 'debug_control_if_run_then' }],
@@ -275,7 +262,6 @@ test('truthy guard statement reject', async () => {
         result: 'guard statement',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'rejected by guard statement' } }],
   ]);
 });
 
@@ -293,7 +279,7 @@ test('falsy guard statement reject', async () => {
             response: 'guard statement',
           },
         },
-        { ':reject': { info: 'rejected by guard statement' } },
+        { ':reject': 'rejected by guard statement' },
       ],
     },
     {
@@ -305,11 +291,11 @@ test('falsy guard statement reject', async () => {
         response: 'end',
       },
     },
-    { ':reject': { info: 'made it to the end' } },
+    { ':reject': 'made it to the end' },
   ];
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'made it to the end' });
+  expect(res.error).toEqual(new Error('made it to the end'));
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: false, evaluated: false } }],
     [
@@ -333,7 +319,6 @@ test('falsy guard statement reject', async () => {
         result: 'end',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'made it to the end' } }],
   ]);
 });
 
@@ -350,14 +335,14 @@ test('reject in a try catch block', async () => {
             response: 'try_reject_block',
           },
         },
-        { ':reject': { info: 'reject in try block' } },
+        { ':reject': 'reject in try block' },
       ],
       catch: [{ ':return': { message: 'Caught rejection' } }],
     },
   ];
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'reject in try block' });
+  expect(res.error).toEqual(new Error('reject in try block'));
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_try' }],
     [
@@ -381,7 +366,6 @@ test('reject in a try catch block', async () => {
         result: 'try_reject_block',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'reject in try block' } }],
   ]);
 });
 
@@ -411,10 +395,10 @@ test('deep nested reject', async () => {
                 response: 'second if',
               },
             },
-            { ':reject': { info: 'rejected by first if' } },
+            { ':reject': 'rejected by first if' },
           ],
         },
-        { ':reject': { info: 'rejected by second if' } },
+        { ':reject': 'rejected by second if' },
       ],
     },
     {
@@ -426,11 +410,11 @@ test('deep nested reject', async () => {
         response: 'end',
       },
     },
-    { ':reject': { info: 'made it to the end' } },
+    { ':reject': 'made it to the end' },
   ];
   const { res, context } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'rejected by first if' });
+  expect(res.error).toEqual(new Error('rejected by first if'));
   expect(context.logger.debug.mock.calls).toEqual([
     [{ event: 'debug_control_if', condition: { input: true, evaluated: true } }],
     [{ event: 'debug_control_if_run_then' }],
@@ -478,6 +462,5 @@ test('deep nested reject', async () => {
         result: 'second if',
       },
     ],
-    [{ event: 'debug_control_reject', response: { info: 'rejected by first if' } }],
   ]);
 });

@@ -24,18 +24,16 @@ test('step calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   const step = (await import('./step.js')).default;
   step({
-    arrayIndices: [0],
     location: 'location',
     params: 'params',
-    step: { step: true },
+    steps: { steps: true },
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        arrayIndices: [0],
         location: 'location',
         object: {
-          step: true,
+          steps: true,
         },
         operator: '_step',
         params: 'params',

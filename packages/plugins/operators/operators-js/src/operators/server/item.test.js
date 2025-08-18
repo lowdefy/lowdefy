@@ -24,18 +24,16 @@ test('item calls getFromObject', async () => {
   const lowdefyOperators = await import('@lowdefy/operators');
   const item = (await import('./item.js')).default;
   item({
-    arrayIndices: [0],
     location: 'location',
     params: 'params',
-    item: { item: true },
+    items: { items: true },
   });
   expect(lowdefyOperators.getFromObject.mock.calls).toEqual([
     [
       {
-        arrayIndices: [0],
         location: 'location',
         object: {
-          item: true,
+          items: true,
         },
         operator: '_item',
         params: 'params',

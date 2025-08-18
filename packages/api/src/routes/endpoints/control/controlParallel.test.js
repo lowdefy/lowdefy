@@ -418,7 +418,7 @@ test('parallel with return and reject', async () => {
               ms: 30,
             },
           },
-          { ':reject': { info: 'Rejection in parallel' } },
+          { ':reject': 'Rejection in parallel' },
         ],
         {
           id: 'request:test_endpoint:test_request_wait_10',
@@ -434,5 +434,5 @@ test('parallel with return and reject', async () => {
   ];
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('reject');
-  expect(res.response).toEqual({ info: 'Rejection in parallel' });
+  expect(res.error).toEqual(new Error('Rejection in parallel'));
 });
