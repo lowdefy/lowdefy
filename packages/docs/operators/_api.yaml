@@ -25,32 +25,220 @@ _ref:
       (endpointId: string): any
       ```
     description: |
-      The `_api` operator returns the response of an API endpoint call. If the endpoint has not yet been called, or is still executing, the returned value is `null`. Dot notation and [block list indexes](/lists) are supported.
+      The `_api` operator returns the response object from an API endpoint that has been called using the [`CallAPI`](/CallAPI) action. This operator is only available on the client side (in pages) and provides access to the full API response object including the response data, loading state, success status, and any errors. If the API endpoint has not yet been called or is still executing, the returned value is `null`. Dot notation is supported for accessing nested properties.
     arguments: |
       ###### string
-      The id of the API endpoint.
+      The id of the API endpoint that was called using the CallAPI action.
     examples: |
-      ###### Using an API endpoint response:
+      ###### Accessing the full API response object:
       ```yaml
-      _api: my_api_endpoint
-      ```
-      Returns: The full response object returned by the API Call.
+      blocks:
+        - id: fetch_button
+          type: Button
+          properties:
+            title: Load User Data
+          events:
+            onClick:
+              - id: call_user_api
+                type: CallAPI
+                params:
+                  endpoint_id: get_user_profile
+                  payload:
+                    user_id:
+                      _state: selected_user_id
 
-      ###### Using dot notation to get the response object from the API Call:
-      ```yaml
-      _api: my_api_endpoint.response
+        - id: api_response_display
+          type: Json
+          properties:
+            data:
+              _api: get_user_profile  # Returns the full response object
       ```
-      ###### Using dot notation to get the status of API Call:
+      Returns: The complete API response object containing response, error, success, status, loading, and timing information.
+
+      ###### Using dot notation to access the response data:
       ```yaml
-      _api: my_api_endpoint.status
+      blocks:
+        - id: user_name_display
+          type: Paragraph
+          properties:
+            content:
+              _if:
+                test:
+                  _api: get_user_profile.success
+                then:
+                  _string.concat:
+                    - 'Welcome, '
+                    - _api: get_user_profile.response.name
+                else: 'User not loaded'
+
+        - id: user_email_display
+          type: TextInput
+          properties:
+            label: Email
+            value:
+              _api: get_user_profile.response.email
+            disabled: true
       ```
 
-      ###### Using dot notation to get the success status of the API Call:
+      ###### Checking loading and error states:
       ```yaml
-      _api: my_api_endpoint.success
+      blocks:
+        - id: loading_spinner
+          type: Spinner
+          visible:
+            _api: fetch_products.loading  # Show spinner while API is loading
+
+        - id: error_message
+          type: Alert
+          visible:
+            _not:
+              _api: fetch_products.success
+          properties:
+            type: error
+            message:
+              _if:
+                test:
+                  _api: fetch_products.error
+                then:
+                  _api: fetch_products.error.message
+                else: 'An error occurred'
+
+        - id: products_list
+          type: List
+          visible:
+            _and:
+              - _api: fetch_products.success
+              - _not:
+                  _api: fetch_products.loading
+          properties:
+            data:
+              _api: fetch_products.response.products
       ```
 
-      ###### Using dot notation to get the error object of the API Call:
+      ###### Working with multiple API calls:
       ```yaml
-      _api: my_api_endpoint.error
+      blocks:
+        - id: load_all_button
+          type: Button
+          properties:
+            title: Load All Data
+          events:
+            onClick:
+              - id: fetch_user
+                type: CallAPI
+                params:
+                  endpoint_id: get_current_user
+
+              - id: fetch_permissions
+                type: CallAPI
+                params:
+                  endpoint_id: get_user_permissions
+                  payload:
+                    user_id:
+                      _api: get_current_user.response._id
+
+              - id: fetch_dashboard_data
+                type: CallAPI
+                params:
+                  endpoint_id: get_dashboard_stats
+                  payload:
+                    permission_level:
+                      _api: get_user_permissions.response.level
+
+        - id: dashboard_container
+          type: Box
+          visible:
+            _and:
+              - _api: get_current_user.success
+              - _api: get_user_permissions.success
+              - _api: get_dashboard_stats.success
+          blocks:
+            - id: welcome_message
+              type: Title
+              properties:
+                content:
+                  _string.concat:
+                    - 'Dashboard for '
+                    - _api: get_current_user.response.name
+
+            - id: stats_display
+              type: Statistic
+              properties:
+                title: Total Revenue
+                value:
+                  _api: get_dashboard_stats.response.total_revenue
+      ```
+
+      ###### Using API response in form validation:
+      ```yaml
+      blocks:
+        - id: check_username_button
+          type: Button
+          properties:
+            title: Check Availability
+          events:
+            onClick:
+              - id: check_username
+                type: CallAPI
+                params:
+                  endpoint_id: validate_username
+                  payload:
+                    username:
+                      _state: username_input
+
+        - id: username_input
+          type: TextInput
+          properties:
+            label: Username
+            status:
+              _if:
+                test:
+                  _eq:
+                    - _api: validate_username.response.available
+                    - false
+                then: error
+                else:
+                  _if:
+                    test:
+                      _eq:
+                        - _api: validate_username.response.available
+                        - true
+                    then: success
+                    else: null
+            help:
+              _if:
+                test:
+                  _api: validate_username.response
+                then:
+                  _if:
+                    test:
+                      _api: validate_username.response.available
+                    then: 'Username is available!'
+                    else: 'Username is already taken'
+                else: 'Enter a username and check availability'
+      ```
+
+      ###### Accessing API response time and metadata:
+      ```yaml
+      blocks:
+        - id: api_debug_info
+          type: Descriptions
+          properties:
+            items:
+              - label: API Status
+                value:
+                  _api: fetch_data.status
+              - label: Success
+                value:
+                  _api: fetch_data.success
+              - label: Response Time
+                value:
+                  _string.concat:
+                    - _api: fetch_data.response_time
+                    - 'ms'
+              - label: Timestamp
+                value:
+                  _date.format:
+                    - _api: fetch_data.end_timestamp
+                    - 'HH:mm:ss'
       ```

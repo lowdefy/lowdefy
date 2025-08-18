@@ -207,6 +207,7 @@
 - _ref: operators/_index.yaml
 - _ref: operators/_input.yaml
 - _ref: operators/_intl.yaml
+- _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
 - _ref: operators/_location.yaml
@@ -233,6 +234,7 @@
 - _ref: operators/_request_details.yaml
 - _ref: operators/_secret.yaml
 - _ref: operators/_state.yaml
+- _ref: operators/_step.yaml
 - _ref: operators/_string.yaml
 - _ref: operators/_subtract.yaml
 - _ref: operators/_sum.yaml

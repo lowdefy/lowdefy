@@ -789,6 +789,9 @@
         - id: _intl
           type: MenuLink
           pageId: _intl
+        - id: _item
+          type: MenuLink
+          pageId: _item
         - id: _js
           type: MenuLink
           pageId: _js
@@ -867,6 +870,9 @@
         - id: _state
           type: MenuLink
           pageId: _state
+        - id: _step
+          type: MenuLink
+          pageId: _step
         - id: _string
           type: MenuLink
           pageId: _string
