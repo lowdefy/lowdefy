@@ -25,25 +25,25 @@ _ref:
       (key: string): any
       ```
     description: |
-      The `_item` operator returns the current item value during iteration in `:for` and `:parallel_for` control structures within API routines. This operator is only available inside the `:do` block of these loop controls. The key used with `_item` must match the key defined in the `:for` or `:parallel_for` declaration. Dot notation is supported for accessing nested properties.
+      The `_item` operator returns the current item value during iteration in `:for` and `:parallel_for` control structures within API routines. The key used with `_item` must match the key defined in the relevant `:for` or `:parallel_for` declaration because it also supports nested loops. Dot notation is supported for accessing nested properties.
     arguments: |
       ###### string
-      The key name defined in the `:for` or `:parallel_for` control structure.
+      The key name defined in the relevant `:for` or `:parallel_for` control structure.
     examples: |
       ###### Using in a :for loop:
       ```yaml
       routine:
-        - :for: user
+        - :for: user_id
           :in:
             _payload: user_ids
           :do:
             - id: update_user
               type: MongoDBUpdateOne
-              connectionId: users-db
+              connectionId: users
               properties:
                 filter:
                   _id:
-                    _item: user  # Access the current user_id
+                    _item: user_id  # Access the current user_id
                 update:
                   $set:
                     last_seen:
@@ -60,7 +60,7 @@ _ref:
           :do:
             - id: update_product
               type: MongoDBUpdateOne
-              connectionId: products-db
+              connectionId: products
               properties:
                 filter:
                   _id:
@@ -89,7 +89,7 @@ _ref:
       routine:
         - id: get_orders
           type: MongoDBFind
-          connectionId: orders-db
+          connectionId: orders
           properties:
             query:
               status: 'pending'
@@ -127,7 +127,7 @@ _ref:
               :do:
                 - id: update_product
                   type: MongoDBUpdateOne
-                  connectionId: products-db
+                  connectionId: products
                   properties:
                     filter:
                       _id:

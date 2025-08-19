@@ -1,23 +1,23 @@
 Lowdefy APIs allow you to create custom server-side API endpoints within your Lowdefy application. These endpoints can execute complex server-side logic, orchestrate multiple database or external API calls, perform data transformations, and implement business workflows that require server-side processing.
 
 APIs are particularly useful when you need to:
-- Coordinate multiple requests in a specific sequence
-- Implement complex business logic that should run on the server
-- Transform or aggregate data from multiple sources
-- Create reusable endpoints that can be called from multiple pages
-- Build webhook endpoints for external services
-- Keep sensitive operations and data on the server
+- Coordinate multiple requests in a specific sequence.
+- Implement complex business logic that should run on the server.
+- Transform or aggregate data from multiple sources.
+- Create reusable endpoints that can be called from multiple pages.
+- Build webhook endpoints for external services.
+- Keep sensitive operations and data on the server.
 
 ## How Lowdefy APIs Work
 
 Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a **routine** - a sequence of steps and control structures that define the execution flow. When an API is called from the client using the `CallAPI` action, the routine executes on the server with access to connections, secrets, and server-side operators.
 
 The API execution flow:
-1. Client calls the API using the `CallAPI` action with an optional payload
-2. Server checks authorization based on the auth configuration in `lowdefy.yaml`
-3. The API routine executes sequentially (or in parallel where specified)
-4. Each step can make requests to connections, transform data, or control flow
-5. The API returns a response to the client
+1. Client calls the API using the `CallAPI` action with an optional payload.
+2. Server checks authorization based on the auth configuration in `lowdefy.yaml`.
+3. The API routine executes sequentially (or in parallel where specified).
+4. Each step can make requests to connections, transform data, or control flow.
+5. The API returns a response to the client.
 
 ## API Definition
 
@@ -38,7 +38,7 @@ api:
 lowdefy: 4.4.0
 
 connections:
-  - id: users-db
+  - id: users
     type: MongoDB
     properties:
       uri:
@@ -51,7 +51,7 @@ api:
     routine:
       - id: fetch_user
         type: MongoDBFindOne
-        connectionId: users-db
+        connectionId: users
         properties:
           query:
             user_id:
@@ -78,7 +78,7 @@ api:
     routine:
       - id: get_data
         type: MongoDBFind
-        connectionId: content-db
+        connectionId: content
         properties:
           query:
             published: true
@@ -95,12 +95,9 @@ To protect APIs and require authentication, configure them in the `auth` section
 auth:
   # Configure which APIs require authentication
   api:
-    protected:
-      - get_user_data
-      - update_profile
-      - admin_api
+    protected: true
     public:
-      - health_check  # Explicitly public (though unnecessary since default is public)
+      - health_check
     roles:
       admin:
         - admin_api
@@ -127,11 +124,11 @@ api:
     routine:
       - id: fetch_user
         type: MongoDBFindOne
-        connectionId: users-db
+        connectionId: users
         properties:
           query:
             user_id:
-              _user: id  # Only available when protected
+              _user: id
       - :return:
           user:
             _step: fetch_user
@@ -155,7 +152,7 @@ api:
       - :return:
           message: 'This API requires authentication'
           user_id:
-            _user: id  # _user operator only works in protected APIs
+            _user: id
           email:
             _user: email
 ```
@@ -187,7 +184,7 @@ api:
     routine:
       - id: get_system_stats
         type: MongoDBAggregate
-        connectionId: analytics-db
+        connectionId: analytics
         properties:
           pipeline:
             - $group:
@@ -203,7 +200,7 @@ api:
     routine:
       - id: get_profile
         type: MongoDBFindOne
-        connectionId: users-db
+        connectionId: users
         properties:
           query:
             user_id:
@@ -212,115 +209,17 @@ api:
           _step: get_profile
 ```
 
-### Using User Context
-
-The `_user` operator is only available in protected APIs. Attempting to use it in a public API will return null:
-
-```yaml
-api:
-  - id: user_profile_api
-    type: Api
-    routine:
-      - id: get_user_profile
-        type: MongoDBFindOne
-        connectionId: profiles
-        properties:
-          query:
-            userId:
-              _user: id  # Access the authenticated user's ID
-
-      - id: log_access
-        type: MongoDBInsertOne
-        connectionId: access_logs
-        properties:
-          doc:
-            userId:
-              _user: id
-            userEmail:
-              _user: email
-            userRoles:
-              _user: roles
-            action: 'view_profile'
-            timestamp:
-              _date: now
-
-      - :return:
-          profile:
-            _step: get_user_profile
-          user:
-            id:
-              _user: id
-            email:
-              _user: email
-            roles:
-              _user: roles
-```
-
 ### Authorization Errors
 
 When a user attempts to access an API they're not authorized for:
-- Unauthenticated users trying to access protected APIs will receive an authentication error
-- Authenticated users without required roles will receive an authorization error
-- The API endpoint behaves the same as pages - appearing as if it doesn't exist to unauthorized users
-
-### Security Best Practices for APIs
-
-1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list
-2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access
-3. **Validate User Context**: In protected APIs, always validate that users can only access their own data
-4. **Audit Sensitive Operations**: Log access to sensitive APIs for security auditing
-5. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible
-
-Example of a secure API with user validation:
-
-```yaml
-auth:
-  api:
-    protected:
-      - update_user_settings
-    roles:
-      user:
-        - update_user_settings
-      admin:
-        - update_user_settings
-
-api:
-  - id: update_user_settings
-    type: Api
-    routine:
-      # Validate that non-admin users can only update their own settings
-      - :if:
-          _and:
-            - _not:
-                _array.includes:
-                  - _user: roles
-                  - 'admin'
-            - _ne:
-                - _payload: user_id
-                - _user: id
-        :then:
-          :reject: 'Unauthorized: You can only update your own settings'
-
-      # Update settings
-      - id: update_settings
-        type: MongoDBUpdateOne
-        connectionId: user-settings
-        properties:
-          filter:
-            user_id:
-              _payload: user_id
-          update:
-            $set:
-              _payload: settings
-
-      - :return:
-          success: true
-          message: 'Settings updated successfully'
-```
+- Unauthenticated users trying to access protected APIs will receive an authentication error.
+- Authenticated users without required roles will receive an authorization error.
+- The API endpoint behaves the same as pages - appearing as if it doesn't exist to unauthorized users.
 
 ## Routines
 
 Routines define the execution logic of your API. They can be either:
+
 - **Arrays**: Steps execute sequentially
 - **Objects**: Single step or control structure
 - **Nested combinations**: Arrays and objects can be nested to create complex flows
@@ -333,7 +232,7 @@ By default, steps in an array execute one after another:
 routine:
   - id: step_1
     type: MongoDBFindOne
-    connectionId: users-db
+    connectionId: users
     properties:
       query:
         _id:
@@ -363,7 +262,7 @@ Use the `_step` operator to access results from previously executed steps:
 ```yaml
 - id: get_user
   type: MongoDBFindOne
-  connectionId: users-db
+  connectionId: users
   properties:
     query:
       email:
@@ -371,335 +270,39 @@ Use the `_step` operator to access results from previously executed steps:
 
 - id: get_orders
   type: MongoDBFind
-  connectionId: orders-db
+  connectionId: orders
   properties:
     query:
       user_id:
         _step: get_user._id  # Access the _id from get_user step
 ```
 
-## Control Structures
+### Control Structures
 
-Control structures allow you to implement complex logic flows within your API routines.
+Control structures allow you to implement complex logic flows within your API routines. The following controls can be used in API routines:
 
-### Conditional Execution (`:if`)
+- [`:for`](/for) - Iterate over an array sequentially.
+- [`:if`](/if) - Execute different routines based on a condition.
+- [`:log`](/log) - Output messages to the server console.
+- [`:parallel`](/parallel) - Execute multiple routines simultaneously.
+- [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
+- [`:reject`](/reject) - Return a user-facing error response.
+- [`:return`](/return) - Return a successful response with data.
+- [`:set_state`](/set_state) - Set values in server-side state.
+- [`:switch`](/switch) - Handle multiple conditions with different outcomes.
+- [`:throw`](/throw) - Throw a system error that can be caught.
+- [`:try`](/try) - Handle errors with catch and finally blocks.
 
-Execute different routines based on conditions:
+### Operators
 
-```yaml
-routine:
-  - :if:
-      _eq:
-        - _payload: action
-        - 'create'
-    :then:
-      - id: create_record
-        type: MongoDBInsertOne
-        connectionId: records-db
-        properties:
-          doc:
-            _payload: data
-      - :return:
-          created: true
-          id:
-            _step: create_record.insertedId
-    :else:
-      - id: update_record
-        type: MongoDBUpdateOne
-        connectionId: records-db
-        properties:
-          filter:
-            _id:
-              _payload: id
-          update:
-            $set:
-              _payload: data
-      - :return:
-          updated: true
-          id:
-            _payload: id
-```
+APIs have access to all operators with server-side functionality, the following are the most relevant:
 
-### Switch Statements (`:switch`)
-
-Handle multiple conditions:
-
-```yaml
-routine:
-  - :switch:
-      - :case:
-          _eq:
-            - _payload: operation
-            - 'sum'
-        :then:
-          :return:
-            result:
-              _sum:
-                _payload: values
-
-      - :case:
-          _eq:
-            - _payload: operation
-            - 'average'
-        :then:
-          :return:
-            result:
-              _divide:
-                - _sum:
-                    _payload: values
-                - _array.length:
-                    _payload: values
-
-    :default:
-      :return:
-        error: 'Unknown operation'
-```
-
-### Loops (`:for`)
-
-Iterate over arrays to process items sequentially:
-
-```yaml
-routine:
-  - id: get_product_ids
-    type: MongoDBAggregation
-    connectionId: orders-db
-    properties:
-      pipeline:
-        - $match:
-            status: 'pending'
-        - $project:
-            product_id: 1
-
-  - :for: product
-    :in:
-      _step: get_product_ids
-    :do:
-      - id: update_inventory
-        type: MongoDBUpdateOne
-        connectionId: products-db
-        properties:
-          filter:
-            _id:
-              _item: product.product_id
-          update:
-            $inc:
-              inventory: -1
-
-  - :return:
-      processed:
-        _array.length:
-          _step: get_product_ids
-```
-
-### Parallel Execution (`:parallel`)
-
-Execute multiple routines simultaneously:
-
-```yaml
-routine:
-  - :parallel:
-      - id: fetch_user_details
-        type: MongoDBFindOne
-        connectionId: users-db
-        properties:
-          query:
-            _id:
-              _payload: user_id
-
-      - id: fetch_user_orders
-        type: MongoDBFind
-        connectionId: orders-db
-        properties:
-          query:
-            user_id:
-              _payload: user_id
-
-      - id: fetch_user_preferences
-        type: MongoDBFindOne
-        connectionId: preferences-db
-        properties:
-          query:
-            user_id:
-              _payload: user_id
-
-  - :return:
-      user:
-        _step: fetch_user_details
-      orders:
-        _step: fetch_user_orders
-      preferences:
-        _step: fetch_user_preferences
-```
-
-### Parallel For Loops (`:parallel_for`)
-
-Process array items concurrently:
-
-```yaml
-routine:
-  - :parallel_for: user_id
-    :in:
-      _payload: user_ids
-    :do:
-      - id: update_last_seen
-        type: MongoDBUpdateOne
-        connectionId: users-db
-        properties:
-          filter:
-            _id:
-              _item: user_id
-          update:
-            $set:
-              last_seen:
-                _date: now
-```
-
-### Error Handling (`:try`)
-
-Handle errors gracefully:
-
-```yaml
-routine:
-  - :try:
-      - id: risky_operation
-        type: AxiosHttp
-        connectionId: external-api
-        properties:
-          method: POST
-          url: /process
-          data:
-            _payload: data
-
-      - :return:
-          success: true
-          result:
-            _step: risky_operation.data
-
-    :catch:
-      - :log:
-          message: 'External API failed'
-        :level: error
-
-      - :return:
-          success: false
-          error: 'Processing failed, please try again'
-
-    :finally:
-      - id: log_attempt
-        type: MongoDBInsertOne
-        connectionId: api-logs
-        properties:
-          doc:
-            timestamp:
-              _date: now
-            api: 'process_data'
-            success:
-              _if:
-                test:
-                  _step: risky_operation
-                then: true
-                else: false
-```
-
-### Return and Reject
-
-Control API responses:
-
-```yaml
-routine:
-  - id: validate_user
-    type: MongoDBFindOne
-    connectionId: users-db
-    properties:
-      query:
-        _id:
-          _payload: user_id
-
-  - :if:
-      _not:
-        _step: validate_user
-    :then:
-      :reject: 'User not found'
-
-  - :return:
-      user:
-        _step: validate_user
-      message: 'User retrieved successfully'
-```
-
-### State Management (`:set_state`)
-
-Maintain state during API execution:
-
-```yaml
-routine:
-  - :set_state:
-      processed_count: 0
-      errors: []
-
-  - :for: item
-    :in:
-      _payload: items
-    :do:
-      - :try:
-          - id: process_item
-            type: MongoDBInsertOne
-            connectionId: processed-items
-            properties:
-              doc:
-                _item: item
-
-          - :set_state:
-              processed_count:
-                _sum:
-                  - _state: processed_count
-                  - 1
-
-        :catch:
-          - :set_state:
-              errors:
-                _array.concat:
-                  - _state: errors
-                  - - _item: item.id
-
-  - :return:
-      processed:
-        _state: processed_count
-      errors:
-        _state: errors
-      success:
-        _eq:
-          - _array.length:
-              _state: errors
-          - 0
-```
-
-### Logging (`:log`)
-
-Output to server console for debugging:
-
-```yaml
-routine:
-  - :log:
-      message: 'Processing order'
-      order_id:
-        _payload: order_id
-      timestamp:
-        _date: now
-    :level: info  # debug, info, warn, error
-```
-
-### Server-Side Operators
-
-APIs have access to server-only operators:
-
-- `_step`: Access results from previous steps
-- `_item`: Access current item in :for and :parallel_for loops
-- `_state`: Access server-side state set with :set_state
-- `_payload`: Access the payload sent from the client
-- `_user`: Access authenticated user information (only in protected APIs)
-- _secret: Access secrets (in connection properties)
+- [`_step`](/_step) - Access results from previous steps.
+- [`_item`](/_item) - Access current item in :for and :parallel_for loops.
+- [`_state`](/_state) - Access server-side state set with :set_state.
+- [`_payload`](/_payload) - Access the payload sent from the client.
+- [`_user`](/_user) - Access authenticated user information.
+- [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
 
 ## Calling APIs from the Client
 
@@ -736,9 +339,9 @@ pages:
                   _actions: call_user_api.response.user
 
       - id: user_display
-        type: Json
+        type: Descriptions
         properties:
-          data:
+          items:
             _state: user_data
 ```
 
@@ -771,9 +374,9 @@ blocks:
         _api: fetch_data.error.message
 
   - id: data_display
-    type: Json
+    type: Descriptions
     properties:
-      data:
+      items:
         _api: fetch_data.response
 ```
 
@@ -834,7 +437,7 @@ api:
       # Validate order
       - id: validate_order
         type: MongoDBFindOne
-        connectionId: orders-db
+        connectionId: orders
         properties:
           query:
             _id:
@@ -856,7 +459,7 @@ api:
         :do:
           - id: check_inventory
             type: MongoDBFindOne
-            connectionId: products-db
+            connectionId: products
             properties:
               query:
                 _id:
@@ -889,7 +492,7 @@ api:
         :catch:
           - id: mark_payment_failed
             type: MongoDBUpdateOne
-            connectionId: orders-db
+            connectionId: orders
             properties:
               filter:
                 _id:
@@ -905,7 +508,7 @@ api:
       # Update order status
       - id: complete_order
         type: MongoDBUpdateOne
-        connectionId: orders-db
+        connectionId: orders
         properties:
           filter:
             _id:
@@ -925,7 +528,7 @@ api:
         :do:
           - id: reduce_inventory
             type: MongoDBUpdateOne
-            connectionId: products-db
+            connectionId: products
             properties:
               filter:
                 _id:
@@ -960,28 +563,58 @@ api:
 
 ## Best Practices
 
-### Security
-- Always protect APIs that handle user data or sensitive operations
-- Use `:reject` to return user-friendly error messages
-- Keep sensitive logic and data transformations on the server
-- Validate that users can only access their own data
+1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list.
+2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access.
+3. **Validate User Context**: In protected APIs, always validate that users can only access their own data.
+4. **Audit Sensitive Operations**: Log access to sensitive APIs for security auditing.
+5. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible.
 
-### Performance
-- Use `:parallel` when operations don't depend on each other
-- Minimize database calls by using efficient queries
-- Consider caching frequently accessed data
+Example of a secure API with user validation:
 
-### Error Handling
-- Always use `:try`/`:catch` for external API calls
-- Provide meaningful error messages with `:reject`
-- Log errors for debugging with `:log`
-- Use `:finally` for cleanup operations
+```yaml
+auth:
+  api:
+    protected:
+      - update_user_settings
+    roles:
+      user:
+        - update_user_settings
+      admin:
+        - update_user_settings
 
-### Code Organization
-- Keep routines focused on a single responsibility
-- Use descriptive step IDs
-- Comment complex logic
-- Consider breaking very long routines into multiple APIs
+api:
+  - id: update_user_settings
+    type: Api
+    routine:
+      # Validate that non-admin users can only update their own settings
+      - :if:
+          _and:
+            - _not:
+                _array.includes:
+                  - _user: roles
+                  - 'admin'
+            - _ne:
+                - _payload: user_id
+                - _user: id
+        :then:
+          :reject: 'Unauthorized: You can only update your own settings'
+
+      # Update settings
+      - id: update_settings
+        type: MongoDBUpdateOne
+        connectionId: user-settings
+        properties:
+          filter:
+            user_id:
+              _payload: user_id
+          update:
+            $set:
+              _payload: settings
+
+      - :return:
+          success: true
+          message: 'Settings updated successfully'
+```
 
 ## TLDR
 

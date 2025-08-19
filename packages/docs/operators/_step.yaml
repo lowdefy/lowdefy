@@ -35,7 +35,7 @@ _ref:
       routine:
         - id: get_user
           type: MongoDBFindOne
-          connectionId: users-db
+          connectionId: users
           properties:
             query:
               email:
@@ -51,7 +51,7 @@ _ref:
       routine:
         - id: get_user
           type: MongoDBFindOne
-          connectionId: users-db
+          connectionId: users
           properties:
             query:
               email:
@@ -59,7 +59,7 @@ _ref:
 
         - id: get_orders
           type: MongoDBFind
-          connectionId: orders-db
+          connectionId: orders
           properties:
             query:
               userId:
@@ -71,7 +71,7 @@ _ref:
       routine:
         - id: get_products
           type: MongoDBFind
-          connectionId: products-db
+          connectionId: products
           properties:
             query:
               category: 'electronics'
@@ -88,7 +88,7 @@ _ref:
       routine:
         - id: create_order
           type: MongoDBInsertOne
-          connectionId: orders-db
+          connectionId: orders
           properties:
             doc:
               items:
