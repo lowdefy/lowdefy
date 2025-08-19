@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :throw
     pageTitle: :throw
-    filePath: controls/:throw.yaml
+    filePath: controls/throw.yaml
     types: |
       ```
       ({:throw: string, :cause: any}): void
@@ -63,7 +63,7 @@ _ref:
       ```yaml
       - id: get_system_config
         type: MongoDBFindOne
-        connectionId: config-db
+        connectionId: config
         properties:
           filter:
             name: 'max_file_size'

@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :log
     pageTitle: :log
-    filePath: controls/:log.yaml
+    filePath: controls/log.yaml
     types: |
       ```
       ({:log: any, :level: string}): void

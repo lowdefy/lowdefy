@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :switch
     pageTitle: :switch
-    filePath: controls/:switch.yaml
+    filePath: controls/switch.yaml
     types: |
       ```
       ({:switch: [{:case: boolean, :then: routine], :default: routine}): void
@@ -68,7 +68,7 @@ _ref:
       ```yaml
       - id: get_user_subscription
         type: MongoDBFindOne
-        connectionId: subscriptions-db
+        connectionId: subscriptions
         properties:
           filter:
             user_id:

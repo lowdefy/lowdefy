@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :reject
     pageTitle: :reject
-    filePath: controls/:reject.yaml
+    filePath: controls/reject.yaml
     types: |
       ```
       ({:reject: string, :cause: any}): void
@@ -33,7 +33,7 @@ _ref:
       ```yaml
       - id: check_inventory
         type: MongoDBFindOne
-        connectionId: products-db
+        connectionId: products
         properties:
           filter:
             product_id:

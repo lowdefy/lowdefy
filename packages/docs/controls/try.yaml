@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :try
     pageTitle: :try
-    filePath: controls/:try.yaml
+    filePath: controls/try.yaml
     types: |
       ```
       ({:try: routine, :catch: routine, :finally: routine}): void

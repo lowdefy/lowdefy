@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :for
     pageTitle: :for
-    filePath: controls/:for.yaml
+    filePath: controls/for.yaml
     types: |
       ```
       ({:for: string, :in: any[], :do: routine}): void

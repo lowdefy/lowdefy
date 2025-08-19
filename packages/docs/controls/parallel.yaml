@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :parallel
     pageTitle: :parallel
-    filePath: controls/:parallel.yaml
+    filePath: controls/parallel.yaml
     types: |
       ```
       ({:parallel: routine[]}): void

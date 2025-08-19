@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :while
     pageTitle: :while
-    filePath: controls/:while.yaml
+    filePath: controls/while.yaml
     types: |
       ```
       ({:while: boolean, :do: routine}): void

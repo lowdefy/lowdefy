@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :return
     pageTitle: :return
-    filePath: controls/:return.yaml
+    filePath: controls/return.yaml
     types: |
       ```
       ({:return: any}): void
@@ -46,7 +46,7 @@ _ref:
       ```yaml
       - id: get_user_subscription
         type: MongoDBFindOne
-        connectionId: subscriptions-db
+        connectionId: subscriptions
         properties:
           filter:
             user_id:

@@ -17,7 +17,7 @@ _ref:
   vars:
     pageId: :set_state
     pageTitle: :set_state
-    filePath: controls/:set_state.yaml
+    filePath: controls/set_state.yaml
     types: |
       ```
       ({:set_state: object}): void
