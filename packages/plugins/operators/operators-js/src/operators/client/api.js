@@ -32,7 +32,7 @@ function _api({ params, apiResponses, location }) {
     const key = keyParts.join('.');
     return get(apiResponses[endpoint][0], key, {
       copy: true,
-      default: null,
+      default: apiResponses[endpoint][0],
     });
   }
 
