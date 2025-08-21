@@ -20,6 +20,7 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 import { CsvExportModule } from '@ag-grid-community/csv-export';
 
 import processColDefs from './processColDefs.js';
+import assignRowId from './assignRowId.js';
 
 const AgGrid = ({ properties, methods, loading, events }) => {
   const {
@@ -36,12 +37,12 @@ const AgGrid = ({ properties, methods, loading, events }) => {
   const memoDefaultColDef = useMemo(() => defaultColDef);
 
   const getRowId = useCallback(
-    (params) =>
-      params.data[properties.rowId] ??
-      params.data.id ??
-      params.data._id ??
-      JSON.stringify(params.data),
-    []
+    (params) => {
+      if (properties.rowId && params.data[properties.rowId] !== undefined)
+        return params.data[properties.rowId];
+      return assignRowId(params);
+    },
+    [properties.rowId]
   );
 
   const onRowClick = useCallback((event) => {
@@ -51,7 +52,6 @@ const AgGrid = ({ properties, methods, loading, events }) => {
         event: {
           row: event.data,
           selected: gridRef.current.api.getSelectedRows(),
-          index: parseInt(event.node.id),
           rowIndex: event.rowIndex,
         },
       });
@@ -64,7 +64,6 @@ const AgGrid = ({ properties, methods, loading, events }) => {
         event: {
           cell: { column: event.colDef.field, value: event.value },
           colId: event.column.colId,
-          index: parseInt(event.node.id),
           row: event.data,
           rowIndex: event.rowIndex,
           selected: gridRef.current.api.getSelectedRows(),
@@ -78,7 +77,6 @@ const AgGrid = ({ properties, methods, loading, events }) => {
       methods.triggerEvent({
         name: 'onRowSelected',
         event: {
-          index: parseInt(event.node.id),
           row: event.data,
           rowIndex: event.rowIndex,
           selected: gridRef.current.api.getSelectedRows(),
