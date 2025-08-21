@@ -1,6 +1,6 @@
-<!-- 
-Date Generated: 2025-07-01 08:24:34 UTC
-Branch: develop
+<!--
+Date Generated: 2025-08-21 14:58:37 UTC
+Branch: generate-docs-md
 -->
 
 # Lowdefy Documentation
@@ -297,10 +297,6 @@ pages:
 
 **Section:** Concepts
 
-
----
-**Nunjucks Template:**
-```yaml
 A Lowdefy app has a few different data objects which can be accessed and modified. The app wide objects are the `global`, `media` and `user` objects. Then there are page specific objects like the `state`, `urlQuery` and `input` objects.
 
 ## State
@@ -543,8 +539,6 @@ blocks:
   - All input blocks write their value to `state`, with the their `id` as the key in the `state` object.
   - Input blocks which are not visible are removed from `state`.
   - The `SetState` action can also modify the `state` object.
-```
----
 
 
 ---
@@ -1572,10 +1566,6 @@ Or compact mode can be applied by importing:
 
 **Section:** Concepts
 
-
----
-**Nunjucks Template:**
-```yaml
 Lowdefy runs as Next.Js app. It is possible to extend the functionality of a Lowdefy app by loading custom code (HTML, CSS and JavaScript) into the HTML `head` and `body` of all pages. This can be useful for executing third party code such as Google Analytics, Intercom, etc. However, if the goal is to extend the functionality of your Lowdefy app with custom blocks, operators, actions or requests, use [plugins](/plugins).
 
 The content loaded into the `head` and `body` tag can be any valid HTML. Be sure to only load trusted code into your app, as this code will be able to execute JavaScript on all pages of your Lowdefy app, which could expose you app or data to security vulnerabilities. Your own code can also be hosted from the [Lowdefy public folder](/hosting-files).
@@ -1615,8 +1605,6 @@ app:
       <!-- End Google Analytics -->
 # ...
 ```
-```
----
 
 
 ---
@@ -1630,10 +1618,6 @@ app:
 In a Lowdefy app you can integrate with other services like API's or databases using `connections` and `requests`. Connections configure the settings to the external service, and often contain parameters like connection strings, urls and secrets like passwords or API keys. Requests are used to interact with the connection, such as inserting a data record, executing a query or calling an API end-point.
 
 
-
----
-**Nunjucks Template:**
-```yaml
 To implement requests, the following steps are required:
 - Define a connection.
 - Define a request.
@@ -1673,13 +1657,7 @@ Our goal is to make connections for everything. As the Lowdefy community grows, 
 Requests can be defined on any block, and the results of the request can be access using the `_request` operator anywhere on the same page. Requests must have an `id`, `type`, `connectionId` field specifying the connection to use, and `properties` defining the request settings. Requests can be called using the [`Request`](/Request) action.
 
 Data that should be passed to the request from the client can be defined in the `payload` field. Operators can be used to create the payload. An example of this would be to use the `_state` operator to include the value of an input block in the payload. The data in the payload can be accessed in the request by making use of the `_payload` operator in the `properties` field. The operators defined in the properties field are evaluated on the server, while those defined in the payload field are evaluated on the client. Operators in the request are evaluated every time a request is called.
-```
----
 
-
----
-**Nunjucks Template:**
-```yaml
 The schema for a Lowdefy request is:
 
 - `id: string`: __Required__ - A identifier for the request. It must be unique within the page the request is defined in.
@@ -2041,8 +2019,6 @@ pages:
   - `requests` use connections to make a call to the connected external services.
   - Use the `payload` object on a request to pass data such as state values from the app client to the server as required.
   - Use the [`_secret`](/_secret) operator to reference API keys or other secrets as required - do not code secrets into your config or commit secrets to your config source control.
-```
----
 
 
 ---
@@ -2210,10 +2186,6 @@ We collect the following information:
 
 **Section:** Concepts
 
-
----
-**Nunjucks Template:**
-```yaml
 A Lowdefy page is compiled out of an arrangement of blocks. Every HTML element of this page is rendered as a result of a block placed and configured on the page. A Lowdefy Block is just a React component. A large number of default blocks make it easy to build apps with Lowdefy, and for more specific requirements, custom blocks can be added to apps as [plugins](/plugins).
 
 Blocks make it simple for Lowdefy developers to create apps since they only have to decide which block type to use, where in the layout the block should render, and what the block should do by defining the block's `properties` and `events`. How a block implements these `properties` and `events` is up to the specific block type.
@@ -2361,8 +2333,6 @@ pages:
   #### Block loading
   - Some blocks gracefully handle a loading state while `onMount` events are being executed.
   - A block's default loading can be overwritten by defining custom `skeleton` settings on a block.
-```
----
 
 
 ---
@@ -2423,10 +2393,6 @@ Your browser should open on http://localhost:3000, and you should see the follow
 > __Error: Could not find "lowdefy.yaml"__: Make sure your current working directory contains the _lowdefy.yaml_ file. You can verify this by running the `dir` (Windows) or `ls` (MacOS) command.
 
 
-
----
-**Nunjucks Template:**
-```yaml
 #### 1.5. Open the configuration file
 
 Open the `lowdefy.yaml` file using a text editor like [VS Code](https://code.visualstudio.com/download). The content of the file should look like this:
@@ -2491,8 +2457,6 @@ Let's modify the button to link to the Lowdefy Discord community instead of to t
 First, change `Let's build something` to `Join Lowdefy on Discord`, then save the file. Your page should automatically refresh and you should see the changed text of the button.
 
 Next, update the link url to the Lowdefy Discord link, replace `https://docs.lowdefy.com` with [`https://discord.gg/QQY9eJ7A2D`](https://discord.gg/QQY9eJ7A2D), then save the file. If you now click the button it should open a new window linking to the Lowdefy Discord Channel - Join our community to ask questions or learn more regarding Lowdefy ❤️
-```
----
 
 ### What happened
 
@@ -2539,10 +2503,6 @@ We will make use of an SQLite database with a table called `tickets`, that has t
 The database used in this tutorial can be downloaded <a href="/tutorial/tutorial_db.sqlite" download>here</a>.
 
 
-
----
-**Nunjucks Template:**
-```yaml
 Alternatively, install [SQLite](https://www.sqlite.org/) on your computer and use the following to create the needed table:
 
 ```
@@ -2695,8 +2655,6 @@ We also defined a `KnexRaw` request, to save the data to our SQLite database, an
 ### Up next
 
 Next, we will add a new page to display all open tickets an a table.
-```
----
 
 
 ---
@@ -2707,10 +2665,6 @@ Next, we will add a new page to display all open tickets an a table.
 
 **Section:** Tutorial
 
-
----
-**Nunjucks Template:**
-```yaml
 If you have been following along, you can continue with your current config. Else, you can find the config from the previous section [here](https://github.com/lowdefy/lowdefy-example-tutorial/tree/main/04-interactive-pages).
 
 We will now add a `AxiosHttp` [connection and request](/connections-and-requests) to get the list of products that tickets can be logged for from an external API endpoint.
@@ -2864,8 +2818,6 @@ We then mapped the request response to the product selector options by using the
 ### Up next
 
 Next we will save the form data to a SQLite database file.
-```
----
 
 
 ---
@@ -3221,10 +3173,6 @@ Our next steps will show you some of the things you could do next.
 
 **Section:** Tutorial
 
-
----
-**Nunjucks Template:**
-```yaml
 Let's create a page for a web form where users can log a new ticket.
 
 #### 2.1. Create `new-ticket.yaml`
@@ -3270,8 +3218,6 @@ pages:
       title: Welcome
     # ...
 ```
-```
----
 
 #### 2.3. Navigate to the new page
 
@@ -4362,10 +4308,6 @@ The `_user` operator can be used to access data in the user object received from
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 The `user` object contains data about the currently logged in user, and can be accessed using the [`_user`](/_user) operator. The data on the user object depends on the fields returned by the provider. By default, Next-Auth will add the `name`, `email` and `image` fields.
 
 Lowdefy will also map the `roles` and the standard OpenID Connect claim fields from the provider to the user object. The OpenID Connect claims are:
@@ -4401,7 +4343,7 @@ type: Avatar
 properties:
   src:
     _user: image
-````
+```
 
 ###### Insert user name and id (sub) when inserting a document in MongoDB:
 ```yaml
@@ -4416,7 +4358,7 @@ properties:
         _user: name
       id:
         _user: sub
-````
+```
 
 ######  Setting all the data from the provider to the user object (Use this in development to see the data from the provider - it is not recommended to do this in production):
 ```yaml
@@ -4438,8 +4380,6 @@ auth:
     # Some providers like Auth0 require custom claims to be added under a URL namespace
     openid_custom_claim: 'profile.https://example.com/custom'
 ```
-```
----
 
 
 ---
@@ -4450,10 +4390,6 @@ auth:
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 Roles can be used to limit user access to certain pages. Only users with a role linked to the page will be able to see that page, and the page will be filtered from menus if the user does not have the role.
 
 Roles can be read from the `roles` field on the user object. It should be an array of strings which are the role names. If the provider returns a `roles` field on the user profile then this will be used, otherwise the `auth.userFields` configuration can be used to map another field to the `roles` field on the user object. Custom auth callback plugins can also be used to add a roles field to the user object.
@@ -4486,9 +4422,7 @@ auth:
     reports:
       - sales-report
       - operations-report
-````
 ```
----
 
 
 ---
@@ -4499,10 +4433,6 @@ auth:
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 By default, all the pages in a Lowdefy app are public. Protected pages are pages that can only be accessed by a logged in user. If a user that is not logged in tries to access a protected page, the user will be redirected to the 404 page. Pages that a user are not allowed to see will be filtered from the app menus.
 
 The config can either be set to protect all pages, except for a list of public pages, or vice-versa, all pages are public except for a a list of protected pages.
@@ -4525,7 +4455,7 @@ auth:
       - '404'
       - login
       - public-page
-````
+```
 ###### List specific protected pages:
 ```yaml
 lowdefy: {{ version }}
@@ -4535,9 +4465,7 @@ auth:
     protected:
       - admin
       - users
-````
 ```
----
 
 
 ---
@@ -4703,10 +4631,6 @@ Auth.js provides a credentials provider, which can be used to sign in using any 
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 The `auth` section of the Lowdefy configuration is used to configure the user authentication settings.
 
 The `_secret` operator is evaluated over the entire section.
@@ -4769,8 +4693,6 @@ If the server log level is set to `debug`, the Next-Auth debug mode will be enab
 ## Cookies
 
 The  `auth.advanced.cookies` section can be used to overwrite the NextAuth cookie options. This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application. See [here](https://next-auth.js.org/configuration/options#cookies) for more details.
-```
----
 
 
 ---
@@ -4781,10 +4703,6 @@ The  `auth.advanced.cookies` section can be used to overwrite the NextAuth cooki
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 All Next-Auth preconfigured OAuth providers can used in a Lowdefy app. The provider properties are mapped through directly, so the Next-Auth documentation can be used as reference. They usually only need a few configuration properties to be used. Since these properties include secrets, the [`_secret`](/_secret) operator should be used to configure these properties.
 
 For most OAuth providers, a callback URL must be configured with the provider for security reasons. This URL is the URL to which the user will be redirected to complete the login flow. This URL should be set to `<app-domain>/api/auth/callback/<providerId>` where the `providerId` is the Lowdefy providerId.
@@ -4890,8 +4808,6 @@ auth:
         clientSecret:
           _secret: GITHUB_CLIENT_SECRET
 ```
-```
----
 
 
 ---
@@ -4902,10 +4818,6 @@ auth:
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 The OpenIDConnectProvider can be used to authenticate with a OpenID Connect compliant identity provider that is not already included as a default Next-Auth provider, without the need to develop a custom provider plugin.
 
 #### Properties
@@ -4948,8 +4860,6 @@ providers:
 ```
 
 where `LOWDEFY_SECRET_OPENID_CONNECT_WELLKNOWN` usually has the format `https://my-provider.com/.well-known/openid-configuration`
-```
----
 
 
 ---
@@ -4960,10 +4870,6 @@ where `LOWDEFY_SECRET_OPENID_CONNECT_WELLKNOWN` usually has the format `https://
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 The MongoDBAdapter can be used to connect Next-Auth to a MongoDB database. It uses the [Next-Auth adapter-mongodb](https://next-auth.js.org/adapters/mongodb) package. It uses the same `databaseUri` and client options configuration as the `MongoDBCollection` connection. The collection names used by the adapter can be configured using the `options.collections` property. The default values are `users`, `accounts`, `sessions` and `verification_tokens`.
 
 
@@ -5014,8 +4920,6 @@ auth:
           Sessions: my_sessions
           VerificationTokens: my_verification_tokens
 ```
-```
----
 
 
 ---
@@ -5026,10 +4930,6 @@ auth:
 
 **Section:** User Authentication
 
-
----
-**Nunjucks Template:**
-```yaml
 The Auth0LogoutCallback can be used to log the user out from Auth0 when logging out of the Lowdefy app. The callback takes a `returnToPageId` property, which is the pageId the user will be directed to after logout from Auth0 is complete. The URL which the user will be directed to needs to be configured with Auth0 as an allowed logout URL.
 
 To trigger the Auth0 logout, the `Logout` action `callbackUrl.url` param should be set to `AUTH0_LOGOUT`.
@@ -5082,8 +4982,6 @@ events:
         callbackUrl:
           url: AUTH0_LOGOUT
 ```
-```
----
 
 
 ---
@@ -5122,1611 +5020,4297 @@ events:
 
 ## File: `blocks/list/TimelineList.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The TimelineList block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+The timeline nodes can be customized based on the array data.
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## Schema
 
-# TODO: Fix schema to add to docs
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: TimelineList
-    category: list
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TimelineList/schema.json
-    filePath: blocks/TimelineList/TimelineList.yaml
-    description_content: |
-      The TimelineList block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
-
-      The timeline nodes can be customized based on the array data.
-    areas:
-      - content
-    init_state_values:
-      shipment_events:
-        - type: Order Placed
-          icon: AiTwoToneShoppingCart
-          color: '#2f54eb'
-          orderNumber: 2112
-          timestamp:
-            _date: '2021-02-10T20:30:00.000Z'
-          item:
-            code: ax2m-83kl9-ck
-            title: Useless Glue
-        - type: Shipped
-          icon: AiTwoToneGift
-          color: '#fa8c16'
-          orderNumber: 2112
-          timestamp:
-            _date: '2021-02-11T08:33:00.000Z'
-        - type: Cleared Customs
-          icon: AiTwoToneFileDone
-          color: '#13c2c2'
-          orderNumber: 2112
-          timestamp:
-            _date: '2021-02-11T16:12:00.000Z'
-        - type: Delivered
-          icon: AiTwoToneCheckCircle
-          color: '#52c41a'
-          orderNumber: 2112
-          timestamp:
-            _date: '2021-02-11T16:12:00.000Z'
-
-    methods:
-      - name: pushItem
-        onClick:
-          - id: pushItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: pushItem
-      - name: unshiftItem
-        onClick:
-          - id: unshiftItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: unshiftItem
-      - name: removeItem at index 1
-        onClick:
-          - id: removeItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: removeItem
-              args:
-                - 1
-      - name: for index 1 moveItemDown
-        onClick:
-          - id: moveItemDown
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemDown
-              args:
-                - 1
-      - name: for index 1 moveItemUp
-        onClick:
-          - id: moveItemUp
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemUp
-              args:
-                - 1
-    examples:
-      - title: Shipment Event Log
-        block:
-          id: shipment_events
-          type: TimelineList
-          blocks:
-            - id: todo_input
-              type: TextInput
-              layout:
-                grow: 1
-              properties:
-                label:
-                  disabled: true
-                placeholder: Write something todo...
-        extra:
-          id: ex_state
-          type: MarkdownWithCode
-          style:
-            paddingTop: 16
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ###### Shipment Events State Value:
-                  ```yaml
-                  {{ value | safe }}
-                  ```
-                on:
-                  value:
-                    _yaml.stringify:
-                      on:
-                        shipment_events:
-                          _state: shipment_events
-                      options:
-                        sortKeys: false
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "data": {
+        "type": "array",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to timeline.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "pendingDotIcon": {
+        "type": [
+          "object",
+          "string"
+        ],
+        "description": "Set the dot of the last ghost node when pending is true.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "pending": {
+        "type": "boolean",
+        "default": false,
+        "description": "Set the last ghost node's existence or its content."
+      },
+      "reverse": {
+        "type": "boolean",
+        "default": false,
+        "description": "Reverse timeline nodes."
+      },
+      "iconField": {
+        "type": "string",
+        "description": "Use a custom icon field. Defaults to 'icon'."
+      },
+      "styleField": {
+        "type": "string",
+        "description": "Use a custom style field. Defaults to 'style'."
+      },
+      "colorField": {
+        "type": "string",
+        "description": "Use a custom color field. Defaults to 'color'."
+      },
+      "positionField": {
+        "type": "string",
+        "description": "Use a custom position field. Defaults to 'position'."
+      },
+      "labelField": {
+        "type": "string",
+        "description": "Use a custom label field. Defaults to 'label'."
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "left",
+          "right",
+          "alternate"
+        ],
+        "default": "left",
+        "description": "By sending alternate the timeline will distribute the nodes to the left and right."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Shipment Event Log
+  block:
+    id: shipment_events
+    type: TimelineList
+    blocks:
+      - id: todo_input
+        type: TextInput
+        layout:
+          grow: 1
+        properties:
+          label:
+            disabled: true
+          placeholder: Write something todo...
+  extra:
+    id: ex_state
+    type: MarkdownWithCode
+    style:
+      paddingTop: 16
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ###### Shipment Events State Value:
+            ```yaml
+            {{ value | safe }}
+            ```
+          'on':
+            value:
+              _yaml.stringify:
+                'on':
+                  shipment_events:
+                    _state: shipment_events
+                options:
+                  sortKeys: false
+```
+
+## Methods
+
+### pushItem
+
+### unshiftItem
+
+### removeItem at index 1
+
+### for index 1 moveItemDown
+
+### for index 1 moveItemUp
+
+
 ---
 
 ## File: `blocks/list/List.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: List
-    category: list
-    schema: ../plugins/blocks/blocks-basic/src/blocks/List/schema.json
-    filePath: blocks/list/List.yaml
-    description_content: |
-      The List block renders a content area for all items in the array. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
-    areas:
-      - content
-    init_state_values:
-      todos:
-        - Bake a 🧁
-        - Eat a🍦
-        - Phone a 🦖
-    methods:
-      - name: pushItem
-        onClick:
-          - id: pushItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: pushItem
-      - name: unshiftItem
-        onClick:
-          - id: unshiftItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: unshiftItem
-      - name: removeItem at index 1
-        onClick:
-          - id: removeItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: removeItem
-              args:
-                - 1
-      - name: for index 1 moveItemDown
-        onClick:
-          - id: moveItemDown
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemDown
-              args:
-                - 1
-      - name: for index 1 moveItemUp
-        onClick:
-          - id: moveItemUp
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemUp
-              args:
-                - 1
-    examples:
-      - title: Todo List
-        block:
-          id: todo_app
-          type: Box
-          layout:
-            contentGutter: 16
-          blocks:
-            - id: todo_input
-              type: TextInput
-              layout:
-                grow: 1
-              properties:
-                label:
-                  disabled: true
-                placeholder: Write something todo...
-            - id: add_item
-              type: Button
-              layout:
-                shrink: 1
-              properties:
-                title: Add item
-                icon: AiOutlinePlus
-              events:
-                onClick:
-                  - id: add
-                    type: SetState
-                    params:
-                      todos:
-                        _array.concat:
-                          - [_state: todo_input]
-                          - _state: todos
-                      todo_input: null
-            - id: todos
-              type: List
-              layout:
-                contentGutter: 16
-              blocks:
-                - id: todos.$
-                  type: TitleInput
-                  layout:
-                    grow: 1
-                  properties:
-                    level: 4
-                - id: remove_item
-                  type: Icon
-                  layout:
-                    shrink: 1
-                  properties:
-                    name: AiOutlineMinusCircle
-                    size: 18
-                  events:
-                    onClick:
-                      - id: remove
-                        type: CallMethod
-                        messages:
-                          loading: Removing Item...
-                          success: Item Removed.
-                        params:
-                          blockId: todos
-                          method: removeItem
-                          args:
-                            - _index: 0
-
-        extra:
-          id: ex_state
-          type: MarkdownWithCode
-          style:
-            paddingTop: 16
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ###### Todos State Value:
-                  ```yaml
-                  {{ value | safe }}
-                  ```
-                on:
-                  value:
-                    _yaml.stringify:
-                      on:
-                        todos:
-                          _state: todos
-                      options:
-                        sortKeys: false
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "direction": {
+        "type": "string",
+        "enum": [
+          "row",
+          "column",
+          "row-reverse",
+          "column-reverse"
+        ],
+        "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
+      },
+      "wrap": {
+        "type": "string",
+        "enum": [
+          "wrap",
+          "nowrap",
+          "wrap-reverse"
+        ],
+        "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
+      },
+      "scroll": {
+        "type": "boolean",
+        "description": "Specifies whether scrolling should be applied to the List, can be true or false. Applies the 'overflow' css property to the List block - defaults to 'visible', requires List direction to be set."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to List block.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the List is clicked."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Todo List
+  block:
+    id: todo_app
+    type: Box
+    layout:
+      contentGutter: 16
+    blocks:
+      - id: todo_input
+        type: TextInput
+        layout:
+          grow: 1
+        properties:
+          label:
+            disabled: true
+          placeholder: Write something todo...
+      - id: add_item
+        type: Button
+        layout:
+          shrink: 1
+        properties:
+          title: Add item
+          icon: AiOutlinePlus
+        events:
+          onClick:
+            - id: add
+              type: SetState
+              params:
+                todos:
+                  _array.concat:
+                    - - _state: todo_input
+                    - _state: todos
+                todo_input: null
+      - id: todos
+        type: List
+        layout:
+          contentGutter: 16
+        blocks:
+          - id: todos.$
+            type: TitleInput
+            layout:
+              grow: 1
+            properties:
+              level: 4
+          - id: remove_item
+            type: Icon
+            layout:
+              shrink: 1
+            properties:
+              name: AiOutlineMinusCircle
+              size: 18
+            events:
+              onClick:
+                - id: remove
+                  type: CallMethod
+                  messages:
+                    loading: Removing Item...
+                    success: Item Removed.
+                  params:
+                    blockId: todos
+                    method: removeItem
+                    args:
+                      - _index: 0
+  extra:
+    id: ex_state
+    type: MarkdownWithCode
+    style:
+      paddingTop: 16
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ###### Todos State Value:
+            ```yaml
+            {{ value | safe }}
+            ```
+          'on':
+            value:
+              _yaml.stringify:
+                'on':
+                  todos:
+                    _state: todos
+                options:
+                  sortKeys: false
+```
+
+## Methods
+
+### pushItem
+
+### unshiftItem
+
+### removeItem at index 1
+
+### for index 1 moveItemDown
+
+### for index 1 moveItemUp
+
+
 ---
 
 ## File: `blocks/list/ControlledList.yaml`
 
+## Description
+
+The ControlledList block renders a content area for all items in the array into the list card and provides easy UI elements to add or remove items in the list. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Controlled list title."
+      },
+      "addToFront": {
+        "type": "boolean",
+        "default": false,
+        "description": "When true, add new items to the front of the list."
+      },
+      "hideAddButton": {
+        "type": "boolean",
+        "default": false,
+        "description": "When true, hide the add new item button."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "When true, hide the add new item button."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to content.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "addItemButton": {
+        "type": "object",
+        "description": "Custom add item button properties.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "removeItemIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Custom remove item icon properties.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "footerStyle": {
+        "type": "object",
+        "description": "Css style object to applied to controlled list footer.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "itemStyle": {
+        "type": "object",
+        "description": "Css style object to applied to controlled list items.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "noDataTitle": {
+        "type": "string",
+        "description": "Title to show when list is empty."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: ControlledList
-    category: list
-    schema: ../plugins/blocks/blocks-antd/src/blocks/ControlledList/schema.json
-    filePath: blocks/list/ControlledList.yaml
-    description_content: |
-      The ControlledList block renders a content area for all items in the array into the list card and provides easy UI elements to add or remove items in the list. All list blocks create a array in state at their block `id`. The list content areas are rendered for each index in the array. See the [List Concept](/lists) page for a detailed description on how to work with lists.
-    areas:
-      - content
-    methods:
-      - name: pushItem
-        onClick:
-          - id: pushItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: pushItem
-      - name: unshiftItem
-        onClick:
-          - id: unshiftItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: unshiftItem
-      - name: removeItem at index 1
-        onClick:
-          - id: removeItem
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: removeItem
-              args:
-                - 1
-      - name: for index 1 moveItemDown
-        onClick:
-          - id: moveItemDown
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemDown
-              args:
-                - 1
-      - name: for index 1 moveItemUp
-        onClick:
-          - id: moveItemUp
-            type: CallMethod
-            params:
-              blockId: block_id
-              method: moveItemUp
-              args:
-                - 1
-    init_state_values:
-      todos:
-        - Add the noodles.
-        - Let it cook for a minute.
-        - Add some 🌶.
-    examples:
-      - title: Todo List
-        block:
-          id: todos
-          type: ControlledList
-          blocks:
-            - id: todos.$
-              type: TitleInput
-              properties:
-                level: 4
-        extra:
-          id: ex_state
-          type: MarkdownWithCode
-          style:
-            paddingTop: 16
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ###### Todos State Value:
-                  ```yaml
-                  {{ value | safe }}
-                  ```
-                on:
-                  value:
-                    _yaml.stringify:
-                      on:
-                        todos:
-                          _state: todos
-                      options:
-                        sortKeys: false
-      - title: List of Contacts
-        block:
-          id: contacts
-          type: ControlledList
-          blocks:
-            - id: contacts.$.first_name
-              type: TextInput
-              layout:
-                span: 12
-              required: true
-              properties:
-                title: First Name
-                label:
-                  span: 10
-                  align: right
-            - id: contacts.$.last_name
-              type: TextInput
-              layout:
-                span: 12
-              required: true
-              properties:
-                title: Last Name
-                label:
-                  span: 10
-                  align: right
-
-            - id: contacts.$.date_of_birth
-              type: DateSelector
-              layout:
-                span: 12
-              required: true
-              properties:
-                title: Date of Birth
-                label:
-                  span: 10
-                  align: right
-            - id: contacts.$.email
-              type: TextInput
-              layout:
-                span: 12
-              required: true
-              properties:
-                title: Email address
-                label:
-                  span: 10
-                  align: right
-            - id: contacts.$.phone_number
-              type: TextInput
-              layout:
-                span: 12
-              properties:
-                title: Phone number
-                label:
-                  span: 10
-                  align: right
-            - id: contacts.$.preference
-              type: ButtonSelector
-              layout:
-                span: 12
-              properties:
-                title: Preference
-                label:
-                  span: 10
-                  align: right
+- title: Todo List
+  block:
+    id: todos
+    type: ControlledList
+    blocks:
+      - id: todos.$
+        type: TitleInput
+        properties:
+          level: 4
+  extra:
+    id: ex_state
+    type: MarkdownWithCode
+    style:
+      paddingTop: 16
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ###### Todos State Value:
+            ```yaml
+            {{ value | safe }}
+            ```
+          'on':
+            value:
+              _yaml.stringify:
+                'on':
+                  todos:
+                    _state: todos
                 options:
-                  - Phone
-                  - Email
-        extra:
-          id: ex_state
-          type: MarkdownWithCode
-          style:
-            paddingTop: 16
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ###### Contacts State Value:
-                  ```yaml
-                  {{ value | safe }}
-                  ```
-                on:
-                  value:
-                    _yaml.stringify:
-                      on:
-                        contacts:
-                          _state: contacts
-                      options:
-                        sortKeys: false
-
+                  sortKeys: false
+- title: List of Contacts
+  block:
+    id: contacts
+    type: ControlledList
+    blocks:
+      - id: contacts.$.first_name
+        type: TextInput
+        layout:
+          span: 12
+        required: true
+        properties:
+          title: First Name
+          label:
+            span: 10
+            align: right
+      - id: contacts.$.last_name
+        type: TextInput
+        layout:
+          span: 12
+        required: true
+        properties:
+          title: Last Name
+          label:
+            span: 10
+            align: right
+      - id: contacts.$.date_of_birth
+        type: DateSelector
+        layout:
+          span: 12
+        required: true
+        properties:
+          title: Date of Birth
+          label:
+            span: 10
+            align: right
+      - id: contacts.$.email
+        type: TextInput
+        layout:
+          span: 12
+        required: true
+        properties:
+          title: Email address
+          label:
+            span: 10
+            align: right
+      - id: contacts.$.phone_number
+        type: TextInput
+        layout:
+          span: 12
+        properties:
+          title: Phone number
+          label:
+            span: 10
+            align: right
+      - id: contacts.$.preference
+        type: ButtonSelector
+        layout:
+          span: 12
+        properties:
+          title: Preference
+          label:
+            span: 10
+            align: right
+          options:
+            - Phone
+            - Email
+  extra:
+    id: ex_state
+    type: MarkdownWithCode
+    style:
+      paddingTop: 16
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ###### Contacts State Value:
+            ```yaml
+            {{ value | safe }}
+            ```
+          'on':
+            value:
+              _yaml.stringify:
+                'on':
+                  contacts:
+                    _state: contacts
+                options:
+                  sortKeys: false
 ```
+
+## Methods
+
+### pushItem
+
+### unshiftItem
+
+### removeItem at index 1
+
+### for index 1 moveItemDown
+
+### for index 1 moveItemUp
+
+
 ---
 
-## File: `blocks/input/WeekSelector.yaml`
+## File: `blocks/container/Tooltip.yaml`
 
 ## Description
 
-The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
+A simple text popup tip. Can be used to display extra information about its children blocks.
 
-> Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `MonthSelector`.
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "arrowPointAtCenter": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether the arrow is pointed at the center of target."
+      },
+      "autoAdjustOverflow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to adjust popup placement automatically when popup is off screen."
+      },
+      "overlayStyle": {
+        "type": "object",
+        "description": "Style of the tooltip card.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "color": {
+        "type": "string",
+        "description": "The background color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "defaultVisible": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether the floating tooltip card is visible by default."
+      },
+      "mouseEnterDelay": {
+        "type": "number",
+        "default": 0.1,
+        "description": "Delay in seconds, before tooltip is shown on mouse enter."
+      },
+      "mouseLeaveDelay": {
+        "type": "number",
+        "default": 0.1,
+        "description": "Delay in seconds, before tooltip is shown on mouse enter."
+      },
+      "placement": {
+        "type": "string",
+        "enum": [
+          "top",
+          "left",
+          "right",
+          "bottom",
+          "topLeft",
+          "topRight",
+          "bottomLeft",
+          "bottomRight",
+          "leftTop",
+          "leftBottom",
+          "rightTop",
+          "rightBottom"
+        ],
+        "default": "top",
+        "description": "The position of the tooltip relative to the target."
+      },
+      "trigger": {
+        "type": "string",
+        "enum": [
+          "hover",
+          "focus",
+          "click"
+        ],
+        "default": "hover",
+        "description": "Tooltip trigger mode."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+      },
+      "zIndex": {
+        "type": "integer",
+        "description": "The z-index of the Tooltip."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onVisibleChange": {
+        "type": "array",
+        "description": "Trigger action when visibility of the tooltip card is changed."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Button tooltip
+  block:
+    id: button_ex
+    type: Tooltip
+    properties:
+      title: Explains what happens when this button is clicked.
+    blocks:
+      - id: btn
+        type: Button
+        properties:
+          title: Button
+```
 
 
 ---
 
-## File: `blocks/input/TreeSelector.yaml`
+## File: `blocks/container/Tabs.yaml`
+
+## Description
+
+Tabs to easily switch between different views.
+The key of each tabs is the area keys of the container and there is an `extra` content area.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "animated": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to change tabs with animation. Only works while tabPosition is top or bottom."
+      },
+      "defaultActiveKey": {
+        "type": "string",
+        "description": "Initial active TabPane's key, if activeKey is not set."
+      },
+      "size": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "default",
+          "small",
+          "large"
+        ],
+        "description": "Size of the tabs."
+      },
+      "tabPosition": {
+        "type": "string",
+        "default": "top",
+        "enum": [
+          "top",
+          "right",
+          "bottom",
+          "left"
+        ],
+        "description": "Position of the tabs."
+      },
+      "tabType": {
+        "type": "string",
+        "default": "line",
+        "enum": [
+          "line",
+          "card"
+        ],
+        "description": "Type of tabs."
+      },
+      "tabs": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the tab - supports html."
+            },
+            "key": {
+              "type": "string",
+              "description": "Area key of the tab."
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the tab if true."
+            },
+            "icon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to show in tab title.",
+              "docs": {
+                "displayType": "icon"
+              }
+            }
+          }
+        }
+      },
+      "tabBarStyle": {
+        "type": "object",
+        "description": "Css style to apply to the tab bar.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "extraAreaKey": {
+        "type": "string",
+        "description": "Area key for the extra area blocks."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action on tab change."
+      },
+      "onTabScroll": {
+        "type": "array",
+        "description": "Trigger action on tab scroll."
+      },
+      "onTabClick": {
+        "type": "array",
+        "description": "Trigger action on tab click."
+      }
+    }
+  }
+}
+```
+
+## Methods
+
+### setActiveKey
+
+
+---
+
+## File: `blocks/container/Spinner.yaml`
+
+## Description
+
+A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the icon.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "description": "Size of the icon spinner.",
+        "enum": [
+          "small",
+          "medium",
+          "large"
+        ]
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Span.yaml`
+
+## Description
+
+A Span is a container that places sub-blocks into a html `<span>`.
+The Span has a single area, `content`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Span content string. Overrides the \"content\" content area."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to Span div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the Span is clicked."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Sider.yaml`
+
+## Description
+
+The `Sider` block provides a page container for a [sider](https://4x.ant.design/components/layout/) area with content.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "breakpoint": {
+        "type": "string",
+        "enum": [
+          "xs",
+          "sm",
+          "md",
+          "lg",
+          "xl",
+          "xxl"
+        ],
+        "default": "sm",
+        "description": "Breakpoint of the responsive layout"
+      },
+      "collapsedWidth": {
+        "type": "integer",
+        "description": "Width of the collapsed sidebar, by setting to 0 a special trigger will appear"
+      },
+      "collapsible": {
+        "type": "boolean",
+        "description": "Whether can be collapsed"
+      },
+      "initialCollapsed": {
+        "type": "boolean",
+        "default": true,
+        "description": "Set the initial collapsed state"
+      },
+      "reverseArrow": {
+        "type": "boolean",
+        "default": false,
+        "description": "Direction of arrow, for a sider that expands from the right"
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "light",
+          "dark"
+        ],
+        "default": "dark",
+        "description": "Color theme of the sidebar"
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to sider.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "width": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "description": "width of the sidebar",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClose": {
+        "type": "array",
+        "description": "Trigger actions when sider is closed."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger actions when sider is opened."
+      },
+      "onBreakpoint": {
+        "type": "array",
+        "description": "Trigger actions on breakpoint change."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Result.yaml`
+
+## Description
+
+Used to provide feedback the results of a task or error.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to use as result image.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "info",
+          "warning",
+          "404",
+          "403",
+          "500"
+        ],
+        "default": "info",
+        "description": "Status of the result. Determines image and color."
+      },
+      "subTitle": {
+        "type": "string",
+        "description": "Result subtitle or secondary text - supports html."
+      },
+      "title": {
+        "type": "string",
+        "description": "Result title or primary text - supports html."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+- title: 500 Error
+  block:
+    id: error_example
+    type: Result
+    properties:
+      status: 500
+      title: An error occurred
+```
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+---
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## File: `blocks/container/Popover.yaml`
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: TreeSelector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TreeSelector/schema.json
-    filePath: blocks/input/TreeSelector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: Node 1
-          value: '1'
-          children:
-            - label: Node 1.1
-              value: '1.1'
-        - label: Node 2
-          value: '2'
-          children:
-            - label: Node 2.1
-              value: '2.1'
+## Description
 
-    description_content: |
-      The `TreeSelector` block allows a user to display, collapse and select a single node from a hierarchical list in a tree structure.
+A popover container. Can be used to display extra information or options inside the popover.
 
-      The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+## Schema
 
-      The value in state is an array of values with the selected node value first followed by any parent node values.
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the card."
+      },
+      "color": {
+        "type": "string",
+        "description": "Popover background color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "description": "Whether the popover is open by default.",
+        "default": false
+      },
+      "autoAdjustOverflow": {
+        "type": "boolean",
+        "description": "Whether to adjust popup placement automatically when popup is off screen",
+        "default": true
+      },
+      "placement": {
+        "type": "string",
+        "description": "Placement of the popover.",
+        "enum": [
+          "top",
+          "topLeft",
+          "topRight",
+          "left",
+          "leftTop",
+          "leftBottom",
+          "right",
+          "rightTop",
+          "rightBottom",
+          "bottom",
+          "bottomLeft",
+          "bottomRight"
+        ],
+        "default": "bottom"
+      },
+      "trigger": {
+        "type": "string",
+        "description": "Trigger mode which executes the popover.",
+        "enum": [
+          "hover",
+          "click",
+          "focus"
+        ],
+        "default": "hover"
+      },
+      "zIndex": {
+        "type": "number",
+        "description": "Z-index of the popover."
+      },
+      "overlayInnerStyle": {
+        "type": "object",
+        "description": "Style of overlay inner div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "mouseEnterDelay": {
+        "type": "number",
+        "description": "Delay in milliseconds, before tooltip is shown on mouse enter.",
+        "default": 0.1
+      },
+      "mouseLeaveDelay": {
+        "type": "number",
+        "description": "Delay in milliseconds, before tooltip is hidden on mouse leave.",
+        "default": 0.1
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onOpenChange": {
+        "type": "array",
+        "description": "Trigger actions when visibility of the tooltip card is changed."
+      }
+    }
+  }
+}
+```
 
-    examples:
-      - title: Tree list of type and category with connecting line and single select.
-        block:
-          id: tree_list_type_category
-          type: TreeSelector
-          properties:
-            showLine: true
+## Examples
+
+```yaml
+- title: Popover menu
+  block:
+    id: button_ex
+    type: Popover
+    properties:
+      title: Explains what happens.
+    blocks:
+      - id: settings
+        type: Button
+        properties:
+          title: Settings
+          icon: AiOutlineSetting
+          block: true
+    areas:
+      popover:
+        blocks:
+          - id: profile
+            type: Button
+            properties:
+              title: Profile
+          - id: admin
+            type: Button
+            properties:
+              title: Admin
+          - id: logout
+            type: Button
+            properties:
+              title: Logout
+```
+
+
+---
+
+## File: `blocks/container/PageSiderMenu.yaml`
+
+## Description
+
+The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "logo": {
+        "type": "object",
+        "description": "Header logo settings.",
+        "additionalProperties": false,
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "Header logo source url."
+          },
+          "srcMobile": {
+            "type": "string",
+            "description": "Header logo img element for mobile."
+          },
+          "breakpoint": {
+            "type": "number",
+            "description": "Header logo breakpoint for switching between mobile and desktop logo."
+          },
+          "alt": {
+            "type": "string",
+            "default": "Lowdefy",
+            "description": "Header logo alternative text."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to logo.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "header": {
+        "type": "object",
+        "description": "Header properties.",
+        "additionalProperties": false,
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark"
+            ],
+            "description": "Header theme color."
+          },
+          "contentStyle": {
+            "type": "object",
+            "description": "Header content css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Header css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "sider": {
+        "type": "object",
+        "description": "Sider properties.",
+        "additionalProperties": false,
+        "properties": {
+          "breakpoint": {
+            "type": "string",
+            "enum": [
+              "xs",
+              "sm",
+              "md",
+              "lg",
+              "xl"
+            ],
+            "default": "sm",
+            "description": "Breakpoint of the responsive layout."
+          },
+          "collapsedWidth": {
+            "type": "integer",
+            "description": "Width of the collapsed sidebar, by setting to 0 a special trigger will appear."
+          },
+          "collapsible": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether can be collapsed."
+          },
+          "initialCollapsed": {
+            "type": "boolean",
+            "default": true,
+            "description": "Set the initial collapsed state."
+          },
+          "reverseArrow": {
+            "type": "boolean",
+            "default": false,
+            "description": "Direction of arrow, for a sider that expands from the right."
+          },
+          "theme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark"
+            ],
+            "default": "light",
+            "description": "Color theme of the sidebar."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to sider.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "width": {
+            "type": [
+              "string",
+              "number"
+            ],
+            "default": "string",
+            "description": "width of the sidebar",
+            "docs": {
+              "displayType": "string"
+            }
+          },
+          "hideToggleButton": {
+            "type": "boolean",
+            "description": "Hide toggle button in sider.",
+            "default": false
+          }
+        }
+      },
+      "toggleSiderButton": {
+        "type": "object",
+        "description": "Toggle sider button properties.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "footer": {
+        "type": "object",
+        "description": "Footer properties.",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Footer css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "content": {
+        "type": "object",
+        "description": "Content properties.",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Content css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "breadcrumb": {
+        "type": "object",
+        "description": "Breadcrumb properties.",
+        "properties": {
+          "separator": {
+            "type": "string",
+            "default": "/",
+            "description": "Use a custom separator string."
+          },
+          "list": {
+            "type": "array",
+            "description": "List of breadcrumb links.",
+            "items": {
+              "type": "string",
+              "description": "Title of the breadcrumb link."
+            }
+          }
+        }
+      },
+      "menu": {
+        "type": "object",
+        "description": "Menu properties.",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "dark",
+              "light"
+            ],
+            "default": "light",
+            "description": "Color theme of menu."
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "type"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Menu item id."
+                },
+                "pageId": {
+                  "type": "string",
+                  "description": "Page to link to."
+                },
+                "properties": {
+                  "type": "object",
+                  "description": "properties from menu item.",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "Menu item title."
+                    },
+                    "icon": {
+                      "type": [
+                        "string",
+                        "object"
+                      ],
+                      "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
+                      "docs": {
+                        "displayType": "icon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "menuLg": {
+        "type": "object",
+        "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "menuMd": {
+        "type": "object",
+        "description": "Mobile menu properies. Overwrites menu properties on mobile screen sizes.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to layout.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBreadcrumbClick": {
+        "type": "array",
+        "description": "Trigger action when a breadcrumb item is clicked."
+      },
+      "onChangeToggleSiderAffix": {
+        "type": "array",
+        "description": "Trigger action when sider collapse button affix triggers a onChange event."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Trigger action when menu is closed."
+      },
+      "onMenuItemSelect": {
+        "type": "array",
+        "description": "Trigger action when menu item is selected."
+      },
+      "onMenuItemClick": {
+        "type": "array",
+        "description": "Trigger action when menu item is clicked."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger action when menu is open."
+      },
+      "onToggleDrawer": {
+        "type": "array",
+        "description": "Trigger action when mobile menu drawer is toggled."
+      },
+      "onToggleMenuGroup": {
+        "type": "array",
+        "description": "Trigger action when mobile menu group is opened."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/PageHeaderMenu.yaml`
+
+## Description
+
+The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "logo": {
+        "type": "object",
+        "description": "Header logo settings.",
+        "additionalProperties": false,
+        "properties": {
+          "src": {
+            "type": "string",
+            "description": "Header logo source url."
+          },
+          "srcMobile": {
+            "type": "string",
+            "description": "Header logo img element for mobile."
+          },
+          "breakpoint": {
+            "type": "number",
+            "description": "Header logo breakpoint for switching between mobile and desktop logo."
+          },
+          "alt": {
+            "type": "string",
+            "default": "Lowdefy",
+            "description": "Header logo alternative text."
+          },
+          "style": {
+            "type": "object",
+            "description": "Css style object to apply to logo.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "header": {
+        "type": "object",
+        "description": "Header properties.",
+        "additionalProperties": false,
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark"
+            ],
+            "default": "dark",
+            "description": "Header theme color."
+          },
+          "contentStyle": {
+            "type": "object",
+            "description": "Header content css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "style": {
+            "type": "object",
+            "description": "Header css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "footer": {
+        "type": "object",
+        "description": "Footer properties.",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Footer css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "content": {
+        "type": "object",
+        "description": "Content properties.",
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "type": "object",
+            "description": "Content css style object.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "breadcrumb": {
+        "type": "object",
+        "description": "Breadcrumb properties.",
+        "properties": {
+          "separator": {
+            "type": "string",
+            "default": "/",
+            "description": "Use a custom separator string."
+          },
+          "list": {
+            "type": "array",
+            "description": "List of breadcrumb links.",
+            "items": {
+              "type": "string",
+              "description": "Title of the breadcrumb link."
+            }
+          }
+        }
+      },
+      "menu": {
+        "type": "object",
+        "description": "Menu properties.",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "dark",
+              "light"
+            ],
+            "default": "dark",
+            "description": "Color theme of menu."
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "type"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Menu item id."
+                },
+                "pageId": {
+                  "type": "string",
+                  "description": "Page to link to."
+                },
+                "properties": {
+                  "type": "object",
+                  "description": "properties from menu item.",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "description": "Menu item title."
+                    },
+                    "icon": {
+                      "type": [
+                        "string",
+                        "object"
+                      ],
+                      "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
+                      "docs": {
+                        "displayType": "icon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "menuLg": {
+        "type": "object",
+        "description": "Menu large screen properties. Overwrites menu properties on desktop screen sizes.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "menuMd": {
+        "type": "object",
+        "description": "Mobile menu properties. Overwrites menu properties on mobile screen sizes.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to layout.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBreadcrumbClick": {
+        "type": "array",
+        "description": "Trigger action when a breadcrumb item is clicked."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Trigger action when mobile menu is closed."
+      },
+      "onMenuItemClick": {
+        "type": "array",
+        "description": "Trigger action when menu item is clicked."
+      },
+      "onMenuItemSelect": {
+        "type": "array",
+        "description": "Trigger action when menu item is selected."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger action when mobile menu is open."
+      },
+      "onToggleDrawer": {
+        "type": "array",
+        "description": "Trigger action when mobile menu drawer is toggled."
+      },
+      "onToggleMenuGroup": {
+        "type": "array",
+        "description": "Trigger action when mobile menu group is opened."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Modal.yaml`
+
+## Description
+
+A popup container, presenting the user with a modal dialog.
+The Modal has a `content` and a `footer` content area. The default `footer` area is the `Ok` and `Cancel` buttons; defining a `footer` area overwrites these buttons.
+
+> To open the modal, invoke a modal method.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "bodyStyle": {
+        "type": "object",
+        "description": "Css style to applied to modal body.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "centered": {
+        "type": "boolean",
+        "default": false,
+        "description": "Center the modal vertically."
+      },
+      "closable": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether a close (x) button is visible on top right of the modal dialog or not."
+      },
+      "title": {
+        "type": "string",
+        "description": "The modal dialog's title - supports html."
+      },
+      "footer": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show footer area."
+      },
+      "mask": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether show mask or not."
+      },
+      "maskStyle": {
+        "type": "object",
+        "description": "Css style to applied to modal mask.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "maskClosable": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked."
+      },
+      "okText": {
+        "type": "string",
+        "default": "Ok",
+        "description": "Text of the Ok button."
+      },
+      "okButtonProps": {
+        "type": "object",
+        "description": "Set additional properties for the ok button.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style to applied to modal.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "cancelText": {
+        "type": "string",
+        "default": "Cancel",
+        "description": "Text of the Cancel button."
+      },
+      "cancelButtonProps": {
+        "type": "object",
+        "description": "Set additional properties for the cancel button.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "width": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "default": "520px",
+        "description": "Width of the modal dialog.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "wrapperStyle": {
+        "type": "object",
+        "description": "Css style to applied to modal wrapper.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "zIndex": {
+        "type": "integer",
+        "default": 1000,
+        "description": "The z-index of the modal. Useful when displaying two modals simultaneously."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onOk": {
+        "type": "array",
+        "description": "Trigger actions when Ok button is clicked."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger actions when modal is opened."
+      },
+      "onCancel": {
+        "type": "array",
+        "description": "Trigger actions when Cancel button is clicked."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Trigger actions after onOk or onCancel is completed."
+      }
+    }
+  }
+}
+```
+
+## Methods
+
+### toggleOpen
+
+### setOpen
+
+
+---
+
+## File: `blocks/container/Layout.yaml`
+
+## Description
+
+The `Layout` block provides a page container for a [layout](https://4x.ant.design/components/layout/) area with content. It can be used as a wrapper, in which `Header`, `Sider`, `Content,` `Footer` or `Layout` itself can be nested.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to layout.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Layout, Header-Content-Footer
+  block:
+    id: layout_example
+    type: Layout
+    style:
+      textAlign: center
+    blocks:
+      - id: header
+        type: Header
+        blocks:
+          - id: Title
+            type: Title
+            properties:
+              content: Header
+            style:
+              backgroundColor: red
+      - id: content
+        type: Content
+        blocks:
+          - id: Title
+            type: Title
+            style:
+              backgroundColor: green
+            properties:
+              content: Content
+      - id: footer
+        type: Footer
+        blocks:
+          - id: Title
+            type: Title
+            style:
+              backgroundColor: blue
+            properties:
+              content: Footer
+```
+
+
+---
+
+## File: `blocks/container/Label.yaml`
+
+## Description
+
+A container that provides a label for a input block. Most input block use Label by default.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "align": {
+        "type": "string",
+        "enum": [
+          "left",
+          "right"
+        ],
+        "default": "left",
+        "description": "Align label left or right when inline."
+      },
+      "colon": {
+        "type": "boolean",
+        "default": true,
+        "description": "Append label with colon."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable to not render a label title."
+      },
+      "extra": {
+        "type": "string",
+        "description": "Extra text to display beneath the content - supports html."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "title": {
+        "type": "string",
+        "description": "Label title - supports html."
+      },
+      "extraStyle": {
+        "type": "object",
+        "description": "Css style to applied to label extra.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "feedbackStyle": {
+        "type": "object",
+        "description": "Css style to applied to label feedback.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "span": {
+        "type": "number",
+        "description": "Label inline span."
+      },
+      "inline": {
+        "type": "boolean",
+        "default": false,
+        "description": "Render input and label inline."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Header.yaml`
+
+## Description
+
+The `Header` block provides a page container for a [header](https://4x.ant.design/components/layout/) area with content.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to header.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "light",
+          "dark"
+        ],
+        "default": "dark",
+        "description": "Page theme."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/GoogleMapsScript.yaml`
+
+# GoogleMapsScript
+
+## Description
+
+This is a Lowdefy blocks wrapper for the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview). It is used to specify the api key and libraries to be used for the [`GoogleMaps`](./GoogleMaps) and [`GoogleMapsHeatmap`](./GoogleMapsHeatmap) blocks, and wraps these blocks as a parent container. Only one `GoogleMapsScript` blocks should be used on a page.v
+
+### Properties
+
+- `apiKey: string`: Your Google Maps API key.
+- `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "description": "Your Google Maps API key."
+      },
+      "libraries": {
+        "type": "array",
+        "description": "A list of Google libraries, see <a href='https://developers.google.com/maps/documentation/javascript/libraries'>more</a>.",
+        "items": {
+          "type": "string",
+          "enum": [
+            "drawing",
+            "geometry",
+            "journeySharing",
+            "localContext",
+            "places",
+            "visualization"
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Simple Script
+  block:
+    id: google_maps_script
+    type: GoogleMapsScript
+    properties:
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks: []
+- title: Script with libraries
+  block:
+    id: google_maps_script
+    type: GoogleMapsScript
+    properties:
+      libraries:
+        - visualization
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+```
+
+
+---
+
+## File: `blocks/container/GoogleMapsHeatmap.yaml`
+
+# GoogleMapsHeatmap
+
+## Description
+
+This is a Lowdefy block which implements [Heatmap](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions) from the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview).
+
+In order to use this block, it must be wrapped in a [`GoogleMapsScript`](./GoogleMapsScript) block with the visualization library specified.
+
+### Properties
+
+- `apiKey: string`: Your Google Maps API key.
+- `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
+- `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+  - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
+  - `zoom: number`: Map zoom level.
+  - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+- `heatmap: heatmapOptions`: Add a heatmap layer, see more [heatmap options](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions). This will automatically load the `visualization` library, which must be added to the list of libraries in the `libraries` property of the `GoogleMapsScript` block.
+  - `data: { lat: number, lng: number, weight: number } []`: A list of heatmap data points.
+- `style: cssObject`: A style object applied to the map element.
+- `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
+  - `position: { lat: number, lng: number }`: Position of infoWindow on map.
+  - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
+
+### Events
+
+- `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+- `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+- `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
+  - `domEvent`: event object
+  - `latLng`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `pixel`:
+    - `x`: x position on map block
+    - `y`: y position on map block
+- `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
+- `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
+object:
+  - `domEvent`: event object
+  - `latLng`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `pixel`:
+    - `x`: x position on map block
+    - `y`: y position on map block
+- `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+
+### Methods
+
+- `fitBounds`: Fit map to given bounds.
+  - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
+  - `zoom: number`: Map zoom level.
+- `getBounds`: Returns the bounds of the map.
+- `getCenter`: Returns the center of the map.
+- `getZoom`: Returns the zoom of the map.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "map": {
+        "type": "object",
+        "description": "Map settings object.",
+        "properties": {
+          "center": {
+            "type": "object",
+            "description": "A coordinate position object by which to center the map.",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          },
+          "zoom": {
+            "type": "number",
+            "description": "Map zoom level."
+          },
+          "options": {
+            "type": "object",
+            "description": "Map options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions'>more</a>."
+          }
+        }
+      },
+      "heatmap": {
+        "type": "object",
+        "description": "Add a heatmap layer, see more <a href='https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions'>heatmap options</a>. This will automatically load the 'visualization' library.",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "A list of heatmap data points.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                },
+                "weight": {
+                  "type": "number",
+                  "description": "Item weight on heatmap."
+                }
+              }
+            }
+          }
+        }
+      },
+      "markers": {
+        "type": "array",
+        "description": "A list of Markers with marker options.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                }
+              }
+            },
+            "label": {
+              "type": "string",
+              "description": "Label displayed on marker."
+            }
+          }
+        }
+      },
+      "infoWindow": {
+        "type": "object",
+        "description": "infoWindow options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions'>more</a>.",
+        "properties": {
+          "visible": {
+            "type": "boolean",
+            "description": "When visible is true, blocks inside infoWindow content area will be rendered."
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          }
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Custom map css properties to apply to map block."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the map is clicked."
+      },
+      "onMarkerClick": {
+        "type": "array",
+        "description": "Trigger actions when marker is clicked."
+      },
+      "onZoomChanged": {
+        "type": "array",
+        "description": "Trigger actions when the zoom on the map is changed."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Add a heatmap
+  block:
+    id: google_maps_script
+    type: GoogleMapsScript
+    properties:
+      libraries:
+        - visualization
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps
+        type: GoogleMapsHeatmap
+        properties:
+          map:
+            disableDefaultUI: true
+          heatmap:
+            data:
+              - lat: 34.091158
+                lng: -118.2795188
+                weight: 1
+              - lat: 34.0771192
+                lng: -118.2587199
+                weight: 2
+              - lat: 34.083527
+                lng: -118.370157
+                weight: 1
+              - lat: 34.0951843
+                lng: -118.283107
+                weight: 2
+              - lat: 34.1033401
+                lng: -118.2875469
+                weight: 4
+              - lat: 34.035798
+                lng: -118.251288
+                weight: 2
+              - lat: 34.0776068
+                lng: -118.2646526
+                weight: 3
+              - lat: 34.0919263
+                lng: -118.2820544
+                weight: 3
+              - lat: 34.0568525
+                lng: -118.3646369
+                weight: 3
+              - lat: 34.0285781
+                lng: -118.4115541
+                weight: 0
+              - lat: 34.017339
+                lng: -118.278469
+                weight: 0
+              - lat: 34.0764288
+                lng: -118.3661624
+                weight: 4
+              - lat: 33.9925942
+                lng: -118.4232475
+                weight: 4
+              - lat: 34.0764345
+                lng: -118.3730332
+                weight: 3
+              - lat: 34.093981
+                lng: -118.327638
+                weight: 0
+              - lat: 34.056385
+                lng: -118.2508724
+                weight: 1
+              - lat: 34.107701
+                lng: -118.2667943
+                weight: 4
+              - lat: 34.0450139
+                lng: -118.2388682
+                weight: 4
+              - lat: 34.1031997
+                lng: -118.2586152
+                weight: 1
+              - lat: 34.0828183
+                lng: -118.3241586
+                weight: 1
             options:
-              - label: Type
-                value: type
-                children:
-                  - label: One
-                    value: 1
-                  - label: Two
-                    value: 2
-                  - label: Three
-                    value: 3
-              - label: Category
-                value: category
-                children:
-                  - label: One
-                    value: 1
-                  - label: Two
-                    value: 2
-                  - label: Three
-                    value: 3
-
+              radius: 20
+              opacity: 1
 ```
+
+
 ---
 
-## File: `blocks/input/TitleInput.yaml`
+## File: `blocks/container/GoogleMaps.yaml`
+
+# GoogleMaps
 
 ## Description
 
-The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
+This is a Lowdefy block which implements the following from the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview):
+  - [Map](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)
+  - [Markers](https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions)
+  - [Marker Clusterers](https://developers.google.com/maps/documentation/javascript/marker-clustering)
 
+In order to use this block, it must be wrapped in a [`GoogleMapsScript`](./GoogleMapsScript) block.
 
----
+### Properties
 
-## File: `blocks/input/TextInput.yaml`
+- `apiKey: string`: Your Google Maps API key.
+- `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
+- `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+  - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
+  - `zoom: number`: Map zoom level.
+  - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
+- `style: cssObject`: A style object applied to the map element.
+- `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+  - `position: { lat: number, lng: number }`: Position of marker on map.
+  - `label: string`: Label displayed on marker.
+- `markerClusterers: markerClustererOptions[]`: A list of MarkerClusterers with marker clusterer options.
+  - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
+    - `position: { lat: number, lng: number }`: Position of marker on map.
+    - `label: string`: Label displayed on marker.
+  - `options: markerClustererOptions`: All other [marker clusterer options](https://react-google-maps-api-docs.netlify.app/#markerclusterer).
+- `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
+  - `position: { lat: number, lng: number }`: Position of infoWindow on map.
+  - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
+
+### Events
+
+- `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+- `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+- `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
+  - `domEvent`: event object
+  - `latLng`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `pixel`:
+    - `x`: x position on map block
+    - `y`: y position on map block
+- `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
+- `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
+object:
+  - `domEvent`: event object
+  - `latLng`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `pixel`:
+    - `x`: x position on map block
+    - `y`: y position on map block
+- `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
+object:
+  - `bounds`:
+    - `east`: latitudinal coordinate
+    - `north`: longitudinal coordinate
+    - `south`: longitudinal coordinate
+    - `west`: latitudinal coordinate
+  - `center`:
+    - `lat`: latitudinal coordinate
+    - `lng`: longitudinal coordinate
+  - `zoom`: zoom level
+
+### Methods
+
+- `fitBounds`: Fit map to given bounds.
+  - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
+  - `zoom: number`: Map zoom level.
+- `getBounds`: Returns the bounds of the map.
+- `getCenter`: Returns the center of the map.
+- `getZoom`: Returns the zoom of the map.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "map": {
+        "type": "object",
+        "description": "Map settings object.",
+        "properties": {
+          "center": {
+            "type": "object",
+            "description": "A coordinate position object by which to center the map.",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          },
+          "zoom": {
+            "type": "number",
+            "description": "Map zoom level."
+          },
+          "options": {
+            "type": "object",
+            "description": "Map options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions'>more</a>."
+          }
+        }
+      },
+      "heatmap": {
+        "type": "object",
+        "description": "Add a heatmap layer, see more <a href='https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions'>heatmap options</a>. This will automatically load the 'visualization' library.",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "A list of heatmap data points.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                },
+                "weight": {
+                  "type": "number",
+                  "description": "Item weight on heatmap."
+                }
+              }
+            }
+          }
+        }
+      },
+      "markers": {
+        "type": "array",
+        "description": "A list of Markers with marker options.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "description": "Lateral coordinate."
+                },
+                "lng": {
+                  "type": "number",
+                  "description": "Longitudinal coordinate."
+                }
+              }
+            },
+            "label": {
+              "type": "string",
+              "description": "Label displayed on marker."
+            }
+          }
+        }
+      },
+      "markerClusterers": {
+        "type": "array",
+        "description": "A list of Marker Clusterers with marker clusterer options.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "markers": {
+              "type": "array",
+              "description": "A list of Markers with marker options.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number",
+                        "description": "Lateral coordinate."
+                      },
+                      "lng": {
+                        "type": "number",
+                        "description": "Longitudinal coordinate."
+                      }
+                    }
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "Label displayed on marker."
+                  }
+                }
+              }
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "averageCenter": {
+                  "type": "boolean",
+                  "description": "Whether the position of a cluster marker should be the average position of all markers in the cluster."
+                },
+                "gridSize": {
+                  "type": "number",
+                  "description": "The grid size of a cluster in pixels."
+                },
+                "maxZoom": {
+                  "type": "number",
+                  "description": "The maximum zoom level at which clustering is enabled."
+                },
+                "minimumClusterSize": {
+                  "type": "number",
+                  "description": "The minimum number of markers needed to form a cluster."
+                },
+                "styles": {
+                  "type": "array",
+                  "description": "Styles of the cluster markers to be used."
+                },
+                "zoomOnClick": {
+                  "type": "boolean",
+                  "description": "Whether to zoom the map when a cluster marker is clicked."
+                }
+              }
+            }
+          }
+        }
+      },
+      "infoWindow": {
+        "type": "object",
+        "description": "infoWindow options, see <a href='https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions'>more</a>.",
+        "properties": {
+          "visible": {
+            "type": "boolean",
+            "description": "When visible is true, blocks inside infoWindow content area will be rendered."
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "lat": {
+                "type": "number",
+                "description": "Lateral coordinate."
+              },
+              "lng": {
+                "type": "number",
+                "description": "Longitudinal coordinate."
+              }
+            }
+          }
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Custom map css properties to apply to map block."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBoundsChanged": {
+        "type": "array",
+        "description": "Trigger actions when the bounds of the map are changed."
+      },
+      "onCenterChanged": {
+        "type": "array",
+        "description": "Trigger actions when the center of the map is changed."
+      },
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the map is clicked."
+      },
+      "onMarkerClick": {
+        "type": "array",
+        "description": "Trigger actions when marker is clicked."
+      },
+      "onZoomChanged": {
+        "type": "array",
+        "description": "Trigger actions when the zoom on the map is changed."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: TextInput
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/TextInput/schema.json
-    filePath: blocks/input/TextInput.yaml
-    description_content: |
-      The `TextInput` block is a single line text input.
-
-    examples:
-      - title: Required text input
-        block:
-          id: required_example
-          type: TextInput
-          required: true
-          properties:
-            title: Required text input
-      - title: Placeholder
-        block:
-          id: placeholder_example
-          type: TextInput
-          properties:
-            placeholder: Placeholder
-      - title: Prefix and suffix text
-        block:
-          id: prefix_suffix_example
-          type: TextInput
-          properties:
-            label:
-              extra: Prefix and suffix text
-            prefix: The cat
-            placeholder: chased
-            suffix: the rat
-      - title: User name
-        block:
-          id: username
-          type: TextInput
-          properties:
-            title: First Name
-            suffixIcon: AiOutlineUser
-            placeholder: Your name
-            label:
-              span: 6
-      - title: Field Type
-        block:
-          id: field_type_example
-          type: TextInput
-          properties:
-            type: password
-            label:
-              span: 6
-
-```
----
-
-## File: `blocks/input/TextArea.yaml`
-
-## Description
-
-The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
-
-
----
-
-## File: `blocks/input/Switch.yaml`
-
-## Description
-
-The `Switch` block is an on/off input. It has a boolean value (true/false).
-
-
----
-
-## File: `blocks/input/Selector.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Selector
-    value_type: any
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Selector/schema.json
-    filePath: blocks/input/Selector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `Selector` block is a drop down selector that allows a user to select a single value from a set of options.
-
-      The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `RadioSelector`.
-
-    examples:
-      - title: Listing options from database search
-        block:
-          id: example_selector
-          type: Selector
-          requests:
-            - id: example_search
-              type: MongoDBAggregation
-              connectionId: companies
-              payload:
-                search_input:
-                  _state: search_input
-              properties:
-                pipeline:
-                  - $search:
-                      compound:
-                        should:
-                          - wildcard:
-                              query:
-                                _string.concat:
-                                  - '*'
-                                  - payload: search_input
-                                  - '*'
-                              path: # field names to search in the companies collection
-                                - _id
-                                - company_name
-                              allowAnalyzedField: true
-                  - $addFields:
-                      score:
-                        $meta: searchScore
-                  - $sort:
-                      score: -1
-                  - $limit: 50
-                  - $project: # selector options value, label pairs
-                      _id: 0
-                      value: $_id
-                      label:
-                        $concat:
-                          - $_id
-                          - ' - '
-                          - $ifNull:
-                              - $company_name
-                              - ''
-          properties:
-            placeholder: Search
+- title: Add markers
+  block:
+    id: google_maps_script
+    type: GoogleMapsScript
+    properties:
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps
+        type: GoogleMaps
+        properties:
+          map:
             options:
-              _if_none: # search request results will be used as options
-                - _request: example_search
-                - []
-            label:
-              disabled: true
-          events:
-            onSearch: # selector onSearch actions
-              debounce:
-                ms: 500
-              try:
-                - id: set_state
-                  type: SetState
-                  params:
-                    search_input:
-                      _event: value
-                - id: perform_search
-                  type: Request
-                  params: example_search
-
-```
----
-
-## File: `blocks/input/S3UploadPhoto.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: S3UploadPhoto
-    value_type: object
-    category: input
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadPhoto/schema.json
-    filePath: blocks/input/S3UploadPhoto.yaml
-    description_content: |
-      The `S3UploadPhoto` block allows a user to to upload a photo to AWS S3.
-
-      The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
-
-      The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
-
-      For the examples to work, a `AwsS3Bucket` connection is required. For example:
-      ```yaml
-        connections:
-        - id: files
-          type: AwsS3Bucket
-          properties:
-            accessKeyId:
-              _secret: FILES_S3_ACCESS_KEY_ID
-            secretAccessKey:
-              _secret: FILES_S3_SECRET_ACCESS_KEY
-            region: af-south-1
-            bucket:
-              _secret: FILES_S3_BUCKET
-            write: true
-      ````
-
-      > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
-
-    examples:
-      - title: Basic S3UploadPhoto Example
-        block:
-          id: attach_files
-          type: S3UploadPhoto
-          properties:
-            s3PostPolicyRequestId: upload_file
-          requests:
-            - id: upload_file
-              type: AwsS3PresignedPostPolicy
-              connectionId: files
-              payload:
-                filename:
-                  _event: file.name
-              properties:
-                key:
-                  _nunjucks:
-                    template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
-                    on:
-                      now:
-                        _date: now
-                      filename:
-                        _payload: filename
-
-```
----
-
-## File: `blocks/input/S3UploadDragger.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http:www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: S3UploadDragger
-    value_type: object
-    category: input
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadDragger/schema.json
-    filePath: blocks/input/S3UploadDragger.yaml
-    description_content: |
-      The `S3UploadDragger` block allows a user to to upload a file to AWS S3.
-
-      The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
-
-      The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
-
-      It provides a draggable content area for file upload, with a default text. It also exposes an `onPaste` event that can be used to handle pasted files.
-
-      For the examples to work, a `AwsS3Bucket` connection is required. For example:
-      ```yaml
-        connections:
-        - id: files
-          type: AwsS3Bucket
-          properties:
-            accessKeyId:
-              _secret: FILES_S3_ACCESS_KEY_ID
-            secretAccessKey:
-              _secret: FILES_S3_SECRET_ACCESS_KEY
-            region: af-south-1
-            bucket:
-              _secret: FILES_S3_BUCKET
-            write: true
-
-      > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
-
-      ````
-    init_state_values:
-      block_id:
-        file:
-          key: 'example.pdf'
-          type: 'application/pdf'
-          name: example.pdf
-        fileList:
-          - key: 'example.pdf'
-            type: 'application/pdf'
-            name: example.pdf
-          - key: 'example_two.pdf'
-            type: 'application/pdf'
-            name: example_two.pdf
-    # methods:
-    #   - name: uploadFromPaste
-    #     onPaste:
-    #       - id: uploadFromPaste
-    #         type: CallMethod
-    #         params:
-    #           blockId: block_id
-    #           method: uploadFromPaste
-    examples:
-      - title: Basic S3UploadDragger Example
-        block:
-          id: attach_files
-          type: S3UploadDragger
-          properties:
-            s3PostPolicyRequestId: upload
-          requests:
-            - id: upload
-              type: AwsS3PresignedPostPolicy
-              connectionId: files
-              payload:
-                filename:
-                  _event: file.name
-                content_type:
-                  _event: file.type
-              properties:
-                fields:
-                  Content-Type:
-                    _payload: content_type
-                key:
-                  _nunjucks:
-                    template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
-                    on:
-                      now:
-                        _date: now
-                      filename:
-                        _payload: filename
-      - title: S3UploadDragger Example with onPaste event
-        block:
-          id: on_file_paste
-          type: Box
-          events:
-            onPaste:
-              - id: upload
-                type: CallMethod
-                params:
-                  blockId: attach_files
-                  method: uploadFromPaste
-                  args:
-                    - _event: true
-          blocks:
-            - id: text_input
-              type: TextArea
-            - id: attach_files
-              type: S3UploadDragger
-              properties:
-                s3PostPolicyRequestId: upload_file
-              requests:
-                - id: upload_file
-                  type: AwsS3PresignedPostPolicy
-                  connectionId: files
-                  payload:
-                    filename:
-                      _event: file.name
-                    content_type:
-                      _event: file.type
-                  properties:
-                    fields:
-                      Content-Type:
-                        _payload: content_type
-                    key:
-                      _nunjucks:
-                        template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
-                        on:
-                          now:
-                            _date: now
-                          filename:
-                            _payload: filename
-
-```
----
-
-## File: `blocks/input/S3UploadButton.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: S3UploadButton
-    value_type: object
-    category: input
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3UploadButton/schema.json
-    filePath: blocks/input/S3UploadButton.yaml
-    description_content: |
-      The `S3UploadButton` block allows a user to to upload a file to AWS S3.
-
-      The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
-
-      The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
-
-      For the examples to work, a `AwsS3Bucket` connection is required. For example:
-      ```yaml
-        connections:
-        - id: files
-          type: AwsS3Bucket
-          properties:
-            accessKeyId:
-              _secret: FILES_S3_ACCESS_KEY_ID
-            secretAccessKey:
-              _secret: FILES_S3_SECRET_ACCESS_KEY
-            region: af-south-1
-            bucket:
-              _secret: FILES_S3_BUCKET
-            write: true
-      ````
-
-      > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
-
-    examples:
-      - title: Basic S3UploadButton Example
-        block:
-          id: attach_files
-          type: S3UploadButton
-          properties:
-            s3PostPolicyRequestId: upload_file
-          requests:
-            - id: upload_file
-              type: AwsS3PresignedPostPolicy
-              connectionId: files
-              payload:
-                filename:
-                  _event: file.name
-              properties:
-                key:
-                  _nunjucks:
-                    template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
-                    on:
-                      now:
-                        _date: now
-                      filename:
-                        _payload: filename
-
-```
----
-
-## File: `blocks/input/RatingSlider.yaml`
-
-## Description
-
-The `RatingSlider` block allows a user to choose a numerical value on a slider input. It is typically used for scores or ratings. It has the option to have a "Not Applicable" checkbox, which leaves the value as null.
-
-
----
-
-## File: `blocks/input/RadioSelector.yaml`
-
-## Description
-
-The `RadioSelector` block is a set of radio buttons that allow a user to select a single value from a set of options.
-
-The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-> Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `Selector`.
-
-
----
-
-## File: `blocks/input/PhoneNumberInput.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: PhoneNumberInput
-    value_type: object
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PhoneNumberInput/schema.json
-    filePath: blocks/input/PhoneNumberInput.yaml
-    description_content: |
-      The `PhoneNumberInput` block is a region dial code selector with a single line text input.
-    examples:
-      - title: Simple phone number input
-        block:
-          id: default
-          type: PhoneNumberInput
-      - title: Phone number input with specified regions
-        block:
-          id: allowed_regions
-          type: PhoneNumberInput
-          properties:
-            allowedRegions:
-              - 'ZA'
-              - 'UA'
-      - title: Phone number input with default region and flags disabled
-        block:
-          id: default_region
-          type: PhoneNumberInput
-          properties:
-            defaultRegion: 'US'
-            showFlags: false
-
-```
----
-
-## File: `blocks/input/PasswordInput.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: PasswordInput
-    value_type: string
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/PasswordInput/schema.json
-    filePath: blocks/input/PasswordInput.yaml
-    description_content: |
-      The `PasswordInput` block is a single line password input.
-
-    examples:
-      - title: Required password input
-        block:
-          id: required_example
-          type: PasswordInput
-          required: true
-          properties:
-            title: Required password input
-      - title: Placeholder
-        block:
-          id: placeholder_example
-          type: PasswordInput
-          properties:
-            placeholder: Placeholder
-      - title: Password
-        block:
-          id: password
-          type: PasswordInput
-          properties:
-            title: Password
-            placeholder: Your password
-            label:
-              span: 6
-
-```
----
-
-## File: `blocks/input/ParagraphInput.yaml`
-
-## Description
-
-The `ParagraphInput` block can display a paragraph, yet allow the user to click a edit icon and change the paragraph content. This is useful when the UI renders an existing document with a paragraph, which a user must be able to edit.
-
-
----
-
-## File: `blocks/input/Pagination.yaml`
-
-## Description
-
-The `Pagination` controls user input for pagination purposes.
-
-> This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.
-
-
----
-
-## File: `blocks/input/NumberInput.yaml`
-
-## Description
-
-The `NumberInput` allows a user to input a number.
-
-
----
-
-## File: `blocks/input/MultipleSelector.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: MultipleSelector
-    value_type: any[]
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/MultipleSelector/schema.json
-    filePath: blocks/input/MultipleSelector.yaml
-    init_state_values:
-      __type_block.properties.options: object[]
-      __object_arr_block.properties.options:
-        - label: First
-          value: '1'
-        - label: Second
-          value: '2'
-
-    description_content: |
-      The `MultipleSelector` block is a drop down selector that allows a user to select multiple values from a set of options.
-
-      The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-      > Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `RadioSelector` and `Selector`.
-
-    examples:
-      - title: Basic MultipleSelector Usage
-        block:
-          id: basic_selector
-          type: MultipleSelector
-          properties:
-            title: Select options
+              panControl: true
+              zoomControl: true
+              fullscreenControl: true
+            zoom: 14
+            center:
+              lat: -25.344
+              lng: 131.036
+          markers:
+            - position:
+                lat: -25.344
+                lng: 131.036
+              label: One
+            - position:
+                lat: -25.348
+                lng: 131.038
+              label: Two
+- title: Add markers with onClick event
+  block:
+    id: google_maps_script
+    type: GoogleMapsScript
+    properties:
+      apiKey:
+        _build.env: GOOGLE_MAPS_API_KEY
+    blocks:
+      - id: google_maps
+        type: GoogleMaps
+        properties:
+          map:
             options:
-              - Option A
-              - Option B
-              - Option C
-      - title: MultipleSelector with label value options
-        block:
-          id: label_value_selector
-          type: MultipleSelector
-          properties:
-            title: Select options
-            options:
-              - label: Option 1
-                value: 1
-              - label: Option 2
-                value: 2
-              - label: Option 3
-                value: 3
-      - title: MultipleSelector with html label value options
-        block:
-          id: label_value_selector
-          type: MultipleSelector
-          properties:
-            title: Select options
-            options:
-              - label: |
-                  <div style="font-weight: bold;">Max Verstappen</div>
-                  <div style="font-size: 0.7em;">Red Bull Racing</div>
-                value: 1
-              - label: |
-                  <div style="font-weight: bold;">Logan Sargeant</div>
-                  <div style="font-size: 0.7em;">Williams</div>
-                value: 2
-              - label: |
-                  <div style="font-weight: bold;">Daniel Ricciardo</div>
-                  <div style="font-size: 0.7em;">AlphaTauri</div>
-                value: 3
-      - title: MultipleSelector that renders Tags for selected values
-        block:
-          id: label_value_selector
-          type: MultipleSelector
-          properties:
-            title: Select options
-            renderTags: true
-            options:
-              - label: |
-                  <div style="font-weight: bold;">Max Verstappen</div>
-                  <div style="font-size: 0.7em;">Red Bull Racing</div>
-                value: 1
-                tag:
-                  color: red
-                  title: Max
-              - label: |
-                  <div style="font-weight: bold;">Logan Sargeant</div>
-                  <div style="font-size: 0.7em;">Williams</div>
-                value: 2
-                tag:
-                  color: blue
-                  title: Logan
-              - label: |
-                  <div style="font-weight: bold;">Daniel Ricciardo</div>
-                  <div style="font-size: 0.7em;">AlphaTauri</div>
-                value: 3
-                tag:
-                  color: magenta
-                  title: Daniel
-      - title: Listing options from database search
-        block:
-          id: example_selector
-          type: MultipleSelector
-          requests:
-            - id: example_search
-              type: MongoDBAggregation
-              connectionId: companies
-              payload:
-                search_input:
-                  _state: search_input
-              properties:
-                pipeline:
-                  - $search:
-                      compound:
-                        should:
-                          - wildcard:
-                              query:
-                                _string.concat:
-                                  - '*'
-                                  - _payload: search_input
-                                  - '*'
-                              path: # field names to search in the companies collection
-                                - _id
-                                - company_name
-                              allowAnalyzedField: true
-                  - $addFields:
-                      score:
-                        $meta: searchScore
-                  - $sort:
-                      score: -1
-                  - $limit: 50
-                  - $project:
-                      _id: 0
-                      value: $_id
-                      label:
-                        $concat:
-                          - $_id
-                          - ' - '
-                          - $ifNull:
-                              - $company_name
-                              - ''
-          properties:
-            placeholder: Search
-            options: # search request results will be used as options
-              _array.concat:
-                - _if_none:
-                    - _state: example_options
-                    - []
-                - _if_none:
-                    - _request: example_search
-                    - []
-            label:
-              disabled: true
-          events:
-            onChange: # selector onChange actions - triggered when the value of the selector changes
-              - id: set_state
-                type: SetState
-                params:
-                  example_options:
-                    _mql.aggregate:
-                      on:
-                        _array.concat:
-                          - _state: example_options
-                          - _request: example_search
-                      pipeline:
-                        - $match:
-                            value:
-                              $in:
-                                _state: example_selector
-            onSearch: # selector onSearch actions - triggered when the user types in the search input
-              debounce:
-                ms: 500
-              try:
-                - id: set_state
-                  type: SetState
-                  params:
-                    search_input:
-                      _event: value
-                - id: perform_search
-                  type: Request
-                  params: example_search
-
+              panControl: true
+              zoomControl: true
+              fullscreenControl: true
+            center:
+              lat: -25.344
+              lng: 131.036
+            zoom: 5
+          markers:
+            _state: markers_list
+        events:
+          onClick:
+            - id: markers_list
+              type: SetState
+              params:
+                markers_list:
+                  _array.concat:
+                    - - position:
+                          _event: latLng
+                        label: Hi
+                    - _if_none:
+                        - _state: markers_list
+                        - []
 ```
+
+
 ---
 
-## File: `blocks/input/MonthSelector.yaml`
+## File: `blocks/container/Footer.yaml`
 
 ## Description
 
-The `MonthSelector` block allows a user to select a month. The value is a date object, with day and time values of midnight on the first day of the month GMT.
+The `Footer` block provides a page container for a [footer](https://4x.ant.design/components/layout/) area with content.
 
-> Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `WeekSelector`.
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to footer.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/input/DateTimeSelector.yaml`
+## File: `blocks/container/Drawer.yaml`
 
 ## Description
 
-The `DateTimeSelector` block allows a user to select a date and a time from a calender.
+A panel which slides in from the edge of the screen.
+The Drawer has a single area, `content`.
 
-By default, the time selected by the user is converted to GMT time, based on the timezone of the user. The selector will also display the selected time in the correct timezone for that user. If the `selectGMT` property is set to true, the value of the selector will be the time selected by the user as GMT time, and not in the timezone of the user.
+> To open the drawer, invoke a drawer method.
 
-> Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "closable": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether a close (x) button is visible on top right of the Drawer dialog or not."
+      },
+      "mask": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to show mask or not."
+      },
+      "maskClosable": {
+        "type": "boolean",
+        "default": true,
+        "description": "Clicking on the mask (area outside the Drawer) to close the Drawer or not."
+      },
+      "title": {
+        "type": "string",
+        "description": "The title of the Drawer."
+      },
+      "width": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "default": "256px",
+        "description": "Width of the Drawer dialog.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "height": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "default": "256px",
+        "description": "When placement is top or bottom, height of the Drawer dialog.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "headerStyle": {
+        "type": "object",
+        "description": "Css style to applied to drawer header.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "bodyStyle": {
+        "type": "object",
+        "description": "Css style to applied to drawer body.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "contentWrapperStyle": {
+        "type": "object",
+        "description": "Css style to applied to content area.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "maskStyle": {
+        "type": "object",
+        "description": "Css style to applied to drawer mask.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "drawerStyle": {
+        "type": "object",
+        "description": "Css style to applied to drawer.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "zIndex": {
+        "type": "integer",
+        "default": 1000,
+        "description": "The z-index of the Drawer."
+      },
+      "placement": {
+        "type": "string",
+        "enum": [
+          "top",
+          "right",
+          "bottom",
+          "left"
+        ],
+        "default": "right",
+        "description": "The placement of the Drawer."
+      },
+      "keyboard": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether support press esc to close."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onToggle": {
+        "type": "array",
+        "description": "Trigger actions when drawer is toggled."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Trigger actions when drawer is closed."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger actions when drawer is opened."
+      },
+      "afterClose": {
+        "type": "array",
+        "description": "Trigger actions after drawer is closed."
+      },
+      "afterOpenChange": {
+        "type": "array",
+        "description": "Trigger actions after drawer is opened."
+      }
+    }
+  }
+}
+```
+
+## Methods
+
+### toggleOpen
+
+### setOpen
 
 
 ---
 
-## File: `blocks/input/DateSelector.yaml`
+## File: `blocks/container/Descriptions.yaml`
 
 ## Description
 
-The `DateSelector` block allows a user to select a date from a calender.
+Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
 
-> Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+## Schema
 
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "bordered": {
+        "type": "boolean",
+        "default": false,
+        "description": "Render items in a table."
+      },
+      "colon": {
+        "type": "boolean",
+        "default": true,
+        "description": "Include a colon in item labels."
+      },
+      "contentStyle": {
+        "type": "object",
+        "description": "Customize content style.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "column": {
+        "default": 3,
+        "oneOf": [
+          {
+            "type": "number",
+            "description": "The number of description items in a row."
+          },
+          {
+            "type": "object",
+            "properties": {
+              "xs": {
+                "type": "integer",
+                "description": "The number of description items in a row for 'xs' media size."
+              },
+              "sm": {
+                "type": "integer",
+                "description": "The number of description items in a row for 'sm' media size."
+              },
+              "md": {
+                "type": "integer",
+                "description": "The number of description items in a row for 'md' media size."
+              },
+              "lg": {
+                "type": "integer",
+                "description": "The number of description items in a row for 'lg' media size."
+              },
+              "xl": {
+                "type": "integer",
+                "description": "The number of description items in a row for 'xl' media size."
+              }
+            }
+          }
+        ]
+      },
+      "itemOptions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "Item key to which these settings should apply."
+            },
+            "span": {
+              "type": [
+                "number",
+                "object"
+              ],
+              "description": "Item span for this key. Can also be a function that receives item and index.",
+              "docs": {
+                "displayType": "number"
+              }
+            },
+            "style": {
+              "type": "object",
+              "description": "Item css style for this key. Can also be a function that receives item and index.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "transformLabel": {
+              "type": "object",
+              "description": "Function to transform item key or label. Function receives arguments label, item and index.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "transformValue": {
+              "type": "object",
+              "description": "Function to transform item value. Function receives arguments value, item and index.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
+        }
+      },
+      "items": {
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "List of items to display",
+            "items": {
+              "type": "object",
+              "required": [
+                "label"
+              ],
+              "properties": {
+                "contentStyle": {
+                  "type": "object",
+                  "description": "Customize content style.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "labelStyle": {
+                  "type": "object",
+                  "description": "Customize label style.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Item label - supports html."
+                },
+                "value": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "description": "Value of item - supports html."
+                    },
+                    {
+                      "type": "number",
+                      "description": "Value of item - supports html."
+                    }
+                  ]
+                },
+                "span": {
+                  "type": "integer",
+                  "description": "Number of columns for this item to span."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style object to applied to item.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Object of key value pairs to display",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        ]
+      },
+      "labelStyle": {
+        "type": "object",
+        "description": "Customize label style.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "layout": {
+        "type": "string",
+        "description": "Put values next to or below their labels.",
+        "enum": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      },
+      "size": {
+        "type": "string",
+        "description": "Size of the block.",
+        "enum": [
+          "default",
+          "small"
+        ],
+        "default": "default"
+      },
+      "title": {
+        "type": "string",
+        "description": "The title of the description block, placed at the top - supports html."
+      }
+    }
+  }
+}
+```
 
----
-
-## File: `blocks/input/DateRangeSelector.yaml`
-
-## Description
-
-The `DateRangeSelector` block allows the user to choose a start date and an end date for a date range. The selected range is saved as an array with two date elements, the start and end dates.
-
-> Other date type blocks are `DateSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
-
-
----
-
-## File: `blocks/input/ColorSelector.yaml`
-
-## Description
-
-A color selector component.
-
-
----
-
-## File: `blocks/input/CheckboxSwitch.yaml`
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: CheckboxSwitch
-    value_type: any[]
-    category: input
-    schema: ../plugins/blocks/blocks-antd/src/blocks/CheckboxSwitch/schema.json
-    filePath: blocks/input/CheckboxSwitch.yaml
-    description_content: |
-      The `CheckboxSwitch` block allows a user to select a boolean value between (true/false).
-
-      > A similar switch block is `Switch`. Alternatively the `CheckboxSelector` can be used to list multiple options.
-    examples:
-      - title: Checkbox only
-        block:
-          id: checkbox_example
-          type: CheckboxSwitch
-          properties:
-            label:
-              disabled: true
-      - title: Description only
-        block:
-          id: description_example
-          type: CheckboxSwitch
-          properties:
-            description: Option
-      - title: Description and label
-        block:
-          id: description_label_example
-          type: CheckboxSwitch
-          properties:
-            description: Option
-            label:
-              title: Label
-      - title: Agree to terms and conditions
-        block:
-          id: terms_example
-          type: CheckboxSwitch
-          properties:
-            description: I agree to the terms and conditions and privacy policy as found on the website.... Thoroughly I agree to the terms and conditions and privacy policy as found on the website....
-            label:
-              disabled: true
-
+- title: Object data example
+  block:
+    id: object_example
+    type: Descriptions
+    properties:
+      bordered: true
+      items:
+        Location: South Africa
+        Temperature: 22
+        Date: 2021-02-02T00:00:00.000Z
 ```
----
-
-## File: `blocks/input/CheckboxSelector.yaml`
-
-## Description
-
-The `CheckboxSelector` block allows a user to select multiple values from a set of options.
-
-The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans, or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
-
-> Other selector blocks are `ButtonSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
 
 
 ---
 
-## File: `blocks/input/ButtonSelector.yaml`
+## File: `blocks/container/Content.yaml`
 
 ## Description
 
-The `ButtonSelector` block allows a user to select a single value from a set of options. The user cannot deselect an option once they have selected an input.
+The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
 
-The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+## Schema
 
-> Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to content.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/input/AutoComplete.yaml`
+## File: `blocks/container/ConfirmModal.yaml`
 
 ## Description
 
-The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
+A popup container, presenting the user with a modal confirmation dialog.
+The ConfirmModal has a single area, `content`.
 
->If you need the user to select only from a list of options (and be able to select the top match for the given input by simply hitting Enter), use a block like the `Selector` block instead.
+> To open the confirm modal, invoke the open method.
+
+## Schema
+
+```json
+{
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Modal title - supports html."
+      },
+      "bodyStyle": {
+        "type": "object",
+        "description": "Css style to applied to modal body.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "centered": {
+        "type": "boolean",
+        "default": false,
+        "description": "Centered Modal."
+      },
+      "closable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether a close (x) button is visible on top right of the confirm dialog or not."
+      },
+      "content": {
+        "type": "string",
+        "description": "Modal content. Overridden by the \"content\" content area - supports html."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize modal icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "mask": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether show mask or not."
+      },
+      "maskClosable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked."
+      },
+      "modalStyle": {
+        "type": "object",
+        "description": "Css style to applied to modal.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "okText": {
+        "type": "string",
+        "default": "Ok",
+        "description": "Text of the Ok button."
+      },
+      "cancelText": {
+        "type": "string",
+        "default": "Cancel",
+        "description": "Text of the Cancel button."
+      },
+      "okButton": {
+        "type": "object",
+        "description": "Ok button properties.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "cancelButton": {
+        "type": "object",
+        "description": "Cancel button properties.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "default": 416,
+        "description": "Width of the modal dialog.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "zIndex": {
+        "type": "number",
+        "default": 1000,
+        "description": "The z-index of the Modal."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "info",
+          "warning",
+          "confirm"
+        ],
+        "default": "confirm",
+        "description": "Modal status type."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onOk": {
+        "type": "array",
+        "description": "Trigger actions when Ok button is clicked."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger actions when confirm modal is opened."
+      },
+      "onCancel": {
+        "type": "array",
+        "description": "Trigger actions when Cancel button is clicked."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Triggered after onOk or onCancel actions are completed."
+      }
+    }
+  }
+}
+```
+
+## Methods
+
+### open
+
+
+---
+
+## File: `blocks/container/Comment.yaml`
+
+## Description
+
+A Comment renders a comment list item. It can be used as both a `display` or `container` category block.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "author": {
+        "type": "string",
+        "description": "Comment author title. Overrides the \"author\" content area."
+      },
+      "avatar": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Source URL of a avatar image."
+          },
+          {
+            "type": "object",
+            "description": "Avatar block properties.",
+            "docs": {
+              "displayType": "avatar"
+            }
+          }
+        ]
+      },
+      "content": {
+        "type": "string",
+        "description": "Comment content. Overrides the \"content\" content area."
+      },
+      "datetime": {
+        "type": [
+          "object",
+          "string"
+        ],
+        "description": "Comment date and time.",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Comment
+  block:
+    id: comment_ex
+    type: Comment
+    properties:
+      author: The Dude
+      content: Yeah, well, you know, that’s just, like, your opinion, man.
+      datetime: 18 January, 1998
+      avatar:
+        color: '#402B18'
+        content: TD
+        shape: square
+```
+
+
+---
+
+## File: `blocks/container/Collapse.yaml`
+
+## Description
+
+A container with collapsible panels. The area keys are user defined, and should be listed under the `panels` property. Each panel also has a 'extra' content area, the key of which can be defined in the `panels.$.extraKey` property.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "accordion": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, only one panel is open at a time."
+      },
+      "activeKey": {
+        "type": "string",
+        "description": "Current panel's key."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Toggles rendering of the border around the collapse block."
+      },
+      "defaultActiveKey": {
+        "type": "string",
+        "description": "Initial active panel's key, if activeKey is not set."
+      },
+      "destroyInactivePanel": {
+        "type": "boolean",
+        "default": false,
+        "description": "Destroy inactive panel."
+      },
+      "expandIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for expand icon on the right of selector.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "expandIconPosition": {
+        "type": "string",
+        "enum": [
+          "left",
+          "right"
+        ],
+        "default": "left",
+        "description": "Set position of expand icon."
+      },
+      "forceRender": {
+        "type": "boolean",
+        "default": "false",
+        "description": "Force render for all panels."
+      },
+      "panels": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Title of the panel - supports html."
+            },
+            "key": {
+              "type": "string",
+              "description": "Key of the panel."
+            },
+            "extraKey": {
+              "type": "string",
+              "description": "Key for the extra area of the panel."
+            },
+            "disabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Disable the panel if true."
+            }
+          }
+        }
+      },
+      "showArrow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show expand icon."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when collapse item is toggled."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Carousel.yaml`
+
+## Description
+
+Carousel to navigate through different slides consisting of blocks.
+The key of each slide is the area keys of the container.
+### Methods
+
+  - `goTo`: Set the current slide to a specific slide.
+    - `slide: string`: The key of the chosen slide.
+    - `dontAnimate: boolean`: If true, the transition happens without animation.
+  - `next`: Set the next slide as the current slide.
+  - `prev`: Set the previous slide as the current slide.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "accessibility": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable tabbing and arrow key navigation."
+      },
+      "adaptiveHeight": {
+        "type": "boolean",
+        "default": false,
+        "description": "Adjust the slide's height automatically."
+      },
+      "arrows": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether or not to show arrows."
+      },
+      "autoplaySpeed": {
+        "type": "integer",
+        "default": 3000,
+        "description": "Delay between each auto scroll (in milliseconds)."
+      },
+      "autoplay": {
+        "type": "boolean",
+        "default": false,
+        "description": "Toggles whether or not to scroll automatically."
+      },
+      "centerMode": {
+        "type": "boolean",
+        "default": false,
+        "description": "Center current slide."
+      },
+      "centerPadding": {
+        "type": "string",
+        "default": "50px",
+        "description": "Padding applied to center slide."
+      },
+      "dotPosition": {
+        "type": "string",
+        "enum": [
+          "left",
+          "right",
+          "top",
+          "bottom"
+        ],
+        "default": "bottom",
+        "description": "The position of the dots, which can be one of top, bottom, left or right."
+      },
+      "dots": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not to show the dots."
+      },
+      "draggable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Enable scrollable via dragging on desktop"
+      },
+      "easing": {
+        "type": "string",
+        "default": "linear",
+        "description": "Transition interpolation function name."
+      },
+      "effect": {
+        "type": "string",
+        "default": "scrollx",
+        "description": "Transition effect, either scrollx or fade."
+      },
+      "focusOnSelect": {
+        "type": "boolean",
+        "default": false,
+        "description": "Go to slide on click."
+      },
+      "infinite": {
+        "type": "boolean",
+        "default": true,
+        "description": "Infinitely wrap around contents."
+      },
+      "pauseOnDotsHover": {
+        "type": "boolean",
+        "default": false,
+        "description": "Prevents autoplay while hovering on dot."
+      },
+      "pauseOnFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Prevents autoplay while focused on slides."
+      },
+      "pauseOnHover": {
+        "type": "boolean",
+        "default": true,
+        "description": "Prevents autoplay while hovering on track."
+      },
+      "responsive": {
+        "type": "array",
+        "default": [],
+        "description": "Customize based on breakpoints.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "breakpoint": {
+              "type": "integer",
+              "description": "Maximum screen size."
+            },
+            "settings": {
+              "type": "object",
+              "description": "Carousel properties.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            }
+          }
+        }
+      },
+      "rows": {
+        "type": "integer",
+        "default": 1,
+        "description": "Number of rows per slide in the slider, (enables grid mode)."
+      },
+      "rtl": {
+        "type": "boolean",
+        "default": false,
+        "description": "Reverses the slide order."
+      },
+      "slidesPerRow": {
+        "type": "integer",
+        "default": 1,
+        "description": "Number of slides to display in grid mode, this is useful with rows option."
+      },
+      "slidesToScroll": {
+        "type": "integer",
+        "default": 1,
+        "description": "How many slides to scroll at once."
+      },
+      "slidesToShow": {
+        "type": "integer",
+        "default": 1,
+        "description": "How many slides to show in one frame."
+      },
+      "speed": {
+        "type": "integer",
+        "default": 500,
+        "description": "Number of slides to display in grid mode, this is useful with rows option."
+      },
+      "swipeToSlide": {
+        "type": "boolean",
+        "default": false,
+        "description": "Enable drag/swipe irrespective of `slidesToScroll`."
+      },
+      "swipe": {
+        "type": "boolean",
+        "default": true,
+        "description": "Enable/disable swiping to change slides."
+      },
+      "vertical": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether or not the slides are shown in a column."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "afterChange": {
+        "type": "array",
+        "description": "Trigger actions after the slide is changed."
+      },
+      "beforeChange": {
+        "type": "array",
+        "description": "Trigger actions before the slide is changed."
+      },
+      "onInit": {
+        "type": "array",
+        "description": "Trigger actions when the carousel is initialized."
+      },
+      "onSwipe": {
+        "type": "array",
+        "description": "Trigger actions when the carousel is swiped."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Carousel
+  block:
+    id: basic_carousel
+    type: Carousel
+    properties:
+      draggable: true
+      slidesToShow: 1
+      slides:
+        - key: slide_one
+        - key: slide_two
+        - key: slide_three
+    areas:
+      slide_one:
+        blocks:
+          - id: side_1
+            type: Card
+            blocks:
+              - id: title_side_1
+                type: Title
+                properties:
+                  content: Slide 1
+      slide_two:
+        blocks:
+          - id: side_2
+            type: Card
+            blocks:
+              - id: title_side_2
+                type: Title
+                properties:
+                  content: Slide 2
+      slide_three:
+        blocks:
+          - id: side_3
+            type: Card
+            blocks:
+              - id: title_side_3
+                type: Title
+                properties:
+                  content: Slide 3
+- title: Responsive Carousel
+  block:
+    id: responsive_carousel
+    type: Carousel
+    properties:
+      autoplay: true
+      draggable: true
+      slidesToShow: 3
+      slides:
+        - key: slide_one
+        - key: slide_two
+        - key: slide_three
+        - key: slide_four
+      responsive:
+        - breakpoint: 1024
+          settings:
+            slidesToShow: 2
+            slidesToScroll: 2
+            infinite: true
+            dots: true
+        - breakpoint: 600
+          settings:
+            slidesToShow: 1
+            slidesToScroll: 1
+    areas:
+      slide_one:
+        blocks:
+          - id: side_1
+            type: Card
+            blocks:
+              - id: title_side_1
+                type: Title
+                properties:
+                  content: Slide 1
+      slide_two:
+        blocks:
+          - id: side_2
+            type: Card
+            blocks:
+              - id: title_side_2
+                type: Title
+                properties:
+                  content: Slide 2
+      slide_three:
+        blocks:
+          - id: side_3
+            type: Card
+            blocks:
+              - id: title_side_3
+                type: Title
+                properties:
+                  content: Slide 3
+      slide_four:
+        blocks:
+          - id: side_4
+            type: Card
+            blocks:
+              - id: title_side_4
+                type: Title
+                properties:
+                  content: Slide 4
+```
+
+
+---
+
+## File: `blocks/container/Card.yaml`
+
+## Description
+
+A Card container places blocks on a white background with a card border.
+The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Toggles rendering of the border around the card."
+      },
+      "hoverable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Lift up when hovering card."
+      },
+      "headerStyle": {
+        "type": "object",
+        "description": "Css style to applied to card header.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "bodyStyle": {
+        "type": "object",
+        "description": "Css style to applied to card body.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "inner": {
+        "type": "boolean",
+        "default": false,
+        "description": "Change the card style to inner."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "default",
+          "small"
+        ],
+        "default": "default",
+        "description": "Size of the card."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the Card is clicked."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Box.yaml`
+
+## Description
+
+A Box is a container that places sub-blocks into a html `<div>`.
+The Box has a single area, `content`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Box content string. Overrides the \"content\" content area."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to Box div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when the Box is clicked."
+      },
+      "onPaste": {
+        "type": "array",
+        "description": "Trigger actions when the element is focused and a paste event is triggered."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Badge.yaml`
+
+## Description
+
+Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "color": {
+        "type": "string",
+        "description": "Customize Badge dot color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "count": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Text to show in badge.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "dot": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to display a red dot instead of count."
+      },
+      "size": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "default",
+          "small"
+        ],
+        "description": "Sets the size of badge if count is set."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in badge.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "offset": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "description": "Set offset of the badge dot, array of numbers for x and y offset ([x,y])."
+      },
+      "overflowCount": {
+        "type": "number",
+        "default": 99,
+        "description": "Max count to show"
+      },
+      "showZero": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to show badge when count is zero."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "processing",
+          "default",
+          "error",
+          "warning"
+        ],
+        "default": null,
+        "description": "Set Badge as a status dot."
+      },
+      "text": {
+        "type": "string",
+        "description": "If status is set, text sets the display text of the status dot."
+      },
+      "title": {
+        "type": "string",
+        "description": "Text to show when hovering over the badge."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Alert.yaml`
+
+## Description
+
+Alert is used to render user feedback messages in a Alert styled frame.
+
+## Schema
+
+```json
+{
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "banner": {
+        "type": "boolean",
+        "default": false,
+        "description": "Style as banner at top of application window."
+      },
+      "closable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Allow alert to be closed."
+      },
+      "closeText": {
+        "type": "string",
+        "description": "Close text to show."
+      },
+      "description": {
+        "type": "string",
+        "description": "Content description of alert - supports html."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an Ant Design Icon or properties of an Icon block to customize alert icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "message": {
+        "type": "string",
+        "description": "Content message of alert - supports html."
+      },
+      "showIcon": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show type default icon."
+      },
+      "type": {
+        "type": "string",
+        "enum": [
+          "success",
+          "info",
+          "warning",
+          "error"
+        ],
+        "default": "info",
+        "description": "Alert style type."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClose": {
+        "type": "array",
+        "description": "Called when Alert close button is clicked."
+      },
+      "afterClose": {
+        "type": "array",
+        "description": "Called after Alert has been closed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/container/Affix.yaml`
+
+## Description
+
+An Affix block makes it's content stick to the viewport.
+The Affix has a single area, `content`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "offsetBottom": {
+        "type": "number",
+        "description": "Offset from the bottom of the viewport (in pixels)."
+      },
+      "offsetTop": {
+        "type": "number",
+        "description": "Offset from the top of the viewport (in pixels)."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to affix.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when container affix status changes."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -6737,470 +9321,1050 @@ The AutoComplete block is a text input that has a list of suggestions for the us
 
 A title component. Corresponds to html h1, h2, h3 and h4 elements.
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "code": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply code style."
+      },
+      "color": {
+        "type": "string",
+        "description": "Title color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "content": {
+        "type": "string",
+        "description": "Title text content - supports html."
+      },
+      "copyable": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Provide copy text button."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Paragraph text to copy when clicked."
+              },
+              "icon": {
+                "type": [
+                  "string",
+                  "object",
+                  "array"
+                ],
+                "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltips": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                "docs": {
+                  "displayType": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "delete": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply deleted (strikethrough) style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply disabled style."
+      },
+      "ellipsis": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Display ellipsis when text overflows a single line."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rows": {
+                "type": "number",
+                "description": "Max rows of content."
+              },
+              "expandable": {
+                "type": "boolean",
+                "description": "Expand hidden content when clicked."
+              },
+              "suffix": {
+                "type": "string",
+                "description": "Suffix of ellipses content."
+              }
+            }
+          }
+        ]
+      },
+      "italic": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply italic style."
+      },
+      "level": {
+        "type": "number",
+        "default": 1,
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "description": "Set title type. Matches with h1, h2, h3 and h4."
+      },
+      "mark": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply marked (highlighted) style."
+      },
+      "type": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "secondary",
+          "warning",
+          "danger",
+          "success"
+        ],
+        "description": "Additional types. Don't specify for default."
+      },
+      "underline": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply underline style."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onExpand": {
+        "type": "array",
+        "description": "Trigger action when ellipse expand is clicked."
+      },
+      "onCopy": {
+        "type": "array",
+        "description": "Trigger action when copy text is clicked."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/Tag.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+A block to render a Tag component.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+Besides hex color values, the following color preset values are available:
+- `success`
+- `processing`
+- `error`
+- `warning`
+- `default`
+- `blue`
+- `cyan`
+- `geekblue`
+- `gold`
+- `green`
+- `lime`
+- `magenta`
+- `orange`
+- `purple`
+- `red`
+- `volcano`
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## Schema
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Tag
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tag/schema.json
-    filePath: blocks/display/Tag.yaml
-    description_content: |
-      A block to render a Tag component.
-
-      Besides hex color values, the following color preset values are available:
-      - `success`
-      - `processing`
-      - `error`
-      - `warning`
-      - `default`
-      - `blue`
-      - `cyan`
-      - `geekblue`
-      - `gold`
-      - `green`
-      - `lime`
-      - `magenta`
-      - `orange`
-      - `purple`
-      - `red`
-      - `volcano`
-
-    examples:
-      - title: Basic Tag
-        block:
-          id: basic_example
-          type: Tag
-          properties:
-            title: A tag with title
-      - title: Preset color tags and icons
-        block:
-          id: error_tag
-          type: Tag
-          properties:
-            title: Error
-            color: error
-            icon: AiOutlineCloseCircle
-
+```json
+{
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "closable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Allow tag to be closed."
+      },
+      "color": {
+        "type": "string",
+        "description": "Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Content title of tag - supports html."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an Ant Design Icon or properties of an Icon block to customize alert icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Called when Tag is clicked."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Called when Tag close icon is clicked."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic Tag
+  block:
+    id: basic_example
+    type: Tag
+    properties:
+      title: A tag with title
+- title: Preset color tags and icons
+  block:
+    id: error_tag
+    type: Tag
+    properties:
+      title: Error
+      color: error
+      icon: AiOutlineCloseCircle
+```
+
+
 ---
 
 ## File: `blocks/display/Statistic.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+A statistic block renders indicator numbers.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Statistic
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Statistic/schema.json
-    filePath: blocks/display/Statistic.yaml
-    init_state_values:
-      __type_block.properties.value: number
-      __number_block.properties.value: 33.3
-    description_content: |
-      A statistic block renders indicator numbers.
-
-    examples:
-      - title: Basic statistic
-        block:
-          id: basic_example
-          type: Statistic
-          properties:
-            value: 99.5
-            prefixIcon: AiOutlineAlert
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "decimalSeparator": {
+        "type": "string",
+        "default": ".",
+        "description": "Decimal separator."
+      },
+      "groupSeparator": {
+        "type": "string",
+        "default": ",",
+        "description": "Group separator."
+      },
+      "loading": {
+        "type": "boolean",
+        "default": false,
+        "description": "Control the loading status of Statistic."
+      },
+      "precision": {
+        "type": "number",
+        "description": "Number of decimals to display."
+      },
+      "prefix": {
+        "type": "string",
+        "description": "Prefix text, priority over prefixIcon."
+      },
+      "prefixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon which prefix the statistic.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "suffix": {
+        "type": "string",
+        "description": "Suffix text, priority over suffixIcon."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon which suffix the statistic.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the component - supports html."
+      },
+      "value": {
+        "oneOf": [
+          {
+            "type": "number",
+            "description": "Value to display.",
+            "step": "0.01"
+          },
+          {
+            "type": "string",
+            "description": "Value to display."
+          }
+        ]
+      },
+      "valueStyle": {
+        "type": "object",
+        "description": "Css style to applied to value.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic statistic
+  block:
+    id: basic_example
+    type: Statistic
+    properties:
+      value: 99.5
+      prefixIcon: AiOutlineAlert
+```
+
+
 ---
 
 ## File: `blocks/display/SkeletonParagraph.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The `SkeletonParagraph` block can be used as a loading skeleton for a `Paragraph` block.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: SkeletonParagraph
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonParagraph/schema.json
-    filePath: blocks/display/SkeletonParagraph.yaml
-    description_content: |
-      The `SkeletonParagraph` block can be used as a loading skeleton for a `Paragraph` block.
-
-    examples:
-      - title: Basic skeleton paragraph
-        block:
-          id: basic_skeleton_paragraph_example
-          type: SkeletonParagraph
-          properties:
-            lines: 5
-            width: 100
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "lines": {
+        "type": "number",
+        "default": 4,
+        "description": "Number of paragraph lines of the skeleton."
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic skeleton paragraph
+  block:
+    id: basic_skeleton_paragraph_example
+    type: SkeletonParagraph
+    properties:
+      lines: 5
+      width: 100
+```
+
+
 ---
 
 ## File: `blocks/display/SkeletonInput.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The `SkeletonInput` block can be used as a loading skeleton for `Input` blocks.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: SkeletonInput
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonInput/schema.json
-    filePath: blocks/display/SkeletonInput.yaml
-    description_content: |
-      The `SkeletonInput` block can be used as a loading skeleton for `Input` blocks.
-
-    examples:
-      - title: Basic skeleton input
-        block:
-          id: basic_skeleton_input_example
-          type: SkeletonInput
-          properties:
-            inputHeight: 100
-            labelHeight: 50
-            labelWidth: 50
-            size: large
-            width: 100
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "labelStyle": {
+        "type": "object",
+        "description": "Css style object to apply to the label skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style object to apply to the input skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "default": "medium",
+        "description": "Size of the skeleton.",
+        "enum": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "labelHeight": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Height of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "labelWidth": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "inputHeight": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Height of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic skeleton input
+  block:
+    id: basic_skeleton_input_example
+    type: SkeletonInput
+    properties:
+      inputHeight: 100
+      labelHeight: 50
+      labelWidth: 50
+      size: large
+      width: 100
+```
+
+
 ---
 
 ## File: `blocks/display/SkeletonButton.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The `SkeletonButton` block can be used as a loading skeleton for a `Button` block.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: SkeletonButton
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonButton/schema.json
-    filePath: blocks/display/SkeletonButton.yaml
-    description_content: |
-      The `SkeletonButton` block can be used as a loading skeleton for a `Button` block.
-
-    examples:
-      - title: Basic skeleton button
-        block:
-          id: basic_skeleton_example
-          type: SkeletonButton
-          properties:
-            size: small
-            width: 100
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "default": "medium",
+        "description": "Size of the skeleton.",
+        "enum": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic skeleton button
+  block:
+    id: basic_skeleton_example
+    type: SkeletonButton
+    properties:
+      size: small
+      width: 100
+```
+
+
 ---
 
 ## File: `blocks/display/SkeletonAvatar.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: SkeletonAvatar
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/SkeletonAvatar/schema.json
-    filePath: blocks/display/SkeletonAvatar.yaml
-    description_content: |
-      The `SkeletonAvatar` block can be used as a loading skeleton for an `Avatar` block.
-
-    examples:
-      - title: Basic skeleton avatar
-        block:
-          id: basic_skeleton_avatar_example
-          type: SkeletonAvatar
-          properties:
-            shape: square
-            size: large
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "default": "medium",
+        "description": "Size of the skeleton.",
+        "enum": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      "shape": {
+        "type": "string",
+        "default": "round",
+        "description": "Shape of the skeleton.",
+        "enum": [
+          "square",
+          "round"
+        ]
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic skeleton avatar
+  block:
+    id: basic_skeleton_avatar_example
+    type: SkeletonAvatar
+    properties:
+      shape: square
+      size: large
+```
+
+
 ---
 
 ## File: `blocks/display/Skeleton.yaml`
 
+## Description
+
+The `Skeleton` block can be used as a regular block or as a loading skeleton for another block.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to the skeleton.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "height": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Height of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "description": "Width of the skeleton.",
+        "docs": {
+          "displayType": "string"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
+```
+
+## Examples
+
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Skeleton
-    category: display
-    schema: ../plugins/blocks/blocks-loaders/src/blocks/Skeleton/schema.json
-    filePath: blocks/display/Skeleton.yaml
-    description_content: |
-      The `Skeleton` block can be used as a regular block or as a loading skeleton for another block.
-
-    examples:
-      - title: Basic skeleton
-        block:
-          id: basic_skeleton_example
-          type: Skeleton
+- title: Basic skeleton
+  block:
+    id: basic_skeleton_example
+    type: Skeleton
+    properties:
+      height: 100
+      width: 100
+- title: Loading skeleton for a card
+  block:
+    id: loading_skeleton_card_example
+    type: Card
+    loading: true
+    skeleton:
+      type: Card
+      blocks:
+        - type: Skeleton
           properties:
             height: 100
-            width: 100
-      - title: Loading skeleton for a card
-        block:
-          id: loading_skeleton_card_example
-          type: Card
-          loading: true
-          skeleton:
-            type: Card
-            blocks:
-              - type: Skeleton
-                properties:
-                  height: 100
-
 ```
+
+
 ---
 
 ## File: `blocks/display/S3Download.yaml`
 
+## Description
+
+The `S3Download` block allows a user to download a files from AWS S3.
+
+The `s3GetPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedGetPolicy`](/AWSS3) request. This request is called by the block when the user downloads a file, to create a policy that allows a file to be downloaded from AWS S3.
+
+If using files were uploaded using a S3Upload block, the `fileList` can be mapped to the `S3Download` block to allow the user to download the files, given the correct `AwsS3PresignedGetPolicy` is in defined.
+
+For the examples to work, a `AwsS3Bucket` connection is required. For example:
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: S3Download
-    value_type: object
-    category: display
-    schema: ../plugins/plugins/plugin-aws/src/blocks/S3Download/schema.json
-    filePath: blocks/display/S3Download.yaml
-    description_content: |
-      The `S3Download` block allows a user to download a files from AWS S3.
-
-      The `s3GetPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedGetPolicy`](/AWSS3) request. This request is called by the block when the user downloads a file, to create a policy that allows a file to be downloaded from AWS S3.
-
-      If using files were uploaded using a S3Upload block, the `fileList` can be mapped to the `S3Download` block to allow the user to download the files, given the correct `AwsS3PresignedGetPolicy` is in defined.
-
-      For the examples to work, a `AwsS3Bucket` connection is required. For example:
-      ```yaml
-        connections:
-        - id: files
-          type: AwsS3Bucket
-          properties:
-            accessKeyId:
-              _secret: FILES_S3_ACCESS_KEY_ID
-            secretAccessKey:
-              _secret: FILES_S3_SECRET_ACCESS_KEY
-            region: af-south-1
-            bucket:
-              _secret: FILES_S3_BUCKET
-            write: true
-      ````
-
-      > The examples on this page are not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
-    init_property_values:
-      fileList:
-        - key: 'example.pdf'
-          type: 'application/pdf'
-          name: example_document.pdf
-        - key: 'example.jpg'
-          type: 'image/jpeg'
-          name: example_image.jpg
-    examples:
-      - title: Basic S3Download Example
-        block:
-          id: download_files
-          type: S3Download
-          properties:
-            s3GetPolicyRequestId: download_file
-            fileList:
-              - key: 'example.pdf'
-                type: 'application/pdf'
-                name: example_document.pdf
-              - key: 'example.jpg'
-                type: 'image/jpeg'
-                name: example_image.jpg
-          requests:
-            - id: download_file
-              type: AwsS3PresignedGetObject
-              connectionId: files
-              payload:
-                key:
-                  _event: file.key
-                type:
-                  _event: file.type
-              properties:
-                key:
-                  _payload: key
-                responseContentType:
-                  _payload: type
-
+  connections:
+  - id: files
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: FILES_S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: FILES_S3_SECRET_ACCESS_KEY
+      region: af-south-1
+      bucket:
+        _secret: FILES_S3_BUCKET
+      write: true
 ```
+
+> The examples on this page are not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "required": [
+      "s3GetPolicyRequestId"
+    ],
+    "properties": {
+      "fileList": {
+        "type": "array",
+        "description": "List of files to be downloaded. If files were uploaded using an S3Upload block, the fileList value can just be mapped to this field.",
+        "items": {
+          "type": "object",
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "S3 file key."
+            },
+            "lastModified": {
+              "type": "string",
+              "description": "File last modified date."
+            },
+            "name": {
+              "type": "string",
+              "description": "File name."
+            },
+            "size": {
+              "type": "number",
+              "description": "File size in bytes."
+            },
+            "type": {
+              "type": "string",
+              "description": "File MIME type."
+            }
+          }
+        }
+      },
+      "s3GetPolicyRequestId": {
+        "type": "string",
+        "description": "Id of a request of type s3GetPolicyRequestId that defines to which S3 bucket and what file should be downloaded.",
+        "docs": {
+          "displayType": "manual",
+          "block": {
+            "id": "block_properties_s3GetPolicyRequestId",
+            "layout": {
+              "_global": "settings_input_layout"
+            },
+            "type": "Label",
+            "required": true,
+            "properties": {
+              "title": "s3GetPolicyRequestId",
+              "span": 8,
+              "align": "right"
+            },
+            "blocks": [
+              {
+                "id": "block_properties_s3GetPolicyRequestId_text",
+                "type": "Markdown",
+                "style": {
+                  "color": "#8c8c8c"
+                },
+                "properties": {
+                  "content": "Id of a request of type AwsS3PresignedGetPolicy that defines to which S3 bucket and what file should be downloaded."
+                }
+              }
+            ]
+          }
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to download component.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when the upload state is changing."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Basic S3Download Example
+  block:
+    id: download_files
+    type: S3Download
+    properties:
+      s3GetPolicyRequestId: download_file
+      fileList:
+        - key: example.pdf
+          type: application/pdf
+          name: example_document.pdf
+        - key: example.jpg
+          type: image/jpeg
+          name: example_image.jpg
+    requests:
+      - id: download_file
+        type: AwsS3PresignedGetObject
+        connectionId: files
+        payload:
+          key:
+            _event: file.key
+          type:
+            _event: file.type
+        properties:
+          key:
+            _payload: key
+          responseContentType:
+            _payload: type
+```
+
+
 ---
 
 ## File: `blocks/display/Progress.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+Display the current progress as a percentage of completion.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Progress
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Progress/schema.json
-    filePath: blocks/display/Progress.yaml
-    init_property_values:
-      percent: 30
-    description_content: |
-      Display the current progress as a percentage of completion.
-
-    examples:
-      - title: Line progress
-        block:
-          id: line_example
-          type: Progress
-          properties:
-            type: line
-            percent: 60
-            strokeColor: '#fcb900'
-            status: active
-      - title: Circle progress
-        block:
-          id: circle_example
-          type: Progress
-          properties:
-            type: circle
-            percent: 60
-            strokeColor: '#52c41a'
-      - title: Dashboard progress
-        block:
-          id: dashboard_example
-          type: Progress
-          properties:
-            type: dashboard
-            percent: 60
-            strokeColor: '#1890ff'
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "type": {
+        "type": "string",
+        "default": "line",
+        "enum": [
+          "line",
+          "circle",
+          "dashboard"
+        ],
+        "description": "Set type of progress display."
+      },
+      "showInfo": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to display the progress value and the status icon."
+      },
+      "percent": {
+        "type": "number",
+        "default": 0,
+        "description": "Set the completion percentage."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "exception",
+          "normal",
+          "active"
+        ],
+        "default": "normal",
+        "description": "Set the status of the Progress."
+      },
+      "strokeLinecap": {
+        "type": "string",
+        "default": "round",
+        "enum": [
+          "round",
+          "square"
+        ],
+        "description": "Set the style of the progress linecap."
+      },
+      "strokeColor": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Color of progress bar.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "success": {
+        "type": "number",
+        "default": 0,
+        "description": "Segmented success percent."
+      },
+      "trailColor": {
+        "type": "string",
+        "description": "Color of unfilled part.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "strokeWidth": {
+        "type": "number",
+        "description": "Set the width of the progress bar."
+      },
+      "width": {
+        "type": "number",
+        "default": 132,
+        "description": "Set the canvas width of the circular progress."
+      },
+      "gapDegree": {
+        "type": "number",
+        "default": 75,
+        "description": "The gap degree of half circle."
+      },
+      "gapPosition": {
+        "type": "string",
+        "enum": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "top",
+        "description": "The gap position."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Line progress
+  block:
+    id: line_example
+    type: Progress
+    properties:
+      type: line
+      percent: 60
+      strokeColor: '#fcb900'
+      status: active
+- title: Circle progress
+  block:
+    id: circle_example
+    type: Progress
+    properties:
+      type: circle
+      percent: 60
+      strokeColor: '#52c41a'
+- title: Dashboard progress
+  block:
+    id: dashboard_example
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 60
+      strokeColor: '#1890ff'
+```
+
+
 ---
 
 ## File: `blocks/display/Paragraph.yaml`
@@ -7208,6 +10372,159 @@ _ref:
 ## Description
 
 A paragraph text component.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "code": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply code style."
+      },
+      "content": {
+        "type": "string",
+        "description": "Paragraph text content - supports html.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "copyable": {
+        "description": "Provide copy text button.",
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Paragraph text to copy when clicked."
+              },
+              "icon": {
+                "type": [
+                  "string",
+                  "object",
+                  "array"
+                ],
+                "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltips": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                "docs": {
+                  "displayType": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "delete": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply deleted (strikethrough) style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply disabled style."
+      },
+      "ellipsis": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Display ellipsis when text overflows a single line."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rows": {
+                "type": "number",
+                "description": "Max rows of content."
+              },
+              "expandable": {
+                "type": "boolean",
+                "description": "Expand hidden content when clicked."
+              },
+              "suffix": {
+                "type": "string",
+                "description": "Suffix of ellipses content."
+              }
+            }
+          }
+        ]
+      },
+      "italic": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply italic style."
+      },
+      "mark": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply marked (highlighted) style."
+      },
+      "strong": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply strong (bold) style."
+      },
+      "type": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "success",
+          "default",
+          "secondary",
+          "warning",
+          "danger"
+        ],
+        "description": "Additional types. Don't specify for default."
+      },
+      "underline": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply underline style."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onExpand": {
+        "type": "array",
+        "description": "Trigger action when ellipse expand is clicked."
+      },
+      "onCopy": {
+        "type": "array",
+        "description": "Trigger action when copy text is clicked."
+      },
+      "onTextSelection": {
+        "type": "array",
+        "description": "Trigger action when text is selected and pass selected text to the event object."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -7219,6 +10536,112 @@ A paragraph text component.
 Display a popup notification on the page.
 
 > To display a notification, invoke the open method.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "bottom": {
+        "type": "number",
+        "default": 24,
+        "description": "Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels)."
+      },
+      "button": {
+        "type": "object",
+        "description": "Button object to customized the close button. Triggers onClose event when clicked.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "description": {
+        "type": "string",
+        "description": "The content of notification box - supports html."
+      },
+      "duration": {
+        "type": "number",
+        "default": 4.5,
+        "description": "Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize notification icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "closeIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize close icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "message": {
+        "type": "string",
+        "description": "The title of notification box - supports html."
+      },
+      "notificationStyle": {
+        "type": "object",
+        "description": "Css style to applied to notification.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "placement": {
+        "type": "string",
+        "enum": [
+          "topLeft",
+          "topRight",
+          "bottomLeft",
+          "bottomRight"
+        ],
+        "default": "topRight",
+        "description": "Position of Notification."
+      },
+      "top": {
+        "type": "number",
+        "default": 24,
+        "description": "Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels)."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "info",
+          "warning"
+        ],
+        "description": "Notification status type."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClose": {
+        "type": "array",
+        "description": "Trigger actions when notification is closed."
+      },
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when notification is clicked."
+      }
+    }
+  }
+}
+```
 
 ## Methods
 
@@ -7233,6 +10656,273 @@ Display a popup notification on the page.
 
 A menu designed for mobile devices. Renders a button that opens a Drawer with the menu inside. This menu is used by default in `PageHeaderMenu` and `PageSiderMenu` on mobile devices.
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "toggleMenuButton": {
+        "type": "object",
+        "description": "Toggle menu button properties.",
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "drawer": {
+        "type": "object",
+        "description": "Menu drawer properties.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "menuId": {
+        "type": "string",
+        "description": "App menu id used to get menu links."
+      },
+      "selectedKeys": {
+        "type": "array",
+        "description": "Array with the keys of currently selected menu items.",
+        "items": {
+          "type": "string",
+          "description": "Selected menu item 'id'."
+        }
+      },
+      "subMenuCloseDelay": {
+        "type": "number",
+        "description": "Delay time to hide submenu when mouse leaves (in seconds)."
+      },
+      "subMenuOpenDelay": {
+        "type": "number",
+        "description": "Delay time to show submenu when mouse enters (in seconds)."
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "dark",
+          "light"
+        ],
+        "default": "light",
+        "description": "Color theme of menu."
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Menu item id."
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "MenuDivider",
+                "MenuLink",
+                "MenuGroup"
+              ],
+              "default": "MenuLink",
+              "description": "Menu item type."
+            },
+            "pageId": {
+              "type": "string",
+              "description": "Page to link to."
+            },
+            "style": {
+              "type": "object",
+              "description": "Css style to applied to link.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "properties": {
+              "type": "object",
+              "description": "properties from menu item.",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Menu item title."
+                },
+                "icon": {
+                  "type": [
+                    "string",
+                    "object"
+                  ],
+                  "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
+                },
+                "danger": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Apply danger style to menu item."
+                },
+                "dashed": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether the divider line is dashed."
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "type"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Menu item id."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "MenuDivider",
+                      "MenuLink",
+                      "MenuGroup"
+                    ],
+                    "default": "MenuLink",
+                    "description": "Menu item type."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to applied to sub-link.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
+                  },
+                  "pageId": {
+                    "type": "string",
+                    "description": "Page to link to."
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "properties from menu item.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Menu item title."
+                      },
+                      "danger": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Apply danger style to menu item."
+                      },
+                      "dashed": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Whether the divider line is dashed."
+                      }
+                    },
+                    "links": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "type"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Menu item id."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "MenuDivider",
+                              "MenuLink"
+                            ],
+                            "default": "MenuLink",
+                            "description": "Menu item type."
+                          },
+                          "style": {
+                            "type": "object",
+                            "description": "Css style to applied to sub-link.",
+                            "docs": {
+                              "displayType": "yaml"
+                            }
+                          },
+                          "pageId": {
+                            "type": "string",
+                            "description": "Page to link to."
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "properties from menu item.",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "Menu item title."
+                              },
+                              "danger": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Apply danger style to menu item."
+                              },
+                              "dashed": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Whether the divider line is dashed."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onToggleDrawer": {
+        "type": "array",
+        "description": "Trigger action when mobile menu drawer is toggled."
+      },
+      "onClose": {
+        "type": "array",
+        "description": "Trigger action when mobile menu is closed."
+      },
+      "onOpen": {
+        "type": "array",
+        "description": "Trigger action when mobile menu is opened."
+      },
+      "onMenuItemSelect": {
+        "type": "array",
+        "description": "Trigger action when menu item is selected."
+      },
+      "onMenuItemClick": {
+        "type": "array",
+        "description": "Trigger action when menu item is clicked."
+      },
+      "onToggleMenuGroup": {
+        "type": "array",
+        "description": "Trigger action when mobile menu group is opened."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
@@ -7243,6 +10933,68 @@ A menu designed for mobile devices. Renders a button that opens a Drawer with th
 Display a popup message on the page.
 
 > To display a message, invoke the open method.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "The content of the message - supports html."
+      },
+      "duration": {
+        "type": "number",
+        "default": 4.5,
+        "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize message icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "success",
+          "error",
+          "info",
+          "warning",
+          "loading"
+        ],
+        "default": "info",
+        "description": "Message status type."
+      },
+      "messageStyle": {
+        "type": "object",
+        "description": "Css style to applied to message.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClose": {
+        "type": "array",
+        "description": "Trigger actions when message is closed."
+      }
+    }
+  }
+}
+```
 
 ## Methods
 
@@ -7256,6 +11008,280 @@ Display a popup message on the page.
 ## Description
 
 A menu block used to display page links.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "expandIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Menu expand icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "menuId": {
+        "type": "string",
+        "description": "App menu id used to get menu links."
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "vertical",
+          "horizontal",
+          "inline"
+        ],
+        "default": "vertical",
+        "description": "Type of menu to render."
+      },
+      "selectedKeys": {
+        "type": "array",
+        "description": "Array with the keys of currently selected menu items.",
+        "items": {
+          "type": "string",
+          "description": "A menu item 'id' to be displayed as selected."
+        }
+      },
+      "defaultOpenKeys": {
+        "type": "array",
+        "description": "Array with the keys of default opened sub menus.",
+        "items": {
+          "type": "string",
+          "description": "A menu item 'id' which should be open by default."
+        }
+      },
+      "forceSubMenuRender": {
+        "type": "boolean",
+        "description": "Render submenu into DOM before it becomes visible.",
+        "default": false
+      },
+      "subMenuCloseDelay": {
+        "type": "number",
+        "description": "Delay time to hide submenu when mouse leaves (in seconds)."
+      },
+      "subMenuOpenDelay": {
+        "type": "number",
+        "description": "Delay time to show submenu when mouse enters (in seconds)."
+      },
+      "theme": {
+        "type": "string",
+        "enum": [
+          "dark",
+          "light"
+        ],
+        "default": "dark",
+        "description": "Color theme of menu."
+      },
+      "links": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "type"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Menu item id."
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "MenuDivider",
+                "MenuLink",
+                "MenuGroup"
+              ],
+              "default": "MenuLink",
+              "description": "Menu item type."
+            },
+            "pageId": {
+              "type": "string",
+              "description": "Page to link to."
+            },
+            "style": {
+              "type": "object",
+              "description": "Css style to applied to link.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "properties": {
+              "type": "object",
+              "description": "properties from menu item.",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Menu item title."
+                },
+                "icon": {
+                  "type": [
+                    "string",
+                    "object"
+                  ],
+                  "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on menu item.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
+                },
+                "danger": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Apply danger style to menu item."
+                },
+                "dashed": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether the divider line is dashed."
+                }
+              }
+            },
+            "links": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "type"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Menu item id."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "MenuDivider",
+                      "MenuLink",
+                      "MenuGroup"
+                    ],
+                    "default": "MenuLink",
+                    "description": "Menu item type."
+                  },
+                  "style": {
+                    "type": "object",
+                    "description": "Css style to applied to sub-link.",
+                    "docs": {
+                      "displayType": "yaml"
+                    }
+                  },
+                  "pageId": {
+                    "type": "string",
+                    "description": "Page to link to."
+                  },
+                  "properties": {
+                    "type": "object",
+                    "description": "properties from menu item.",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Menu item title."
+                      },
+                      "danger": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Apply danger style to menu item."
+                      },
+                      "dashed": {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Whether the divider line is dashed."
+                      }
+                    },
+                    "links": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "type"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Menu item id."
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "MenuDivider",
+                              "MenuLink"
+                            ],
+                            "default": "MenuLink",
+                            "description": "Menu item type."
+                          },
+                          "style": {
+                            "type": "object",
+                            "description": "Css style to applied to sub-link.",
+                            "docs": {
+                              "displayType": "yaml"
+                            }
+                          },
+                          "pageId": {
+                            "type": "string",
+                            "description": "Page to link to."
+                          },
+                          "properties": {
+                            "type": "object",
+                            "description": "properties from menu item.",
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "Menu item title."
+                              },
+                              "danger": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Apply danger style to menu item."
+                              },
+                              "dashed": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Whether the divider line is dashed."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onSelect": {
+        "type": "array",
+        "description": "Trigger action when menu item is selected."
+      },
+      "onClick": {
+        "type": "array",
+        "description": "Trigger action when menu item is clicked."
+      },
+      "onToggleMenuGroup": {
+        "type": "array",
+        "description": "Trigger action when mobile menu group is opened."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -7278,6 +11304,39 @@ Render markdown content with code highlighting support. Currently, the following
 
 > For more details on markdown syntax see: [Markdown cheat sheet](https://guides.github.com/features/mastering-markdown/).
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Content in markdown format.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "skipHtml": {
+        "type": "boolean",
+        "default": false,
+        "description": "By default, HTML in markdown is escaped. When true all HTML code in the markdown will not be rendered."
+      },
+      "style": {
+        "type": "object",
+        "description": "Style to apply to Markdown div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
+```
+
 
 ---
 
@@ -7289,54 +11348,144 @@ Render markdown text content.
 
 > For more details on markdown syntax see: [Markdown cheat sheet](https://guides.github.com/features/mastering-markdown/).
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Content in markdown format.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "skipHtml": {
+        "type": "boolean",
+        "default": false,
+        "description": "By default, HTML in markdown is escaped. When true all HTML code in the markdown will not be rendered."
+      },
+      "style": {
+        "type": "object",
+        "description": "Style to apply to Markdown div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/Img.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+A block to render a HTML [`<img/>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) element.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Img
-    category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Img/schema.json
-    filePath: blocks/display/Img.yaml
-    init_property_values:
-      src: 'https://docs.lowdefy.com/logo-light-theme.png'
-    description_content: |
-      A block to render a HTML [`<img/>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img) element.
-    examples:
-      - title: Basic Img
-        block:
-          id: basic_example
-          type: Img
-          properties:
-            src: https://docs.lowdefy.com/logo-light-theme.png
-      - title: srcset Img
-        block:
-          id: srcset_example
-          type: Img
-          properties:
-            src: https://docs.lowdefy.com/logo-light-theme.png
-            srcSet: https://docs.lowdefy.com/logo-square-light-theme.png 40w, https://docs.lowdefy.com/logo-light-theme.png 577w
-            sizes: '(max-width: 576px) 40px, 577px'
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "src"
+    ],
+    "properties": {
+      "src": {
+        "type": "string",
+        "description": "The image URL."
+      },
+      "alt": {
+        "type": "string",
+        "description": "Alternative text description of the image."
+      },
+      "crossOrigin": {
+        "type": "string",
+        "enum": [
+          "anonymous",
+          "use-credentials"
+        ],
+        "description": "Indicates if the fetching of the image must be done using a CORS request."
+      },
+      "decoding": {
+        "type": "string",
+        "enum": [
+          "sync",
+          "async",
+          "auto"
+        ],
+        "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
+      },
+      "height": {
+        "type": "number",
+        "description": "Height of the image."
+      },
+      "loading": {
+        "type": "string",
+        "enum": [
+          "eager",
+          "lazy"
+        ],
+        "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
+      },
+      "sizes": {
+        "type": "string",
+        "description": "Indicating a set of source sizes of strings separated by commas."
+      },
+      "srcSet": {
+        "type": "string",
+        "description": "Possible image sources for the user agent to use, strings separated by commas.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to the image.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "width": {
+        "type": "number",
+        "description": "Width of the image."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic Img
+  block:
+    id: basic_example
+    type: Img
+    properties:
+      src: https://docs.lowdefy.com/logo-light-theme.png
+- title: srcset Img
+  block:
+    id: srcset_example
+    type: Img
+    properties:
+      src: https://docs.lowdefy.com/logo-light-theme.png
+      srcSet: https://docs.lowdefy.com/logo-square-light-theme.png 40w, https://docs.lowdefy.com/logo-light-theme.png 577w
+      sizes: '(max-width: 576px) 40px, 577px'
+```
+
+
 ---
 
 ## File: `blocks/display/Icon.yaml`
@@ -7345,64 +11494,153 @@ _ref:
 
 A Icon component. Render Ant Design and other icons
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "color": {
+        "type": "string",
+        "description": "Primary icon color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "name": {
+        "type": "string",
+        "default": "AiOutlineCloseCircle",
+        "description": "Name of icon to be displayed."
+      },
+      "rotate": {
+        "type": "number",
+        "description": "Number of degrees to rotate the icon."
+      },
+      "size": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "description": "Size of the icon.",
+        "docs": {
+          "displayType": "number"
+        }
+      },
+      "spin": {
+        "type": "boolean",
+        "default": false,
+        "description": "Continuously spin icon with animation."
+      },
+      "title": {
+        "type": "string",
+        "description": "Icon description for accessibility."
+      },
+      "style": {
+        "type": "object",
+        "description": "CSS style object.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "disableLoadingIcon": {
+        "type": "boolean",
+        "default": false,
+        "description": "While loading after the icon has been clicked, don't render the loading icon."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger actions when icon is clicked."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/Html.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+A block to render HTML.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+> The Html block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) default configuration. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the Html block. In short, it is strongly advised to never render any user input Html content, only render hardcoded or trusted HTML content.
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## Schema
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Html
-    category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/Html/schema.json
-    filePath: blocks/display/Html.yaml
-    init_property_values:
-      html: <a href="https://lowdefy.com">Lowdefy Website</a>
-    description_content: |
-      A block to render HTML.
-
-      > The Html block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) default configuration. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the Html block. In short, it is strongly advised to never render any user input Html content, only render hardcoded or trusted HTML content.
-
-    examples:
-      - title: Basic DangerousHtml
-        block:
-          id: basic_example
-          type: Html
-          properties:
-            html: |
-              <div style="background: #123456; padding: 10px;"><h1 style="color: white;">A simple white title box</h1></div>
-      - title: DangerousHtml with iframes sanitized
-        block:
-          id: sanitized_iframes_example
-          type: Html
-          properties:
-            html: |
-              The iframe was removed: <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>      - title: DangerousHtml with iframes enabled
-      - title: DangerousHtml basic sanitization
-        block:
-          id: sanitized_example
-          type: Html
-          properties:
-            html: |
-              <div style="color: red; border: 2px dashed blue; padding: 10px;"><script>alert("hello world")</script><img src=x onerror=alert("img") />A little bit of bad html sanitized.</div>
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "html": {
+        "type": "string",
+        "description": "Content to be rendered as Html.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to Html div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onTextSelection": {
+        "type": "array",
+        "description": "Trigger action when text is selected and pass selected text to the event object."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic DangerousHtml
+  block:
+    id: basic_example
+    type: Html
+    properties:
+      html: |
+        <div style="background: #123456; padding: 10px;"><h1 style="color: white;">A simple white title box</h1></div>
+- title: DangerousHtml with iframes sanitized
+  block:
+    id: sanitized_iframes_example
+    type: Html
+    properties:
+      html: |
+        The iframe was removed: <iframe style="max-width: 512px;" width="100%" src="https://www.youtube.com/embed/7N7GWdlQJlU" frameborder="0"  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>      - title: DangerousHtml with iframes enabled
+- title: DangerousHtml basic sanitization
+  block:
+    id: sanitized_example
+    type: Html
+    properties:
+      html: |
+        <div style="color: red; border: 2px dashed blue; padding: 10px;"><script>alert("hello world")</script><img src=x onerror=alert("img") />A little bit of bad html sanitized.</div>
+```
+
+
 ---
 
 ## File: `blocks/display/EChart.yaml`
@@ -7417,64 +11655,182 @@ See the [Apache ECharts docs](https://echarts.apache.org/en/api.html#echarts) fo
 
 > View more [Apache EChart examples](https://echarts.apache.org/examples/en/index.html).
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "option": {
+        "type": "object",
+        "description": "EChart settings object.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "theme": {
+        "type": "object",
+        "description": "EChart theme object.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "width": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "default": "auto",
+        "description": "Specify chart width explicitly, in pixel.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "height": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "default": "auto",
+        "description": "Specify chart height explicitly, in pixel.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "init": {
+        "type": "object",
+        "description": "EChart init object.",
+        "properties": {
+          "renderer": {
+            "type": "string",
+            "enum": [
+              "canvas",
+              "svg"
+            ],
+            "default": "canvas",
+            "description": "Chart renderer."
+          },
+          "locale": {
+            "type": "string",
+            "enum": [
+              "EN",
+              "ZH"
+            ],
+            "default": "EN",
+            "description": "Specify the locale."
+          }
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to EChart div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "click": {
+        "type": "array",
+        "description": "Trigger actions when the element is clicked."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/DocSearch.yaml`
 
+## Description
+
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+_nunjucks:
+  'on':
+    version:
+      _ref: version.yaml
+  template: |
+    This block renders a [Algolia DocSearch](https://docsearch.algolia.com/) search box.
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+    To use the block, the `apiKey`, `appId` and `indexName` properties need to be configured.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+    The DocSearch CSS files and preconnect optimisation also need to be added to the HTML head of your app using `appendHead` as follows:
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: DocSearch
-    category: display
-    schema: ../plugins/blocks/blocks-algolia/src/blocks/DocSearch/schema.json
-    filePath: blocks/display/DocSearch.yaml
-    description_content:
-      _nunjucks:
-        on:
-          version:
-            _ref: version.yaml
-        template: |
-          This block renders a [Algolia DocSearch](https://docsearch.algolia.com/) search box.
-
-          To use the block, the `apiKey`, `appId` and `indexName` properties need to be configured.
-
-          The DocSearch CSS files and preconnect optimisation also need to be added to the HTML head of your app using `appendHead` as follows:
-
-          ```yaml
-          lowdefy: {{ version }}
-          app:
-            html:
-              appendHead: |
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
-                <link rel="preconnect" href="https://YOUR_APP_ID-dsn.algolia.net" crossorigin />
-          ```
-    examples:
-      - title: Standard Usage
-        block:
-          id: standard_usage
-          type: DocSearch
-          properties:
-            apiKey: YOUR_API_KEY
-            appId: YOUR_APP_ID
-            indexName: YOUR_INDEX_NAME
-
+    ```yaml
+    lowdefy: {{ version }}
+    app:
+      html:
+        appendHead: |
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+          <link rel="preconnect" href="https://YOUR_APP_ID-dsn.algolia.net" crossorigin />
+    ```
 ```
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "description": "Your Algolia Search API key."
+      },
+      "appId": {
+        "type": "string",
+        "description": "Your Algolia application ID."
+      },
+      "disableUserPersonalization": {
+        "type": "boolean",
+        "description": "Disable saving recent searches and favorites to the local storage."
+      },
+      "indexName": {
+        "type": "string",
+        "description": "Your Algolia index name."
+      },
+      "initialQuery": {
+        "type": "string",
+        "description": "The search input initial query."
+      },
+      "maxResultsPerGroup": {
+        "type": "number",
+        "description": "The maximum number of results to display per search group. Default is 5."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Standard Usage
+  block:
+    id: standard_usage
+    type: DocSearch
+    properties:
+      apiKey: YOUR_API_KEY
+      appId: YOUR_APP_ID
+      indexName: YOUR_INDEX_NAME
+```
+
+
 ---
 
 ## File: `blocks/display/Divider.yaml`
@@ -7483,179 +11839,348 @@ _ref:
 
 A divider line. Can be used horizontally or vertically.
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "dashed": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether line is dashed."
+      },
+      "orientation": {
+        "type": "string",
+        "default": "center",
+        "enum": [
+          "left",
+          "right",
+          "center"
+        ],
+        "description": "Position of title inside divider."
+      },
+      "title": {
+        "type": "string",
+        "description": "Divider title - supports html."
+      },
+      "type": {
+        "type": "string",
+        "default": "horizontal",
+        "enum": [
+          "horizontal",
+          "vertical"
+        ],
+        "description": "Direction type of divider"
+      },
+      "plain": {
+        "type": "boolean",
+        "default": false,
+        "description": "Show text as plain style."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/DangerousMarkdown.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+Render markdown content which can include HTML elements. If the markdown content does not need to render HTML, use the [Markdown](/Markdown) or [MarkdownWithCode](/MarkdownWithCode) blocks instead. Specify what HTML element to allow or remove by changing the default modifying the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify).
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+> The DangerousMarkdown block sanitizes the markdown content using [DOMPurify's](https://github.com/cure53/DOMPurify) before converting the markdown to HTML. DangerousMarkdown provides the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousMarkdown block.
+>
+> In short, it is strongly advised to never render any user input DangerousMarkdown content, only render hardcoded or trusted markdown and HTML content.
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## Schema
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: DangerousMarkdown
-    category: display
-    schema: ../plugins/blocks/blocks-markdown/src/blocks/DangerousMarkdown/schema.json
-    filePath: blocks/display/DangerousMarkdown.yaml
-    init_property_values:
-      content: |
-        ## Some Html content:
-
-        <div style="background: #123456; padding: 10px;"><h4 style="color: white;">A simple white title box</h4></div>
-
-    description_content: |
-      Render markdown content which can include HTML elements. If the markdown content does not need to render HTML, use the [Markdown](/Markdown) or [MarkdownWithCode](/MarkdownWithCode) blocks instead. Specify what HTML element to allow or remove by changing the default modifying the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify).
-
-      > The DangerousMarkdown block sanitizes the markdown content using [DOMPurify's](https://github.com/cure53/DOMPurify) before converting the markdown to HTML. DangerousMarkdown provides the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousMarkdown block.
-      >
-      > In short, it is strongly advised to never render any user input DangerousMarkdown content, only render hardcoded or trusted markdown and HTML content.
-
-    examples:
-      - title: DangerousMarkdown headings
-        block:
-          id: iframes_example
-          type: DangerousMarkdown
-          properties:
-            DOMPurifyOptions":
-              ADD_TAGS":
-                - iframe
-            content: |
-              # Markdown with an iframe:
-              <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "content": {
+        "type": "string",
+        "description": "Content in markdown format.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "DOMPurifyOptions": {
+        "type": "object",
+        "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Style to apply to Markdown div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: DangerousMarkdown headings
+  block:
+    id: iframes_example
+    type: DangerousMarkdown
+    properties:
+      DOMPurifyOptions":
+        ADD_TAGS":
+          - iframe
+      content: |
+        # Markdown with an iframe:
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+```
+
+
 ---
 
 ## File: `blocks/display/DangerousHtml.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+A block to render HTML with the ability to customize the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify).
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+> The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block.
+>
+> In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## Schema
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: DangerousHtml
-    category: display
-    schema: ../plugins/blocks/blocks-basic/src/blocks/DangerousHtml/schema.json
-    filePath: blocks/display/DangerousHtml.yaml
-    init_property_values:
-      html: <a href="https://lowdefy.com">Lowdefy Website</a>
-    description_content: |
-      A block to render HTML with the ability to customize the [DOMPurify's options](https://github.com/cure53/DOMPurify#can-i-configure-dompurify).
-
-      > The DangerousHtml block sanitizes HTML using [DOMPurify's](https://github.com/cure53/DOMPurify) with the ability to customize the sanitization options. This comes with some security considerations, please consider [DOMPurify's Security Goals and Threat Model](https://github.com/cure53/DOMPurify/wiki/Security-Goals-&-Threat-Model) for more details regarding the security impact of using the DangerousHtml block.
-      >
-      > In short, it is strongly advised to never render any user input DangerousHtml content, only render hardcoded or trusted HTML content.
-
-    examples:
-      - title: Basic DangerousHtml
-        block:
-          id: basic_example
-          type: DangerousHtml
-          properties:
-            html: |
-              <div style="background: #123456; padding: 10px;"><h1 style="color: white;">A simple white title box</h1></div>
-      - title: DangerousHtml with iframes sanitized
-        block:
-          id: sanitized_iframes_example
-          type: DangerousHtml
-          properties:
-            html: |
-              The iframe was removed: <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>      - title: DangerousHtml with iframes enabled
-      - title: DangerousHtml with iframes not sanitized
-        block:
-          id: iframes_example
-          type: DangerousHtml
-          properties:
-            DOMPurifyOptions:
-              ADD_TAGS:
-                - iframe
-            html: |
-              The iframe was not removed: <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      - title: DangerousHtml basic sanitization
-        block:
-          id: sanitized_example
-          type: DangerousHtml
-          properties:
-            html: |
-              <div style="color: red; border: 2px dashed blue; padding: 10px;"><script>alert("hello world")</script><img src=x onerror=alert("img") />A little bit of bad html sanitized.</div>
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "html": {
+        "type": "string",
+        "description": "Content to be rendered as Html.",
+        "docs": {
+          "displayType": "text-area"
+        }
+      },
+      "DOMPurifyOptions": {
+        "type": "object",
+        "description": "Customize DOMPurify options. Options are only applied when the block is mounted, thus any parsed settings is only applied at first render.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to apply to Html div.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Basic DangerousHtml
+  block:
+    id: basic_example
+    type: DangerousHtml
+    properties:
+      html: |
+        <div style="background: #123456; padding: 10px;"><h1 style="color: white;">A simple white title box</h1></div>
+- title: DangerousHtml with iframes sanitized
+  block:
+    id: sanitized_iframes_example
+    type: DangerousHtml
+    properties:
+      html: |
+        The iframe was removed: <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>      - title: DangerousHtml with iframes enabled
+- title: DangerousHtml with iframes not sanitized
+  block:
+    id: iframes_example
+    type: DangerousHtml
+    properties:
+      DOMPurifyOptions:
+        ADD_TAGS:
+          - iframe
+      html: |
+        The iframe was not removed: <iframe width="560" height="315" src="https://www.youtube.com/embed/pkCJpDleMtI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+- title: DangerousHtml basic sanitization
+  block:
+    id: sanitized_example
+    type: DangerousHtml
+    properties:
+      html: |
+        <div style="color: red; border: 2px dashed blue; padding: 10px;"><script>alert("hello world")</script><img src=x onerror=alert("img") />A little bit of bad html sanitized.</div>
+```
+
+
 ---
 
 ## File: `blocks/display/Button.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+## Description
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+Button block.
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+## Schema
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Button
-    category: display
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Button/schema.json
-    filePath: blocks/display/Button.yaml
-    description_content: |
-      Button block.
-
-    examples:
-      - title: Block and ghost button with icon
-        block:
-          id: ghost_example
-          type: Button
-          properties:
-            title: Get started
-            block: true
-            ghost: true
-            icon: AiOutlineRocket
-      - title: Round and type danger
-        block:
-          id: danger_example
-          type: Button
-          properties:
-            title: Delete Forever
-            shape: round
-            type: danger
-            icon: AiOutlineWarning
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "block": {
+        "type": "boolean",
+        "description": "Fit the button's span to its parent container span.",
+        "default": false
+      },
+      "color": {
+        "type": "string",
+        "description": "Button color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "danger": {
+        "type": "boolean",
+        "description": "Set button style to danger.",
+        "default": false
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disable the button if true.",
+        "default": false
+      },
+      "ghost": {
+        "type": "boolean",
+        "description": "Make the button's background transparent when true.",
+        "default": false
+      },
+      "hideTitle": {
+        "type": "boolean",
+        "description": "Hide the button's title.",
+        "default": false
+      },
+      "href": {
+        "type": "string",
+        "description": "The URL to redirect to when the button is clicked. Useful when used with a type link button."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use icon in button.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "shape": {
+        "type": "string",
+        "default": "square",
+        "enum": [
+          "circle",
+          "round",
+          "square"
+        ],
+        "description": "Shape of the button."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the button."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to button.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title text on the button - supports html."
+      },
+      "type": {
+        "type": "string",
+        "default": "primary",
+        "enum": [
+          "primary",
+          "default",
+          "dashed",
+          "danger",
+          "link",
+          "text"
+        ],
+        "description": "The button type."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Trigger action when button is clicked."
+      }
+    }
+  }
+}
 ```
+
+## Examples
+
+```yaml
+- title: Block and ghost button with icon
+  block:
+    id: ghost_example
+    type: Button
+    properties:
+      title: Get started
+      block: true
+      ghost: true
+      icon: AiOutlineRocket
+- title: Round and type danger
+  block:
+    id: danger_example
+    type: Button
+    properties:
+      title: Delete Forever
+      shape: round
+      type: danger
+      icon: AiOutlineWarning
+```
+
+
 ---
 
 ## File: `blocks/display/Breadcrumb.yaml`
@@ -7663,6 +12188,92 @@ _ref:
 ## Description
 
 A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy with provided links.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "separator": {
+        "type": "string",
+        "default": "/",
+        "description": "Use a custom separator string."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to breadcrumb.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "list": {
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "List of breadcrumb links.",
+            "items": {
+              "type": "string",
+              "description": "Title of the breadcrumb link."
+            }
+          },
+          {
+            "type": "array",
+            "description": "List of breadcrumb links.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Label of the breadcrumb link."
+                },
+                "pageId": {
+                  "type": "string",
+                  "description": "Page id to link to when clicked."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "External url link."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to apply to link.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "icon": {
+                  "type": [
+                    "string",
+                    "object"
+                  ],
+                  "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in breadcrumb link.",
+                  "docs": {
+                    "displayType": "icon"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Triggered when breadcrumb item is clicked. Provides clicked link and index as args."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -7672,6 +12283,95 @@ A breadcrumb displays the current location within a hierarchy. It allows going b
 ## Description
 
 Avatars can be used to represent people or objects. It supports images, Icons, or letters.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "alt": {
+        "type": "string",
+        "description": "This attribute defines the alternative text describing the image."
+      },
+      "color": {
+        "type": "string",
+        "description": "The background color of the avatar if not using a src url. Should be a hex color string. Color is a random color if not specified.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "content": {
+        "type": "string",
+        "description": "Text to display inside avatar."
+      },
+      "gap": {
+        "type": "number",
+        "description": "Letter type unit distance between left and right sides."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to use an icon in avatar.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "shape": {
+        "type": "string",
+        "enum": [
+          "circle",
+          "square"
+        ],
+        "default": "circle",
+        "description": "Shape of the avatar."
+      },
+      "size": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "default",
+        "enum": [
+          "default",
+          "small",
+          "large"
+        ],
+        "description": "Size of the avatar; default, small, large or responsive.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "src": {
+        "type": "string",
+        "description": "The address of the image for an image avatar."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to avatar.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Triggered when avatar item is clicked."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -7684,1620 +12384,6544 @@ Anchor link block. Creates a clickable icon and/ or text.
 
 > When changing the relationship (`rel`) property of the linked URL, make sure you understand the security implications. Read more about link types [here](https://developer.mozilla.org/en-US/docs/Web/HTML/Link_types).
 
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "ariaLabel": {
+        "type": "string",
+        "description": "Arial-label to apply to link tag."
+      },
+      "back": {
+        "type": "boolean",
+        "description": "When the link is clicked, trigger the browser back."
+      },
+      "home": {
+        "type": "boolean",
+        "description": "When the link is clicked, route to the home page."
+      },
+      "input": {
+        "type": "object",
+        "description": "When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "urlQuery": {
+        "type": "object",
+        "description": "When the link is clicked, pass data as a url query to the next page.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the anchor if true."
+      },
+      "icon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block for anchor icon.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "pageId": {
+        "type": "string",
+        "description": "When the link is clicked, route to the provided Lowdefy page."
+      },
+      "href": {
+        "type": "string",
+        "description": "The href to link to when the anchor link is clicked."
+      },
+      "url": {
+        "type": "string",
+        "description": "External url to link to when the anchor link is clicked."
+      },
+      "rel": {
+        "type": "string",
+        "default": "noopener noreferrer",
+        "description": "The relationship of the linked URL as space-separated link types."
+      },
+      "newTab": {
+        "type": "boolean",
+        "default": false,
+        "description": "Open link in a new tab when the anchor link is clicked."
+      },
+      "replace": {
+        "type": "boolean",
+        "default": false,
+        "description": "Prevent adding a new entry into browser history by replacing the url instead of pushing into history. Can only be used with pageId link and newTab false."
+      },
+      "scroll": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable scrolling to the top of the page after page transition. Can only be used with pageId link and newTab false."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to anchor.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Text to display in the anchor."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onClick": {
+        "type": "array",
+        "description": "Called when Anchor is clicked."
+      }
+    }
+  }
+}
+```
+
 
 ---
 
 ## File: `blocks/display/AgGrid.yaml`
 
+# AgGrid
+
+## Description
+
+This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
+The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
+
+Available ag-grid theme specific block types:
+- [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
+- [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
+- [`AgGridBalham`](https://www.ag-grid.com/example?theme=ag-theme-balham)
+- [`AgGridBalhamDark`](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
+- [`AgGridMaterial`](https://www.ag-grid.com/example?theme=ag-theme-material)
+
+See the [Ag-Grid docs](https://www.ag-grid.com/documentation/react/getting-started/) for the table settings API.
+Here are a couple of basic properties.
+
+### Properties
+- `height: number`: Specify table height explicitly, in pixel.
+- `rowData: array`: The list of data to display on the table.
+- `defaultColDef: columnProperties`: Column properties which get applied to all columns. See all [column properties](https://www.ag-grid.com/javascript-data-grid/column-properties/)
+- `columnDefs: columnProperties[]`: A list of properties for each column.
+  - `field: string`: The field of the row object to get the cell's data from. Deep references into a row object is supported via dot notation, i.e 'address.firstLine'.
+  - `headerName: string`: The name to render in the column header. If not specified and field is specified, the field name will be used as the header name.
+  - `filter: boolean`: Filter component to use for this column. Set to true to use the default filter.
+  - `sortable: boolean`: Set to true to allow sorting on this column. Default: false.
+  - `resizable: boolean`: Set to true to allow this column should be resized. Default: false.
+  - `width: number`: Initial width in pixels for the cell.
+  - `cellStyle: cssObject`: An object of css values returning an object of css values for a particular cell.
+  - `cellRenderer: function`: Provide your own cell Renderer function (using the `_function` operator) for this column's cells.
+  - `valueFormatter: function`: A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.
+### Events
+- `onCellClick`: Trigger event when a cell is clicked and pass the following to `_event`:
+  - `cell: object`: Cell data object.
+  - `colId: string`: Column id of the clicked cell.
+  - `index: number`: Data index of the clicked row as per provided data array.
+  - `row: object`: Row data object.
+  - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+  - `selected: object[]`: List of selected row objects.
+- `onFilterChanged`: Trigger event when the filter changes and pass the following to `_event`:
+  - `rows: object[]`: List of row objects matched by the filter.
+  - `filter: object`: An object of objects where each key is the row being filtered.
+- `onRowClick`: Trigger event when a row is clicked and pass the following to `_event`:
+  - `index: number`: Data index of the clicked row as per provided data array.
+  - `row: object`: Row data object.
+  - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+  - `selected: object[]`: List of selected row objects.
+- `onRowSelected`: Trigger event when a row is selected and pass the following to `_event`:
+  - `index: number`: Data index of the clicked row as per provided data array.
+  - `row: object`: Row data object.
+  - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
+  - `selected: object[]`: List of selected row objects.
+- `onSelectionChanged`: Triggered when the selected rows are changed and pass the following to `_event`:
+  - `selected: object[]`: List of selected row objects.
+- `onSortChanged`: Trigger event when the sort changes and pass the following to `_event`:
+  - `rows: object[]`: List of row objects matched by the filter.
+  - `sort: object[]`: List of rows which are being sorted.
+### Methods
+- `exportDataAsCsv`: When called, table data will be downloaded in csv format.
+- `sizeColumnsToFit`: When called, size table column widths to fit all columns to table width.
+- `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`.
+      - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns.
+      - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
+- `setFilterModel`: When called, apply filter model to table. See https://www.ag-grid.com/javascript-data-grid/filter-api/ for model details.
+- `setQuickFilter`: When called, pass a quick filter text into the grid for filtering. See https://www.ag-grid.com/javascript-data-grid/filter-quick/ for details.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "properties": {
+      "type": "object",
+      "description": "AgGrid table properties object. See the Ag-Grid docs(https://www.ag-grid.com/documentation/react/getting-started/) for all the table settings API.",
+      "properties": {
+        "height": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "default": "auto",
+          "description": "Specify table height explicitly, in pixel."
+        },
+        "rowData": {
+          "type": "array",
+          "description": "The list of data to display on the table."
+        },
+        "rowId": {
+          "type": "string",
+          "description": "The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/)."
+        },
+        "defaultColDef": {
+          "type": "object",
+          "description": "Column properties which get applied to all columns. See all (https://www.ag-grid.com/javascript-data-grid/column-properties/)."
+        },
+        "columnDefs": {
+          "type": "array",
+          "description": "A list of properties for each column.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "description": "The field of the row object to get the cell's data from. Deep references into a row object is supported via dot notation, i.e 'address.firstLine'."
+              },
+              "headerName": {
+                "type": "string",
+                "description": "The name to render in the column header. If not specified and field is specified, the field name will be used as the header name."
+              },
+              "filter": {
+                "type": "boolean",
+                "default": false,
+                "description": "Filter component to use for this column. Set to true to use the default filter."
+              },
+              "sortable": {
+                "type": "boolean",
+                "default": false,
+                "description": "Set to true to allow sorting on this column."
+              },
+              "resizable": {
+                "type": "boolean",
+                "default": false,
+                "description": "Set to true to allow this column should be resized."
+              },
+              "width": {
+                "type": "number",
+                "description": "Initial width in pixels for the cell."
+              },
+              "cellStyle": {
+                "type": "number",
+                "description": "An object of css values returning an object of css values for a particular cell."
+              },
+              "cellRenderer": {
+                "type": "object",
+                "description": "Provide your own cell Renderer function (using the `_function` operator) for this column's cells."
+              },
+              "valueFormatter": {
+                "type": [
+                  "object",
+                  "string"
+                ],
+                "description": "A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering."
+              }
+            }
+          }
+        }
+      },
+      "events": {
+        "type": "object",
+        "properties": {
+          "onCellClick": {
+            "type": "array",
+            "description": "Trigger event when a cell is clicked."
+          },
+          "onFilterChanged": {
+            "type": "array",
+            "description": "Trigger event when the filter changes."
+          },
+          "onRowClick": {
+            "type": "array",
+            "description": "Trigger event when a row is clicked."
+          },
+          "onRowSelected": {
+            "type": "array",
+            "description": "Trigger event when a row is selected."
+          },
+          "onSelectionChanged": {
+            "type": "array",
+            "description": "Triggered when the selected rows are changed."
+          },
+          "onSortChanged": {
+            "type": "array",
+            "description": "Trigger event when the sort changes."
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Examples
+
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/generic_block.yaml.njk
-  vars:
-    block_type: AgGrid
-    category: display
-    pageTitle: AgGrid
-    filePath: blocks/display/AgGrid.yaml
-    schema: ../plugins/blocks/blocks-aggrid/src/blocks/AgGridAlpine/schema.json
-    description_content: |
-      This is a Lowdefy blocks wrapper for for [Ag-Grid](https://www.ag-grid.com/), a feature rich javascript grid and table library.
-      The implementation of these blocks is a minimal wrapper for the [@ag-grid-community/core](https://www.npmjs.com/package/@ag-grid-community/core) package. This means you write normal Ag-Grid config to create tables.
-
-      Available ag-grid theme specific block types:
-      - [`AgGridAlpine`](https://www.ag-grid.com/example?theme=ag-theme-alpine)
-      - [`AgGridAlpineDark`](https://www.ag-grid.com/example?theme=ag-theme-alpine-dark)
-      - [`AgGridBalham`](https://www.ag-grid.com/example?theme=ag-theme-balham)
-      - [`AgGridBalhamDark`](https://www.ag-grid.com/example?theme=ag-theme-balham-dark)
-      - [`AgGridMaterial`](https://www.ag-grid.com/example?theme=ag-theme-material)
-
-      See the [Ag-Grid docs](https://www.ag-grid.com/documentation/react/getting-started/) for the table settings API.
-      Here are a couple of basic properties.
-
-      ### Properties
-      - `height: number`: Specify table height explicitly, in pixel.
-      - `rowData: array`: The list of data to display on the table.
-      - `defaultColDef: columnProperties`: Column properties which get applied to all columns. See all [column properties](https://www.ag-grid.com/javascript-data-grid/column-properties/)
-      - `columnDefs: columnProperties[]`: A list of properties for each column.
-        - `field: string`: The field of the row object to get the cell's data from. Deep references into a row object is supported via dot notation, i.e 'address.firstLine'.
-        - `headerName: string`: The name to render in the column header. If not specified and field is specified, the field name will be used as the header name.
-        - `filter: boolean`: Filter component to use for this column. Set to true to use the default filter.
-        - `sortable: boolean`: Set to true to allow sorting on this column. Default: false.
-        - `resizable: boolean`: Set to true to allow this column should be resized. Default: false.
-        - `width: number`: Initial width in pixels for the cell.
-        - `cellStyle: cssObject`: An object of css values returning an object of css values for a particular cell.
-        - `cellRenderer: function`: Provide your own cell Renderer function (using the `_function` operator) for this column's cells.
-        - `valueFormatter: function`: A function (using the `_function` operator) or expression to format a value, should return a string. Not used for CSV export or copy to clipboard, only for UI cell rendering.
-      ### Events
-      - `onCellClick`: Trigger event when a cell is clicked and pass the following to `_event`:
-        - `cell: object`: Cell data object.
-        - `colId: string`: Column id of the clicked cell.
-        - `index: number`: Data index of the clicked row as per provided data array.
-        - `row: object`: Row data object.
-        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
-        - `selected: object[]`: List of selected row objects.
-      - `onFilterChanged`: Trigger event when the filter changes and pass the following to `_event`:
-        - `rows: object[]`: List of row objects matched by the filter.
-        - `filter: object`: An object of objects where each key is the row being filtered.
-      - `onRowClick`: Trigger event when a row is clicked and pass the following to `_event`:
-        - `index: number`: Data index of the clicked row as per provided data array.
-        - `row: object`: Row data object.
-        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
-        - `selected: object[]`: List of selected row objects.
-      - `onRowSelected`: Trigger event when a row is selected and pass the following to `_event`:
-        - `index: number`: Data index of the clicked row as per provided data array.
-        - `row: object`: Row data object.
-        - `rowIndex: number`: List index of the clicked row, changes with data sorting or filtering.
-        - `selected: object[]`: List of selected row objects.
-      - `onSelectionChanged`: Triggered when the selected rows are changed and pass the following to `_event`:
-        - `selected: object[]`: List of selected row objects.
-      - `onSortChanged`: Trigger event when the sort changes and pass the following to `_event`:
-        - `rows: object[]`: List of row objects matched by the filter.
-        - `sort: object[]`: List of rows which are being sorted.
-      ### Methods
-      - `exportDataAsCsv`: When called, table data will be downloaded in csv format.
-      - `sizeColumnsToFit`: When called, size table column widths to fit all columns to table width.
-      - `autoSize`: When called, auto size columns. The following can be passed as the first argument of `args`.
-            - `skipHeader: boolean`: Do not consider header content width when auto-sizing columns.
-            - `columnIds: string[]`: List of `colId`s for which to calculate auto-size when called.
-      - `setFilterModel`: When called, apply filter model to table. See https://www.ag-grid.com/javascript-data-grid/filter-api/ for model details.
-      - `setQuickFilter`: When called, pass a quick filter text into the grid for filtering. See https://www.ag-grid.com/javascript-data-grid/filter-quick/ for details.
-    examples:
-      - title: Basic example
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              - title: One
-                year: 2010
-                viewerReviews: 30
-              - title: Two
-                year: 2011
-                viewerReviews: 20
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 350
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Viewer Reviews
-                field: viewerReviews
-                width: 160
-      - title: 'Format dates with cellRenderer'
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              - title: One
-                year: 2010
-                date:
-                  _date: 2010-03-14
-              - title: Two
-                year: 2011
-                date:
-                  _date: 2011-04-01
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 200
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Date
-                field: date
-                width: 160
-                cellRenderer:
-                  _function:
-                    __moment.format:
-                      on:
-                        __args: 0.data.date
-                      format: 'D MMM YYYY'
-      - title: 'Format currency with valueFormatter'
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              - title: One
-                year: 2010
-                total: 300.21
-              - title: Two
-                year: 2011
-                total: 1230.9495
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 200
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Total
-                field: total
-                width: 160
-                valueFormatter:
-                  _function:
-                    __intl.numberFormat:
-                      on:
-                        __args: 0.value
-                      options:
-                        style: 'currency'
-                        currency: 'EUR'
-      - title: 'onRowClick'
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              - title: One
-                year: 2010
-                viewerReviews: 30
-              - title: Two
-                year: 2011
-                viewerReviews: 20
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 350
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Viewer Reviews
-                field: viewerReviews
-                width: 160
-          events:
-            onRowClick:
-              - id: set_selected
-                type: SetState
-                params:
-                  selected_row: # Update 'selected' in state with the event data.
-                    _event: true
-        extra:
-          id: selection
-          type: MarkdownWithCode
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ```yaml
-                    {{ selection | safe | indent(2) }}
-                  ```
-                on:
-                  selection:
-                    _yaml.stringify:
-                      - _state: selected_row
-      - title: 'onCellClick'
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              - title: One
-                year: 2010
-                viewerReviews: 30
-              - title: Two
-                year: 2011
-                viewerReviews: 20
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 350
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Viewer Reviews
-                field: viewerReviews
-                width: 160
-          events:
-            onCellClick:
-              - id: set_selected
-                type: SetState
-                params:
-                  selected_cell: # Update 'selected_cell' in state with the event cell data.
-                    _event: true
-        extra:
-          id: selection
-          type: MarkdownWithCode
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  ```yaml
-                    {{ selection | safe | indent(2) }}
-                  ```
-                on:
-                  selection:
-                    _yaml.stringify:
-                      - _state: selected_cell
-      - title: 'Using rowId to preserve selection'
-        description: |
-          This example shows a table switching between two sets of data. Some rows are common between the data sets and the data rows have a unique identifier field `uniqueId` which we can use as the `rowId` field to ensure selection is preserved when switching the data sets. If no `rowId` is set and the row data does not contain an `id` or `_id` field, and the row data JSON stringified is used as the row id. This still works but may slightly impact performance.
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            height: 200
-            rowId: uniqueId
-            rowData:
-              _state: table_data
-            columnDefs:
-              - headerName: Unique ID
-                field: uniqueId
-                checkboxSelection: true
-              - headerName: Title
-                field: title
-              - headerName: Year
-                field: year
-        extra:
-          id: table_data_box
-          type: Box
-          events:
-            onMount:
-              - id: init_value
-                type: SetState
-                params:
-                  table_data:
-                    - title: One
-                      year: 2010
-                      uniqueId: 2010-1
-                    - title: Two
-                      year: 2011
-                      uniqueId: 2011-1
-          blocks:
-            - id: table_data
-              type: ButtonSelector
-              properties:
-                label:
-                  disabled: true
+- title: Basic example
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          viewerReviews: 30
+        - title: Two
+          year: 2011
+          viewerReviews: 20
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 350
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Viewer Reviews
+          field: viewerReviews
+          width: 160
+- title: Format dates with cellRenderer
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          date:
+            _date: 2010-03-14T00:00:00.000Z
+        - title: Two
+          year: 2011
+          date:
+            _date: 2011-04-01T00:00:00.000Z
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 200
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Date
+          field: date
+          width: 160
+          cellRenderer:
+            _function:
+              __moment.format:
+                'on':
+                  __args: 0.data.date
+                format: D MMM YYYY
+- title: Format currency with valueFormatter
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          total: 300.21
+        - title: Two
+          year: 2011
+          total: 1230.9495
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 200
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Total
+          field: total
+          width: 160
+          valueFormatter:
+            _function:
+              __intl.numberFormat:
+                'on':
+                  __args: 0.value
                 options:
-                  - label: Data Set 1
-                    value:
-                      - title: One
-                        year: 2010
-                        uniqueId: 2010-1
-                      - title: Two
-                        year: 2011
-                        uniqueId: 2011-1
-                  - label: Data Set 2
-                    value:
-                      - title: Three
-                        year: 2011
-                        uniqueId: 2011-2
-                      - title: One
-                        year: 2010
-                        uniqueId: 2010-1
-            - id: table_data_display
-              type: MarkdownWithCode
-              properties:
-                content:
-                  _nunjucks:
-                    template: |
-                      ```yaml
-                        {{ table_data | safe | indent(2) }}
-                      ```
-                    on:
-                      table_data:
-                        _yaml.stringify:
-                          - _state: table_data
-      - title: 'Server-side filter and sort'
-        description: |
-          This example shows how you can filter your table data server-side by making use of AgGrid's built in filter and sort functionality and calling the `onFilterChanged` and `onSortChanged` events. In this example we use dummy data, but you would pass in `_request: table_request` to `properties.rowData`.
-        block:
-          id: my_table
-          type: AgGridAlpine
-          properties:
-            rowData:
-              ## We use dummy data for demo purposes. We would usually read the table data from the request
-              # _request: table_request
+                  style: currency
+                  currency: EUR
+- title: onRowClick
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          viewerReviews: 30
+        - title: Two
+          year: 2011
+          viewerReviews: 20
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 350
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Viewer Reviews
+          field: viewerReviews
+          width: 160
+    events:
+      onRowClick:
+        - id: set_selected
+          type: SetState
+          params:
+            selected_row:
+              _event: true
+  extra:
+    id: selection
+    type: MarkdownWithCode
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ```yaml
+              {{ selection | safe | indent(2) }}
+            ```
+          'on':
+            selection:
+              _yaml.stringify:
+                - _state: selected_row
+- title: onCellClick
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          viewerReviews: 30
+        - title: Two
+          year: 2011
+          viewerReviews: 20
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 350
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Viewer Reviews
+          field: viewerReviews
+          width: 160
+    events:
+      onCellClick:
+        - id: set_selected
+          type: SetState
+          params:
+            selected_cell:
+              _event: true
+  extra:
+    id: selection
+    type: MarkdownWithCode
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            ```yaml
+              {{ selection | safe | indent(2) }}
+            ```
+          'on':
+            selection:
+              _yaml.stringify:
+                - _state: selected_cell
+- title: Using rowId to preserve selection
+  description: |
+    This example shows a table switching between two sets of data. Some rows are common between the data sets and the data rows have a unique identifier field `uniqueId` which we can use as the `rowId` field to ensure selection is preserved when switching the data sets. If no `rowId` is set and the row data does not contain an `id` or `_id` field, and the row data JSON stringified is used as the row id. This still works but may slightly impact performance.
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      height: 200
+      rowId: uniqueId
+      rowData:
+        _state: table_data
+      columnDefs:
+        - headerName: Unique ID
+          field: uniqueId
+          checkboxSelection: true
+        - headerName: Title
+          field: title
+        - headerName: Year
+          field: year
+  extra:
+    id: table_data_box
+    type: Box
+    events:
+      onMount:
+        - id: init_value
+          type: SetState
+          params:
+            table_data:
               - title: One
                 year: 2010
-                viewerReviews: 30
+                uniqueId: 2010-1
               - title: Two
                 year: 2011
-                viewerReviews: 20
-            defaultColDef:
-              sortable: true
-              resizable: true
-              filter: true
-              ## Simplify the table filter
-              filterParams:
-                suppressAndOrCondition: true
-                filterOptions:
-                  - contains
-            columnDefs:
-              - headerName: Title
-                field: title
-                width: 350
-              - headerName: Year
-                field: year
-                width: 100
-              - headerName: Viewer Reviews
-                field: viewerReviews
-                width: 160
-          events:
-            onSortChanged:
-              - id: set_table_sort
-                type: SetState
-                params:
-                  table.sort:
-                    _event: sort
-              - id: refetch
-                type: Request
-                messages:
-                  error: false
-                params: table_request
-            onFilterChanged:
-              - id: set_table_filter
-                type: SetState
-                params:
-                  table.filter:
-                    _event: filter
-              - id: refetch
-                type: Request
-                messages:
-                  error: false
-                params: table_request
-
-        extra:
-          id: example_config
-          type: MarkdownWithCode
-          properties:
-            content:
-              _nunjucks:
-                template: |
-                  onSortChanged response (only `sort`, not `rows`):
-                  ```yaml
-                  {{ sort | safe }}
-                  ```
-                  onFilterChanged response filter (only `filter`, not `rows`):
-                  ```yaml
-                  {{ filter | safe }}
-                  ```
-                  Table request:
-                  ```yaml
-                  id: table_request
-                  type: MongoDBAggregation
-                  connectionId: table_connection
-                  payload:
-                    table:
-                      _state: table
-                  properties:
-                    pipeline:
-                      - $match:
-                          $expr:
-                            $and:
-                              _if:
-                                test:
-                                  _eq:
-                                    - _if_none:
-                                        - _payload: table.filter
-                                        - null
-                                    - null
-                                then:
-                                  - true ## If a filter is not applied to the table.
-                                else:
-                                  _array.map:
-                                    - _object.entries:
-                                        _payload: table.filter
-                                    - _function:
-                                        $regexMatch:
-                                          input:
-                                            __string.concat:
-                                              - '$'
-                                              - __args: '0.0'
-                                          regex:
-                                            __args: '0.1.filter'
-                                          options: 'i'
-                      - $sort:
-                          _if:
-                            test:
-                              _eq:
-                                - _array.length:
-                                    _if_none:
-                                      - _payload: table.sort
-                                      - []
-                                - 0
-                            then:
-                              year: 1 ## If a sort is not applied to the table, default to this.
-                            else:
-                              _object.fromEntries:
-                                _array.map:
-                                  - _array.sort:
-                                      - _if_none:
-                                          - _payload: table.sort
-                                          - []
-                                      - _function:
-                                          __subtract:
-                                            - __args: 0.sortIndex
-                                            - __args: 1.sortIndex
-                                  - _function:
-                                      - __args: 0.colId
-                                      - __if:
-                                          test:
-                                            __eq:
-                                              - __args: 0.sort
-                                              - 'asc'
-                                          then: 1
-                                          else: -1
-                  ```
-
-                on:
-                  sort:
-                    _yaml.stringify:
-                      - _state: table.sort
-                  filter:
-                    _yaml.stringify:
-                      - _state: table.filter
-
+                uniqueId: 2011-1
+    blocks:
+      - id: table_data
+        type: ButtonSelector
+        properties:
+          label:
+            disabled: true
+          options:
+            - label: Data Set 1
+              value:
+                - title: One
+                  year: 2010
+                  uniqueId: 2010-1
+                - title: Two
+                  year: 2011
+                  uniqueId: 2011-1
+            - label: Data Set 2
+              value:
+                - title: Three
+                  year: 2011
+                  uniqueId: 2011-2
+                - title: One
+                  year: 2010
+                  uniqueId: 2010-1
+      - id: table_data_display
+        type: MarkdownWithCode
+        properties:
+          content:
+            _nunjucks:
+              template: |
+                ```yaml
+                  {{ table_data | safe | indent(2) }}
+                ```
+              'on':
+                table_data:
+                  _yaml.stringify:
+                    - _state: table_data
+- title: Server-side filter and sort
+  description: |
+    This example shows how you can filter your table data server-side by making use of AgGrid's built in filter and sort functionality and calling the `onFilterChanged` and `onSortChanged` events. In this example we use dummy data, but you would pass in `_request: table_request` to `properties.rowData`.
+  block:
+    id: my_table
+    type: AgGridAlpine
+    properties:
+      rowData:
+        - title: One
+          year: 2010
+          viewerReviews: 30
+        - title: Two
+          year: 2011
+          viewerReviews: 20
+      defaultColDef:
+        sortable: true
+        resizable: true
+        filter: true
+        filterParams:
+          suppressAndOrCondition: true
+          filterOptions:
+            - contains
+      columnDefs:
+        - headerName: Title
+          field: title
+          width: 350
+        - headerName: Year
+          field: year
+          width: 100
+        - headerName: Viewer Reviews
+          field: viewerReviews
+          width: 160
+    events:
+      onSortChanged:
+        - id: set_table_sort
+          type: SetState
+          params:
+            table.sort:
+              _event: sort
+        - id: refetch
+          type: Request
+          messages:
+            error: false
+          params: table_request
+      onFilterChanged:
+        - id: set_table_filter
+          type: SetState
+          params:
+            table.filter:
+              _event: filter
+        - id: refetch
+          type: Request
+          messages:
+            error: false
+          params: table_request
+  extra:
+    id: example_config
+    type: MarkdownWithCode
+    properties:
+      content:
+        _nunjucks:
+          template: |
+            onSortChanged response (only `sort`, not `rows`):
+            ```yaml
+            {{ sort | safe }}
+            ```
+            onFilterChanged response filter (only `filter`, not `rows`):
+            ```yaml
+            {{ filter | safe }}
+            ```
+            Table request:
+            ```yaml
+            id: table_request
+            type: MongoDBAggregation
+            connectionId: table_connection
+            payload:
+              table:
+                _state: table
+            properties:
+              pipeline:
+                - $match:
+                    $expr:
+                      $and:
+                        _if:
+                          test:
+                            _eq:
+                              - _if_none:
+                                  - _payload: table.filter
+                                  - null
+                              - null
+                          then:
+                            - true ## If a filter is not applied to the table.
+                          else:
+                            _array.map:
+                              - _object.entries:
+                                  _payload: table.filter
+                              - _function:
+                                  $regexMatch:
+                                    input:
+                                      __string.concat:
+                                        - '$'
+                                        - __args: '0.0'
+                                    regex:
+                                      __args: '0.1.filter'
+                                    options: 'i'
+                - $sort:
+                    _if:
+                      test:
+                        _eq:
+                          - _array.length:
+                              _if_none:
+                                - _payload: table.sort
+                                - []
+                          - 0
+                      then:
+                        year: 1 ## If a sort is not applied to the table, default to this.
+                      else:
+                        _object.fromEntries:
+                          _array.map:
+                            - _array.sort:
+                                - _if_none:
+                                    - _payload: table.sort
+                                    - []
+                                - _function:
+                                    __subtract:
+                                      - __args: 0.sortIndex
+                                      - __args: 1.sortIndex
+                            - _function:
+                                - __args: 0.colId
+                                - __if:
+                                    test:
+                                      __eq:
+                                        - __args: 0.sort
+                                        - 'asc'
+                                    then: 1
+                                    else: -1
+            ```
+          'on':
+            sort:
+              _yaml.stringify:
+                - _state: table.sort
+            filter:
+              _yaml.stringify:
+                - _state: table.filter
 ```
+
+
 ---
 
-## File: `blocks/container/Tooltip.yaml`
+## File: `blocks/input/WeekSelector.yaml`
+
+## Description
+
+The `WeekSelector` block allows a user to select a week. The value is a date object, with day and time values of midnight on the first monday of the week GMT.
+
+> Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `MonthSelector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disabledDates": {
+        "type": "object",
+        "description": "Disable specific dates so that they can not be chosen.",
+        "properties": {
+          "min": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "max": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "dates": {
+            "type": "array",
+            "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Specific dates to be disabled.",
+              "docs": {
+                "displayType": "date"
+              }
+            }
+          },
+          "ranges": {
+            "type": "array",
+            "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": "array",
+              "description": "Specific date ranges to be disabled.",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              },
+              "docs": {
+                "displayType": "dateRange"
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "type": "string",
+        "default": "YYYY-wo",
+        "description": "Format in which to format the date value, eg. \"wo-YYYY\" will format a date value of 1999-12-26 as \"52nd-1999\". The format has to conform to moment.js formats."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select Week",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "showToday": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows a button to easily select the current date if true."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCalendar",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at the right-hand side of the date picker.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when week is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/TreeSelector.yaml`
+
+## Description
+
+The `TreeSelector` block allows a user to display, collapse and select a single node from a hierarchical list in a tree structure.
+
+The options for the selector can be provided as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+The value in state is an array of values with the selected node value first followed by any parent node values.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "checkable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Make nodes checkboxes."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "optionsStyle": {
+        "type": "object",
+        "description": "Css style to applied to option elements.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "showLine": {
+        "type": "boolean",
+        "default": false,
+        "description": "Show a connecting line if true."
+      },
+      "selectable": {
+        "type": "boolean",
+        "default": true,
+        "description": "Selectable if true."
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user - supports html."
+                },
+                "value": {
+                  "description": "Value selected. Can be of any type.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "description": "Disable the node if true.",
+                  "default": false
+                },
+                "disableCheckbox": {
+                  "type": "boolean",
+                  "description": "Disable the checkbox if true.",
+                  "default": false
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "children": {
+                  "type": "array",
+                  "description": "Options can either be an array of label, value pairs.",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "value"
+                    ],
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "description": "Value label shown to user - supports html."
+                      },
+                      "value": {
+                        "description": "Value selected. Can be of any type.",
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "object"
+                          },
+                          {
+                            "type": "array"
+                          }
+                        ],
+                        "docs": {
+                          "displayType": "yaml"
+                        }
+                      },
+                      "disabled": {
+                        "type": "boolean",
+                        "description": "Disable the node if true.",
+                        "default": false
+                      },
+                      "disableCheckbox": {
+                        "type": "boolean",
+                        "description": "Disable the checkbox if true.",
+                        "default": false
+                      },
+                      "style": {
+                        "type": "object",
+                        "description": "Css style to applied to option.",
+                        "docs": {
+                          "displayType": "yaml"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when selection is changed."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Tooltip
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Tooltip/schema.json
-    description_content: |
-      A simple text popup tip. Can be used to display extra information about its children blocks.
-    init_state_values:
-      block.properties.title: Tooltip title
-    areas:
-      - content
-    examples:
-      - title: Button tooltip
-        block:
-          id: button_ex
-          type: Tooltip
-          properties:
-            title: Explains what happens when this button is clicked.
-          blocks:
-            - id: btn
-              type: Button
-              properties:
-                title: Button
-
+- title: Tree list of type and category with connecting line and single select.
+  block:
+    id: tree_list_type_category
+    type: TreeSelector
+    properties:
+      showLine: true
+      options:
+        - label: Type
+          value: type
+          children:
+            - label: One
+              value: 1
+            - label: Two
+              value: 2
+            - label: Three
+              value: 3
+        - label: Category
+          value: category
+          children:
+            - label: One
+              value: 1
+            - label: Two
+              value: 2
+            - label: Three
+              value: 3
 ```
+
+
 ---
 
-## File: `blocks/container/Tabs.yaml`
+## File: `blocks/input/TitleInput.yaml`
 
 ## Description
 
-Tabs to easily switch between different views.
-The key of each tabs is the area keys of the container and there is an `extra` content area.
+The `TitleInput` block can display a title, yet allow the user to click a edit icon and change the title. This is useful when the UI renders an existing document with a title, which a user must be able to edit.
 
-## Methods
+## Schema
 
-### setActiveKey
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "code": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply code style."
+      },
+      "color": {
+        "type": "string",
+        "description": "Title color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "copyable": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Provide copy text button."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Paragraph text to copy when clicked."
+              },
+              "icon": {
+                "type": [
+                  "string",
+                  "object",
+                  "array"
+                ],
+                "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltips": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                "docs": {
+                  "displayType": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "delete": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply deleted (strikethrough) style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply disabled style."
+      },
+      "ellipsis": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Display ellipsis when text overflows a single line."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rows": {
+                "type": "number",
+                "description": "Max rows of content."
+              },
+              "expandable": {
+                "type": "boolean",
+                "description": "Expand hidden content when clicked."
+              },
+              "suffix": {
+                "type": "string",
+                "description": "Suffix of ellipses content."
+              }
+            }
+          }
+        ]
+      },
+      "editable": {
+        "default": true,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Allow paragraph editing when true, editable settings can be provided with editable object."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "icon": {
+                "type": [
+                  "string",
+                  "object"
+                ],
+                "description": "Edit icon.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltip": {
+                "type": "string",
+                "description": "Edit tooltip text."
+              },
+              "editing": {
+                "type": "boolean",
+                "default": false,
+                "description": "Control editing state."
+              },
+              "maxLength": {
+                "type": "number",
+                "description": "Max length of text area input."
+              }
+            }
+          }
+        ]
+      },
+      "italic": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply italic style."
+      },
+      "level": {
+        "type": "number",
+        "default": 1,
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "description": "Set title type. Matches with h1, h2, h3 and h4."
+      },
+      "mark": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply marked (highlighted) style."
+      },
+      "type": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "default",
+          "secondary",
+          "warning",
+          "danger",
+          "success"
+        ],
+        "description": "Additional types. Don't specify for default."
+      },
+      "underline": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply underline style."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onExpand": {
+        "type": "array",
+        "description": "Trigger action when ellipse expand is clicked."
+      },
+      "onCopy": {
+        "type": "array",
+        "description": "Trigger action when copy text is clicked."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when title is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/Spinner.yaml`
+## File: `blocks/input/TextInput.yaml`
 
 ## Description
 
-A loading spinner. Can be used as a display block, or as container wrapping another block, with the `spinning` property set in `state`.
+The `TextInput` block is a single line text input.
 
+## Schema
 
----
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": false,
+        "description": "Allow the user to clear their input."
+      },
+      "type": {
+        "type": "string",
+        "enum": [
+          "text",
+          "number",
+          "password",
+          "tel",
+          "email",
+          "url"
+        ],
+        "default": "text",
+        "description": "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>)."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the text input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "maxLength": {
+        "type": "integer",
+        "description": "The max number of input characters."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "prefix": {
+        "type": "string",
+        "description": "Prefix text for the block, priority over $prefix_con."
+      },
+      "prefixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "replaceInput": {
+        "type": "object",
+        "description": "Regex used to sanitize input.",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The regular expression pattern to use to sanitize input."
+          },
+          "flags": {
+            "type": "string",
+            "description": "The regex flags to use. The default value is 'gm'."
+          },
+          "replacement": {
+            "type": "string",
+            "description": "The string used to replace the input that matches the pattern. The default value is ''."
+          }
+        },
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "middle",
+          "large"
+        ],
+        "default": "middle",
+        "description": "Size of the block."
+      },
+      "showCount": {
+        "type": "boolean",
+        "default": false,
+        "description": "Show text character count"
+      },
+      "suffix": {
+        "type": "string",
+        "description": "Suffix text for the block, priority over suffixIcon."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when text input loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when text input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when text input gets focus."
+      },
+      "onPressEnter": {
+        "type": "array",
+        "description": "Trigger action when enter is pressed while text input is focused."
+      }
+    }
+  }
+}
+```
 
-## File: `blocks/container/Span.yaml`
-
-## Description
-
-A Span is a container that places sub-blocks into a html `<span>`.
-The Span has a single area, `content`.
-
-
----
-
-## File: `blocks/container/Sider.yaml`
-
-## Description
-
-The `Sider` block provides a page container for a [sider](https://4x.ant.design/components/layout/) area with content.
-
-
----
-
-## File: `blocks/container/Result.yaml`
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Result
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Result/schema.json
-    filePath: blocks/container/Result.yaml
-    description_content: |
-      Used to provide feedback the results of a task or error.
-    areas:
-      - content
-      - extra
-    examples:
-      - title: 500 Error
-        block:
-          id: error_example
-          type: Result
-          properties:
-            status: 500
-            title: An error occurred
-
+- title: Required text input
+  block:
+    id: required_example
+    type: TextInput
+    required: true
+    properties:
+      title: Required text input
+- title: Placeholder
+  block:
+    id: placeholder_example
+    type: TextInput
+    properties:
+      placeholder: Placeholder
+- title: Prefix and suffix text
+  block:
+    id: prefix_suffix_example
+    type: TextInput
+    properties:
+      label:
+        extra: Prefix and suffix text
+      prefix: The cat
+      placeholder: chased
+      suffix: the rat
+- title: User name
+  block:
+    id: username
+    type: TextInput
+    properties:
+      title: First Name
+      suffixIcon: AiOutlineUser
+      placeholder: Your name
+      label:
+        span: 6
+- title: Field Type
+  block:
+    id: field_type_example
+    type: TextInput
+    properties:
+      type: password
+      label:
+        span: 6
 ```
+
+
 ---
 
-## File: `blocks/container/Popover.yaml`
+## File: `blocks/input/TextArea.yaml`
+
+## Description
+
+The `TextArea` block is a text input that has multiple rows of input. It can be set to a fixed number of rows, or it can expand automatically as the user inputs more text.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": false,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "autoSize": {
+        "oneOf": [
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Automatically extend the block number of rows."
+          },
+          {
+            "type": "object",
+            "description": "Automatically extend the block number of rows, with a set minimum and maximum row amount.",
+            "properties": {
+              "minRows": {
+                "type": "integer",
+                "description": "Minimum number of rows the block can be."
+              },
+              "maxRows": {
+                "type": "integer",
+                "description": "Maximum number of rows the block can be."
+              }
+            }
+          }
+        ],
+        "description": "autoSize can either be a boolean value, or an object with minimum and maximum rows.  Defining autoSize disables any prefix or suffix defined."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the textarea has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "maxLength": {
+        "type": "integer",
+        "description": "The max number of input characters."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "rows": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Number of rows in the block, should be greater or equal to 1. Defining rows disables any prefix."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "middle",
+          "large"
+        ],
+        "default": "middle",
+        "description": "Size of the block."
+      },
+      "showCount": {
+        "type": [
+          "boolean",
+          "object"
+        ],
+        "default": false,
+        "description": "Show input character count.",
+        "docs": {
+          "displayType": "boolean"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when text input loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when text input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when text input gets focus."
+      },
+      "onPressEnter": {
+        "type": "array",
+        "description": "Trigger action when enter is pressed while text input is focused."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/Switch.yaml`
+
+## Description
+
+The `Switch` block is an on/off input. It has a boolean value (true/false).
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "checkedIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCheck",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to shown when switch is checked (true).",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "checkedText": {
+        "type": "string",
+        "description": "Text to shown when switch is checked (true)."
+      },
+      "color": {
+        "type": "string",
+        "description": "Switch checked color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      },
+      "uncheckedIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineClose",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "uncheckedText": {
+        "type": "string",
+        "description": "Text to shown when switch is not checked (false)."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when switch is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/Selector.yaml`
+
+## Description
+
+The `Selector` block is a drop down selector that allows a user to select a single value from a set of options.
+
+The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+> Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `RadioSelector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear the selected value, sets the value to null."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the selector has a border style."
+      },
+      "clearIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCloseCircle",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "optionsStyle": {
+        "type": "object",
+        "description": "Css style to applied to option elements.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "number"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user - supports html."
+                },
+                "value": {
+                  "description": "Value selected. Can be of any type.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Disable the option if true."
+                },
+                "filterString": {
+                  "type": "string",
+                  "description": "String to match against when filtering selector options during. If no filterString is provided the filter method matches against options.label."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select item",
+        "description": "Placeholder text inside the block before user selects input."
+      },
+      "loadingPlaceholder": {
+        "type": "string",
+        "default": "Loading",
+        "description": "Placeholder text to show in options while the block is loading."
+      },
+      "notFoundContent": {
+        "type": "string",
+        "default": "not Found",
+        "description": "Placeholder text to show when list of options are empty."
+      },
+      "showArrow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show the suffix icon at the drop-down position of the selector."
+      },
+      "showSearch": {
+        "type": "boolean",
+        "default": true,
+        "description": "Make the selector options searchable."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineDown",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at the drop-down position of the selector.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when selector loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when selection is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when selector gets focus."
+      },
+      "onClear": {
+        "type": "array",
+        "description": "Trigger action when selector is cleared."
+      },
+      "onSearch": {
+        "type": "array",
+        "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Popover
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Popover/schema.json
-    description_content: |
-      A popover container. Can be used to display extra information or options inside the popover.
-    init_state_values:
-      block.properties.title: Popover title
-    areas:
-      - content
-      - popover
-    examples:
-      - title: Popover menu
-        block:
-          id: button_ex
-          type: Popover
-          properties:
-            title: Explains what happens.
-          blocks:
-            - id: settings
-              type: Button
-              properties:
-                title: Settings
-                icon: AiOutlineSetting
-                block: true
-          areas:
-            popover:
-              blocks:
-                - id: profile
-                  type: Button
-                  properties:
-                    title: Profile
-                - id: admin
-                  type: Button
-                  properties:
-                    title: Admin
-                - id: logout
-                  type: Button
-                  properties:
-                    title: Logout
-
+- title: Listing options from database search
+  block:
+    id: example_selector
+    type: Selector
+    requests:
+      - id: example_search
+        type: MongoDBAggregation
+        connectionId: companies
+        payload:
+          search_input:
+            _state: search_input
+        properties:
+          pipeline:
+            - $search:
+                compound:
+                  should:
+                    - wildcard:
+                        query:
+                          _string.concat:
+                            - '*'
+                            - payload: search_input
+                            - '*'
+                        path:
+                          - _id
+                          - company_name
+                        allowAnalyzedField: true
+            - $addFields:
+                score:
+                  $meta: searchScore
+            - $sort:
+                score: -1
+            - $limit: 50
+            - $project:
+                _id: 0
+                value: $_id
+                label:
+                  $concat:
+                    - $_id
+                    - ' - '
+                    - $ifNull:
+                        - $company_name
+                        - ''
+    properties:
+      placeholder: Search
+      options:
+        _if_none:
+          - _request: example_search
+          - []
+      label:
+        disabled: true
+    events:
+      onSearch:
+        debounce:
+          ms: 500
+        try:
+          - id: set_state
+            type: SetState
+            params:
+              search_input:
+                _event: value
+          - id: perform_search
+            type: Request
+            params: example_search
 ```
+
+
 ---
 
-## File: `blocks/container/PageSiderMenu.yaml`
+## File: `blocks/input/S3UploadPhoto.yaml`
 
 ## Description
 
-The Page Sider Menu block provides a structured layout for a page with a header, sider including menu, content and footer area.
+The `S3UploadPhoto` block allows a user to to upload a photo to AWS S3.
 
+The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
 
----
+The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
 
-## File: `blocks/container/PageHeaderMenu.yaml`
+For the examples to work, a `AwsS3Bucket` connection is required. For example:
+```yaml
+  connections:
+  - id: files
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: FILES_S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: FILES_S3_SECRET_ACCESS_KEY
+      region: af-south-1
+      bucket:
+        _secret: FILES_S3_BUCKET
+      write: true
+```
 
-## Description
+> The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
 
-The Page Header Menu block provides a structured layout for a page with a header containing a menu, content and footer area.
+## Schema
 
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "required": [
+      "s3PostPolicyRequestId"
+    ],
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the file input to be displayed instead of 'Upload image'.",
+        "default": "Upload image"
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disable the file input."
+      },
+      "maxCount": {
+        "type": "number",
+        "description": "Maximum number of files that can be uploaded."
+      },
+      "s3PostPolicyRequestId": {
+        "type": "string",
+        "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
+        "docs": {
+          "displayType": "manual",
+          "block": {
+            "id": "block_properties_s3PostPolicyRequestId",
+            "layout": {
+              "_global": "settings_input_layout"
+            },
+            "type": "Label",
+            "required": true,
+            "properties": {
+              "title": "s3PostPolicyRequestId",
+              "span": 8,
+              "align": "right"
+            },
+            "blocks": [
+              {
+                "id": "block_properties_s3PostPolicyRequestId_text",
+                "type": "Markdown",
+                "style": {
+                  "color": "#8c8c8c"
+                },
+                "properties": {
+                  "content": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+                }
+              }
+            ]
+          },
+          "getter": {}
+        }
+      },
+      "showUploadList": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to show default upload list."
+      },
+      "singleFile": {
+        "type": "boolean",
+        "default": false,
+        "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to draggable area.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when the upload state is changing."
+      }
+    }
+  }
+}
+```
 
----
-
-## File: `blocks/container/Modal.yaml`
-
-## Description
-
-A popup container, presenting the user with a modal dialog.
-The Modal has a `content` and a `footer` content area. The default `footer` area is the `Ok` and `Cancel` buttons; defining a `footer` area overwrites these buttons.
-
-> To open the modal, invoke a modal method.
-
-## Methods
-
-### toggleOpen
-
-### setOpen
-
-
----
-
-## File: `blocks/container/Layout.yaml`
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Layout
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Layout/schema.json
-    filePath: blocks/container/Layout.yaml
-    description_content: |
-      The `Layout` block provides a page container for a [layout](https://4x.ant.design/components/layout/) area with content. It can be used as a wrapper, in which `Header`, `Sider`, `Content,` `Footer` or `Layout` itself can be nested.
-
-    areas:
-      - content
-
-    examples:
-      - title: Layout, Header-Content-Footer
-        block:
-          id: layout_example
-          type: Layout
-          style:
-            textAlign: center
-          blocks:
-            - id: header
-              type: Header
-              blocks:
-                - id: Title
-                  type: Title
-                  properties:
-                    content: Header
-                  style:
-                    backgroundColor: red
-            - id: content
-              type: Content
-              blocks:
-                - id: Title
-                  type: Title
-                  style:
-                    backgroundColor: green
-                  properties:
-                    content: Content
-            - id: footer
-              type: Footer
-              blocks:
-                - id: Title
-                  type: Title
-                  style:
-                    backgroundColor: blue
-                  properties:
-                    content: Footer
-
+- title: Basic S3UploadPhoto Example
+  block:
+    id: attach_files
+    type: S3UploadPhoto
+    properties:
+      s3PostPolicyRequestId: upload_file
+    requests:
+      - id: upload_file
+        type: AwsS3PresignedPostPolicy
+        connectionId: files
+        payload:
+          filename:
+            _event: file.name
+        properties:
+          key:
+            _nunjucks:
+              template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
+              'on':
+                now:
+                  _date: now
+                filename:
+                  _payload: filename
 ```
+
+
 ---
 
-## File: `blocks/container/Label.yaml`
+## File: `blocks/input/S3UploadDragger.yaml`
 
 ## Description
 
-A container that provides a label for a input block. Most input block use Label by default.
+The `S3UploadDragger` block allows a user to to upload a file to AWS S3.
+
+The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
+
+The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
+
+It provides a draggable content area for file upload, with a default text. It also exposes an `onPaste` event that can be used to handle pasted files.
+
+For the examples to work, a `AwsS3Bucket` connection is required. For example:
+```yaml
+  connections:
+  - id: files
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: FILES_S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: FILES_S3_SECRET_ACCESS_KEY
+      region: af-south-1
+      bucket:
+        _secret: FILES_S3_BUCKET
+      write: true
+
+> The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
+
+```
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "required": [
+      "s3PostPolicyRequestId"
+    ],
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title of the file input to be displayed on the draggable area."
+      },
+      "accept": {
+        "type": "string",
+        "description": "File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept."
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disable the file input."
+      },
+      "maxCount": {
+        "type": "number",
+        "description": "Maximum number of files that can be uploaded."
+      },
+      "s3PostPolicyRequestId": {
+        "type": "string",
+        "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
+        "docs": {
+          "displayType": "manual",
+          "block": {
+            "id": "block_properties_s3PostPolicyRequestId",
+            "layout": {
+              "_global": "settings_input_layout"
+            },
+            "type": "Label",
+            "required": true,
+            "properties": {
+              "title": "s3PostPolicyRequestId",
+              "span": 8,
+              "align": "right"
+            },
+            "blocks": [
+              {
+                "id": "block_properties_s3PostPolicyRequestId_text",
+                "type": "Markdown",
+                "style": {
+                  "color": "#8c8c8c"
+                },
+                "properties": {
+                  "content": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+                }
+              }
+            ]
+          }
+        }
+      },
+      "showUploadList": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to show default upload list."
+      },
+      "singleFile": {
+        "type": "boolean",
+        "default": false,
+        "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt."
+      },
+      "style": {
+        "type": "object",
+        "description": "Css style object to applied to draggable area.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when the upload state is changing."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Basic S3UploadDragger Example
+  block:
+    id: attach_files
+    type: S3UploadDragger
+    properties:
+      s3PostPolicyRequestId: upload
+    requests:
+      - id: upload
+        type: AwsS3PresignedPostPolicy
+        connectionId: files
+        payload:
+          filename:
+            _event: file.name
+          content_type:
+            _event: file.type
+        properties:
+          fields:
+            Content-Type:
+              _payload: content_type
+          key:
+            _nunjucks:
+              template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
+              'on':
+                now:
+                  _date: now
+                filename:
+                  _payload: filename
+- title: S3UploadDragger Example with onPaste event
+  block:
+    id: on_file_paste
+    type: Box
+    events:
+      onPaste:
+        - id: upload
+          type: CallMethod
+          params:
+            blockId: attach_files
+            method: uploadFromPaste
+            args:
+              - _event: true
+    blocks:
+      - id: text_input
+        type: TextArea
+      - id: attach_files
+        type: S3UploadDragger
+        properties:
+          s3PostPolicyRequestId: upload_file
+        requests:
+          - id: upload_file
+            type: AwsS3PresignedPostPolicy
+            connectionId: files
+            payload:
+              filename:
+                _event: file.name
+              content_type:
+                _event: file.type
+            properties:
+              fields:
+                Content-Type:
+                  _payload: content_type
+              key:
+                _nunjucks:
+                  template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
+                  'on':
+                    now:
+                      _date: now
+                    filename:
+                      _payload: filename
+```
 
 
 ---
 
-## File: `blocks/container/Header.yaml`
+## File: `blocks/input/S3UploadButton.yaml`
 
 ## Description
 
-The `Header` block provides a page container for a [header](https://4x.ant.design/components/layout/) area with content.
+The `S3UploadButton` block allows a user to to upload a file to AWS S3.
 
+The `s3PostPolicyRequestId` property is required, and should be the `id` of a [`AwsS3PresignedPostPolicy`](/AWSS3) request. This request is called by the block when the user uploads a file, to create a policy that allows a file to be uploaded to AWS S3.
 
----
+The block has an object value in state, with a `file` key, which has an object corresponding to the last uploaded file, and a `fileList` array with objects for each the files.
 
-## File: `blocks/container/GoogleMapsScript.yaml`
+For the examples to work, a `AwsS3Bucket` connection is required. For example:
+```yaml
+  connections:
+  - id: files
+    type: AwsS3Bucket
+    properties:
+      accessKeyId:
+        _secret: FILES_S3_ACCESS_KEY_ID
+      secretAccessKey:
+        _secret: FILES_S3_SECRET_ACCESS_KEY
+      region: af-south-1
+      bucket:
+        _secret: FILES_S3_BUCKET
+      write: true
+```
+
+> The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "required": [
+      "s3PostPolicyRequestId"
+    ],
+    "properties": {
+      "accept": {
+        "type": "string",
+        "description": "File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept."
+      },
+      "button": {
+        "type": "object",
+        "description": "Button block properties.",
+        "default": {
+          "icon": "UploadOutlined",
+          "title": "Upload",
+          "type": "default"
+        },
+        "docs": {
+          "displayType": "button"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "description": "Disable the file input."
+      },
+      "maxCount": {
+        "type": "number",
+        "description": "Maximum number of files that can be uploaded."
+      },
+      "s3PostPolicyRequestId": {
+        "type": "string",
+        "description": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded.",
+        "docs": {
+          "displayType": "manual",
+          "block": {
+            "id": "block_properties_s3PostPolicyRequestId",
+            "layout": {
+              "_global": "settings_input_layout"
+            },
+            "type": "Label",
+            "required": true,
+            "properties": {
+              "title": "s3PostPolicyRequestId",
+              "span": 8,
+              "align": "right"
+            },
+            "blocks": [
+              {
+                "id": "block_properties_s3PostPolicyRequestId_text",
+                "type": "Markdown",
+                "style": {
+                  "color": "#8c8c8c"
+                },
+                "properties": {
+                  "content": "Id of a request of type AwsS3PresignedPostPolicy that defines to which S3 bucket and how the file should be uploaded."
+                }
+              }
+            ]
+          },
+          "getter": {}
+        }
+      },
+      "showUploadList": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to show default upload list."
+      },
+      "singleFile": {
+        "type": "boolean",
+        "default": false,
+        "description": "Only allow a single file to be uploaded. Only one file can be selected in the prompt."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when the upload state is changing."
+      },
+      "onClick": {
+        "type": "array",
+        "description": "Triggered when the upload button is clicked."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/generic_block.yaml.njk
-  vars:
-    block_type: GoogleMapsScript
-    category: container
-    pageTitle: GoogleMapsScript
-    filePath: blocks/container/GoogleMapsScript.yaml
-    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsScript/GoogleMapsScript.json
-    description_content: |
-      This is a Lowdefy blocks wrapper for the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview). It is used to specify the api key and libraries to be used for the [`GoogleMaps`](./GoogleMaps) and [`GoogleMapsHeatmap`](./GoogleMapsHeatmap) blocks, and wraps these blocks as a parent container. Only one `GoogleMapsScript` blocks should be used on a page.v
-
-      ### Properties
-
-      - `apiKey: string`: Your Google Maps API key.
-      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
-
-    examples:
-      - title: Simple Script
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-          blocks: []
-
-      - title: Script with libraries
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            libraries:
-              - visualization
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-
+- title: Basic S3UploadButton Example
+  block:
+    id: attach_files
+    type: S3UploadButton
+    properties:
+      s3PostPolicyRequestId: upload_file
+    requests:
+      - id: upload_file
+        type: AwsS3PresignedPostPolicy
+        connectionId: files
+        payload:
+          filename:
+            _event: file.name
+        properties:
+          key:
+            _nunjucks:
+              template: '{{ now | date("YYYYMMDD_HHmmssS") }}_{{ filename }}'
+              'on':
+                now:
+                  _date: now
+                filename:
+                  _payload: filename
 ```
+
+
 ---
 
-## File: `blocks/container/GoogleMapsHeatmap.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/generic_block.yaml.njk
-  vars:
-    block_type: GoogleMapsHeatmap
-    category: container
-    pageTitle: GoogleMapsHeatmap
-    filePath: blocks/container/GoogleMapsHeatmap.yaml
-    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMapsHeatmap/GoogleMapsHeatmap.json
-    description_content: |
-      This is a Lowdefy block which implements [Heatmap](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions) from the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview).
-
-      In order to use this block, it must be wrapped in a [`GoogleMapsScript`](./GoogleMapsScript) block with the visualization library specified.
-
-      ### Properties
-
-      - `apiKey: string`: Your Google Maps API key.
-      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
-      - `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
-        - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
-        - `zoom: number`: Map zoom level.
-        - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
-      - `heatmap: heatmapOptions`: Add a heatmap layer, see more [heatmap options](https://developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions). This will automatically load the `visualization` library, which must be added to the list of libraries in the `libraries` property of the `GoogleMapsScript` block.
-        - `data: { lat: number, lng: number, weight: number } []`: A list of heatmap data points.
-      - `style: cssObject`: A style object applied to the map element.
-      - `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
-        - `position: { lat: number, lng: number }`: Position of infoWindow on map.
-        - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
-
-      ### Events
-
-      - `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-      - `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-      - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
-        - `domEvent`: event object
-        - `latLng`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `pixel`:
-          - `x`: x position on map block
-          - `y`: y position on map block
-      - `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
-      - `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
-      object:
-        - `domEvent`: event object
-        - `latLng`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `pixel`:
-          - `x`: x position on map block
-          - `y`: y position on map block
-      - `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-
-      ### Methods
-
-      - `fitBounds`: Fit map to given bounds.
-        - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
-        - `zoom: number`: Map zoom level.
-      - `getBounds`: Returns the bounds of the map.
-      - `getCenter`: Returns the center of the map.
-      - `getZoom`: Returns the zoom of the map.
-
-    examples:
-      - title: Add a heatmap
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            libraries:
-              - visualization
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-          blocks:
-            - id: google_maps
-              type: GoogleMapsHeatmap
-              properties:
-                map:
-                  disableDefaultUI: true
-                heatmap:
-                  data:
-                    - lat: 34.091158
-                      lng: -118.2795188
-                      weight: 1
-                    - lat: 34.0771192
-                      lng: -118.2587199
-                      weight: 2
-                    - lat: 34.083527
-                      lng: -118.370157
-                      weight: 1
-                    - lat: 34.0951843
-                      lng: -118.283107
-                      weight: 2
-                    - lat: 34.1033401
-                      lng: -118.2875469
-                      weight: 4
-                    - lat: 34.035798
-                      lng: -118.251288
-                      weight: 2
-                    - lat: 34.0776068
-                      lng: -118.2646526
-                      weight: 3
-                    - lat: 34.0919263
-                      lng: -118.2820544
-                      weight: 3
-                    - lat: 34.0568525
-                      lng: -118.3646369
-                      weight: 3
-                    - lat: 34.0285781
-                      lng: -118.4115541
-                      weight: 0
-                    - lat: 34.017339
-                      lng: -118.278469
-                      weight: 0
-                    - lat: 34.0764288
-                      lng: -118.3661624
-                      weight: 4
-                    - lat: 33.9925942
-                      lng: -118.4232475
-                      weight: 4
-                    - lat: 34.0764345
-                      lng: -118.3730332
-                      weight: 3
-                    - lat: 34.093981
-                      lng: -118.327638
-                      weight: 0
-                    - lat: 34.056385
-                      lng: -118.2508724
-                      weight: 1
-                    - lat: 34.107701
-                      lng: -118.2667943
-                      weight: 4
-                    - lat: 34.0450139
-                      lng: -118.2388682
-                      weight: 4
-                    - lat: 34.1031997
-                      lng: -118.2586152
-                      weight: 1
-                    - lat: 34.0828183
-                      lng: -118.3241586
-                      weight: 1
-                  options:
-                    radius: 20
-                    opacity: 1
-
-```
----
-
-## File: `blocks/container/GoogleMaps.yaml`
-
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/generic_block.yaml.njk
-  vars:
-    block_type: GoogleMaps
-    category: container
-    pageTitle: GoogleMaps
-    filePath: blocks/container/GoogleMaps.yaml
-    schema: ../plugins/blocks/blocks-google-maps/src/blocks/GoogleMaps/GoogleMaps.json
-    description_content: |
-      This is a Lowdefy block which implements the following from the [Google Maps API](https://developers.google.com/maps/documentation/javascript/overview):
-        - [Map](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions)
-        - [Markers](https://developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions)
-        - [Marker Clusterers](https://developers.google.com/maps/documentation/javascript/marker-clustering)
-
-      In order to use this block, it must be wrapped in a [`GoogleMapsScript`](./GoogleMapsScript) block.
-
-      ### Properties
-
-      - `apiKey: string`: Your Google Maps API key.
-      - `libraries: array`: List of [Google libraries](https://developers.google.com/maps/documentation/javascript/libraries).
-      - `map: mapOptions`: All [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
-        - `center: { lat: number, lng: number }`: A coordinate position object by which to center the map.
-        - `zoom: number`: Map zoom level.
-        - `options: mapOptions`: All other [map options](https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions).
-      - `style: cssObject`: A style object applied to the map element.
-      - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
-        - `position: { lat: number, lng: number }`: Position of marker on map.
-        - `label: string`: Label displayed on marker.
-      - `markerClusterers: markerClustererOptions[]`: A list of MarkerClusterers with marker clusterer options.
-        - `markers: markerOptions[]`: A list of Markers with marker options, see more [Javascript API Markers](https://developers.google.com/maps/documentation/javascript/markers).
-          - `position: { lat: number, lng: number }`: Position of marker on map.
-          - `label: string`: Label displayed on marker.
-        - `options: markerClustererOptions`: All other [marker clusterer options](https://react-google-maps-api-docs.netlify.app/#markerclusterer).
-      - `infoWindow: infoWindowOptions`: All infoWindow options, see [infoWindow options](https://developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindowOptions).
-        - `position: { lat: number, lng: number }`: Position of infoWindow on map.
-        - `visible: boolean`: When visible is true, blocks inside infoWindow content area will be rendered.
-
-      ### Events
-
-      - `onBoundsChanged`: Trigger onBoundsChanged actions when the bounds of the map are changed, returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-      - `onCenterChanged`: Trigger onCenterChanged actions when the center of the map is changed, returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-      - `onClick`: Trigger onClick actions when the map is clicked, returns `_event` object:
-        - `domEvent`: event object
-        - `latLng`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `pixel`:
-          - `x`: x position on map block
-          - `y`: y position on map block
-      - `onClusterClick`: Trigger onClusterClick actions when a cluster is clicked, returns `_event`
-      - `onMarkerClick`: Trigger onMarkerClick actions when a marker is clicked, returns `_event`
-      object:
-        - `domEvent`: event object
-        - `latLng`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `pixel`:
-          - `x`: x position on map block
-          - `y`: y position on map block
-      - `onZoomChanged`: Trigger onZoomChanged actions when the zoom on the map is changed. returns `_event`
-      object:
-        - `bounds`:
-          - `east`: latitudinal coordinate
-          - `north`: longitudinal coordinate
-          - `south`: longitudinal coordinate
-          - `west`: latitudinal coordinate
-        - `center`:
-          - `lat`: latitudinal coordinate
-          - `lng`: longitudinal coordinate
-        - `zoom`: zoom level
-
-      ### Methods
-
-      - `fitBounds`: Fit map to given bounds.
-        - `bounds: { lat: number, lng: number } []`: A list of the coordinate positions of the boundary points.
-        - `zoom: number`: Map zoom level.
-      - `getBounds`: Returns the bounds of the map.
-      - `getCenter`: Returns the center of the map.
-      - `getZoom`: Returns the zoom of the map.
-
-    examples:
-      - title: Add markers
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-          blocks:
-            - id: google_maps
-              type: GoogleMaps
-              properties:
-                map:
-                  options:
-                    panControl: true
-                    zoomControl: true
-                    fullscreenControl: true
-                  zoom: 14
-                  center:
-                    lat: -25.344
-                    lng: 131.036
-                markers:
-                  - position:
-                      lat: -25.344
-                      lng: 131.036
-                    label: One
-                  - position:
-                      lat: -25.348
-                      lng: 131.038
-                    label: Two
-
-      - title: Add markers with onClick event
-        block:
-          id: google_maps_script
-          type: GoogleMapsScript
-          properties:
-            apiKey:
-              _build.env: GOOGLE_MAPS_API_KEY
-          blocks:
-            - id: google_maps
-              type: GoogleMaps
-              properties:
-                map:
-                  options:
-                    panControl: true
-                    zoomControl: true
-                    fullscreenControl: true
-                  center:
-                    lat: -25.344
-                    lng: 131.036
-                  zoom: 5
-                markers:
-                  _state: markers_list
-              events:
-                onClick:
-                  - id: markers_list
-                    type: SetState
-                    params:
-                      markers_list:
-                        _array.concat:
-                          - - position:
-                                _event: latLng
-                              label: Hi
-                          - _if_none:
-                              - _state: markers_list
-                              - []
-
-```
----
-
-## File: `blocks/container/Footer.yaml`
+## File: `blocks/input/RatingSlider.yaml`
 
 ## Description
 
-The `Footer` block provides a page container for a [footer](https://4x.ant.design/components/layout/) area with content.
+The `RatingSlider` block allows a user to choose a numerical value on a slider input. It is typically used for scores or ratings. It has the option to have a "Not Applicable" checkbox, which leaves the value as null.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "color": {
+        "type": "string",
+        "description": "Rating slider color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disableIcons": {
+        "type": "boolean",
+        "default": false,
+        "description": "Hides minimum and maximum icons."
+      },
+      "disableNotApplicable": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disables the N/A option left of slider."
+      },
+      "minIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineFrown",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "maxIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineSmile",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "min": {
+        "type": "number",
+        "default": 0,
+        "description": "The minimum value of the slider."
+      },
+      "max": {
+        "type": "number",
+        "default": 10,
+        "description": "The maximum value of the slider."
+      },
+      "notApplicableLabel": {
+        "type": "string",
+        "default": "N/A",
+        "description": "Label shown at the null value of the slider."
+      },
+      "showDots": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows dots at values between step values when true."
+      },
+      "showMarks": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows values at specified min, max and step values."
+      },
+      "step": {
+        "type": "number",
+        "default": 1,
+        "exclusiveMinimum": 0,
+        "description": " The size of the step between values, has to be values greater than 0."
+      },
+      "tooltipVisible": {
+        "type": "string",
+        "enum": [
+          "never",
+          "onClick",
+          "always"
+        ],
+        "default": "onClick",
+        "description": "When tooltip should be visible."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when rating is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/Drawer.yaml`
+## File: `blocks/input/RadioSelector.yaml`
 
 ## Description
 
-A panel which slides in from the edge of the screen.
-The Drawer has a single area, `content`.
+The `RadioSelector` block is a set of radio buttons that allow a user to select a single value from a set of options.
 
-> To open the drawer, invoke a drawer method.
+The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
-## Methods
+> Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `MultipleSelector` and `Selector`.
 
-### toggleOpen
+## Schema
 
-### setOpen
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "align": {
+        "type": "string",
+        "enum": [
+          "start",
+          "end",
+          "center",
+          "baseline"
+        ],
+        "default": "start",
+        "description": "Align options."
+      },
+      "color": {
+        "type": "string",
+        "description": "Selected radio color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "direction": {
+        "type": "string",
+        "enum": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal",
+        "description": "List options horizontally or vertical."
+      },
+      "wrap": {
+        "type": "boolean",
+        "default": true,
+        "description": "Specifies wrapping of options. Applies when 'direction' is 'horizontal'."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "number"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user - supports html."
+                },
+                "value": {
+                  "description": "Value selected.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Disable the option if true."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when selection is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/Descriptions.yaml`
+## File: `blocks/input/PhoneNumberInput.yaml`
+
+## Description
+
+The `PhoneNumberInput` block is a region dial code selector with a single line text input.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": false,
+        "description": "Allow the user to clear their input."
+      },
+      "allowedRegions": {
+        "type": "array",
+        "description": "List of allowed ISO 3166-1 alpha-2 region codes. If allowedRegions is [] or null, the default list of all regions is used.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the text input has a border style."
+      },
+      "defaultRegion": {
+        "type": "string",
+        "description": "The dial code of the default region to be used."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "maxLength": {
+        "type": "integer",
+        "description": "The max number of input characters."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "prefix": {
+        "type": "string",
+        "description": "Prefix text for the block, priority over $prefix_con."
+      },
+      "prefixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to prefix the text input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "optionsStyle": {
+        "type": "object",
+        "description": "Css style to applied to option elements.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "replaceInput": {
+        "type": "object",
+        "description": "Regex used to sanitize input.",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The regular expression pattern to use to sanitize input."
+          },
+          "flags": {
+            "type": "string",
+            "description": "The regex flags to use. The default value is 'gm'."
+          },
+          "replacement": {
+            "type": "string",
+            "description": "The string used to replace the input that matches the pattern. The default value is ''."
+          }
+        },
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "selectStyle": {
+        "type": "object",
+        "description": "Css style to applied to selector.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "showArrow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show the suffix icon at the drop-down position of the selector."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "middle",
+          "large"
+        ],
+        "default": "middle",
+        "description": "Size of the block."
+      },
+      "suffix": {
+        "type": "string",
+        "description": "Suffix text for the block, priority over suffixIcon."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon to suffix the text input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onInputChange": {
+        "type": "array",
+        "description": "Trigger action when text input is changed."
+      },
+      "onCodeChange": {
+        "type": "array",
+        "description": "Trigger action when the selector is changed."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when the number is changed."
+      },
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when input loses focus."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when input gets focus."
+      },
+      "onPressEnter": {
+        "type": "array",
+        "description": "Trigger action when enter is pressed while text input is focused."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+- title: Simple phone number input
+  block:
+    id: default
+    type: PhoneNumberInput
+- title: Phone number input with specified regions
+  block:
+    id: allowed_regions
+    type: PhoneNumberInput
+    properties:
+      allowedRegions:
+        - ZA
+        - UA
+- title: Phone number input with default region and flags disabled
+  block:
+    id: default_region
+    type: PhoneNumberInput
+    properties:
+      defaultRegion: US
+      showFlags: false
+```
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+---
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+## File: `blocks/input/PasswordInput.yaml`
 
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Descriptions
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Descriptions/schema.json
-    filePath: blocks/container/Descriptions.yaml
-    init_state_values:
-      __type_block.properties.column: number
-      __type_block.properties.items: object[]
-      __object_arr_block.properties.items:
-        - label: Item One
+## Description
+
+The `PasswordInput` block is a single line password input.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      },
+      "visibilityToggle": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show password visibility toggle button."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when text input loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when text input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when text input gets focus."
+      },
+      "onPressEnter": {
+        "type": "array",
+        "description": "Trigger action when enter is pressed while text input is focused."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Required password input
+  block:
+    id: required_example
+    type: PasswordInput
+    required: true
+    properties:
+      title: Required password input
+- title: Placeholder
+  block:
+    id: placeholder_example
+    type: PasswordInput
+    properties:
+      placeholder: Placeholder
+- title: Password
+  block:
+    id: password
+    type: PasswordInput
+    properties:
+      title: Password
+      placeholder: Your password
+      label:
+        span: 6
+```
+
+
+---
+
+## File: `blocks/input/ParagraphInput.yaml`
+
+## Description
+
+The `ParagraphInput` block can display a paragraph, yet allow the user to click a edit icon and change the paragraph content. This is useful when the UI renders an existing document with a paragraph, which a user must be able to edit.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "code": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply code style."
+      },
+      "copyable": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Provide copy text button."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Paragraph text to copy when clicked."
+              },
+              "icon": {
+                "type": [
+                  "string",
+                  "object",
+                  "array"
+                ],
+                "description": "Copy icon, can be an array or two icons for before and after clicked.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltips": {
+                "type": [
+                  "string",
+                  "array"
+                ],
+                "description": "Tooltip text, can be an array or two strings for before and after clicked.",
+                "docs": {
+                  "displayType": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "delete": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply deleted (strikethrough) style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply disabled style."
+      },
+      "editable": {
+        "default": true,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Allow paragraph editing when true, editable settings can be provided with editable object."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "icon": {
+                "type": [
+                  "string",
+                  "object"
+                ],
+                "description": "Edit icon.",
+                "docs": {
+                  "displayType": "icon"
+                }
+              },
+              "tooltip": {
+                "type": "string",
+                "description": "Edit tooltip text."
+              },
+              "editing": {
+                "type": "boolean",
+                "description": "Control editing state."
+              },
+              "maxLength": {
+                "type": "number",
+                "description": "Max length of text area input."
+              }
+            }
+          }
+        ]
+      },
+      "ellipsis": {
+        "default": false,
+        "oneOf": [
+          {
+            "type": "boolean",
+            "description": "Display ellipsis when text overflows a single line."
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "rows": {
+                "type": "number",
+                "description": "Max rows of content."
+              },
+              "expandable": {
+                "type": "boolean",
+                "description": "Expand hidden content when clicked."
+              },
+              "suffix": {
+                "type": "string",
+                "description": "Suffix of ellipses content."
+              }
+            }
+          }
+        ]
+      },
+      "italic": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply italic style."
+      },
+      "mark": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply marked (highlighted) style."
+      },
+      "strong": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply strong (bold) style."
+      },
+      "type": {
+        "type": "string",
+        "default": "default",
+        "enum": [
+          "success",
+          "default",
+          "secondary",
+          "warning",
+          "danger"
+        ],
+        "description": "Additional types. Don't specify for default."
+      },
+      "underline": {
+        "type": "boolean",
+        "default": false,
+        "description": "Apply underline style."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onExpand": {
+        "type": "array",
+        "description": "Trigger action when ellipse expand is clicked."
+      },
+      "onCopy": {
+        "type": "array",
+        "description": "Trigger action when copy text is clicked."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when paragraph is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/Pagination.yaml`
+
+## Description
+
+The `Pagination` controls user input for pagination purposes.
+
+> This block does not paginate requests, it only manage pagination parameters which can be used to control pagination requests.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "total": {
+        "type": "integer",
+        "default": 100,
+        "description": "Total number of items to be displayed in pagination."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default"
+        ],
+        "default": "default",
+        "description": "Pagination element size."
+      },
+      "simple": {
+        "type": "boolean",
+        "default": false,
+        "description": "Use simplified pagination display."
+      },
+      "showTotal": {
+        "type": [
+          "boolean",
+          "string",
+          "object"
+        ],
+        "default": false,
+        "description": "Show pagination total number and range if boolean, or define a custom string or function to display.",
+        "docs": {
+          "displayType": "string"
+        }
+      },
+      "showSizeChanger": {
+        "type": "boolean",
+        "default": false,
+        "description": "Determine whether to show page size select, it will be true when total > 50."
+      },
+      "showQuickJumper": {
+        "type": "boolean",
+        "default": false,
+        "description": "Determine whether you can jump to pages directly."
+      },
+      "pageSizeOptions": {
+        "type": "array",
+        "default": [
+          10,
+          20,
+          30,
+          40
+        ],
+        "description": "Specify the page size changer options.",
+        "items": {
+          "type": "number"
+        }
+      },
+      "hideOnSinglePage": {
+        "type": "boolean",
+        "default": false,
+        "description": "Hide pager on short list of a single page."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable pager."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onSizeChange": {
+        "type": "array",
+        "description": "Triggered when page size is changed."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Triggered when current page is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/NumberInput.yaml`
+
+## Description
+
+The `NumberInput` allows a user to input a number.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the number input has a border style."
+      },
+      "controls": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not to show the +- controls."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "formatter": {
+        "type": "object",
+        "description": "A function specifying the format of the value presented.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "keyboard": {
+        "type": "boolean",
+        "default": true,
+        "description": "If enabled, control input with keyboard up and down."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "min": {
+        "type": "number",
+        "description": "Minimum value allowed by the block."
+      },
+      "max": {
+        "type": "number",
+        "description": "Maximum value allowed by the block."
+      },
+      "parser": {
+        "type": "object",
+        "description": "A function specifying the value extracted from the formatter.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "placeholder": {
+        "type": "string",
+        "description": "Placeholder text inside the block to show message before user types input."
+      },
+      "decimalSeparator": {
+        "type": "string",
+        "default": ".",
+        "description": "Separator between number and decimal places."
+      },
+      "precision": {
+        "type": "integer",
+        "description": "Precision (number of decimal places) allowed by the block."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "step": {
+        "type": "number",
+        "default": 1,
+        "description": "The number to which the current value is increased or decreased. It can be an integer or decimal."
+      },
+      "title": {
+        "type": "string",
+        "description": "Number input label title - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when number input loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger action when number input is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when number input gets focus."
+      },
+      "onPressEnter": {
+        "type": "array",
+        "description": "Trigger actions when input is focused and enter is pressed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/MultipleSelector.yaml`
+
+## Description
+
+The `MultipleSelector` block is a drop down selector that allows a user to select multiple values from a set of options.
+
+The options for the selector can be provides as either an array of primitive values (Strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+> Other selector blocks are `ButtonSelector`, `CheckboxSelector`, `RadioSelector` and `Selector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear the selected value, sets the value to null."
+      },
+      "autoClearSearchValue": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether the current search will be cleared on selecting an item."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the selector has a border style."
+      },
+      "clearIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCloseCircle",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "optionsStyle": {
+        "type": "object",
+        "description": "Css style to applied to option elements.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "number"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user - supports html."
+                },
+                "value": {
+                  "description": "Value selected. Can be of any type.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Disable the option if true."
+                },
+                "filterString": {
+                  "type": "string",
+                  "description": "String to match against when filtering selector options during. If no filterString is provided the filter method matches against options.label."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "tag": {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "description": "Color of the Tag. Preset options are success, processing, error, warning, default, blue, cyan, geekblue, gold, green, lime, magenta, orange, purple, red, volcano, or alternatively any hex color.",
+                      "docs": {
+                        "displayType": "color"
+                      }
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Content title of tag - supports html."
+                    },
+                    "icon": {
+                      "type": [
+                        "string",
+                        "object"
+                      ],
+                      "description": "Name of an Ant Design Icon or properties of an Icon block to customize alert icon.",
+                      "docs": {
+                        "displayType": "icon"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "maxTagCount": {
+        "type": "number",
+        "description": "Max tag count to show."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select item",
+        "description": "Placeholder text inside the block before user selects input."
+      },
+      "loadingPlaceholder": {
+        "type": "string",
+        "default": "Loading",
+        "description": "Placeholder text to show in options while the block is loading."
+      },
+      "notFoundContent": {
+        "type": "string",
+        "default": "not Found",
+        "description": "Placeholder text to show when list of options are empty."
+      },
+      "selectedIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCheck",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "showArrow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show the suffix icon at the drop-down position of the selector."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineDown",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize at the drop-down position of the selector.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Multiple selector label title - supports html."
+      },
+      "renderTags": {
+        "type": "boolean",
+        "description": "When true, the selected option labels are rendered as tags in the selector input. This field must be true to render option tag values."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      },
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when selector loses focus."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when selector gets focus."
+      },
+      "onClear": {
+        "type": "array",
+        "description": "Trigger action when selector gets cleared."
+      },
+      "onSearch": {
+        "type": "array",
+        "description": "Trigger actions when input is changed. 'value' is passed to the _event operator to be used in actions such as search queries."
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+```yaml
+- title: Basic MultipleSelector Usage
+  block:
+    id: basic_selector
+    type: MultipleSelector
+    properties:
+      title: Select options
+      options:
+        - Option A
+        - Option B
+        - Option C
+- title: MultipleSelector with label value options
+  block:
+    id: label_value_selector
+    type: MultipleSelector
+    properties:
+      title: Select options
+      options:
+        - label: Option 1
           value: 1
-        - label: Item Two
+        - label: Option 2
           value: 2
-        - label: Item Three
+        - label: Option 3
           value: 3
-        - label: Item Four
-          value: 4
-          span: 3
-
-    description_content: |
-      Display multiple read-only fields in groups. Commonly used to display a detailed set of data.
-
-    examples:
-      - title: Object data example
-        block:
-          id: object_example
-          type: Descriptions
-          properties:
-            bordered: true
-            items:
-              Location: South Africa
-              Temperature: 22
-              Date: 2021-02-02
-    areas:
-      - extra
-
+- title: MultipleSelector with html label value options
+  block:
+    id: label_value_selector
+    type: MultipleSelector
+    properties:
+      title: Select options
+      options:
+        - label: |
+            <div style="font-weight: bold;">Max Verstappen</div>
+            <div style="font-size: 0.7em;">Red Bull Racing</div>
+          value: 1
+        - label: |
+            <div style="font-weight: bold;">Logan Sargeant</div>
+            <div style="font-size: 0.7em;">Williams</div>
+          value: 2
+        - label: |
+            <div style="font-weight: bold;">Daniel Ricciardo</div>
+            <div style="font-size: 0.7em;">AlphaTauri</div>
+          value: 3
+- title: MultipleSelector that renders Tags for selected values
+  block:
+    id: label_value_selector
+    type: MultipleSelector
+    properties:
+      title: Select options
+      renderTags: true
+      options:
+        - label: |
+            <div style="font-weight: bold;">Max Verstappen</div>
+            <div style="font-size: 0.7em;">Red Bull Racing</div>
+          value: 1
+          tag:
+            color: red
+            title: Max
+        - label: |
+            <div style="font-weight: bold;">Logan Sargeant</div>
+            <div style="font-size: 0.7em;">Williams</div>
+          value: 2
+          tag:
+            color: blue
+            title: Logan
+        - label: |
+            <div style="font-weight: bold;">Daniel Ricciardo</div>
+            <div style="font-size: 0.7em;">AlphaTauri</div>
+          value: 3
+          tag:
+            color: magenta
+            title: Daniel
+- title: Listing options from database search
+  block:
+    id: example_selector
+    type: MultipleSelector
+    requests:
+      - id: example_search
+        type: MongoDBAggregation
+        connectionId: companies
+        payload:
+          search_input:
+            _state: search_input
+        properties:
+          pipeline:
+            - $search:
+                compound:
+                  should:
+                    - wildcard:
+                        query:
+                          _string.concat:
+                            - '*'
+                            - _payload: search_input
+                            - '*'
+                        path:
+                          - _id
+                          - company_name
+                        allowAnalyzedField: true
+            - $addFields:
+                score:
+                  $meta: searchScore
+            - $sort:
+                score: -1
+            - $limit: 50
+            - $project:
+                _id: 0
+                value: $_id
+                label:
+                  $concat:
+                    - $_id
+                    - ' - '
+                    - $ifNull:
+                        - $company_name
+                        - ''
+    properties:
+      placeholder: Search
+      options:
+        _array.concat:
+          - _if_none:
+              - _state: example_options
+              - []
+          - _if_none:
+              - _request: example_search
+              - []
+      label:
+        disabled: true
+    events:
+      onChange:
+        - id: set_state
+          type: SetState
+          params:
+            example_options:
+              _mql.aggregate:
+                'on':
+                  _array.concat:
+                    - _state: example_options
+                    - _request: example_search
+                pipeline:
+                  - $match:
+                      value:
+                        $in:
+                          _state: example_selector
+      onSearch:
+        debounce:
+          ms: 500
+        try:
+          - id: set_state
+            type: SetState
+            params:
+              search_input:
+                _event: value
+          - id: perform_search
+            type: Request
+            params: example_search
 ```
+
+
 ---
 
-## File: `blocks/container/Content.yaml`
+## File: `blocks/input/MonthSelector.yaml`
 
 ## Description
 
-The `Content` block provides a page container for a [content](https://4x.ant.design/components/layout/) area.
+The `MonthSelector` block allows a user to select a month. The value is a date object, with day and time values of midnight on the first day of the month GMT.
+
+> Other date type blocks are `DateRangeSelector`, `DateSelector`, `DateTimeSelector` and `WeekSelector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disabledDates": {
+        "type": "object",
+        "description": "Disable specific dates so that they can not be chosen.",
+        "properties": {
+          "min": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "max": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "dates": {
+            "type": "array",
+            "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Specific dates to be disabled.",
+              "docs": {
+                "displayType": "date"
+              }
+            }
+          },
+          "ranges": {
+            "type": "array",
+            "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": "array",
+              "description": "Specific date ranges to be disabled.",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              },
+              "docs": {
+                "displayType": "dateRange"
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "type": "string",
+        "default": "YYYY-MM",
+        "description": "Format in which to format the date value, eg. \"MMMM YYYY\" will format a date value of 1999-12-31 as \"December 1999\". The format has to conform to moment.js formats."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select Month",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "showToday": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows a button to easily select the current date if true."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCalendar",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Month selector label title - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/ConfirmModal.yaml`
+## File: `blocks/input/DateTimeSelector.yaml`
 
 ## Description
 
-A popup container, presenting the user with a modal confirmation dialog.
-The ConfirmModal has a single area, `content`.
+The `DateTimeSelector` block allows a user to select a date and a time from a calender.
 
-> To open the confirm modal, invoke the open method.
+By default, the time selected by the user is converted to GMT time, based on the timezone of the user. The selector will also display the selected time in the correct timezone for that user. If the `selectGMT` property is set to true, the value of the selector will be the time selected by the user as GMT time, and not in the timezone of the user.
 
-## Methods
+> Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
 
-### open
+## Schema
+
+```json
+{
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disabledDates": {
+        "type": "object",
+        "description": "Disable specific dates so that they can not be chosen.",
+        "properties": {
+          "min": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "max": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "dates": {
+            "type": "array",
+            "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Specific dates to be disabled.",
+              "docs": {
+                "displayType": "date"
+              }
+            }
+          },
+          "ranges": {
+            "type": "array",
+            "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": "array",
+              "description": "Specific date ranges to be disabled.",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              },
+              "docs": {
+                "displayType": "dateRange"
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "type": "string",
+        "default": "YYYY-MM-DD HH:mm",
+        "description": "Format in which to parse the date value, eg. \"DD MMMM YYYY\" will parse a date value of 1999-12-31 as \"31 December 1999\". The format has to conform to moment.js formats."
+      },
+      "hourStep": {
+        "type": "integer",
+        "default": 1,
+        "minimum": 1,
+        "description": "Hour intervals to show in the time selector."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "minuteStep": {
+        "type": "integer",
+        "default": 5,
+        "minimum": 1,
+        "description": "Minute intervals to show in the time selector."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select Date & Time",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "secondStep": {
+        "type": "integer",
+        "default": 5,
+        "minimum": 1,
+        "description": "Minute intervals to show in the time selector."
+      },
+      "selectUTC": {
+        "type": "boolean",
+        "default": false,
+        "description": "Shows the user's selection as UTC time, not time-zone based."
+      },
+      "showToday": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows a button to easily select the current date if true."
+      },
+      "showNow": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows a 'Now' button to set current time."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCalendar",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "timeFormat": {
+        "type": "string",
+        "default": "HH:mm",
+        "description": "Time format to show in the time selector. HH:mm:ss will show hours, minutes and seconds, HH:mm only hours and minutes and HH only hours."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/Comment.yaml`
+## File: `blocks/input/DateSelector.yaml`
+
+## Description
+
+The `DateSelector` block allows a user to select a date from a calender.
+
+> Other date type blocks are `DateRangeSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disabledDates": {
+        "type": "object",
+        "description": "Disable specific dates so that they can not be chosen.",
+        "properties": {
+          "min": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "max": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "dates": {
+            "type": "array",
+            "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Specific dates to be disabled.",
+              "docs": {
+                "displayType": "date"
+              }
+            }
+          },
+          "ranges": {
+            "type": "array",
+            "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": "array",
+              "description": "Specific date ranges to be disabled.",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              },
+              "docs": {
+                "displayType": "dateRange"
+              }
+            }
+          }
+        }
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "format": {
+        "type": "string",
+        "default": "YYYY-MM-DD",
+        "description": "Format in which to parse the date value, eg. \"DD MMMM YYYY\" will parse a date value of 1999-12-31 as \"31 December 1999\". The format has to conform to moment.js formats."
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Select Date",
+        "description": "Placeholder text inside the block before user types input."
+      },
+      "showToday": {
+        "type": "boolean",
+        "default": true,
+        "description": "Shows a button to easily select the current date if true."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCalendar",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/DateRangeSelector.yaml`
+
+## Description
+
+The `DateRangeSelector` block allows the user to choose a start date and an end date for a date range. The selected range is saved as an array with two date elements, the start and end dates.
+
+> Other date type blocks are `DateSelector`, `DateTimeSelector`, `MonthSelector` and `WeekSelector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear their input."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "disabledDates": {
+        "type": "object",
+        "description": "Disable specific dates so that they can not be chosen.",
+        "properties": {
+          "min": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates less than the minimum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "max": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "description": "Disable all dates greater than the maximum date. Can be a date string or a _date object.",
+            "docs": {
+              "displayType": "date"
+            }
+          },
+          "dates": {
+            "type": "array",
+            "description": "Array of specific dates to be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Specific dates to be disabled.",
+              "docs": {
+                "displayType": "date"
+              }
+            }
+          },
+          "ranges": {
+            "type": "array",
+            "description": "Array of array pairs of start and end dates be disabled. Can be date strings or a _date objects.",
+            "items": {
+              "type": "array",
+              "description": "Specific date ranges to be disabled.",
+              "items": {
+                "type": [
+                  "string",
+                  "object"
+                ]
+              },
+              "docs": {
+                "displayType": "dateRange"
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "type": "string",
+        "default": "YYYY-MM-DD",
+        "description": "Format in which to parse the date value, eg. \"DD MMMM YYYY\" will parse a date value of 1999-12-31 as \"31 December 1999\". The format has to conform to moment.js formats."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "placeholder": {
+        "type": "array",
+        "default": [
+          "Start Date",
+          "End Date"
+        ],
+        "description": "Placeholder text inside the block before user types input.",
+        "docs": {
+          "displayType": "manual",
+          "block": {
+            "id": "block_properties_placeholder",
+            "layout": {
+              "_global": "settings_input_layout"
+            },
+            "type": "Label",
+            "properties": {
+              "title": "placeholder",
+              "span": 8,
+              "align": "right",
+              "extra": "Placeholder text inside the block before user types input."
+            },
+            "blocks": [
+              {
+                "id": "block.properties.placeholder.0",
+                "layout": {
+                  "span": 12
+                },
+                "type": "TextInput",
+                "properties": {
+                  "size": "small",
+                  "label": {
+                    "disabled": true
+                  }
+                }
+              },
+              {
+                "id": "block.properties.placeholder.1",
+                "layout": {
+                  "span": 12
+                },
+                "type": "TextInput",
+                "properties": {
+                  "size": "small",
+                  "label": {
+                    "disabled": true
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "separator": {
+        "type": "string",
+        "default": "~",
+        "description": "Separator symbol shown between start and end date inputs."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "suffixIcon": {
+        "type": [
+          "string",
+          "object"
+        ],
+        "default": "AiOutlineCalendar",
+        "description": "Name of an React-Icon (See <a href='https://react-icons.github.io/react-icons/'>all icons</a>) or properties of an Icon block to customize icon on right-hand side of the date picker.",
+        "docs": {
+          "displayType": "icon"
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/ColorSelector.yaml`
+
+## Description
+
+A color selector component.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, the input is disabled."
+      },
+      "hideInput": {
+        "type": "boolean",
+        "default": false,
+        "description": "If true, the input is hidden."
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when color is picked."
+      }
+    }
+  }
+}
+```
+
+
+---
+
+## File: `blocks/input/CheckboxSwitch.yaml`
+
+## Description
+
+The `CheckboxSwitch` block allows a user to select a boolean value between (true/false).
+
+> A similar switch block is `Switch`. Alternatively the `CheckboxSelector` can be used to list multiple options.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "color": {
+        "type": "string",
+        "description": "Selected checkbox color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "description": {
+        "type": "string",
+        "description": "Text to display next to the checkbox - supports html."
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
+
+## Examples
 
 ```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Comment
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Comment/schema.json
-    filePath: blocks/container/Comment.yaml
-    init_state_values:
-      __type_block.properties.avatar: object
-    description_content: |
-      A Comment renders a comment list item. It can be used as both a `display` or `container` category block.
-    areas:
-      - content
-      - actions
-      - author
-      - title
-    examples:
-      - title: Comment
-        block:
-          id: comment_ex
-          type: Comment
-          properties:
-            author: The Dude
-            content: Yeah, well, you know, that’s just, like, your opinion, man.
-            datetime: 18 January, 1998
-            avatar:
-              color: '#402B18'
-              content: TD
-              shape: square
-
+- title: Checkbox only
+  block:
+    id: checkbox_example
+    type: CheckboxSwitch
+    properties:
+      label:
+        disabled: true
+- title: Description only
+  block:
+    id: description_example
+    type: CheckboxSwitch
+    properties:
+      description: Option
+- title: Description and label
+  block:
+    id: description_label_example
+    type: CheckboxSwitch
+    properties:
+      description: Option
+      label:
+        title: Label
+- title: Agree to terms and conditions
+  block:
+    id: terms_example
+    type: CheckboxSwitch
+    properties:
+      description: I agree to the terms and conditions and privacy policy as found on the website.... Thoroughly I agree to the terms and conditions and privacy policy as found on the website....
+      label:
+        disabled: true
 ```
+
+
 ---
 
-## File: `blocks/container/Collapse.yaml`
+## File: `blocks/input/CheckboxSelector.yaml`
 
 ## Description
 
-A container with collapsible panels. The area keys are user defined, and should be listed under the `panels` property. Each panel also has a 'extra' content area, the key of which can be defined in the `panels.$.extraKey` property.
+The `CheckboxSelector` block allows a user to select multiple values from a set of options.
 
+The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans, or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
 
----
+> Other selector blocks are `ButtonSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
 
-## File: `blocks/container/Carousel.yaml`
+## Schema
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-_ref:
-  path: templates/blocks/template.yaml.njk
-  vars:
-    block_type: Carousel
-    category: container
-    schema: ../plugins/blocks/blocks-antd/src/blocks/Carousel/schema.json
-    filePath: blocks/container/Carousel.yaml
-    description_content: |
-      Carousel to navigate through different slides consisting of blocks.
-      The key of each slide is the area keys of the container.
-      ### Methods
-
-        - `goTo`: Set the current slide to a specific slide.
-          - `slide: string`: The key of the chosen slide.
-          - `dontAnimate: boolean`: If true, the transition happens without animation.
-        - `next`: Set the next slide as the current slide.
-        - `prev`: Set the previous slide as the current slide.
-    init_state_values:
-      block.properties.slides:
-        - key: slide1
-        - key: slide2
-        - key: slide3
-    user_defined_areas: true
-    areas:
-      - slide1
-      - slide2
-      - slide3
-    examples:
-      - title: Carousel
-        block:
-          id: basic_carousel
-          type: Carousel
-          properties:
-            draggable: true
-            slidesToShow: 1
-            slides:
-              - key: slide_one
-              - key: slide_two
-              - key: slide_three
-          areas:
-            slide_one:
-              blocks:
-                - id: side_1
-                  type: Card
-                  blocks:
-                    - id: title_side_1
-                      type: Title
-                      properties:
-                        content: Slide 1
-            slide_two:
-              blocks:
-                - id: side_2
-                  type: Card
-                  blocks:
-                    - id: title_side_2
-                      type: Title
-                      properties:
-                        content: Slide 2
-            slide_three:
-              blocks:
-                - id: side_3
-                  type: Card
-                  blocks:
-                    - id: title_side_3
-                      type: Title
-                      properties:
-                        content: Slide 3
-      - title: Responsive Carousel
-        block:
-          id: responsive_carousel
-          type: Carousel
-          properties:
-            autoplay: true
-            draggable: true
-            slidesToShow: 3
-            slides:
-              - key: slide_one
-              - key: slide_two
-              - key: slide_three
-              - key: slide_four
-            responsive:
-              - breakpoint: 1024
-                settings:
-                  slidesToShow: 2
-                  slidesToScroll: 2
-                  infinite: true
-                  dots: true
-              - breakpoint: 600
-                settings:
-                  slidesToShow: 1
-                  slidesToScroll: 1
-          areas:
-            slide_one:
-              blocks:
-                - id: side_1
-                  type: Card
-                  blocks:
-                    - id: title_side_1
-                      type: Title
-                      properties:
-                        content: Slide 1
-            slide_two:
-              blocks:
-                - id: side_2
-                  type: Card
-                  blocks:
-                    - id: title_side_2
-                      type: Title
-                      properties:
-                        content: Slide 2
-            slide_three:
-              blocks:
-                - id: side_3
-                  type: Card
-                  blocks:
-                    - id: title_side_3
-                      type: Title
-                      properties:
-                        content: Slide 3
-            slide_four:
-              blocks:
-                - id: side_4
-                  type: Card
-                  blocks:
-                    - id: title_side_4
-                      type: Title
-                      properties:
-                        content: Slide 4
-
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "align": {
+        "type": "string",
+        "enum": [
+          "start",
+          "end",
+          "center",
+          "baseline"
+        ],
+        "default": "start",
+        "description": "Align options."
+      },
+      "color": {
+        "type": "string",
+        "description": "Selected checkbox color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "direction": {
+        "type": "string",
+        "enum": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal",
+        "description": "List options horizontally or vertical."
+      },
+      "wrap": {
+        "type": "boolean",
+        "default": true,
+        "description": "Specifies wrapping of options. Applies when 'direction' is 'horizontal'."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "number"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user."
+                },
+                "value": {
+                  "description": "Value selected. Can be of any type - supports html.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Disable the option if true."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
 ```
----
-
-## File: `blocks/container/Card.yaml`
-
-## Description
-
-A Card container places blocks on a white background with a card border.
-The Card has `content`, `title` and `extra` areas. The `title` area replaces `properties.title` if defined.
 
 
 ---
 
-## File: `blocks/container/Box.yaml`
+## File: `blocks/input/ButtonSelector.yaml`
 
 ## Description
 
-A Box is a container that places sub-blocks into a html `<div>`.
-The Box has a single area, `content`.
+The `ButtonSelector` block allows a user to select a single value from a set of options. The user cannot deselect an option once they have selected an input.
+
+The options for the selector can be provides as either an array of primitive values (strings, numbers, booleans or dates), or as an array of label-value pairs, where the label is a string, and the value can be of any type, including objects like dates and arrays.
+
+> Other selector blocks are `CheckboxSelector`, `MultipleSelector`, `RadioSelector` and `Selector`.
+
+## Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "buttonStyle": {
+        "type": "string",
+        "enum": [
+          "solid",
+          "outline"
+        ],
+        "default": "solid",
+        "description": "Style of the selected option button."
+      },
+      "color": {
+        "type": "string",
+        "description": "Selected button color.",
+        "docs": {
+          "displayType": "color"
+        }
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "options": {
+        "default": [],
+        "oneOf": [
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs - supports html.",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "number"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "boolean"
+            }
+          },
+          {
+            "type": "array",
+            "description": "Options can either be an array of primitive values, on an array of label, value pairs.",
+            "items": {
+              "type": "object",
+              "required": [
+                "value"
+              ],
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "Value label shown to user - supports html."
+                },
+                "value": {
+                  "description": "Value selected. Can be of any type.",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ],
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Disable the option if true."
+                },
+                "style": {
+                  "type": "object",
+                  "description": "Css style to applied to option.",
+                  "docs": {
+                    "displayType": "yaml"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content - supports html."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title - supports html."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      }
+    }
+  }
+}
+```
 
 
 ---
 
-## File: `blocks/container/Badge.yaml`
+## File: `blocks/input/AutoComplete.yaml`
 
 ## Description
 
-Small numerical value or status descriptor for UI elements. Badge is used as a container block, describing its content block.
+The AutoComplete block is a text input that has a list of suggestions for the user. These suggestions are filtered as the user fills in the input. The user is also allowed to fill in an input not part of that list.
 
+>If you need the user to select only from a list of options (and be able to select the top match for the given input by simply hitting Enter), use a block like the `Selector` block instead.
 
----
+## Schema
 
-## File: `blocks/container/Alert.yaml`
-
-## Description
-
-Alert is used to render user feedback messages in a Alert styled frame.
-
-
----
-
-## File: `blocks/container/Affix.yaml`
-
-## Description
-
-An Affix block makes it's content stick to the viewport.
-The Affix has a single area, `content`.
+```json
+{
+  "type": "object",
+  "properties": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "allowClear": {
+        "type": "boolean",
+        "default": true,
+        "description": "Allow the user to clear the selected value, sets the value to null."
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "default": false,
+        "description": "Autofocus to the block on page load."
+      },
+      "bordered": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether or not the input has a border style."
+      },
+      "backfill": {
+        "type": "boolean",
+        "default": false,
+        "description": "Backfill selected item the input when using keyboard"
+      },
+      "defaultOpen": {
+        "type": "boolean",
+        "default": false,
+        "description": "Initial open state of dropdown."
+      },
+      "disabled": {
+        "type": "boolean",
+        "default": false,
+        "description": "Disable the block if true."
+      },
+      "inputStyle": {
+        "type": "object",
+        "description": "Css style to applied to input.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "label": {
+        "type": "object",
+        "description": "Label properties.",
+        "additionalProperties": false,
+        "properties": {
+          "align": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "default": "left",
+            "description": "Align label left or right when inline."
+          },
+          "colon": {
+            "type": "boolean",
+            "default": true,
+            "description": "Append label with colon."
+          },
+          "extra": {
+            "type": "string",
+            "description": "Extra text to display beneath the content."
+          },
+          "title": {
+            "type": "string",
+            "description": "Label title."
+          },
+          "span": {
+            "type": "number",
+            "description": "Label inline span."
+          },
+          "disabled": {
+            "type": "boolean",
+            "description": "Hide input label."
+          },
+          "hasFeedback": {
+            "type": "boolean",
+            "default": true,
+            "description": "Display feedback extra from validation, this does not disable validation."
+          },
+          "inline": {
+            "type": "boolean",
+            "default": false,
+            "description": "Render input and label inline."
+          },
+          "extraStyle": {
+            "type": "object",
+            "description": "Css style to applied to label extra.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          },
+          "feedbackStyle": {
+            "type": "object",
+            "description": "Css style to applied to label feedback.",
+            "docs": {
+              "displayType": "yaml"
+            }
+          }
+        }
+      },
+      "options": {
+        "default": [],
+        "type": "array",
+        "description": "Options can either be an array of string values.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "optionsStyle": {
+        "type": "object",
+        "description": "Css style to applied to option elements.",
+        "docs": {
+          "displayType": "yaml"
+        }
+      },
+      "placeholder": {
+        "type": "string",
+        "default": "Type or select item",
+        "description": "Placeholder text inside the block before user selects input."
+      },
+      "size": {
+        "type": "string",
+        "enum": [
+          "small",
+          "default",
+          "large"
+        ],
+        "default": "default",
+        "description": "Size of the block."
+      },
+      "title": {
+        "type": "string",
+        "description": "Title to describe the input component, if no title is specified the block id is displayed."
+      }
+    }
+  },
+  "events": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "onBlur": {
+        "type": "array",
+        "description": "Trigger action event occurs when selector loses focus."
+      },
+      "onChange": {
+        "type": "array",
+        "description": "Trigger actions when selection is changed."
+      },
+      "onFocus": {
+        "type": "array",
+        "description": "Trigger action when an selector gets focus."
+      },
+      "onClear": {
+        "type": "array",
+        "description": "Trigger action when selector gets cleared."
+      },
+      "onSearch": {
+        "type": "array",
+        "description": "Called when searching items."
+      }
+    }
+  }
+}
+```
 
 
 ---
@@ -9699,7 +19323,7 @@ properties:
 
 ###### Setting a key-value pair only if key does not exist:
 
-````yaml
+```yaml
 id: redisRequest
 type: Redis
 connectionId: redis
@@ -11515,10 +21139,6 @@ requests:
 
 **Section:** Connections
 
-
----
-**Nunjucks Template:**
-```yaml
 The `AxiosHttp` connection is used to connect to APIs and web servers using HTTP or HTTPS.
 
 It uses the [axios](https://github.com/axios/axios) library.
@@ -11698,8 +21318,6 @@ requests:
       data:
         _payload: data
 ```
-```
----
 
 
 ---
@@ -13675,10 +23293,8 @@ The `_yaml` parses and writes YAML strings.
 The `_yaml.parse` method parses a YAML string into an object.
 
 ```
-```
 ({on: string, options?: object}): object
 ([on: string, options?: object]): object
-```
 ```
 
 **Arguments:**
@@ -13721,10 +23337,8 @@ array:
 The `_yaml.stringify` method creates a YAML string from an object.
 
 ```
-```
 ({on: any, options?: object}): string
 ([on: any, options?: object]): string
-```
 ```
 
 **Arguments:**
@@ -13898,9 +23512,7 @@ Returns: A version 4 UUID.
 Create a version 1 (timestamp) UUID.
 
 ```
-```
 (void): string
-```
 ```
 
 **Arguments:**
@@ -13918,10 +23530,8 @@ Returns: A version 1 UUID.
 Create a version 3 (namespace w/ MD5) UUID.
 
 ```
-```
 ({name: string | string[], namespace: string | string[]}): string
 ([name: string | string[], namespace: string | string[]]): string
-```
 ```
 
 **Arguments:**
@@ -13944,9 +23554,7 @@ Returns: A version 3 UUID.
 Create a version 4 (random) UUID.
 
 ```
-```
 (void): string
-```
 ```
 
 **Arguments:**
@@ -13964,10 +23572,8 @@ Returns: A version 4 UUID.
 Create a version 5 (namespace w/ SHA-1) UUID.
 
 ```
-```
 ({name: string | string[], namespace: string | string[]}): string
 ([name: string | string[], namespace: string | string[]]): string
-```
 ```
 
 **Arguments:**
@@ -14205,9 +23811,7 @@ The `_uri` operator [encodes and decodes](https://en.wikipedia.org/wiki/Percent-
 The `_uri.decode` method decodes a string that has been uri-encoded. It uses [`decodeURIComponent`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent).
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -14226,9 +23830,7 @@ Returns: `"http://username:password@www.example.com:80/path/to/file.php?foo=316&
 The `_uri.encode` uri-encodes a string. It uses [`encodeURIComponent`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent).
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -14476,10 +24078,8 @@ The `_string` operator can be used to run javascript [`String`](https://develope
 The `_string.charAt` method returns a string consisting of [the single UTF-16 code (character) unit located at the specified offset](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt) into the string.
 
 ```
-```
 (arguments: {on: string, index: number}): string
 (arguments: [on: string, index: number]): string
-```
 ```
 
 ### concat
@@ -14487,9 +24087,7 @@ The `_string.charAt` method returns a string consisting of [the single UTF-16 co
 The `_string.concat` method [concatenates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat) strings.
 
 ```
-```
 (strings: string[]): string
-```
 ```
 
 ### endsWith
@@ -14497,7 +24095,6 @@ The `_string.concat` method [concatenates](https://developer.mozilla.org/en-US/d
 The `_string.endsWith` method determines whether a string [ends with the characters of a specified string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith), returning `true` or `false` as appropriate.
 
 ```
-```
 (arguments: {
   on: string,
   searchString: string,
@@ -14508,7 +24105,6 @@ The `_string.endsWith` method determines whether a string [ends with the charact
   searchString: string,
   length?: number
 ]): boolean
-```
 ```
 
 ### includes
@@ -14516,7 +24112,6 @@ The `_string.endsWith` method determines whether a string [ends with the charact
 The `_string.includes` method determines whether [one string may be found within another string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes), returning `true` or `false` as appropriate.
 
 ```
-```
 (arguments: {
   on: string,
   searchString: string,
@@ -14528,13 +24123,11 @@ The `_string.includes` method determines whether [one string may be found within
   position?: number
 ]): boolean
 ```
-```
 
 ### indexOf
 
 The `_string.indexOf` method returns the index within string of the [first occurrence of the specified value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf), starting the search at `fromIndex`. Returns `-1` if the value is not found.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14546,7 +24139,6 @@ The `_string.indexOf` method returns the index within string of the [first occur
   searchValue: string,
   fromIndex?: number
 ]): number
-```
 ```
 
 ### length
@@ -14554,16 +24146,13 @@ The `_string.indexOf` method returns the index within string of the [first occur
 The `_string.length` method returns the [length](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length) of a string.
 
 ```
-```
 (string: string): number
-```
 ```
 
 ### lastIndexOf
 
 The `_string.lastIndexOf` method returns the index within string of the [last  occurrence of the specified value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf), searching backwards from `fromIndex`. Returns `-1` if the value is not found.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14576,13 +24165,11 @@ The `_string.lastIndexOf` method returns the index within string of the [last  o
   fromIndex?: number
 ]): number
 ```
-```
 
 ### match
 
 The `_string.match` method returns the [result of matching a string against a regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match).
 
-```
 ```
 (arguments: {
   on: string,
@@ -14590,17 +24177,14 @@ The `_string.match` method returns the [result of matching a string against a re
   regexFlags?: string
 }): string[]
 ```
-```
 
 ### normalize
 
 The `_string.normalize` method returns the [Unicode Normalization Form](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) of the string.
 
 ```
-```
 (arguments: {on: string, form?: enum}): string
 (arguments: [on: string, form?: enum]): string
-```
 ```
 
 ### padEnd
@@ -14608,7 +24192,6 @@ The `_string.normalize` method returns the [Unicode Normalization Form](https://
 The `_string.padEnd` method [pads the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the end of the string.
 
 ```
-```
 (arguments: {
   on: string,
   targetLength: number,
@@ -14619,7 +24202,6 @@ The `_string.padEnd` method [pads the string](https://developer.mozilla.org/en-U
   targetLength: number,
   padString?: string
 ]): string
-```
 ```
 
 ### padStart
@@ -14627,7 +24209,6 @@ The `_string.padEnd` method [pads the string](https://developer.mozilla.org/en-U
 The `_string.padStart` method [pads the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the start of the string.
 
 ```
-```
 (arguments: {
   on: string,
   targetLength: number,
@@ -14639,24 +24220,20 @@ The `_string.padStart` method [pads the string](https://developer.mozilla.org/en
   padString?: string
 ]): string
 ```
-```
 
 ### repeat
 
 The `_string.repeat` method returns a string which contains [the specified number of copies of the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat) on which it was called, concatenated together.
 
 ```
-```
 (arguments: {on: string, count: number}): string
 (arguments: [on: string, count: number]): string
-```
 ```
 
 ### replace
 
 The `_string.replace` method returns a string with [some or all matches of a pattern replaced by a replacement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace).
 
-```
 ```
 (arguments: {
   on: string,
@@ -14665,13 +24242,11 @@ The `_string.replace` method returns a string with [some or all matches of a pat
   regexFlags?: string
 }): string
 ```
-```
 
 ### search
 
 The `_string.search` method executes a [search for a match between a regular expression and a string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search). It returns the index of the first match between the regular expression and the given string, or `-1` if no match was found.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14679,13 +24254,11 @@ The `_string.search` method executes a [search for a match between a regular exp
   regexFlags?: string
 }): number
 ```
-```
 
 ### slice
 
 The `_string.slice` method [extracts a section](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice) of a string.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14698,24 +24271,20 @@ The `_string.slice` method [extracts a section](https://developer.mozilla.org/en
   end?: number
 ]): string
 ```
-```
 
 ### split
 
 The `_string.split` method [divides a string into an array of substrings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split), splitting on the provided separator.
 
 ```
-```
 (arguments: {on: string, separator?: string}): string[]
 (arguments: [on: string, separator?: string]): string[]
-```
 ```
 
 ### startsWith
 
 The `_string.startsWith` method determines whether a string [starts with the characters of a specified string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith), returning `true` or `false` as appropriate.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14728,13 +24297,11 @@ The `_string.startsWith` method determines whether a string [starts with the cha
   position?: number
 ]): boolean
 ```
-```
 
 ### substring
 
 The `_string.startsWith` method returns [the part of the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring) between the `start` and `end` indexes, or to the end of the string.
 
-```
 ```
 (arguments: {
   on: string,
@@ -14747,16 +24314,13 @@ The `_string.startsWith` method returns [the part of the string](https://develop
   end?: number
 ]): string
 ```
-```
 
 ### toLowerCase
 
 The `_string.toLowerCase` method converts the string to [lower case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase).
 
 ```
-```
 (string: string): string
-```
 ```
 
 ### toUpperCase
@@ -14764,9 +24328,7 @@ The `_string.toLowerCase` method converts the string to [lower case](https://dev
 The `_string.toUpperCase` method converts the string to [upper case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase).
 
 ```
-```
 (string: string): string
-```
 ```
 
 ### trim
@@ -14774,9 +24336,7 @@ The `_string.toUpperCase` method converts the string to [upper case](https://dev
 The `_string.trim` method [removes whitespace from both ends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim) of a string.
 
 ```
-```
 (string: string): string
-```
 ```
 
 ### trimEnd
@@ -14784,9 +24344,7 @@ The `_string.trim` method [removes whitespace from both ends](https://developer.
 The `_string.trimEnd` method [removes whitespace from the end](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd) of a string.
 
 ```
-```
 (string: string): string
-```
 ```
 
 ### trimStart
@@ -14794,9 +24352,7 @@ The `_string.trimEnd` method [removes whitespace from the end](https://developer
 The `_string.trimStart` method [removes whitespace from the start](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimStart) of a string.
 
 ```
-```
 (string: string): string
-```
 ```
 
 
@@ -15125,305 +24681,291 @@ Returns: `true` if matched else `false`.
 
 ## File: `operators/_ref.yaml`
 
-```yaml
-# Copyright 2020-2024 Lowdefy, Inc
+# _ref
 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+## Description
 
-#     http://www.apache.org/licenses/LICENSE-2.0
+The `_ref` operator can be used to reference a configuration file, in order to split the Lowdefy configuration into multiple files. More information on references and the Lowdefy configuration schema can be found [here](/lowdefy-schema).
 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+> The `_ref` operator is a build time operator: it is evaluated when the app configuration is being built. This means it is not evaluated dynamically as the app is running, and can be used anywhere in the configuration as long as the resulting configuration files are valid YAML.
 
-_ref:
-  path: templates/operators.yaml.njk
-  transformer: templates/operatorsMethodTransformer.js
-  vars:
-    pageId: _ref
-    pageTitle: _ref
-    filePath: operators/_ref.yaml
-    env: Build Only
-    types: |
-      ```
-      (path: string): any
-      (arguments: {
-        path?: string,
-        key?: string,
-        resolver?: string,
-        transformer?: string,
-        vars?: object,
-      }): any
-      ```
-    description: |
-      The `_ref` operator can be used to reference a configuration file, in order to split the Lowdefy configuration into multiple files. More information on references and the Lowdefy configuration schema can be found [here](/lowdefy-schema).
+The `_ref` operator requires a file path to the file to be referenced, relative to the root directory of the project.
 
-      > The `_ref` operator is a build time operator: it is evaluated when the app configuration is being built. This means it is not evaluated dynamically as the app is running, and can be used anywhere in the configuration as long as the resulting configuration files are valid YAML.
+If this file is a YAML or JSON file, and has file extension `.yaml`, `.yml`, or `.json`, the file is parsed as YAML/JSON, and the parsed result is included in the configuration.
 
-      The `_ref` operator requires a file path to the file to be referenced, relative to the root directory of the project.
+If this file is a Nunjucks template file, with file extension `.njk`, the file is parsed as a Nunjucks template, using any variables provided in the `vars` argument. If the file extension is `.yaml.njk`, `.yml.njk` or `.json.njk`, the template output is also parsed as YAML/JSON.
 
-      If this file is a YAML or JSON file, and has file extension `.yaml`, `.yml`, or `.json`, the file is parsed as YAML/JSON, and the parsed result is included in the configuration.
+If the file is not parsed (for example has an extension like `.txt`, `.md`, or `.html`), the file contents are included in the configuration as a string.
 
-      If this file is a Nunjucks template file, with file extension `.njk`, the file is parsed as a Nunjucks template, using any variables provided in the `vars` argument. If the file extension is `.yaml.njk`, `.yml.njk` or `.json.njk`, the template output is also parsed as YAML/JSON.
+If the referenced file is a YAML or JSON file, the `key` argument can be used to reference a specific key inside that file, instead of the whole file.
 
-      If the file is not parsed (for example has an extension like `.txt`, `.md`, or `.html`), the file contents are included in the configuration as a string.
+###### Variables
 
-      If the referenced file is a YAML or JSON file, the `key` argument can be used to reference a specific key inside that file, instead of the whole file.
+Variables defined in the `vars` argument can be accessed in the referenced file using the [`_var`](/_var), and as template variables in Nunjucks files.
 
-      ###### Variables
+###### Resolver
 
-      Variables defined in the `vars` argument can be accessed in the referenced file using the [`_var`](/_var), and as template variables in Nunjucks files.
+A resolver is a JavaScript function that overwrites the default way configuration files are read from the filesystem. It does not need to read from the filesystem, it could generate a value to return programmatically, or it could fetch the configuration using HTTP (from Github for example). The `resolver` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a resolver function.
 
-      ###### Resolver
+The resolver function receives the `path`, `vars`, and a `context` object as arguments. If a resolver function is specified, the `path` argument to the `_ref` operator is optional, and does not need to correspond to a path to a file. If `path` ends with `.yaml`, `.yml`, `.json`, `.njk`, `.yaml.njk`, `.yml.njk`, or `.json.njk`, the returned result will be parsed as YAML/JSON/Nunjucks template.
 
-      A resolver is a JavaScript function that overwrites the default way configuration files are read from the filesystem. It does not need to read from the filesystem, it could generate a value to return programmatically, or it could fetch the configuration using HTTP (from Github for example). The `resolver` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a resolver function.
+A default `_ref` resolver can be specified in the `lowdefy.yaml` `cli` section (as `refResolver`), or as a command-line option when running the CLI (as `--ref-resolver`). This resolver will then be used for all references in the app, unless another resolver is specified.
 
-      The resolver function receives the `path`, `vars`, and a `context` object as arguments. If a resolver function is specified, the `path` argument to the `_ref` operator is optional, and does not need to correspond to a path to a file. If `path` ends with `.yaml`, `.yml`, `.json`, `.njk`, `.yaml.njk`, `.yml.njk`, or `.json.njk`, the returned result will be parsed as YAML/JSON/Nunjucks template.
+###### Transformer
 
-      A default `_ref` resolver can be specified in the `lowdefy.yaml` `cli` section (as `refResolver`), or as a command-line option when running the CLI (as `--ref-resolver`). This resolver will then be used for all references in the app, unless another resolver is specified.
+A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars` as arguments. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function.
 
-      ###### Transformer
+###### CommonJS and ES Modules
 
-      A transformer is a JavaScript function that receives the result of the `_ref` operator, and its `vars` as arguments. The value returned by this function will be included in the configuration as the final result of the `_ref` operator. The `transformer` argument should be the file path (relative to the root of the project) to a JavaScript file that exports a transformer function.
+Both [CommonJS](https://nodejs.org/api/modules.html) and [ES Modules](https://nodejs.org/api/esm.html) are supported for in resolver and transformer functions. By default the functions are imported as CommonJs modules, and the function should be exported as a default export (`module.exports = transformer`). Files can also use the `.cjs` file extension to indicate they are CommonJs modules.
 
-      ###### CommonJS and ES Modules
+To use ES Modules, either use files with `.mjs` file extension, or add a `package.json` in the project directory file with `"type": "module"` set. When using ES Modules, the functions should also be a default export (`export default transformer;`)
 
-      Both [CommonJS](https://nodejs.org/api/modules.html) and [ES Modules](https://nodejs.org/api/esm.html) are supported for in resolver and transformer functions. By default the functions are imported as CommonJs modules, and the function should be exported as a default export (`module.exports = transformer`). Files can also use the `.cjs` file extension to indicate they are CommonJs modules.
-
-      To use ES Modules, either use files with `.mjs` file extension, or add a `package.json` in the project directory file with `"type": "module"` set. When using ES Modules, the functions should also be a default export (`export default transformer;`)
-
-    arguments: |
-      ###### string
-      The file path to the referenced file, from the root of the project directory.
-
-      ###### object
-        - `path: string`:  The file path to the referenced file, from the root of the project directory. If no `resolver` is specified, `path` is required.
-        - `key: string`: Only include the content at the specified key, instead of the entire file content. Dot notation is supported. This can only be used with YAML or JSON files.
-        - `resolver: string`: The file path to a JavaScript file, from the root of the project directory, that exports a resolver function.
-        - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
-        - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
-
-    examples:
-      _nunjucks:
-        on:
-          version:
-            _ref: version.yaml
-        template: |
-          ###### Reference pages:
-          ```yaml
-          # lowdefy.yaml
-          lowdefy: {{ version }}
-          pages:
-            - _ref: pages/page1.yaml
-            - _ref: pages/page2.yaml
-          ```
-          ```yaml
-          # pages/page1.yaml
-          id: page1
-          type: PageHeaderMenu
-          blocks:
-            # ...
-          ```
-          ```yaml
-          # pages/page2.yaml
-          id: page2
-          type: PageHeaderMenu
-          blocks:
-            # ...
-          ```
-          Returns:
-          ```
-          lowdefy: {{ version }}
-          pages:
-            - id: page1
-              type: PageHeaderMenu
-              blocks:
-                # ...
-            - id: page2
-              type: PageHeaderMenu
-              blocks:
-                # ...
-          ```
-
-          ###### Using a standardized input label template:
-          ```yaml
-          blocks:
-            - id: name
-              type: TextInput
-              properties:
-                label:
-                  _ref:
-                    path: label.yaml
-                    vars:
-                      title: Name
-                      description: Your name and surname.
-            - id: age
-              type: NumberInput
-              properties:
-                label:
-                  _ref:
-                    path: label.yaml
-                    vars:
-                      title: Age
-                      description: Your age.
-          ```
-          ```yaml
-          # label.yaml
-          title:
-            _var: title
-          extra:
-            _var: description
-          span: 8
-          colon: false
-          extraStyle:
-            color: '#546358'
-          ```
-          Returns:
-          ```yaml
-          blocks:
-            - id: name
-              type: TextInput
-              properties:
-                label:
-                  title: Name
-                  extra: Your name and surname.
-                  span: 8
-                  colon: false
-                  extraStyle:
-                    color: '#546358'
-            - id: age
-              type: NumberInput
-              properties:
-                label:
-                  title: Age
-                  extra: Your age.
-                  span: 8
-                  colon: false
-                  extraStyle:
-                    color: '#546358'
-          ```
-
-          ###### Use key:
-          ```yaml
-          # lowdefy.yaml
-          lowdefy: {{ version }}
-          version:
-            _ref:
-              path: package.json
-              field: version
-          ```
-          ```json
-          // package.json
-          {
-            "version": "1.0.0"
-          }
-          ```
-          Returns:
-          ```
-          lowdefy: {{ version }}
-          version: 1.0.0
-          ```
-
-          ###### Local or shared resolver:
-
-          This resolver function will first look for the configuration file in the current working directory, but if the file is not found it will be read from an adjacent "shared" directory. This pattern can be used to build apps that mostly use a shared configuration, with a few components that are customised per app.
-
-          ```js
-          // resolvers/useLocalOrSharedConfig.js
-          const fs = require('fs');
-          const path = require('path');
-          const { promisify } = require('util');
-
-          const readFilePromise = promisify(fs.readFile);
-
-          async function useLocalOrSharedConfig(refPath, vars, context) {
-            let fileContent
-            try {
-              fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
-              return fileContent;
-            } catch (error) {
-              if (error.code === 'ENOENT') {
-                fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
-                return fileContent;
-              }
-              throw error;
-            }
-
-
-          }
-
-          module.exports = useLocalOrSharedConfig;
-          ```
-
-          ```yaml
-          // lowdefy.yaml
-          lowdefy: {{ version }}
-
-          cli:
-            refResolver: resolvers/useLocalOrSharedConfig.js
-
-          pages:
-            - _ref: pages/local-page.yaml
-            - _ref: pages/shared-page.yaml
-          ```
-
-          ###### This transformer adds a standard footer to each page:
-
-          ```js
-          //  transformers/addFooter.js
-
-          function addFooter(page, vars) {
-            const footer = {
-              // ...
-            };
-            page.areas.footer = footer;
-            return page;
-          }
-          module.exports = addFooter;
-          ```
-          ```yaml
-          // lowdefy.yaml
-          lowdefy: {{ version }}
-
-          pages:
-            - _ref:
-                path: pages/page1.yaml
-                transformer: transformers/addFooter.js
-          ```
-          ###### Using ES Modules with `.mjs` file extension:
-
-          ```js
-          // resolvers/useLocalOrSharedConfig.mjs
-          import fs from 'fs';
-          import path from 'path';
-          import { promisify } from 'util';
-
-          const readFilePromise = promisify(fs.readFile);
-
-          async function useLocalOrSharedConfig(refPath, vars, context) {
-            let fileContent
-            try {
-              fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
-              return fileContent;
-            } catch (error) {
-              if (error.code === 'ENOENT') {
-                fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
-                return fileContent;
-              }
-              throw error;
-            }
-
-
-          }
-
-          export default useLocalOrSharedConfig;
-          ```
+## Types
 
 ```
+(path: string): any
+(arguments: {
+  path?: string,
+  key?: string,
+  resolver?: string,
+  transformer?: string,
+  vars?: object,
+}): any
+```
+
+## Arguments
+
+###### string
+The file path to the referenced file, from the root of the project directory.
+
+###### object
+  - `path: string`:  The file path to the referenced file, from the root of the project directory. If no `resolver` is specified, `path` is required.
+  - `key: string`: Only include the content at the specified key, instead of the entire file content. Dot notation is supported. This can only be used with YAML or JSON files.
+  - `resolver: string`: The file path to a JavaScript file, from the root of the project directory, that exports a resolver function.
+  - `transformer: string`: The file path to a JavaScript file, from the root of the project directory, that exports a transformer function.
+  - `vars: object`: An object to be used as variables for the `_var` operator in the referenced file, and as template variables in Nunjucks template files.
+
+## Examples
+
+```yaml
+_nunjucks:
+  'on':
+    version:
+      _ref: version.yaml
+  template: |
+    ###### Reference pages:
+    ```yaml
+    # lowdefy.yaml
+    lowdefy: {{ version }}
+    pages:
+      - _ref: pages/page1.yaml
+      - _ref: pages/page2.yaml
+    ```
+    ```yaml
+    # pages/page1.yaml
+    id: page1
+    type: PageHeaderMenu
+    blocks:
+      # ...
+    ```
+    ```yaml
+    # pages/page2.yaml
+    id: page2
+    type: PageHeaderMenu
+    blocks:
+      # ...
+    ```
+    Returns:
+    ```
+    lowdefy: {{ version }}
+    pages:
+      - id: page1
+        type: PageHeaderMenu
+        blocks:
+          # ...
+      - id: page2
+        type: PageHeaderMenu
+        blocks:
+          # ...
+    ```
+
+    ###### Using a standardized input label template:
+    ```yaml
+    blocks:
+      - id: name
+        type: TextInput
+        properties:
+          label:
+            _ref:
+              path: label.yaml
+              vars:
+                title: Name
+                description: Your name and surname.
+      - id: age
+        type: NumberInput
+        properties:
+          label:
+            _ref:
+              path: label.yaml
+              vars:
+                title: Age
+                description: Your age.
+    ```
+    ```yaml
+    # label.yaml
+    title:
+      _var: title
+    extra:
+      _var: description
+    span: 8
+    colon: false
+    extraStyle:
+      color: '#546358'
+    ```
+    Returns:
+    ```yaml
+    blocks:
+      - id: name
+        type: TextInput
+        properties:
+          label:
+            title: Name
+            extra: Your name and surname.
+            span: 8
+            colon: false
+            extraStyle:
+              color: '#546358'
+      - id: age
+        type: NumberInput
+        properties:
+          label:
+            title: Age
+            extra: Your age.
+            span: 8
+            colon: false
+            extraStyle:
+              color: '#546358'
+    ```
+
+    ###### Use key:
+    ```yaml
+    # lowdefy.yaml
+    lowdefy: {{ version }}
+    version:
+      _ref:
+        path: package.json
+        field: version
+    ```
+    ```json
+    // package.json
+    {
+      "version": "1.0.0"
+    }
+    ```
+    Returns:
+    ```
+    lowdefy: {{ version }}
+    version: 1.0.0
+    ```
+
+    ###### Local or shared resolver:
+
+    This resolver function will first look for the configuration file in the current working directory, but if the file is not found it will be read from an adjacent "shared" directory. This pattern can be used to build apps that mostly use a shared configuration, with a few components that are customised per app.
+
+    ```js
+    // resolvers/useLocalOrSharedConfig.js
+    const fs = require('fs');
+    const path = require('path');
+    const { promisify } = require('util');
+
+    const readFilePromise = promisify(fs.readFile);
+
+    async function useLocalOrSharedConfig(refPath, vars, context) {
+      let fileContent
+      try {
+        fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+        return fileContent;
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+          return fileContent;
+        }
+        throw error;
+      }
+
+
+    }
+
+    module.exports = useLocalOrSharedConfig;
+    ```
+
+    ```yaml
+    // lowdefy.yaml
+    lowdefy: {{ version }}
+
+    cli:
+      refResolver: resolvers/useLocalOrSharedConfig.js
+
+    pages:
+      - _ref: pages/local-page.yaml
+      - _ref: pages/shared-page.yaml
+    ```
+
+    ###### This transformer adds a standard footer to each page:
+
+    ```js
+    //  transformers/addFooter.js
+
+    function addFooter(page, vars) {
+      const footer = {
+        // ...
+      };
+      page.areas.footer = footer;
+      return page;
+    }
+    module.exports = addFooter;
+    ```
+    ```yaml
+    // lowdefy.yaml
+    lowdefy: {{ version }}
+
+    pages:
+      - _ref:
+          path: pages/page1.yaml
+          transformer: transformers/addFooter.js
+    ```
+    ###### Using ES Modules with `.mjs` file extension:
+
+    ```js
+    // resolvers/useLocalOrSharedConfig.mjs
+    import fs from 'fs';
+    import path from 'path';
+    import { promisify } from 'util';
+
+    const readFilePromise = promisify(fs.readFile);
+
+    async function useLocalOrSharedConfig(refPath, vars, context) {
+      let fileContent
+      try {
+        fileContent =  await readFilePromise(path.resolve(refPath), 'utf8');
+        return fileContent;
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          fileContent = readFilePromise(path.resolve('../shared', refPath), 'utf8');
+          return fileContent;
+        }
+        throw error;
+      }
+
+
+    }
+
+    export default useLocalOrSharedConfig;
+    ```
+```
+
+
 ---
 
 ## File: `operators/_random.yaml`
@@ -15708,9 +25250,7 @@ The `_object` operator can be used to run javascript [`Object`](https://develope
 The `_object.assign` method copies the values of one ore more source objects to a target objects. The first object in the arguments array is the target object, and the rest are source objects. Keys in the target object are overwritten. The result of `_object.assign` can be seen as a "shallow-merge" of all the objects in the array, with the values in later objects taken preferentially.
 
 ```
-```
 (objs: obj[]): object
-```
 ```
 
 **Arguments:**
@@ -15763,7 +25303,6 @@ The `_object.defineProperty` method defines a new property directly on an object
 > The `_object.defineProperty` method is handy when the `key` to set is variable.
 
 ```
-```
 (arguments: {
   on: object,
   key: string,
@@ -15784,7 +25323,6 @@ The `_object.defineProperty` method defines a new property directly on an object
     writable?: boolean
   }
 ]): any
-```
 ```
 
 **Examples:**
@@ -15810,9 +25348,7 @@ series: Friends
 The `_object.entries` method returns an array with an array of key-values pairs of all the fields in an object.
 
 ```
-```
 (obj: object): any[]
-```
 ```
 
 **Arguments:**
@@ -15839,9 +25375,7 @@ Returns:
 The `_object.fromEntries` method creates an object from an array of key-value pairs.
 
 ```
-```
 (array: any[][]): object
-```
 ```
 
 **Arguments:**
@@ -15868,9 +25402,7 @@ lastName: Geller
 The `_object.keys` method returns an array with the objects keys.
 
 ```
-```
 (obj: object): string[]
-```
 ```
 
 **Arguments:**
@@ -15908,9 +25440,7 @@ Returns:
 The `_object.values` method returns an array with the values of all the fields in an object.
 
 ```
-```
 (obj: object): any[]
-```
 ```
 
 **Arguments:**
@@ -16095,9 +25625,7 @@ The `_number` operator can be used to run javascript [`Number`](https://develope
 The `_number.EPSILON` property represents the smallest interval between two representable numbers.. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### MAX_SAFE_INTEGER
@@ -16105,9 +25633,7 @@ The `_number.EPSILON` property represents the smallest interval between two repr
 The `_number.MAX_SAFE_INTEGER` property represents the maximum safe integer in JavaScript (2^53 - 1). [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### MAX_VALUE
@@ -16115,9 +25641,7 @@ The `_number.MAX_SAFE_INTEGER` property represents the maximum safe integer in J
 The `_number.MAX_VALUE` property represents the largest positive representable number. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_VALUE) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### MIN_SAFE_INTEGER
@@ -16125,9 +25649,7 @@ The `_number.MAX_VALUE` property represents the largest positive representable n
 The `_number.MIN_SAFE_INTEGER` property represents the minimum safe integer in JavaScript (-(2^53 - 1)). [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_SAFE_INTEGER) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### MIN_VALUE
@@ -16135,9 +25657,7 @@ The `_number.MIN_SAFE_INTEGER` property represents the minimum safe integer in J
 The `_number.MIN_VALUE` property represents the smallest positive representable number — that is, the positive number closest to zero (without actually being zero). [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_VALUE) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### NaN
@@ -16145,9 +25665,7 @@ The `_number.MIN_VALUE` property represents the smallest positive representable 
 The `_number.NaN` property represents the special "Not a Number" value. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NaN) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### NEGATIVE_INFINITY
@@ -16155,9 +25673,7 @@ The `_number.NaN` property represents the special "Not a Number" value. [See MDN
 The `_number.NEGATIVE_INFINITY` property represents negative infinity. Returned on overflow. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### POSITIVE_INFINITY
@@ -16165,9 +25681,7 @@ The `_number.NEGATIVE_INFINITY` property represents negative infinity. Returned 
 The `_number.POSITIVE_INFINITY` property represents positive infinity. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### isFinite
@@ -16175,9 +25689,7 @@ The `_number.POSITIVE_INFINITY` property represents positive infinity. [See MDN]
 The `_number.isFinite` method is used to determine whether the passed value is a finite number. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isFinite) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### isInteger
@@ -16185,9 +25697,7 @@ The `_number.isFinite` method is used to determine whether the passed value is a
 The `_number.isInteger` method is used to determine whether the passed value is an integer. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isInteger) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### isNaN
@@ -16195,9 +25705,7 @@ The `_number.isInteger` method is used to determine whether the passed value is 
 The `_number.isNaN` method is used to determine whether the passed value is NaN. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### isSafeInteger
@@ -16205,9 +25713,7 @@ The `_number.isNaN` method is used to determine whether the passed value is NaN.
 The `_number.isSafeInteger` method is used to determine whether the passed value is a safe integer (number between -(2^53 - 1) and 2^53 - 1). [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isSafeInteger) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### parseFloat
@@ -16215,9 +25721,7 @@ The `_number.isSafeInteger` method is used to determine whether the passed value
 The `_number.parseFloat` method parses an argument and returns a floating point number. If a number cannot be parsed from the argument, it returns NaN. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseFloat) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### parseInt
@@ -16225,9 +25729,7 @@ The `_number.parseFloat` method parses an argument and returns a floating point 
 The `_number.parseInt` method parses a string argument and returns an integer of the specified radix or base. If a number cannot be parsed from the argument, it returns NaN. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/parseInt) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### toExponential
@@ -16235,9 +25737,7 @@ The `_number.parseInt` method parses a string argument and returns an integer of
 The `_number.toExponential` method returns a string representing the Number object in exponential notation. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### toFixed
@@ -16245,9 +25745,7 @@ The `_number.toExponential` method returns a string representing the Number obje
 The `_number.toFixed` method formats a number using fixed-point notation. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### toLocaleString
@@ -16255,9 +25753,7 @@ The `_number.toFixed` method formats a number using fixed-point notation. [See M
 The `_number.toLocaleString` method returns a string with a language-sensitive representation of this number. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### toPrecision
@@ -16265,9 +25761,7 @@ The `_number.toLocaleString` method returns a string with a language-sensitive r
 The `_number.toPrecision` method returns a string representing the Number object to the specified precision. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 ### toString
@@ -16275,9 +25769,7 @@ The `_number.toPrecision` method returns a string representing the Number object
 The `_number.toString` method returns a string representing the specified Number object. [See MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString) for more details and examples.
 
 ```
-```
 (void): number
-```
 ```
 
 
@@ -16409,10 +25901,8 @@ The `_mql` operator uses the [`mingo`](https://www.npmjs.com/package/mingo) pack
 The `_mql.aggregate` method runs a MongoDB aggregation pipeline on an input array.
 
 ```
-```
 ({on: object[], pipeline: object[]}): object[]
 ([on: object[], pipeline: object[]]): object[]
-```
 ```
 
 **Arguments:**
@@ -16442,10 +25932,8 @@ _mql.aggregate:
 The `_mql.expr` method evaluates a MongoDB aggregation pipeline operator expression. This is any statement that could be written in a `$project` stage.
 
 ```
-```
 ({on: object, expr: any}): any
 ([on: object, expr: any]): any
-```
 ```
 
 **Arguments:**
@@ -16471,10 +25959,8 @@ _mql.expr:
 The `_mql.test` method tests if a object matches a MongoDB filter/query expression.
 
 ```
-```
 ({on: object, test: object}): boolean
 ([on: object, test: object]): boolean
-```
 ```
 
 **Arguments:**
@@ -16512,13 +25998,11 @@ The `_moment` operator converts date objects to strings, using a specified forma
 The `_moment.format` formats dates using the [moment.js](https://momentjs.com/docs/#/displaying/format/) library.
 
 ```
-```
 (arguments: {
   on: date | string,
   locale?: string,
   format?: string
 })
-```
 ```
 
 **Arguments:**
@@ -16542,14 +26026,12 @@ Returns: `"4 Jun 2019"`.
 The `_moment.humanizeDuration` formats durations in milliseconds using the [moment.js](https://momentjs.com/docs/#/durations/humanize/)
 
 ```
-```
 (arguments: {
   on: number,
   locale?: string,
   thresholds?: string,
   withSuffix?: boolean
 })
-```
 ```
 
 **Arguments:**
@@ -16795,9 +26277,7 @@ Returns: `99`
 The `_math.abs` method returns the [absolute value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/abs) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### acos
@@ -16805,9 +26285,7 @@ The `_math.abs` method returns the [absolute value](https://developer.mozilla.or
 The `_math.acos` method returns the [arccosine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/acos) (in radians) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### acosh
@@ -16815,9 +26293,7 @@ The `_math.acos` method returns the [arccosine](https://developer.mozilla.org/en
 The `_math.acosh` method returns the [hyperbolic arc-cosine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/acosh) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### asin
@@ -16825,9 +26301,7 @@ The `_math.acosh` method returns the [hyperbolic arc-cosine](https://developer.m
 The `_math.asin` method returns the [arcsine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/asin) (in radians) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### atan
@@ -16835,9 +26309,7 @@ The `_math.asin` method returns the [arcsine](https://developer.mozilla.org/en-U
 The `_math.atan` method returns the [arctangent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan) (in radians) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### atan2
@@ -16845,10 +26317,8 @@ The `_math.atan` method returns the [arctangent](https://developer.mozilla.org/e
 The `_math.atan2` method returns the [angle in the plane (in radians) between the positive x-axis and the ray from (0,0) to the point (x,y)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2).
 
 ```
-```
 ({x: number, y: number}): number
 ([x: number, y: number]): number
-```
 ```
 
 ### atanh
@@ -16856,9 +26326,7 @@ The `_math.atan2` method returns the [angle in the plane (in radians) between th
 The `_math.atanh` method returns the [hyperbolic arctangent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atanh) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### cbrt
@@ -16866,9 +26334,7 @@ The `_math.atanh` method returns the [hyperbolic arctangent](https://developer.m
 The `_math.cbrt` method returns the returns the [cube root](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/cbrt) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### ceil
@@ -16876,9 +26342,7 @@ The `_math.cbrt` method returns the returns the [cube root](https://developer.mo
 The `_math.ceil` method [rounds a number up](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/ceil) to the next largest integer.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### clz32
@@ -16886,9 +26350,7 @@ The `_math.ceil` method [rounds a number up](https://developer.mozilla.org/en-US
 The `_math.clz32` method returns the [number of leading zero bits in the 32-bit binary representation of a number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/clz32).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### cos
@@ -16896,9 +26358,7 @@ The `_math.clz32` method returns the [number of leading zero bits in the 32-bit 
 The `_math.cos` method returns the [cosine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/cos) of the specified angle, which must be specified in radians
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### cosh
@@ -16906,9 +26366,7 @@ The `_math.cos` method returns the [cosine](https://developer.mozilla.org/en-US/
 The `_math.cosh` method returns the [hyperbolic cosine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/cosh) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### exp
@@ -16916,9 +26374,7 @@ The `_math.cosh` method returns the [hyperbolic cosine](https://developer.mozill
 The `_math.exp` method returns [`e` (Euler's number) to the power `x`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/exp).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### expm1
@@ -16926,9 +26382,7 @@ The `_math.exp` method returns [`e` (Euler's number) to the power `x`](https://d
 The `_math.expm1` method returns [`e` (Euler's number) to the power `x` minus `1`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/expm1).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### floor
@@ -16936,9 +26390,7 @@ The `_math.expm1` method returns [`e` (Euler's number) to the power `x` minus `1
 The `_math.floor` method returns the [largest integer less than or equal to a given number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### fround
@@ -16946,9 +26398,7 @@ The `_math.floor` method returns the [largest integer less than or equal to a gi
 The `_math.fround` method returns the [nearest 32-bit single precision float representation of a number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/fround).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### hypot
@@ -16956,9 +26406,7 @@ The `_math.fround` method returns the [nearest 32-bit single precision float rep
 The `_math.hypot` method returns the [square root of the sum of squares of its arguments](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/hypot).
 
 ```
-```
 (values: number[]): number
-```
 ```
 
 ### imul
@@ -16966,10 +26414,8 @@ The `_math.hypot` method returns the [square root of the sum of squares of its a
 The `_math.imul` method returns the [result of the C-like 32-bit multiplication of the two parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul).
 
 ```
-```
 ({a: number, b: number}): number
 ([a: number, b: number]): number
-```
 ```
 
 ### log
@@ -16977,9 +26423,7 @@ The `_math.imul` method returns the [result of the C-like 32-bit multiplication 
 The `_math.log` method returns the [natural logarithm](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log) (base `e`) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### log10
@@ -16987,9 +26431,7 @@ The `_math.log` method returns the [natural logarithm](https://developer.mozilla
 The `_math.log10` method returns the [base `10` logarithm](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log10) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### log1p
@@ -16997,9 +26439,7 @@ The `_math.log10` method returns the [base `10` logarithm](https://developer.moz
 The `_math.log1p` method returns the [natural logarithm (base e) of `1 + a number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log1p).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### log2
@@ -17007,9 +26447,7 @@ The `_math.log1p` method returns the [natural logarithm (base e) of `1 + a numbe
 The `_math.log2` method returns the [base `2` logarithm](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/log2) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### max
@@ -17017,9 +26455,7 @@ The `_math.log2` method returns the [base `2` logarithm](https://developer.mozil
 The `_math.max` method returns the [largest of the numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max) given as input parameters.
 
 ```
-```
 (values: number[]): number
-```
 ```
 
 ### min
@@ -17027,9 +26463,7 @@ The `_math.max` method returns the [largest of the numbers](https://developer.mo
 The `_math.min` method returns the [smallest of the numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max) given as input parameters.
 
 ```
-```
 (values: number[]): number
-```
 ```
 
 ### pow
@@ -17037,10 +26471,8 @@ The `_math.min` method returns the [smallest of the numbers](https://developer.m
 The `_math.pow` method returns the [`base` to the `exponent` power](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/pow).
 
 ```
-```
 ({base: number, exponent: number}): number
 ([base: number, exponent: number]): number
-```
 ```
 
 ### random
@@ -17048,9 +26480,7 @@ The `_math.pow` method returns the [`base` to the `exponent` power](https://deve
 The `_math.random` method returns a floating-point, [pseudo-random number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random) in the range `0` to less than `1`.
 
 ```
-```
 (void): number
-```
 ```
 
 ### round
@@ -17058,9 +26488,7 @@ The `_math.random` method returns a floating-point, [pseudo-random number](https
 The `_math.round` method returns the value of a number [rounded to the nearest integer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/round).
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### sign
@@ -17068,9 +26496,7 @@ The `_math.round` method returns the value of a number [rounded to the nearest i
 The `_math.sign` method returns either a [positive or negative 1 (`+/- 1`)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sign), indicating the sign of a number passed into the argument.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### sin
@@ -17078,9 +26504,7 @@ The `_math.sign` method returns either a [positive or negative 1 (`+/- 1`)](http
 The `_math.sin` method returns the [sine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sin) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### sinh
@@ -17088,9 +26512,7 @@ The `_math.sin` method returns the [sine](https://developer.mozilla.org/en-US/do
 The `_math.sinh` method returns the [hyperbolic sine](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sinh) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### sqrt
@@ -17098,9 +26520,7 @@ The `_math.sinh` method returns the [hyperbolic sine](https://developer.mozilla.
 The `_math.sqrt` method returns the [square root](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### tan
@@ -17108,9 +26528,7 @@ The `_math.sqrt` method returns the [square root](https://developer.mozilla.org/
 The `_math.tan` method returns the [tangent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/tan) of a number.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### trunc
@@ -17118,9 +26536,7 @@ The `_math.tan` method returns the [tangent](https://developer.mozilla.org/en-US
 The `_math.trunc` method returns the [integer part](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc) of a number by removing any fractional digits.
 
 ```
-```
 (x: number): number
-```
 ```
 
 ### E
@@ -17128,9 +26544,7 @@ The `_math.trunc` method returns the [integer part](https://developer.mozilla.or
 The `_math.E` method returns [Euler's number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/E), the base of natural logarithms, `e`, which is approximately 2.718.
 
 ```
-```
 (void): number
-```
 ```
 
 ### LN10
@@ -17138,9 +26552,7 @@ The `_math.E` method returns [Euler's number](https://developer.mozilla.org/en-U
 The `_math.LN10` method returns the [natural logarithm of `10`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LN10), which is approximately 2.302.
 
 ```
-```
 (void): number
-```
 ```
 
 ### LN2
@@ -17148,9 +26560,7 @@ The `_math.LN10` method returns the [natural logarithm of `10`](https://develope
 The `_math.LN2` method returns the [natural logarithm of `2`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LN2), which is approximately 0.693.
 
 ```
-```
 (void): number
-```
 ```
 
 ### LOG10E
@@ -17158,9 +26568,7 @@ The `_math.LN2` method returns the [natural logarithm of `2`](https://developer.
 The `_math.LOG10E` method returns the [base `10` logarithm of `e`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LOG10E), which is approximately 0.434.
 
 ```
-```
 (void): number
-```
 ```
 
 ### LOG2E
@@ -17168,9 +26576,7 @@ The `_math.LOG10E` method returns the [base `10` logarithm of `e`](https://devel
 The `_math.LOG2E` method returns the [base `2` logarithm of `e`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/LOG2E), which is approximately 1.442.
 
 ```
-```
 (void): number
-```
 ```
 
 ### PI
@@ -17178,9 +26584,7 @@ The `_math.LOG2E` method returns the [base `2` logarithm of `e`](https://develop
 The `_math.PI` method returns the constant [`pi`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/PI), the ratio of the circumference of a circle to its diameter, which is approximately 3.14159.
 
 ```
-```
 (void): number
-```
 ```
 
 ### SQRT1_2
@@ -17188,9 +26592,7 @@ The `_math.PI` method returns the constant [`pi`](https://developer.mozilla.org/
 The `_math.SQRT1_2` method returns the [square root of `1/2`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/SQRT1_2), which is approximately 0.707.
 
 ```
-```
 (void): number
-```
 ```
 
 ### SQRT2
@@ -17198,9 +26600,7 @@ The `_math.SQRT1_2` method returns the [square root of `1/2`](https://developer.
 The `_math.SQRT2` method returns the [square root of `2`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/SQRT2), which is approximately 1.414.
 
 ```
-```
 (void): number
-```
 ```
 
 
@@ -17417,9 +26817,7 @@ The `_json` parses and writes JSON strings.
 The `_json.parse` method parses a JSON string into an object.
 
 ```
-```
 (value: string): any
-```
 ```
 
 **Arguments:**
@@ -17445,10 +26843,8 @@ array:
 The `_json.stringify` method creates a JSON string from an object.
 
 ```
-```
 ({on: any, options?: object}): string
 ([on: any, options?: object]): string
-```
 ```
 
 **Arguments:**
@@ -17634,13 +27030,11 @@ The `_intl` operator converts date objects to strings, using a specified format.
 The `_intl.dateTimeFormat` provides language-sensitive date and time formatting, based on [`Intl.DateTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat). If no locale is provide, the users default locale will be used.
 
 ```
-```
 (arguments: {
   on: date,
   locale?: string,
   options?: object
 })
-```
 ```
 
 **Arguments:**
@@ -17669,13 +27063,11 @@ Returns: `"Thursday, June 13, 2019"`.
 The `_intl.listFormat` provides language-sensitive list formatting, based on [`Intl.ListFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat/ListFormat). If no locale is provide, the users default locale will be used.
 
 ```
-```
 (arguments: {
   on: any[],
   locale?: string,
   options?: object
 })
-```
 ```
 
 **Arguments:**
@@ -17701,13 +27093,11 @@ Returns: `"Motorcycle, Bus et Car"`.
 The `_intl.numberFormat` provides language-sensitive number formatting, based on [`Intl.NumberFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat). If no locale is provide, the users default locale will be used.
 
 ```
-```
 (arguments: {
   on: number,
   locale?: string,
   options?: object
 })
-```
 ```
 
 **Arguments:**
@@ -17730,14 +27120,12 @@ Returns: `"13.182.375.813,474"`.
 The `_intl.relativeTimeFormat` provides language-sensitive relative time  formatting, based on [`Intl.RelativeTimeFormat`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat/RelativeTimeFormat). If no locale is provide, the users default locale will be used.
 
 ```
-```
 (arguments: {
   on: any,
   locale?: string,
   unit: enum,
   options?: object
 })
-```
 ```
 
 **Arguments:**
@@ -18022,9 +27410,7 @@ The `_hash` operator generates hashes using various algorithms.
 The `_hash.md5` method generates the [MD5](https://en.wikipedia.org/wiki/MD5) hash of the input value.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -18043,9 +27429,7 @@ Returns: `"ed076287532e86365e841e92bfc50d8c"`.
 The `_hash.sha1` method generates the [SHA1](https://en.wikipedia.org/wiki/SHA1) hash of the input value.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -18064,9 +27448,7 @@ Returns: `"2ef7bde608ce5404e97d5f042f95f89f1c232871"`.
 The `_hash.sha256` method generates the [SHA256](https://en.wikipedia.org/wiki/SHA256) hash of the input value.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -18085,9 +27467,7 @@ Returns: `"7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"`.
 The `_hash.sha512` method generates the [SHA512](https://en.wikipedia.org/wiki/SHA512) hash of the input value.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -18106,9 +27486,7 @@ Returns: `"861844d6704e8573fec34d967e20bcfef3d424cf48be04e6dc08f2bd58c7297433710
 The `_hash.ripemd160` method generates the [RIPEMD-160](https://en.wikipedia.org/wiki/RIPEMD160) hash of the input value.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -18704,10 +28082,8 @@ Returns: `null` and throws a operator error.
 The `_diff.deep` method compares two objects and returns an object that describes the structural differences between the two objects.
 
 ```
-```
 (arguments: {lhs: any, rhs: any}): object[]
 ([lhs: any, rhs: any]): object[]
-```
 ```
 
 **Arguments:**
@@ -18810,9 +28186,7 @@ Returns: Thu Jan 28 2021 12:38:29 GMT+0000
 The `_date.getDate` method returns the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getDay
@@ -18820,9 +28194,7 @@ The `_date.getDate` method returns the [day of the month](https://developer.mozi
 The `_date.getDay` method returns the [day of the week](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getFullYear
@@ -18830,9 +28202,7 @@ The `_date.getDay` method returns the [day of the week](https://developer.mozill
 The `_date.getFullYear` method returns the [year](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getFullYear) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getHours
@@ -18840,9 +28210,7 @@ The `_date.getFullYear` method returns the [year](https://developer.mozilla.org/
 The `_date.getHours` method returns the [hour](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getHours) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getMilliseconds
@@ -18850,9 +28218,7 @@ The `_date.getHours` method returns the [hour](https://developer.mozilla.org/en-
 The `_date.getMilliseconds` method returns the [milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getMilliseconds) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getMinutes
@@ -18860,9 +28226,7 @@ The `_date.getMilliseconds` method returns the [milliseconds](https://developer.
 The `_date.getMinutes` method returns the [minutes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getMinutes) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getMonth
@@ -18870,9 +28234,7 @@ The `_date.getMinutes` method returns the [minutes](https://developer.mozilla.or
 The `_date.getMonth` method returns the [month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getMonth) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getSeconds
@@ -18880,9 +28242,7 @@ The `_date.getMonth` method returns the [month](https://developer.mozilla.org/en
 The `_date.getSeconds` method returns the [seconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getSeconds) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getTime
@@ -18890,9 +28250,7 @@ The `_date.getSeconds` method returns the [seconds](https://developer.mozilla.or
 The `_date.getTime` method returns the number of [milliseconds since the epoch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTime), which is defined as the midnight at the beginning of January 1, 1970, UTC.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getTimezoneOffset
@@ -18900,9 +28258,7 @@ The `_date.getTime` method returns the number of [milliseconds since the epoch](
 The `_date.getTimezoneOffset` method returns the [difference, in minutes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset), between a date as evaluated in the UTC time zone, and the same date as evaluated in the local time zone.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCDate
@@ -18910,9 +28266,7 @@ The `_date.getTimezoneOffset` method returns the [difference, in minutes](https:
 The `_date.getUTCDate` method returns the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCDate) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCDay
@@ -18920,9 +28274,7 @@ The `_date.getUTCDate` method returns the [day of the month](https://developer.m
 The `_date.getUTCDay` method returns the [day of the week](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCDay) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCFullYear
@@ -18930,9 +28282,7 @@ The `_date.getUTCDay` method returns the [day of the week](https://developer.moz
 The `_date.getUTCFullYear` method returns the [year](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCFullYear) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCHours
@@ -18940,9 +28290,7 @@ The `_date.getUTCFullYear` method returns the [year](https://developer.mozilla.o
 The `_date.getUTCHours` method returns the [hour](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCHours) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCMilliseconds
@@ -18950,9 +28298,7 @@ The `_date.getUTCHours` method returns the [hour](https://developer.mozilla.org/
 The `_date.getUTCMilliseconds` method returns the [milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCMilliseconds) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCMinutes
@@ -18960,9 +28306,7 @@ The `_date.getUTCMilliseconds` method returns the [milliseconds](https://develop
 The `_date.getUTCMinutes` method returns the [minutes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCMinutes) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCMonth
@@ -18970,9 +28314,7 @@ The `_date.getUTCMinutes` method returns the [minutes](https://developer.mozilla
 The `_date.getUTCMonth` method returns the [month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCMonth) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### getUTCSeconds
@@ -18980,9 +28322,7 @@ The `_date.getUTCMonth` method returns the [month](https://developer.mozilla.org
 The `_date.getUTCSeconds` method returns the [seconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getUTCSeconds) of a date according to universal time.
 
 ```
-```
 (value: date): number
-```
 ```
 
 ### now
@@ -18990,9 +28330,7 @@ The `_date.getUTCSeconds` method returns the [seconds](https://developer.mozilla
 The `_date.now` method returns a date object representing the moment in time it was called. The method can also be used as `_date: now`
 
 ```
-```
 (void): date
-```
 ```
 
 **Arguments:**
@@ -19013,9 +28351,7 @@ Returns: The current date and time.
 The `_date.parse` method parses a string representation of a date, and returns the number of [milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse) since January 1, 1970, 00:00:00 UTC.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### setDate
@@ -19023,10 +28359,8 @@ The `_date.parse` method parses a string representation of a date, and returns t
 The `_date.setDate` method changes the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setDate) of a date.
 
 ```
-```
 (arguments: {on: date, dayOfMonth: number}): number
 (arguments: [on: date, dayOfMonth: number]): number
-```
 ```
 
 ### setFullYear
@@ -19034,10 +28368,8 @@ The `_date.setDate` method changes the [day of the month](https://developer.mozi
 The `_date.setFullYear` method sets the [full year](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setFullYear) of a date.
 
 ```
-```
 (arguments: {on: date, year: number}): number
 (arguments: [on: date, year: number]): number
-```
 ```
 
 ### setHours
@@ -19045,10 +28377,8 @@ The `_date.setFullYear` method sets the [full year](https://developer.mozilla.or
 The `_date.setHours` method sets the [hours](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setHours) of a date.
 
 ```
-```
 (arguments: {on: date, hours: number}): number
 (arguments: [on: date, hours: number]): number
-```
 ```
 
 ### setMilliseconds
@@ -19056,10 +28386,8 @@ The `_date.setHours` method sets the [hours](https://developer.mozilla.org/en-US
 The `_date.setMilliseconds` method sets the [milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMilliseconds) of a date.
 
 ```
-```
 (arguments: {on: date, milliseconds: number}): number
 (arguments: [on: date, milliseconds: number]): number
-```
 ```
 
 ### setMinutes
@@ -19067,10 +28395,8 @@ The `_date.setMilliseconds` method sets the [milliseconds](https://developer.moz
 The `_date.setMinutes` method sets the [minutes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMinutes) of a date.
 
 ```
-```
 (arguments: {on: date, minutes: number}): number
 (arguments: [on: date, minutes: number]): number
-```
 ```
 
 ### setMonth
@@ -19078,10 +28404,8 @@ The `_date.setMinutes` method sets the [minutes](https://developer.mozilla.org/e
 The `_date.setMonth` method sets the [month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth) of a date.
 
 ```
-```
 (arguments: {on: date, month: number}): number
 (arguments: [on: date, month: number]): number
-```
 ```
 
 ### setSeconds
@@ -19089,10 +28413,8 @@ The `_date.setMonth` method sets the [month](https://developer.mozilla.org/en-US
 The `_date.setSeconds` method sets the [seconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setSeconds) of a date.
 
 ```
-```
 (arguments: {on: date, seconds: number}): number
 (arguments: [on: date, seconds: number]): number
-```
 ```
 
 ### setTime
@@ -19100,10 +28422,8 @@ The `_date.setSeconds` method sets the [seconds](https://developer.mozilla.org/e
 The `_date.setTime` method sets the [time](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setTime) represented by a number of milliseconds since January 1, 1970, 00:00:00 UTC.
 
 ```
-```
 (arguments: {on: date, time: number}): number
 (arguments: [on: date, time: number]): number
-```
 ```
 
 ### setUTCDate
@@ -19111,10 +28431,8 @@ The `_date.setTime` method sets the [time](https://developer.mozilla.org/en-US/d
 The `_date.setUTCDate` method changes the [day of the month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCDate) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, dayOfMonth: number}): number
 (arguments: [on: date, dayOfMonth: number]): number
-```
 ```
 
 ### setFullYear
@@ -19122,10 +28440,8 @@ The `_date.setUTCDate` method changes the [day of the month](https://developer.m
 The `_date.setUTCFullYear` method sets the [full year](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCFullYear) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, year: number}): number
 (arguments: [on: date, year: number]): number
-```
 ```
 
 ### setUTCHours
@@ -19133,10 +28449,8 @@ The `_date.setUTCFullYear` method sets the [full year](https://developer.mozilla
 The `_date.setUTCHours` method sets the [hours](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCHours) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, hours: number}): number
 (arguments: [on: date, hours: number]): number
-```
 ```
 
 ### setUTCMilliseconds
@@ -19144,10 +28458,8 @@ The `_date.setUTCHours` method sets the [hours](https://developer.mozilla.org/en
 The `_date.setUTCMilliseconds` method sets the [milliseconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCMilliseconds) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, milliseconds: number}): number
 (arguments: [on: date, milliseconds: number]): number
-```
 ```
 
 ### setUTCMinutes
@@ -19155,10 +28467,8 @@ The `_date.setUTCMilliseconds` method sets the [milliseconds](https://developer.
 The `_date.setUTCMinutes` method sets the [minutes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCMinutes) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, minutes: number}): number
 (arguments: [on: date, minutes: number]): number
-```
 ```
 
 ### setUTCMonth
@@ -19166,10 +28476,8 @@ The `_date.setUTCMinutes` method sets the [minutes](https://developer.mozilla.or
 The `_date.setUTCMonth` method sets the [month](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCMonth) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, month: number}): number
 (arguments: [on: date, month: number]): number
-```
 ```
 
 ### setUTCSeconds
@@ -19177,10 +28485,8 @@ The `_date.setUTCMonth` method sets the [month](https://developer.mozilla.org/en
 The `_date.setUTCSeconds` method sets the [seconds](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setUTCSeconds) of a date, based on UTC time.
 
 ```
-```
 (arguments: {on: date, seconds: number}): number
 (arguments: [on: date, seconds: number]): number
-```
 ```
 
 ### toDateString
@@ -19188,9 +28494,7 @@ The `_date.setUTCSeconds` method sets the [seconds](https://developer.mozilla.or
 The `_date.toDateString` method returns the [date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toDateString) as a string.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### toISOString
@@ -19198,9 +28502,7 @@ The `_date.toDateString` method returns the [date](https://developer.mozilla.org
 The `_date.toISOString` method returns the [date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString) as a string in ISO format.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### toJSON
@@ -19208,9 +28510,7 @@ The `_date.toISOString` method returns the [date](https://developer.mozilla.org/
 The `_date.toJSON` method returns the [date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON) as a string in ISO format.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### toString
@@ -19218,9 +28518,7 @@ The `_date.toJSON` method returns the [date](https://developer.mozilla.org/en-US
 The `_date.toString` method returns the [date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toString) as a string.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### toTimeString
@@ -19228,9 +28526,7 @@ The `_date.toString` method returns the [date](https://developer.mozilla.org/en-
 The `_date.toTimeString` method returns the [time](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toTimeString) of a date as a string.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### toUTCString
@@ -19238,9 +28534,7 @@ The `_date.toTimeString` method returns the [time](https://developer.mozilla.org
 The `_date.toUTCString` method returns the [date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toUTCString) as a string in UTC time.
 
 ```
-```
 (value: date): string
-```
 ```
 
 ### UTC
@@ -19248,10 +28542,8 @@ The `_date.toUTCString` method returns the [date](https://developer.mozilla.org/
 The `_date.UTC` method accepts [year, month, day, hours, minutes, seconds parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC) of a date but treats them as UTC.
 
 ```
-```
 (arguments: {year: number, month: number, day: number, hours: number, minutes: number, seconds: number}): number
 (arguments: [year: number, month: number, day: number, hours: number, minutes: number, seconds: number]): number
-```
 ```
 
 ### valueOf
@@ -19259,9 +28551,7 @@ The `_date.UTC` method accepts [year, month, day, hours, minutes, seconds parame
 The `_date.valueOf` method returns the [primitive value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/valueOf) of a date.
 
 ```
-```
 (value: date): number
-```
 ```
 
 
@@ -19370,14 +28660,12 @@ Returns: `This Is An example string`
 The `_change_case.camelCase` method transforms `on` into a string with the separator denoted by the next word capitalized.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19393,14 +28681,12 @@ Returns: `"myVariable"`
 The `_change_case.capitalCase` method transforms `on` into a space separated string with each word capitalized.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19416,14 +28702,12 @@ Returns:  `"My Variable"`
 The `_change_case.constantCase` method transforms `on` into upper case string with an underscore between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19439,14 +28723,12 @@ Returns: `"MY_VARIABLE"`
 The `_change_case.dotCase` method transforms `on` into a lower case string with a period between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19462,14 +28744,12 @@ Returns: `"my.variable"`
 The `_change_case.kebabCase` method transforms `on` into a lower cased string with dashes between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19485,14 +28765,12 @@ Returns: `"my-variable"`
 The `_change_case.noCase` method transforms `on` into a lower cased string with spaces between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19508,14 +28786,12 @@ Returns: `"my variable"`
 The `_change_case.pascalCase` method transforms `on` into a string of capitalized words without separators.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19531,14 +28807,12 @@ Returns: `"MyVariable"`
 The `_change_case.pascalSnakeCase` method transforms `on` into a string of capitalized words with underscores between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19554,14 +28828,12 @@ Returns: `"My_Variable"`
 The `_change_case.pathCase` method transforms `on` into a lower case string with slashes between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19577,14 +28849,12 @@ Returns: `my/variable`
 The `_change_case.sentenceCase` method transforms `on` into a lower case with spaces between words, then capitalize the first word.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19600,14 +28870,12 @@ Returns: `"My variable"`
 The `_change_case.snakeCase` method transforms `on` into a lower case string with underscores between words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19623,14 +28891,12 @@ Returns: `"my_variable"`
 The `_change_case.trainCase` method transforms `on` into a dash separated string of capitalized words.
 
 ```
-```
 ({on: string, options: object}): string
 ([on: string, options: object]): string
 ({on: object, options: object}): object
 ([on: object, options: object]): object
 ({on: array, options: object}): array
 ([on: array, options: object]): array
-```
 ```
 
 **Examples:**
@@ -19659,10 +28925,8 @@ The `_build` operator evaluates at build time. This allows looping over a list i
 The `_build.env` method reads from your environment variables. The return value of `_build.env` will form part of the build output, so the [`_secret`](/_secret) operator should rather be used for reading any secrets.
 
 ```
-```
 (key: string): any
 (all: boolean): any
-```
 ```
 
 **Examples:**
@@ -19818,9 +29082,7 @@ The `_base64` operator converts strings to and from [base64](https://en.wikipedi
 The `_base64.decode` method decodes base64 encoded content into an ASCII string.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -19839,9 +29101,7 @@ Returns: `"Hello"`.
 The `_base64.encode` method base64 encodes a ASCII string.
 
 ```
-```
 (value: string): string
-```
 ```
 
 **Arguments:**
@@ -19873,16 +29133,13 @@ The `_array` operator can be used to run javascript [`Array`](https://developer.
 The `_array.concat` method [concatenates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat) arrays.
 
 ```
-```
 (arrays: any[][]): any[]
-```
 ```
 
 ### copyWithin
 
 The `_array.copyWithin` method [copies part of an array to another location in the same array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/copyWithin) without modifying its length.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19897,13 +29154,11 @@ The `_array.copyWithin` method [copies part of an array to another location in t
   end?: number
 ]): any[]
 ```
-```
 
 ### every
 
 The `_array.every` method  tests whether [all elements in the array pass](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every) the test implemented by the provided function. It returns a Boolean value.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19914,13 +29169,11 @@ The `_array.every` method  tests whether [all elements in the array pass](https:
   callback: function,
 ]): boolean
 ```
-```
 
 ### fill
 
 The `_array.fill` method [changes all elements in an array to a static value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill), from a `start` index to an `end` index.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19935,13 +29188,11 @@ The `_array.fill` method [changes all elements in an array to a static value](ht
   end?: number
 ]): any[]
 ```
-```
 
 ### filter
 
 The `_array.filter` method returns [an array with all elements that pass the test](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) implemented by the provided function.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19952,13 +29203,11 @@ The `_array.filter` method returns [an array with all elements that pass the tes
   callback: function,
 ]): any[]
 ```
-```
 
 ### find
 
 The `_array.find` method returns the value of the [first element in the provided array that satisfies the provided testing function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find). If no values satisfies the testing function, undefined is returned.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19969,13 +29218,11 @@ The `_array.find` method returns the value of the [first element in the provided
   callback: function,
 ]): any
 ```
-```
 
 ### findIndex
 
 The `_array.findIndex` method returns [the index of the first element in the array that satisfies the provided testing function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex). Otherwise, it returns -1, indicating that no element passed the test.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -19986,17 +29233,14 @@ The `_array.findIndex` method returns [the index of the first element in the arr
   callback: function,
 ]): number
 ```
-```
 
 ### flat
 
 The `_array.flat` method returns a array with all [sub-array elements concatenated into it recursively](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat) up to the specified `depth`.
 
 ```
-```
 (arguments: {on: any[], depth?: number}): any[]
 (arguments: [on: any[], depth?: number]): any[]
-```
 ```
 
 ### includes
@@ -20004,10 +29248,8 @@ The `_array.flat` method returns a array with all [sub-array elements concatenat
 The `_array.includes` method determines whether an array [includes a certain value among its entries](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes), returning `true` or `false` as appropriate.
 
 ```
-```
 (arguments: {on: any[], value: any}): boolean
 (arguments: [on: any[], value: any]): boolean
-```
 ```
 
 ### indexOf
@@ -20015,10 +29257,8 @@ The `_array.includes` method determines whether an array [includes a certain val
 The `_array.indexOf` method returns the [first index at which a given element can be found](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf) in the array, or `-1` if it is not present.
 
 ```
-```
 (arguments: {on: any[], value: any}): number
 (arguments: [on: any[], value: any]): number
-```
 ```
 
 ### join
@@ -20026,10 +29266,8 @@ The `_array.indexOf` method returns the [first index at which a given element ca
 The `_array.join` method returns [a string by concatenating all of the elements in an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join), separated by commas or a specified `separator` string. If the array has only one item, then that item will be returned without using the separator.
 
 ```
-```
 (arguments: {on: any[], separator?: string}): string
 (arguments: [on: any[], separator?: string]): string
-```
 ```
 
 ### lastIndexOf
@@ -20037,10 +29275,8 @@ The `_array.join` method returns [a string by concatenating all of the elements 
 The `_array.lastIndexOf` method returns the [last index at which a given element can be found](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/lastIndexOf) in the array, or -1 if it is not present.
 
 ```
-```
 (arguments: {on: any[], value: any}): number
 (arguments: [on: any[], value: any]): number
-```
 ```
 
 ### length
@@ -20048,16 +29284,13 @@ The `_array.lastIndexOf` method returns the [last index at which a given element
 The `_array.length` method returns the [number of elements](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) in the array.
 
 ```
-```
 (array: any[]}): number
-```
 ```
 
 ### map
 
 The `_array.map` method returns an array populated with the results of [calling a provided function on every element](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) in the provided array.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -20068,13 +29301,11 @@ The `_array.map` method returns an array populated with the results of [calling 
   callback: function,
 ]): any[]
 ```
-```
 
 ### reduce
 
 The `_array.reduce` method [executes a reducer function on each element of the array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce), resulting in single output value.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -20086,7 +29317,6 @@ The `_array.reduce` method [executes a reducer function on each element of the a
   callback: function,
   initialValue?: any
 ]): any
-```
 ```
 
 **Examples:**
@@ -20142,7 +29372,6 @@ This will return `sum: 107`
 The `_array.reduceRight` method [applies a function against an accumulator and each value of the array (from right-to-left)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/ReduceRight) to reduce it to a single value.
 
 ```
-```
 (arguments: {
   on: any[],
   callback: function,
@@ -20154,23 +29383,19 @@ The `_array.reduceRight` method [applies a function against an accumulator and e
   initialValue?: any
 ]): any
 ```
-```
 
 ### reverse
 
 The `_array.reverse` method [reverses](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) an array.
 
 ```
-```
 (array: any[]}): any[]
-```
 ```
 
 ### slice
 
 The `_array.slice` method returns [a portion of an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice) selected from `start` to `end` (end not included) where `start` and `end` represent the index of items in that array.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -20183,13 +29408,11 @@ The `_array.slice` method returns [a portion of an array](https://developer.mozi
   end?: number
 ]): number
 ```
-```
 
 ### some
 
 The `_array.some` method tests whether [at least one element in the array passes the test](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some) implemented by the provided function. It returns a Boolean value.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -20200,23 +29423,19 @@ The `_array.some` method tests whether [at least one element in the array passes
   callback: function,
 ]): boolean
 ```
-```
 
 ### sort
 
 The `_array.sort` method [sorts](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) the elements of an array. The sort order is ascending, built upon converting the elements into strings, then comparing their sequences of UTF-16 code units values.
 
 ```
-```
 (arguments: {on: any[]}): number
-```
 ```
 
 ### splice
 
 The `_array.slice` method [changes the contents of an array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice) by removing or replacing existing elements and/or adding new elements.
 
-```
 ```
 (arguments: {
   on: any[],
@@ -20230,7 +29449,6 @@ The `_array.slice` method [changes the contents of an array](https://developer.m
   deleteCount?: number,
   insert: any[]
 }): number
-```
 ```
 
 
@@ -20465,10 +29683,6 @@ events:
 
 **Section:** Migration
 
-
----
-**Nunjucks Template:**
-```yaml
 ## Payload on Requests
 
 In version 3, the `state`, `global`, `input`, `urlQuery` and `event` data objects were sent with the request. This allowed the use of the [`_state`](/_state), [`_global`](/_global), [`_input`](/_input), [`_url_query`](/_url_query) and [`_event`](/_event) operators inside requests and connections. If the state became too large, this would result in a payload size exceeded error on request calls.
@@ -20884,8 +30098,6 @@ _change_case.headerCase:
 _change_case.trainCase:
   on: example string
 ```
-```
----
 
 
 ---
