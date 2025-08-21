@@ -36,6 +36,11 @@ const ControlledListBlock = ({
     methods.registerMethod('removeItem', methods.removeItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
   });
+  if (list.length < (properties.minItems ?? 0)) {
+    for (let i = 0; i < (properties.minItems ?? 0) - list.length; i++) {
+      methods.pushItem({});
+    }
+  }
   const styles = {
     header: {
       display: 'flex',
@@ -112,7 +117,8 @@ const ControlledListBlock = ({
           key={`${blockId}_${i}`}
           className={methods.makeCssClass([styles.item, properties.itemStyle])}
           extra={
-            !properties.hideRemoveButton && [
+            !properties.hideRemoveButton &&
+            list.length > (properties.minItems ?? 0) && [
               // eslint-disable-next-line react/jsx-key
               <Icon
                 blockId={`${blockId}_${i}_remove_icon`}
