@@ -132,13 +132,13 @@ _ref:
           content: |
             ## APIs
 
-            API objects define server-side endpoints that execute routines - sequences of steps and control structures that run on the server with access to connections, secrets, and server-side operators.
+            API objects define server-side endpoints that execute routines i.e. sequences of steps and control structures that run on the server with access to connections, secrets, and server-side operators.
 
             Each API should have an `id` that is unique among all APIs in the app. Each API is called from the client using the [`CallAPI`](/CallAPI) action with the `endpointId` parameter matching the API's id.
 
             APIs must have a `routine` that defines the execution logic. The routine executes sequentially by default and returns a response to the client through [`:return`](/:return) or [`:reject`](/:reject) control statements.
 
-            By default, APIs are public and can be accessed without authentication, just like pages. To require authentication or restrict access to specific roles, APIs must be configured in the `auth` section of your `lowdefy.yaml` file. Protected APIs can use the [`_user`](/_user) operator to access authenticated user information.
+            By default, APIs are public and can be accessed without authentication, just like pages. To require authentication or restrict access to specific roles, APIs must be configured in the `auth` section of your `lowdefy.yaml` file.
 
             See the [APIs documentation](/lowdefy-api) for more information on how to use and define them.
 

@@ -10,10 +10,11 @@ APIs are particularly useful when you need to:
 
 ## How Lowdefy APIs Work
 
-Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a **routine** - a sequence of steps and control structures that define the execution flow. When an API is called from the client using the `CallAPI` action, the routine executes on the server with access to connections, secrets, and server-side operators.
+Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a `routine` i.e. a sequence of steps and control structures that define the execution flow. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the routine executes on the server with access to connections, secrets, and server-side operators.
 
 The API execution flow:
-1. Client calls the API using the `CallAPI` action with an optional payload.
+
+1. Client calls the API using the [`CallAPI`](/CallAPI) action with an optional payload.
 2. Server checks authorization based on the auth configuration in `lowdefy.yaml`.
 3. The API routine executes sequentially (or in parallel where specified).
 4. Each step can make requests to connections, transform data, or control flow.
@@ -21,29 +22,26 @@ The API execution flow:
 
 ## API Definition
 
-APIs are defined in the `api` array at the root of your Lowdefy configuration. Each API should have an `id` that is unique among all APIs in the app. When an API is called from the client using the `CallAPI` action, the `endpointId` parameter must match the API's `id`.
+APIs are defined in the `api` array at the root of your Lowdefy configuration. Each API should have an `id` that is unique among all APIs in the app. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the `endpointId` parameter must match the API's `id`.
 
-### API Schema
+The schema for a Lowdefy API is:
 
-```yaml
-api:
-  - id: string        # Required - Unique identifier for the API endpoint
-    type: string      # Required - The API type (typically 'Api')
-    routine: array/object  # Required - The routine to execute
-```
+- `id: string`: __Required__ - A unique identifier for the API endpoint.
+- `type: Api`: __Required__ - The API type.
+- `routine: array/object`: __Required__ - The routine to execute. __Operators are evaluated__.
 
-### Basic API Example
+###### API definition example:
 
 ```yaml
 lowdefy: 4.4.0
 
 connections:
   - id: users
-    type: MongoDB
+    type: MongoDBCollection
     properties:
-      uri:
+      collection: users
+      databaseUri:
         _secret: MONGODB_URI
-      databaseName: my_app
 
 api:
   - id: get_user_data
@@ -66,26 +64,6 @@ pages:
 ## Authentication and Authorization
 
 Lowdefy APIs use the same authentication and authorization system as pages. By default, APIs are public (accessible without authentication), just like pages. Authorization is configured at the app level in your `lowdefy.yaml` file, not on individual API endpoints.
-
-### Default Behavior
-
-By default, all APIs are public and can be accessed without authentication:
-
-```yaml
-api:
-  - id: public_api
-    type: Api
-    routine:
-      - id: get_data
-        type: MongoDBFind
-        connectionId: content
-        properties:
-          query:
-            published: true
-      - :return:
-          data:
-            _step: get_data
-```
 
 ### Global Auth Configuration
 
@@ -166,15 +144,17 @@ auth:
   api:
     protected:
       - admin_dashboard_api
-      - team_reports_api
+      - department_stats_api
       - profile_api
+      - team_reports_api
+      - user_management_api
     roles:
       admin:
         - admin_dashboard_api
         - user_management_api
       manager:
-        - team_reports_api
         - department_stats_api
+        - team_reports_api
       user:
         - profile_api
 
@@ -183,7 +163,7 @@ api:
     type: Api
     routine:
       - id: get_system_stats
-        type: MongoDBAggregate
+        type: MongoDBAggregation
         connectionId: analytics
         properties:
           pipeline:
@@ -257,7 +237,7 @@ routine:
 
 ### Accessing Step Results
 
-Use the `_step` operator to access results from previously executed steps:
+Use the [`_step`](/_step) operator to access results from previously executed steps:
 
 ```yaml
 - id: get_user
@@ -269,12 +249,13 @@ Use the `_step` operator to access results from previously executed steps:
         _payload: email
 
 - id: get_orders
-  type: MongoDBFind
+  type: MongoDBAggregation
   connectionId: orders
   properties:
-    query:
-      user_id:
-        _step: get_user._id  # Access the _id from get_user step
+    pipeline:
+      - $match:
+          user_id:
+            _step: get_user._id  # Access the _id from get_user step
 ```
 
 ### Control Structures
@@ -304,64 +285,97 @@ APIs have access to all operators with server-side functionality, the following 
 - [`_user`](/_user) - Access authenticated user information.
 - [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
 
-## Calling APIs from the Client
+## CallAPI Action
 
-Use the `CallAPI` action to call your API endpoints from pages:
+Use the `CallAPI` action to call your API endpoints from pages. Read more about the `CallAPI` action [here](/CallAPI).
 
-```yaml
-pages:
-  - id: user_dashboard
-    type: PageHeaderMenu
-    blocks:
-      - id: user_id_input
-        type: TextInput
-        properties:
-          label: User ID
-
-      - id: fetch_user_btn
-        type: Button
-        properties:
-          title: Fetch User Data
-        events:
-          onClick:
-            - id: call_user_api
-              type: CallAPI
-              params:
-                endpoint_id: get_user_data
-                payload:
-                  user_id:
-                    _state: user_id_input
-
-            - id: set_user_data
-              type: SetState
-              params:
-                user_data:
-                  _actions: call_user_api.response.user
-
-      - id: user_display
-        type: Descriptions
-        properties:
-          items:
-            _state: user_data
-```
-
-### Handling API Responses
-
-The `CallAPI` action returns:
-- `response`: The data returned by the API's :return statement
-- `error`: Any error if the API failed or used :reject
-- `success`: Boolean indicating if the API completed successfully
-- `loading`: Boolean indicating if the API is currently executing
-- `status`: The status of the API call
-
-Access API responses using the `_api` operator on the client:
+###### Basic example:
 
 ```yaml
 blocks:
-  - id: loading_spinner
-    type: Spinner
+  - id: user_id_input
+    type: TextInput
+    properties:
+      title: User ID
+
+  - id: fetch_user_btn
+    type: Button
+    properties:
+      title: Fetch User Data
+    events:
+      onClick:
+        - id: call_user_api
+          type: CallAPI
+          params:
+            endpoint_id: get_user_data
+            payload:
+              user_id:
+                _state: user_id_input
+
+        - id: set_user_data
+          type: SetState
+          params:
+            user_data:
+              _api: call_user_api.response.user
+
+  - id: user_display
+    type: Descriptions
+    properties:
+      items:
+        _state: user_data
+```
+
+###### Error handling example:
+
+```yaml
+events:
+  onClick:
+    try:
+      - id: call_api
+        type: CallAPI
+        params:
+          endpoint_id: process_data
+          payload:
+            data:
+              _state: form_data
+
+      - id: show_success
+        type: DisplayMessage
+        params:
+          content: 'Data processed successfully!'
+          status: success
+
+      - id: update_state
+        type: SetState
+        params:
+          result:
+            _api: call_api.response
+
+    catch:
+      - id: show_error
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - 'Error: '
+              - _api: call_api.error.message
+          status: error
+```
+
+## _api Operator
+
+The [`_api`](/_api) operator returns the response value of an API call. If the API has not yet been called, or is still executing, the returned value is `null`.
+
+###### Using an API response:
+
+```yaml
+blocks:
+  - id: loading_text
+    type: Html
     visible:
       _api: fetch_data.loading
+    properties:
+      html: '<div class="secondary">Loading...</div>'
 
   - id: error_alert
     type: Alert
@@ -380,42 +394,12 @@ blocks:
         _api: fetch_data.response
 ```
 
-## Error Handling Example
+## Best Practices
 
-```yaml
-events:
-  onClick:
-    try:
-      - id: call_api
-        type: CallAPI
-        params:
-          endpoint_id: process_data
-          payload:
-            data:
-              _state: form_data
-
-      - id: show_success
-        type: Message
-        params:
-          content: 'Data processed successfully!'
-          status: success
-
-      - id: update_state
-        type: SetState
-        params:
-          result:
-            _actions: call_api.response
-
-    catch:
-      - id: show_error
-        type: Message
-        params:
-          content:
-            _string.concat:
-              - 'Error: '
-              - _actions: call_api.error
-          status: error
-```
+1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list.
+2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access.
+3. **Validate User Context**: In protected APIs, always validate that users can only access their own data.
+4. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible.
 
 ## Complex Example: Order Processing API
 
@@ -480,8 +464,6 @@ api:
             type: AxiosHttp
             connectionId: payment-gateway
             properties:
-              method: POST
-              url: /charge
               data:
                 amount:
                   _step: validate_order.total
@@ -561,68 +543,12 @@ api:
           message: 'Order processed successfully'
 ```
 
-## Best Practices
+### TLDR
 
-1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list.
-2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access.
-3. **Validate User Context**: In protected APIs, always validate that users can only access their own data.
-4. **Audit Sensitive Operations**: Log access to sensitive APIs for security auditing.
-5. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible.
-
-Example of a secure API with user validation:
-
-```yaml
-auth:
-  api:
-    protected:
-      - update_user_settings
-    roles:
-      user:
-        - update_user_settings
-      admin:
-        - update_user_settings
-
-api:
-  - id: update_user_settings
-    type: Api
-    routine:
-      # Validate that non-admin users can only update their own settings
-      - :if:
-          _and:
-            - _not:
-                _array.includes:
-                  - _user: roles
-                  - 'admin'
-            - _ne:
-                - _payload: user_id
-                - _user: id
-        :then:
-          :reject: 'Unauthorized: You can only update your own settings'
-
-      # Update settings
-      - id: update_settings
-        type: MongoDBUpdateOne
-        connectionId: user-settings
-        properties:
-          filter:
-            user_id:
-              _payload: user_id
-          update:
-            $set:
-              _payload: settings
-
-      - :return:
-          success: true
-          message: 'Settings updated successfully'
-```
-
-## TLDR
-
-- **Lowdefy APIs** create custom server-side endpoints that execute complex logic and are public by default - explicitly protect sensitive APIs in auth configuration
-- **Routines** define the execution flow using steps and control structures
-- **Control structures** like `:if`, `:for`, `:parallel`, and `:try` enable sophisticated flows
-- **Steps** make requests to connections and can access results using `_step`
-- **CallAPI action** is used to invoke APIs from the client with payloads
-- **Server-side execution** provides access to secrets, connections, and server operators
-- **Responses** are controlled with `:return` (success) and `:reject` (user errors)
-- **_user** operator only works in protected APIs, not public ones
+- `Lowdefy APIs` create custom server-side endpoints that execute complex logic and are public by default - explicitly protect sensitive APIs in auth configuration.
+- `Routines` define the execution flow using steps and control structures.
+- `Control structures` like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
+- `Steps` make requests to connections and can access results using [`_step`](/_step).
+- [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
+- `Server-side execution` provides access to secrets, connections, and server operators.
+- `Responses` are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).

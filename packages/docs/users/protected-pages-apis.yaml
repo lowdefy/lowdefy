@@ -98,7 +98,6 @@ _ref:
                 ## Important Notes
 
                 - Pages and APIs are configured separately - protecting pages does not automatically protect APIs
-                - The `_user` operator is only available in protected APIs
                 - Protected resources require users to be authenticated before access is granted
                 - Role-based access control can be layered on top of protection for finer-grained permissions
 

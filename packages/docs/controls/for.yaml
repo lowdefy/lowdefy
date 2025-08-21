@@ -25,7 +25,7 @@ _ref:
     description: |
       The `:for` control iterates over an array, executing a routine for each item sequentially.
       The routine defined by the `:do` key is executed for each item within the array defined by the `:in` key. This routine is executed sequentially for each item in the array.
-      The value of the current array item can be accessed using the `_item` operator with the item key set by the `:for` key. This operator is only available within the `:for` and `:parallel_for` controls.
+      The value of the current array item can be accessed using the [`_item`](/_item) operator with the item key set by the `:for` key. This operator is only available within the `:for` and [`:parallel_for`](/:parallel_for) controls.
     controlKeys: |
       - `:for: string`: __Required__ - Used to define the key that can be used to access the value of the array item of the current iteration.
       - `:in: array`: __Required__ - Used to define the array of data to iterate over.

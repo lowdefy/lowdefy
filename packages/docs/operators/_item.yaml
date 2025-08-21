@@ -25,10 +25,12 @@ _ref:
       (key: string): any
       ```
     description: |
-      The `_item` operator returns the current item value during iteration in `:for` and `:parallel_for` control structures within API routines. The key used with `_item` must match the key defined in the relevant `:for` or `:parallel_for` declaration because it also supports nested loops. Dot notation is supported for accessing nested properties.
+      The `_item` operator returns the current item value during iteration in [`:for`](/:for) and [`:parallel_for`](/:parallel_for) loop control structures within API routines.
+      The key used with `_item` must match the key defined in the relevant loop control declaration because it also supports nested loops.
+      Dot notation is supported for accessing nested properties.
     arguments: |
       ###### string
-      The key name defined in the relevant `:for` or `:parallel_for` control structure.
+      The key name defined in the relevant loop control structure.
     examples: |
       ###### Using in a :for loop:
       ```yaml
@@ -84,7 +86,7 @@ _ref:
                   _item: product.sku
       ```
 
-      ###### Using in :parallel_for for concurrent processing:
+      ###### Using in :parallel_for loop for concurrent processing:
       ```yaml
       routine:
         - id: get_orders

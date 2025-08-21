@@ -26,6 +26,22 @@ _ref:
       ```
     description: |
       The `_api` operator returns the response object from an API endpoint that has been called using the [`CallAPI`](/CallAPI) action. This operator is only available on the client side (in pages) and provides access to the full API response object including the response data, loading state, success status, and any errors. If the API endpoint has not yet been called or is still executing, the returned value is `null`. Dot notation is supported for accessing nested properties.
+
+      The response includes the following fields:
+
+      - `blockId: string`: The id of the block from which the API was initiated.
+      - `endTimestamp: date`: The timestamp when the API call ended.
+      - `endpointId: string`: The id of the API endpoint that was called.
+      - `error: object`: Any error if the API failed or used :reject.
+      - `loading: boolean`: When `true`, the API is awaiting a response.
+      - `pageId: string`: The id of the page from which the API was initiated.
+      - `payload: object`: The payload sent with the API call.
+      - `response: object`: The data returned by the API's :return statement.
+      - `responseTime: number`: The time taken to get the response in milliseconds.
+      - `startTimestamp: date`: The timestamp when the API call started.
+      - `status: string`: The status of the API call.
+      - `success: boolean`: When `true`, the API completed successfully.
+
     arguments: |
       ###### string
       The id of the API endpoint that was called using the CallAPI action.
@@ -42,15 +58,15 @@ _ref:
               - id: call_user_api
                 type: CallAPI
                 params:
-                  endpoint_id: get_user_profile
+                  endpointId: get_user_profile
                   payload:
                     user_id:
                       _state: selected_user_id
 
         - id: api_response_display
-          type: Json
+          type: Descriptions
           properties:
-            data:
+            items:
               _api: get_user_profile  # Returns the full response object
       ```
       Returns: The complete API response object containing response, error, success, status, loading, and timing information.
@@ -72,21 +88,43 @@ _ref:
                 else: 'User not loaded'
 
         - id: user_email_display
-          type: TextInput
+          type: Html
           properties:
-            label: Email
-            value:
-              _api: get_user_profile.response.email
-            disabled: true
+            html:
+              _nunjucks:
+                template: |
+                  <div>
+                    <span>Email:</span>
+                    <span>
+                      {{ email }}
+                    </span>
+                  </div>
+                on:
+                  email:
+                    _api: get_user_profile.response.email
       ```
 
       ###### Checking loading and error states:
       ```yaml
+      events:
+        onMount:
+          - id: fetch_products
+            type: CallAPI
+            params:
+              endpointId: get_products
+          - id: set_products_list
+            type: SetState
+            params:
+              products_list
+                _api: fetch_products.response.products
+
       blocks:
-        - id: loading_spinner
-          type: Spinner
+        - id: loading_text
+          type: Html
           visible:
-            _api: fetch_products.loading  # Show spinner while API is loading
+            _api: fetch_products.loading # Show loading text while API is loading
+          properties:
+            html: '<div class="secondary">Loading...</div>'
 
         - id: error_message
           type: Alert
@@ -110,9 +148,6 @@ _ref:
               - _api: fetch_products.success
               - _not:
                   _api: fetch_products.loading
-          properties:
-            data:
-              _api: fetch_products.response.products
       ```
 
       ###### Working with multiple API calls:
@@ -127,12 +162,12 @@ _ref:
               - id: fetch_user
                 type: CallAPI
                 params:
-                  endpoint_id: get_current_user
+                  endpointId: get_current_user
 
               - id: fetch_permissions
                 type: CallAPI
                 params:
-                  endpoint_id: get_user_permissions
+                  endpointId: get_user_permissions
                   payload:
                     user_id:
                       _api: get_current_user.response._id
@@ -140,7 +175,7 @@ _ref:
               - id: fetch_dashboard_data
                 type: CallAPI
                 params:
-                  endpoint_id: get_dashboard_stats
+                  endpointId: get_dashboard_stats
                   payload:
                     permission_level:
                       _api: get_user_permissions.response.level
@@ -181,7 +216,7 @@ _ref:
               - id: check_username
                 type: CallAPI
                 params:
-                  endpoint_id: validate_username
+                  endpointId: validate_username
                   payload:
                     username:
                       _state: username_input
@@ -189,33 +224,23 @@ _ref:
         - id: username_input
           type: TextInput
           properties:
-            label: Username
-            status:
-              _if:
-                test:
-                  _eq:
-                    - _api: validate_username.response.available
-                    - false
-                then: error
-                else:
-                  _if:
-                    test:
-                      _eq:
-                        - _api: validate_username.response.available
-                        - true
-                    then: success
-                    else: null
-            help:
-              _if:
-                test:
-                  _api: validate_username.response
-                then:
-                  _if:
-                    test:
-                      _api: validate_username.response.available
-                    then: 'Username is available!'
-                    else: 'Username is already taken'
-                else: 'Enter a username and check availability'
+            title: Username
+            disabled:
+              _eq:
+                - _api: validate_username.response.available
+                - false
+            label:
+              extra:
+                _if:
+                  test:
+                    _api: validate_username.response
+                  then:
+                    _if:
+                      test:
+                        _api: validate_username.response.available
+                      then: 'Username is available!'
+                      else: 'Username is already taken'
+                  else: 'Enter a username and check availability'
       ```
 
       ###### Accessing API response time and metadata:
@@ -234,11 +259,11 @@ _ref:
               - label: Response Time
                 value:
                   _string.concat:
-                    - _api: fetch_data.response_time
+                    - _api: fetch_data.responseTime
                     - 'ms'
               - label: Timestamp
                 value:
                   _date.format:
-                    - _api: fetch_data.end_timestamp
+                    - _api: fetch_data.endTimestamp
                     - 'HH:mm:ss'
       ```
