@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -23,7 +23,9 @@ _ref:
       ({:return: any}): void
       ```
     description: |
-      The `:return` control immediately ends the execution of an API endpoint routine and returns a successful response with the specified data. Any routine steps after a `:return` are not executed. The control accepts any value type (objects, arrays, strings, numbers, null) and marks the API call as successful. When used within conditional controls like `:if` or `:switch`, it provides a way to exit early with a success status and return data to the client.
+      The `:return` control immediately ends the execution of an API endpoint routine and returns a successful response with the specified data.
+      Any routine steps after a `:return` are not executed. The control accepts any value type (objects, arrays, strings, numbers, null) and marks the API call as successful.
+      When used within conditional controls like [`:if`](/:if) or [`:switch`](/:switch), it provides a way to exit early with a success status and return data to the client.
     controlKeys: |
       - `:return: any`: __Required__ - The value that will be returned in the response object of the API call result.
     examples: |
@@ -48,7 +50,7 @@ _ref:
         type: MongoDBFindOne
         connectionId: subscriptions
         properties:
-          filter:
+          query:
             user_id:
               _user: id
       - :switch:

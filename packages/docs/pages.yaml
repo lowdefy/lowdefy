@@ -258,7 +258,7 @@
 - _ref: controls/switch.yaml
 - _ref: controls/throw.yaml
 - _ref: controls/try.yaml
-- _ref: controls/while.yaml
+# - _ref: controls/while.yaml # TODO: Add back when while control implemented
 
 - _ref: migration/v3-to-v4.yaml
 

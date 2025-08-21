@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -23,8 +23,10 @@ _ref:
       ({:set_state: object}): void
       ```
     description: |
-      The `:set_state` control sets values in the server-side state object during API endpoint execution. It accepts an object where each key-value pair is saved to the state, making data available throughout the routine via the `_state` operator. This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type. Values are evaluated before being set, allowing dynamic state updates based on previous operations.
-
+      The `:set_state` control sets values in the server-side state object during API endpoint execution.
+      It accepts an object where each key-value pair is saved to the state, making data available throughout the routine via the `_state` operator.
+      This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type.
+      Values are evaluated before being set, allowing dynamic state updates based on previous operations.
     controlKeys: |
       - `:set_state: object`: __Required__ - Object to be saved to server state.
     examples: |

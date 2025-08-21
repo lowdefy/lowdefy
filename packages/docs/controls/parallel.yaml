@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -42,10 +42,14 @@ _ref:
                         _payload: account_id
                   - $group:
                       _id: null
-                      total_users: { $sum: 1 }
+                      total_users:
+                        $sum: 1
                       active_users:
                         $sum:
-                          $cond: [{ $eq: ['$status', 'active'] }, 1, 0]
+                          $cond:
+                            - $eq: ['$status', 'active']
+                            - 1
+                            - 0
 
             - id: fetch_revenue
               type: KnexRaw

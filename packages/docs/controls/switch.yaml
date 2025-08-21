@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -23,8 +23,11 @@ _ref:
       ({:switch: [{:case: boolean, :then: routine], :default: routine}): void
       ```
     description: |
-      The `:switch` control evaluates multiple conditions sequentially and executes the routine for the first matching case. Each case in the `:switch` array contains a `:case` condition and a `:then` routine. The control evaluates conditions from top to bottom, executing only the first matching case's `:then` block. If no cases match, the optional `:default` routine is executed. This control is ideal for handling multiple mutually exclusive conditions more elegantly than nested `:if` statements.
-
+      The `:switch` control evaluates multiple conditions sequentially and executes the routine for the first matching case.
+      Each case in the `:switch` array contains a `:case` condition and a `:then` routine.
+      The control evaluates conditions from top to bottom, executing only the first matching case's `:then` block.
+      If no cases match, the optional `:default` routine is executed.
+      This control is ideal for handling multiple mutually exclusive conditions more elegantly than nested [`:if`](/:if) statements.
     controlKeys: |
       - `:switch: array`: __Required__
           - `:case: boolean`: __Required__ - The boolean result of a test.
@@ -42,8 +45,9 @@ _ref:
           - :case:
               _not:
                 _regex:
-                  - _payload: email
-                  - "^[^@]+@[^@]+\\.[^@]+$"
+                  on:
+                    _payload: email
+                  pattern: ^[^@]+@[^@]+\\.[^@]+$
             :then:
               :reject: "Invalid email format"
           - :case:

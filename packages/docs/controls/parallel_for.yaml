@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -23,7 +23,9 @@ _ref:
       ({:parallel_for: string, :in: any[], :do: routine}): void
       ```
     description: |
-      The `:parallel_for` control executes a routine for each item in an array simultaneously. Each iteration has access to its array item through the `_item` operator using the key specified in `:parallel_for`. Unlike sequential `:for`, all iterations start at the same time, making it ideal for processing independent items where order doesn't matter. The control waits for all iterations to complete before continuing, unless an error, rejection, or return occurs.
+      The `:parallel_for` control executes a routine for each item in an array simultaneously. Each iteration has access to its array item through the [`_item`](/_item) operator using the key specified in `:parallel_for`.
+      Unlike sequential [`:for`](/:for), all iterations start at the same time, making it ideal for processing independent items where order doesn't matter.
+      The control waits for all iterations to complete before continuing, unless an error, rejection, or return occurs.
     controlKeys: |
       - `:parallel_for: string`: __Required__ - Used to define the key that can be used to access the value of the array item of the executing iteration.
       - `:in: any`: __Required__ - Used to define the array of data to iterate over.

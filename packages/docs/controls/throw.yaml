@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
@@ -23,7 +23,10 @@ _ref:
       ({:throw: string, :cause: any}): void
       ```
     description: |
-      The `:throw` control creates a system error that immediately stops routine execution and returns with an "error" status. Unlike `:reject` which handles expected user errors, `:throw` is designed for unexpected system failures, programming errors, or critical issues that require attention. The key difference is that `:throw` can be caught and handled by `:try`/`:catch` blocks, while `:reject` cannot. This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
+      The `:throw` control creates a system error that immediately stops routine execution and returns with an "error" status.
+      Unlike [`:reject`](/:reject), which handles expected user errors, `:throw` is designed for unexpected system failures, programming errors, or critical issues that require attention.
+      The key difference is that `:throw` can be caught and handled by [`:try`](/:try)/`:catch` blocks, while [`:reject`](/:reject) cannot.
+      This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
     controlKeys: |
       - `:throw: string`: __Required__ - The error message that will be returned in the response object of the API call result.
       - `:cause: any`: Additional metadata that will be returned with the error message.
@@ -65,7 +68,7 @@ _ref:
         type: MongoDBFindOne
         connectionId: config
         properties:
-          filter:
+          query:
             name: 'max_file_size'
 
       - :if:
