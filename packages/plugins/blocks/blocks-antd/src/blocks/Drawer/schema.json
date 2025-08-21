@@ -107,6 +107,14 @@
       "onOpen": {
         "type": "array",
         "description": "Trigger actions when drawer is opened."
+      },
+      "afterClose": {
+        "type": "array",
+        "description": "Trigger actions after drawer is closed."
+      },
+      "afterOpenChange": {
+        "type": "array",
+        "description": "Trigger actions after drawer is opened."
       }
     }
   }
