@@ -29,6 +29,9 @@ function _api({ params, apiResponses, location }) {
   const [endpoint, ...keyParts] = splitKey;
 
   if (endpoint in apiResponses && !apiResponses[endpoint][0].loading) {
+    if (splitKey.length === 1) {
+      return apiResponses[endpoint][0];
+    }
     const key = keyParts.join('.');
     return get(apiResponses[endpoint][0], key, {
       copy: true,
