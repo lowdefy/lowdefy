@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
     pageId: :parallel
     pageTitle: :parallel
-    filePath: controls/:parallel.yaml
+    filePath: controls/parallel.yaml
     types: |
       ```
       ({:parallel: routine[]}): void
@@ -38,14 +38,18 @@ _ref:
               properties:
                 pipeline:
                   - $match:
-                      accountId:
-                        _payload: accountId
+                      account_id:
+                        _payload: account_id
                   - $group:
                       _id: null
-                      totalUsers: { $sum: 1 }
-                      activeUsers:
+                      total_users:
+                        $sum: 1
+                      active_users:
                         $sum:
-                          $cond: [{ $eq: ['$status', 'active'] }, 1, 0]
+                          $cond:
+                            - $eq: ['$status', 'active']
+                            - 1
+                            - 0
 
             - id: fetch_revenue
               type: KnexRaw
@@ -56,21 +60,21 @@ _ref:
                     SUM(amount) as total_revenue,
                     COUNT(*) as transaction_count
                   FROM transactions
-                  WHERE account_id = :accountId
+                  WHERE account_id = :account_id
                     AND created_at >= NOW() - INTERVAL '30 days'
                 parameters:
-                  accountId:
-                    _payload: accountId
+                  account_id:
+                    _payload: account_id
 
             - id: fetch_tickets
               type: AxiosHttp
-              connectionId: tickets_api
+              connectionId: tickets-api
               properties:
                 url: '/tickets'
                 method: get
                 params:
                   organization_id:
-                    _payload: accountId
+                    _payload: account_id
                   status: 'open'
         - :return:
             user_stats:

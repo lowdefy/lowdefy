@@ -11,19 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
     pageId: :reject
     pageTitle: :reject
-    filePath: controls/:reject.yaml
+    filePath: controls/reject.yaml
     types: |
       ```
       ({:reject: string, :cause: any}): void
       ```
     description: |
-      The `:reject` control is used to return a user-friendly error to the client when validation fails or business rules are violated. Unlike `:throw`, which indicates a system error, `:reject` represents an expected failure condition that should be communicated to the user. The control immediately stops routine execution and returns with a `"reject"` status. Importantly, `:reject` does not trigger `:catch` blocks in `:try` statements, making it ideal for handling validation and business logic errors separately from system errors.
+      The `:reject` control is used to return a user-friendly error to the client when validation fails or business rules are violated.
+      Unlike [`:throw`](/:throw), which indicates a system error, `:reject` represents an expected failure condition that should be communicated to the user.
+      The control immediately stops routine execution and returns with a `"reject"` status.
+      Importantly, `:reject` does not trigger `:catch` blocks in [`:try`](/:try) statements, making it ideal for handling validation and business logic errors separately from system errors.
     controlKeys: |
       - `:reject: string`: __Required__ - The error message that will be returned in the response object of the API call result.
       - `:cause: any`: Additional metadata that will be returned with the error message.
@@ -33,17 +36,21 @@ _ref:
       ```yaml
       - id: check_inventory
         type: MongoDBFindOne
-        connectionId: products_db
+        connectionId: products
         properties:
-          filter:
-            productId:
-              _payload: productId
+          query:
+            product_id:
+              _payload: product_id
       - :if:
           _lt:
             - _step: check_inventory.quantity
-            - _payload: requestedQuantity
+            - _payload: requested_quantity
         :then:
-          :reject: "Insufficient inventory. Only {{ _step.check_inventory.quantity }} items available"
+          :reject:
+            _string.concat:
+              - "Insufficient inventory. Only "
+              - _step: check_inventory.quantity
+              - " items available"
       ```
 
       ###### Reject with Additional Context
@@ -55,10 +62,10 @@ _ref:
         :then:
           :reject: "Please verify your email before proceeding"
           :cause:
-            userId:
+            user_id:
               _step: get_user._id
             email:
               _step: get_user.email
-            accountCreatedAt:
-              _step: get_user.createdAt
+            account_created_at:
+              _step: get_user.created_at
       ```

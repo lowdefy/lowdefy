@@ -26,7 +26,8 @@ _ref:
       }): void
       ```
     description: |
-      The `CallAPI` action calls an API endpoint.
+      The `CallAPI` action invokes a server-side API endpoint defined in your Lowdefy application's configuration.
+      It sends an optional payload to the API and returns the response data, making it a way to execute server-side logic and orchestrate database operations from your Lowdefy pages.
 
     params: |
       ###### object

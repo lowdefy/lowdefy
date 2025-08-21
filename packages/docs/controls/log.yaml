@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+
 _ref:
   path: templates/controls.yaml.njk
   vars:
     pageId: :log
     pageTitle: :log
-    filePath: controls/:log.yaml
+    filePath: controls/log.yaml
     types: |
       ```
       ({:log: any, :level: string}): void
@@ -54,7 +54,7 @@ _ref:
       - :log:
           message: Multiple failed attempts
           attempts:
-            _payload: attemptCount
+            _payload: attempt_count
           user:
             _user: id
         :level: warn

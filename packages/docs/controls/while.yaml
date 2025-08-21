@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO
+# TODO: Add back when while control implemented
 _ref:
   path: templates/controls.yaml.njk
   vars:
     pageId: :while
     pageTitle: :while
-    filePath: controls/:while.yaml
+    filePath: controls/while.yaml
     types: |
       ```
       ({:while: boolean, :do: routine}): void

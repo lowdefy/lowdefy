@@ -1,49 +1,46 @@
 Lowdefy APIs allow you to create custom server-side API endpoints within your Lowdefy application. These endpoints can execute complex server-side logic, orchestrate multiple database or external API calls, perform data transformations, and implement business workflows that require server-side processing.
 
 APIs are particularly useful when you need to:
-- Coordinate multiple requests in a specific sequence
-- Implement complex business logic that should run on the server
-- Transform or aggregate data from multiple sources
-- Create reusable endpoints that can be called from multiple pages
-- Build webhook endpoints for external services
+- Coordinate multiple requests in a specific sequence.
+- Implement complex business logic that should run on the server.
+- Transform or aggregate data from multiple sources.
+- Create reusable endpoints that can be called from multiple pages.
+- Build webhook endpoints for external services.
+- Keep sensitive operations and data on the server.
 
 ## How Lowdefy APIs Work
 
-Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a **routine** - a sequence of steps and control structures that define the execution flow. When an API is called from the client using the `CallAPI` action, the routine executes on the server with access to connections, secrets, and server-side operators.
+Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a `routine` i.e. a sequence of steps and control structures that define the execution flow. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the routine executes on the server with access to connections, secrets, and server-side operators.
 
 The API execution flow:
-1. Client calls the API using the `CallAPI` action with an optional payload
-2. Server authorizes the request based on the API's auth configuration
-3. The API routine executes sequentially (or in parallel where specified)
-4. Each step can make requests to connections, transform data, or control flow
-5. The API returns a response to the client
+
+1. Client calls the API using the [`CallAPI`](/CallAPI) action with an optional payload.
+2. Server checks authorization based on the auth configuration in `lowdefy.yaml`.
+3. The API routine executes sequentially (or in parallel where specified).
+4. Each step can make requests to connections, transform data, or control flow.
+5. The API returns a response to the client.
 
 ## API Definition
 
-APIs are defined in the `api` array at the root of your Lowdefy configuration. Each API must have an `id`, `type`, and `routine`.
+APIs are defined in the `api` array at the root of your Lowdefy configuration. Each API should have an `id` that is unique among all APIs in the app. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the `endpointId` parameter must match the API's `id`.
 
-### API Schema
+The schema for a Lowdefy API is:
 
-```yaml
-api:
-  - id: string        # Required - Unique identifier for the API endpoint
-    type: string      # Required - The API type (typically 'Api')
-    routine: array/object  # Required - The routine to execute
-    auth:             # Optional - Authorization configuration
-      public: boolean # Whether the API is publicly accessible
-      roles: array    # Array of roles that can access this API
-```
+- `id: string`: __Required__ - A unique identifier for the API endpoint.
+- `type: Api`: __Required__ - The API type.
+- `routine: array/object`: __Required__ - The routine to execute. __Operators are evaluated__.
 
-### Basic API Example
+###### API definition example:
 
 ```yaml
 lowdefy: 4.4.0
 
 connections:
-  - id: my_database
-    type: MongoDB
+  - id: users
+    type: MongoDBCollection
     properties:
-      uri:
+      collection: users
+      databaseUri:
         _secret: MONGODB_URI
 
 api:
@@ -55,8 +52,8 @@ api:
         connectionId: users
         properties:
           query:
-            userId:
-              _payload: userId
+            user_id:
+              _payload: user_id
       - :return:
           _step: fetch_user
 
@@ -66,199 +63,143 @@ pages:
 
 ## Authentication and Authorization
 
-Lowdefy APIs respect the same authentication and authorization rules as pages. By default, APIs require authentication unless explicitly made public. You can control access to your API endpoints using the `auth` configuration.
+Lowdefy APIs use the same authentication and authorization system as pages. By default, APIs are public (accessible without authentication), just like pages. Authorization is configured at the app level in your `lowdefy.yaml` file, not on individual API endpoints.
 
-### Auth Configuration
+### Global Auth Configuration
 
-The `auth` object on an API endpoint supports:
-- `public: boolean` - Makes the API accessible without authentication
-- `roles: string[]` - Restricts access to users with specific roles
-
-### Protected APIs (Default)
-
-By default, APIs require authentication:
+To protect APIs and require authentication, configure them in the `auth` section of your `lowdefy.yaml`:
 
 ```yaml
+auth:
+  # Configure which APIs require authentication
+  api:
+    protected: true
+    public:
+      - health_check
+    roles:
+      admin:
+        - admin_api
+        - manage_users
+      manager:
+        - manager_reports
+        - team_data
+      user:
+        - get_user_data
+        - update_profile
+
+# Your API definitions
 api:
-  - id: protected_api
+  - id: health_check
     type: Api
     routine:
       - :return:
-          message: 'This API requires authentication'
-          userId:
-            _user: id
-```
+          status: 'healthy'
+          timestamp:
+            _date: now
 
-### Public APIs
-
-Make an API publicly accessible without authentication:
-
-```yaml
-api:
-  - id: public_api
+  - id: get_user_data
     type: Api
-    auth:
-      public: true
     routine:
-      - id: get_public_data
-        type: MongoDBFind
-        connectionId: public_content
-        properties:
-          query: {}
-          options: {}
-            limit: 10
-      - :return:
-          data:
-            _step: get_public_data
-```
-
-### Role-Based Access Control
-
-Restrict API access to users with specific roles:
-
-```yaml
-api:
-  - id: admin_api
-    type: Api
-    auth:
-      roles:
-        - admin
-        - super_admin
-    routine:
-      - id: get_sensitive_data
-        type: MongoDBFind
-        connectionId: sensitive_data
-        properties:
-          query: {}
-          options:
-            limit: 10
-      - :return:
-          data:
-            _step: get_sensitive_data
-
-  - id: manager_api
-    type: Api
-    auth:
-      roles:
-        - manager
-        - admin
-    routine:
-      - id: get_reports
-        type: MongoDBFind
-        connectionId: reports
+      - id: fetch_user
+        type: MongoDBFindOne
+        connectionId: users
         properties:
           query:
-            department:
-              _user: department
+            user_id:
+              _user: id
       - :return:
-          reports:
-            _step: get_reports
+          user:
+            _step: fetch_user
 ```
 
-### Using User Context
+### Protected APIs
 
-In authenticated APIs, you can access user information using the `_user` operator:
+To require authentication for specific APIs, list them under `protected` in your auth configuration:
 
 ```yaml
+auth:
+  api:
+    protected:
+      - user_profile_api
+      - update_settings_api
+
 api:
   - id: user_profile_api
     type: Api
     routine:
-      - id: get_user_profile
+      - :return:
+          message: 'This API requires authentication'
+          user_id:
+            _user: id
+          email:
+            _user: email
+```
+
+### Role-Based Access Control
+
+For APIs that should only be accessible to users with specific roles, configure them under `roles`:
+
+```yaml
+auth:
+  api:
+    protected:
+      - admin_dashboard_api
+      - department_stats_api
+      - profile_api
+      - team_reports_api
+      - user_management_api
+    roles:
+      admin:
+        - admin_dashboard_api
+        - user_management_api
+      manager:
+        - department_stats_api
+        - team_reports_api
+      user:
+        - profile_api
+
+api:
+  - id: admin_dashboard_api
+    type: Api
+    routine:
+      - id: get_system_stats
+        type: MongoDBAggregation
+        connectionId: analytics
+        properties:
+          pipeline:
+            - $group:
+                _id: null
+                total_users:
+                  $sum: 1
+      - :return:
+          stats:
+            _step: get_system_stats
+
+  - id: profile_api
+    type: Api
+    routine:
+      - id: get_profile
         type: MongoDBFindOne
-        connectionId: profiles
+        connectionId: users
         properties:
           query:
-            userId:
-              _user: id  # Access the authenticated user's ID
-
-      - id: log_access
-        type: MongoDBInsertOne
-        connectionId: access_logs
-        properties:
-          doc:
-            userId:
-              _user: id
-            userEmail:
-              _user: email
-            userRoles:
-              _user: roles
-            action: 'view_profile'
-            timestamp:
-              _date: now
-
+            user_id:
+              _user: id  # Can only get own profile
       - :return:
-          profile:
-            _step: get_user_profile
-          user:
-            id:
-              _user: id
-            email:
-              _user: email
-            roles:
-              _user: roles
+          _step: get_profile
 ```
 
 ### Authorization Errors
 
 When a user attempts to access an API they're not authorized for:
-- Unauthenticated users trying to access protected APIs will receive an authentication error
-- Authenticated users without required roles will receive an authorization error
-- The API endpoint will appear as if it doesn't exist to unauthorized users
-
-### Security Best Practices for APIs
-
-1. **Default to Protected**: Unless specifically needed, don't make APIs public
-2. **Use Specific Roles**: Define specific roles rather than broad permissions
-3. **Validate User Context**: Always validate that users can only access their own data
-4. **Audit Sensitive Operations**: Log access to sensitive APIs for security auditing
-
-Example of a secure API with user validation:
-
-```yaml
-api:
-  - id: update_user_settings
-    type: Api
-    auth:
-      roles:
-        - user
-        - admin
-    routine:
-      # Validate that non-admin users can only update their own settings
-      - :if:
-          _and:
-            - _not:
-                _array.includes:
-                  - _user: roles
-                  - 'admin'
-            - _ne:
-                - _payload: userId
-                - _user: id
-        :then:
-          :reject:
-            error: 'Unauthorized: You can only update your own settings'
-            code: 403
-
-      # Update settings
-      - id: update_settings
-        type: MongoDBUpdateOne
-        connectionId: user_settings
-        properties:
-          filter:
-            userId:
-              _payload: userId
-          update:
-            $set:
-              _payload: settings
-
-      - :return:
-          success: true
-          message: 'Settings updated successfully'
-```
+- Unauthenticated users trying to access protected APIs will receive an authentication error.
+- Authenticated users without required roles will receive an authorization error.
+- The API endpoint behaves the same as pages - appearing as if it doesn't exist to unauthorized users.
 
 ## Routines
 
 Routines define the execution logic of your API. They can be either:
+
 - **Arrays**: Steps execute sequentially
 - **Objects**: Single step or control structure
 - **Nested combinations**: Arrays and objects can be nested to create complex flows
@@ -275,14 +216,14 @@ routine:
     properties:
       query:
         _id:
-          _payload: userId
+          _payload: user_id
 
   - id: step_2
     type: MongoDBInsertOne
-    connectionId: audit_log
+    connectionId: audit-log
     properties:
       doc:
-        userId:
+        user_id:
           _step: step_1._id
         action: 'user_viewed'
         timestamp:
@@ -294,9 +235,9 @@ routine:
       logged: true
 ```
 
-### Accessing Request Results
+### Accessing Step Results
 
-Use the `_step` operator to access results from previous steps:
+Use the [`_step`](/_step) operator to access results from previously executed steps:
 
 ```yaml
 - id: get_user
@@ -308,336 +249,83 @@ Use the `_step` operator to access results from previous steps:
         _payload: email
 
 - id: get_orders
-  type: MongoDBFind
+  type: MongoDBAggregation
   connectionId: orders
   properties:
-    query:
-      userId:
-        _step: get_user._id  # Access the _id from get_user step
+    pipeline:
+      - $match:
+          user_id:
+            _step: get_user._id  # Access the _id from get_user step
 ```
 
-## Control Structures
+### Control Structures
 
-Control structures allow you to implement complex logic flows within your API routines.
+Control structures allow you to implement complex logic flows within your API routines. The following controls can be used in API routines:
 
-### Conditional Execution (`:if`)
+- [`:for`](/for) - Iterate over an array sequentially.
+- [`:if`](/if) - Execute different routines based on a condition.
+- [`:log`](/log) - Output messages to the server console.
+- [`:parallel`](/parallel) - Execute multiple routines simultaneously.
+- [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
+- [`:reject`](/reject) - Return a user-facing error response.
+- [`:return`](/return) - Return a successful response with data.
+- [`:set_state`](/set_state) - Set values in server-side state.
+- [`:switch`](/switch) - Handle multiple conditions with different outcomes.
+- [`:throw`](/throw) - Throw a system error that can be caught.
+- [`:try`](/try) - Handle errors with catch and finally blocks.
 
-Execute different routines based on conditions:
+### Operators
 
-```yaml
-routine:
-  - :if:
-      _eq:
-        - _payload: action
-        - 'create'
-    :then:
-      - id: create_record
-        type: MongoDBInsertOne
-        connectionId: records
-        properties:
-          doc:
-            _payload: data
-      - :return:
-          created: true
-          id:
-            _step: create_record.insertedId
-    :else:
-      - id: update_record
-        type: MongoDBUpdateOne
-        connectionId: records
-        properties:
-          filter:
-            _id:
-              _payload: id
-          update:
-            $set:
-              _payload: data
-      - :return:
-          updated: true
-          id:
-            _payload: id
-```
+APIs have access to all operators with server-side functionality, the following are the most relevant:
 
-### Switch Statements (`:switch`)
+- [`_step`](/_step) - Access results from previous steps.
+- [`_item`](/_item) - Access current item in :for and :parallel_for loops.
+- [`_state`](/_state) - Access server-side state set with :set_state.
+- [`_payload`](/_payload) - Access the payload sent from the client.
+- [`_user`](/_user) - Access authenticated user information.
+- [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
 
-Handle multiple conditions:
+## CallAPI Action
+
+Use the `CallAPI` action to call your API endpoints from pages. Read more about the `CallAPI` action [here](/CallAPI).
+
+###### Basic example:
 
 ```yaml
-routine:
-  - :switch:
-      - :case:
-          _eq:
-            - _payload: operation
-            - 'sum'
-        :then:
-          :return:
-            result:
-              _sum:
-                _payload: values
-
-      - :case:
-          _eq:
-            - _payload: operation
-            - 'average'
-        :then:
-          :return:
-            result:
-              _divide:
-                - _sum:
-                    _payload: values
-                - _array.length:
-                    _payload: values
-
-    :default:
-      :return:
-        error: 'Unknown operation'
-```
-
-### Loops (`:for`)
-
-Iterate over arrays to process items:
-
-```yaml
-routine:
-  - id: get_product_ids
-    type: MongoDBAggregation
-    connectionId: orders
+blocks:
+  - id: user_id_input
+    type: TextInput
     properties:
-      pipeline:
-        - $match:
-            status: 'pending'
-        - $project:
-            productId: 1
+      title: User ID
 
-  - :for: product
-    :in:
-      _step: get_product_ids
-    :do:
-      - id: update_inventory
-        type: MongoDBUpdateOne
-        connectionId: products
-        properties:
-          filter:
-            _id:
-              _item: product.productId
-          update:
-            $inc:
-              inventory: -1
-
-  - :return:
-      processed:
-        _array.length:
-          _step: get_product_ids
-```
-
-### Parallel Execution (`:parallel`)
-
-Execute multiple routines simultaneously:
-
-```yaml
-routine:
-  - :parallel:
-      - id: fetch_user_details
-        type: MongoDBFindOne
-        connectionId: users
-        properties:
-          query:
-            _id:
-              _payload: userId
-
-      - id: fetch_user_orders
-        type: MongoDBFind
-        connectionId: orders
-        properties:
-          query:
-            userId:
-              _payload: userId
-
-      - id: fetch_user_preferences
-        type: MongoDBFindOne
-        connectionId: preferences
-        properties:
-          query:
-            userId:
-              _payload: userId
-
-  - :return:
-      user:
-        _step: fetch_user_details
-      orders:
-        _step: fetch_user_orders
-      preferences:
-        _step: fetch_user_preferences
-```
-
-### Error Handling (`:try`)
-
-Handle errors gracefully:
-
-```yaml
-routine:
-  - :try:
-      - id: risky_operation
-        type: AxiosHttp
-        connectionId: external_api
-        properties:
-          method: POST
-          url: /process
-          data:
-            _payload: data
-
-      - :return:
-          success: true
-          result:
-            _step: risky_operation.data
-
-    :catch:
-      - :log:
-          level: error
-          message: 'External API failed'
-
-      - :return:
-          success: false
-          error: 'Processing failed, please try again'
-
-    :finally:
-      - id: log_attempt
-        type: MongoDBInsertOne
-        connectionId: api_logs
-        properties:
-          doc:
-            timestamp:
-              _date: now
-            api: 'process_data'
-            success:
-              _if:
-                _step: risky_operation
-                then: true
-                else: false
-```
-
-### Return and Reject
-
-Control API responses:
-
-```yaml
-routine:
-  - id: validate_user
-    type: MongoDBFindOne
-    connectionId: users
+  - id: fetch_user_btn
+    type: Button
     properties:
-      query:
-        _id:
-          _payload: userId
+      title: Fetch User Data
+    events:
+      onClick:
+        - id: call_user_api
+          type: CallAPI
+          params:
+            endpoint_id: get_user_data
+            payload:
+              user_id:
+                _state: user_id_input
 
-  - :if:
-      _not:
-        _step: validate_user
-    :then:
-      :reject:
-        error: 'User not found'
-        code: 404
+        - id: set_user_data
+          type: SetState
+          params:
+            user_data:
+              _api: call_user_api.response.user
 
-  - :return:
-      user:
-        _step: validate_user
-      message: 'User retrieved successfully'
+  - id: user_display
+    type: Descriptions
+    properties:
+      items:
+        _state: user_data
 ```
 
-### State Management (`:set_state`)
-
-Maintain state during API execution:
-
-```yaml
-routine:
-  - :set_state:
-      processedCount: 0
-      errors: []
-
-  - :for: item
-    :in:
-      _payload: items
-    :do:
-      - :try:
-          - id: process_item
-            type: MongoDBInsertOne
-            connectionId: processed_items
-            properties:
-              doc:
-                _item: item
-
-          - :set_state:
-              processedCount:
-                _sum:
-                  - _state: processedCount
-                  - 1
-
-        :catch:
-          - :set_state:
-              errors:
-                _array.concat:
-                  - _state: errors
-                  - - _item: item.id
-
-  - :return:
-      processed:
-        _state: processedCount
-      errors:
-        _state: errors
-      success:
-        _eq:
-          - _array.length:
-              _state: errors
-          - 0
-```
-
-## Calling APIs from the Client
-
-Use the `CallAPI` action to call your API endpoints from pages:
-
-```yaml
-pages:
-  - id: user_dashboard
-    type: PageHeaderMenu
-    blocks:
-      - id: user_id_input
-        type: TextInput
-        properties:
-          label: User ID
-
-      - id: fetch_user_btn
-        type: Button
-        properties:
-          title: Fetch User Data
-        events:
-          onClick:
-            - id: call_user_api
-              type: CallAPI
-              params:
-                endpointId: get_user_data
-                payload:
-                  userId:
-                    _state: user_id_input
-
-            - id: set_user_data
-              type: SetState
-              params:
-                userData:
-                  _actions: call_user_api.response.user
-
-      - id: user_display
-        type: Json
-        properties:
-          data:
-            _state: userData
-```
-
-### Handling API Responses
-
-The `CallAPI` action returns:
-- `response`: The data returned by the API's `:return` statement
-- `error`: Any error if the API failed or used `:reject`
-- `success`: Boolean indicating if the API completed successfully
+###### Error handling example:
 
 ```yaml
 events:
@@ -646,13 +334,13 @@ events:
       - id: call_api
         type: CallAPI
         params:
-          endpointId: process_data
+          endpoint_id: process_data
           payload:
             data:
               _state: form_data
 
       - id: show_success
-        type: Message
+        type: DisplayMessage
         params:
           content: 'Data processed successfully!'
           status: success
@@ -661,24 +349,71 @@ events:
         type: SetState
         params:
           result:
-            _actions: call_api.response
+            _api: call_api.response
 
     catch:
       - id: show_error
-        type: Message
+        type: DisplayMessage
         params:
           content:
             _string.concat:
               - 'Error: '
-              - _actions: call_api.error.message
+              - _api: call_api.error.message
           status: error
 ```
+
+## _api Operator
+
+The [`_api`](/_api) operator returns the response value of an API call. If the API has not yet been called, or is still executing, the returned value is `null`.
+
+###### Using an API response:
+
+```yaml
+blocks:
+  - id: loading_text
+    type: Html
+    visible:
+      _api: fetch_data.loading
+    properties:
+      html: '<div class="secondary">Loading...</div>'
+
+  - id: error_alert
+    type: Alert
+    visible:
+      _not:
+        _api: fetch_data.success
+    properties:
+      type: error
+      message:
+        _api: fetch_data.error.message
+
+  - id: data_display
+    type: Descriptions
+    properties:
+      items:
+        _api: fetch_data.response
+```
+
+## Best Practices
+
+1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list.
+2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access.
+3. **Validate User Context**: In protected APIs, always validate that users can only access their own data.
+4. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible.
 
 ## Complex Example: Order Processing API
 
 Here's a comprehensive example showing various features:
 
 ```yaml
+auth:
+  api:
+    protected:
+      - process_order
+    roles:
+      user:
+        - process_order
+
 api:
   - id: process_order
     type: Api
@@ -690,16 +425,16 @@ api:
         properties:
           query:
             _id:
-              _payload: orderId
+              _payload: order_id
             status: 'pending'
+            user_id:
+              _user: id  # Ensure user owns this order
 
       - :if:
           _not:
             _step: validate_order
         :then:
-          :reject:
-            error: 'Order not found or already processed'
-            code: 404
+          :reject: 'Order not found or already processed'
 
       # Process items in parallel
       - :parallel_for: item
@@ -712,7 +447,7 @@ api:
             properties:
               query:
                 _id:
-                  _item: item.productId
+                  _item: item.product_id
                 inventory:
                   $gte:
                     _item: item.quantity
@@ -727,16 +462,14 @@ api:
       - :try:
           - id: process_payment
             type: AxiosHttp
-            connectionId: payment_gateway
+            connectionId: payment-gateway
             properties:
-              method: POST
-              url: /charge
               data:
                 amount:
                   _step: validate_order.total
                 currency: 'USD'
                 source:
-                  _payload: paymentToken
+                  _payload: payment_token
 
         :catch:
           - id: mark_payment_failed
@@ -745,16 +478,14 @@ api:
             properties:
               filter:
                 _id:
-                  _payload: orderId
+                  _payload: order_id
               update:
                 $set:
                   status: 'payment_failed'
-                  failedAt:
+                  failed_at:
                     _date: now
 
-          - :reject:
-              error: 'Payment processing failed'
-              code: 402
+          - :reject: 'Payment processing failed'
 
       # Update order status
       - id: complete_order
@@ -763,13 +494,13 @@ api:
         properties:
           filter:
             _id:
-              _payload: orderId
+              _payload: order_id
           update:
             $set:
               status: 'completed'
-              paymentId:
+              payment_id:
                 _step: process_payment.data.id
-              completedAt:
+              completed_at:
                 _date: now
 
       # Update inventory
@@ -783,69 +514,41 @@ api:
             properties:
               filter:
                 _id:
-                  _item: item.productId
+                  _item: item.product_id
               update:
                 $inc:
-                  inventory:
-                    _product:
-                      - _item: item.quantity
-                      - -1
+                  inventory: -1
 
       # Send confirmation email
       - id: send_confirmation
         type: SendGridMail
-        connectionId: email_service
+        connectionId: email-service
         properties:
           to:
-            _step: validate_order.customerEmail
+            _step: validate_order.customer_email
           template_id: 'order_confirmation'
           dynamic_template_data:
-            orderId:
-              _payload: orderId
+            order_id:
+              _payload: order_id
             total:
               _step: validate_order.total
 
       # Return success
       - :return:
           success: true
-          orderId:
-            _payload: orderId
-          paymentId:
+          order_id:
+            _payload: order_id
+          payment_id:
             _step: process_payment.data.id
           message: 'Order processed successfully'
 ```
 
-## Best Practices
+### TLDR
 
-### Security
-- Always validate input payloads
-- Use `:reject` to return user-friendly error messages
-- Keep sensitive logic and data transformations on the server
-- Use the `auth` configuration to control access
-
-### Performance
-- Use `:parallel` when operations don't depend on each other
-- Minimize database calls by using efficient queries
-- Consider caching frequently accessed data
-
-### Error Handling
-- Always use `:try`/`:catch` for external API calls
-- Provide meaningful error messages
-- Log errors for debugging
-- Use `:finally` for cleanup operations
-
-### Code Organization
-- Keep routines focused on a single responsibility
-- Use descriptive step IDs
-- Comment complex logic
-- Consider breaking very long routines into multiple APIs
-
-## TLDR
-
-- **Lowdefy APIs** create custom server-side endpoints that execute complex logic
-- **Routines** define the execution flow using steps and control structures
-- **Control structures** like `:if`, `:for`, `:parallel`, and `:try` enable sophisticated flows
-- **Steps** make requests to connections and can access results using `_step`
-- **CallAPI action** is used to invoke APIs from the client with payloads
-- **Server-side execution** provides access to secrets, connections, and server operators
-- **Responses** are controlled with `:return` (success) and `:reject` (user errors)
+- `Lowdefy APIs` create custom server-side endpoints that execute complex logic and are public by default - explicitly protect sensitive APIs in auth configuration.
+- `Routines` define the execution flow using steps and control structures.
+- `Control structures` like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
+- `Steps` make requests to connections and can access results using [`_step`](/_step).
+- [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
+- `Server-side execution` provides access to secrets, connections, and server operators.
+- `Responses` are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
