@@ -44,7 +44,7 @@ test('list block no init', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
 });
@@ -79,7 +79,7 @@ test('list block with init', async () => {
     lowdefy,
     pageConfig,
   });
-  const text0 = context._internal.RootBlocks.map['list.0.text'];
+  const text0 = context._internal.RootAreas.map['list.0.text'];
   expect(text0.value).toEqual('hello');
   expect(context.state).toEqual({ list: [{ text: 'hello' }] });
 });
@@ -138,12 +138,12 @@ test('list block no init push item', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
 
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
   list.pushItem();
-  const text0 = context._internal.RootBlocks.map['list.0.text'];
+  const text0 = context._internal.RootAreas.map['list.0.text'];
 
   expect(text0.value).toBe(null);
   expect(context.state).toEqual({ list: [{ text: null }] });
@@ -179,7 +179,7 @@ test('list block with init move item up', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
   list.moveItemUp(0);
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
@@ -217,7 +217,7 @@ test('list block with init move item down', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
   list.moveItemDown(5);
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5] });
@@ -246,15 +246,15 @@ test('list block no init unshift item to start', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list, root } = context._internal.RootBlocks.map;
-  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
+  const { list, root } = context._internal.RootAreas.map;
+  const BlocksContainingList = context._internal.RootAreas.subAreas[root.id][0];
 
   expect(list.value).toBe(undefined);
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ list: [{ text: null }] });
-  const text0 = context._internal.RootBlocks.map['list.0.text'];
-  const ListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
+  const text0 = context._internal.RootAreas.map['list.0.text'];
+  const ListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
 
   text0.setValue('first');
   expect(context.state).toEqual({ list: [{ text: 'first' }] });
@@ -265,8 +265,8 @@ test('list block no init unshift item to start', async () => {
   expect(ListSubblocks0.arrayIndices).toEqual([1]);
 
   // get new references to Blocks classes at index 0 and 1
-  const NewListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
-  const NewListSubblocks1 = BlocksContainingList.subBlocks[list.id][1];
+  const NewListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
+  const NewListSubblocks1 = BlocksContainingList.subAreas[list.id][1];
 
   expect(NewListSubblocks0.arrayIndices).toEqual([0]);
   expect(NewListSubblocks1.arrayIndices).toEqual([1]);
@@ -275,7 +275,7 @@ test('list block no init unshift item to start', async () => {
 
   // original text0
   expect(text0.value).toEqual('first');
-  const newText0 = context._internal.RootBlocks.map['list.0.text'];
+  const newText0 = context._internal.RootAreas.map['list.0.text'];
   expect(newText0.value).toEqual(null);
 });
 
@@ -300,23 +300,23 @@ test('list block no init unshift item to start, block id not in array', async ()
     lowdefy,
     pageConfig,
   });
-  const { list, root } = context._internal.RootBlocks.map;
-  const BlocksContainingList = context._internal.RootBlocks.subBlocks[root.id][0];
+  const { list, root } = context._internal.RootAreas.map;
+  const BlocksContainingList = context._internal.RootAreas.subAreas[root.id][0];
   expect(context.state).toEqual({ list: [] });
   list.unshiftItem();
   expect(context.state).toEqual({ other: [null] });
-  const text0 = context._internal.RootBlocks.map['other.0'];
+  const text0 = context._internal.RootAreas.map['other.0'];
   text0.setValue('first');
   expect(context.state).toEqual({ other: ['first'] });
   list.unshiftItem();
 
-  const NewListSubblocks0 = BlocksContainingList.subBlocks[list.id][0];
-  const NewListSubblocks1 = BlocksContainingList.subBlocks[list.id][1];
+  const NewListSubblocks0 = BlocksContainingList.subAreas[list.id][0];
+  const NewListSubblocks1 = BlocksContainingList.subAreas[list.id][1];
 
   expect(NewListSubblocks0.arrayIndices).toEqual([0]);
   expect(NewListSubblocks1.arrayIndices).toEqual([1]);
   expect(text0.value).toEqual('first');
-  const newText0 = context._internal.RootBlocks.map['other.0'];
+  const newText0 = context._internal.RootAreas.map['other.0'];
   expect(newText0.value).toEqual(null);
 
   expect(context.state).toEqual({ other: [null, 'first'] });
@@ -373,7 +373,7 @@ test('list block unshift item clear all previous values', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({
     list: [
       {
@@ -435,7 +435,7 @@ test('list block with init push item', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ list: [{ text: 'a' }] });
   list.pushItem();
   expect(context.state).toEqual({ list: [{ text: 'a' }, { text: null }] });
@@ -471,7 +471,7 @@ test('list block with init including extra data and push item', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }], d: 'd' });
   list.pushItem();
   expect(context.state).toEqual({ list: [{ b: 'b', c: 'c' }, { b: null }], d: 'd' });
@@ -499,7 +499,7 @@ test('list block no init push item, with enforced input type', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ list: [] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [{ text: null }] });
 });
@@ -549,7 +549,7 @@ test('list block with rec visible in parent blocks', async () => {
     lowdefy,
     pageConfig,
   });
-  const a0 = context._internal.RootBlocks.map['list.0.a'];
+  const a0 = context._internal.RootAreas.map['list.0.a'];
   expect(context.state).toEqual({ list: [{ a: 'a' }] });
   a0.setValue('show b');
   expect(context.state).toEqual({ list: [{ b: 'b', a: 'show b' }], c: 'c' });
@@ -590,7 +590,7 @@ test('list block with visible', async () => {
     lowdefy,
     pageConfig,
   });
-  const { swtch } = context._internal.RootBlocks.map;
+  const { swtch } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ list: [{ a: 'a' }], swtch: true });
   swtch.setValue(false);
@@ -639,7 +639,7 @@ test('toggle list object field visibility with index', async () => {
     lowdefy,
     pageConfig,
   });
-  const swtch1 = context._internal.RootBlocks.map['list.1.swtch'];
+  const swtch1 = context._internal.RootAreas.map['list.1.swtch'];
 
   expect(context.state).toEqual({ list: [{ text: 'a1', swtch: true }, { swtch: false }] });
   swtch1.setValue(true);
@@ -713,7 +713,7 @@ test('primitive list block with init', async () => {
     lowdefy,
     pageConfig,
   });
-  const number0 = context._internal.RootBlocks.map['list.0'];
+  const number0 = context._internal.RootAreas.map['list.0'];
   expect(number0.value).toBe(1);
   expect(context.state).toEqual({ list: [1, 2, 3] });
 });
@@ -749,10 +749,10 @@ test('primitive list block with init, push item and setValue', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [1, 2, 3, null] });
-  const a3 = context._internal.RootBlocks.map['list.3'];
+  const a3 = context._internal.RootAreas.map['list.3'];
   a3.setValue(-1);
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
@@ -788,10 +788,10 @@ test('primitive list block with init, push item and setValue', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ list: [1, 2, 3] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [1, 2, 3, null] });
-  const a3 = context._internal.RootBlocks.map['list.3'];
+  const a3 = context._internal.RootAreas.map['list.3'];
   a3.setValue(-1);
   expect(context.state).toEqual({ list: [1, 2, 3, -1] });
 });
@@ -827,7 +827,7 @@ test('primitive list block with init and push item with enforced input type', as
     pageConfig,
   });
   expect(context.state).toEqual({ list: [true, true, true] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({ list: [true, true, true, false] });
 });
@@ -873,7 +873,7 @@ test('list block with nested primitive array with init, push item enforced type 
     pageConfig,
   });
   expect(context.state).toEqual({ list: [{ innerList: [true, true, true], text: 'text' }] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -881,7 +881,7 @@ test('list block with nested primitive array with init, push item enforced type 
       { innerList: [], text: null },
     ],
   });
-  const innerList1 = context._internal.RootBlocks.map['list.1.innerList'];
+  const innerList1 = context._internal.RootAreas.map['list.1.innerList'];
   innerList1.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -889,7 +889,7 @@ test('list block with nested primitive array with init, push item enforced type 
       { innerList: [false], text: null },
     ],
   });
-  const switch_1_0 = context._internal.RootBlocks.map['list.1.innerList.0'];
+  const switch_1_0 = context._internal.RootAreas.map['list.1.innerList.0'];
   switch_1_0.setValue(true);
   expect(context.state).toEqual({
     list: [
@@ -940,7 +940,7 @@ test('list block with nested primitive array with init, push item and setValue',
     pageConfig,
   });
   expect(context.state).toEqual({ list: [{ innerList: [1, 2, 3], text: 'text' }] });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   list.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -948,7 +948,7 @@ test('list block with nested primitive array with init, push item and setValue',
       { innerList: [], text: null },
     ],
   });
-  const innerList1 = context._internal.RootBlocks.map['list.1.innerList'];
+  const innerList1 = context._internal.RootAreas.map['list.1.innerList'];
   innerList1.pushItem();
   expect(context.state).toEqual({
     list: [
@@ -956,7 +956,7 @@ test('list block with nested primitive array with init, push item and setValue',
       { innerList: [null], text: null },
     ],
   });
-  const number_1_0 = context._internal.RootBlocks.map['list.1.innerList.0'];
+  const number_1_0 = context._internal.RootAreas.map['list.1.innerList.0'];
   number_1_0.setValue(-1);
   expect(context.state).toEqual({
     list: [
@@ -996,13 +996,13 @@ test('list block with init remove item of first item and more than two values', 
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ list: [{ text: '0' }, { text: '1' }, { text: '2' }] });
   list.removeItem(0);
   expect(context.state).toEqual({ list: [{ text: '1' }, { text: '2' }] });
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootAreas.subAreas[context._internal.RootAreas.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
   expect(listSubblocksList[0].arrayIndices).toEqual([0]);
   expect(listSubblocksList[1].arrayIndices).toEqual([1]);
   expect(listSubblocksList.length).toEqual(2);
@@ -1038,10 +1038,10 @@ test('list block remove item, add item does not have previous item value ', asyn
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootAreas.subAreas[context._internal.RootAreas.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }] });
   list.removeItem(0);
@@ -1082,12 +1082,12 @@ test('list block with init remove item and set existing item values', async () =
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
-  const text0 = context._internal.RootBlocks.map['list.0.text'];
-  const text2 = context._internal.RootBlocks.map['list.2.text'];
+  const { list } = context._internal.RootAreas.map;
+  const text0 = context._internal.RootAreas.map['list.0.text'];
+  const text2 = context._internal.RootAreas.map['list.2.text'];
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootAreas.subAreas[context._internal.RootAreas.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   expect(context.state).toEqual({ list: [{ text: '0' }, { text: '1' }, { text: '2' }] });
   expect(listSubblocksList[0].arrayIndices).toEqual([0]);
@@ -1141,12 +1141,12 @@ test('primitive list block with init remove item', async () => {
   });
   expect(context.state).toEqual({ list: [0, 1, 2, 3, 4, 5, 6, 7] });
 
-  const { list } = context._internal.RootBlocks.map;
-  const num3 = context._internal.RootBlocks.map['list.3'];
-  const num5 = context._internal.RootBlocks.map['list.5'];
+  const { list } = context._internal.RootAreas.map;
+  const num3 = context._internal.RootAreas.map['list.3'];
+  const num5 = context._internal.RootAreas.map['list.5'];
   const blocksContainingList =
-    context._internal.RootBlocks.subBlocks[context._internal.RootBlocks.map.root.id][0];
-  const listSubblocksList = blocksContainingList.subBlocks[list.id];
+    context._internal.RootAreas.subAreas[context._internal.RootAreas.map.root.id][0];
+  const listSubblocksList = blocksContainingList.subAreas[list.id];
 
   const B3 = listSubblocksList[3];
   const B4 = listSubblocksList[4];
@@ -1253,10 +1253,10 @@ test('nested list', async () => {
     ],
   });
 
-  const { list } = context._internal.RootBlocks.map;
-  const container2 = context._internal.RootBlocks.map['list.2.container'];
-  const swtch2 = context._internal.RootBlocks.map['list.2.swtch'];
-  const swtch3 = context._internal.RootBlocks.map['list.3.swtch'];
+  const { list } = context._internal.RootAreas.map;
+  const container2 = context._internal.RootAreas.map['list.2.container'];
+  const swtch2 = context._internal.RootAreas.map['list.2.swtch'];
+  const swtch3 = context._internal.RootAreas.map['list.3.swtch'];
 
   swtch2.setValue(false);
   expect(container2.visibleEval.output).toEqual(false);

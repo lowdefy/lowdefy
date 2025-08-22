@@ -23,7 +23,7 @@ import Block from './Block.js';
 const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const content = {};
   // eslint-disable-next-line prefer-destructuring
-  const areas = Blocks.subBlocks[block.id][0].areas;
+  const areas = Blocks.subAreas[block.id][0].areas;
   Object.keys(areas).forEach((areaKey, i) => {
     content[areaKey] = (areaStyle) => (
       <Area
@@ -38,7 +38,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
         {areas[areaKey].blocks.map((bl, k) => (
           <Block
             block={bl}
-            Blocks={Blocks.subBlocks[block.id][0]}
+            Blocks={Blocks.subAreas[block.id][0]}
             context={context}
             key={`co-${bl.blockId}-${k}`}
             lowdefy={lowdefy}

@@ -81,8 +81,8 @@ test('Validate required field', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['text1'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['text1'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['This field is required'],
@@ -206,9 +206,9 @@ test('Validate all fields', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['text1'];
-  const text2 = context._internal.RootBlocks.map['text2'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['text1'];
+  const text2 = context._internal.RootAreas.map['text2'];
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
     status: null,
@@ -393,9 +393,9 @@ test('Validate only one field', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['text1'];
-  const text2 = context._internal.RootBlocks.map['text2'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['text1'];
+  const text2 = context._internal.RootAreas.map['text2'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
@@ -539,10 +539,10 @@ test('Validate list of fields', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['text1'];
-  const text2 = context._internal.RootBlocks.map['text2'];
-  const text3 = context._internal.RootBlocks.map['text3'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['text1'];
+  const text2 = context._internal.RootAreas.map['text2'];
+  const text3 = context._internal.RootAreas.map['text3'];
   text1.setValue('text1');
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
@@ -666,7 +666,7 @@ test('Invalid Validate params', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   await button.triggerEvent({ name: 'onClick' });
   expect(button.Events.events.onClick.history[0]).toEqual({
     blockId: 'button',
@@ -744,8 +744,8 @@ test('Validate does not fail on warnings', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['text1'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['text1'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: [],
@@ -821,8 +821,8 @@ test('Validate on nested objects using params.regex string', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text1 = context._internal.RootBlocks.map['obj.text1'];
+  const button = context._internal.RootAreas.map['button'];
+  const text1 = context._internal.RootAreas.map['obj.text1'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
@@ -912,10 +912,10 @@ test('Validate on nested objects using params.regex array', async () => {
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text2 = context._internal.RootBlocks.map['text2'];
-  const text1 = context._internal.RootBlocks.map['obj.text1'];
-  const abc1 = context._internal.RootBlocks.map['obj.abc1'];
+  const button = context._internal.RootAreas.map['button'];
+  const text2 = context._internal.RootAreas.map['text2'];
+  const text1 = context._internal.RootAreas.map['obj.text1'];
+  const abc1 = context._internal.RootAreas.map['obj.abc1'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],
@@ -1020,10 +1020,10 @@ test('Validate on nested objects using params.regex array and blockIds', async (
     pageConfig,
     operators: lowdefy._internal.operators,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const text2 = context._internal.RootBlocks.map['text2'];
-  const text1 = context._internal.RootBlocks.map['obj.text1'];
-  const abc1 = context._internal.RootBlocks.map['obj.abc1'];
+  const button = context._internal.RootAreas.map['button'];
+  const text2 = context._internal.RootAreas.map['text2'];
+  const text1 = context._internal.RootAreas.map['obj.text1'];
+  const abc1 = context._internal.RootAreas.map['obj.abc1'];
   await button.triggerEvent({ name: 'onClick' });
   expect(text1.eval.validation).toEqual({
     errors: ['text1 does not match pattern "text1"'],

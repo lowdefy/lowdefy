@@ -59,7 +59,7 @@ test('container and set value from block', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textA, textB } = context._internal.RootBlocks.map;
+  const { textA, textB } = context._internal.RootAreas.map;
   expect(textA.value).toBe(null);
   expect(textA.setValue).toBeDefined();
   expect(textB.value).toBe('b');
@@ -110,7 +110,7 @@ test('container blocks visibility toggle fields in state and propagate visibilit
     lowdefy,
     pageConfig,
   });
-  const { container, text, swtch1, swtch2 } = context._internal.RootBlocks.map;
+  const { container, text, swtch1, swtch2 } = context._internal.RootAreas.map;
   expect(container.visibleEval.output).toEqual(true);
   expect(text.visibleEval.output).toEqual(true);
   swtch1.setValue(false);
@@ -177,7 +177,7 @@ test('container blocks visibility toggle fields in state with nested containers 
     lowdefy,
     pageConfig,
   });
-  const { container1, text, swtch1, swtch2 } = context._internal.RootBlocks.map;
+  const { container1, text, swtch1, swtch2 } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ text: 'a', swtch1: true, swtch2: true });
 
   expect(container1.visibleEval.output).toEqual(true);
@@ -224,6 +224,6 @@ test('visibleParent. If container visible is null, child blocks should still be 
     lowdefy,
     pageConfig,
   });
-  expect(context._internal.RootBlocks.map.container.eval.visible).toBe(null);
-  expect(context._internal.RootBlocks.map.text.eval.visible).toBe(true);
+  expect(context._internal.RootAreas.map.container.eval.visible).toBe(null);
+  expect(context._internal.RootAreas.map.text.eval.visible).toBe(true);
 });
