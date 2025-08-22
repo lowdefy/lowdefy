@@ -62,6 +62,11 @@
       "noDataTitle": {
         "type": "string",
         "description": "Title to show when list is empty."
+      },
+      "minItems": {
+        "type": "number",
+        "default": 0,
+        "description": "Minimum number of items in the controlled list."
       }
     }
   }

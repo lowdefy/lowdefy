@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
+const assignRowId = (params) => {
+  if (params.data.id !== undefined) return params.data.id;
+  if (params.data._id !== undefined) return params.data._id;
+  if (!params.data.__rid) {
+    const rowDataCopy = { ...params.data };
+    delete rowDataCopy.__rid;
+    Object.defineProperty(params.data, '__rid', {
+      value: Math.random(),
+      enumerable: false,
+    });
+  }
+  return params.data.__rid;
+};
 
-async function clearTestMongoDb({ collection }) {
-  const client = new MongoClient(process.env.MONGO_URL);
-  await client.connect();
-  const db = client.db();
-  await db.collection(collection).deleteMany({});
-  await client.close();
-}
-
-export default clearTestMongoDb;
+export default assignRowId;

@@ -119,10 +119,7 @@ test('insertOne insert a date', async () => {
   let client;
   let inserted;
   try {
-    client = new MongoClient(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    client = new MongoClient(process.env.MONGO_URL);
     await client.connect();
     const db = client.db();
     inserted = await db.collection(collection).findOne({ _id: 'insertOneDate' });
