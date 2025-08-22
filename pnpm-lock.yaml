@@ -800,8 +800,8 @@ importers:
         specifier: 4.4.0
         version: link:../../../utils/helpers
       dompurify:
-        specifier: 3.0.6
-        version: 3.0.6
+        specifier: 3.2.4
+        version: 3.2.4
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1087,8 +1087,8 @@ importers:
         specifier: 4.4.0
         version: link:../../../utils/block-utils
       dompurify:
-        specifier: 3.0.6
-        version: 3.0.6
+        specifier: 3.2.4
+        version: 3.2.4
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2216,8 +2216,8 @@ importers:
         specifier: 4.4.0
         version: link:../helpers
       dompurify:
-        specifier: 3.0.6
-        version: 3.0.6
+        specifier: 3.2.4
+        version: 3.2.4
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -3969,6 +3969,9 @@ packages:
   '@types/tough-cookie@4.0.3':
     resolution: {integrity: sha512-THo502dA5PzG/sfQH+42Lw3fvmYkceefOspdCwpHRul8ik2Jv1K8I5OZz1AT3/rs46kwgMCe9bSBmDLYkkOMGg==}
 
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
   '@types/unist@2.0.6':
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
 
@@ -5146,8 +5149,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.0.6:
-    resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
+  dompurify@3.2.4:
+    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
 
   domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -11795,6 +11798,9 @@ snapshots:
 
   '@types/tough-cookie@4.0.3': {}
 
+  '@types/trusted-types@2.0.7':
+    optional: true
+
   '@types/unist@2.0.6': {}
 
   '@types/unist@3.0.0': {}
@@ -13171,7 +13177,9 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.0.6: {}
+  dompurify@3.2.4:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   domutils@1.7.0:
     dependencies:
