@@ -46,7 +46,7 @@ test('two areas in block', async () => {
     lowdefy,
     pageConfig,
   });
-  const { swtch1, swtch2 } = context._internal.RootBlocks.map;
+  const { swtch1, swtch2 } = context._internal.RootAreas.map;
   expect(swtch1.value).toBe(false);
   expect(context.state).toEqual({ swtch1: false, swtch2: false });
   swtch1.setValue(true);
@@ -101,9 +101,9 @@ test('parse values across areas with same block id and visible switching block t
     lowdefy,
     pageConfig,
   });
-  const { hide1, hide2 } = context._internal.RootBlocks.map;
-  const swtch1 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.key1.blocks[0];
-  const swtch2 = context._internal.RootBlocks.subBlocks['page:root'][0].areas.key2.blocks[0];
+  const { hide1, hide2 } = context._internal.RootAreas.map;
+  const swtch1 = context._internal.RootAreas.subAreas['page:root'][0].areas.key1.blocks[0];
+  const swtch2 = context._internal.RootAreas.subAreas['page:root'][0].areas.key2.blocks[0];
   expect(swtch1.visibleEval.output).toBe(true);
   expect(swtch2.visibleEval.output).toBe(true);
   expect(context.state).toEqual({ swtch: false, hide1: false, hide2: false });
@@ -158,11 +158,11 @@ test('areas inside list', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
 
   list.pushItem();
-  const swtchA0 = context._internal.RootBlocks.map['list.0.swtchA'];
-  const swtchB0 = context._internal.RootBlocks.map['list.0.swtchB'];
+  const swtchA0 = context._internal.RootAreas.map['list.0.swtchA'];
+  const swtchB0 = context._internal.RootAreas.map['list.0.swtchB'];
   expect(swtchA0.value).toBe(false);
   expect(swtchB0.value).toBe(false);
 
@@ -170,8 +170,8 @@ test('areas inside list', async () => {
   expect(context.state).toEqual({ list: [{ swtchA: true, swtchB: false }] });
 
   list.pushItem();
-  const swtchA1 = context._internal.RootBlocks.map['list.1.swtchA'];
-  const swtchB1 = context._internal.RootBlocks.map['list.1.swtchB'];
+  const swtchA1 = context._internal.RootAreas.map['list.1.swtchA'];
+  const swtchB1 = context._internal.RootAreas.map['list.1.swtchB'];
 
   expect(swtchA1.value).toBe(false);
   expect(swtchB1.value).toBe(false);

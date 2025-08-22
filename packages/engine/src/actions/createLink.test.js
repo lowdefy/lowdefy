@@ -73,7 +73,7 @@ test('Link with string pageId params', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([[{ pageId: 'pageId' }]]);
   expect(res.success).toBe(true);
@@ -97,7 +97,7 @@ test('Link with object params', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([
     [
@@ -131,7 +131,7 @@ test('Link error', async () => {
   lowdefy._internal.link.mockImplementationOnce(() => {
     throw new Error('Link test error');
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.link.mock.calls).toEqual([
     [

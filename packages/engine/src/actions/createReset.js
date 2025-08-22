@@ -19,7 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 function createReset({ context }) {
   return function reset() {
     context._internal.State.resetState();
-    context._internal.RootBlocks.reset(
+    context._internal.RootAreas.reset(
       serializer.deserializeFromString(context._internal.State.frozenState)
     );
   };

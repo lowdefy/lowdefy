@@ -58,7 +58,7 @@ test('SetState data to state', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   expect(context.state).toEqual({ textInput: 'init' });
   button.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ textInput: 'init', x: [1, 2, 3] });
@@ -96,8 +96,8 @@ test('SetState field to state and update block value', async () => {
     pageConfig,
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
 
   expect(context.state).toEqual({ textInput: 'init' });
   await button.triggerEvent({ name: 'onClick' });
@@ -137,8 +137,8 @@ test('SetState field to state with incorrect type - NOTE SetState IS NOT TYPE SA
     pageConfig,
   });
   expect(context.state).toEqual({ textInput: 'init' });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
 
   expect(context.state).toEqual({ textInput: 'init' });
   await button.triggerEvent({ name: 'onClick' });
@@ -189,7 +189,7 @@ test('SetState value on array and create new Blocks for array items', async () =
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
 
   expect(context.state).toEqual({ list: [{ textInput: 'init' }] });
 
@@ -198,9 +198,9 @@ test('SetState value on array and create new Blocks for array items', async () =
     list: [{ textInput: '0' }, { textInput: '1' }, { textInput: '2' }],
   });
 
-  const textInput0 = context._internal.RootBlocks.map['list.0.textInput'];
-  const textInput1 = context._internal.RootBlocks.map['list.1.textInput'];
-  const textInput2 = context._internal.RootBlocks.map['list.2.textInput'];
+  const textInput0 = context._internal.RootAreas.map['list.0.textInput'];
+  const textInput1 = context._internal.RootAreas.map['list.1.textInput'];
+  const textInput2 = context._internal.RootAreas.map['list.2.textInput'];
 
   expect(textInput0.value).toEqual('0');
   expect(textInput1.value).toEqual('1');
