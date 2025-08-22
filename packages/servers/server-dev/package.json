@@ -89,7 +89,7 @@
     "less": "4.1.3",
     "less-loader": "11.1.3",
     "next-with-less": "3.0.1",
-    "webpack": "5.89.0"
+    "webpack": "5.94.0"
   },
   "engines": {
     "node": ">=18"
