@@ -40,12 +40,12 @@ const createIcon = (Icons) => {
   const AiOutlineLoading3Quarters = Icons['AiOutlineLoading3Quarters'];
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
-  const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
-    const formatTitle = (title) => {
-      let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
-      return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
-    };
+  const formatTitle = (title) => {
+    let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
+    return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
+  };
 
+  const IconBlock = ({ blockId, events, methods, onClick, properties, ...props }) => {
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
     const spin =
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
