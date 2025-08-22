@@ -34,7 +34,7 @@
       },
       "title": {
         "type": "string",
-        "description": "Icon title for accessibility."
+        "description": "Icon hover title for accessibility."
       },
       "style": {
         "type": "object",
