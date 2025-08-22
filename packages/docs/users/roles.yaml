@@ -61,7 +61,7 @@ _ref:
                     reports:
                       - sales-report
                       - operations-report
-                ````
+                ```
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

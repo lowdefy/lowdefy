@@ -46,7 +46,7 @@ _ref:
 
       > The examples on this page is not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
 
-      ````
+      ```
     init_state_values:
       block_id:
         file:

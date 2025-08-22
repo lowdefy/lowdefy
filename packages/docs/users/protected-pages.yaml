@@ -51,7 +51,7 @@ _ref:
                       - '404'
                       - login
                       - public-page
-                ````
+                ```
                 ###### List specific protected pages:
                 ```yaml
                 lowdefy: {{ version }}
@@ -61,7 +61,7 @@ _ref:
                     protected:
                       - admin
                       - users
-                ````
+                ```
 
       - _ref:
           path: templates/navigation_buttons.yaml

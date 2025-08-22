@@ -41,7 +41,7 @@ _ref:
             bucket:
               _secret: FILES_S3_BUCKET
             write: true
-      ````
+      ```
 
       > The examples on this page are not setup with a [`AwsS3Bucket`](/AWSS3) connection, and thus will throw.
     init_property_values:
