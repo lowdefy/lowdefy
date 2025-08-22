@@ -116,7 +116,7 @@
     "@typescript-eslint/eslint-plugin": "5.45.0",
     "@typescript-eslint/parser": "5.45.0",
     "@vscode/test-electron": "2.2.0",
-    "esbuild": "0.23.0",
+    "esbuild": "0.25.0",
     "glob": "10.3.12",
     "js-yaml": "4.1.0",
     "mocha": "10.1.0",
