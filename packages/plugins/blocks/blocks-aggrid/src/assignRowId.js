@@ -1,5 +1,5 @@
 /*
-  Copyright 2020-2024 Lowdefy, Inc
+  Copyright 2021 Lowdefy, Inc
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import { applyArrayIndices } from '@lowdefy/helpers';
-
-function createSetState({ arrayIndices, context }) {
-  return function setState(params) {
-    Object.keys(params).forEach((key) => {
-      context._internal.State.set(applyArrayIndices(arrayIndices, key), params[key]);
+const assignRowId = (params) => {
+  if (params.data.id !== undefined) return params.data.id;
+  if (params.data._id !== undefined) return params.data._id;
+  if (!params.data.__rid) {
+    const rowDataCopy = { ...params.data };
+    delete rowDataCopy.__rid;
+    Object.defineProperty(params.data, '__rid', {
+      value: Math.random(),
+      enumerable: false,
     });
-    context._internal.RootAreas.reset();
-    context._internal.update();
-  };
-}
+  }
+  return params.data.__rid;
+};
 
-export default createSetState;
+export default assignRowId;

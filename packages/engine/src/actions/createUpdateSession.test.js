@@ -66,7 +66,7 @@ test('UpdateSession', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(lowdefy._internal.auth.updateSession.mock.calls).toEqual([[]]);
   expect(res.success).toBe(true);

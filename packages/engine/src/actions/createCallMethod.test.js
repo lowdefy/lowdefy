@@ -73,8 +73,8 @@ test('CallMethod with no args, synchronous method', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
@@ -148,8 +148,8 @@ test('CallMethod method return a promise', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
@@ -211,8 +211,8 @@ test('CallMethod with args not an array', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
@@ -296,8 +296,8 @@ test('CallMethod with multiple positional args, synchronous method', async () =>
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput = context._internal.RootBlocks.map['textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput = context._internal.RootAreas.map['textInput'];
   textInput.registerMethod('blockMethod', blockMethod);
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
@@ -370,9 +370,9 @@ test('CallMethod of block in array by explicit id', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
-  const textInput0 = context._internal.RootBlocks.map['list.0.textInput'];
-  const textInput1 = context._internal.RootBlocks.map['list.1.textInput'];
+  const button = context._internal.RootAreas.map['button'];
+  const textInput0 = context._internal.RootAreas.map['list.0.textInput'];
+  const textInput1 = context._internal.RootAreas.map['list.1.textInput'];
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
   await button.triggerEvent({ name: 'onClick' });
@@ -429,10 +429,10 @@ test('CallMethod of block in array by block with same indices and id pattern', a
     lowdefy,
     pageConfig,
   });
-  const textInput0 = context._internal.RootBlocks.map['list.0.textInput'];
-  const textInput1 = context._internal.RootBlocks.map['list.1.textInput'];
-  const button0 = context._internal.RootBlocks.map['list.0.button'];
-  const button1 = context._internal.RootBlocks.map['list.1.button'];
+  const textInput0 = context._internal.RootAreas.map['list.0.textInput'];
+  const textInput1 = context._internal.RootAreas.map['list.1.textInput'];
+  const button0 = context._internal.RootAreas.map['list.0.button'];
+  const button1 = context._internal.RootAreas.map['list.1.button'];
   textInput0.registerMethod('blockMethod', blockMethod0);
   textInput1.registerMethod('blockMethod', blockMethod1);
   await button1.triggerEvent({ name: 'onClick' });
@@ -481,7 +481,7 @@ test('CallMethod with method does not exist', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   const res = await button.triggerEvent({ name: 'onClick' });
   expect(res).toEqual({
     blockId: 'button',

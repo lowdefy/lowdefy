@@ -20,35 +20,33 @@ import { makeCssClass } from '@lowdefy/block-utils';
 
 import Block from './Block.js';
 
-const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
+const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const content = {};
-  const contentList = [];
-  Blocks.subAreas[block.id].forEach((SBlock) => {
-    Object.keys(SBlock.areas).forEach((areaKey) => {
-      content[areaKey] = (areaStyle) => (
-        <Area
-          area={block.eval.areas[areaKey]}
-          areaKey={areaKey}
-          areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
-          id={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
-          key={`ar-${block.blockId}-${SBlock.id}-${areaKey}`}
-          layout={block.eval.layout}
-          makeCssClass={makeCssClass}
-        >
-          {SBlock.areas[areaKey].blocks.map((bl) => (
-            <Block
-              block={bl}
-              Blocks={SBlock}
-              context={context}
-              key={`ls-${bl.blockId}`}
-              lowdefy={lowdefy}
-              parentLoading={loading}
-            />
-          ))}
-        </Area>
-      );
-    });
-    contentList.push({ ...content });
+  // eslint-disable-next-line prefer-destructuring
+  const areas = Blocks.subAreas[block.id][0].areas;
+  Object.keys(areas).forEach((areaKey, i) => {
+    content[areaKey] = (areaStyle) => (
+      <Area
+        area={block.eval.areas[areaKey]}
+        areaKey={areaKey}
+        areaStyle={[areaStyle, block.eval.areas[areaKey]?.style]}
+        id={`ar-${block.blockId}-${areaKey}`}
+        key={`ar-${block.blockId}-${areaKey}-${i}`}
+        layout={block.eval.layout}
+        makeCssClass={makeCssClass}
+      >
+        {areas[areaKey].blocks.map((bl, k) => (
+          <Block
+            block={bl}
+            Blocks={Blocks.subAreas[block.id][0]}
+            context={context}
+            key={`co-${bl.blockId}-${k}`}
+            lowdefy={lowdefy}
+            parentLoading={loading}
+          />
+        ))}
+      </Area>
+    );
   });
   return (
     <BlockLayout
@@ -60,30 +58,32 @@ const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
       <Component
         methods={Object.assign(block.methods, {
           makeCssClass,
+          registerEvent: block.registerEvent,
+          registerMethod: block.registerMethod,
+          triggerEvent: block.triggerEvent,
+          setValue: block.setValue,
           moveItemDown: block.moveItemDown,
           moveItemUp: block.moveItemUp,
           pushItem: block.pushItem,
-          registerEvent: block.registerEvent,
-          registerMethod: block.registerMethod,
           removeItem: block.removeItem,
-          triggerEvent: block.triggerEvent,
           unshiftItem: block.unshiftItem,
         })}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
         components={lowdefy._internal.components}
+        content={content}
         events={block.eval.events}
         key={block.blockId}
-        list={contentList}
         loading={loading}
         menus={lowdefy.menus}
         pageId={lowdefy.pageId}
         properties={block.eval.properties}
         required={block.eval.required}
         validation={block.eval.validation}
+        value={block.value}
       />
     </BlockLayout>
   );
 };
 
-export default List;
+export default InputContainer;

@@ -435,7 +435,7 @@ test('fetch should set call query every time it is called', async () => {
     pageConfig,
   });
   context._internal.lowdefy._internal.callRequest = mockCallRequest;
-  context._internal.RootBlocks = {
+  context._internal.RootAreas = {
     update: jest.fn(),
   };
   await context._internal.Requests.callRequest({ requestId: 'req_one', onlyNew: true, blockId });
@@ -514,7 +514,7 @@ test('trigger request from event end to end and parse payload', async () => {
     pageConfig,
   });
   context._internal.lowdefy._internal.callRequest = mockCallRequest;
-  const { button, inc } = context._internal.RootBlocks.map;
+  const { button, inc } = context._internal.RootAreas.map;
   await button.triggerEvent({ name: 'onClick' });
   expect(context.requests).toEqual({
     req_one: [

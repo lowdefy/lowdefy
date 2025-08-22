@@ -58,12 +58,12 @@ test('parse validate on fields', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
@@ -106,9 +106,9 @@ test('validate should fail if parser has errors', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
@@ -142,9 +142,9 @@ test('validate, only test where parser failed should fail', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ['Parser failed'],
     status: 'error',
@@ -182,11 +182,11 @@ test('parse validate, validate an object not an array', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({ errors: ["Not 'c'"], status: null, warnings: [] });
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ["Not 'c'"],
     status: 'error',
@@ -237,11 +237,11 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
     lowdefy,
     pageConfig,
   });
-  const { text, list } = context._internal.RootBlocks.map;
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  const { text, list } = context._internal.RootAreas.map;
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 
   text.setValue('1');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -249,7 +249,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
   ]);
 
   text.setValue('12');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list',
       validation: { errors: ['Error 123'], status: 'error', warnings: [] },
@@ -257,11 +257,11 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
   ]);
 
   text.setValue('123');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 
   text.setValue('12');
   list.pushItem();
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -271,7 +271,7 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
 
   text.setValue('123');
   list.pushItem();
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list.0.innerText',
       validation: { errors: ['Error 1234'], status: 'error', warnings: [] },
@@ -283,13 +283,13 @@ test('RootBlock.validate(match) to ignore errors where field not visible', async
   ]);
 
   text.setValue('1234');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 
   text.setValue('0');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 
   text.setValue('12');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     { blockId: 'list', validation: { errors: ['Error 123'], status: 'error', warnings: [] } },
     {
       blockId: 'list.0.innerText',
@@ -318,20 +318,20 @@ test('required on input to return validation error on RootBlock.validate(match)'
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
@@ -362,11 +362,11 @@ test('required on input to return validation error with priority over validation
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
   expect(context.state).toEqual({
     text: null,
   });
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -377,7 +377,7 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('a');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -388,9 +388,9 @@ test('required on input to return validation error with priority over validation
     },
   ]);
   text.setValue('1234');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: {
@@ -474,7 +474,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({
     text: null,
@@ -498,7 +498,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
       { innerList: [], swtch: true },
     ],
   });
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -557,7 +557,7 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
     },
   ]);
   text.setValue('1');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -600,9 +600,9 @@ test('nested arrays with validate, and RootBlock.validate(match) returns all val
     },
   ]);
   text.setValue('12');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('0');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'list.0.swtch',
       validation: {
@@ -698,7 +698,7 @@ test('validation warnings', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text: 'a' });
   expect(text.eval.validation).toEqual({
@@ -707,7 +707,7 @@ test('validation warnings', async () => {
     warnings: ["Not 'c'"],
   });
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: [],
     status: 'warning',
@@ -756,7 +756,7 @@ test('validation errors override warnings', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
   console.log(text.validationEval);
   expect(text.eval.validation).toEqual({
@@ -765,7 +765,7 @@ test('validation errors override warnings', async () => {
     warnings: ['Warning message'],
   });
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   console.log('showValidation', text.showValidation);
   console.log(text.validationEval);
   expect(text.eval.validation).toEqual({
@@ -815,14 +815,14 @@ test('showValidation only on fields that matches for error', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text1, text2 } = context._internal.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text1: '3', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ errors: ["Not '1'"], status: null, warnings: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ errors: ["Not '2'"], status: null, warnings: [] });
-  context._internal.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootAreas.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: ["Not '1'"],
@@ -875,14 +875,14 @@ test('showValidation only on fields that matches for warning', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text1, text2 } = context._internal.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text1: '3', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ warnings: ["Not '1'"], status: 'warning', errors: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ warnings: ["Not '2'"], status: 'warning', errors: [] });
-  context._internal.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootAreas.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: [],
@@ -935,14 +935,14 @@ test('showValidation only on fields that matches for success', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text1, text2 } = context._internal.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text1.eval.validation).toEqual({ warnings: [], status: null, errors: [] });
   expect(text2.showValidation).toBe(false);
   expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
-  context._internal.RootBlocks.validate((id) => id === 'text1');
+  context._internal.RootAreas.validate((id) => id === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text1.eval.validation).toEqual({
     errors: [],
@@ -953,7 +953,7 @@ test('showValidation only on fields that matches for success', async () => {
   expect(text2.eval.validation).toEqual({ warnings: [], status: null, errors: ["Not '2'"] });
 });
 
-test('drop showValidation on RootBlocks.reset()', async () => {
+test('drop showValidation on RootAreas.reset()', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -995,20 +995,20 @@ test('drop showValidation on RootBlocks.reset()', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text1, text2 } = context._internal.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(true);
-  context._internal.RootBlocks.reset();
+  context._internal.RootAreas.reset();
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
 });
 
-test('drop showValidation on RootBlocks.resetValidation()', async () => {
+test('drop showValidation on RootAreas.resetValidation()', async () => {
   const pageConfig = {
     id: 'root',
     type: 'Box',
@@ -1050,18 +1050,18 @@ test('drop showValidation on RootBlocks.resetValidation()', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text1, text2 } = context._internal.RootBlocks.map;
+  const { text1, text2 } = context._internal.RootAreas.map;
 
   expect(context.state).toEqual({ text1: '1', text2: null });
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
-  context._internal.RootBlocks.validate((blockId) => blockId === 'text1');
+  context._internal.RootAreas.validate((blockId) => blockId === 'text1');
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(false);
-  context._internal.RootBlocks.resetValidation(() => false);
+  context._internal.RootAreas.resetValidation(() => false);
   expect(text1.showValidation).toBe(true);
   expect(text2.showValidation).toBe(false);
-  context._internal.RootBlocks.resetValidation((blockId) => blockId === 'text1');
+  context._internal.RootAreas.resetValidation((blockId) => blockId === 'text1');
   expect(text1.showValidation).toBe(false);
   expect(text2.showValidation).toBe(false);
 });
@@ -1093,21 +1093,21 @@ test('dynamic required on input to return validation error when required evaluat
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
   expect(context.state).toEqual({
     text: null,
     is_required: true,
   });
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['This field is required'], status: 'error', warnings: [] },
@@ -1115,7 +1115,7 @@ test('dynamic required on input to return validation error when required evaluat
   ]);
   context._internal.State.set('is_required', false);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 });
 
 test('dynamic required on input to return validation error when required evaluates to a message on RootBlock.validate(match)', async () => {
@@ -1145,21 +1145,21 @@ test('dynamic required on input to return validation error when required evaluat
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
   expect(context.state).toEqual({
     text: null,
     is_required_message: 'Custom Message',
   });
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['Custom Message'], status: 'error', warnings: [] },
     },
   ]);
   text.setValue('a');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([
+  expect(context._internal.RootAreas.validate(match)).toEqual([
     {
       blockId: 'text',
       validation: { errors: ['Custom Message'], status: 'error', warnings: [] },
@@ -1167,9 +1167,9 @@ test('dynamic required on input to return validation error when required evaluat
   ]);
   context._internal.State.set('is_required_message', false);
   text.setValue('');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
   text.setValue('a');
-  expect(context._internal.RootBlocks.validate(match)).toEqual([]);
+  expect(context._internal.RootAreas.validate(match)).toEqual([]);
 });
 
 test('user specified required message', async () => {
@@ -1188,9 +1188,9 @@ test('user specified required message', async () => {
     lowdefy,
     pageConfig,
   });
-  const { text } = context._internal.RootBlocks.map;
+  const { text } = context._internal.RootAreas.map;
 
-  context._internal.RootBlocks.validate(match);
+  context._internal.RootAreas.validate(match);
   expect(text.eval.validation).toEqual({
     errors: ['Custom required message'],
     status: 'error',

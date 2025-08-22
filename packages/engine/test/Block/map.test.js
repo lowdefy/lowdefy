@@ -84,7 +84,7 @@ test('all nested blocks present in map', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'y',
     'a',
@@ -101,8 +101,8 @@ test('all nested blocks present in map', async () => {
     'a.1.c.0.d.1',
     'a.1.c.0.d.2',
   ]);
-  Object.keys(context._internal.RootBlocks.map).forEach((key) => {
-    expect(context._internal.RootBlocks.map[key].blockId).toEqual(key);
+  Object.keys(context._internal.RootAreas.map).forEach((key) => {
+    expect(context._internal.RootAreas.map[key].blockId).toEqual(key);
   });
 });
 
@@ -139,27 +139,27 @@ test('unshiftItem item in list updates map', async () => {
     pageConfig,
   });
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
   ]);
-  const { list } = context._internal.RootBlocks.map;
-  const originalL0 = context._internal.RootBlocks.map['list.0'];
-  const originalL1 = context._internal.RootBlocks.map['list.1'];
+  const { list } = context._internal.RootAreas.map;
+  const originalL0 = context._internal.RootAreas.map['list.0'];
+  const originalL1 = context._internal.RootAreas.map['list.1'];
 
   list.unshiftItem();
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
     'list.2',
   ]);
-  const newL1 = context._internal.RootBlocks.map['list.1'];
-  const newL2 = context._internal.RootBlocks.map['list.2'];
+  const newL1 = context._internal.RootAreas.map['list.1'];
+  const newL2 = context._internal.RootAreas.map['list.2'];
 
   expect(originalL0).toBe(newL1);
   expect(originalL1).toBe(newL2);
@@ -197,21 +197,21 @@ test('pushItem item in list updates map', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
-  const originalL0 = context._internal.RootBlocks.map['list.0'];
+  const { list } = context._internal.RootAreas.map;
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual(['root', 'list', 'list.0']);
+  const originalL0 = context._internal.RootAreas.map['list.0'];
 
   list.pushItem();
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
   ]);
-  const newL0 = context._internal.RootBlocks.map['list.0'];
+  const newL0 = context._internal.RootAreas.map['list.0'];
   expect(originalL0).toBe(newL0);
-  expect(context._internal.RootBlocks.map['list.1'].blockId).toEqual('list.1');
+  expect(context._internal.RootAreas.map['list.1'].blockId).toEqual('list.1');
 });
 
 test('removeItem in list updates map', async () => {
@@ -246,7 +246,7 @@ test('removeItem in list updates map', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -254,43 +254,43 @@ test('removeItem in list updates map', async () => {
     'list.2',
     'list.3',
   ]);
-  const { list } = context._internal.RootBlocks.map;
-  const L0 = context._internal.RootBlocks.map['list.0'];
-  const L2 = context._internal.RootBlocks.map['list.2'];
-  const L3 = context._internal.RootBlocks.map['list.3'];
+  const { list } = context._internal.RootAreas.map;
+  const L0 = context._internal.RootAreas.map['list.0'];
+  const L2 = context._internal.RootAreas.map['list.2'];
+  const L3 = context._internal.RootAreas.map['list.3'];
 
   list.removeItem(1);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
     'list.2',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.2']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L0);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.2']).toBe(L3);
 
   list.removeItem(0);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
     'list.1',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L3);
 
   list.removeItem(1);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list', 'list.0']);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L2);
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual(['root', 'list', 'list.0']);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L2);
 
   list.removeItem(0);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual(['root', 'list']);
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual(['root', 'list']);
 });
 
 test('moveItemUp in list updates map', async () => {
@@ -325,13 +325,13 @@ test('moveItemUp in list updates map', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
 
-  const L0 = context._internal.RootBlocks.map['list.0'];
-  const L1 = context._internal.RootBlocks.map['list.1'];
-  const L2 = context._internal.RootBlocks.map['list.2'];
-  const L3 = context._internal.RootBlocks.map['list.3'];
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  const L0 = context._internal.RootAreas.map['list.0'];
+  const L1 = context._internal.RootAreas.map['list.1'];
+  const L2 = context._internal.RootAreas.map['list.2'];
+  const L3 = context._internal.RootAreas.map['list.3'];
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -342,7 +342,7 @@ test('moveItemUp in list updates map', async () => {
 
   list.moveItemUp(1);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -350,14 +350,14 @@ test('moveItemUp in list updates map', async () => {
     'list.2',
     'list.3',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L1);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L0);
-  expect(context._internal.RootBlocks.map['list.2']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L1);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L0);
+  expect(context._internal.RootAreas.map['list.2']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.3']).toBe(L3);
 
   list.moveItemUp(0);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -365,10 +365,10 @@ test('moveItemUp in list updates map', async () => {
     'list.2',
     'list.3',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L1);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L0);
-  expect(context._internal.RootBlocks.map['list.2']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L1);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L0);
+  expect(context._internal.RootAreas.map['list.2']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.3']).toBe(L3);
 });
 
 test('moveItemDown in list updates map', async () => {
@@ -403,14 +403,14 @@ test('moveItemDown in list updates map', async () => {
     lowdefy,
     pageConfig,
   });
-  const { list } = context._internal.RootBlocks.map;
+  const { list } = context._internal.RootAreas.map;
 
-  const L0 = context._internal.RootBlocks.map['list.0'];
-  const L1 = context._internal.RootBlocks.map['list.1'];
-  const L2 = context._internal.RootBlocks.map['list.2'];
-  const L3 = context._internal.RootBlocks.map['list.3'];
+  const L0 = context._internal.RootAreas.map['list.0'];
+  const L1 = context._internal.RootAreas.map['list.1'];
+  const L2 = context._internal.RootAreas.map['list.2'];
+  const L3 = context._internal.RootAreas.map['list.3'];
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -420,7 +420,7 @@ test('moveItemDown in list updates map', async () => {
   ]);
   list.moveItemDown(1);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -428,14 +428,14 @@ test('moveItemDown in list updates map', async () => {
     'list.2',
     'list.3',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.2']).toBe(L1);
-  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L0);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.2']).toBe(L1);
+  expect(context._internal.RootAreas.map['list.3']).toBe(L3);
 
   list.moveItemDown(3);
 
-  expect(Object.keys(context._internal.RootBlocks.map)).toEqual([
+  expect(Object.keys(context._internal.RootAreas.map)).toEqual([
     'root',
     'list',
     'list.0',
@@ -443,8 +443,8 @@ test('moveItemDown in list updates map', async () => {
     'list.2',
     'list.3',
   ]);
-  expect(context._internal.RootBlocks.map['list.0']).toBe(L0);
-  expect(context._internal.RootBlocks.map['list.1']).toBe(L2);
-  expect(context._internal.RootBlocks.map['list.2']).toBe(L1);
-  expect(context._internal.RootBlocks.map['list.3']).toBe(L3);
+  expect(context._internal.RootAreas.map['list.0']).toBe(L0);
+  expect(context._internal.RootAreas.map['list.1']).toBe(L2);
+  expect(context._internal.RootAreas.map['list.2']).toBe(L1);
+  expect(context._internal.RootAreas.map['list.3']).toBe(L3);
 });
