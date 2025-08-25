@@ -17,17 +17,11 @@
 import { get } from '@lowdefy/helpers';
 
 import getRefPath from './getRefPath.js';
-import makeId from '../../utils/makeId.js';
+import makeRefHash from '../../utils/makeRefHash.js';
 
 function makeRefDefinition(refDefinition, parent, refMap) {
-  const id = makeId();
   const refDef = {
     parent,
-  };
-  refMap[id] = refDef;
-  return {
-    ...refDef,
-    id,
     key: get(refDefinition, 'key'),
     original: refDefinition,
     path: getRefPath(refDefinition),
@@ -35,6 +29,12 @@ function makeRefDefinition(refDefinition, parent, refMap) {
     transformer: get(refDefinition, 'transformer'),
     vars: get(refDefinition, 'vars', { default: {} }),
   };
+
+  const refHash = makeRefHash(refDef);
+  refMap[refHash] = { parent };
+  refDef.hash = refHash;
+
+  return refDef;
 }
 
 export default makeRefDefinition;

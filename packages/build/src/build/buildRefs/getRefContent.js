@@ -20,9 +20,7 @@ import runRefResolver from './runRefResolver.js';
 
 async function getRefContent({ context, refDef, referencedFrom }) {
   let content;
-  if (refDef.path === 'lowdefy.yaml' || refDef.path === 'lowdefy.yml') {
-    content = await getConfigFile({ context, refDef, referencedFrom });
-  } else if (refDef.resolver || context.refResolver) {
+  if (refDef.resolver || context.refResolver) {
     content = await runRefResolver({ context, refDef, referencedFrom });
   } else {
     content = await getConfigFile({ context, refDef, referencedFrom });
