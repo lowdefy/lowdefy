@@ -29,7 +29,7 @@ _ref:
                 version:
                   _ref: version.yaml
               template: |
-                By default, all pages and APIs in a Lowdefy app are public. Protected pages and APIs are resources that can only be accessed by a logged in user. If a user that is not logged in tries to access a protected page or API, they will receive an authentication error. For pages, the user will be redirected to the 404 page, and pages that a user is not allowed to see will be filtered from the app menus. For APIs, the endpoint will appear as if it doesn't exist.
+                By default, all pages and APIs in a Lowdefy app are public. Protected pages and APIs are resources that can only be accessed by a logged in user. If a user that is not logged in tries to access a protected page or API, they will receive an authentication error. For pages, the user will be redirected to the 404 page, and pages that a user is not allowed to see will be filtered from the app menus. For APIs, an "API Endpoint does not exist" error will be thrown.
 
                 The config can either be set to protect all pages/APIs, except for a list of public ones, or vice-versa, all are public except for a list of protected ones.
 
@@ -74,7 +74,7 @@ _ref:
                       - admin_dashboard_api
                 ```
 
-                ###### Mixed configuration (common pattern):
+                ###### Mixed configuration:
                 ```yaml
                 lowdefy: {{ version }}
                 auth:
@@ -86,13 +86,9 @@ _ref:
                       - profile
                       - settings
 
-                  # Protect specific APIs that require authentication
+                  # Protect all API endpoints
                   api:
-                    protected:
-                      - get_user_profile
-                      - update_settings
-                      - delete_account
-                    # Other APIs remain public by default
+                    protected: true
                 ```
 
                 ## Important Notes

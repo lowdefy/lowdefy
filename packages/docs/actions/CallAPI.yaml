@@ -37,19 +37,34 @@ _ref:
     examples: |
       ###### Call an API endpoint:
       ```yaml
-      - id: call_api
+      - id: call_my_api
         type: CallAPI
         params:
-          endpointId: api_endpoint_1
+          endpointId: my_api_endpoint
+      ```
+
+      ###### Call an API endpoint with a payload:
+      ```yaml
+      - id: call_rating_api
+        type: CallAPI
+        params:
+          endpointId: review_product
+          payload:
+            product_id:
+              _url_query: product_id
+            rating:
+              _state: rating
+            comment:
+              _state: comment
+
       ```
 
       ###### Call an API endpoint with client state as the payload:
       ```yaml
-      - id: call_api_with_payload
+      - id: call_my_api
         type: CallAPI
         params:
-          endpointId: api_endpoint_1
+          endpointId: my_api_endpoint
           payload:
-            client_state:
-              _state: all
+            _state: true
       ```

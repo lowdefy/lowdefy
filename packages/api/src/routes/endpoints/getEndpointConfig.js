@@ -17,13 +17,13 @@
 import { ConfigurationError } from '../../context/errors.js';
 
 async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
-  const request = await readConfigFile(`api/${endpointId}.json`);
-  if (!request) {
+  const endpoint = await readConfigFile(`api/${endpointId}.json`);
+  if (!endpoint) {
     const err = new ConfigurationError(`API Endpoint "${endpointId}" does not exist.`);
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }
-  return request;
+  return endpoint;
 }
 
 export default getEndpointConfig;

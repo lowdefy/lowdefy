@@ -19,7 +19,6 @@ _ref:
     pageId: _state
     pageTitle: _state
     filePath: operators/_state.yaml
-    env: Client Only
     types: |
       ```
       (key: string): any
@@ -31,7 +30,9 @@ _ref:
       }): any
       ```
     description: |
-      The `_state` operator gets a value from the [`state`](/page-and-app-state) object. The `state` is a data object specific to the page it is in. The value of `input` blocks are available in `state`, with their `blockId` as key. By default, `_state` accesses the `state` object from the [page](/page-and-app-state) the operator is used in.
+      If used in a block, the `_state` operator gets a value from the [`state`](/page-and-app-state) object. The `state` is a data object specific to the page it is in. The value of `input` blocks are available in `state`, with their `blockId` as key.
+
+      If used in an API endpoint, the `_state` operator gets a value from the API endpoints state. The `state` is a data object specific to that execution of the API endpoint.
 
     arguments: |
       ###### string
@@ -102,3 +103,49 @@ _ref:
       _state: my_array.$.value
       ```
       Returns: `0` when used from the first block (0th index) in a list.
+
+      ###### Using `_state` with `:set_state` in an API endpoint
+
+      ```yaml
+      - :set_state:
+          product_id:
+            _uuid: true
+      - id: insert_product
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _state: product_id
+            name:
+              _payload: product_name
+            created_at:
+              _date: now
+
+      - id: insert_new_product_event
+        type: MongoDBInsertOne
+        connectionId: events
+        properties:
+          doc:
+            _id:
+              _uuid: true
+            type: new-product
+            description:
+              _nunjucks:
+                template: New product {{ product_name }} created by {{ user_name }}.
+                on:
+                  product_name:
+                    _payload: product_name
+                  user_name:
+                    _user: name
+            product_id:
+              _state: product_id
+            user:
+              id:
+                _user: id
+              name:
+                _user: name
+            timestamp:
+              _date: now
+
+      ```

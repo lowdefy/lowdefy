@@ -29,22 +29,22 @@ _ref:
 
       The response includes the following fields:
 
-      - `blockId: string`: The id of the block from which the API was initiated.
+      - `blockId: string`: The block id of the block from which the API call was initiated.
       - `endTimestamp: date`: The timestamp when the API call ended.
-      - `endpointId: string`: The id of the API endpoint that was called.
-      - `error: object`: Any error if the API failed or used :reject.
-      - `loading: boolean`: When `true`, the API is awaiting a response.
-      - `pageId: string`: The id of the page from which the API was initiated.
+      - `endpointId: string`: The endpoint id of the API endpoint that was called.
+      - `error: object`: Any error if the API endpoint failed or used :reject.
+      - `loading: boolean`: When `true`, the API endpoint is awaiting a response.
+      - `pageId: string`: The page id of the page from which the API call was initiated.
       - `payload: object`: The payload sent with the API call.
-      - `response: object`: The data returned by the API's :return statement.
+      - `response: object`: The data returned by the API endpoint's :return statement.
       - `responseTime: number`: The time taken to get the response in milliseconds.
       - `startTimestamp: date`: The timestamp when the API call started.
       - `status: string`: The status of the API call.
-      - `success: boolean`: When `true`, the API completed successfully.
+      - `success: boolean`: When `true`, the API call completed successfully.
 
     arguments: |
       ###### string
-      The id of the API endpoint that was called using the CallAPI action.
+      The endpoint id of the API endpoint that was called using the CallAPI action.
     examples: |
       ###### Accessing the full API response object:
       ```yaml
