@@ -1,6 +1,7 @@
 Lowdefy APIs allow you to create custom server-side API endpoints within your Lowdefy application. These endpoints can execute complex server-side logic, orchestrate multiple database or external API calls, perform data transformations, and implement business workflows that require server-side processing.
 
 APIs are particularly useful when you need to:
+
 - Coordinate multiple requests in a specific sequence.
 - Implement complex business logic that should run on the server.
 - Transform or aggregate data from multiple sources.
@@ -10,30 +11,30 @@ APIs are particularly useful when you need to:
 
 ## How Lowdefy APIs Work
 
-Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a `routine` i.e. a sequence of steps and control structures that define the execution flow. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the routine executes on the server with access to connections, secrets, and server-side operators.
+Lowdefy APIs are defined at the root level of your configuration, similar to connections and pages. Each API endpoint consists of a `routine` i.e. a sequence of steps and control structures that define the execution flow. When an API endpoint is called from the client using the [`CallAPI`](/CallAPI) action, the routine executes on the server with access to connections, secrets, and server-side operators.
 
 The API execution flow:
 
-1. Client calls the API using the [`CallAPI`](/CallAPI) action with an optional payload.
+1. Client calls the API endpoint using the [`CallAPI`](/CallAPI) action with an optional payload.
 2. Server checks authorization based on the auth configuration in `lowdefy.yaml`.
-3. The API routine executes sequentially (or in parallel where specified).
+3. The endpoint routine executes sequentially (or in parallel where specified).
 4. Each step can make requests to connections, transform data, or control flow.
-5. The API returns a response to the client.
+5. The endpoint returns a response to the client.
 
-## API Definition
+## API Endpoint Definition
 
-APIs are defined in the `api` array at the root of your Lowdefy configuration. Each API should have an `id` that is unique among all APIs in the app. When an API is called from the client using the [`CallAPI`](/CallAPI) action, the `endpointId` parameter must match the API's `id`.
+API endpoints are defined in the `api` array at the root of your Lowdefy configuration. Each endpoint should have an `id` that is unique among all API endpoints in the app. The `endpointId` is used by the [`CallAPI`](/CallAPI) action to specify which endpoint to execute.
 
 The schema for a Lowdefy API is:
 
-- `id: string`: __Required__ - A unique identifier for the API endpoint.
-- `type: Api`: __Required__ - The API type.
-- `routine: array/object`: __Required__ - The routine to execute. __Operators are evaluated__.
+- `id: string`: **Required** - A unique identifier for the API endpoint.
+- `type: Api`: **Required** - The API type.
+- `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 
 ###### API definition example:
 
 ```yaml
-lowdefy: 4.4.0
+lowdefy: '{{ version }}'
 
 connections:
   - id: users
@@ -63,13 +64,13 @@ pages:
 
 ## Authentication and Authorization
 
-Lowdefy APIs use the same authentication and authorization system as pages. By default, APIs are public (accessible without authentication), just like pages. Authorization is configured at the app level in your `lowdefy.yaml` file, not on individual API endpoints.
+Lowdefy APIs use the same [authorization configuration](/protected-pages-apis) as pages. By default, API endpoints are public (accessible without authentication), just like pages. Authorization is configured in the `auth.api` section of the `lowdefy.yaml` file.
 
-### Global Auth Configuration
-
-To protect APIs and require authentication, configure them in the `auth` section of your `lowdefy.yaml`:
+Unlike requests which are defined on a specific page and inherit the authorization of the page they are defined on, API endpoints can be called from any page in the app. Thus they do not inherit the authorization of the page they are called from, and authorization should be configured separately.
 
 ```yaml
+lowdefy: '{{ version }}'
+
 auth:
   # Configure which APIs require authentication
   api:
@@ -83,132 +84,50 @@ auth:
       manager:
         - manager_reports
         - team_data
-      user:
-        - get_user_data
-        - update_profile
-
-# Your API definitions
-api:
-  - id: health_check
-    type: Api
-    routine:
-      - :return:
-          status: 'healthy'
-          timestamp:
-            _date: now
-
-  - id: get_user_data
-    type: Api
-    routine:
-      - id: fetch_user
-        type: MongoDBFindOne
-        connectionId: users
-        properties:
-          query:
-            user_id:
-              _user: id
-      - :return:
-          user:
-            _step: fetch_user
-```
-
-### Protected APIs
-
-To require authentication for specific APIs, list them under `protected` in your auth configuration:
-
-```yaml
-auth:
-  api:
-    protected:
-      - user_profile_api
-      - update_settings_api
 
 api:
-  - id: user_profile_api
-    type: Api
-    routine:
-      - :return:
-          message: 'This API requires authentication'
-          user_id:
-            _user: id
-          email:
-            _user: email
+  # Your API definitions
+  # ...
 ```
-
-### Role-Based Access Control
-
-For APIs that should only be accessible to users with specific roles, configure them under `roles`:
-
-```yaml
-auth:
-  api:
-    protected:
-      - admin_dashboard_api
-      - department_stats_api
-      - profile_api
-      - team_reports_api
-      - user_management_api
-    roles:
-      admin:
-        - admin_dashboard_api
-        - user_management_api
-      manager:
-        - department_stats_api
-        - team_reports_api
-      user:
-        - profile_api
-
-api:
-  - id: admin_dashboard_api
-    type: Api
-    routine:
-      - id: get_system_stats
-        type: MongoDBAggregation
-        connectionId: analytics
-        properties:
-          pipeline:
-            - $group:
-                _id: null
-                total_users:
-                  $sum: 1
-      - :return:
-          stats:
-            _step: get_system_stats
-
-  - id: profile_api
-    type: Api
-    routine:
-      - id: get_profile
-        type: MongoDBFindOne
-        connectionId: users
-        properties:
-          query:
-            user_id:
-              _user: id  # Can only get own profile
-      - :return:
-          _step: get_profile
-```
-
-### Authorization Errors
-
-When a user attempts to access an API they're not authorized for:
-- Unauthenticated users trying to access protected APIs will receive an authentication error.
-- Authenticated users without required roles will receive an authorization error.
-- The API endpoint behaves the same as pages - appearing as if it doesn't exist to unauthorized users.
 
 ## Routines
 
-Routines define the execution logic of your API. They can be either:
+Routines define the execution logic of your API endpoint. Routines are defined as a nested combination of routines (subroutines). A routine can be one of:
 
-- **Arrays**: Steps execute sequentially
-- **Objects**: Single step or control structure
-- **Nested combinations**: Arrays and objects can be nested to create complex flows
+- **Request**: A Lowdefy request definition.
+- **Control**: A control structure, which often contain nested subroutines.
+- **Array of Subroutines**: An array of subroutines to execute sequentially.
 
-### Sequential Execution
+### Requests
 
-By default, steps in an array execute one after another:
+[Requests and connections](/connections-and-requests) can be used in API endpoints. Requests use the same connections defined in the `connections` section of the `lowdefy.yaml` file.
+
+The `payload` property should not be defined for requests used in an API endpoint, the payload is specified by the [CallAPI](/CallAPI) action.
+
+A single request definition is a valid routine definition.
 
 ```yaml
+id: log_message
+type: Api
+routine:
+  id: insert_log_message
+  type: MongoDBInsertOne
+  connectionId: logs
+  properties:
+    message:
+      _payload: message
+    doc:
+      timestamp:
+        _date: now
+```
+
+### Arrays of Subroutines
+
+Subroutines in an array execute one after another:
+
+```yaml
+id: my_endpoint
+type: Api
 routine:
   - id: step_1
     type: MongoDBFindOne
@@ -235,6 +154,72 @@ routine:
       logged: true
 ```
 
+Arrays can also be nested. This is useful when referencing shared subroutines that might be an array
+
+```yaml
+# my_endpoint.yaml
+id: my_endpoint
+type: Api
+routine:
+  - _ref: shared_routine.yaml
+  - :return:
+      user:
+        _step: step_1
+      logged: true
+```
+
+```yaml
+# shared_routine.yaml
+- id: step_1
+  type: MongoDBFindOne
+  connectionId: users
+  properties:
+    query:
+      _id:
+        _payload: user_id
+
+- id: step_2
+  type: MongoDBInsertOne
+  connectionId: audit-log
+  properties:
+    doc:
+      user_id:
+        _step: step_1._id
+      action: 'user_viewed'
+      timestamp:
+        _date: now
+```
+
+### Control Structures
+
+Control structures allow you to implement complex logic flows within your API routines. The following controls can be used in API routines:
+
+- [`:for`](/for) - Iterate over an array sequentially.
+- [`:if`](/if) - Execute different routines based on a condition.
+- [`:log`](/log) - Output messages to the server console.
+- [`:parallel`](/parallel) - Execute multiple routines simultaneously.
+- [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
+- [`:reject`](/reject) - Return a user-facing error response.
+- [`:return`](/return) - Return a successful response with data.
+- [`:set_state`](/set_state) - Set values in server-side state.
+- [`:switch`](/switch) - Handle multiple conditions with different outcomes.
+- [`:throw`](/throw) - Throw a system error that can be caught.
+- [`:try`](/try) - Handle errors with catch and finally blocks.
+
+## Operators
+
+The following operators are specific to API endpoints:
+
+- [`_item`](/_item) - Access current item in :for and :parallel_for loops.
+- [`_state`](/_state) - Access server-side state set with :set_state.
+- [`_step`](/_step) - Access results from requests in previous steps.
+
+API endpoints also have access to all operators available on the server, including:
+
+- [`_payload`](/_payload) - Access the payload sent from the client.
+- [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
+- [`_user`](/_user) - Access authenticated user information.
+
 ### Accessing Step Results
 
 Use the [`_step`](/_step) operator to access results from previously executed steps:
@@ -255,35 +240,8 @@ Use the [`_step`](/_step) operator to access results from previously executed st
     pipeline:
       - $match:
           user_id:
-            _step: get_user._id  # Access the _id from get_user step
+            _step: get_user._id # Access the _id from the get_user request
 ```
-
-### Control Structures
-
-Control structures allow you to implement complex logic flows within your API routines. The following controls can be used in API routines:
-
-- [`:for`](/for) - Iterate over an array sequentially.
-- [`:if`](/if) - Execute different routines based on a condition.
-- [`:log`](/log) - Output messages to the server console.
-- [`:parallel`](/parallel) - Execute multiple routines simultaneously.
-- [`:parallel_for`](/parallel_for) - Iterate over an array with concurrent processing.
-- [`:reject`](/reject) - Return a user-facing error response.
-- [`:return`](/return) - Return a successful response with data.
-- [`:set_state`](/set_state) - Set values in server-side state.
-- [`:switch`](/switch) - Handle multiple conditions with different outcomes.
-- [`:throw`](/throw) - Throw a system error that can be caught.
-- [`:try`](/try) - Handle errors with catch and finally blocks.
-
-### Operators
-
-APIs have access to all operators with server-side functionality, the following are the most relevant:
-
-- [`_step`](/_step) - Access results from previous steps.
-- [`_item`](/_item) - Access current item in :for and :parallel_for loops.
-- [`_state`](/_state) - Access server-side state set with :set_state.
-- [`_payload`](/_payload) - Access the payload sent from the client.
-- [`_user`](/_user) - Access authenticated user information.
-- [`_secret`](/_secret) - Access secrets from environment variables or secrets configuration.
 
 ## CallAPI Action
 
@@ -316,7 +274,7 @@ blocks:
           type: SetState
           params:
             user_data:
-              _api: call_user_api.response.user
+              _actions: call_user_api.response.user
 
   - id: user_display
     type: Descriptions
@@ -331,7 +289,7 @@ blocks:
 events:
   onClick:
     try:
-      - id: call_api
+      - id: call_process_data_api
         type: CallAPI
         params:
           endpoint_id: process_data
@@ -349,20 +307,17 @@ events:
         type: SetState
         params:
           result:
-            _api: call_api.response
+            _actions: call_process_data_api.response
 
     catch:
-      - id: show_error
-        type: DisplayMessage
+      - id: update_state
+        type: SetState
         params:
-          content:
-            _string.concat:
-              - 'Error: '
-              - _api: call_api.error.message
-          status: error
+          error_message:
+            _actions: call_process_data_api.error.message
 ```
 
-## _api Operator
+### \_api Operator
 
 The [`_api`](/_api) operator returns the response value of an API call. If the API has not yet been called, or is still executing, the returned value is `null`.
 
@@ -394,22 +349,15 @@ blocks:
         _api: fetch_data.response
 ```
 
-## Best Practices
-
-1. **Explicitly Protect Sensitive APIs**: Always add APIs that handle user data or sensitive operations to the protected list.
-2. **Use Role-Based Access**: Configure specific roles for APIs that should have restricted access.
-3. **Validate User Context**: In protected APIs, always validate that users can only access their own data.
-4. **Be Aware of Default Public Access**: Remember that APIs are public by default - always protect APIs that shouldn't be publicly accessible.
-
 ## Complex Example: Order Processing API
 
 Here's a comprehensive example showing various features:
 
 ```yaml
+lowdefy: '{{ version }}'
 auth:
   api:
-    protected:
-      - process_order
+    protected: true
     roles:
       user:
         - process_order
@@ -428,7 +376,7 @@ api:
               _payload: order_id
             status: 'pending'
             user_id:
-              _user: id  # Ensure user owns this order
+              _user: id # Ensure user owns this order
 
       - :if:
           _not:
@@ -545,10 +493,10 @@ api:
 
 ### TLDR
 
-- `Lowdefy APIs` create custom server-side endpoints that execute complex logic and are public by default - explicitly protect sensitive APIs in auth configuration.
-- `Routines` define the execution flow using steps and control structures.
-- `Control structures` like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
-- `Steps` make requests to connections and can access results using [`_step`](/_step).
-- [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
-- `Server-side execution` provides access to secrets, connections, and server operators.
-- `Responses` are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
+- Lowdefy APIs create custom server-side endpoints that execute complex logic.
+- Routines define the execution flow using arrays, requests and control structures.
+- Control structures like [`:if`](/:if), [`:for`](/:for), [`:parallel`](/:parallel), and [`:try`](/:try) enable sophisticated flows.
+- Requests make requests to connections and can access results using [`_step`](/_step).
+- The [`CallAPI`](/CallAPI) action is used to invoke APIs from the client with payloads.
+- Server-side execution provides access to secrets, connections, and server operators.
+- Responses are controlled with [`:return`](/:return) (success) and [`:reject`](/:reject) (user errors).
