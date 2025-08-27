@@ -40,14 +40,23 @@ _ref:
 
             ##### Client only operators:
             - [_actions](/_actions)
+            - [_api](/_api)
+            - [_event](/_event)
+            - [_global](/_global)
+            - [_index](/_index)
+            - [_input](/_input)
+            - [_location](/_location)
             - [_media](/_media)
             - [_menu](/_menu)
             - [_request](/_request)
+            - [_url_query](/_url_query)
 
             ##### Server only operators:
-            - [_diff](/_diff)
+            - [_hash](/_hash)
+            - [_item](/_item)
+            - [_payload](/_payload)
             - [_secret](/_secret)
-            - [_uuid](/_uuid)
+            - [_step](/_step)
 
             Operators that are client side only cannot be used in `Requests` and `Connections`, and operators which are server side only cannot be used in `Blocks` and `Actions`.
 

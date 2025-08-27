@@ -70,6 +70,7 @@ function buildTypes({ components, context }) {
     blocks: {},
     connections: {},
     requests: {},
+    api: {},
     operators: {
       client: {},
       server: {},

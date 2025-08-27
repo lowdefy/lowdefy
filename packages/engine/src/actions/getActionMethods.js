@@ -15,6 +15,7 @@
 */
 
 import createCallMethod from './createCallMethod.js';
+import createCallAPI from './createCallAPI.js';
 import createGetActions from './createGetActions.js';
 import createGetBlockId from './createGetBlockId.js';
 import createGetEvent from './createGetEvent.js';
@@ -39,6 +40,7 @@ import createValidate from './createValidate.js';
 
 function getActionMethods(props) {
   return {
+    callAPI: createCallAPI(props),
     callMethod: createCallMethod(props),
     displayMessage: createDisplayMessage(props),
     getActions: createGetActions(props),

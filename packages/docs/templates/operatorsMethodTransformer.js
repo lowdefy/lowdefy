@@ -19,7 +19,7 @@ function transformer(obj) {
   if (!obj.methods) {
     return obj.page;
   }
-  const contentArray = obj.page.blocks[1].areas.content.blocks[0].blocks[1].blocks;
+  const contentArray = obj.page.blocks[0].areas.content.blocks[0].blocks[1].blocks;
   const operatorName = obj.page.properties.title;
 
   contentArray.push({

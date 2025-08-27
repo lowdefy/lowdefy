@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import callEndpoint from './routes/endpoints/callEndpoint.js';
 import callRequest from './routes/request/callRequest.js';
 import createApiContext from './context/createApiContext.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
@@ -24,6 +25,7 @@ import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import { ConfigurationError, RequestError, ServerError } from './context/errors.js';
 
 export {
+  callEndpoint,
   callRequest,
   ConfigurationError,
   createApiContext,
