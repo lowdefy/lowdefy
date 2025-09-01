@@ -70,8 +70,10 @@
     "@lowdefy/operators-uuid": "4.4.0",
     "@lowdefy/operators-yaml": "4.4.0",
     "@lowdefy/plugin-next-auth": "4.4.0",
+    "@modelcontextprotocol/sdk": "1.17.4",
     "chokidar": "3.5.3",
     "dotenv": "16.3.1",
+    "mcp-handler": "1.0.2",
     "next": "13.5.4",
     "next-auth": "4.24.5",
     "opener": "1.5.2",
@@ -82,7 +84,8 @@
     "react-icons": "4.12.0",
     "swr": "2.2.4",
     "yaml": "2.3.4",
-    "yargs": "17.7.2"
+    "yargs": "17.7.2",
+    "zod": "^3"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "13.5.4",
