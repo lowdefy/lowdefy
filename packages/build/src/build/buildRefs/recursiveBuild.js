@@ -24,7 +24,6 @@ import runTransformer from './runTransformer.js';
 
 async function recursiveBuild({ context, refDef, count, referencedFrom, refCache }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
-  console.log('Evaluating refs');
   if (count > 10000) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
@@ -38,7 +37,7 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
   // Compile all found refs into an array, and replace all refs inside the file with the refDef object
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
     fileContent,
-    refDef.id,
+    refDef.hash,
     context.refMap
   );
 
