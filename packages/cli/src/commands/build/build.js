@@ -26,13 +26,7 @@ async function build({ context }) {
 
   const directory = context.directories.server;
 
-  let packageName = '@lowdefy/server-community';
-
-  if (!context.options.communityEdition) {
-    packageName = '@lowdefy/server-enterprise';
-  }
-
-  await getServer({ context, packageName, directory });
+  await getServer({ context, packageName: '@lowdefy/server', directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
   await installServer({ context, directory });

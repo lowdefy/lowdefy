@@ -57,11 +57,6 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    license: {
-      entitlements: env.LOWDEFY_LICENSE_ENTITLEMENTS
-        ? JSON.parse(env.LOWDEFY_LICENSE_ENTITLEMENTS)
-        : [],
-    },
     version: env.npm_package_version,
   };
 

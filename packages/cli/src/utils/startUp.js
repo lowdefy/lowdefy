@@ -25,7 +25,6 @@ import getLowdefyYaml from './getLowdefyYaml.js';
 import getOptions from './getOptions.js';
 import getSendTelemetry from './getSendTelemetry.js';
 import readDotEnv from './readDotEnv.js';
-import validateLicense from './validateLicense.js';
 import validateVersion from './validateVersion.js';
 
 async function startUp({ context, options = {}, command }) {
@@ -50,7 +49,6 @@ async function startUp({ context, options = {}, command }) {
   context.pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
   checkPnpmIsInstalled(context);
   await validateVersion(context);
-  context.license = await validateLicense(context);
   context.sendTelemetry = getSendTelemetry(context);
 
   if (type.isNone(lowdefyVersion)) {

@@ -1,20 +1,23 @@
 /*
-  Copyright (C) 2024 Lowdefy, Inc
-  Use of this software is governed by the Business Source License included in the LICENSE file and at www.mariadb.com/bsl11.
+  Copyright 2020-2024 Lowdefy, Inc
 
-  Change Date: 2028-01-16
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-  On the date above, in accordance with the Business Source License, use
-  of this software will be governed by the Apache License, Version 2.0.
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 */
 
 import NextAuth from 'next-auth';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
-import createLicenseRedirectCallback from '../../../lib/server/auth/createLicenseRedirectCallback.js';
-import validateLicense from '../../../lib/server/validateLicense.js';
-import checkAuthorizedHost from '../../../lib/server/checkAuthorizedHost.js';
 
 async function handler({ context, req, res }) {
   if (authJson.configured !== true) {
@@ -22,20 +25,11 @@ async function handler({ context, req, res }) {
       message: 'Auth not configured',
     });
   }
+
   // Required for emails in corporate networks, see:
   // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
   if (req.method === 'HEAD') {
     return res.status(200).end();
-  }
-  if (req.url.startsWith('/api/auth/callback')) {
-    const license = await validateLicense(context);
-    const authorizedHost = checkAuthorizedHost({ license, req });
-    if (!authorizedHost) {
-      throw new Error('Domain not authorized to use license.');
-    }
-    context.authOptions.callbacks.redirect = createLicenseRedirectCallback(context, license);
-  } else {
-    context.authOptions.callbacks.redirect = context.authOptions.originalRedirectCallback;
   }
   return NextAuth(req, res, context.authOptions);
 }

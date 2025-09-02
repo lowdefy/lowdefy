@@ -139,8 +139,8 @@ blocks:
         <ul style="list-style: none; font-size: 14px; margin: 0; padding: 0;">
           <small style="color: #A3A3A3;"><b>LEGAL</b></small>
           <li>
-            <a href="https://docs.lowdefy.com/licenses" style='color: black'>
-              Licenses
+            <a href="https://github.com/lowdefy/lowdefy/blob/main/LICENSE" style='color: black'>
+              Apache 2.0 License
             </a>
           </li>
           <li>
