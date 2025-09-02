@@ -46,7 +46,6 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
 
   for (const newRefDef of foundRefs.values()) {
     // Parse vars and path before passing down to parse new file
-    // returns the newRefDef with all vars filled in and all refs resolved
     const parsedRefDef = populateRefs({
       toPopulate: newRefDef,
       refCache,
@@ -97,7 +96,6 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
     refDef,
   });
 
-  // Cache the final result before returning
   refCache.set(refDef.hash, result);
 
   return result;
