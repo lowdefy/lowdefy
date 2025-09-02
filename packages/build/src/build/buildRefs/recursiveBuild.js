@@ -28,13 +28,11 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
 
-  // Check if this file has already been built and cached
   if (refCache.has(refDef.hash)) {
     return refCache.get(refDef.hash);
   }
 
-  let fileContent = await getRefContent({ context, refDef, referencedFrom }); // Get the parsed yaml content for the refDef.path
-  // Compile all found refs into an array, and replace all refs inside the file with the refDef object
+  let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
     fileContent,
     refDef.hash,
