@@ -21,7 +21,6 @@ import makeRefHash from '../../utils/makeRefHash.js';
 
 function makeRefDefinition(refDefinition, parent, refMap) {
   const refDef = {
-    parent,
     key: get(refDefinition, 'key'),
     original: refDefinition,
     path: getRefPath(refDefinition),
@@ -33,6 +32,7 @@ function makeRefDefinition(refDefinition, parent, refMap) {
   const refHash = makeRefHash(refDef);
   refMap[refHash] = { parent };
   refDef.hash = refHash;
+  refDef.parent = parent;
 
   return refDef;
 }
