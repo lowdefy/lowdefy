@@ -277,5 +277,5 @@ _ref:
           vars:
             previous_page_title: Connections and Requests
             previous_page_id: connections-and-requests
-            next_page_title: References and Templates
-            next_page_id: references-and-templates
+            next_page_title: APIs
+            next_page_id: lowdefy-api

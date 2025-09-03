@@ -98,7 +98,7 @@ const authenticatedContext = testContext({
   readConfigFile: mockReadConfigFile,
   operators,
   secrets,
-  session: { user: { sub: 'sub' } },
+  session: { user: { id: 'id' } },
 });
 
 const defaultParams = {
@@ -377,7 +377,7 @@ test('deserialize inputs', async () => {
   ]);
 });
 
-test('parse request properties for operators', async () => {
+test('evaluate request properties operators', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       requestConfig: {
@@ -389,7 +389,7 @@ test('parse request properties for operators', async () => {
         auth: { public: true },
         properties: {
           payload: { _payload: 'value' },
-          user: { _user: 'sub' },
+          user: { _user: 'id' },
         },
       },
     })
@@ -412,7 +412,7 @@ test('parse request properties for operators', async () => {
       },
       request: {
         payload: 'payloadValue',
-        user: 'sub',
+        user: 'id',
       },
     },
     success: true,
@@ -420,7 +420,7 @@ test('parse request properties for operators', async () => {
   });
 });
 
-test('parse connection properties for operators', async () => {
+test('evaluate connection properties operators', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
       connectionConfig: {
@@ -429,7 +429,7 @@ test('parse connection properties for operators', async () => {
         connectionId: 'testConnection',
         properties: {
           payload: { _payload: 'value' },
-          user: { _user: 'sub' },
+          user: { _user: 'id' },
         },
       },
     })
@@ -449,7 +449,7 @@ test('parse connection properties for operators', async () => {
     response: {
       connection: {
         payload: 'payloadValue',
-        user: 'sub',
+        user: 'id',
       },
       request: {
         requestProperty: 'requestProperty',
@@ -575,7 +575,7 @@ test('request properties operator error', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
   await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 
@@ -595,7 +595,7 @@ test('connection properties operator error', async () => {
   );
   mockTestRequest.mockImplementation(defaultResolverImp);
 
-  await expect(callRequest(context, defaultParams)).rejects.toThrow(RequestError);
+  await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
   await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
 });
 

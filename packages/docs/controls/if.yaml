@@ -1,0 +1,94 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/controls.yaml.njk
+  vars:
+    pageId: :if
+    pageTitle: :if
+    filePath: controls/if.yaml
+    types: |
+      ```
+      ({:if: boolean, :then: routine, :else: routine}): void
+      ```
+    description: |
+      The `:if` control executes different routines based on a boolean condition. It evaluates the condition and runs the `:then` branch if true, or the optional `:else` branch if false. Generally other operators are used to evaluate the test.
+    controlKeys: |
+      - `:if: boolean`: __Required__ - The boolean result of a test or value.
+      - `:then: routine`: __Required__ - The routine to execute if the test result is true.
+      - `:else: routine`: The routine to execute if the test result is false.
+    examples: |
+      ###### Simple Example
+      ```yaml
+      routine:
+        - :if: true
+          :then:
+            :log: 'Test was true'
+          :else:
+            :log: 'Test was false'
+      ```
+      Logs:
+      `Test was true`
+
+      ###### Set User Features
+      ```yaml
+      routine:
+        - :if:
+            _eq:
+              - _payload: user_type
+              - 'premium'
+          :then:
+            - :set_state:
+                discount: 0.2
+                features: ['unlimited', 'priority_support']
+          :else:
+            - :set_state:
+                discount: 0
+                features: ['basic']
+      ```
+
+      ###### Optional Fraud Check
+
+      ```yaml
+      routines:
+        - :if:
+            _gte:
+              - _payload: order_amount
+              - 1000
+          :then:
+            - :log: 'High-value order detected, applying fraud checks'
+            - id: fraud_check
+              type: FraudDetectionAPI
+              connectionId: fraud-service
+              properties:
+                amount:
+                  _payload: order_amount
+                customer_id:
+                  _payload: customer_id
+            - :if:
+                _gt:
+                  - _step: fraud_check.risk_score
+                  - 0.7
+              :then:
+                :reject: 'Order flagged for manual review'
+        - id: create_payment_intent
+          type: StripeRequest
+          connectionId: stripe
+          properties:
+            paymentIntents:
+              create:
+                - amount: 2000
+                  currency: eur
+                  payment_method_types: ['card']
+      ```

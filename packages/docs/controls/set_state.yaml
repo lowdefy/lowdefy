@@ -1,0 +1,113 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/controls.yaml.njk
+  vars:
+    pageId: :set_state
+    pageTitle: :set_state
+    filePath: controls/set_state.yaml
+    types: |
+      ```
+      ({:set_state: object}): void
+      ```
+    description: |
+      The `:set_state` control sets values in the server-side state object during API endpoint execution.
+      It accepts an object where each key-value pair is saved to the state, making data available throughout the routine via the `_state` operator.
+      This server state is isolated to the current API call and does not persist between calls or affect client state. The control supports nested paths using dot notation and can store any data type.
+      Values are evaluated before being set, allowing dynamic state updates based on previous operations.
+    controlKeys: |
+      - `:set_state: object`: __Required__ - Object to be saved to server state.
+    examples: |
+      ###### Accumulating Values
+      ```yaml
+      - :set_state:
+          total: 0
+          count: 0
+      - :for: product
+        :in:
+          _payload: products
+        :do:
+          - :set_state:
+              total:
+                _sum:
+                  - _state: total
+                  - _item: product.price
+              count:
+                _sum:
+                  - _state: processed_count
+                  - 1
+      - :return:
+          total:
+            _state: total
+          count:
+            _state: count
+      ```
+
+      ###### Dot Notation
+      ```yaml
+      - :set_state:
+          user:
+            _step: get_user
+      - :set_state:
+          user.profile.name:
+            _string.concat:
+              - _state: user.profile.first_name
+              - ' '
+              - _state: user.profile.last_name
+      ```
+
+      ###### Shared Value
+      ```yaml
+      - :set_state:
+          product_id:
+            _uuid: true
+      - id: insert_product
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _state: product_id
+            name:
+              _payload: product_name
+            created_at:
+              _date: now
+
+      - id: insert_new_product_event
+        type: MongoDBInsertOne
+        connectionId: events
+        properties:
+          doc:
+            _id:
+              _uuid: true
+            type: new-product
+            description:
+              _nunjucks:
+                template: New product {{ product_name }} created by {{ user_name }}.
+                on:
+                  product_name:
+                    _payload: product_name
+                  user_name:
+                    _user: name
+            product_id:
+              _state: product_id
+            user:
+              id:
+                _user: id
+              name:
+                _user: name
+            timestamp:
+              _date: now
+      ```

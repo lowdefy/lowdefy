@@ -1,0 +1,70 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/actions.yaml.njk
+  vars:
+    pageId: CallAPI
+    pageTitle: CallAPI
+    filePath: actions/CallAPI.yaml
+    types: |
+      ```
+      (params: {
+        endpointId: string,
+        payload: object
+      }): void
+      ```
+    description: |
+      The `CallAPI` action invokes a server-side API endpoint defined in your Lowdefy application's configuration.
+      It sends an optional payload to the API and returns the response data, making it a way to execute server-side logic and orchestrate database operations from your Lowdefy pages.
+
+    params: |
+      ###### object
+        - `endpointId: string`: __Required__ - The id of the API endpoint to call.
+        - `payload: object`: Used to pass data such as state values from the app client to the endpoint as required.
+
+    examples: |
+      ###### Call an API endpoint:
+      ```yaml
+      - id: call_my_api
+        type: CallAPI
+        params:
+          endpointId: my_api_endpoint
+      ```
+
+      ###### Call an API endpoint with a payload:
+      ```yaml
+      - id: call_rating_api
+        type: CallAPI
+        params:
+          endpointId: review_product
+          payload:
+            product_id:
+              _url_query: product_id
+            rating:
+              _state: rating
+            comment:
+              _state: comment
+
+      ```
+
+      ###### Call an API endpoint with client state as the payload:
+      ```yaml
+      - id: call_my_api
+        type: CallAPI
+        params:
+          endpointId: my_api_endpoint
+          payload:
+            _state: true
+      ```

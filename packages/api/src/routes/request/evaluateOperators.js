@@ -14,36 +14,17 @@
   limitations under the License.
 */
 
-import { ServerParser } from '@lowdefy/operators';
-
-import { RequestError } from '../../context/errors.js';
-
-function evaluateOperators(
-  { jsMap, operators, secrets, session },
-  { connectionConfig, payload, requestConfig }
-) {
-  const operatorsParser = new ServerParser({
-    jsMap,
-    operators,
-    payload,
-    secrets,
-    user: session?.user,
-  });
-  const { output: connectionProperties, errors: connectionErrors } = operatorsParser.parse({
+function evaluateOperators({ evaluateOperators }, { connectionConfig, items, requestConfig }) {
+  const connectionProperties = evaluateOperators({
     input: connectionConfig.properties || {},
     location: connectionConfig.connectionId,
   });
-  if (connectionErrors.length > 0) {
-    throw new RequestError(connectionErrors[0]);
-  }
 
-  const { output: requestProperties, errors: requestErrors } = operatorsParser.parse({
+  const requestProperties = evaluateOperators({
     input: requestConfig.properties || {},
+    items,
     location: requestConfig.requestId,
   });
-  if (requestErrors.length > 0) {
-    throw new RequestError(requestErrors[0]);
-  }
 
   return {
     connectionProperties,

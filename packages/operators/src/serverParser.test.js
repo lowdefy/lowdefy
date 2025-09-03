@@ -41,6 +41,14 @@ const secrets = {
   secrets: true,
 };
 
+const state = {
+  state: true,
+};
+
+const steps = {
+  steps: true,
+};
+
 const user = {
   user: true,
 };
@@ -70,7 +78,7 @@ test('parse location not string', () => {
 
 test('operator returns value and removes ~k', () => {
   const input = { a: { _test: { params: true, '~k': 'c' }, '~k': 'b' }, '~k': 'a' };
-  const parser = new ServerParser({ operators, payload, secrets, user });
+  const parser = new ServerParser({ operators, payload, secrets, state, steps, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: 'test' });
   expect(operators._test.mock.calls).toMatchInlineSnapshot(`
@@ -84,6 +92,7 @@ test('operator returns value and removes ~k', () => {
           ],
           "arrayIndices": Array [],
           "env": undefined,
+          "items": undefined,
           "jsMap": undefined,
           "location": "location",
           "methodName": undefined,
@@ -127,6 +136,12 @@ test('operator returns value and removes ~k', () => {
             "secrets": Object {
               "secrets": true,
             },
+            "state": Object {
+              "state": true,
+            },
+            "steps": Object {
+              "steps": true,
+            },
             "user": Object {
               "user": true,
             },
@@ -138,6 +153,12 @@ test('operator returns value and removes ~k', () => {
           "runtime": "node",
           "secrets": Object {
             "secrets": true,
+          },
+          "state": Object {
+            "state": true,
+          },
+          "steps": Object {
+            "steps": true,
           },
           "user": Object {
             "user": true,

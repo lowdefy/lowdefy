@@ -105,3 +105,40 @@ test('throw on Duplicate ids', () => {
     'Duplicate connectionId "connection1".'
   );
 });
+
+test('count operators', () => {
+  const components = {
+    connections: [
+      {
+        id: 'connection1',
+        type: 'MongoDBCollection',
+        properties: {
+          collection: { _payload: 'collection' },
+          databaseUri: {
+            '_string.concat': ['db', 'uri'],
+          },
+        },
+      },
+      {
+        id: 'connection2',
+        type: 'MongoDBCollection',
+        properties: {
+          changeLog: {
+            _payload: 'changelog',
+          },
+          collection: { '_number.toString': 10 },
+          write: {
+            _eq: [true, false],
+          },
+        },
+      },
+    ],
+  };
+  buildConnections({ components, context });
+  expect(context.typeCounters.operators.server.getCounts()).toEqual({
+    _eq: 1,
+    _number: 1,
+    _payload: 2,
+    _string: 1,
+  });
+});

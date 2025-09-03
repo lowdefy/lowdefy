@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+export { default as CallAPI } from './actions/CallAPI.js';
 export { default as CallMethod } from './actions/CallMethod.js';
 export { default as CopyToClipboard } from './actions/CopyToClipboard.js';
 export { default as Link } from './actions/Link.js';

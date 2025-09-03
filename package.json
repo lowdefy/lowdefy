@@ -40,7 +40,9 @@
     "start:server-community": "pnpm -r --filter='@lowdefy/server-community' start",
     "start:server-enterprise": "pnpm -r --filter='@lowdefy/server-enterprise' start",
     "release:version": "pnpm changeset version && pnpm install --no-frozen-lockfile",
-    "release:publish": "pnpm -r --filter=!lowdefy-vscode publish"
+    "release:publish": "pnpm -r --filter=!lowdefy-vscode publish",
+    "release:version-experimental": "pnpm changeset version --snapshot experimental && pnpm install --no-frozen-lockfile && pnpm build",
+    "release:publish-experimental": "pnpm -r --filter=!lowdefy-vscode publish --tag experimental --no-git-checks"
   },
   "devDependencies": {
     "@changesets/cli": "2.26.2",
