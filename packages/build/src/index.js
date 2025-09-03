@@ -47,6 +47,7 @@ import writeMaps from './build/writeMaps.js';
 import writeMenus from './build/writeMenus.js';
 import writePages from './build/writePages.js';
 import writePluginImports from './build/writePluginImports/writePluginImports.js';
+import writePluginSchemas from './build/writePluginSchemas/writePluginSchemas.js';
 import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
@@ -79,6 +80,7 @@ async function build(options) {
   await writeMenus({ components, context });
   await writeTypes({ components, context });
   await writePluginImports({ components, context });
+  await writePluginSchemas({ context });
   await writeJs({ components, context });
   await updateServerPackageJson({ components, context });
   await copyPublicFolder({ components, context });
