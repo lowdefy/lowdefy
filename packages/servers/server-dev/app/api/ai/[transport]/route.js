@@ -1,58 +1,69 @@
 import { createMcpHandler } from 'mcp-handler';
-import fs from 'fs';
-import path from 'path';
-import listBlocks from './tools/listBlocks.js';
+import getAction from './tools/getAction.js';
 import getBlock from './tools/getBlock.js';
+import getConnection from './tools/getConnection.js';
+import getOperator from './tools/getOperator.js';
+import listActions from './tools/listActions.js';
+import listBlocks from './tools/listBlocks.js';
+import listConnections from './tools/listConnections.js';
+import listOperators from './tools/listOperators.js';
+import loadIndividualSchema from './helpers/loadIndividualSchema.js';
+import loadSchemasAsArray from './helpers/loadSchemasAsArray.js';
 
 const handler = createMcpHandler(
   async (server) => {
-    // Helper function to load blocks schema
-    const loadBlocksSchema = () => {
-      try {
-        const schemasDir = path.join(process.cwd(), 'build/schemas/blocks');
-        const files = fs.readdirSync(schemasDir);
-        const blocks = {};
+    // Actions
+    server.tool(...listActions(() => loadSchemasAsArray('actions', ['schema'])));
+    server.tool(...getAction((actionType) => loadIndividualSchema('actions', actionType)));
 
-        files.forEach((file) => {
-          if (file.endsWith('.json')) {
-            const blockType = file.replace('.json', '');
-            const schemaPath = path.join(schemasDir, file);
-            const schemaContent = fs.readFileSync(schemaPath, 'utf8');
-            blocks[blockType] = JSON.parse(schemaContent);
-          }
-        });
+    // Blocks
+    server.tool(...listBlocks(() => loadSchemasAsArray('blocks', ['schema'])));
+    server.tool(...getBlock((blockType) => loadIndividualSchema('blocks', blockType)));
 
-        return blocks;
-      } catch (error) {
-        console.error('Failed to load blocks schema:', error);
-        return {};
-      }
-    };
+    // Connections
+    server.tool(...listConnections(() => loadSchemasAsArray('connections', ['schema'])));
+    server.tool(
+      ...getConnection((connectionType) => loadIndividualSchema('connections', connectionType))
+    );
 
-    // Helper function to load individual block schema
-    const loadBlockSchema = (blockType) => {
-      try {
-        const schemaPath = path.join(process.cwd(), `build/schemas/blocks/${blockType}.json`);
-        const schemaContent = fs.readFileSync(schemaPath, 'utf8');
-        return JSON.parse(schemaContent);
-      } catch (error) {
-        return null;
-      }
-    };
-
-    server.tool(...listBlocks(loadBlocksSchema));
-
-    server.tool(...getBlock(loadBlockSchema));
+    // Operators
+    server.tool(...listOperators(() => loadSchemasAsArray('operators', ['schema'])));
+    server.tool(
+      ...getOperator((operatorType, context) =>
+        loadIndividualSchema('operators', `${operatorType}_${context}`)
+      )
+    );
   },
   {
     capabilities: {
       tools: {
+        list_actions: {
+          description: 'Returns a list all available Lowdefy actions with their types and packages',
+        },
+        get_action: {
+          description: 'Returns detailed schema information for a specific action type',
+        },
         list_blocks: {
           description:
             'Returns a list of all available Lowdefy blocks with their types and packages',
         },
         get_block: {
           description: 'Returns detailed schema information for a specific block type',
+        },
+        list_connections: {
+          description:
+            'Returns a list of all available Lowdefy connections with their types and packages',
+        },
+        get_connection: {
+          description: 'Returns detailed schema information for a specific connection type',
+        },
+        list_operators: {
+          description:
+            'Returns a list of all available Lowdefy operators with their types and packages',
+        },
+        get_operator: {
+          description:
+            'Returns detailed schema information for a specific operator type and context',
         },
       },
     },

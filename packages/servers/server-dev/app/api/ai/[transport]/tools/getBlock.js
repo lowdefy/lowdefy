@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export default function getBlock(loadBlockSchema) {
+function getBlock(loadBlockSchema) {
   return [
     'get_block',
     'Returns detailed schema information for a specific block type',
@@ -38,3 +38,5 @@ export default function getBlock(loadBlockSchema) {
     },
   ];
 }
+
+export default getBlock;
