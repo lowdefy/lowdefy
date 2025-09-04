@@ -34,7 +34,7 @@ async function writeActionSchemas({ context }) {
       );
     }
   } catch (error) {
-    console.warn('Failed to write action schemas:', error.message);
+    context.logger.warn('Failed to write action schemas:', error.message);
   }
 }
 

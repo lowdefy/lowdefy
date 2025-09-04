@@ -31,7 +31,13 @@ async function writeBlockSchemas({ context }) {
       // Try to read schema.json from the package
       try {
         const packagePath = path.join(process.cwd(), 'node_modules', blockConfig.package);
-        const schemaPath = path.join(packagePath, 'dist', 'blocks', blockType, 'schema.json');
+        const schemaPath = path.join(
+          packagePath,
+          'dist',
+          'blocks',
+          blockConfig.originalTypeName,
+          'schema.json'
+        );
 
         if (fs.existsSync(schemaPath)) {
           const schemaContent = fs.readFileSync(schemaPath, 'utf8');
@@ -40,7 +46,7 @@ async function writeBlockSchemas({ context }) {
         }
       } catch (error) {
         // Continue without schema if it can't be read
-        console.warn(`Could not read schema for ${blockType}:`, error.message);
+        context.logger.warn(`Could not read schema for ${blockType}:`, error.message);
       }
 
       const schemaFileName = `${blockType}.json`;
@@ -49,7 +55,7 @@ async function writeBlockSchemas({ context }) {
       await context.writeBuildArtifact(`schemas/blocks/${schemaFileName}`, individualSchemaContent);
     }
   } catch (error) {
-    console.warn('Failed to write block schemas:', error.message);
+    context.logger.warn('Failed to write block schemas:', error.message);
   }
 }
 

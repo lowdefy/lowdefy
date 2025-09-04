@@ -35,7 +35,7 @@ async function writeConnectionSchemas({ context }) {
           packagePath,
           'dist',
           'connections',
-          connectionType,
+          connectionConfig.originalTypeName,
           'schema.js'
         );
 
@@ -45,7 +45,7 @@ async function writeConnectionSchemas({ context }) {
         }
       } catch (error) {
         // Continue without schema if it can't be read
-        console.warn(`Could not read schema for ${connectionType}:`, error.message);
+        context.logger.warn(`Could not read schema for ${connectionType}:`, error.message);
       }
 
       const schemaFileName = `${connectionType}.json`;
@@ -57,7 +57,7 @@ async function writeConnectionSchemas({ context }) {
       );
     }
   } catch (error) {
-    console.warn('Failed to write connection schemas:', error.message);
+    context.logger.warn('Failed to write connection schemas:', error.message);
   }
 }
 

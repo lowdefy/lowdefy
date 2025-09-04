@@ -62,7 +62,7 @@ async function writeOperatorSchemas({ context }) {
       );
     }
   } catch (error) {
-    console.warn('Failed to write operator schemas:', error.message);
+    context.logger.warn('Failed to write operator schemas:', error.message);
   }
 }
 

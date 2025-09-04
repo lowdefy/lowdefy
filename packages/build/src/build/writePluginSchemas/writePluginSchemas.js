@@ -20,6 +20,10 @@ import writeConnectionSchemas from './writeConnectionSchemas.js';
 import writeOperatorSchemas from './writeOperatorSchemas.js';
 
 async function writePluginSchemas({ context }) {
+  if (context.stage !== 'dev') {
+    return;
+  }
+
   await Promise.all([
     writeActionSchemas({ context }),
     writeBlockSchemas({ context }),
