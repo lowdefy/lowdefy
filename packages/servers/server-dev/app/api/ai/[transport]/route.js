@@ -43,37 +43,7 @@ const handler = createMcpHandler(
     server.tool(...getOperator);
   },
   {
-    capabilities: {
-      tools: {
-        list_actions: {
-          description: 'Returns a list all available Lowdefy actions with their types and packages',
-        },
-        get_action: {
-          description: 'Returns detailed schema information for a specific action type',
-        },
-        list_blocks: {
-          description:
-            'Returns a list of all available Lowdefy blocks with their types and packages',
-        },
-        get_block: {
-          description: 'Returns detailed schema information for a specific block type',
-        },
-        list_connections: {
-          description:
-            'Returns a list of all available Lowdefy connections with their types and packages',
-        },
-        get_connection: {
-          description: 'Returns detailed schema information for a specific connection type',
-        },
-        list_operators: {
-          description:
-            'Returns a list of all available Lowdefy operators with their types and packages',
-        },
-        get_operator: {
-          description: 'Returns detailed schema information for a specific operator type',
-        },
-      },
-    },
+    // Optional server options
   },
   {
     basePath: '/api/ai',
