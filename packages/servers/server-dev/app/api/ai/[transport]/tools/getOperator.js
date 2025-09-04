@@ -3,24 +3,21 @@ import { z } from 'zod';
 function getOperator(loadOperatorSchema) {
   return [
     'get_operator',
-    'Returns detailed schema information for a specific operator type and context',
+    'Returns detailed schema information for a specific operator type',
     {
       operatorType: z
         .string()
         .describe('The operator type to get schema for (e.g., "and", "array", "string")'),
-      context: z
-        .string()
-        .describe('The operator context (e.g., "shared", "client", "server", "build")'),
     },
-    async ({ operatorType, context }) => {
-      const operator = loadOperatorSchema(operatorType, context);
+    async ({ operatorType }) => {
+      const operator = loadOperatorSchema(operatorType);
 
       if (!operator) {
         return {
           content: [
             {
               type: 'text',
-              text: `Operator "${operatorType}" with context "${context}" not found.`,
+              text: `Operator "${operatorType}" not found.`,
             },
           ],
         };
@@ -30,7 +27,7 @@ function getOperator(loadOperatorSchema) {
         content: [
           {
             type: 'text',
-            text: `Operator: ${operatorType} (${context})\nPackage: ${
+            text: `Operator: ${operatorType}\nPackage: ${
               operator.package
             }\nSchema:\n${JSON.stringify(operator, null, 2)}`,
           },

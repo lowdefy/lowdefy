@@ -28,11 +28,7 @@ const handler = createMcpHandler(
 
     // Operators
     server.tool(...listOperators(() => loadSchemasAsArray('operators', ['schema'])));
-    server.tool(
-      ...getOperator((operatorType, context) =>
-        loadIndividualSchema('operators', `${operatorType}_${context}`)
-      )
-    );
+    server.tool(...getOperator((operatorType) => loadIndividualSchema('operators', operatorType)));
   },
   {
     capabilities: {
@@ -62,8 +58,7 @@ const handler = createMcpHandler(
             'Returns a list of all available Lowdefy operators with their types and packages',
         },
         get_operator: {
-          description:
-            'Returns detailed schema information for a specific operator type and context',
+          description: 'Returns detailed schema information for a specific operator type',
         },
       },
     },
