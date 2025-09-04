@@ -15,44 +15,39 @@
 */
 
 import { z } from 'zod';
+import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
 
-function getConnection(loadConnectionSchema) {
-  return [
-    'get_connection',
-    'Returns detailed schema information for a specific connection type',
-    {
-      connectionType: z
-        .string()
-        .describe(
-          'The connection type to get schema for (e.g., "MongoDBCollection", "AxiosHttp", "ElasticsearchSearch")'
-        ),
-    },
-    async ({ connectionType }) => {
-      const connection = loadConnectionSchema(connectionType);
+export default [
+  'get_connection',
+  'Returns detailed schema information for a specific connection type',
+  {
+    connectionType: z
+      .string()
+      .describe('The connection type to get schema for (e.g., "AxiosHttp", "MongoDBCollection")'),
+  },
+  async ({ connectionType }) => {
+    const connection = loadIndividualSchema('connections', connectionType);
 
-      if (!connection) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Connection type "${connectionType}" not found.`,
-            },
-          ],
-        };
-      }
-
+    if (!connection) {
       return {
         content: [
           {
             type: 'text',
-            text: `Connection: ${connectionType}\nPackage: ${
-              connection.package
-            }\nSchema:\n${JSON.stringify(connection.schema, null, 2)}`,
+            text: `Connection "${connectionType}" not found.`,
           },
         ],
       };
-    },
-  ];
-}
+    }
 
-export default getConnection;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Connection: ${connectionType}\nPackage: ${
+            connection.package
+          }\nSchema:\n${JSON.stringify(connection, null, 2)}`,
+        },
+      ],
+    };
+  },
+];

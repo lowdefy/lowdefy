@@ -14,24 +14,22 @@
   limitations under the License.
 */
 
-function listConnections(loadConnectionsSummary) {
-  return [
-    'list_connections',
-    'Returns a list of all available Lowdefy connections with their types and packages',
-    {},
-    async () => {
-      const connectionList = loadConnectionsSummary();
+import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Available connections:\n${JSON.stringify(connectionList, null, 2)}`,
-          },
-        ],
-      };
-    },
-  ];
-}
+export default [
+  'list_connections',
+  'Returns a list of all available Lowdefy connections with their types and packages',
+  {},
+  async () => {
+    const connectionList = loadSchemasAsArray('connections', ['schema']);
 
-export default listConnections;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Available connections:\n${JSON.stringify(connectionList, null, 2)}`,
+        },
+      ],
+    };
+  },
+];

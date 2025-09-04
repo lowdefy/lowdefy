@@ -15,42 +15,41 @@
 */
 
 import { z } from 'zod';
+import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
 
-function getOperator(loadOperatorSchema) {
-  return [
-    'get_operator',
-    'Returns detailed schema information for a specific operator type',
-    {
-      operatorType: z
-        .string()
-        .describe('The operator type to get schema for (e.g., "and", "array", "string")'),
-    },
-    async ({ operatorType }) => {
-      const operator = loadOperatorSchema(operatorType);
+export default [
+  'get_operator',
+  'Returns detailed schema information for a specific operator type',
+  {
+    operatorType: z
+      .string()
+      .describe('The operator type to get schema for (e.g., "_and", "_array", "_string")'),
+  },
+  async ({ operatorType }) => {
+    const operator = loadIndividualSchema('operators', operatorType);
 
-      if (!operator) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Operator "${operatorType}" not found.`,
-            },
-          ],
-        };
-      }
-
+    if (!operator) {
       return {
         content: [
           {
             type: 'text',
-            text: `Operator: ${operatorType}\nPackage: ${
-              operator.package
-            }\nSchema:\n${JSON.stringify(operator, null, 2)}`,
+            text: `Operator "${operatorType}" not found.`,
           },
         ],
       };
-    },
-  ];
-}
+    }
 
-export default getOperator;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Operator: ${operatorType}\nPackage: ${operator.package}\nSchema:\n${JSON.stringify(
+            operator,
+            null,
+            2
+          )}`,
+        },
+      ],
+    };
+  },
+];

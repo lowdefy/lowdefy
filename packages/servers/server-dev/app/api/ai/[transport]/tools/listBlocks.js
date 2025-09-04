@@ -14,24 +14,22 @@
   limitations under the License.
 */
 
-function listBlocks(loadBlocksSummary) {
-  return [
-    'list_blocks',
-    'Returns a list of all available Lowdefy blocks with their types and packages',
-    {},
-    async () => {
-      const blockList = loadBlocksSummary();
+import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Available blocks:\n${JSON.stringify(blockList, null, 2)}`,
-          },
-        ],
-      };
-    },
-  ];
-}
+export default [
+  'list_blocks',
+  'Returns a list of all available Lowdefy blocks with their types and packages',
+  {},
+  async () => {
+    const blockList = loadSchemasAsArray('blocks', ['schema']);
 
-export default listBlocks;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Available blocks:\n${JSON.stringify(blockList, null, 2)}`,
+        },
+      ],
+    };
+  },
+];

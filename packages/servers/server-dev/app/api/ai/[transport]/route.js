@@ -23,28 +23,24 @@ import listActions from './tools/listActions.js';
 import listBlocks from './tools/listBlocks.js';
 import listConnections from './tools/listConnections.js';
 import listOperators from './tools/listOperators.js';
-import loadIndividualSchema from './helpers/loadIndividualSchema.js';
-import loadSchemasAsArray from './helpers/loadSchemasAsArray.js';
 
 const handler = createMcpHandler(
   async (server) => {
     // Actions
-    server.tool(...listActions(() => loadSchemasAsArray('actions', ['schema'])));
-    server.tool(...getAction((actionType) => loadIndividualSchema('actions', actionType)));
+    server.tool(...listActions);
+    server.tool(...getAction);
 
     // Blocks
-    server.tool(...listBlocks(() => loadSchemasAsArray('blocks', ['schema'])));
-    server.tool(...getBlock((blockType) => loadIndividualSchema('blocks', blockType)));
+    server.tool(...listBlocks);
+    server.tool(...getBlock);
 
     // Connections
-    server.tool(...listConnections(() => loadSchemasAsArray('connections', ['schema'])));
-    server.tool(
-      ...getConnection((connectionType) => loadIndividualSchema('connections', connectionType))
-    );
+    server.tool(...listConnections);
+    server.tool(...getConnection);
 
     // Operators
-    server.tool(...listOperators(() => loadSchemasAsArray('operators', ['schema'])));
-    server.tool(...getOperator((operatorType) => loadIndividualSchema('operators', operatorType)));
+    server.tool(...listOperators);
+    server.tool(...getOperator);
   },
   {
     capabilities: {

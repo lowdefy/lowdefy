@@ -15,44 +15,41 @@
 */
 
 import { z } from 'zod';
+import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
 
-function getBlock(loadBlockSchema) {
-  return [
-    'get_block',
-    'Returns detailed schema information for a specific block type',
-    {
-      blockType: z
-        .string()
-        .describe('The block type to get schema for (e.g., "Box", "Button", "TextInput")'),
-    },
-    async ({ blockType }) => {
-      const block = loadBlockSchema(blockType);
+export default [
+  'get_block',
+  'Returns detailed schema information for a specific block type',
+  {
+    blockType: z
+      .string()
+      .describe('The block type to get schema for (e.g., "Button", "TextInput", "Card")'),
+  },
+  async ({ blockType }) => {
+    const block = loadIndividualSchema('blocks', blockType);
 
-      if (!block) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Block type "${blockType}" not found.`,
-            },
-          ],
-        };
-      }
-
+    if (!block) {
       return {
         content: [
           {
             type: 'text',
-            text: `Block: ${blockType}\nPackage: ${block.package}\nSchema:\n${JSON.stringify(
-              block.schema,
-              null,
-              2
-            )}`,
+            text: `Block "${blockType}" not found.`,
           },
         ],
       };
-    },
-  ];
-}
+    }
 
-export default getBlock;
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Block: ${blockType}\nPackage: ${block.package}\nSchema:\n${JSON.stringify(
+            block,
+            null,
+            2
+          )}`,
+        },
+      ],
+    };
+  },
+];
