@@ -19,10 +19,12 @@ import getAction from './tools/getAction.js';
 import getBlock from './tools/getBlock.js';
 import getConnection from './tools/getConnection.js';
 import getOperator from './tools/getOperator.js';
+import getRequest from './tools/getRequest.js';
 import listActions from './tools/listActions.js';
 import listBlocks from './tools/listBlocks.js';
 import listConnections from './tools/listConnections.js';
 import listOperators from './tools/listOperators.js';
+import listRequests from './tools/listRequests.js';
 
 const handler = createMcpHandler(
   async (server) => {
@@ -41,6 +43,10 @@ const handler = createMcpHandler(
     // Operators
     server.tool(...listOperators);
     server.tool(...getOperator);
+
+    // Requests
+    server.tool(...listRequests);
+    server.tool(...getRequest);
   },
   {
     // Optional server options

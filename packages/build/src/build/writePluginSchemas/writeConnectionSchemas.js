@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import writeRequestSchemas from './writeRequestSchemas.js';
 
 async function writeConnectionSchemas({ context }) {
   try {
@@ -55,6 +56,12 @@ async function writeConnectionSchemas({ context }) {
         `schemas/connections/${schemaFileName}`,
         individualSchemaContent
       );
+
+      await writeRequestSchemas({
+        connectionType,
+        context,
+        connectionPackage: connectionConfig.package,
+      });
     }
   } catch (error) {
     context.logger.warn('Failed to write connection schemas:', error.message);
