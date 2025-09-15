@@ -25,6 +25,7 @@ import listBlocks from './tools/listBlocks.js';
 import listConnections from './tools/listConnections.js';
 import listOperators from './tools/listOperators.js';
 import listRequests from './tools/listRequests.js';
+import executeRequest from './tools/executeRequest.js';
 
 const handler = createMcpHandler(
   async (server) => {
@@ -47,6 +48,7 @@ const handler = createMcpHandler(
     // Requests
     server.tool(...listRequests);
     server.tool(...getRequest);
+    server.tool(...executeRequest);
   },
   {
     // Optional server options
