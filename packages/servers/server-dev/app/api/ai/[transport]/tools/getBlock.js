@@ -15,7 +15,7 @@
 */
 
 import { z } from 'zod';
-import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
+import loadIndividualDoc from '../helpers/loadIndividualDoc.js';
 
 export default [
   'get_block',
@@ -26,7 +26,7 @@ export default [
       .describe('The block type to get schema for (e.g., "Button", "TextInput", "Card")'),
   },
   async ({ blockType }) => {
-    const block = loadIndividualSchema('blocks', blockType);
+    const block = loadIndividualDoc('blocks', blockType);
 
     if (!block) {
       return {
@@ -43,11 +43,7 @@ export default [
       content: [
         {
           type: 'text',
-          text: `Block: ${blockType}\nPackage: ${block.package}\nSchema:\n${JSON.stringify(
-            block,
-            null,
-            2
-          )}`,
+          text: `Block: ${blockType}\nDocumentation:\n${block}`,
         },
       ],
     };

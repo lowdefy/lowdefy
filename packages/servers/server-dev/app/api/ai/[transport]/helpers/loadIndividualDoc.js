@@ -18,15 +18,15 @@ import fs from 'fs';
 import path from 'path';
 
 // Helper function to load individual schema
-function loadIndividualSchema(schemaType, identifier) {
+function loadIndividualDoc(docType, identifier) {
   try {
-    const schemaPath = path.join(process.cwd(), `build/schemas/${schemaType}/${identifier}.json`);
-    const schemaContent = fs.readFileSync(schemaPath, 'utf8');
+    const docPath = path.join(process.cwd(), `build/docs/${docType}/${identifier}.md`);
+    const content = fs.readFileSync(docPath, 'utf8');
 
-    return JSON.parse(schemaContent);
+    return content;
   } catch (error) {
     return null;
   }
 }
 
-export default loadIndividualSchema;
+export default loadIndividualDoc;

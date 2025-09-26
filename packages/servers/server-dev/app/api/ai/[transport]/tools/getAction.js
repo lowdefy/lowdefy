@@ -15,7 +15,7 @@
 */
 
 import { z } from 'zod';
-import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
+import loadIndividualDoc from '../helpers/loadIndividualDoc.js';
 
 export default [
   'get_action',
@@ -26,7 +26,7 @@ export default [
       .describe('The action type to get schema for (e.g., "CallAPI", "SetState", "Fetch")'),
   },
   async ({ actionType }) => {
-    const action = loadIndividualSchema('actions', actionType);
+    const action = loadIndividualDoc('actions', actionType);
 
     if (!action) {
       return {
@@ -43,11 +43,7 @@ export default [
       content: [
         {
           type: 'text',
-          text: `Action: ${actionType}\nPackage: ${action.package}\nSchema:\n${JSON.stringify(
-            action,
-            null,
-            2
-          )}`,
+          text: `Action: ${actionType}\nDocumentation:\n${action}`,
         },
       ],
     };

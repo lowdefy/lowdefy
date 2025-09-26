@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
+import loadDocsAsArray from '../helpers/loadDocsAsArray.js';
 
 export default [
   'list_actions',
   'Returns a list of all available Lowdefy actions with their types and packages',
   {},
   async () => {
-    const actionList = loadSchemasAsArray('actions', ['schema']);
+    const actionList = loadDocsAsArray('actions');
+
+    const formattedList = actionList
+      .map((action) => `- ${action.title}: ${action.description}`)
+      .join('\n');
 
     return {
       content: [
         {
           type: 'text',
-          text: `Available actions:\n${JSON.stringify(actionList, null, 2)}`,
+          text: `Available actions:\n${formattedList}`,
         },
       ],
     };

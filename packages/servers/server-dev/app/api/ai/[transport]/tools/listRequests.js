@@ -15,7 +15,7 @@
 */
 
 import { z } from 'zod';
-import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
+import loadDocsAsArray from '../helpers/loadDocsAsArray.js';
 
 export default [
   'list_requests',
@@ -26,13 +26,17 @@ export default [
       .describe('The connection type to get requests for (e.g., "AxiosHttp", "MongoDBCollection")'),
   },
   async ({ connectionType }) => {
-    const requestList = loadSchemasAsArray(`requests/${connectionType}`, ['schema']);
+    const requestList = loadDocsAsArray(`requests/${connectionType}`);
+
+    const formattedList = requestList
+      .map((request) => `- ${request.title}: ${request.description}`)
+      .join('\n');
 
     return {
       content: [
         {
           type: 'text',
-          text: `Available requests:\n${JSON.stringify(requestList, null, 2)}`,
+          text: `Available requests for ${connectionType}:\n${formattedList}`,
         },
       ],
     };

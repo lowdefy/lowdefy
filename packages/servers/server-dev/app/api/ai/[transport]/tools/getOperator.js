@@ -15,7 +15,7 @@
 */
 
 import { z } from 'zod';
-import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
+import loadIndividualDoc from '../helpers/loadIndividualDoc.js';
 
 export default [
   'get_operator',
@@ -26,7 +26,7 @@ export default [
       .describe('The operator type to get schema for (e.g., "_and", "_array", "_string")'),
   },
   async ({ operatorType }) => {
-    const operator = loadIndividualSchema('operators', operatorType);
+    const operator = loadIndividualDoc('operators', operatorType);
 
     if (!operator) {
       return {
@@ -43,11 +43,7 @@ export default [
       content: [
         {
           type: 'text',
-          text: `Operator: ${operatorType}\nPackage: ${operator.package}\nSchema:\n${JSON.stringify(
-            operator,
-            null,
-            2
-          )}`,
+          text: `Operator: ${operatorType}\nDocumentation:\n${operator}`,
         },
       ],
     };
