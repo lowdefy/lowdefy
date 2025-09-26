@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as _uuid } from './operators/shared/uuid.js';
+export { default as _uuid } from './operators/shared/uuid/uuid.js';

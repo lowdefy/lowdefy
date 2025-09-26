@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as _change_case } from './operators/shared/change_case.js';
+export { default as _change_case } from './operators/shared/change_case/change_case.js';

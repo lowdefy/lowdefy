@@ -16,11 +16,11 @@
 
 import { ServerParser } from '@lowdefy/operators';
 
-import _args from './args.js';
+import _args from '../args/args.js';
 import _array from './array.js';
-import _function from './function.js';
-import _gt from './gt.js';
-import _sum from './sum.js';
+import _function from '../function/function.js';
+import _gt from '../gt/gt.js';
+import _sum from '../sum/sum.js';
 
 const operators = {
   _args,

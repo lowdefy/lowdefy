@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as _diff } from './operators/shared/diff.js';
+export { default as _diff } from './operators/shared/diff/diff.js';
