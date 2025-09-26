@@ -14,22 +14,14 @@
   limitations under the License.
 */
 
-import writeActionSchemas from './writeActionSchemas.js';
-import writeBlockSchemas from './writeBlockSchemas.js';
-import writeConnectionSchemas from './writeConnectionSchemas.js';
-import writeOperatorSchemas from './writeOperatorSchemas.js';
+import writeDocs from './writeDocs.js';
 
-async function writePluginSchemas({ context }) {
+async function writePluginDocs({ context }) {
   if (context.stage !== 'dev') {
     return;
   }
 
-  await Promise.all([
-    writeActionSchemas({ context }),
-    writeBlockSchemas({ context }),
-    writeConnectionSchemas({ context }),
-    writeOperatorSchemas({ context }),
-  ]);
+  await writeDocs({ context });
 }
 
-export default writePluginSchemas;
+export default writePluginDocs;
