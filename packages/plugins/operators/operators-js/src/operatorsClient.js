@@ -51,7 +51,7 @@ export { default as _uri } from './operators/shared/uri/uri.js';
 export { default as _user } from './operators/shared/user/user.js';
 
 export { default as _api } from './operators/client/api/api.js';
-export { default as _index } from './operators/client/_index/_index.js';
+export { default as _index } from './operators/client/index/_index.js';
 export { default as _actions } from './operators/client/actions/actions.js';
 export { default as _base64 } from './operators/client/base64/base64.js';
 export { default as _event_log } from './operators/client/event_log/event_log.js';
