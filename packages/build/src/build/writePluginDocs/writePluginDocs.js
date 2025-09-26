@@ -20,8 +20,60 @@ async function writePluginDocs({ context }) {
   if (context.stage !== 'dev') {
     return;
   }
+  const blocks = context.typesMap.blocks || {};
+  const actions = context.typesMap.actions || {};
+  // const connections = context.typesMap.connections || {};
+  const operators = context.typesMap.operators || {};
+  // const allRequests = context.typesMap.requests || {};
 
-  await writeDocs({ context });
+  const items = [
+    ...Object.entries(blocks).map(([type, config]) => ({ type, config, category: 'blocks' })),
+    ...Object.entries(actions).map(([type, config]) => ({ type, config, category: 'actions' })),
+    // TODO: Connections and Requests
+    // ...Object.entries(connections).map(([type, config]) => ({
+    //   type,
+    //   config,
+    //   category: 'connections',
+    // })),
+    // ...Object.entries(allRequests).map(([type, config]) => ({
+    //   type,
+    //   config,
+    //   category: 'requests',
+    //   connectionType: config.connectionType,
+    // })),
+  ];
+
+  // Add operators
+  const allOperators = {};
+  if (operators.client) {
+    for (const [operatorType, operatorConfig] of Object.entries(operators.client)) {
+      allOperators[operatorType] = {
+        ...operatorConfig,
+        groups: ['client'],
+      };
+    }
+  }
+  if (operators.server) {
+    for (const [operatorType, operatorConfig] of Object.entries(operators.server)) {
+      if (allOperators[operatorType]) {
+        allOperators[operatorType].groups.push('server');
+      } else {
+        allOperators[operatorType] = {
+          ...operatorConfig,
+          groups: ['server'],
+        };
+      }
+    }
+  }
+  items.push(
+    ...Object.entries(allOperators).map(([type, config]) => ({
+      type,
+      config,
+      category: 'operators',
+    }))
+  );
+
+  await writeDocs({ context, items });
 }
 
 export default writePluginDocs;
