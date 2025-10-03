@@ -16,24 +16,23 @@
 
 import jsonata from 'jsonata';
 import { type } from '@lowdefy/helpers';
-
 import { runClass } from '@lowdefy/operators';
 
 function evaluate(data, expression, bindings) {
-  if (data === null) {
-    data = {};
+  let evalData = data;
+  if (evalData === null) {
+    evalData = {};
   }
   if (!type.isString(expression)) {
     throw new Error('Expression must be a string.');
   }
+  if (bindings && type.isObject(bindings)) {
+    evalData = { ...evalData, ...bindings };
+  }
   try {
     const expr = jsonata(expression);
-    let evalData = data;
-    if (bindings && type.isObject(bindings)) {
-      evalData = { ...data, ...bindings };
-    }
     const result = expr.evaluate(evalData);
-    // JSONata may add a 'sequence' property to arrays, convert to plain arrays
+    // JSONata may add a 'sequence' property to arrays; convert to plain arrays
     if (type.isArray(result) && result.sequence === true) {
       return Array.from(result);
     }
@@ -43,16 +42,11 @@ function evaluate(data, expression, bindings) {
   }
 }
 
-function transform(data, expression, bindings) {
-  return evaluate(data, expression, bindings);
-}
-
 const meta = {
-  evaluate: { namedArgs: ['on', 'expr', 'bindings'], validTypes: ['array', 'object', 'string'] },
-  transform: { namedArgs: ['on', 'expr', 'bindings'], validTypes: ['array', 'object', 'string'] },
+  evaluate: { namedArgs: ['on', 'expr', 'bindings'], validTypes: ['array', 'object'] },
 };
 
-const functions = { evaluate, transform };
+const functions = { evaluate };
 
 function _jsonata({ params, location, methodName }) {
   return runClass({
@@ -62,6 +56,7 @@ function _jsonata({ params, location, methodName }) {
     methodName,
     operator: '_jsonata',
     params,
+    defaultFunction: 'evaluate',
   });
 }
 

@@ -1,30 +1,37 @@
 # Lowdefy Operators JSONata
 
-JSONata operators for Lowdefy - powerful query and transformation language for JSON data.
+JSONata operator for Lowdefy - powerful query and transformation language for JSON data.
 
 ## Overview
 
 JSONata is a lightweight query and transformation language for JSON data. It provides a simple and intuitive way to navigate, query, and transform JSON structures.
 
-## Operators
+## Operator
 
-### `_jsonata.evaluate`
+### `_jsonata`
 
 Evaluate a JSONata expression against data.
 
 **Syntax:**
+
 ```yaml
-_jsonata.evaluate:
+_jsonata:
   on: <data>
   expr: <string>
-  bindings: <object>  # optional
+  bindings: <object> # optional
 ```
+
+**Parameters:**
+
+- `on`: The input data to evaluate the expression against
+- `expr`: A JSONata expression string
+- `bindings`: Optional object to provide additional variables to the expression
 
 **Examples:**
 
 ```yaml
 # Basic arithmetic
-_jsonata.evaluate:
+_jsonata:
   on:
     a: 5
     b: 3
@@ -32,7 +39,7 @@ _jsonata.evaluate:
 # Returns: 8
 
 # String concatenation
-_jsonata.evaluate:
+_jsonata:
   on:
     firstName: John
     lastName: Doe
@@ -40,14 +47,14 @@ _jsonata.evaluate:
 # Returns: "John Doe"
 
 # Array filtering
-_jsonata.evaluate:
+_jsonata:
   on:
     items: [1, 2, 3, 4, 5]
   expr: items[$ > 3]
 # Returns: [4, 5]
 
 # Array mapping
-_jsonata.evaluate:
+_jsonata:
   on:
     users:
       - name: Alice
@@ -58,32 +65,16 @@ _jsonata.evaluate:
 # Returns: ["Alice", "Bob"]
 
 # With bindings
-_jsonata.evaluate:
+_jsonata:
   on:
     price: 100
   expr: price * taxRate
   bindings:
     taxRate: 1.2
 # Returns: 120
-```
 
-### `_jsonata.transform`
-
-Transform data using a JSONata expression. This is an alias for `evaluate` but semantically indicates data transformation.
-
-**Syntax:**
-```yaml
-_jsonata.transform:
-  on: <data>
-  expr: <string>
-  bindings: <object>  # optional
-```
-
-**Examples:**
-
-```yaml
 # Object transformation
-_jsonata.transform:
+_jsonata:
   on:
     user:
       firstName: Jane
@@ -97,7 +88,7 @@ _jsonata.transform:
 # Returns: { "fullName": "Jane Smith", "contact": "jane@example.com" }
 
 # Array transformation
-_jsonata.transform:
+_jsonata:
   on:
     orders:
       - id: 1
@@ -114,11 +105,11 @@ JSONata provides many powerful features:
 
 - **Path Expressions**: Navigate nested objects and arrays
 - **Predicates**: Filter arrays with conditions
-- **Functions**: Built-in functions like `$sum`, `$count`, `$average`, etc.
+- **Functions**: 60+ built-in functions like `$sum`, `$count`, `$average`, `$map`, `$filter`, etc.
 - **Transformations**: Create new object structures
 - **Conditionals**: Ternary operator for conditional logic
-- **String operations**: Concatenation, substring, etc.
+- **String operations**: Concatenation, substring, regex, etc.
 - **Arithmetic**: Standard math operations
-- **Aggregation**: Sum, count, min, max, etc.
+- **Aggregation**: Sum, count, min, max, average, etc.
 
 For more information on JSONata syntax, visit [https://jsonata.org](https://jsonata.org)
