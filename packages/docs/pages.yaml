@@ -210,6 +210,7 @@
 - _ref: operators/_item.yaml
 - _ref: operators/_js.yaml
 - _ref: operators/_json.yaml
+- _ref: operators/_jsonata.yaml
 - _ref: operators/_location.yaml
 - _ref: operators/_log.yaml
 - _ref: operators/_lt.yaml
