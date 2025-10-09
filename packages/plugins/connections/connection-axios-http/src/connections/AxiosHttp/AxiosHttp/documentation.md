@@ -4,21 +4,47 @@ AxiosHttp
 
 <DESCRIPTION>
 
-The `AxiosHttp` connection is used to connect to APIs and web servers using HTTP or HTTPS.
+### Properties
 
-It uses the [axios](https://github.com/axios/axios) library.
-
-The same properties can be set on both connections and requests. The properties will be merged, with the request properties overwriting connection properties. This allows properties like authentication headers and the baseURL to be set on the connection, with request specific properties like the request.
-
->Secrets like authentication headers and API keys should be stored using the [`_secret`](_secret) operator.
+- `url: string`: The server URL that will be used for the request.
+- `method: enum`: Default: `'get'` - The request method to be used when making the request. Options are:
+  - `'get'`
+  - `'delete'`
+  - `'head'`
+  - `'options'`
+  - `'post'`
+  - `'put'`
+  - `'patch'`
+- `baseURL: string`: `baseURL` will be prepended to `url` unless `url` is absolute. It can be convenient to set `baseURL` for an axios connection to pass relative URLs to requests or mutations using that connection.
+- `headers: object`: An object with custom headers to be sent sent with the request. The object keys should be header names, and the values should be the string header values.
+- `params: object`: An object with URL parameters to be sent with the request.
+- `data: string | object | array`: The data to be sent as the request body. Only applicable for request methods `'put'`, `'post'`, and `'patch'`. Can be an object, array or a string in the format `'Country=Brasil&City=Belo Horizonte'`.
+- `auth: object`: Indicates that HTTP Basic authorization should be used, and supplies credentials. This will set an `Authorization` header, overwriting any existing `Authorization` custom headers you have set using `headers`. Only HTTP Basic auth is configurable through this parameter, for Bearer tokens and such, use `Authorization` custom headers instead. The `auth` object should have the following fields:
+  - `username: string`
+  - `password: string`
+- `httpAgentOptions: object`: Options to pass to the Node.js [`http.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
+- `httpsAgentOptions: object`: Options to pass to the Node.js [`https.Agent`](https://nodejs.org/api/http.html#http_class_http_agent) class.
+- `maxContentLength: number`: Defines the max size of the http response content allowed in bytes.
+- `maxRedirects: number`: Defines the maximum number of redirects to follow. If set to 0, no redirects will be followed.
+- `proxy: object`: Defines the hostname and port of the proxy server. The `proxy` object should have the following fields:
+  - `host: string`: Host IP address (eg. `'127.0.0.1'`).
+  - `port: number`: Port number.
+  - `auth: object`: Object with username and password.
+- `responseType: enum`: Default: `'json'` - The type of data that the server will respond with. Options are:
+  - `'document'`
+  - `'json'`
+  - `'text'`
+- `responseEncoding: string`: Default: `'utf8'` - Indicates encoding to use for decoding responses.
+- `timeout: number`: Default: `0` (no timeout) - The number of milliseconds before the request times out. If the request takes longer than `timeout`, the request will be aborted. Set to `0` for no timeout.
+- `transformRequest: function`: A function to transform the request data before it is sent. Receives `data` and `headers` as arguments and should return the data to be sent.
+- `transformResponse: function`: A function to transform the received data. Receives `data` as an argument and should return the transformed data.
+- `validateStatus: function`: A function to validate whether the response should complete successfully given a status code. Receives `status` as an argument and should `true` if the status code is valid.
 
 </DESCRIPTION>
 
-<REQUESTS>
-
-- AxiosHttp
-
-</REQUESTS>
+<CONNECTION>
+AxiosHttp
+</CONNECTION>
 
 <SCHEMA>
 
