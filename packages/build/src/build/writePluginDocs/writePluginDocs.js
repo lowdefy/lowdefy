@@ -22,26 +22,44 @@ async function writePluginDocs({ context }) {
   }
   const blocks = context.typesMap.blocks || {};
   const actions = context.typesMap.actions || {};
-  // const connections = context.typesMap.connections || {};
+  const connections = context.typesMap.connections || {};
   const operators = context.typesMap.operators || {};
-  // const allRequests = context.typesMap.requests || {};
+  const allRequests = context.typesMap.requests || {};
 
+  // Group requests by package name
+  const requestsByPackage = {};
+  for (const [type, config] of Object.entries(allRequests)) {
+    const packageName = config.package;
+    if (!requestsByPackage[packageName]) {
+      requestsByPackage[packageName] = [];
+    }
+    requestsByPackage[packageName].push({ type, config });
+  }
+
+  // Add blocks and actions
   const items = [
     ...Object.entries(blocks).map(([type, config]) => ({ type, config, category: 'blocks' })),
     ...Object.entries(actions).map(([type, config]) => ({ type, config, category: 'actions' })),
-    // TODO: Connections and Requests
-    // ...Object.entries(connections).map(([type, config]) => ({
-    //   type,
-    //   config,
-    //   category: 'connections',
-    // })),
-    // ...Object.entries(allRequests).map(([type, config]) => ({
-    //   type,
-    //   config,
-    //   category: 'requests',
-    //   connectionType: config.connectionType,
-    // })),
   ];
+
+  // Add connections and their associated requests
+  for (const [type, config] of Object.entries(connections)) {
+    items.push({
+      type,
+      config,
+      category: 'connections',
+    });
+
+    const requests = requestsByPackage[config.package] || [];
+    for (const { type: requestType, config: requestConfig } of requests) {
+      items.push({
+        type: requestType,
+        config: requestConfig,
+        category: 'requests',
+        connectionType: type,
+      });
+    }
+  }
 
   // Add operators
   const allOperators = {};
