@@ -15,7 +15,7 @@
 */
 
 import { z } from 'zod';
-import loadIndividualSchema from '../helpers/loadIndividualSchema.js';
+import loadIndividualDoc from '../helpers/loadIndividualDoc.js';
 
 export default [
   'get_request',
@@ -31,7 +31,7 @@ export default [
       .describe('The request type to get schema for (e.g., "AxiosHttp", "MongoDBAggregation")'),
   },
   async ({ connectionType, requestType }) => {
-    const request = loadIndividualSchema(`requests/${connectionType}`, requestType);
+    const request = loadIndividualDoc(`requests/${connectionType}`, requestType);
 
     if (!request) {
       return {
@@ -48,9 +48,7 @@ export default [
       content: [
         {
           type: 'text',
-          text: `Connection: ${connectionType}\nRequest: ${requestType}\nPackage: ${
-            request.package
-          }\nSchema:\n${JSON.stringify(request, null, 2)}`,
+          text: `Connection: ${connectionType}\nRequest: ${requestType}\nDocumentation:\n${request}`,
         },
       ],
     };

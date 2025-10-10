@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
+import loadDocsAsArray from '../helpers/loadDocsAsArray.js';
 
 export default [
   'list_operators',
   'Returns a list of all available Lowdefy operators with their types and packages',
   {},
   async () => {
-    const operatorList = loadSchemasAsArray('operators', ['schema']);
+    const operatorList = loadDocsAsArray('operators');
+
+    const formattedList = operatorList
+      .map((operator) => `- ${operator.title}: ${operator.description}`)
+      .join('\n');
 
     return {
       content: [
         {
           type: 'text',
-          text: `Available operators:\n${JSON.stringify(operatorList, null, 2)}`,
+          text: `Available operators:\n${formattedList}`,
         },
       ],
     };

@@ -14,4 +14,4 @@
   limitations under the License.
 */
 
-export { default as _mql } from './operators/shared/mql.js';
+export { default as _mql } from './operators/shared/mql/mql.js';

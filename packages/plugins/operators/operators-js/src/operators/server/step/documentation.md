@@ -1,0 +1,91 @@
+<TITLE>_step</TITLE>
+<METADATA>env: Server</METADATA>
+<DESCRIPTION>The `_step` operator returns the response value from a previously executed step in an API routine. This operator is only available within API routines and allows later steps to access data from earlier steps. If the step has not yet been executed or is still executing, the returned value is `null`. Dot notation and array indexes are supported for accessing nested properties.</DESCRIPTION>
+<USAGE>(stepId: string): any ###### string The id of a step that has already been executed in the current API routine.</USAGE>
+<EXAMPLES>###### Using a step response:
+```yaml
+routine:
+  - id: get_user
+    type: MongoDBFindOne
+    connectionId: users
+    properties:
+      query:
+        email:
+          _payload: email
+
+- :return:
+  \_step: get_user
+
+````
+Returns: The complete response object returned by the `get_user` step.
+
+###### Using dot notation to access nested properties:
+```yaml
+routine:
+  - id: get_user
+    type: MongoDBFindOne
+    connectionId: users
+    properties:
+      query:
+        email:
+          _payload: email
+
+  - id: get_orders
+    type: MongoDBFind
+    connectionId: orders
+    properties:
+      query:
+        userId:
+          _step: get_user._id  # Access the _id field from get_user
+````
+
+###### Using array indexes:
+
+```yaml
+routine:
+  - id: get_products
+    type: MongoDBFind
+    connectionId: products
+    properties:
+      query:
+        category: 'electronics'
+
+  - :return:
+      first_product:
+        _step: get_products.0 # Access the first element of the array
+      first_product_name:
+        _step: get_products.0.name # Access a property of the first element
+```
+
+###### Chaining multiple steps:
+
+````yaml
+routine:
+  - id: create_order
+    type: MongoDBInsertOne
+    connectionId: orders
+    properties:
+      doc:
+        items:
+          _payload: items
+        total:
+          _payload: total
+
+  - id: send_confirmation
+    type: SendGridMail
+    connectionId: email-service
+    properties:
+      to:
+        _payload: customer_email
+      template_data:
+        order_id:
+          _step: create_order.insertedId  # Use the inserted document's ID
+
+  - :return:
+      success: true
+      order_id:
+        _step: create_order.insertedId
+      email_sent:
+        _step: send_confirmation.success
+```</EXAMPLES>
+````

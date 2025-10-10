@@ -14,23 +14,23 @@
   limitations under the License.
 */
 
-export { default as CallAPI } from './actions/CallAPI.js';
-export { default as CallMethod } from './actions/CallMethod.js';
-export { default as CopyToClipboard } from './actions/CopyToClipboard.js';
-export { default as Link } from './actions/Link.js';
-export { default as Login } from './actions/Login.js';
-export { default as Logout } from './actions/Logout.js';
-export { default as DisplayMessage } from './actions/DisplayMessage.js';
-export { default as Fetch } from './actions/Fetch.js';
-export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition.js';
-export { default as Request } from './actions/Request.js';
-export { default as Reset } from './actions/Reset.js';
-export { default as ResetValidation } from './actions/ResetValidation.js';
-export { default as ScrollTo } from './actions/ScrollTo.js';
-export { default as SetFocus } from './actions/SetFocus.js';
-export { default as SetGlobal } from './actions/SetGlobal.js';
-export { default as SetState } from './actions/SetState.js';
-export { default as Throw } from './actions/Throw.js';
-export { default as UpdateSession } from './actions/UpdateSession.js';
-export { default as Validate } from './actions/Validate.js';
-export { default as Wait } from './actions/Wait.js';
+export { default as CallAPI } from './actions/CallAPI/CallAPI.js';
+export { default as CallMethod } from './actions/CallMethod/CallMethod.js';
+export { default as CopyToClipboard } from './actions/CopyToClipboard/CopyToClipboard.js';
+export { default as Link } from './actions/Link/Link.js';
+export { default as Login } from './actions/Login/Login.js';
+export { default as Logout } from './actions/Logout/Logout.js';
+export { default as DisplayMessage } from './actions/DisplayMessage/DisplayMessage.js';
+export { default as Fetch } from './actions/Fetch/Fetch.js';
+export { default as GeolocationCurrentPosition } from './actions/GeolocationCurrentPosition/GeolocationCurrentPosition.js';
+export { default as Request } from './actions/Request/Request.js';
+export { default as Reset } from './actions/Reset/Reset.js';
+export { default as ResetValidation } from './actions/ResetValidation/ResetValidation.js';
+export { default as ScrollTo } from './actions/ScrollTo/ScrollTo.js';
+export { default as SetFocus } from './actions/SetFocus/SetFocus.js';
+export { default as SetGlobal } from './actions/SetGlobal/SetGlobal.js';
+export { default as SetState } from './actions/SetState/SetState.js';
+export { default as Throw } from './actions/Throw/Throw.js';
+export { default as UpdateSession } from './actions/UpdateSession/UpdateSession.js';
+export { default as Validate } from './actions/Validate/Validate.js';
+export { default as Wait } from './actions/Wait/Wait.js';

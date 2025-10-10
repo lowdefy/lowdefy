@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import loadSchemasAsArray from '../helpers/loadSchemasAsArray.js';
+import loadDocsAsArray from '../helpers/loadDocsAsArray.js';
 
 export default [
   'list_blocks',
   'Returns a list of all available Lowdefy blocks with their types and packages',
   {},
   async () => {
-    const blockList = loadSchemasAsArray('blocks', ['schema']);
+    const blockList = loadDocsAsArray('blocks');
+
+    const formattedList = blockList
+      .map((block) => `- ${block.title}: ${block.description}`)
+      .join('\n');
 
     return {
       content: [
         {
           type: 'text',
-          text: `Available blocks:\n${JSON.stringify(blockList, null, 2)}`,
+          text: `Available blocks:\n${formattedList}`,
         },
       ],
     };

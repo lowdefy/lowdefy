@@ -1,0 +1,147 @@
+<TITLE>_state</TITLE>
+<METADATA>env: Client</METADATA>
+<DESCRIPTION>If used in a block, the `_state` operator gets a value from the [`state`](/page-and-app-state) object. The `state` is a data object specific to the page it is in. The value of `input` blocks are available in `state`, with their `blockId` as key.
+
+If used in an API endpoint, the `_state` operator gets a value from the API endpoints state. The `state` is a data object specific to that execution of the API endpoint.</DESCRIPTION>
+<USAGE>```yaml
+(key: string): any
+(all: boolean): any
+(arguments: {
+all?: boolean,
+key?: string,
+default?: any,
+}): any
+
+````
+###### string
+If the `_state` operator is called with a string argument, the value of the key in the `state` object is returned. If the value is not found, `null` is returned. Dot notation and [block list indexes](/lists) are supported.
+
+###### boolean
+If the `_state` operator is called with boolean argument `true`, the entire `state` object is returned.
+
+###### object
+  - `all: boolean`: If `all` is set to `true`, the entire `state` object is returned. One of `all` or `key` are required.
+  - `key: string`: The value of the key in the `state` object is returned. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported. One of `all` or `key` are required.
+  - `default: any`: A value to return if the `key` is not found in `state`. By default, `null` is returned if a value is not found.</USAGE>
+<EXAMPLES>###### Get the value of `my_key` from `state`:
+```yaml
+_state: my_key
+````
+
+```yaml
+_state:
+  key: my_key
+```
+
+Returns: The value of `my_key` in `state`.
+
+###### Get the entire `state` object:
+
+```yaml
+_state: true
+```
+
+```yaml
+_state:
+  all: true
+```
+
+Returns: The entire `state` object.
+
+###### Dot notation:
+
+Assuming state:
+
+```yaml
+my_object:
+  subfield: 'Value'
+```
+
+then:
+
+```yaml
+_state: my_object.subfield
+```
+
+```yaml
+_state:
+  key: my_object.subfield
+```
+
+Returns: `"Value"`.
+
+###### Return a default value if the value is not found:
+
+```yaml
+_state:
+  key: might_not_exist
+  default: Default value
+```
+
+Returns: The value of `might_not_exist`, or `"Default value"`.
+
+###### Block list indices:
+
+Assuming `state`:
+
+```yaml
+my_array:
+  - value: 0
+  - value: 1
+  - value: 2
+```
+
+then:
+
+```yaml
+_state: my_array.$.value
+```
+
+Returns: `0` when used from the first block (0th index) in a list.
+
+###### Using `_state` with `:set_state` in an API endpoint
+
+````yaml
+- :set_state:
+    product_id:
+      _uuid: true
+- id: insert_product
+  type: MongoDBInsertOne
+  connectionId: tickets
+  properties:
+    doc:
+      _id:
+        _state: product_id
+      name:
+        _payload: product_name
+      created_at:
+        _date: now
+
+- id: insert_new_product_event
+  type: MongoDBInsertOne
+  connectionId: events
+  properties:
+    doc:
+      _id:
+        _uuid: true
+      type: new-product
+      description:
+        _nunjucks:
+          template: New product {{ product_name }} created by {{ user_name }}.
+          on:
+            product_name:
+              _payload: product_name
+            user_name:
+              _user: name
+      product_id:
+        _state: product_id
+      user:
+        id:
+          _user: id
+        name:
+          _user: name
+      timestamp:
+        _date: now
+
+```</EXAMPLES>
+````
