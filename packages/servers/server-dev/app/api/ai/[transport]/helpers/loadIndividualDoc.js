@@ -17,7 +17,6 @@
 import fs from 'fs';
 import path from 'path';
 
-// Helper function to load individual schema
 function loadIndividualDoc(docType, identifier) {
   try {
     const docPath = path.join(process.cwd(), `build/docs/${docType}/${identifier}.md`);
