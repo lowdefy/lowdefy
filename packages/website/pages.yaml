@@ -13,7 +13,7 @@
 # limitations under the License.
 
 - _ref: pages/home/home.yaml
-- _ref: pages/pricing/pricing.yaml
+# - _ref: pages/pricing/pricing.yaml
 - _ref: pages/contact-us/contact-us.yaml
 - _ref: pages/terms/terms.yaml
 - _ref: pages/blog/blog.yaml
