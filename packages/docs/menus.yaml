@@ -798,6 +798,9 @@
         - id: _json
           type: MenuLink
           pageId: _json
+        - id: _jsonata
+          type: MenuLink
+          pageId: _jsonata
         - id: _location
           type: MenuLink
           pageId: _location
