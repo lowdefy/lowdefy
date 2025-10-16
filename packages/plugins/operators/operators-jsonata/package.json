@@ -1,0 +1,57 @@
+{
+  "name": "@lowdefy/operators-jsonata",
+  "version": "4.4.0",
+  "license": "Apache-2.0",
+  "description": "JSONata operators for Lowdefy",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "lowdefy operator",
+    "lowdefy plugin",
+    "jsonata"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Machiel van der Walt",
+      "url": "https://github.com/machielvdw"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    "./operators/client": "./dist/operatorsClient.js",
+    "./operators/server": "./dist/operatorsServer.js",
+    "./types": "./dist/types.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --delete-dir-on-start --copy-files",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "4.4.0",
+    "@lowdefy/operators": "4.4.0",
+    "jsonata": "1.8.7"
+  },
+  "devDependencies": {
+    "@jest/globals": "28.1.3",
+    "@swc/cli": "0.1.63",
+    "@swc/core": "1.3.99",
+    "@swc/jest": "0.2.29",
+    "jest": "28.1.3",
+    "jest-environment-jsdom": "28.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
