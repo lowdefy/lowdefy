@@ -30,7 +30,6 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     directories: {
       config: configDirectory || '',
     },
-    entitlements: ['AUTH'],
     typeCounters: {
       actions: createCounter(),
       auth: {

@@ -14,22 +14,21 @@
   limitations under the License.
 */
 
-import build from '@lowdefy/build';
-import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+/* eslint-disable react/jsx-props-no-spreading */
 
-function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
-    logger.info({ print: 'spin' }, 'Building config...');
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    await build({
-      customTypesMap,
-      directories,
-      logger,
-      refResolver: options.refResolver,
-      stage: 'dev',
-    });
-    logger.info({ print: 'log' }, 'Built config.');
-  };
+function authNotConfigured() {
+  throw new Error('Auth not configured.');
 }
 
-export default lowdefyBuild;
+function AuthNotConfigured({ authConfig, children }) {
+  const auth = {
+    authConfig,
+    getSession: authNotConfigured,
+    signIn: authNotConfigured,
+    signOut: authNotConfigured,
+  };
+
+  return children(auth);
+}
+
+export default AuthNotConfigured;

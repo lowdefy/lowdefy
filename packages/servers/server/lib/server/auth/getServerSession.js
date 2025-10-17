@@ -14,24 +14,15 @@
   limitations under the License.
 */
 
-import NextAuth from 'next-auth';
+import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
-import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
 
-async function handler({ context, req, res }) {
-  if (authJson.configured !== true) {
-    return res.status(404).json({
-      message: 'Auth not configured',
-    });
+function getServerSession({ authOptions, req, res }) {
+  if (authJson.configured === true) {
+    return getNextAuthServerSession(req, res, authOptions);
   }
-
-  // Required for emails in corporate networks, see:
-  // https://next-auth.js.org/tutorials/avoid-corporate-link-checking-email-provider
-  if (req.method === 'HEAD') {
-    return res.status(200).end();
-  }
-  return NextAuth(req, res, context.authOptions);
+  return undefined;
 }
 
-export default apiWrapper(handler);
+export default getServerSession;
