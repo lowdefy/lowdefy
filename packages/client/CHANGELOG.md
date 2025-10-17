@@ -1,5 +1,21 @@
 # Change Log
 
+## 4.5.0
+
+### Minor Changes
+
+- d9512d9be: - Refactor build to create individual block instances.
+  - Add hybrid block type to extend block functionality.
+
+### Patch Changes
+
+- 4f610de5c: Allow custom icon titles and format the icon name if a title is not specified.
+- Updated dependencies [d9512d9be]
+  - @lowdefy/engine@4.5.0
+  - @lowdefy/layout@4.5.0
+  - @lowdefy/block-utils@4.5.0
+  - @lowdefy/helpers@4.5.0
+
 ## 4.4.0
 
 ### Patch Changes
