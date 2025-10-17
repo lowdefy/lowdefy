@@ -14,73 +14,61 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import DOMPurify from 'dompurify';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { type } from '@lowdefy/helpers';
 
-class HtmlComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.div = {
-      innerHTML: '',
-    };
-    this.onTextSelection = this.onTextSelection.bind(this);
-  }
-
-  componentDidMount() {
-    const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString);
-  }
-
-  componentDidUpdate() {
-    const htmlString = type.isNone(this.props.html) ? '' : this.props.html.toString();
-    this.div.innerHTML = DOMPurify.sanitize(htmlString);
-  }
-
-  onTextSelection() {
-    if (this.props.events?.onTextSelection) {
-      const selection = window.getSelection().toString();
-      if (selection !== '') {
-        this.props.methods.triggerEvent({
-          name: 'onTextSelection',
-          event: {
-            selection,
-          },
-        });
+const HtmlComponent = React.memo(
+  ({
+    data,
+    div,
+    events,
+    html,
+    id,
+    methods,
+    onClick = () => methods.triggerEvent({ name: 'onClick', event: { data } }),
+    style,
+    template,
+  }) => {
+    const memoizedHtml = useMemo(() => {
+      let htmlContent = html?.toString() ?? '';
+      if (type.isString(template)) {
+        htmlContent = nunjucksFunction(template)(data);
       }
-    }
-  }
-  render() {
-    const { div, id, methods, style } = this.props;
+      return DOMPurify.sanitize(htmlContent);
+    }, [html, template, JSON.stringify(data)]);
+
+    if (memoizedHtml === '') return undefined; // do not render a element when so content is provided
+
+    const onTextSelection = () => {
+      if (events?.onTextSelection) {
+        const selection = window.getSelection().toString();
+        if (selection !== '') {
+          methods.triggerEvent({
+            name: 'onTextSelection',
+            event: {
+              selection,
+            },
+          });
+        }
+      }
+    };
+
+    const childProps = {
+      'data-testid': id,
+      className: methods.makeCssClass(style),
+      dangerouslySetInnerHTML: { __html: memoizedHtml },
+      id,
+      onClick,
+      onTextSelection,
+      style,
+    };
     if (div === true) {
-      return (
-        <div
-          id={id}
-          data-testid={id}
-          ref={(el) => {
-            if (el) {
-              this.div = el;
-            }
-          }}
-          className={methods.makeCssClass(style)}
-          onMouseUp={this.onTextSelection}
-        />
-      );
+      return <div {...childProps} />;
     }
-    return (
-      <span
-        id={id}
-        data-testid={id}
-        ref={(el) => {
-          if (el) {
-            this.div = el;
-          }
-        }}
-        className={methods.makeCssClass(style)}
-        onMouseUp={this.onTextSelection}
-      />
-    );
+    return <span {...childProps} />;
   }
-}
+);
 
 export default HtmlComponent;

@@ -2164,6 +2164,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 4.4.0
         version: link:../helpers
+      '@lowdefy/nunjucks':
+        specifier: 4.4.0
+        version: link:../nunjucks
       dompurify:
         specifier: 3.2.4
         version: 3.2.4
