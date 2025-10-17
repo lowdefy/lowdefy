@@ -108,6 +108,60 @@ export default {
             },
           },
         },
+        api: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "config.auth.api" should be an object.',
+          },
+          properties: {
+            protected: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.api.protected.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is required. When specified, all unspecified api endpoints will be public.',
+                errorMessage: {
+                  type: 'App "auth.api.protected.$" should be an array of strings.',
+                },
+              },
+            },
+            public: {
+              type: ['array', 'boolean'],
+              errorMessage: {
+                type: 'App "auth.api.public.$" should be an array of strings.',
+              },
+              items: {
+                type: 'string',
+                description:
+                  'Page ids for which authentication is not required. When specified, all unspecified api endpoints will be protected.',
+                errorMessage: {
+                  type: 'App "auth.api.public.$" should be an array of strings.',
+                },
+              },
+            },
+            roles: {
+              type: 'object',
+              patternProperties: {
+                '^.*$': {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  errorMessage: {
+                    type: 'App "auth.api.roles.[role]" should be an array of strings.',
+                  },
+                },
+              },
+              errorMessage: {
+                type: 'App "auth.api.roles" should be an object.',
+              },
+            },
+          },
+        },
         authPages: {
           type: 'object',
           additionalProperties: false,
@@ -467,6 +521,41 @@ export default {
         },
       },
     },
+    endpoint: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['id', 'type'],
+      properties: {
+        id: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "id" should be a string.',
+          },
+        },
+        type: {
+          type: 'string',
+          errorMessage: {
+            type: 'Api endpoint "type" should be a string.',
+          },
+        },
+        routine: {
+          anyOf: [
+            {
+              type: 'array',
+              errorMessage: {
+                type: 'Api endpoint "routine" should be an array or object.',
+              },
+            },
+            {
+              type: 'object',
+              errorMessage: {
+                type: 'Api endpoint "routine" should be an array or object.',
+              },
+            },
+          ],
+        },
+      },
+    },
     connection: {
       type: 'object',
       additionalProperties: false,
@@ -803,6 +892,15 @@ export default {
       },
       errorMessage: {
         type: 'App "connections" should be an array.',
+      },
+    },
+    api: {
+      type: 'array',
+      items: {
+        $ref: '#/definitions/endpoint',
+      },
+      errorMessage: {
+        type: 'App "api" should be an array.',
       },
     },
     menus: {

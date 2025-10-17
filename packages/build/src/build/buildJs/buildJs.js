@@ -24,6 +24,11 @@ function buildJs({ components, context }) {
     const cleanRequests = jsMapParser({ input: pageRequests, jsMap: context.jsMap, env: 'server' });
     return { ...cleanPage, requests: cleanRequests };
   });
+  components.api = jsMapParser({
+    input: components.api,
+    jsMap: context.jsMap,
+    env: 'server',
+  });
   components.connections = jsMapParser({
     input: components.connections,
     jsMap: context.jsMap,

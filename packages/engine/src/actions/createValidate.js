@@ -18,7 +18,7 @@ import getBlockMatcher from '../getBlockMatcher.js';
 
 function createValidate({ context }) {
   return function validate(params) {
-    const validationErrors = context._internal.RootBlocks.validate(getBlockMatcher(params));
+    const validationErrors = context._internal.RootAreas.validate(getBlockMatcher(params));
     if (validationErrors.length > 0) {
       const error = new Error(
         `Your input has ${validationErrors.length} validation error${

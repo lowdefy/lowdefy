@@ -54,10 +54,6 @@ function buildTypes({ components, context }) {
   loaderTypes.blocks.forEach((block) => typeCounters.blocks.increment(block));
   // Used for DisplayMessage in @lowdefy/client
   typeCounters.blocks.increment('Message');
-  // Used by license-invalid page
-  typeCounters.blocks.increment('Button');
-  typeCounters.blocks.increment('Result');
-  typeCounters.operators.client.increment('_get');
 
   components.types = {
     actions: {},
@@ -70,6 +66,7 @@ function buildTypes({ components, context }) {
     blocks: {},
     connections: {},
     requests: {},
+    api: {},
     operators: {
       client: {},
       server: {},

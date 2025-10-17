@@ -17,7 +17,7 @@ import { ServerParser, WebParser } from '@lowdefy/operators';
 import _function from './function.js';
 import _args from './args.js';
 import _payload from '../server/payload.js';
-import _state from '../client/state.js';
+import _state from '../shared/state.js';
 
 const operators = {
   _args,

@@ -46,7 +46,7 @@ test('parse block visible', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.visible).toEqual({ _state: 'key' });
   expect(textInput.eval.visible).toEqual('value');
 });
@@ -75,7 +75,7 @@ test('default value for visible', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.visible).toEqual(true);
   expect(textInput.eval.visible).toEqual(true);
 });
@@ -105,7 +105,7 @@ test('parse block required', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.required).toEqual({ _state: 'key' });
   expect(textInput.eval.required).toEqual('value');
 });
@@ -134,7 +134,7 @@ test('default value for required', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.required).toEqual(false);
   expect(textInput.eval.required).toEqual(false);
 });
@@ -164,7 +164,7 @@ test('parse block properties', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.properties).toEqual({ _state: 'key' });
   expect(textInput.eval.properties).toEqual('value');
 });
@@ -193,7 +193,7 @@ test('default value for properties', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.properties).toEqual({});
   expect(textInput.eval.properties).toEqual({});
 });
@@ -223,7 +223,7 @@ test('parse block style', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.style).toEqual({ _state: 'key' });
   expect(textInput.eval.style).toEqual('value');
 });
@@ -252,7 +252,7 @@ test('default value for style', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.style).toEqual({});
   expect(textInput.eval.style).toEqual({});
 });
@@ -282,7 +282,7 @@ test('parse block layout', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.layout).toEqual({ _state: 'key' });
   expect(textInput.eval.layout).toEqual('value');
 });
@@ -311,7 +311,7 @@ test('default value for layout', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.layout).toEqual({});
   expect(textInput.eval.layout).toEqual({});
 });
@@ -345,7 +345,7 @@ test('parse block areas', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.eval.areas).toEqual({
     area1: {
       property1: 'value',
@@ -388,7 +388,7 @@ test('parse block areas, remove blocks array', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.eval.areas).toEqual({
     area1: {
       property1: 'value',
@@ -420,7 +420,7 @@ test('default value for areas', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.eval.areas).toEqual({});
 });
 
@@ -449,7 +449,7 @@ test('parse block loading', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.loading).toEqual({ _state: 'key' });
   expect(textInput.eval.loading).toEqual(true);
 });
@@ -478,7 +478,7 @@ test('default value for loading', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.loading).toEqual(false);
   expect(textInput.eval.loading).toEqual(false);
 });
@@ -508,7 +508,7 @@ test('parse block skeleton', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.skeleton).toEqual({ _state: 'key' });
   expect(textInput.eval.skeleton).toEqual(false);
 });
@@ -537,7 +537,7 @@ test('default value for skeleton', async () => {
     lowdefy,
     pageConfig,
   });
-  const { textInput } = context._internal.RootBlocks.map;
+  const { textInput } = context._internal.RootAreas.map;
   expect(textInput.skeleton).toEqual(null);
   expect(textInput.eval.skeleton).toEqual(null);
 });

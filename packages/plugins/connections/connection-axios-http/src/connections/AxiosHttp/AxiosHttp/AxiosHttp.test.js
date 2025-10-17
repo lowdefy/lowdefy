@@ -32,7 +32,6 @@ test('get default method,', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {},
@@ -60,7 +59,6 @@ test('get specify method', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {},
@@ -91,7 +89,6 @@ test('get with params', async () => {
     'content-type': 'application/json; charset=utf-8',
     date: expect.any(String),
     etag: expect.any(String),
-    'content-length': expect.any(String),
   });
   expect(res.data).toMatchObject({
     args: {

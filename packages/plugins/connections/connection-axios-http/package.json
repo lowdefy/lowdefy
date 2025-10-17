@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "4.4.0",
-    "axios": "1.6.2"
+    "axios": "1.8.2"
   },
   "devDependencies": {
     "@lowdefy/ajv": "4.4.0",

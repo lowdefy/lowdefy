@@ -66,6 +66,7 @@ class Requests {
       });
       throw error;
     }
+    // evaluate operators
     const { output: payload, errors: parserErrors } = this.context._internal.parser.parse({
       actions,
       event,

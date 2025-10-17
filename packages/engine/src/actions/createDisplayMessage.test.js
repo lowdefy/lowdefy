@@ -58,7 +58,7 @@ test('DisplayMessage with content', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -98,7 +98,7 @@ test('DisplayMessage with all params', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [
@@ -135,7 +135,7 @@ test('DisplayMessage with no params', async () => {
     lowdefy,
     pageConfig,
   });
-  const button = context._internal.RootBlocks.map['button'];
+  const button = context._internal.RootAreas.map['button'];
   button.triggerEvent({ name: 'onClick' });
   expect(mockMessage.mock.calls).toEqual([
     [

@@ -25,7 +25,7 @@ const createSetGlobal = ({ arrayIndices, context }) => {
         params[key]
       );
     });
-    context._internal.RootBlocks.reset();
+    context._internal.RootAreas.reset();
     context._internal.update();
   };
 };

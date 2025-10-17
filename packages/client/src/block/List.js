@@ -23,7 +23,7 @@ import Block from './Block.js';
 const List = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const content = {};
   const contentList = [];
-  Blocks.subBlocks[block.id].forEach((SBlock) => {
+  Blocks.subAreas[block.id].forEach((SBlock) => {
     Object.keys(SBlock.areas).forEach((areaKey) => {
       content[areaKey] = (areaStyle) => (
         <Area

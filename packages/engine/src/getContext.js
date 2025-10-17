@@ -17,7 +17,7 @@
 import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
-import Blocks from './Blocks.js';
+import Areas from './Areas.js';
 import Requests from './Requests.js';
 import State from './State.js';
 
@@ -92,18 +92,18 @@ function getContext({
   _internal.State = new State(ctx);
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
-  _internal.RootBlocks = new Blocks({
+  _internal.RootAreas = new Areas({
     areas: { root: { blocks: [_internal.rootBlock] } },
     context: ctx,
   });
-  _internal.RootBlocks.init();
+  _internal.RootAreas.init();
   _internal.update = () => {
-    _internal.RootBlocks.update();
+    _internal.RootAreas.update();
   };
   _internal.runOnInit = async (progress) => {
     progress();
     if (!_internal.onInitDone) {
-      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+      await _internal.RootAreas.areas.root.blocks[0].triggerEvent({
         name: 'onInit',
         progress,
       });
@@ -114,7 +114,7 @@ function getContext({
   };
   _internal.runOnInitAsync = async (progress) => {
     if (_internal.onInitDone && !_internal.onInitAsyncDone) {
-      await _internal.RootBlocks.areas.root.blocks[0].triggerEvent({
+      await _internal.RootAreas.areas.root.blocks[0].triggerEvent({
         name: 'onInitAsync',
         progress,
       });
