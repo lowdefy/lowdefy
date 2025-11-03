@@ -22,19 +22,22 @@ import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
 
-async function recursiveBuild({ context, refDef, count, referencedFrom }) {
+async function recursiveBuild({ context, refDef, count, referencedFrom, refCache }) {
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
   if (count > 10000) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
+
+  if (refCache.has(refDef.hash)) {
+    return refCache.get(refDef.hash);
+  }
+
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
     fileContent,
-    refDef.id,
+    refDef.hash,
     context.refMap
   );
-
-  const parsedFiles = {};
 
   // Since we can have references in the variables of a reference, we need to first parse
   // the deeper nodes, so we can use those parsed files in references higher in the tree.
@@ -45,15 +48,16 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
     // Parse vars and path before passing down to parse new file
     const parsedRefDef = populateRefs({
       toPopulate: newRefDef,
-      parsedFiles,
+      refCache,
       refDef,
     });
-    context.refMap[parsedRefDef.id].path = parsedRefDef.path;
+    context.refMap[parsedRefDef.hash].path = parsedRefDef.path;
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,
       count: count + 1,
       referencedFrom: refDef.path,
+      refCache,
     });
 
     const transformedFile = await runTransformer({
@@ -77,20 +81,24 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
       Object.defineProperty(value, '~r', {
-        value: refDef.id,
+        value: refDef.hash,
         enumerable: false,
         writable: true,
         configurable: true,
       });
       return value;
     };
-    parsedFiles[newRefDef.id] = JSON.parse(JSON.stringify(withRefKey), reviver);
+    refCache.set(newRefDef.hash, JSON.parse(JSON.stringify(withRefKey), reviver));
   }
-  return populateRefs({
+  const result = populateRefs({
     toPopulate: fileContentBuiltRefs,
-    parsedFiles,
+    refCache,
     refDef,
   });
+
+  refCache.set(refDef.hash, result);
+
+  return result;
 }
 
 export default recursiveBuild;

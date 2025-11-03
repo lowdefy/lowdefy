@@ -19,7 +19,7 @@ import { get, type } from '@lowdefy/helpers';
 function refReviver(key, value) {
   if (type.isObject(value)) {
     if (!type.isUndefined(value._ref)) {
-      return this.parsedFiles[value._ref.id];
+      return this.refCache.get(value._ref.hash);
     }
     if (value._var) {
       if (type.isString(value._var)) {
@@ -44,11 +44,8 @@ function refReviver(key, value) {
   return value;
 }
 
-function populateRefs({ parsedFiles, refDef, toPopulate }) {
-  return JSON.parse(
-    JSON.stringify(toPopulate),
-    refReviver.bind({ parsedFiles, vars: refDef.vars })
-  );
+function populateRefs({ refCache, refDef, toPopulate }) {
+  return JSON.parse(JSON.stringify(toPopulate), refReviver.bind({ refCache, vars: refDef.vars }));
 }
 
 export default populateRefs;
