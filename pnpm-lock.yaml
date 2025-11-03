@@ -1674,8 +1674,8 @@ importers:
         specifier: 4.5.0
         version: link:../../../operators
       uuid:
-        specifier: 9.0.1
-        version: 9.0.1
+        specifier: 13.0.0
+        version: 13.0.0
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -1878,9 +1878,18 @@ importers:
       '@lowdefy/blocks-loaders':
         specifier: 4.5.0
         version: link:../../plugins/blocks/blocks-loaders
+      '@lowdefy/blocks-markdown':
+        specifier: 4.5.0
+        version: link:../../plugins/blocks/blocks-markdown
       '@lowdefy/client':
         specifier: 4.5.0
         version: link:../../client
+      '@lowdefy/connection-axios-http':
+        specifier: 4.5.0
+        version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-mongodb':
+        specifier: 4.5.0
+        version: link:../../plugins/connections/connection-mongodb
       '@lowdefy/helpers':
         specifier: 4.5.0
         version: link:../../utils/helpers
@@ -1893,6 +1902,12 @@ importers:
       '@lowdefy/operators-js':
         specifier: 4.5.0
         version: link:../../plugins/operators/operators-js
+      '@lowdefy/operators-nunjucks':
+        specifier: 4.5.0
+        version: link:../../plugins/operators/operators-nunjucks
+      '@lowdefy/operators-uuid':
+        specifier: 4.5.0
+        version: link:../../plugins/operators/operators-uuid
       '@lowdefy/plugin-next-auth':
         specifier: 4.5.0
         version: link:../../plugins/plugins/plugin-next-auth
@@ -9104,6 +9119,10 @@ packages:
 
   util@0.12.5:
     resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
+
+  uuid@13.0.0:
+    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+    hasBin: true
 
   uuid@8.0.0:
     resolution: {integrity: sha512-jOXGuXZAWdsTH7eZLtyXMqUb9EcWMGZNbL9YcGBJl4MH4nrxHmZJhEHvyLFrkxo+28uLb/NYRcStH48fnD0Vzw==}
@@ -18150,6 +18169,8 @@ snapshots:
       is-generator-function: 1.0.10
       is-typed-array: 1.1.12
       which-typed-array: 1.1.11
+
+  uuid@13.0.0: {}
 
   uuid@8.0.0: {}
 

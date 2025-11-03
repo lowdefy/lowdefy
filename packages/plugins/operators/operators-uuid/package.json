@@ -44,7 +44,7 @@
   "dependencies": {
     "@lowdefy/helpers": "4.5.0",
     "@lowdefy/operators": "4.5.0",
-    "uuid": "9.0.1"
+    "uuid": "13.0.0"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
