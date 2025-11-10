@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.5.2
+
 ## 4.5.1
 
 ### Patch Changes
