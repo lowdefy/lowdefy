@@ -41,6 +41,9 @@ const createIcon = (Icons) => {
   const AiOutlineExclamationCircle = Icons['AiOutlineExclamationCircle'];
 
   const formatTitle = (title) => {
+    if (!title || !type.isString(title)) {
+      return '';
+    }
     let spacedTitle = title.replace(/([A-Z])/g, ' $1').trim();
     return spacedTitle.substring(spacedTitle.indexOf(' ') + 1);
   };
