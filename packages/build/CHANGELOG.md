@@ -1,5 +1,18 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/operators@4.5.2
+- @lowdefy/blocks-basic@4.5.2
+- @lowdefy/blocks-loaders@4.5.2
+- @lowdefy/operators-js@4.5.2
+- @lowdefy/ajv@4.5.2
+- @lowdefy/helpers@4.5.2
+- @lowdefy/node-utils@4.5.2
+- @lowdefy/nunjucks@4.5.2
+
 ## 4.5.1
 
 ### Patch Changes

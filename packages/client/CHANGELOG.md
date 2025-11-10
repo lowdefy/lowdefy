@@ -1,5 +1,15 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- d573e8ff8: Add guard to prevent TypeError in icon `formatTitle`.
+  - @lowdefy/engine@4.5.2
+  - @lowdefy/layout@4.5.2
+  - @lowdefy/block-utils@4.5.2
+  - @lowdefy/helpers@4.5.2
+
 ## 4.5.1
 
 ### Patch Changes
