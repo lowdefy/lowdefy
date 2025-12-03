@@ -148,11 +148,6 @@
           pageId: cli
           properties:
             title: The CLI
-        - id: licenses
-          type: MenuLink
-          pageId: licenses
-          properties:
-            title: Licenses
 
     - id: deployment
       type: MenuGroup
@@ -798,6 +793,9 @@
         - id: _json
           type: MenuLink
           pageId: _json
+        - id: _jsonata
+          type: MenuLink
+          pageId: _jsonata
         - id: _location
           type: MenuLink
           pageId: _location

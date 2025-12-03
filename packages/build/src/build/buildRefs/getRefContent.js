@@ -14,19 +14,40 @@
   limitations under the License.
 */
 
+import { getFileExtension } from '@lowdefy/node-utils';
+
 import getConfigFile from './getConfigFile.js';
 import parseRefContent from './parseRefContent.js';
 import runRefResolver from './runRefResolver.js';
 
+function getCacheKey(refDef) {
+  const { path, vars } = refDef;
+  // For nunjucks files, vars affect the output, so include them in the cache key
+  const ext = getFileExtension(path);
+  if (ext === 'njk' && vars) {
+    return `${path}::${JSON.stringify(vars)}`;
+  }
+  return path;
+}
+
 async function getRefContent({ context, refDef, referencedFrom }) {
-  let content;
+  // Skip caching for resolver-based refs (dynamic content)
   if (refDef.resolver || context.refResolver) {
-    content = await runRefResolver({ context, refDef, referencedFrom });
-  } else {
-    content = await getConfigFile({ context, refDef, referencedFrom });
+    const content = await runRefResolver({ context, refDef, referencedFrom });
+    return parseRefContent({ content, refDef });
   }
 
-  return parseRefContent({ content, refDef });
+  const cacheKey = getCacheKey(refDef);
+  const cached = context.parsedContentCache.get(cacheKey);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const rawContent = await getConfigFile({ context, refDef, referencedFrom });
+  const parsed = parseRefContent({ content: rawContent, refDef });
+
+  context.parsedContentCache.set(cacheKey, parsed);
+  return parsed;
 }
 
 export default getRefContent;

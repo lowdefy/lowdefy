@@ -35,10 +35,6 @@ const program = new Command();
 program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
 
 const options = {
-  communityEdition: new Option(
-    '--community-edition',
-    'Use the Apache 2.0 licensed community edition server.'
-  ).env('LOWDEFY_COMMUNITY_EDITION'),
   configDirectory: new Option(
     '--config-directory <config-directory>',
     'Change config directory. Default is the current working directory.'
@@ -83,7 +79,6 @@ program
   .command('build')
   .description('Build a Lowdefy production app.')
   .usage('[options]')
-  .addOption(options.communityEdition)
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)

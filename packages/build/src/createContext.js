@@ -17,26 +17,27 @@
 */
 
 import { mergeObjects } from '@lowdefy/helpers';
+import { BuildParser } from '@lowdefy/operators';
+import operators from '@lowdefy/operators-js/operators/build';
 
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
-function createContext({
-  customTypesMap,
-  directories,
-  entitlements = [],
-  logger,
-  refResolver,
-  stage = 'prod',
-}) {
+function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+  const operatorsParser = new BuildParser({
+    env: process.env,
+    operators,
+  });
+
   const context = {
     directories,
-    entitlements,
     jsMap: {},
     keyMap: {},
     logger,
+    operatorsParser,
+    parsedContentCache: new Map(),
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
