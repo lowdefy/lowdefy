@@ -1,92 +1,116 @@
-<TITLE>_get</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_get` operator gets a value from the object or array specified in `from`. If the `key` is not found, the provided `default`, or `null` if not specified, are returned.</DESCRIPTION>
-<USAGE>(arguments: {
-  from: any[] | object,
-  key: string,
-  default?: any,
-}): any
-###### object
-  - `from: any[] | object`: __Required__ - The object to get the value from.
-  - `key: string`: __Required__ - The value of the key or array index to get from the `from` object or array. If the value is not found, `null`, or the specified default value is returned. Dot notation and [block list indexes](/lists) are supported.
-  - `default: any`: A value to return if the `key` is not found in `from`. By default, `null` is returned if a value is not found.</USAGE>
-<EXAMPLES>###### Get the value of a key from an object:
+<TITLE>
+_get
+<TITLE>
+
+<METADATA>
+env: Shared
+<METADATA>
+
+<DESCRIPTION>
+The `_get` operator retrieves a value from an object or array using a dot-notation path. It provides a safe way to access nested properties with an optional default value if the path doesn't exist.
+
+If `from` is `null`, it returns the default value (or `null` if no default is specified).
+<DESCRIPTION>
+
+<USAGE>
+```
+(params: object): any
+
+###### params
+
+An object with the following properties:
+- `from`: The source object or array to get the value from.
+- `key`: A dot-notation path string to the desired value.
+- `default`: (optional) Value to return if the key is not found.
+```
+<USAGE>
+
+<SCHEMA>
+```yaml
+_get:
+  from: object | array
+  key: string       # dot-notation path
+  default: any      # optional default value
+```
+<SCHEMA>
+
+<EXAMPLES>
+### Get nested property:
 ```yaml
 _get:
   from:
-    name: George
-    age: 22
-  key: name
+    _state: user
+  key: profile.name
 ```
-Returns: `"George"`
 
-###### Use \_get to as a switch statement to choose an Icon name:
+Returns: The user's profile name
 
+### Access array element by index:
 ```yaml
 _get:
+  from:
+    _request: products
+  key: '0.name'
+```
+
+Returns: Name of the first product
+
+### Provide default value:
+```yaml
+_get:
+  from:
+    _state: settings
+  key: theme.color
+  default: '#000000'
+```
+
+Returns: Theme color or '#000000' if not set
+
+### Access deeply nested data:
+```yaml
+_get:
+  from:
+    _request: order_details
+  key: customer.address.city
+  default: Unknown
+```
+
+Returns: Customer's city or 'Unknown'
+
+### Get value from request response:
+```yaml
+_get:
+  from:
+    _request: search_results.0
+  key: total_count.0.total
+  default: 0
+```
+
+Returns: Total count from search results or 0
+
+### Access array within nested object:
+```yaml
+_get:
+  from:
+    _state: form_data
+  key: items.2.quantity
+  default: 1
+```
+
+Returns: Quantity of third item or 1
+
+### Dynamic key access:
+```yaml
+_get:
+  from:
+    _state: translations
   key:
-    _state: status
-  from:
-    new: AiTwoTonePlusCircle
-    escalated: AiTwoToneExclamationCircle
-    investigation_started: AiTwoToneTool
-    client_contacted: AiTwoToneSound
-    awaiting_confirmation: AiOutlineLike
-    closed: AiOutlineStop
+    _string.concat:
+      - labels.
+      - _state: selected_language
+      - .title
+  default: No translation
 ```
 
-Returns: The icon corresponding to the status in state.
-
-###### Get from an array (arrays are `0` indexed):
-
-```yaml
-_get:
-  from:
-    - id: 1
-      name: Joe
-    - id: 2
-      Name: Dave
-  key: 0.name
-```
-
-Returns: `1`.
-
-###### Dot notation:
-
-```yaml
-_get:
-  from:
-    my_object:
-      subfield: 'Value'
-  key: my_object.subfield
-```
-
-Returns: `"Value"`.
-
-###### Return a default value if the value is not found:
-
-```yaml
-_get:
-  from:
-    value1: 1
-  key: value2
-  default: 99
-```
-
-Returns: `99`.
-
-###### Block list indices:
-
-Assuming `state`:
-
-```yaml
-_get:
-  from:
-    my_array:
-      - value: 0
-      - value: 1
-      - value: 2
-  key: my_array.$.value
-```
-
-Returns: `0` when used from the first block (0th index) in a list.</EXAMPLES>
+Returns: Translation for selected language
+<EXAMPLES>

@@ -1,26 +1,116 @@
-<TITLE>_uri</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_uri` operator [encodes and decodes](https://en.wikipedia.org/wiki/Percent-encoding) Uniform Resource Identifiers (URI). It encodes characters that are not in the limited US-ASCII characters legal within a URI.</DESCRIPTION>
-<USAGE>decode(value: string): string
-encode(value: string): string
-###### decode
-The `_uri.decode` method decodes a string that has been uri-encoded. It uses [`decodeURIComponent`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent).
-###### string
-The string to decode.
+<TITLE>
+_uri
+<TITLE>
+
+<METADATA>
+env: Shared
+<METADATA>
+
+<DESCRIPTION>
+The `_uri` operator provides URL encoding and decoding functions. It wraps JavaScript's `encodeURIComponent` and `decodeURIComponent` functions.
+
+Available methods:
+- `encode`: Encodes special characters for use in URL components
+- `decode`: Decodes URL-encoded strings back to original form
+<DESCRIPTION>
+
+<USAGE>
+```
+_uri.encode: string
+_uri.decode: string
+
 ###### encode
-The `_uri.encode` uri-encodes a string. It uses [`encodeURIComponent`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent).
-###### string
-The string to encode.</USAGE>
-<EXAMPLES>###### Decode a base64 string:
-```yaml
-_uri.decode: http%3A%2F%2Fusername%3Apassword%40www.example.com%3A80%2Fpath%2Fto%2Ffile.php%3Ffoo%3D316%26bar%3Dthis%2Bhas%2Bspaces%23anchor
+Encodes a string for safe use in URLs. Converts special characters to percent-encoded format.
+
+###### decode
+Decodes a percent-encoded string back to its original form.
 ```
-Returns: `"http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor"`.
+<USAGE>
 
-###### Encode a string as base64:
-
+<SCHEMA>
 ```yaml
-_uri.encode: http://username:password@www.example.com:80/path/to/file.php?foo=316&bar=this+has+spaces#anchor
+# Encode string
+_uri.encode: string
+
+# Decode string
+_uri.decode: string
+```
+<SCHEMA>
+
+<EXAMPLES>
+### Encode URL parameter:
+```yaml
+_uri.encode: 'hello world'
 ```
 
-Returns: `"http%3A%2F%2Fusername%3Apassword%40www.example.com%3A80%2Fpath%2Fto%2Ffile.php%3Ffoo%3D316%26bar%3Dthis%2Bhas%2Bspaces%23anchor"`.</EXAMPLES>
+Returns: `'hello%20world'`
+
+### Decode URL parameter:
+```yaml
+_uri.decode: 'hello%20world'
+```
+
+Returns: `'hello world'`
+
+### Encode search query:
+```yaml
+_uri.encode:
+  _state: search_term
+```
+
+Returns: URL-safe search term
+
+### Build URL with encoded parameter:
+```yaml
+_string.concat:
+  - 'https://api.example.com/search?q='
+  - _uri.encode:
+      _state: search_query
+```
+
+Returns: `'https://api.example.com/search?q=test%20query'`
+
+### Encode special characters:
+```yaml
+_uri.encode: 'price=$100&discount=20%'
+```
+
+Returns: `'price%3D%24100%26discount%3D20%25'`
+
+### Decode query parameter:
+```yaml
+_uri.decode:
+  _state: encoded_message
+```
+
+Returns: Decoded message from URL parameter
+
+### Build dynamic URL:
+```yaml
+_string.concat:
+  - '/products/'
+  - _uri.encode:
+      _state: category
+  - '/'
+  - _uri.encode:
+      _state: product_name
+```
+
+Returns: URL-safe path like `/products/electronics/TV%2032%22`
+
+### Encode for API request:
+```yaml
+id: fetch_data
+type: Request
+params:
+  endpoint:
+    _string.concat:
+      - /api/data?filter=
+      - _uri.encode:
+          _json.stringify:
+            on:
+              _state: filter_config
+```
+
+Encodes JSON filter for API query string
+<EXAMPLES>

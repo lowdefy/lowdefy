@@ -1,61 +1,101 @@
-<TITLE>_ne</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_ne` operator tests if two values are not equal. It takes an array of two values to test.
+<TITLE>
+_ne
+<TITLE>
 
-> The `_ne` won't do a deep comparison.</DESCRIPTION>
-> <USAGE>([value1: any, value2: any]): boolean
+<METADATA>
+env: Shared
+<METADATA>
 
-###### array
+<DESCRIPTION>
+The `_ne` operator performs a strict inequality comparison (`!==`) between two values. It takes an array of exactly 2 values and returns `true` if they are not strictly equal, `false` otherwise.
 
-An array of two values to compare.</USAGE>
-<EXAMPLES>###### Two non-equal strings:
+Strict inequality means either the value or type must be different. For example, `1` is not equal to `'1'` because they have different types.
+<DESCRIPTION>
 
+<USAGE>
+```
+(values: [any, any]): boolean
+
+###### values
+
+An array containing exactly two values to compare for strict inequality.
+```
+<USAGE>
+
+<SCHEMA>
 ```yaml
 _ne:
-  - 'Hello'
-  - 'Hello you'
+  - value1
+  - value2
+```
+<SCHEMA>
+
+<EXAMPLES>
+### Compare two strings:
+```yaml
+_ne:
+  - pending
+  - approved
 ```
 
 Returns: `true`
 
-###### Two equal strings:
-
+### Check if status has changed:
 ```yaml
 _ne:
-  - 'Hello'
-  - 'Hello'
+  - _state: current_status
+  - _state: original_status
 ```
 
-Returns: `false`
+Returns: `true` if status was modified
 
-###### Two numbers:
-
+### Check if value is not null:
 ```yaml
 _ne:
-  - _sum:
-      - 3
-      - 4
-  - 8
+  - _state: selected_item
+  - null
 ```
 
-Returns: `true`
+Returns: `true` if an item is selected
 
-###### Arrays are not compared deeply:
+### Show edit button when not submitted:
+```yaml
+id: edit_button
+type: Button
+visible:
+  _ne:
+    - _state: form.status
+    - submitted
+properties:
+  title: Edit Form
+```
 
+Button visible when form is not submitted
+
+### Check if user is not the owner:
 ```yaml
 _ne:
-  - [1, 2, 3]
-  - [1, 2, 3]
+  - _user: id
+  - _state: record.owner_id
 ```
 
-Returns: `true`
+Returns: `true` if current user is not the owner
 
-###### Values from "getter" operators are copies and not equal:
-
+### Validate different passwords:
 ```yaml
 _ne:
-  - _state: my_object
-  - _state: my_object
+  - _state: new_password
+  - _state: current_password
 ```
 
-Returns: `true`</EXAMPLES>
+Returns: `true` if new password is different
+
+### Check if quantity changed:
+```yaml
+_ne:
+  - _state: item.quantity
+  - _state: item.original_quantity
+```
+
+Returns: `true` if quantity was modified
+<EXAMPLES>

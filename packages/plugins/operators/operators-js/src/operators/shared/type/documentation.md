@@ -1,77 +1,172 @@
-<TITLE>_type</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_type` operator performs a type test on an object, and returns true if the object is of the specified type.
+<TITLE>
+_type
+<TITLE>
 
-The regex operator has shorthand argument definitions that can be used on web client.</DESCRIPTION>
-<USAGE>```yaml
-(type: enum): boolean
-(arguments: {
-type: string,
-on?: any,
-key?: string
-}): boolean
+<METADATA>
+env: Shared
+<METADATA>
 
-````
-###### object
-  - `type: enum`: __Required__ - The type to test. Can be one of:
-    - `string`
-    - `array`
-    - `date`
-    - `object`
-    - `boolean`
-    - `number`
-    - `integer`
-    - `null`
-    - `undefined`
-    - `none` (`null` or `undefined`)
-    - `primitive` (`undefined`, `null`, `string`, `number`, `boolean`, or `date`)
-  - `on: any`: The value to test. One of `on` or `key` must be specified unless the operator is used in an input block.
-  - `key: string`: The key of a value in `state` to test. One of `on` or `key` must be specified unless the operator is used in an input block.
+<DESCRIPTION>
+The `_type` operator tests whether a value is of a specific JavaScript type. It returns `true` if the value matches the specified type, `false` otherwise.
 
-###### string
-The type to test. The string shorthand can only be used in an input block, and the tested value will be the block's value.</USAGE>
-<EXAMPLES>###### Check if a value is a number:
+Available type tests:
+- `string`: Test for string type
+- `array`: Test for array type
+- `date`: Test for Date object
+- `object`: Test for plain object (not array, not date)
+- `boolean`: Test for boolean type
+- `number`: Test for number type
+- `integer`: Test for integer (whole number)
+- `null`: Test for null
+- `undefined`: Test for undefined
+- `none`: Test for null or undefined
+- `primitive`: Test for primitive types (string, number, boolean, null, undefined)
+<DESCRIPTION>
+
+<USAGE>
+```
+(params: string | object): boolean
+
+###### String shorthand
+Type name to test against value at current location in state.
+
+###### Object params
+- type: The type name to test (required)
+- on: The value to test (optional, defaults to state at current location)
+- key: State key to get value from (optional)
+```
+<USAGE>
+
+<SCHEMA>
+```yaml
+# String shorthand
+_type: typeName
+
+# Object syntax
+_type:
+  type: string
+  on: value      # Value to test
+  key: string    # Or state key to get value
+```
+<SCHEMA>
+
+<EXAMPLES>
+### Check if string:
+```yaml
+_type:
+  type: string
+  on:
+    _state: user_input
+```
+
+Returns: `true` if user_input is a string
+
+### Check if array:
+```yaml
+_type:
+  type: array
+  on:
+    _state: selected_items
+```
+
+Returns: `true` if selected_items is an array
+
+### Check if number:
 ```yaml
 _type:
   type: number
   on:
-    _state: input
-````
+    _state: quantity
+```
 
-Returns: `true` if a number.
+Returns: `true` if quantity is a number
 
-###### Using the key of the value in `state`:
-
+### Check if integer:
 ```yaml
 _type:
-  type: number
-  key: input
+  type: integer
+  on:
+    _state: count
 ```
 
-Returns: `true` if a number.
+Returns: `true` if count is a whole number
 
-###### Using the value of the block in which the operator is evaluated:
-
+### Check if null:
 ```yaml
-id: input
-type: TextInput
-validate:
-  - message: This field id required.
-    status: error
-    pass:
-      _not:
-        _type: none
+_type:
+  type: null
+  on:
+    _state: optional_field
 ```
 
-Returns: `true` if the input is none.
+Returns: `true` if field is null
 
-###### Test if an id in the `urlQuery` is undefined or null:
-
+### Check if none (null or undefined):
 ```yaml
 _type:
   type: none
   on:
-    _url_query: id
+    _state: optional_value
 ```
 
-Returns: `true` if the id is none,</EXAMPLES>
+Returns: `true` if value is null or undefined
+
+### Check if object:
+```yaml
+_type:
+  type: object
+  on:
+    _state: config
+```
+
+Returns: `true` if config is a plain object
+
+### Check if date:
+```yaml
+_type:
+  type: date
+  on:
+    _state: start_date
+```
+
+Returns: `true` if start_date is a Date object
+
+### Conditional rendering based on type:
+```yaml
+id: display_value
+type: Title
+properties:
+  content:
+    _if:
+      test:
+        _type:
+          type: array
+          on:
+            _state: data
+      then:
+        _array.join:
+          on:
+            _state: data
+          separator: ', '
+      else:
+        _state: data
+```
+
+Displays array as comma-separated or value as-is
+
+### Validate input type:
+```yaml
+_and:
+  - _type:
+      type: string
+      on:
+        _state: email
+  - _not:
+      _type:
+        type: none
+        on:
+          _state: email
+```
+
+Returns: `true` if email is a non-empty string
+<EXAMPLES>

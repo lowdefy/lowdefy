@@ -1,216 +1,184 @@
-<TITLE>_string</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_string` operator can be used to run javascript [`String`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) methods.</DESCRIPTION>
-<USAGE>###### charAt
+<TITLE>
+_string
+<TITLE>
+
+<METADATA>
+env: Shared
+<METADATA>
+
+<DESCRIPTION>
+The `_string` operator provides access to JavaScript String methods. It allows you to manipulate strings with operations like concatenation, searching, replacing, splitting, and case conversion.
+
+If `null` or `undefined` is passed as the string, it will be treated as an empty string `''`.
+
+Available methods include:
+- Manipulation: concat, replace, slice, split, substring, trim, trimStart, trimEnd, repeat, padStart, padEnd
+- Case: toLowerCase, toUpperCase
+- Search: charAt, includes, indexOf, lastIndexOf, startsWith, endsWith, match, search
+- Info: length
+<DESCRIPTION>
+
+<USAGE>
 ```
-(arguments: {on: string, index: number}): string
-(arguments: [on: string, index: number]): string
+_string.methodName: params
+
+###### Single argument methods
+toLowerCase, toUpperCase, trim, trimStart, trimEnd, length
+
+###### Named argument methods
+- charAt: { on, index }
+- concat: array of strings
+- endsWith: { on, searchString, length }
+- includes: { on, searchString, position }
+- indexOf: { on, searchValue, fromIndex }
+- lastIndexOf: { on, searchValue, fromIndex }
+- match: { on, regex, regexFlags }
+- normalize: { on, form }
+- padEnd: { on, targetLength, padString }
+- padStart: { on, targetLength, padString }
+- repeat: { on, count }
+- replace: { on, regex, newSubstr, regexFlags }
+- search: { on, regex, regexFlags }
+- slice: { on, start, end }
+- split: { on, separator }
+- startsWith: { on, searchString, position }
+- substring: { on, start, end }
 ```
-The `_string.charAt` method returns a string consisting of [the single UTF-16 code (character) unit located at the specified offset](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charAt) into the string.
-###### concat
+<USAGE>
+
+<SCHEMA>
+```yaml
+# Single argument methods
+_string.methodName: string
+
+# Named argument methods
+_string.methodName:
+  on: string
+  # method-specific args
+
+# Concat (array of strings)
+_string.concat:
+  - string1
+  - string2
+  - string3
 ```
-(strings: string[]): string
+<SCHEMA>
+
+<EXAMPLES>
+### Convert to uppercase:
+```yaml
+_string.toUpperCase:
+  _state: code
 ```
-The `_string.concat` method [concatenates](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/concat) strings.
-###### endsWith
+
+Returns: Uppercase version of code
+
+### Convert to lowercase:
+```yaml
+_string.toLowerCase:
+  _state: email
 ```
-(arguments: {
-  on: string,
-  searchString: string,
-  length?: number
-}): boolean
-(arguments: [
-  on: string,
-  searchString: string,
-  length?: number
-]): boolean
+
+Returns: Lowercase email for consistency
+
+### Concatenate strings:
+```yaml
+_string.concat:
+  - _state: first_name
+  - ' '
+  - _state: last_name
 ```
-The `_string.endsWith` method determines whether a string [ends with the characters of a specified string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith), returning `true` or `false` as appropriate.
-###### includes
+
+Returns: Full name like 'John Smith'
+
+### Trim whitespace:
+```yaml
+_string.trim:
+  _state: user_input
 ```
-(arguments: {
-  on: string,
-  searchString: string,
-  position?: number
-}): boolean
-(arguments: [
-  on: string,
-  searchString: string,
-  position?: number
-]): boolean
+
+Returns: Input with leading/trailing whitespace removed
+
+### Check if includes substring:
+```yaml
+_string.includes:
+  on:
+    _state: description
+  searchString: 'urgent'
 ```
-The `_string.includes` method determines whether [one string may be found within another string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes), returning `true` or `false` as appropriate.
-###### indexOf
+
+Returns: `true` if description contains 'urgent'
+
+### Replace text:
+```yaml
+_string.replace:
+  on:
+    _state: template
+  regex: '{{name}}'
+  newSubstr:
+    _state: user.name
 ```
-(arguments: {
-  on: string,
-  searchValue: string,
-  fromIndex?: number
-}): number
-(arguments: [
-  on: string,
-  searchValue: string,
-  fromIndex?: number
-]): number
+
+Returns: Template with {{name}} replaced
+
+### Split into array:
+```yaml
+_string.split:
+  on:
+    _state: tags
+  separator: ','
 ```
-The `_string.indexOf` method returns the index within string of the [first occurrence of the specified value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf), starting the search at `fromIndex`. Returns `-1` if the value is not found.
-###### length
+
+Returns: Array of individual tags
+
+### Get string length:
+```yaml
+_string.length:
+  _state: password
 ```
-(string: string): number
+
+Returns: Number of characters in password
+
+### Pad start for formatting:
+```yaml
+_string.padStart:
+  on:
+    _state: order_number
+  targetLength: 6
+  padString: '0'
 ```
-The `_string.length` method returns the [length](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length) of a string.
-###### lastIndexOf
+
+Returns: '000042' (padded to 6 digits)
+
+### Check if starts with prefix:
+```yaml
+_string.startsWith:
+  on:
+    _state: product_code
+  searchString: 'PRD-'
 ```
-(arguments: {
-  on: string,
-  searchValue: string,
-  fromIndex?: number
-}): number
-(arguments: [
-  on: string,
-  searchValue: string,
-  fromIndex?: number
-]): number
+
+Returns: `true` if product code starts with 'PRD-'
+
+### Extract substring:
+```yaml
+_string.substring:
+  on:
+    _state: full_id
+  start: 0
+  end: 8
 ```
-The `_string.lastIndexOf` method returns the index within string of the [last  occurrence of the specified value](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf), searching backwards from `fromIndex`. Returns `-1` if the value is not found.
-###### match
+
+Returns: First 8 characters of ID
+
+### Build URL path:
+```yaml
+_string.concat:
+  - /api/v1/
+  - _state: resource_type
+  - /
+  - _state: resource_id
 ```
-(arguments: {
-  on: string,
-  regex: string,
-  regexFlags?: string
-}): string[]
-```
-The `_string.match` method returns the [result of matching a string against a regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/match).
-###### normalize
-```
-(arguments: {on: string, form?: enum}): string
-(arguments: [on: string, form?: enum]): string
-```
-The `_string.normalize` method returns the [Unicode Normalization Form](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) of the string.
-###### padEnd
-```
-(arguments: {
-  on: string,
-  targetLength: number,
-  padString?: string
-}): string
-(arguments: [
-  on: string,
-  targetLength: number,
-  padString?: string
-]): string
-```
-The `_string.padEnd` method [pads the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the end of the string.
-###### padStart
-```
-(arguments: {
-  on: string,
-  targetLength: number,
-  padString?: string
-}): string
-(arguments: [
-  on: string,
-  targetLength: number,
-  padString?: string
-]): string
-```
-The `_string.padStart` method [pads the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd) with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the start of the string.
-###### repeat
-```
-(arguments: {on: string, count: number}): string
-(arguments: [on: string, count: number]): string
-```
-The `_string.repeat` method returns a string which contains [the specified number of copies of the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat) on which it was called, concatenated together.
-###### replace
-```
-(arguments: {
-  on: string,
-  regex: string,
-  newSubstr: string,
-  regexFlags?: string
-}): string
-```
-The `_string.replace` method returns a string with [some or all matches of a pattern replaced by a replacement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace).
-###### search
-```
-(arguments: {
-  on: string,
-  regex: string,
-  regexFlags?: string
-}): number
-```
-The `_string.search` method executes a [search for a match between a regular expression and a string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/search). It returns the index of the first match between the regular expression and the given string, or `-1` if no match was found.
-###### slice
-```
-(arguments: {
-  on: string,
-  start: number,
-  end?: number
-}): string
-(arguments: [
-  on: string,
-  start: number,
-  end?: number
-]): string
-```
-The `_string.slice` method [extracts a section](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice) of a string.
-###### split
-```
-(arguments: {on: string, separator?: string}): string[]
-(arguments: [on: string, separator?: string]): string[]
-```
-The `_string.split` method [divides a string into an array of substrings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split), splitting on the provided separator.
-###### startsWith
-```
-(arguments: {
-  on: string,
-  searchString: string,
-  position?: number
-}): boolean
-(arguments: [
-  on: string,
-  searchString: string,
-  position?: number
-]): boolean
-```
-The `_string.startsWith` method determines whether a string [starts with the characters of a specified string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith), returning `true` or `false` as appropriate.
-###### substring
-```
-(arguments: {
-  on: string,
-  start: number,
-  end?: number
-}): string
-(arguments: [
-  on: string,
-  start: number,
-  end?: number
-]): string
-```
-The `_string.startsWith` method returns [the part of the string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring) between the `start` and `end` indexes, or to the end of the string.
-###### toLowerCase
-```
-(string: string): string
-```
-The `_string.toLowerCase` method converts the string to [lower case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toLowerCase).
-###### toUpperCase
-```
-(string: string): string
-```
-The `_string.toUpperCase` method converts the string to [upper case](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase).
-###### trim
-```
-(string: string): string
-```
-The `_string.trim` method [removes whitespace from both ends](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim) of a string.
-###### trimEnd
-```
-(string: string): string
-```
-The `_string.trimEnd` method [removes whitespace from the end](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimEnd) of a string.
-###### trimStart
-```
-(string: string): string
-```
-The `_string.trimStart` method [removes whitespace from the start](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/trimStart) of a string.</USAGE>
+
+Returns: Full API path like '/api/v1/users/123'
+<EXAMPLES>

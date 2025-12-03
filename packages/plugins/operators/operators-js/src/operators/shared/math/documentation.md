@@ -1,153 +1,175 @@
-<TITLE>_math</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_math` operator can be used to run javascript [`Math`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math) methods.
+<TITLE>
+_math
+<TITLE>
 
-The `_math` operator can take arguments in the following forms:
+<METADATA>
+env: Shared
+<METADATA>
 
-###### No Arguments
+<DESCRIPTION>
+The `_math` operator provides access to JavaScript Math methods and constants. It includes functions for rounding, trigonometry, logarithms, and common mathematical operations.
 
-```text
-(void): number
+Available methods include:
+- Basic: abs, ceil, floor, round, trunc, sign
+- Trigonometry: sin, cos, tan, asin, acos, atan, sinh, cosh, tanh
+- Logarithms: log, log10, log2, log1p
+- Powers/Roots: sqrt, cbrt, pow, exp, expm1
+- Utilities: max, min, random, hypot
+- Constants: PI, E, LN10, LN2, LOG10E, LOG2E, SQRT1_2, SQRT2
+<DESCRIPTION>
+
+<USAGE>
 ```
+_math.methodName: params
 
-Some methods like `_math.PI` take no arguments:
+###### Single argument methods
+abs, ceil, floor, round, trunc, sign, sqrt, cbrt, 
+exp, expm1, log, log10, log1p, log2, 
+sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asinh, acosh, atanh
 
+###### Named argument methods
+- pow: { base, exponent }
+- atan2: { x, y }
+- imul: { a, b }
+
+###### Spread argument methods (array input)
+- max: Returns largest value
+- min: Returns smallest value
+- hypot: Returns hypotenuse
+
+###### No argument methods
+- random: Returns random number between 0 and 1
+
+###### Constants (properties)
+PI, E, LN10, LN2, LOG10E, LOG2E, SQRT1_2, SQRT2
+```
+<USAGE>
+
+<SCHEMA>
 ```yaml
-_math.PI: null
+# Single argument
+_math.methodName: number
+
+# Named arguments
+_math.pow:
+  base: number
+  exponent: number
+
+# Array argument
+_math.max:
+  - number1
+  - number2
+  - number3
+
+# No arguments
+_math.random:
+
+# Constant
+_math.PI:
 ```
+<SCHEMA>
 
-Returns: `pi`
-
-###### Single argument
-
-```text
-(x: number): number
-```
-
-Some methods like `_math.round` take a single argument:
-
+<EXAMPLES>
+### Round a number:
 ```yaml
-_math.round: 3.14
+_math.round:
+  _state: calculated_value
 ```
 
-Returns: `3`
+Returns: Rounded integer
 
-###### Named arguments
-
-```text
-({x: number, y: number}): number
-([x: number, y: number]): number
+### Get absolute value:
+```yaml
+_math.abs:
+  _subtract:
+    - _state: target
+    - _state: actual
 ```
 
-Some methods like `_math.pow` take an object with named arguments:
+Returns: Absolute difference
 
+### Calculate power:
 ```yaml
 _math.pow:
   base: 2
-  exponent: 3
+  exponent: 10
 ```
 
-Returns: `8`
+Returns: `1024`
 
-These methods also accept their arguments as an array:
-
+### Find maximum value:
 ```yaml
-_math.pow:
-  - 2
-  - 3
-```
-
-Returns: `8`
-
-###### Array arguments
-
-```text
-(values: number[]): number
-```
-
-Some methods like `_math.max` take an array of values as arguments:
-
-```
 _math.max:
-  - 42
-  - 99
-  - 0
+  - _state: offer1.price
+  - _state: offer2.price
+  - _state: offer3.price
 ```
 
-Returns: `99`</DESCRIPTION>
-<USAGE>The `_math` operator can be used to run javascript [`Math`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math) methods.
+Returns: Highest price among offers
 
-The `_math` operator can take arguments in the following forms:
-
-###### No Arguments
-
-```text
-(void): number
-```
-
-Some methods like `_math.PI` take no arguments:
-
+### Find minimum value:
 ```yaml
-_math.PI: null
+_math.min:
+  - _state: option1.delivery_days
+  - _state: option2.delivery_days
+  - _state: option3.delivery_days
 ```
 
-Returns: `pi`
+Returns: Fastest delivery option
 
-###### Single argument
-
-```text
-(x: number): number
-```
-
-Some methods like `_math.round` take a single argument:
-
+### Floor for pagination:
 ```yaml
-_math.round: 3.14
+_math.floor:
+  _divide:
+    - _state: total_items
+    - _state: items_per_page
 ```
 
-Returns: `3`
+Returns: Number of full pages
 
-###### Named arguments
-
-```text
-({x: number, y: number}): number
-([x: number, y: number]): number
-```
-
-Some methods like `_math.pow` take an object with named arguments:
-
+### Ceiling for required containers:
 ```yaml
-_math.pow:
-  base: 2
-  exponent: 3
+_math.ceil:
+  _divide:
+    - _state: total_units
+    - 12
 ```
 
-Returns: `8`
+Returns: Number of boxes needed (12 units per box)
 
-These methods also accept their arguments as an array:
-
+### Get PI constant:
 ```yaml
-_math.pow:
+_product:
   - 2
-  - 3
+  - _math.PI:
+  - _state: radius
 ```
 
-Returns: `8`
+Returns: Circumference of circle
 
-###### Array arguments
-
-```text
-(values: number[]): number
+### Calculate square root:
+```yaml
+_math.sqrt:
+  _sum:
+    - _math.pow:
+        base:
+          _state: side_a
+        exponent: 2
+    - _math.pow:
+        base:
+          _state: side_b
+        exponent: 2
 ```
 
-Some methods like `_math.max` take an array of values as arguments:
+Returns: Hypotenuse using Pythagorean theorem
 
-```
-_math.max:
-  - 42
-  - 99
-  - 0
+### Generate random number:
+```yaml
+_math.floor:
+  _product:
+    - _math.random:
+    - 100
 ```
 
-Returns: `99`</USAGE>
-<EXAMPLES></EXAMPLES>
+Returns: Random integer between 0 and 99
+<EXAMPLES>

@@ -1,69 +1,137 @@
-<TITLE>_regex</TITLE>
-<METADATA>env: Shared</METADATA>
-<DESCRIPTION>The `_regex` operator performs a regex test on a string, and returns `true` if there is a match.
+<TITLE>
+_regex
+<TITLE>
 
-The regex operator has shorthand argument definitions that can be used on web client.</DESCRIPTION>
-<USAGE>(pattern: string): boolean
-(arguments: {
-pattern: string,
-on?: string,
-key?: string,
-flags?: string
-}): boolean
+<METADATA>
+env: Shared
+<METADATA>
 
-###### object
+<DESCRIPTION>
+The `_regex` operator tests a string against a regular expression pattern. It returns `true` if the pattern matches the string, `false` otherwise.
 
-- `pattern: string`: **Required** - The regular expression pattern to test.
-- `on: string`: The string to test the value on. One of `on` or `key` must be specified unless the operator is used in an input block.
-- `key: string`: The key of a value in `state` to test. One of `on` or `key` must be specified unless the operator is used in an input block.
-- `flags: string`: The regex flags to use. The default value is `"gm"`.
+If the test string is `null` or `undefined`, it returns `false`. The pattern is converted to a JavaScript RegExp object.
+<DESCRIPTION>
 
-###### string
+<USAGE>
+```
+(params: string | object): boolean
 
-The regular expression pattern to test. The string shorthand can only be used in an input block, and the tested value will be the block's value.</USAGE>
-<EXAMPLES>###### Check if a username is valid (Alphanumeric string that may include \_ and – having a length of 3 to 16 characters):
+###### String shorthand
+A regex pattern string to test against the value at the current location in state.
 
+###### Object params
+- pattern: The regex pattern string (required)
+- on: The string to test (optional, defaults to state at current location)
+- key: State key to get test string from (optional)
+- flags: Regex flags (optional, default 'gm')
+```
+<USAGE>
+
+<SCHEMA>
+```yaml
+# Pattern shorthand (tests state at current location)
+_regex: patternString
+
+# Full object syntax
+_regex:
+  pattern: string
+  on: string         # String to test
+  key: string        # Or state key to get string
+  flags: string      # Regex flags (default: 'gm')
+```
+<SCHEMA>
+
+<EXAMPLES>
+### Validate email format:
 ```yaml
 _regex:
-  pattern: ^[a-z0-9_-]{3,16}$
+  pattern: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
   on:
-    _state: username_input
+    _state: email
 ```
 
-Returns: `true` if matched else `false`.
+Returns: `true` if valid email format
 
-###### Using the key of the value in `state`:
-
+### Validate phone number:
 ```yaml
 _regex:
-  pattern: ^[a-z0-9_-]{3,16}$
-  key: username_input
+  pattern: '^\+?[1-9]\d{9,14}$'
+  on:
+    _state: phone
 ```
 
-Returns: `true` if matched else `false`.
+Returns: `true` if valid international phone format
 
-###### Using the value of the block in which the operator is evaluated:
-
+### Check for alphanumeric:
 ```yaml
-id: username_input
+_regex:
+  pattern: '^[a-zA-Z0-9]+$'
+  on:
+    _state: username
+```
+
+Returns: `true` if username is alphanumeric only
+
+### Validate URL format:
+```yaml
+_regex:
+  pattern: '^https?:\/\/.+'
+  on:
+    _state: website_url
+```
+
+Returns: `true` if starts with http:// or https://
+
+### Check for numeric string:
+```yaml
+_regex:
+  pattern: '^\d+$'
+  on:
+    _state: postal_code
+```
+
+Returns: `true` if only digits
+
+### Validate password strength:
+```yaml
+_regex:
+  pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+  on:
+    _state: password
+```
+
+Returns: `true` if password has lowercase, uppercase, digit, special char, and 8+ chars
+
+### Check for whitespace:
+```yaml
+_not:
+  _regex:
+    pattern: '^\s*$'
+    on:
+      _state: input_field
+```
+
+Returns: `true` if field is not empty or whitespace only
+
+### Form field validation:
+```yaml
+id: email
 type: TextInput
+properties:
+  label: Email Address
 validate:
-  - message: Invalid username.
+  - message: Please enter a valid email address
     status: error
     pass:
-      _regex: ^[a-z0-9_-]{3,16}$
+      _or:
+        - _regex:
+            pattern: '^[^\s@]+@[^\s@]+\.[^\s@]+$'
+            on:
+              _state: email
+        - _eq:
+            - _state: email
+            - null
 ```
 
-Returns: `true` if matched else `false`.
-
-###### Case insensitive match:
-
-```yaml
-_regex:
-  pattern: ^[a-z0-9_-]{3,16}$
-  on:
-    _state: username_input
-  flags: 'gmi'
-```
-
-Returns: `true` if matched else `false`.</EXAMPLES>
+Validates email with custom error message
+<EXAMPLES>
