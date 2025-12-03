@@ -115,4 +115,62 @@ A color selector component.
 
 <EXAMPLES>
 
+### Basic ColorSelector
+
+```yaml
+id: basic_color
+type: ColorSelector
+properties:
+  title: Pick a color
+```
+
+### ColorSelector with inline label and help text
+
+```yaml
+id: inline_label_color
+type: ColorSelector
+properties:
+  label:
+    title: Brand color
+    extra: Choose the primary color for your theme.
+    inline: true
+    span: 6
+```
+
+### Hidden input (swatch only)
+
+```yaml
+id: swatch_only_color
+type: ColorSelector
+properties:
+  title: Swatch only
+  hideInput: true
+```
+
+### Disabled ColorSelector
+
+```yaml
+id: disabled_color
+type: ColorSelector
+properties:
+  title: Disabled color selector
+  disabled: true
+```
+
+### Trigger action on color change
+
+```yaml
+id: brand_color
+type: ColorSelector
+properties:
+  title: Brand color
+events:
+  onChange:
+    - id: set_brand_color
+      type: SetState
+      params:
+        brand_color:
+          _event: value
+```
+
 </EXAMPLES>
