@@ -86,6 +86,7 @@
     "@lowdefy/connection-stripe": "4.4.0",
     "@lowdefy/operators-change-case": "4.4.0",
     "@lowdefy/operators-diff": "4.4.0",
+    "@lowdefy/operators-jsonata": "4.4.0",
     "@lowdefy/operators-moment": "4.4.0",
     "@lowdefy/operators-mql": "4.4.0",
     "@lowdefy/operators-nunjucks": "4.4.0",
