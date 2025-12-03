@@ -39,11 +39,11 @@ properties:
       properties:
         title: Blog
       pageId: blog
-    - id: pricing
-      type: MenuLink
-      properties:
-        title: Pricing
-      pageId: pricing
+    # - id: pricing
+    #   type: MenuLink
+    #   properties:
+    #     title: Pricing
+    #   pageId: pricing
     - id: contact-us
       type: MenuLink
       properties:
