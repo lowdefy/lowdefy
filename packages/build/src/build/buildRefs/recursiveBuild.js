@@ -22,7 +22,10 @@ import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
 
-async function recursiveBuild({ context, refDef, count, referencedFrom, refCache }) {
+async function recursiveBuild({ context, refDef, count, referencedFrom, refCache, profiler }) {
+  const time = profiler?.time ?? ((_, fn) => fn());
+  const timeSync = profiler?.timeSync ?? ((_, fn) => fn());
+
   // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
   if (count > 10000) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
@@ -32,11 +35,12 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
     return refCache.get(refDef.hash);
   }
 
-  let fileContent = await getRefContent({ context, refDef, referencedFrom });
-  const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
-    fileContent,
-    refDef.hash,
-    context.refMap
+  let fileContent = await time('getRefContent', () =>
+    getRefContent({ context, refDef, referencedFrom })
+  );
+
+  const { foundRefs, fileContentBuiltRefs } = timeSync('getRefsFromFile', () =>
+    getRefsFromFile(fileContent, refDef.hash, context.refMap)
   );
 
   // Since we can have references in the variables of a reference, we need to first parse
@@ -46,55 +50,70 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
 
   for (const newRefDef of foundRefs.values()) {
     // Parse vars and path before passing down to parse new file
-    const parsedRefDef = populateRefs({
-      toPopulate: newRefDef,
-      refCache,
-      refDef,
-    });
+    const parsedRefDef = timeSync('populateRefs:vars', () =>
+      populateRefs({
+        toPopulate: newRefDef,
+        refCache,
+        refDef,
+      })
+    );
     context.refMap[parsedRefDef.hash].path = parsedRefDef.path;
+
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,
       count: count + 1,
       referencedFrom: refDef.path,
       refCache,
+      profiler,
     });
 
-    const transformedFile = await runTransformer({
-      context,
-      input: parsedFile,
-      refDef: parsedRefDef,
-    });
+    const transformedFile = await time('runTransformer', () =>
+      runTransformer({
+        context,
+        input: parsedFile,
+        refDef: parsedRefDef,
+      })
+    );
 
     // Evaluated in recursive loop for better error messages
-    const evaluatedOperators = await evaluateBuildOperators({
-      context,
-      input: transformedFile,
-      refDef: parsedRefDef,
-    });
+    const evaluatedOperators = await time('evaluateBuildOperators', () =>
+      evaluateBuildOperators({
+        context,
+        input: transformedFile,
+        refDef: parsedRefDef,
+      })
+    );
 
-    const withRefKey = getKey({
-      input: evaluatedOperators,
-      refDef: parsedRefDef,
-    });
+    const withRefKey = timeSync('getKey', () =>
+      getKey({
+        input: evaluatedOperators,
+        refDef: parsedRefDef,
+      })
+    );
 
-    const reviver = (_, value) => {
-      if (!type.isObject(value)) return value;
-      Object.defineProperty(value, '~r', {
-        value: refDef.hash,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-      return value;
-    };
-    refCache.set(newRefDef.hash, JSON.parse(JSON.stringify(withRefKey), reviver));
+    timeSync('cacheWithReviver', () => {
+      const reviver = (_, value) => {
+        if (!type.isObject(value)) return value;
+        Object.defineProperty(value, '~r', {
+          value: refDef.hash,
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+        return value;
+      };
+      refCache.set(newRefDef.hash, JSON.parse(JSON.stringify(withRefKey), reviver));
+    });
   }
-  const result = populateRefs({
-    toPopulate: fileContentBuiltRefs,
-    refCache,
-    refDef,
-  });
+
+  const result = timeSync('populateRefs:final', () =>
+    populateRefs({
+      toPopulate: fileContentBuiltRefs,
+      refCache,
+      refDef,
+    })
+  );
 
   refCache.set(refDef.hash, result);
 

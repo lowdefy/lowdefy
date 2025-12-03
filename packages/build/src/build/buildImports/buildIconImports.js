@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import createBuildProfiler from '../../utils/createBuildProfiler.js';
+
 const iconPackages = {
   'react-icons/ai': /"(Ai[A-Z0-9]\w*)"/gm,
   'react-icons/bi': /"(Bi[A-Z0-9]\w*)"/gm,
@@ -45,29 +47,44 @@ const iconPackages = {
   'react-icons/wi': /"(Wi[A-Z0-9]\w*)"/gm,
 };
 
-function getConfigIcons({ components, icons, regex }) {
-  [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
-  [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+function getConfigIcons({ components, icons, regex, timeSync }) {
+  timeSync('stringify:global', () => {
+    [...JSON.stringify(components.global || {}).matchAll(regex)].map((match) =>
+      icons.add(match[1])
+    );
+  });
+  timeSync('stringify:menus', () => {
+    [...JSON.stringify(components.menus || []).matchAll(regex)].map((match) => icons.add(match[1]));
+  });
+  timeSync('stringify:pages', () => {
+    [...JSON.stringify(components.pages || []).matchAll(regex)].map((match) => icons.add(match[1]));
+  });
 }
 
-function getBlockDefaultIcons({ blocks, context, icons, regex }) {
-  blocks.forEach((block) => {
-    (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
-      [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
+function getBlockDefaultIcons({ blocks, context, icons, regex, timeSync }) {
+  timeSync('blockDefaultIcons', () => {
+    blocks.forEach((block) => {
+      (context.typesMap.icons[block.typeName] || []).forEach((icon) => {
+        [...JSON.stringify(icon).matchAll(regex)].map((match) => icons.add(match[1]));
+      });
     });
   });
 }
 
 function buildIconImports({ blocks, components, context, defaults = {} }) {
+  const profiler = createBuildProfiler({ logger: context.logger, prefix: 'buildIconImports' });
+  const timeSync = profiler.timeSync;
+
   const iconImports = [];
   Object.entries(iconPackages).forEach(([iconPackage, regex]) => {
     defaults;
     const icons = new Set(defaults[iconPackage]);
-    getConfigIcons({ components, icons, regex });
-    getBlockDefaultIcons({ blocks, context, icons, regex });
+    getConfigIcons({ components, icons, regex, timeSync });
+    getBlockDefaultIcons({ blocks, context, icons, regex, timeSync });
     iconImports.push({ icons: [...icons], package: iconPackage });
   });
+
+  profiler.printSummary();
   return iconImports;
 }
 

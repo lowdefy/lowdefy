@@ -14,24 +14,36 @@
   limitations under the License.
 */
 
+import createBuildProfiler from '../../utils/createBuildProfiler.js';
 import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 
 async function buildRefs({ context }) {
+  const profiler = createBuildProfiler({ logger: context.logger, prefix: 'buildRefs' });
+
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
   const refCache = new Map();
-  let components = await recursiveBuild({
-    context,
-    refDef,
-    count: 0,
-    refCache,
-  });
-  components = await evaluateBuildOperators({
-    context,
-    input: components,
-    refDef,
-  });
+
+  let components = await profiler.time('recursiveBuild', () =>
+    recursiveBuild({
+      context,
+      refDef,
+      count: 0,
+      refCache,
+      profiler,
+    })
+  );
+
+  components = await profiler.time('evaluateBuildOperators:final', () =>
+    evaluateBuildOperators({
+      context,
+      input: components,
+      refDef,
+    })
+  );
+
+  profiler.printSummary();
   return components ?? {};
 }
 

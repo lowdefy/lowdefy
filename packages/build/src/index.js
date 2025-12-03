@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 /*
   Copyright 2020-2024 Lowdefy, Inc
 
@@ -16,6 +14,7 @@
   limitations under the License.
 */
 
+import createBuildProfiler from './utils/createBuildProfiler.js';
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 
@@ -52,36 +51,40 @@ import writeTypes from './build/writeTypes.js';
 
 async function build(options) {
   const context = createContext(options);
-  const components = await buildRefs({ context });
-  testSchema({ components, context });
-  buildApp({ components, context });
-  validateConfig({ components, context });
-  addDefaultPages({ components, context });
-  buildAuth({ components, context });
-  buildConnections({ components, context });
-  buildApi({ components, context });
-  buildPages({ components, context });
-  buildMenu({ components, context });
-  buildJs({ components, context });
-  addKeys({ components, context });
-  buildTypes({ components, context });
-  buildImports({ components, context });
-  await cleanBuildDirectory({ context });
-  await writeApp({ components, context });
-  await writeAuth({ components, context });
-  await writeConnections({ components, context });
-  await writeApi({ components, context });
-  await writeRequests({ components, context });
-  await writePages({ components, context });
-  await writeConfig({ components, context });
-  await writeGlobal({ components, context });
-  await writeMaps({ components, context });
-  await writeMenus({ components, context });
-  await writeTypes({ components, context });
-  await writePluginImports({ components, context });
-  await writeJs({ components, context });
-  await updateServerPackageJson({ components, context });
-  await copyPublicFolder({ components, context });
+  const { time, printSummary } = createBuildProfiler({ logger: context.logger });
+
+  const components = await time('buildRefs', () => buildRefs({ context }));
+  await time('testSchema', () => testSchema({ components, context }));
+  await time('buildApp', () => buildApp({ components, context }));
+  await time('validateConfig', () => validateConfig({ components, context }));
+  await time('addDefaultPages', () => addDefaultPages({ components, context }));
+  await time('buildAuth', () => buildAuth({ components, context }));
+  await time('buildConnections', () => buildConnections({ components, context }));
+  await time('buildApi', () => buildApi({ components, context }));
+  await time('buildPages', () => buildPages({ components, context }));
+  await time('buildMenu', () => buildMenu({ components, context }));
+  await time('buildJs', () => buildJs({ components, context }));
+  await time('addKeys', () => addKeys({ components, context }));
+  await time('buildTypes', () => buildTypes({ components, context }));
+  await time('buildImports', () => buildImports({ components, context }));
+  await time('cleanBuildDirectory', () => cleanBuildDirectory({ context }));
+  await time('writeApp', () => writeApp({ components, context }));
+  await time('writeAuth', () => writeAuth({ components, context }));
+  await time('writeConnections', () => writeConnections({ components, context }));
+  await time('writeApi', () => writeApi({ components, context }));
+  await time('writeRequests', () => writeRequests({ components, context }));
+  await time('writePages', () => writePages({ components, context }));
+  await time('writeConfig', () => writeConfig({ components, context }));
+  await time('writeGlobal', () => writeGlobal({ components, context }));
+  await time('writeMaps', () => writeMaps({ components, context }));
+  await time('writeMenus', () => writeMenus({ components, context }));
+  await time('writeTypes', () => writeTypes({ components, context }));
+  await time('writePluginImports', () => writePluginImports({ components, context }));
+  await time('writeJs', () => writeJs({ components, context }));
+  await time('updateServerPackageJson', () => updateServerPackageJson({ components, context }));
+  await time('copyPublicFolder', () => copyPublicFolder({ components, context }));
+
+  printSummary();
 }
 
 export { createPluginTypesMap };
