@@ -43,6 +43,8 @@ function createContext({
   // Otherwise create fresh Maps
   const dependencyGraph = buildState?.dependencyGraph ?? new Map();
   const parsedContentCache = buildState?.parsedContentCache ?? new Map();
+  const refCache = buildState?.refCache ?? new Map();
+  const pathToRefHashes = buildState?.pathToRefHashes ?? new Map();
 
   const context = {
     changedFiles,
@@ -53,7 +55,9 @@ function createContext({
     logger,
     operatorsParser,
     parsedContentCache,
+    pathToRefHashes,
     readConfigFile: createReadConfigFile({ directories }),
+    refCache,
     refMap: {},
     refResolver,
     stage,

@@ -23,6 +23,8 @@ function lowdefyBuild({ directories, logger, options }) {
   const buildState = {
     dependencyGraph: new Map(),
     parsedContentCache: new Map(),
+    refCache: new Map(),
+    pathToRefHashes: new Map(), // Maps file path -> Set of ref hashes for that path
   };
 
   return async ({ changedFiles = [] } = {}) => {
@@ -37,6 +39,8 @@ function lowdefyBuild({ directories, logger, options }) {
       // Clear caches for full rebuild
       buildState.dependencyGraph.clear();
       buildState.parsedContentCache.clear();
+      buildState.refCache.clear();
+      buildState.pathToRefHashes.clear();
     }
 
     // Convert absolute paths to relative paths (relative to config directory)

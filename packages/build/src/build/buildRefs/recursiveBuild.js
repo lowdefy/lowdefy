@@ -113,6 +113,14 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
         return value;
       };
       refCache.set(newRefDef.hash, JSON.parse(JSON.stringify(withRefKey), reviver));
+
+      // Track path -> hash mapping for incremental invalidation
+      if (parsedRefDef.path) {
+        if (!context.pathToRefHashes.has(parsedRefDef.path)) {
+          context.pathToRefHashes.set(parsedRefDef.path, new Set());
+        }
+        context.pathToRefHashes.get(parsedRefDef.path).add(newRefDef.hash);
+      }
     });
   }
 
@@ -125,6 +133,14 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
   );
 
   refCache.set(refDef.hash, result);
+
+  // Track path -> hash mapping for the current file
+  if (refDef.path) {
+    if (!context.pathToRefHashes.has(refDef.path)) {
+      context.pathToRefHashes.set(refDef.path, new Set());
+    }
+    context.pathToRefHashes.get(refDef.path).add(refDef.hash);
+  }
 
   return result;
 }

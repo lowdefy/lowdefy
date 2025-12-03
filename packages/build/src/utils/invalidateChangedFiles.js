@@ -54,10 +54,19 @@ function getAffectedFiles(changedFiles, dependencyGraph) {
  * @param {string[]} options.changedFiles - Array of file paths that changed
  * @param {Map<string, Set<string>>} options.dependencyGraph - Dependency graph
  * @param {Map<string, any>} options.parsedContentCache - Cache of parsed file content
+ * @param {Map<string, any>} options.refCache - Cache of resolved refs
+ * @param {Map<string, Set<string>>} options.pathToRefHashes - Maps file path to ref hashes
  * @param {Object} options.logger - Logger instance
  * @returns {Set<string>} - Set of affected file paths that were invalidated
  */
-function invalidateChangedFiles({ changedFiles, dependencyGraph, parsedContentCache, logger }) {
+function invalidateChangedFiles({
+  changedFiles,
+  dependencyGraph,
+  parsedContentCache,
+  refCache,
+  pathToRefHashes,
+  logger,
+}) {
   if (!changedFiles || changedFiles.length === 0) {
     return new Set();
   }
@@ -70,6 +79,20 @@ function invalidateChangedFiles({ changedFiles, dependencyGraph, parsedContentCa
     const filePath = cacheKey.split('::')[0]; // Remove vars suffix if present
     if (affectedFiles.has(filePath)) {
       parsedContentCache.delete(cacheKey);
+    }
+  }
+
+  // Invalidate refCache entries for affected files using pathToRefHashes mapping
+  if (refCache && pathToRefHashes) {
+    for (const filePath of affectedFiles) {
+      const hashes = pathToRefHashes.get(filePath);
+      if (hashes) {
+        for (const hash of hashes) {
+          refCache.delete(hash);
+        }
+        // Also clear the path mapping since it will be rebuilt
+        pathToRefHashes.delete(filePath);
+      }
     }
   }
 
