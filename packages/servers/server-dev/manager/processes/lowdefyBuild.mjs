@@ -14,12 +14,36 @@
   limitations under the License.
 */
 
+import path from 'path';
 import build from '@lowdefy/build';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 
 function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
-    logger.info({ print: 'spin' }, 'Building config...');
+  // Persistent state for incremental builds
+  const buildState = {
+    dependencyGraph: new Map(),
+    parsedContentCache: new Map(),
+  };
+
+  return async ({ changedFiles = [] } = {}) => {
+    const isIncremental = changedFiles.length > 0 && buildState.dependencyGraph.size > 0;
+    if (isIncremental) {
+      logger.info(
+        { print: 'spin' },
+        `Rebuilding config (${changedFiles.length} file(s) changed)...`
+      );
+    } else {
+      logger.info({ print: 'spin' }, 'Building config...');
+      // Clear caches for full rebuild
+      buildState.dependencyGraph.clear();
+      buildState.parsedContentCache.clear();
+    }
+
+    // Convert absolute paths to relative paths (relative to config directory)
+    const relativeChangedFiles = changedFiles.map((filePath) =>
+      path.relative(directories.config, filePath)
+    );
+
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     await build({
       customTypesMap,
@@ -27,6 +51,9 @@ function lowdefyBuild({ directories, logger, options }) {
       logger,
       refResolver: options.refResolver,
       stage: 'dev',
+      changedFiles: isIncremental ? relativeChangedFiles : [],
+      // Pass persistent state for incremental builds
+      buildState,
     });
     logger.info({ print: 'log' }, 'Built config.');
   };

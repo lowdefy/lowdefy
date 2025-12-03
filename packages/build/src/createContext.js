@@ -25,19 +25,34 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
-function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+function createContext({
+  customTypesMap,
+  directories,
+  logger,
+  refResolver,
+  stage = 'prod',
+  changedFiles = [],
+  buildState = null,
+}) {
   const operatorsParser = new BuildParser({
     env: process.env,
     operators,
   });
 
+  // Use persistent buildState if provided (for incremental builds in dev mode)
+  // Otherwise create fresh Maps
+  const dependencyGraph = buildState?.dependencyGraph ?? new Map();
+  const parsedContentCache = buildState?.parsedContentCache ?? new Map();
+
   const context = {
+    changedFiles,
+    dependencyGraph,
     directories,
     jsMap: {},
     keyMap: {},
     logger,
     operatorsParser,
-    parsedContentCache: new Map(),
+    parsedContentCache,
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,

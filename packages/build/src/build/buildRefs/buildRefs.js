@@ -18,9 +18,19 @@ import createBuildProfiler from '../../utils/createBuildProfiler.js';
 import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
+import invalidateChangedFiles from '../../utils/invalidateChangedFiles.js';
 
 async function buildRefs({ context }) {
   const profiler = createBuildProfiler({ logger: context.logger, prefix: 'buildRefs' });
+  // For incremental builds, invalidate caches for changed files and their dependents
+  if (context.changedFiles && context.changedFiles.length > 0) {
+    invalidateChangedFiles({
+      changedFiles: context.changedFiles,
+      dependencyGraph: context.dependencyGraph,
+      parsedContentCache: context.parsedContentCache,
+      logger: context.logger,
+    });
+  }
 
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
   const refCache = new Map();

@@ -23,9 +23,10 @@ function lowdefyBuildWatcher(context) {
     path.isAbsolute(item) ? item : path.resolve(context.directories.config, item);
 
   const callback = async (filePaths) => {
-    const lowdefyYamlModified = filePaths
-      .flat()
-      .some((filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml'));
+    const flatFilePaths = filePaths.flat();
+    const lowdefyYamlModified = flatFilePaths.some(
+      (filePath) => filePath.includes('lowdefy.yaml') || filePath.includes('lowdefy.yml')
+    );
     if (lowdefyYamlModified) {
       const lowdefyVersion = await getLowdefyVersion(context);
       if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
@@ -35,7 +36,9 @@ function lowdefyBuildWatcher(context) {
       }
     }
 
-    await context.lowdefyBuild();
+    // Pass changed files for incremental build (skip if lowdefy.yaml changed - needs full rebuild)
+    const changedFiles = lowdefyYamlModified ? [] : flatFilePaths;
+    await context.lowdefyBuild({ changedFiles });
     context.reloadClients();
   };
   return setupWatcher({

@@ -59,6 +59,15 @@ async function recursiveBuild({ context, refDef, count, referencedFrom, refCache
     );
     context.refMap[parsedRefDef.hash].path = parsedRefDef.path;
 
+    // Build dependency graph: when refDef.path references parsedRefDef.path,
+    // add refDef.path as a dependent of parsedRefDef.path
+    if (parsedRefDef.path && refDef.path) {
+      if (!context.dependencyGraph.has(parsedRefDef.path)) {
+        context.dependencyGraph.set(parsedRefDef.path, new Set());
+      }
+      context.dependencyGraph.get(parsedRefDef.path).add(refDef.path);
+    }
+
     const parsedFile = await recursiveBuild({
       context,
       refDef: parsedRefDef,
