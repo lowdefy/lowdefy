@@ -14,16 +14,8 @@
   limitations under the License.
 */
 
-import { BuildParser } from '@lowdefy/operators';
-import operators from '@lowdefy/operators-js/operators/build';
-
 async function evaluateBuildOperators({ context, input, refDef }) {
-  const operatorsParser = new BuildParser({
-    env: process.env,
-    operators,
-  });
-
-  const { output, errors } = operatorsParser.parse({
+  const { output, errors } = context.operatorsParser.parse({
     input,
     location: refDef.path ?? refDef.resolver,
     operatorPrefix: '_build.',

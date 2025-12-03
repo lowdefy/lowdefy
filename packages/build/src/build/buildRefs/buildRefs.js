@@ -20,10 +20,12 @@ import evaluateBuildOperators from './evaluateBuildOperators.js';
 
 async function buildRefs({ context }) {
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
+  const refCache = new Map();
   let components = await recursiveBuild({
     context,
     refDef,
     count: 0,
+    refCache,
   });
   components = await evaluateBuildOperators({
     context,
