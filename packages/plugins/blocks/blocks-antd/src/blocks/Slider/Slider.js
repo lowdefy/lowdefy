@@ -62,7 +62,7 @@ const SliderBlock = ({
             vertical={properties.vertical}
             onChange={(val) => {
               methods.setValue(val);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: val } });
             }}
             value={value}
           />

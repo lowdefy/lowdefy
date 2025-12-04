@@ -1,5 +1,23 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/nunjucks@4.5.2
+
+## 4.5.1
+
+### Patch Changes
+
+- @lowdefy/nunjucks@4.5.1
+
+## 4.5.0
+
+### Patch Changes
+
+- @lowdefy/nunjucks@4.5.0
+
 ## 4.4.0
 
 ### Patch Changes

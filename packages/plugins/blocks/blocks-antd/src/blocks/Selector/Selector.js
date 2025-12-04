@@ -94,12 +94,11 @@ const Selector = ({
                   : properties.notFoundContent || 'Not found'
               }
               onChange={(newVal) => {
-                methods.setValue(
-                  type.isPrimitive(uniqueValueOptions[newVal])
-                    ? uniqueValueOptions[newVal]
-                    : uniqueValueOptions[newVal].value
-                );
-                methods.triggerEvent({ name: 'onChange' });
+                const val = type.isPrimitive(uniqueValueOptions[newVal])
+                  ? uniqueValueOptions[newVal]
+                  : uniqueValueOptions[newVal].value;
+                methods.setValue(val);
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });

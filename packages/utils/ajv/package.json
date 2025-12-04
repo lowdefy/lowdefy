@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/ajv",
-  "version": "4.4.0",
+  "version": "4.5.2",
   "license": "Apache-2.0",
   "description": "",
   "homepage": "https://lowdefy.com",
@@ -39,7 +39,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/nunjucks": "4.4.0",
+    "@lowdefy/nunjucks": "4.5.2",
     "ajv": "8.12.0",
     "ajv-errors": "3.0.0"
   },

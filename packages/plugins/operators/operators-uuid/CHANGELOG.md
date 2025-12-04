@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/operators@4.5.2
+- @lowdefy/helpers@4.5.2
+
+## 4.5.1
+
+### Patch Changes
+
+- 51f7f9dbe: Use uuid instead of crypto.randomUUID(), update uuid to v13.
+  - @lowdefy/operators@4.5.1
+  - @lowdefy/helpers@4.5.1
+
+## 4.5.0
+
+### Patch Changes
+
+- Updated dependencies [09ae496d8]
+  - @lowdefy/operators@4.5.0
+  - @lowdefy/helpers@4.5.0
+
 ## 4.4.0
 
 ### Patch Changes

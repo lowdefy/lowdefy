@@ -62,7 +62,7 @@ const NumberInput = ({
             step={properties.step}
             onChange={(newVal) => {
               methods.setValue(newVal);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
             }}
             onPressEnter={() => {
               methods.triggerEvent({ name: 'onPressEnter' });

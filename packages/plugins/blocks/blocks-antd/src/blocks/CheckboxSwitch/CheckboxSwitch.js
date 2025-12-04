@@ -59,7 +59,7 @@ const CheckboxSwitch = ({
             ])}
             onChange={(e) => {
               methods.setValue(e.target.checked);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: e.target.checked } });
             }}
           >
             <Space wrap={true}>{renderHtml({ html: properties.description, methods })}</Space>

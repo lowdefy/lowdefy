@@ -14,9 +14,9 @@
   limitations under the License.
 */
 import path from 'path';
-import crypto from 'crypto';
 import { createApiContext } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import { v4 as uuid } from 'uuid';
 
 import config from '../../build/config.json';
 import connections from '../../build/plugins/connections.js';
@@ -35,7 +35,7 @@ function apiWrapper(handler) {
   return async function wrappedHandler(req, res) {
     const context = {
       // Important to give absolute path so Next can trace build files
-      rid: crypto.randomUUID(),
+      rid: uuid(),
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       connections,

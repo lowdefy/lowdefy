@@ -71,15 +71,11 @@ const MonthSelector = ({
                 />
               }
               onChange={(newVal) => {
-                methods.setValue(
-                  !newVal
-                    ? null
-                    : moment
-                        .utc(newVal.add(newVal.utcOffset(), 'minutes'))
-                        .startOf('month')
-                        .toDate()
-                );
-                methods.triggerEvent({ name: 'onChange' });
+                const val = !newVal
+                  ? null
+                  : moment.utc(newVal.add(newVal.utcOffset(), 'minutes')).startOf('month').toDate();
+                methods.setValue(val);
+                methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
             />
           </div>

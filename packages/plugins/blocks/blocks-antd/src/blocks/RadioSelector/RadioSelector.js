@@ -62,12 +62,11 @@ const RadioSelector = ({
             ])}
             disabled={properties.disabled || loading}
             onChange={(event) => {
-              methods.setValue(
-                type.isPrimitive(uniqueValueOptions[event.target.value])
-                  ? uniqueValueOptions[event.target.value]
-                  : uniqueValueOptions[event.target.value].value
-              );
-              methods.triggerEvent({ name: 'onChange' });
+              const val = type.isPrimitive(uniqueValueOptions[event.target.value])
+                ? uniqueValueOptions[event.target.value]
+                : uniqueValueOptions[event.target.value].value;
+              methods.setValue(val);
+              methods.triggerEvent({ name: 'onChange', event: { value: val } });
             }}
             value={`${getValueIndex(value, uniqueValueOptions)}`}
           >

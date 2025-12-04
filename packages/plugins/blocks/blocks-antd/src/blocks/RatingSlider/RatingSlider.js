@@ -206,12 +206,9 @@ const RatingSlider = ({
               range={false}
               step={properties.step ?? 1}
               onChange={(val) => {
-                if (val === minMin) {
-                  methods.setValue(null);
-                } else {
-                  methods.setValue(val);
-                }
-                methods.triggerEvent({ name: 'onChange' });
+                const v = val === minMin ? null : val;
+                methods.setValue(v);
+                methods.triggerEvent({ name: 'onChange', event: { value: v } });
               }}
               value={value === null ? minMin : value}
             />

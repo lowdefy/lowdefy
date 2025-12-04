@@ -1,5 +1,28 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.5.2
+- @lowdefy/helpers@4.5.2
+
+## 4.5.1
+
+### Patch Changes
+
+- @lowdefy/block-utils@4.5.1
+- @lowdefy/helpers@4.5.1
+
+## 4.5.0
+
+### Patch Changes
+
+- d6c58fe97: Add minItems property to ControlledList block.
+- b3a2e6662: Drawer block enhancements. Add afterOpenChange and afterClose methods.
+  - @lowdefy/block-utils@4.5.0
+  - @lowdefy/helpers@4.5.0
+
 ## 4.4.0
 
 ### Minor Changes
