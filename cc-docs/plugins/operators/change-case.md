@@ -1,6 +1,6 @@
 # @lowdefy/operators-change-case
 
-String case conversion operator.
+String case conversion operator using [change-case](https://github.com/blakeembrey/change-case).
 
 ## Operator
 

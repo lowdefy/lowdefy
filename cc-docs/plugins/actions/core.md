@@ -13,7 +13,7 @@ Core actions for Lowdefy. The primary action package included by default.
 | `Link` | Navigate to page |
 | `Login` | Trigger login |
 | `Logout` | Trigger logout |
-| `Message` | Show notification |
+| `DisplayMessage` | Show notification |
 | `Validate` | Validate form |
 | `Reset` | Reset state |
 | `ResetValidation` | Clear validation errors |
@@ -169,13 +169,13 @@ Navigate to another page:
     redirect: /goodbye
 ```
 
-## Message
+## DisplayMessage
 
 Show toast notification:
 
 ```yaml
 - id: notify
-  type: Message
+  type: DisplayMessage
   params:
     content: Operation successful!
     type: success        # success, error, warning, info

@@ -1,6 +1,6 @@
 # @lowdefy/connection-elasticsearch
 
-Elasticsearch connection for Lowdefy.
+[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html) connection for Lowdefy.
 
 ## Connection Type
 

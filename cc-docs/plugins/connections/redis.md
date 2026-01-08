@@ -1,6 +1,6 @@
 # @lowdefy/connection-redis
 
-Redis connection for Lowdefy.
+[Redis](https://redis.io/docs/) connection for Lowdefy. Uses [ioredis](https://github.com/redis/ioredis) client.
 
 ## Connection Type
 

@@ -52,7 +52,13 @@ Used by `@lowdefy/build` for build-time evaluation:
 ```javascript
 const parser = new BuildParser({
   operators: buildOperators,
-  payload: { variables, env, ... },
+  payload: {
+    env,           // Environment variables
+    variables,     // Build-time variables from _var
+    refDef,        // Current _ref definition being processed
+    path,          // Current file path
+  },
+  jsMap,           // Map of JavaScript functions
 });
 
 const result = parser.parse({
@@ -74,7 +80,18 @@ Used by `@lowdefy/api` for server-side evaluation:
 ```javascript
 const parser = new ServerParser({
   operators: serverOperators,
-  payload: { secrets, user, request, ... },
+  payload: {
+    secrets,       // Application secrets
+    user,          // Current authenticated user
+    payload,       // Request payload from client
+    urlQuery,      // URL query parameters
+    pageId,        // Current page ID
+    requestId,     // Current request ID
+    global,        // Global state
+    input,         // Page input data
+    lowdefyGlobal, // Lowdefy app configuration
+    apiResponses,  // Previous request responses
+  },
 });
 
 const result = parser.parse({
@@ -86,7 +103,7 @@ const result = parser.parse({
 **Server-only operators:**
 - `_secret` - Access secrets (never sent to client)
 - `_user` - Current user session
-- `_request` - Request payload
+- `_payload` - Request payload from action
 
 ### WebParser
 
@@ -95,7 +112,20 @@ Used by `@lowdefy/engine` for client-side evaluation:
 ```javascript
 const parser = new WebParser({
   operators: webOperators,
-  payload: { state, urlQuery, input, global, ... },
+  payload: {
+    state,         // Page state object
+    urlQuery,      // URL query parameters
+    input,         // Navigation input data
+    global,        // Global state (cross-page)
+    requests,      // Request responses cache
+    event,         // Current event object
+    eventLog,      // Array of previous events
+    user,          // Authenticated user
+    actions,       // Actions context for _actions_log
+    lowdefyGlobal, // Lowdefy app configuration
+    blockId,       // Current block ID
+    pageId,        // Current page ID
+  },
 });
 
 const result = parser.parse({
@@ -110,7 +140,9 @@ const result = parser.parse({
 - `_input` - Navigation input
 - `_global` - Global state
 - `_request` - Request responses
+- `_event` - Current event data
 - `_args` - Function arguments
+- `_user` - Authenticated user info (client-safe fields only)
 
 ## Operator Syntax
 

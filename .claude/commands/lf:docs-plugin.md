@@ -210,7 +210,23 @@ updated: {date}
 ## Dependencies
 
 **Key external:**
-- `{package}` - {why}
+- `{package}` - {why} - [Documentation Link]({url})
+
+## External Library Documentation
+
+If this plugin wraps an external library, add a documentation link in the header:
+
+```markdown
+# @lowdefy/{plugin}
+
+[External Library Name](https://docs.example.com) integration for Lowdefy.
+```
+
+Examples:
+- `@lowdefy/blocks-antd` → [Ant Design](https://ant.design/components/overview)
+- `@lowdefy/blocks-aggrid` → [AG Grid](https://www.ag-grid.com/documentation/)
+- `@lowdefy/connection-knex` → [Knex.js](https://knexjs.org/guide/)
+- `@lowdefy/operators-moment` → [Moment.js](https://momentjs.com/docs/)
 
 ## Design Decisions
 
@@ -233,8 +249,18 @@ Mark completed in `cc-docs/DOCUMENTATION_PLAN.md`.
 - How it fits into the Lowdefy ecosystem
 - Key implementation patterns
 - Why certain approaches were taken
+- **External library links** when plugin wraps an external library (e.g., Ant Design, AG Grid, Knex)
 
 **Skip:**
 - Full prop documentation (that's in packages/docs)
 - Every component variation
 - CSS/styling details
+
+## Validation Checklist
+
+Before finalizing documentation:
+- [ ] Verify type names against actual exports in `src/types.js`
+- [ ] Check property names against schema files (e.g., `databaseUri` not `connectionString`)
+- [ ] Verify action names (e.g., `DisplayMessage` not `Message`)
+- [ ] Add link to external library documentation if plugin wraps external library
+- [ ] Cross-reference with official Lowdefy docs for accuracy

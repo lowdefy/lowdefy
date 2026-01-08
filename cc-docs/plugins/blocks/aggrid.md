@@ -1,6 +1,6 @@
 # @lowdefy/blocks-aggrid
 
-AG Grid integration for Lowdefy. Provides enterprise-grade data grid functionality.
+[AG Grid](https://www.ag-grid.com/documentation/) integration for Lowdefy. Provides enterprise-grade data grid functionality.
 
 ## Overview
 

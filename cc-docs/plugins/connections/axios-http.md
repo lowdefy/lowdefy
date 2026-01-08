@@ -1,6 +1,6 @@
 # @lowdefy/connection-axios-http
 
-HTTP/REST API connection for Lowdefy using Axios.
+HTTP/REST API connection for Lowdefy using [Axios](https://axios-http.com/docs/intro).
 
 ## Connection Type
 

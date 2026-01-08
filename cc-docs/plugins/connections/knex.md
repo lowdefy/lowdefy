@@ -1,6 +1,6 @@
 # @lowdefy/connection-knex
 
-SQL database connection for Lowdefy using Knex.js. Supports PostgreSQL, MySQL, SQLite, and more.
+SQL database connection for Lowdefy using [Knex.js](https://knexjs.org/guide/). Supports PostgreSQL, MySQL, SQLite, and more.
 
 ## Connection Type
 

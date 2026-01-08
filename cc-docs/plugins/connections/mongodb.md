@@ -2,6 +2,8 @@
 
 MongoDB connection for Lowdefy. Full support for CRUD operations and aggregation pipelines.
 
+Uses the [MongoDB Node.js Driver](https://www.mongodb.com/docs/drivers/node/current/) (v6.3.0).
+
 ## Connection Type
 
 | Type | Purpose |
@@ -15,9 +17,9 @@ connections:
   - id: mongodb
     type: MongoDBCollection
     properties:
-      connectionString:
+      databaseUri:
         _secret: MONGODB_URI
-      databaseName: myapp
+      databaseName: myapp   # Optional if included in URI
       collection: users
       read: true
       write: true
@@ -25,13 +27,13 @@ connections:
 
 ## Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `connectionString` | string | MongoDB connection URI |
-| `databaseName` | string | Database name |
-| `collection` | string | Collection name |
-| `read` | boolean | Allow read operations (default: true) |
-| `write` | boolean | Allow write operations (default: false) |
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `databaseUri` | string | Yes | MongoDB connection URI |
+| `databaseName` | string | No | Database name (can be in URI) |
+| `collection` | string | Yes | Collection name |
+| `read` | boolean | No | Allow read operations (default: true) |
+| `write` | boolean | No | Allow write operations (default: false) |
 
 ## Request Types
 

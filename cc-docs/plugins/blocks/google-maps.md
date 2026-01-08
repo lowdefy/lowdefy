@@ -1,6 +1,6 @@
 # @lowdefy/blocks-google-maps
 
-Google Maps integration for Lowdefy.
+[Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript) integration for Lowdefy.
 
 ## Block
 

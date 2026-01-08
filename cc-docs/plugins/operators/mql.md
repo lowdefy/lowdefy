@@ -1,6 +1,6 @@
 # @lowdefy/operators-mql
 
-MongoDB Query Language operators for Lowdefy. Filter and query data using MongoDB-style syntax.
+[MongoDB Query Language](https://www.mongodb.com/docs/manual/reference/operator/query/) operators for Lowdefy. Filter and query data using MongoDB-style syntax.
 
 ## Overview
 

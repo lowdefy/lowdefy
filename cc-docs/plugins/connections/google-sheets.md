@@ -1,6 +1,6 @@
 # @lowdefy/connection-google-sheets
 
-Google Sheets connection for Lowdefy.
+[Google Sheets API](https://developers.google.com/sheets/api/reference/rest) connection for Lowdefy.
 
 ## Connection Type
 

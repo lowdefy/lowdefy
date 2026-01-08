@@ -1,6 +1,6 @@
 # @lowdefy/connection-sendgrid
 
-SendGrid email connection for Lowdefy.
+[SendGrid](https://docs.sendgrid.com/api-reference/mail-send/mail-send) email connection for Lowdefy.
 
 ## Connection Type
 

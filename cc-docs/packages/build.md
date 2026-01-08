@@ -25,7 +25,7 @@ Lowdefy apps are fast because expensive operations happen once at build time:
 
 ## Build Pipeline
 
-The build function orchestrates 25+ steps in sequence:
+The build function orchestrates 31 steps in sequence:
 
 ```javascript
 async function build(options) {
@@ -146,6 +146,9 @@ Build artifacts go to `.lowdefy/build/`:
 ├── global.json        # Global state defaults
 ├── menus.json         # Navigation menus
 ├── types.json         # Type definitions map
+├── keyMap.json        # Block key tracking for error reporting
+├── refMap.json        # Reference file tracking for debugging
+├── api/               # API endpoint configs (one per endpoint)
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
 ├── requests/          # Request configs (one per request)

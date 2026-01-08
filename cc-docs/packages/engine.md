@@ -88,8 +88,8 @@ class State {
 
 Handles event registration and triggering:
 
-```javascript
-// Events defined in config
+```yaml
+# Events defined in config
 events:
   onClick:
     - id: action1
@@ -100,32 +100,62 @@ events:
           _sum:
             - _state: count
             - 1
+
+  # With debounce (300ms default)
+  onSearchChange:
+    debounce:
+      ms: 500           # Debounce delay
+      leading: false    # Fire on leading edge
+      trailing: true    # Fire on trailing edge (default)
+    actions:
+      - id: search
+        type: Request
+        params:
+          requestId: searchData
 ```
 
 Events orchestrate action execution and handle:
 - Sequential action execution
 - Error handling per action
-- Event bubbling/propagation
+- Debounce support (prevents rapid-fire execution)
+- Event-level catch actions for error recovery
 
 ### Actions
 
 Executes individual actions within events:
 
-```javascript
-// Action types from plugins
-SetState      // Modify state
-Request       // Execute data request
-Link          // Navigate to page
-CallMethod    // Call block method
-Message       // Show notification
-Validate      // Validate form
+```yaml
+# Action types from plugins
+SetState        # Modify state
+Request         # Execute data request
+Link            # Navigate to page
+CallMethod      # Call block method
+DisplayMessage  # Show notification
+Validate        # Validate form
 ...
+
+# Error handling with catchActions
+events:
+  onSave:
+    try:
+      - id: saveData
+        type: Request
+        params:
+          requestId: saveUser
+    catch:
+      - id: showError
+        type: DisplayMessage
+        params:
+          type: error
+          content:
+            _error: message
 ```
 
 Actions receive:
 - `context` - Page context with state
 - `params` - Action parameters (operators evaluated)
 - `event` - Original event object
+- `error` - Error object (in catch actions only)
 
 ### Requests
 
@@ -143,9 +173,10 @@ requests:
 
 Requests class handles:
 - Request execution via API
-- Response caching in state
+- Response caching in state (stores history array, not just latest)
 - Loading state management
 - Error handling
+- Automatic retry on transient failures
 
 ### Areas
 

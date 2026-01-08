@@ -1,6 +1,6 @@
 # @lowdefy/operators-moment
 
-Date and time operators using Moment.js.
+Date and time operators using [Moment.js](https://momentjs.com/docs/).
 
 ## Operators
 

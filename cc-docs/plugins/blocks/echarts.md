@@ -1,6 +1,6 @@
 # @lowdefy/blocks-echarts
 
-Apache ECharts integration for Lowdefy. Provides rich data visualization capabilities.
+[Apache ECharts](https://echarts.apache.org/en/option.html) integration for Lowdefy. Provides rich data visualization capabilities.
 
 ## Overview
 

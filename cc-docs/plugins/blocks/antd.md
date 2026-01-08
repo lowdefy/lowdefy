@@ -1,6 +1,6 @@
 # @lowdefy/blocks-antd
 
-Primary UI component library for Lowdefy, built on Ant Design. Contains 62 blocks covering most UI needs.
+Primary UI component library for Lowdefy, built on [Ant Design](https://ant.design/components/overview). Contains 62 blocks covering most UI needs.
 
 ## Overview
 
@@ -19,7 +19,6 @@ Layout and grouping components:
 
 | Block | Purpose |
 |-------|---------|
-| `Box` | Basic container (from blocks-basic) |
 | `Card` | Bordered container with header |
 | `Collapse` | Accordion panels |
 | `Tabs` | Tabbed content |
@@ -61,7 +60,6 @@ Form input components:
 | `DateSelector` | Date | Date picker |
 | `DateTimeSelector` | Date | Date and time picker |
 | `DateRangeSelector` | Array | Date range picker |
-| `TimeSelector` | Time | Time picker |
 | `MonthSelector` | Date | Month picker |
 | `WeekSelector` | Date | Week picker |
 | `Switch` | Boolean | Toggle switch |
@@ -77,8 +75,11 @@ Content presentation:
 
 | Block | Purpose |
 |-------|---------|
+| `Button` | Clickable button |
 | `Title` | Heading text (h1-h5) |
+| `TitleInput` | Editable heading text |
 | `Paragraph` | Body text |
+| `ParagraphInput` | Editable body text |
 | `Label` | Form field labels |
 | `Statistic` | Numeric display with label |
 | `Descriptions` | Key-value list |

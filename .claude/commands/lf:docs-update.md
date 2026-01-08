@@ -162,6 +162,27 @@ When updating package docs, check if changes affect:
 
 Note needed cross-reference updates in the summary.
 
+## Accuracy Validation
+
+Before finalizing updates, verify:
+
+1. **Property/Type Names**
+   - Check actual schema files for correct property names (e.g., `databaseUri` not `connectionString`)
+   - Verify action names from exports (e.g., `DisplayMessage` not `Message`)
+
+2. **Counts and Lists**
+   - Count actual build steps instead of estimating (e.g., "31 steps" not "25+ steps")
+   - List all output files/directories completely
+
+3. **External Library Links**
+   - When updating plugin docs, include/verify external library documentation links
+
+4. **Context Parameters**
+   - For parser documentation, include complete payload parameters
+
+5. **Advanced Features**
+   - Document debounce, catchActions, and other advanced patterns when present
+
 ## Example Session
 
 **Input:** `/lf:docs-update #456`

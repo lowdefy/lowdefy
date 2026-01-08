@@ -1,6 +1,6 @@
 # @lowdefy/connection-stripe
 
-Stripe payment connection for Lowdefy.
+[Stripe](https://stripe.com/docs/api) payment connection for Lowdefy.
 
 ## Connection Type
 

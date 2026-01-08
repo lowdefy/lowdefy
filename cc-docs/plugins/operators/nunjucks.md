@@ -1,6 +1,6 @@
 # @lowdefy/operators-nunjucks
 
-Nunjucks template operator for Lowdefy.
+[Nunjucks](https://mozilla.github.io/nunjucks/templating.html) template operator for Lowdefy.
 
 ## Operator
 

@@ -174,6 +174,35 @@ Skip:
 - Full API reference (that's in the code)
 - User-facing documentation (that's in packages/docs)
 
+## Accuracy Checklist
+
+Before finalizing documentation:
+- [ ] Verify exact counts (e.g., "31 build steps" not "25+ steps")
+- [ ] List all context parameters for parsers (BuildParser, ServerParser, WebParser)
+- [ ] Include all output files/directories in build output sections
+- [ ] Document advanced features (debounce, catchActions, request history)
+- [ ] Use correct terminology (e.g., `DisplayMessage` not `Message`)
+
+## Package-Specific Guidance
+
+### @lowdefy/build
+- List all 31 build steps by name
+- Include complete output structure (keyMap.json, refMap.json, api/, etc.)
+
+### @lowdefy/operators
+- Document full payload parameters for each parser:
+  - BuildParser: env, variables, refDef, path, jsMap
+  - ServerParser: secrets, user, payload, urlQuery, pageId, requestId, global, input, lowdefyGlobal, apiResponses
+  - WebParser: state, urlQuery, input, global, requests, event, eventLog, user, actions, lowdefyGlobal, blockId, pageId
+
+### @lowdefy/engine
+- Include debounce configuration (ms, leading, trailing)
+- Document try/catch pattern for actions (catchActions)
+- Note that requests store history arrays, not just latest response
+
+### @lowdefy/actions-core
+- Correct action name is `DisplayMessage` (not `Message`)
+
 ## Output
 
 Single file: `cc-docs/packages/{package}.md`
