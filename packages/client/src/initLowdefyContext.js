@@ -21,6 +21,49 @@ import createIcon from './createIcon.js';
 import createLinkComponent from './createLinkComponent.js';
 import setupLink from './setupLink.js';
 
+function createLogError(lowdefy, windowObj) {
+  return async function logError(error) {
+    const errorData = {
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+      configKey: error.configKey,
+      pageId: lowdefy.pageId,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Log to console immediately
+    console.error('[Lowdefy Error]', error.message, error);
+
+    // Try to send to server with 1s timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
+
+    try {
+      const response = await windowObj.fetch(`${lowdefy.basePath}/api/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(errorData),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.configLocation) {
+          console.error(`[Config Location] ${result.configLocation}`);
+        }
+      }
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      // Server unreachable or timeout - error already logged to console
+      if (fetchError.name !== 'AbortError') {
+        console.warn('[Lowdefy] Could not report error to server:', fetchError.message);
+      }
+    }
+  };
+}
+
 function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
@@ -63,6 +106,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
+    lowdefy._internal.logError = createLogError(lowdefy, window);
 
     if (stage === 'dev') {
       window.lowdefy = lowdefy;

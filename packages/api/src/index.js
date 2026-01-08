@@ -21,6 +21,7 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getNextAuthConfig from './routes/auth/getNextAuthConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import logClientError from './routes/log/logClientError.js';
 
 import { ConfigurationError, RequestError, ServerError } from './context/errors.js';
 
@@ -33,6 +34,7 @@ export {
   getNextAuthConfig,
   getPageConfig,
   getRootConfig,
+  logClientError,
   RequestError,
   ServerError,
 };

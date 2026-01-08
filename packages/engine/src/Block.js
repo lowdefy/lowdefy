@@ -21,7 +21,9 @@ import Areas from './Areas.js';
 class Block {
   constructor(
     { context, arrayIndices },
-    {
+    blockConfig
+  ) {
+    const {
       id,
       blockId,
       events,
@@ -35,10 +37,11 @@ class Block {
       visible,
       type: blockType,
       areas,
-    }
-  ) {
+    } = blockConfig;
+
     this.context = context;
     this.arrayIndices = arrayIndices;
+    this.configKey = blockConfig['~k'];
 
     this.idPattern = id;
     this.blockIdPattern = blockId;
@@ -465,6 +468,7 @@ class Block {
     this.update = false;
     this.eval = {
       areas: this.areasLayoutEval.output,
+      configKey: this.configKey,
       events: type.isNone(this.Events.events) ? null : this.Events.events,
       properties: this.propertiesEval.output,
       loading: this.loadingEval.output,

@@ -61,7 +61,7 @@ function apiWrapper(handler) {
       // TODO: Log response time?
       return response;
     } catch (error) {
-      logError({ error, context });
+      await logError({ error, context });
       res.status(500).json({ name: error.name, message: error.message });
     }
   };

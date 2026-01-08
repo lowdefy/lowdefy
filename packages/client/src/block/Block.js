@@ -25,8 +25,14 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
   const [updates, setUpdate] = useState(0);
   lowdefy._internal.updaters[block.id] = () => setUpdate(updates + 1);
 
+  const handleError = (error) => {
+    if (lowdefy._internal.logError) {
+      lowdefy._internal.logError(error);
+    }
+  };
+
   return (
-    <ErrorBoundary>
+    <ErrorBoundary configKey={block.eval?.configKey} onError={handleError}>
       <MountEvents
         context={context}
         triggerEvent={async () => {

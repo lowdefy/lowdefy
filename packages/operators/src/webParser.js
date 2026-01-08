@@ -41,8 +41,7 @@ class WebParser {
       this.context._internal.lowdefy;
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      // TODO: pass ~k in errors.
-      // const _k = value['~k'];
+      const configKey = value['~k'];
       delete value['~k'];
 
       if (Object.keys(value).length !== 1) return value;
@@ -82,6 +81,7 @@ class WebParser {
         });
         return res;
       } catch (e) {
+        e.configKey = e.configKey ?? configKey;
         errors.push(e);
         console.error(e);
         return null;

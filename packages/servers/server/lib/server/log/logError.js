@@ -14,9 +14,33 @@
   limitations under the License.
 */
 
-function logError({ context, error }) {
+import { resolveConfigLocation } from '@lowdefy/helpers';
+
+async function resolveErrorConfigLocation(context, error) {
+  if (!error.configKey) {
+    return null;
+  }
+  try {
+    const [keyMap, refMap] = await Promise.all([
+      context.readConfigFile('keyMap.json'),
+      context.readConfigFile('refMap.json'),
+    ]);
+    const location = resolveConfigLocation({
+      configKey: error.configKey,
+      keyMap,
+      refMap,
+    });
+    return location?.formatted || null;
+  } catch {
+    return null;
+  }
+}
+
+async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
+
+    const configLocation = await resolveErrorConfigLocation(context, error);
 
     context.logger.error({
       // TODO:
@@ -26,6 +50,7 @@ function logError({ context, error }) {
       // build_hash
       // config_hash
       err: error,
+      configLocation,
       user: {
         id: user.id,
         roles: user.roles,
