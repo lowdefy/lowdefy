@@ -62,6 +62,7 @@ describe('resolveConfigLocation', () => {
       path: 'root.pages[0:home].blocks[0:header:Title]',
       file: 'pages/home.yaml',
       line: 5,
+      link: null,
       formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
@@ -77,7 +78,42 @@ describe('resolveConfigLocation', () => {
       path: 'root.pages[1:about].blocks[0:content]',
       file: 'pages/about.yaml',
       line: 12,
+      link: null,
       formatted: 'pages/about.yaml:12 at root.pages[1:about].blocks[0:content]',
+    });
+  });
+
+  test('includes absolute link when configDirectory is provided', () => {
+    const result = resolveConfigLocation({
+      configKey: 'key1',
+      keyMap,
+      refMap,
+      configDirectory: '/Users/dev/myapp',
+    });
+
+    expect(result).toEqual({
+      path: 'root.pages[0:home].blocks[0:header:Title]',
+      file: 'pages/home.yaml',
+      line: 5,
+      link: '/Users/dev/myapp/pages/home.yaml:5',
+      formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
+    });
+  });
+
+  test('link without line number when ~l is missing', () => {
+    const result = resolveConfigLocation({
+      configKey: 'key3',
+      keyMap,
+      refMap,
+      configDirectory: '/Users/dev/myapp',
+    });
+
+    expect(result).toEqual({
+      path: 'root.pages[0:home].requests[0:getData]',
+      file: 'lowdefy.yaml',
+      line: null,
+      link: '/Users/dev/myapp/lowdefy.yaml',
+      formatted: 'lowdefy.yaml at root.pages[0:home].requests[0:getData]',
     });
   });
 
@@ -132,6 +168,7 @@ describe('resolveConfigLocation', () => {
       path: 'root.pages[0:home].requests[0:getData]',
       file: 'lowdefy.yaml',
       line: null,
+      link: null,
       formatted: 'lowdefy.yaml at root.pages[0:home].requests[0:getData]',
     });
   });
@@ -147,6 +184,7 @@ describe('resolveConfigLocation', () => {
       path: 'root.pages[0:home].blocks[0:header:Title]',
       file: 'lowdefy.yaml',
       line: 5,
+      link: null,
       formatted: 'lowdefy.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });

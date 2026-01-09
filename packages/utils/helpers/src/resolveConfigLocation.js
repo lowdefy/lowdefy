@@ -21,17 +21,25 @@
  * @param {string} params.configKey - The ~k value from the config object
  * @param {Object} params.keyMap - The keyMap from build output
  * @param {Object} params.refMap - The refMap from build output
- * @returns {Object|null} Location object with path, file, line, and formatted string, or null if not resolvable
+ * @param {string} [params.configDirectory] - Absolute path to config directory for clickable links
+ * @returns {Object|null} Location object with path, file, line, link, and formatted string, or null if not resolvable
  *
  * @example
  * const location = resolveConfigLocation({
  *   configKey: 'abc123',
  *   keyMap: { 'abc123': { key: 'root.pages[0:home].blocks[0:header]', '~r': 'ref1', '~l': 5 } },
- *   refMap: { 'ref1': { path: 'pages/home.yaml' } }
+ *   refMap: { 'ref1': { path: 'pages/home.yaml' } },
+ *   configDirectory: '/Users/dev/myapp'
  * });
- * // Returns: { path: 'root.pages[0:home].blocks[0:header]', file: 'pages/home.yaml', line: 5, formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header]' }
+ * // Returns: {
+ * //   path: 'root.pages[0:home].blocks[0:header]',
+ * //   file: 'pages/home.yaml',
+ * //   line: 5,
+ * //   link: '/Users/dev/myapp/pages/home.yaml:5',
+ * //   formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header]'
+ * // }
  */
-function resolveConfigLocation({ configKey, keyMap, refMap }) {
+function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   if (!configKey || !keyMap || !keyMap[configKey]) {
     return null;
   }
@@ -42,13 +50,21 @@ function resolveConfigLocation({ configKey, keyMap, refMap }) {
   const refEntry = refMap?.[refId];
   const filePath = refEntry?.path || 'lowdefy.yaml';
 
-  // Format: filepath:line for clickable links in terminals/VSCode
+  // Format: filepath:line for display
   const fileWithLine = lineNumber ? `${filePath}:${lineNumber}` : filePath;
+
+  // Absolute path for clickable links in VSCode terminal
+  let link = null;
+  if (configDirectory) {
+    const absolutePath = `${configDirectory}/${filePath}`;
+    link = lineNumber ? `${absolutePath}:${lineNumber}` : absolutePath;
+  }
 
   return {
     path: keyEntry.key,
     file: filePath,
     line: lineNumber || null,
+    link,
     formatted: `${fileWithLine} at ${keyEntry.key}`,
   };
 }

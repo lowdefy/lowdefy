@@ -37,6 +37,7 @@ function apiWrapper(handler) {
       // Important to give absolute path so Next can trace build files
       rid: crypto.randomUUID(),
       buildDirectory: path.join(process.cwd(), 'build'),
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
       config,
       connections,
       fileCache,

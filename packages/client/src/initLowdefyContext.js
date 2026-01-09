@@ -51,7 +51,19 @@ function createLogError(lowdefy, windowObj) {
       if (response.ok) {
         const result = await response.json();
         if (result.source) {
-          console.error(`[Config Location] ${result.source}`);
+          if (result.link) {
+            // Parse link format: /path/to/file:line
+            const match = result.link.match(/^(.+):(\d+)$/);
+            if (match) {
+              const [, filePath, line] = match;
+              // Use query params to avoid Chrome interpreting :line as port
+              console.error(`[Config] ${result.source} vscode://file${filePath}?line=${line}`);
+            } else {
+              console.error(`[Config] ${result.source} vscode://file${result.link}`);
+            }
+          } else {
+            console.error(`[Config] ${result.source}`);
+          }
         }
       }
     } catch (fetchError) {

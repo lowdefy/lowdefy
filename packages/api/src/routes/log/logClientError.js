@@ -20,6 +20,7 @@ async function logClientError(context, { configKey, message, name, pageId, stack
   const { logger } = context;
 
   let source = null;
+  let link = null;
 
   if (configKey) {
     try {
@@ -28,9 +29,15 @@ async function logClientError(context, { configKey, message, name, pageId, stack
         context.readConfigFile('refMap.json'),
       ]);
 
-      const location = resolveConfigLocation({ configKey, keyMap, refMap });
+      const location = resolveConfigLocation({
+        configKey,
+        keyMap,
+        refMap,
+        configDirectory: context.configDirectory,
+      });
       if (location) {
         source = location.formatted;
+        link = location.link;
       }
     } catch (error) {
       // Maps may not exist in all environments
@@ -45,10 +52,13 @@ async function logClientError(context, { configKey, message, name, pageId, stack
     pageId,
     timestamp,
     source,
+    link,
   };
 
   if (source) {
-    logger.error({ ...logData, stack }, `Client error at ${source}: ${message}`);
+    // Include link in message so it appears on same line and VSCode can detect it
+    const locationInfo = link ? `${source}\n    ${link}` : source;
+    logger.error({ ...logData, stack }, `Client error at ${locationInfo}: ${message}`);
   } else {
     logger.error({ ...logData, stack }, `Client error: ${message}`);
   }
@@ -56,6 +66,7 @@ async function logClientError(context, { configKey, message, name, pageId, stack
   return {
     success: true,
     source,
+    link,
   };
 }
 

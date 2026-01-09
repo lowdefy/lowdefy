@@ -29,8 +29,9 @@ async function resolveErrorConfigLocation(context, error) {
       configKey: error.configKey,
       keyMap,
       refMap,
+      configDirectory: context.configDirectory,
     });
-    return location?.formatted || null;
+    return location || null;
   } catch {
     return null;
   }
@@ -40,7 +41,7 @@ async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
 
-    const source = await resolveErrorConfigLocation(context, error);
+    const location = await resolveErrorConfigLocation(context, error);
 
     context.logger.error({
       // TODO:
@@ -50,7 +51,8 @@ async function logError({ context, error }) {
       // build_hash
       // config_hash
       err: error,
-      source,
+      source: location?.formatted || null,
+      link: location?.link || null,
       user: {
         id: user.id,
         roles: user.roles,
