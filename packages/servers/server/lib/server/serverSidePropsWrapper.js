@@ -15,8 +15,8 @@
 */
 
 import path from 'path';
-import crypto from 'crypto';
 import { createApiContext } from '@lowdefy/api';
+import { v4 as uuid } from 'uuid';
 
 import config from '../../build/config.json';
 import createLogger from './log/createLogger.js';
@@ -31,7 +31,7 @@ function serverSidePropsWrapper(handler) {
   return async function wrappedHandler(nextContext) {
     const context = {
       // Important to give absolute path so Next can trace build files
-      rid: crypto.randomUUID(),
+      rid: uuid(),
       buildDirectory: path.join(process.cwd(), 'build'),
       config,
       fileCache,
