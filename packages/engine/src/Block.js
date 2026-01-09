@@ -466,10 +466,24 @@ class Block {
     if (!this.update) return;
 
     this.update = false;
+
+    // Collect parse errors from all eval results
+    const parseErrors = [
+      ...(this.propertiesEval.errors || []),
+      ...(this.styleEval.errors || []),
+      ...(this.layoutEval.errors || []),
+      ...(this.visibleEval.errors || []),
+      ...(this.loadingEval.errors || []),
+      ...(this.requiredEval.errors || []),
+      ...(this.skeletonEval.errors || []),
+      ...(this.areasLayoutEval.errors || []),
+    ];
+
     this.eval = {
       areas: this.areasLayoutEval.output,
       configKey: this.configKey,
       events: type.isNone(this.Events.events) ? null : this.Events.events,
+      parseErrors: parseErrors.length > 0 ? parseErrors : null,
       properties: this.propertiesEval.output,
       loading: this.loadingEval.output,
       skeleton: this.skeletonEval.output,

@@ -50,8 +50,8 @@ function createLogError(lowdefy, windowObj) {
 
       if (response.ok) {
         const result = await response.json();
-        if (result.configLocation) {
-          console.error(`[Config Location] ${result.configLocation}`);
+        if (result.source) {
+          console.error(`[Config Location] ${result.source}`);
         }
       }
     } catch (fetchError) {

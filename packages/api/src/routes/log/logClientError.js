@@ -19,7 +19,7 @@ import { resolveConfigLocation } from '@lowdefy/helpers';
 async function logClientError(context, { configKey, message, name, pageId, stack, timestamp }) {
   const { logger } = context;
 
-  let configLocation = null;
+  let source = null;
 
   if (configKey) {
     try {
@@ -30,7 +30,7 @@ async function logClientError(context, { configKey, message, name, pageId, stack
 
       const location = resolveConfigLocation({ configKey, keyMap, refMap });
       if (location) {
-        configLocation = location.formatted;
+        source = location.formatted;
       }
     } catch (error) {
       // Maps may not exist in all environments
@@ -44,18 +44,18 @@ async function logClientError(context, { configKey, message, name, pageId, stack
     errorMessage: message,
     pageId,
     timestamp,
-    configLocation,
+    source,
   };
 
-  if (configLocation) {
-    logger.error({ ...logData, stack }, `Client error at ${configLocation}: ${message}`);
+  if (source) {
+    logger.error({ ...logData, stack }, `Client error at ${source}: ${message}`);
   } else {
     logger.error({ ...logData, stack }, `Client error: ${message}`);
   }
 
   return {
     success: true,
-    configLocation,
+    source,
   };
 }
 

@@ -40,7 +40,7 @@ async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
 
-    const configLocation = await resolveErrorConfigLocation(context, error);
+    const source = await resolveErrorConfigLocation(context, error);
 
     context.logger.error({
       // TODO:
@@ -50,7 +50,7 @@ async function logError({ context, error }) {
       // build_hash
       // config_hash
       err: error,
-      configLocation,
+      source,
       user: {
         id: user.id,
         roles: user.roles,

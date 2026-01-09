@@ -52,7 +52,7 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      configLocation: null,
+      source: null,
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -60,7 +60,7 @@ describe('logClientError', () => {
         errorName: 'Error',
         errorMessage: 'Test error',
         pageId: 'home',
-        configLocation: null,
+        source: null,
       }),
       'Client error: Test error'
     );
@@ -91,7 +91,7 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      configLocation: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
+      source: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -99,7 +99,7 @@ describe('logClientError', () => {
         errorName: 'Error',
         errorMessage: 'Test error',
         pageId: 'home',
-        configLocation: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
+        source: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
       }),
       'Client error at pages/home.yaml at root.pages[0:home].blocks[0:header]: Test error'
     );
@@ -129,11 +129,11 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      configLocation: null,
+      source: null,
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
-        configLocation: null,
+        source: null,
       }),
       'Client error: Test error'
     );
@@ -160,7 +160,7 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      configLocation: null,
+      source: null,
     });
     expect(mockLogger.warn).toHaveBeenCalledWith({
       event: 'warn_maps_load_failed',
@@ -168,7 +168,7 @@ describe('logClientError', () => {
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
-        configLocation: null,
+        source: null,
       }),
       'Client error: Test error'
     );
