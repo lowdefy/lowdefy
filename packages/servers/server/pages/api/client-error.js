@@ -22,13 +22,12 @@ async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
     throw new Error('Only POST requests are supported.');
   }
-  const { configKey, message, name, pageId, stack, timestamp } = req.body;
+  const { configKey, message, name, pageId, timestamp } = req.body;
   const response = await logClientError(context, {
     configKey,
     message,
     name,
     pageId,
-    stack,
     timestamp,
   });
   res.status(200).json(response);

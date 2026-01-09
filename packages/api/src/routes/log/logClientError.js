@@ -16,10 +16,11 @@
 
 import { resolveConfigLocation } from '@lowdefy/helpers';
 
-async function logClientError(context, { configKey, message, name, pageId, stack, timestamp }) {
+async function logClientError(context, { configKey, message, name, pageId, timestamp }) {
   const { logger } = context;
 
   let source = null;
+  let config = null;
   let link = null;
 
   if (configKey) {
@@ -36,7 +37,8 @@ async function logClientError(context, { configKey, message, name, pageId, stack
         configDirectory: context.configDirectory,
       });
       if (location) {
-        source = location.formatted;
+        source = location.source;
+        config = location.config;
         link = location.link;
       }
     } catch (error) {
@@ -52,20 +54,22 @@ async function logClientError(context, { configKey, message, name, pageId, stack
     pageId,
     timestamp,
     source,
+    config,
     link,
   };
 
   if (source) {
-    // Include link in message so it appears on same line and VSCode can detect it
-    const locationInfo = link ? `${source}\n    ${link}` : source;
-    logger.error({ ...logData, stack }, `Client error at ${locationInfo}: ${message}`);
+    // Include link in message so VSCode can detect it
+    const locationInfo = link ? `${source} ${config}\n    ${link}` : `${source} ${config}`;
+    logger.error(logData, `Client error at ${locationInfo}: ${message}`);
   } else {
-    logger.error({ ...logData, stack }, `Client error: ${message}`);
+    logger.error(logData, `Client error: ${message}`);
   }
 
   return {
     success: true,
     source,
+    config,
     link,
   };
 }

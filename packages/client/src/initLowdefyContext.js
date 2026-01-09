@@ -22,34 +22,43 @@ import createLinkComponent from './createLinkComponent.js';
 import setupLink from './setupLink.js';
 
 function createLogError(lowdefy, windowObj) {
+  // Track logged errors for deduplication
+  const loggedErrors = new Set();
+
   return async function logError(error) {
+    // Deduplicate by message + configKey
+    const errorKey = `${error.message}:${error.configKey || ''}`;
+    if (loggedErrors.has(errorKey)) {
+      return;
+    }
+    loggedErrors.add(errorKey);
+
     const errorData = {
       message: error.message,
       name: error.name,
-      stack: error.stack,
       configKey: error.configKey,
       pageId: lowdefy.pageId,
       timestamp: new Date().toISOString(),
     };
 
-    // Log to console immediately
-    console.error('[Lowdefy Error]', error.message, error);
-
-    // Try to send to server with 1s timeout
+    // Try to send to server first with 1s timeout (same-origin)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1000);
 
     try {
-      const response = await windowObj.fetch(`${lowdefy.basePath}/api/log`, {
+      const response = await windowObj.fetch(`${lowdefy.basePath}/api/client-error`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(errorData),
         signal: controller.signal,
+        credentials: 'same-origin',
       });
       clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
+        // Log error without stack trace
+        console.error('[Lowdefy Error]', error.message);
         if (result.source) {
           if (result.link) {
             // Parse link format: /path/to/file:line
@@ -57,21 +66,22 @@ function createLogError(lowdefy, windowObj) {
             if (match) {
               const [, filePath, line] = match;
               // Use query params to avoid Chrome interpreting :line as port
-              console.error(`[Config] ${result.source} vscode://file${filePath}?line=${line}`);
+              console.error(`[Config] ${result.source} ${result.config} vscode://file${filePath}?line=${line}`);
             } else {
-              console.error(`[Config] ${result.source} vscode://file${result.link}`);
+              console.error(`[Config] ${result.source} ${result.config} vscode://file${result.link}`);
             }
           } else {
-            console.error(`[Config] ${result.source}`);
+            console.error(`[Config] ${result.source} ${result.config}`);
           }
         }
+      } else {
+        // Server returned error - log locally as fallback (no stack trace)
+        console.error('[Lowdefy Error]', error.message);
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
-      // Server unreachable or timeout - error already logged to console
-      if (fetchError.name !== 'AbortError') {
-        console.warn('[Lowdefy] Could not report error to server:', fetchError.message);
-      }
+      // Server unreachable or timeout - log locally as fallback (no stack trace)
+      console.error('[Lowdefy Error]', error.message);
     }
   };
 }

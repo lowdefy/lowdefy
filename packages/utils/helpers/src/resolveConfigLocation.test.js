@@ -51,7 +51,7 @@ describe('resolveConfigLocation', () => {
     },
   };
 
-  test('resolves config key to location with file, line, and path', () => {
+  test('resolves config key to source and config', () => {
     const result = resolveConfigLocation({
       configKey: 'key1',
       keyMap,
@@ -59,11 +59,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[0:home].blocks[0:header:Title]',
-      file: 'pages/home.yaml',
-      line: 5,
+      source: 'pages/home.yaml:5',
+      config: 'root.pages[0:home].blocks[0:header:Title]',
       link: null,
-      formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
 
@@ -75,11 +73,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[1:about].blocks[0:content]',
-      file: 'pages/about.yaml',
-      line: 12,
+      source: 'pages/about.yaml:12',
+      config: 'root.pages[1:about].blocks[0:content]',
       link: null,
-      formatted: 'pages/about.yaml:12 at root.pages[1:about].blocks[0:content]',
     });
   });
 
@@ -92,11 +88,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[0:home].blocks[0:header:Title]',
-      file: 'pages/home.yaml',
-      line: 5,
+      source: 'pages/home.yaml:5',
+      config: 'root.pages[0:home].blocks[0:header:Title]',
       link: '/Users/dev/myapp/pages/home.yaml:5',
-      formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
 
@@ -109,11 +103,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[0:home].requests[0:getData]',
-      file: 'lowdefy.yaml',
-      line: null,
+      source: 'lowdefy.yaml',
+      config: 'root.pages[0:home].requests[0:getData]',
       link: '/Users/dev/myapp/lowdefy.yaml',
-      formatted: 'lowdefy.yaml at root.pages[0:home].requests[0:getData]',
     });
   });
 
@@ -165,11 +157,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[0:home].requests[0:getData]',
-      file: 'lowdefy.yaml',
-      line: null,
+      source: 'lowdefy.yaml',
+      config: 'root.pages[0:home].requests[0:getData]',
       link: null,
-      formatted: 'lowdefy.yaml at root.pages[0:home].requests[0:getData]',
     });
   });
 
@@ -181,11 +171,9 @@ describe('resolveConfigLocation', () => {
     });
 
     expect(result).toEqual({
-      path: 'root.pages[0:home].blocks[0:header:Title]',
-      file: 'lowdefy.yaml',
-      line: 5,
+      source: 'lowdefy.yaml:5',
+      config: 'root.pages[0:home].blocks[0:header:Title]',
       link: null,
-      formatted: 'lowdefy.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
 });

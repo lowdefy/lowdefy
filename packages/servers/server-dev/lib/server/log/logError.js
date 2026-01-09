@@ -45,7 +45,8 @@ async function logError({ context, error }) {
 
     context.logger.error({
       err: error,
-      source: location?.formatted || null,
+      source: location?.source || null,
+      config: location?.config || null,
       link: location?.link || null,
       user: {
         id: user.id,

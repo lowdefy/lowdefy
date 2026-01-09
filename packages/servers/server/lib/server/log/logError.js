@@ -51,7 +51,8 @@ async function logError({ context, error }) {
       // build_hash
       // config_hash
       err: error,
-      source: location?.formatted || null,
+      source: location?.source || null,
+      config: location?.config || null,
       link: location?.link || null,
       user: {
         id: user.id,

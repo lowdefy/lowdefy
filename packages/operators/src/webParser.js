@@ -83,7 +83,7 @@ class WebParser {
       } catch (e) {
         e.configKey = e.configKey ?? configKey;
         errors.push(e);
-        console.error(e);
+        // Don't log here - errors are logged via logError for deduplication
         return null;
       }
     };

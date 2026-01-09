@@ -15,14 +15,14 @@
 */
 
 /**
- * Resolves a config key (~k) to a human-readable location string.
+ * Resolves a config key (~k) to source and config location.
  *
  * @param {Object} params
  * @param {string} params.configKey - The ~k value from the config object
  * @param {Object} params.keyMap - The keyMap from build output
  * @param {Object} params.refMap - The refMap from build output
  * @param {string} [params.configDirectory] - Absolute path to config directory for clickable links
- * @returns {Object|null} Location object with path, file, line, link, and formatted string, or null if not resolvable
+ * @returns {Object|null} Location object with source, config, and link, or null if not resolvable
  *
  * @example
  * const location = resolveConfigLocation({
@@ -32,11 +32,9 @@
  *   configDirectory: '/Users/dev/myapp'
  * });
  * // Returns: {
- * //   path: 'root.pages[0:home].blocks[0:header]',
- * //   file: 'pages/home.yaml',
- * //   line: 5,
- * //   link: '/Users/dev/myapp/pages/home.yaml:5',
- * //   formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header]'
+ * //   source: 'pages/home.yaml:5',
+ * //   config: 'root.pages[0:home].blocks[0:header]',
+ * //   link: '/Users/dev/myapp/pages/home.yaml:5'
  * // }
  */
 function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
@@ -50,8 +48,11 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   const refEntry = refMap?.[refId];
   const filePath = refEntry?.path || 'lowdefy.yaml';
 
-  // Format: filepath:line for display
-  const fileWithLine = lineNumber ? `${filePath}:${lineNumber}` : filePath;
+  // source: filepath:line (e.g., "lowdefy.yaml:16")
+  const source = lineNumber ? `${filePath}:${lineNumber}` : filePath;
+
+  // config: the config path (e.g., "root.pages[0:home].blocks[0:header]")
+  const config = keyEntry.key;
 
   // Absolute path for clickable links in VSCode terminal
   let link = null;
@@ -61,11 +62,9 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   }
 
   return {
-    path: keyEntry.key,
-    file: filePath,
-    line: lineNumber || null,
+    source,
+    config,
     link,
-    formatted: `${fileWithLine} at ${keyEntry.key}`,
   };
 }
 
