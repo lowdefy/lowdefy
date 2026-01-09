@@ -22,6 +22,7 @@ const keyMap = {
   'key-123': {
     key: 'root.pages[0:home].blocks[0:header]',
     '~r': 'ref-1',
+    '~l': 8,
   },
 };
 
@@ -91,7 +92,7 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      source: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
+      source: 'pages/home.yaml:8 at root.pages[0:home].blocks[0:header]',
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -99,9 +100,9 @@ describe('logClientError', () => {
         errorName: 'Error',
         errorMessage: 'Test error',
         pageId: 'home',
-        source: 'pages/home.yaml at root.pages[0:home].blocks[0:header]',
+        source: 'pages/home.yaml:8 at root.pages[0:home].blocks[0:header]',
       }),
-      'Client error at pages/home.yaml at root.pages[0:home].blocks[0:header]: Test error'
+      'Client error at pages/home.yaml:8 at root.pages[0:home].blocks[0:header]: Test error'
     );
   });
 

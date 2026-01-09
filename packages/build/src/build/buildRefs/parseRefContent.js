@@ -19,9 +19,74 @@
 import { type } from '@lowdefy/helpers';
 import { getFileExtension, getFileSubExtension } from '@lowdefy/node-utils';
 import JSON5 from 'json5';
-import YAML from 'yaml';
+import YAML, { isMap, isSeq, isPair, isScalar } from 'yaml';
 
 import parseNunjucks from './parseNunjucks.js';
+
+function getLineNumber(content, offset) {
+  if (offset == null || offset < 0) return null;
+  return content.substring(0, offset).split('\n').length;
+}
+
+function addLineNumbers(node, content, result) {
+  if (isMap(node)) {
+    const obj = result || {};
+    if (node.range) {
+      Object.defineProperty(obj, '~l', {
+        value: getLineNumber(content, node.range[0]),
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+    for (const pair of node.items) {
+      if (isPair(pair) && isScalar(pair.key)) {
+        const key = pair.key.value;
+        const value = pair.value;
+        if (isMap(value)) {
+          obj[key] = addLineNumbers(value, content, {});
+        } else if (isSeq(value)) {
+          obj[key] = addLineNumbers(value, content, []);
+        } else if (isScalar(value)) {
+          obj[key] = value.value;
+        } else {
+          obj[key] = value?.toJSON?.() ?? value;
+        }
+      }
+    }
+    return obj;
+  }
+
+  if (isSeq(node)) {
+    const arr = result || [];
+    for (const item of node.items) {
+      if (isMap(item)) {
+        arr.push(addLineNumbers(item, content, {}));
+      } else if (isSeq(item)) {
+        arr.push(addLineNumbers(item, content, []));
+      } else if (isScalar(item)) {
+        arr.push(item.value);
+      } else {
+        arr.push(item?.toJSON?.() ?? item);
+      }
+    }
+    return arr;
+  }
+
+  if (isScalar(node)) {
+    return node.value;
+  }
+
+  return node?.toJSON?.() ?? node;
+}
+
+function parseYamlWithLineNumbers(content) {
+  const doc = YAML.parseDocument(content);
+  if (doc.errors && doc.errors.length > 0) {
+    throw new Error(doc.errors[0].message);
+  }
+  return addLineNumbers(doc.contents, content);
+}
 
 function parseRefContent({ content, refDef }) {
   const { path, vars } = refDef;
@@ -33,7 +98,7 @@ function parseRefContent({ content, refDef }) {
     }
 
     if (ext === 'yaml' || ext === 'yml') {
-      content = YAML.parse(content);
+      content = parseYamlWithLineNumbers(content);
     }
     if (ext === 'json') {
       content = JSON5.parse(content);

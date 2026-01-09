@@ -23,16 +23,19 @@ describe('resolveConfigLocation', () => {
     key1: {
       key: 'root.pages[0:home].blocks[0:header:Title]',
       '~r': 'ref1',
+      '~l': 5,
       '~k_parent': 'key0',
     },
     key2: {
       key: 'root.pages[1:about].blocks[0:content]',
       '~r': 'ref2',
+      '~l': 12,
       '~k_parent': 'key0',
     },
     key3: {
       key: 'root.pages[0:home].requests[0:getData]',
       // No ~r - should default to lowdefy.yaml
+      // No ~l - should handle missing line number
       '~k_parent': 'key1',
     },
   };
@@ -48,7 +51,7 @@ describe('resolveConfigLocation', () => {
     },
   };
 
-  test('resolves config key to location with file and path', () => {
+  test('resolves config key to location with file, line, and path', () => {
     const result = resolveConfigLocation({
       configKey: 'key1',
       keyMap,
@@ -58,11 +61,12 @@ describe('resolveConfigLocation', () => {
     expect(result).toEqual({
       path: 'root.pages[0:home].blocks[0:header:Title]',
       file: 'pages/home.yaml',
-      formatted: 'pages/home.yaml at root.pages[0:home].blocks[0:header:Title]',
+      line: 5,
+      formatted: 'pages/home.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
 
-  test('resolves different config key', () => {
+  test('resolves different config key with line number', () => {
     const result = resolveConfigLocation({
       configKey: 'key2',
       keyMap,
@@ -72,7 +76,8 @@ describe('resolveConfigLocation', () => {
     expect(result).toEqual({
       path: 'root.pages[1:about].blocks[0:content]',
       file: 'pages/about.yaml',
-      formatted: 'pages/about.yaml at root.pages[1:about].blocks[0:content]',
+      line: 12,
+      formatted: 'pages/about.yaml:12 at root.pages[1:about].blocks[0:content]',
     });
   });
 
@@ -116,7 +121,7 @@ describe('resolveConfigLocation', () => {
     expect(result).toBeNull();
   });
 
-  test('defaults to lowdefy.yaml when refId not in refMap', () => {
+  test('defaults to lowdefy.yaml when refId not in refMap and handles missing line number', () => {
     const result = resolveConfigLocation({
       configKey: 'key3',
       keyMap,
@@ -126,11 +131,12 @@ describe('resolveConfigLocation', () => {
     expect(result).toEqual({
       path: 'root.pages[0:home].requests[0:getData]',
       file: 'lowdefy.yaml',
+      line: null,
       formatted: 'lowdefy.yaml at root.pages[0:home].requests[0:getData]',
     });
   });
 
-  test('handles null refMap', () => {
+  test('handles null refMap but includes line number', () => {
     const result = resolveConfigLocation({
       configKey: 'key1',
       keyMap,
@@ -140,7 +146,8 @@ describe('resolveConfigLocation', () => {
     expect(result).toEqual({
       path: 'root.pages[0:home].blocks[0:header:Title]',
       file: 'lowdefy.yaml',
-      formatted: 'lowdefy.yaml at root.pages[0:home].blocks[0:header:Title]',
+      line: 5,
+      formatted: 'lowdefy.yaml:5 at root.pages[0:home].blocks[0:header:Title]',
     });
   });
 });

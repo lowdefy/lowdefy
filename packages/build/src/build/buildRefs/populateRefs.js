@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, serializer, type } from '@lowdefy/helpers';
 
 function refReviver(key, value) {
   if (type.isObject(value)) {
@@ -23,15 +23,13 @@ function refReviver(key, value) {
     }
     if (value._var) {
       if (type.isString(value._var)) {
-        return JSON.parse(JSON.stringify(get(this.vars, value._var, { default: null })));
+        return serializer.copy(get(this.vars, value._var, { default: null }));
       }
       if (type.isObject(value._var) && type.isString(value._var.key)) {
-        return JSON.parse(
-          JSON.stringify(
-            get(this.vars, value._var.key, {
-              default: type.isNone(value._var.default) ? null : value._var.default,
-            })
-          )
+        return serializer.copy(
+          get(this.vars, value._var.key, {
+            default: type.isNone(value._var.default) ? null : value._var.default,
+          })
         );
       }
       throw new Error(
@@ -45,10 +43,10 @@ function refReviver(key, value) {
 }
 
 function populateRefs({ parsedFiles, refDef, toPopulate }) {
-  return JSON.parse(
-    JSON.stringify(toPopulate),
-    refReviver.bind({ parsedFiles, vars: refDef.vars })
-  );
+  // Use serializer.copy to preserve non-enumerable properties like ~r, ~k, ~l
+  return serializer.copy(toPopulate, {
+    reviver: refReviver.bind({ parsedFiles, vars: refDef.vars }),
+  });
 }
 
 export default populateRefs;

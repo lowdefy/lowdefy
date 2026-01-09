@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import evaluateBuildOperators from './evaluateBuildOperators.js';
 import getKey from './getKey.js';
@@ -84,7 +84,8 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
       });
       return value;
     };
-    parsedFiles[newRefDef.id] = JSON.parse(JSON.stringify(withRefKey), reviver);
+    // Use serializer.copy to preserve non-enumerable properties like ~l
+    parsedFiles[newRefDef.id] = serializer.copy(withRefKey, { reviver });
   }
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
