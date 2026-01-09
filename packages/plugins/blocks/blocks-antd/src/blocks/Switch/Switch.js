@@ -92,7 +92,7 @@ const SwitchBlock = ({
             }
             onChange={(newVal) => {
               methods.setValue(newVal);
-              methods.triggerEvent({ name: 'onChange' });
+              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
             }}
           />
         ),

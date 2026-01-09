@@ -1,5 +1,30 @@
 # Change Log
 
+## 4.5.2
+
+### Patch Changes
+
+- @lowdefy/helpers@4.5.2
+- @lowdefy/node-utils@4.5.2
+
+## 4.5.1
+
+### Patch Changes
+
+- @lowdefy/helpers@4.5.1
+- @lowdefy/node-utils@4.5.1
+
+## 4.5.0
+
+### Minor Changes
+
+- abc90f3f7: Change to Apache 2.0 license for all packages. All license checks and restrictions have been removed.
+
+### Patch Changes
+
+- @lowdefy/helpers@4.5.0
+- @lowdefy/node-utils@4.5.0
+
 ## 4.4.0
 
 ### Patch Changes

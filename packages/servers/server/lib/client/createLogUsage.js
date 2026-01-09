@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { v4 as uuid } from 'uuid';
 
 // What if this fails?
 // What about public usage
@@ -22,7 +23,7 @@ function createLogUsage({ usageDataRef }) {
   let isOffline = false;
   let machine = localStorage.getItem('lowdefy_machine_id');
   if (!machine) {
-    machine = crypto.randomUUID();
+    machine = uuid();
     localStorage.setItem('lowdefy_machine_id', machine);
   }
 
