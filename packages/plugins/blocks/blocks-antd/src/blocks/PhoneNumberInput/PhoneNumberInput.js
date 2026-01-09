@@ -84,7 +84,10 @@ function AddOnSelect({
         });
 
         methods.triggerEvent({ name: 'onCodeChange' });
-        methods.triggerEvent({ name: 'onChange' });
+        methods.triggerEvent({
+          name: 'onChange',
+          event: { value: { input, region, phone_number } },
+        });
       }}
       onBlur={() => {
         methods.triggerEvent({ name: 'onBlur' });
@@ -217,7 +220,10 @@ const PhoneNumberInput = ({
                 });
 
                 methods.triggerEvent({ name: 'onInputChange' });
-                methods.triggerEvent({ name: 'onChange' });
+                methods.triggerEvent({
+                  name: 'onChange',
+                  event: { value: { input, region, phone_number } },
+                });
               }}
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
