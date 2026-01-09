@@ -40,56 +40,71 @@ async function resolveErrorConfigLocation(context, error) {
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
-
     const location = await resolveErrorConfigLocation(context, error);
+    const message = error?.message || 'Unknown error';
 
-    context.logger.error({
-      // TODO:
-      // app_name
-      // app_version
-      // lowdefy_version
-      // build_hash
-      // config_hash
-      err: error,
-      source: location?.source || null,
-      config: location?.config || null,
-      link: location?.link || null,
-      user: {
-        id: user.id,
-        roles: user.roles,
-        sub: user.sub,
-        session_id: user.session_id,
+    // Human-readable console output (consistent with client format)
+    if (location?.link) {
+      console.error(`[Config Error] ${location.link}`);
+    } else {
+      console.error('[Config Error]');
+    }
+    console.error(`[Msg] ${message}`);
+    if (location?.source) {
+      console.error(`[Src] ${location.source} at ${location.config}`);
+    }
+
+    // Structured logging (consistent with client error schema + production fields)
+    context.logger.error(
+      {
+        // Core error schema (consistent with client)
+        event: 'server_error',
+        errorName: error?.name || 'Error',
+        errorMessage: message,
+        pageId: context.pageId || null,
+        timestamp: new Date().toISOString(),
+        source: location?.source || null,
+        config: location?.config || null,
+        link: location?.link || null,
+        // Production fields
+        user: {
+          id: user.id,
+          roles: user.roles,
+          sub: user.sub,
+          session_id: user.session_id,
+        },
+        url: context.req.url,
+        method: context.req.method,
+        resolvedUrl: context.nextContext?.resolvedUrl,
+        hostname: context.req.hostname,
+        headers: {
+          'accept-language': headers['accept-language'],
+          'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
+          'sec-ch-ua-platform': headers['sec-ch-ua-platform'],
+          'sec-ch-ua': headers['sec-ch-ua'],
+          'user-agent': headers['user-agent'],
+          host: headers.host,
+          referer: headers.referer,
+          // Non localhost headers
+          'x-forward-for': headers['x-forward-for'],
+          // Vercel headers
+          'x-vercel-id': headers['x-vercel-id'],
+          'x-real-ip': headers['x-real-ip'],
+          'x-vercel-ip-country': headers['x-vercel-ip-country'],
+          'x-vercel-ip-country-region': headers['x-vercel-ip-country-region'],
+          'x-vercel-ip-city': headers['x-vercel-ip-city'],
+          'x-vercel-ip-latitude': headers['x-vercel-ip-latitude'],
+          'x-vercel-ip-longitude': headers['x-vercel-ip-longitude'],
+          'x-vercel-ip-timezone': headers['x-vercel-ip-timezone'],
+          // Cloudflare headers
+          'cf-connecting-ip': headers['cf-connecting-ip'],
+          'cf-ray': headers['cf-ray'],
+          'cf-ipcountry': headers['cf-ipcountry'],
+          'cf-visitor': headers['cf-visitor'],
+        },
       },
-      url: context.req.url,
-      method: context.req.method,
-      resolvedUrl: context.nextContext?.resolvedUrl,
-      hostname: context.req.hostname,
-      headers: {
-        'accept-language': headers['accept-language'],
-        'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],
-        'sec-ch-ua-platform': headers['sec-ch-ua-platform'],
-        'sec-ch-ua': headers['sec-ch-ua'],
-        'user-agent': headers['user-agent'],
-        host: headers.host,
-        referer: headers.referer,
-        // Non localhost headers
-        'x-forward-for': headers['x-forward-for'],
-        // Vercel headers
-        'x-vercel-id': headers['x-vercel-id'],
-        'x-real-ip': headers['x-real-ip'],
-        'x-vercel-ip-country': headers['x-vercel-ip-country'],
-        'x-vercel-ip-country-region': headers['x-vercel-ip-country-region'],
-        'x-vercel-ip-city': headers['x-vercel-ip-city'],
-        'x-vercel-ip-latitude': headers['x-vercel-ip-latitude'],
-        'x-vercel-ip-longitude': headers['x-vercel-ip-longitude'],
-        'x-vercel-ip-timezone': headers['x-vercel-ip-timezone'],
-        // Cloudflare headers
-        'cf-connecting-ip': headers['cf-connecting-ip'],
-        'cf-ray': headers['cf-ray'],
-        'cf-ipcountry': headers['cf-ipcountry'],
-        'cf-visitor': headers['cf-visitor'],
-      },
-    });
+      message
+    );
   } catch (e) {
     console.error(error);
     console.error('An error occurred while logging the error.');

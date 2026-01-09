@@ -14,24 +14,19 @@
   limitations under the License.
 */
 
-async function request({ url, method = 'GET', body }) {
-  const res = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: body && JSON.stringify(body),
-  });
-  if (res.status === 404) {
-    return null;
-  }
-  if (!res.ok) {
-    const body = await res.json();
-    console.log(res);
-    console.log(body);
-    throw new Error(body.message || 'Request error');
-  }
-  return res.json();
-}
+import React from 'react';
+import { blockDefaultProps } from '@lowdefy/block-utils';
 
-export default request;
+const Throw = ({ properties }) => {
+  const message = properties.message || 'Intentional error thrown by Throw block';
+  throw new Error(message);
+};
+
+Throw.defaultProps = blockDefaultProps;
+Throw.meta = {
+  category: 'display',
+  icons: [],
+  styles: [],
+};
+
+export default Throw;

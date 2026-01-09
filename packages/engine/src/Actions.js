@@ -44,9 +44,10 @@ class Actions {
     }
     this.loggedActionErrors.add(errorKey);
 
-    // Throw errors are intentional - don't log config location (no stack trace)
+    // Throw errors are intentional - don't log config location
     if (action?.type === 'Throw' || error?.name === 'ThrowError') {
-      console.error('[Throw Action]', error?.message || 'Action error');
+      console.error('[Throw Action]');
+      console.error(`[Msg] ${error?.message || 'Action error'}`);
       return;
     }
 
@@ -56,8 +57,10 @@ class Actions {
       return;
     }
 
-    // Other errors - log without stack trace
-    console.error('[Lowdefy Action Error]', error?.message || 'Action error');
+    // Other errors - log with action type
+    const actionType = action?.type || 'Unknown';
+    console.error(`[${actionType} Action]`);
+    console.error(`[Msg] ${error?.message || 'Action error'}`);
   }
 
   async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {

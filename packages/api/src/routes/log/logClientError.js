@@ -58,13 +58,19 @@ async function logClientError(context, { configKey, message, name, pageId, times
     link,
   };
 
-  if (source) {
-    // Include link in message so VSCode can detect it
-    const locationInfo = link ? `${source} ${config}\n    ${link}` : `${source} ${config}`;
-    logger.error(logData, `Client error at ${locationInfo}: ${message}`);
+  // Human-readable console output
+  if (link) {
+    console.error(`[Config Error] ${link}`);
   } else {
-    logger.error(logData, `Client error: ${message}`);
+    console.error('[Config Error]');
   }
+  console.error(`[Msg] ${message}`);
+  if (source) {
+    console.error(`[Src] ${source} at ${config}`);
+  }
+
+  // Structured logging for log aggregation
+  logger.error(logData, message);
 
   return {
     success: true,

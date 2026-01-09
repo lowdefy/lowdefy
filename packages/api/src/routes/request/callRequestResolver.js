@@ -34,6 +34,8 @@ async function callRequestResolver(
     return response;
   } catch (error) {
     const err = new RequestError(error.message);
+    // Attach configKey for config tracing
+    err.configKey = requestConfig['~k'];
     logger.debug(
       { params: { id: requestConfig.requestId, type: requestConfig.type }, err },
       err.message

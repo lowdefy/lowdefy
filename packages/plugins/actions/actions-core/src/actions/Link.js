@@ -21,7 +21,6 @@ function Link({ methods: { link }, params }) {
   try {
     link(linkParams);
   } catch (error) {
-    console.log(error);
     throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
   }
 }

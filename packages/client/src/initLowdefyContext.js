@@ -57,31 +57,33 @@ function createLogError(lowdefy, windowObj) {
 
       if (response.ok) {
         const result = await response.json();
-        // Log error without stack trace
-        console.error('[Lowdefy Error]', error.message);
-        if (result.source) {
-          if (result.link) {
-            // Parse link format: /path/to/file:line
-            const match = result.link.match(/^(.+):(\d+)$/);
-            if (match) {
-              const [, filePath, line] = match;
-              // Use query params to avoid Chrome interpreting :line as port
-              console.error(`[Config] ${result.source} ${result.config} vscode://file${filePath}?line=${line}`);
-            } else {
-              console.error(`[Config] ${result.source} ${result.config} vscode://file${result.link}`);
-            }
+        // Human-readable console output (consistent with server format)
+        if (result.link) {
+          // Parse link format: /path/to/file:line and convert to vscode URL
+          const match = result.link.match(/^(.+):(\d+)$/);
+          if (match) {
+            const [, filePath, line] = match;
+            console.error(`[Config Error] vscode://file${filePath}?line=${line}`);
           } else {
-            console.error(`[Config] ${result.source} ${result.config}`);
+            console.error(`[Config Error] vscode://file${result.link}`);
           }
+        } else {
+          console.error('[Config Error]');
+        }
+        console.error(`[Msg] ${error.message}`);
+        if (result.source) {
+          console.error(`[Src] ${result.source} at ${result.config}`);
         }
       } else {
-        // Server returned error - log locally as fallback (no stack trace)
-        console.error('[Lowdefy Error]', error.message);
+        // Server returned error - log locally as fallback
+        console.error('[Config Error]');
+        console.error(`[Msg] ${error.message}`);
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
-      // Server unreachable or timeout - log locally as fallback (no stack trace)
-      console.error('[Lowdefy Error]', error.message);
+      // Server unreachable or timeout - log locally as fallback
+      console.error('[Config Error]');
+      console.error(`[Msg] ${error.message}`);
     }
   };
 }

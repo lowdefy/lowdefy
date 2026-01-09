@@ -39,25 +39,34 @@ async function resolveErrorConfigLocation(context, error) {
 
 async function logError({ context, error }) {
   try {
-    const { user = {} } = context;
-
     const location = await resolveErrorConfigLocation(context, error);
+    const message = error?.message || 'Unknown error';
 
-    context.logger.error({
-      err: error,
-      source: location?.source || null,
-      config: location?.config || null,
-      link: location?.link || null,
-      user: {
-        id: user.id,
-        roles: user.roles,
-        sub: user.sub,
-        session_id: user.session_id,
+    // Human-readable console output (consistent with client format)
+    if (location?.link) {
+      console.error(`[Config Error] ${location.link}`);
+    } else {
+      console.error('[Config Error]');
+    }
+    console.error(`[Msg] ${message}`);
+    if (location?.source) {
+      console.error(`[Src] ${location.source} at ${location.config}`);
+    }
+
+    // Structured logging (consistent with client error schema)
+    context.logger.error(
+      {
+        event: 'server_error',
+        errorName: error?.name || 'Error',
+        errorMessage: message,
+        pageId: context.pageId || null,
+        timestamp: new Date().toISOString(),
+        source: location?.source || null,
+        config: location?.config || null,
+        link: location?.link || null,
       },
-      url: context.req.url,
-      method: context.req.method,
-      resolvedUrl: context.nextContext?.resolvedUrl,
-    });
+      message
+    );
   } catch (e) {
     console.error(error);
     console.error('An error occurred while logging the error.');
