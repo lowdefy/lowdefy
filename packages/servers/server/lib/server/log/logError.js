@@ -40,21 +40,31 @@ async function resolveErrorConfigLocation(context, error) {
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
-    const location = await resolveErrorConfigLocation(context, error);
     const message = error?.message || 'Unknown error';
+    const isServiceError = error?.isServiceError === true;
+
+    // For service errors, don't resolve config location (not a config issue)
+    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
 
     // Human-readable console output (single log entry)
+    const errorType = isServiceError ? 'Service Error' : 'Config Error';
     const source = location?.source ? `${location.source} at ${location.config}` : '';
     const link = location?.link || '';
-    console.error(`[Config Error] ${message}\n  ${source}\n  ${link}`)
+
+    if (isServiceError) {
+      console.error(`[${errorType}] ${message}`);
+    } else {
+      console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
+    }
 
     // Structured logging (consistent with client error schema + production fields)
     context.logger.error(
       {
         // Core error schema (consistent with client)
-        event: 'server_error',
+        event: isServiceError ? 'service_error' : 'config_error',
         errorName: error?.name || 'Error',
         errorMessage: message,
+        isServiceError,
         pageId: context.pageId || null,
         timestamp: new Date().toISOString(),
         source: location?.source || null,

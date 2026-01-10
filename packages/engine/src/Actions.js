@@ -50,8 +50,8 @@ class Actions {
       return;
     }
 
-    // Operator errors have configKey - use logError for config tracing
-    if (error?.configKey && logError) {
+    // Errors with configKey or isServiceError flag - use logError for proper handling
+    if ((error?.configKey || error?.isServiceError) && logError) {
       logError(error);
       return;
     }

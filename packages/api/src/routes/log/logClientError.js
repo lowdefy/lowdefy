@@ -16,14 +16,18 @@
 
 import { resolveConfigLocation } from '@lowdefy/helpers';
 
-async function logClientError(context, { configKey, message, name, pageId, timestamp }) {
+async function logClientError(
+  context,
+  { configKey, isServiceError, message, name, pageId, timestamp }
+) {
   const { logger } = context;
 
   let source = null;
   let config = null;
   let link = null;
 
-  if (configKey) {
+  // Only resolve config location for config errors (not service errors)
+  if (configKey && !isServiceError) {
     try {
       const [keyMap, refMap] = await Promise.all([
         context.readConfigFile('keyMap.json'),
@@ -48,9 +52,10 @@ async function logClientError(context, { configKey, message, name, pageId, times
   }
 
   const logData = {
-    event: 'client_error',
+    event: isServiceError ? 'client_service_error' : 'client_config_error',
     errorName: name,
     errorMessage: message,
+    isServiceError: isServiceError || false,
     pageId,
     timestamp,
     source,
@@ -59,14 +64,21 @@ async function logClientError(context, { configKey, message, name, pageId, times
   };
 
   // Human-readable console output (single log entry)
+  const errorType = isServiceError ? 'Service Error' : 'Config Error';
   const sourceInfo = source ? `${source} at ${config}` : '';
-  console.error(`[Config Error] ${message}\n  ${sourceInfo}\n  ${link || ''}`)
+
+  if (isServiceError) {
+    console.error(`[${errorType}] ${message}`);
+  } else {
+    console.error(`[${errorType}] ${message}\n  ${sourceInfo}\n  ${link || ''}`);
+  }
 
   // Structured logging for log aggregation
   logger.error(logData, message);
 
   return {
     success: true,
+    isServiceError: isServiceError || false,
     source,
     config,
     link,

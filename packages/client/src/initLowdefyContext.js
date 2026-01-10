@@ -33,10 +33,13 @@ function createLogError(lowdefy, windowObj) {
     }
     loggedErrors.add(errorKey);
 
+    const isServiceError = error.isServiceError === true;
+
     const errorData = {
       message: error.message,
       name: error.name,
       configKey: error.configKey,
+      isServiceError,
       pageId: lowdefy.pageId,
       timestamp: new Date().toISOString(),
     };
@@ -57,27 +60,36 @@ function createLogError(lowdefy, windowObj) {
 
       if (response.ok) {
         const result = await response.json();
-        // Build single log entry with all info
-        let vscodeLink = '';
-        if (result.link) {
-          const match = result.link.match(/^(.+):(\d+)$/);
-          if (match) {
-            const [, filePath, line] = match;
-            vscodeLink = `vscode://file${filePath}?line=${line}`;
-          } else {
-            vscodeLink = `vscode://file${result.link}`;
+        const errorType = result.isServiceError ? 'Service Error' : 'Config Error';
+
+        if (result.isServiceError) {
+          // Service errors don't need config location
+          console.error(`[${errorType}] ${error.message}`);
+        } else {
+          // Config errors show location info
+          let vscodeLink = '';
+          if (result.link) {
+            const match = result.link.match(/^(.+):(\d+)$/);
+            if (match) {
+              const [, filePath, line] = match;
+              vscodeLink = `vscode://file${filePath}?line=${line}`;
+            } else {
+              vscodeLink = `vscode://file${result.link}`;
+            }
           }
+          const source = result.source ? `${result.source} at ${result.config}` : '';
+          console.error(`[${errorType}] ${error.message}\n  ${source}\n  ${vscodeLink}`);
         }
-        const source = result.source ? `${result.source} at ${result.config}` : '';
-        console.error(`[Config Error] ${error.message}\n  ${source}\n  ${vscodeLink}`);
       } else {
         // Server returned error - log locally as fallback
-        console.error(`[Config Error] ${error.message}`);
+        const errorType = isServiceError ? 'Service Error' : 'Config Error';
+        console.error(`[${errorType}] ${error.message}`);
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
       // Server unreachable or timeout - log locally as fallback
-      console.error(`[Config Error] ${error.message}`);
+      const errorType = isServiceError ? 'Service Error' : 'Config Error';
+      console.error(`[${errorType}] ${error.message}`);
     }
   };
 }
