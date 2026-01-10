@@ -63,8 +63,9 @@ const TreeSelector = ({ blockId, properties, content, methods, value }) => {
   }, [value]);
 
   const onSelect = (selectedKeys) => {
-    methods.setValue(selectedKeys.map((key) => valueMap[key]).flat());
-    methods.triggerEvent({ name: 'onChange' });
+    const val = selectedKeys.map((key) => valueMap[key]).flat();
+    methods.setValue(val);
+    methods.triggerEvent({ name: 'onChange', event: { value: val } });
     setSelectedKeys(selectedKeys);
   };
 
