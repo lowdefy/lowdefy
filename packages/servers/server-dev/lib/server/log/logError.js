@@ -42,16 +42,10 @@ async function logError({ context, error }) {
     const location = await resolveErrorConfigLocation(context, error);
     const message = error?.message || 'Unknown error';
 
-    // Human-readable console output (consistent with client format)
-    if (location?.link) {
-      console.error(`[Config Error] ${location.link}`);
-    } else {
-      console.error('[Config Error]');
-    }
-    console.error(`[Msg] ${message}`);
-    if (location?.source) {
-      console.error(`[Src] ${location.source} at ${location.config}`);
-    }
+    // Human-readable console output (single log entry)
+    const source = location?.source ? `${location.source} at ${location.config}` : '';
+    const link = location?.link || '';
+    console.error(`[Config Error] ${message}\n  ${source}\n  ${link}`)
 
     // Structured logging (consistent with client error schema)
     context.logger.error(

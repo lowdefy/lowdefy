@@ -57,33 +57,27 @@ function createLogError(lowdefy, windowObj) {
 
       if (response.ok) {
         const result = await response.json();
-        // Human-readable console output (consistent with server format)
+        // Build single log entry with all info
+        let vscodeLink = '';
         if (result.link) {
-          // Parse link format: /path/to/file:line and convert to vscode URL
           const match = result.link.match(/^(.+):(\d+)$/);
           if (match) {
             const [, filePath, line] = match;
-            console.error(`[Config Error] vscode://file${filePath}?line=${line}`);
+            vscodeLink = `vscode://file${filePath}?line=${line}`;
           } else {
-            console.error(`[Config Error] vscode://file${result.link}`);
+            vscodeLink = `vscode://file${result.link}`;
           }
-        } else {
-          console.error('[Config Error]');
         }
-        console.error(`[Msg] ${error.message}`);
-        if (result.source) {
-          console.error(`[Src] ${result.source} at ${result.config}`);
-        }
+        const source = result.source ? `${result.source} at ${result.config}` : '';
+        console.error(`[Config Error] ${error.message}\n  ${source}\n  ${vscodeLink}`);
       } else {
         // Server returned error - log locally as fallback
-        console.error('[Config Error]');
-        console.error(`[Msg] ${error.message}`);
+        console.error(`[Config Error] ${error.message}`);
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
       // Server unreachable or timeout - log locally as fallback
-      console.error('[Config Error]');
-      console.error(`[Msg] ${error.message}`);
+      console.error(`[Config Error] ${error.message}`);
     }
   };
 }

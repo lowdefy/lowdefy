@@ -58,16 +58,9 @@ async function logClientError(context, { configKey, message, name, pageId, times
     link,
   };
 
-  // Human-readable console output
-  if (link) {
-    console.error(`[Config Error] ${link}`);
-  } else {
-    console.error('[Config Error]');
-  }
-  console.error(`[Msg] ${message}`);
-  if (source) {
-    console.error(`[Src] ${source} at ${config}`);
-  }
+  // Human-readable console output (single log entry)
+  const sourceInfo = source ? `${source} at ${config}` : '';
+  console.error(`[Config Error] ${message}\n  ${sourceInfo}\n  ${link || ''}`)
 
   // Structured logging for log aggregation
   logger.error(logData, message);

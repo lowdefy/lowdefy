@@ -46,8 +46,7 @@ class Actions {
 
     // Throw errors are intentional - don't log config location
     if (action?.type === 'Throw' || error?.name === 'ThrowError') {
-      console.error('[Throw Action]');
-      console.error(`[Msg] ${error?.message || 'Action error'}`);
+      console.error(`[Throw Action] ${error?.message || 'Action error'}`);
       return;
     }
 
@@ -59,8 +58,7 @@ class Actions {
 
     // Other errors - log with action type
     const actionType = action?.type || 'Unknown';
-    console.error(`[${actionType} Action]`);
-    console.error(`[Msg] ${error?.message || 'Action error'}`);
+    console.error(`[${actionType} Action] ${error?.message || 'Action error'}`);
   }
 
   async callAsyncAction({ action, arrayIndices, block, event, index, responses }) {
