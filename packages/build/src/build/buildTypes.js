@@ -17,6 +17,8 @@
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 
+import formatBuildError from './formatBuildError.js';
+
 function buildTypeClass(
   context,
   { counter, definitions, store, typeClass, warnIfMissing = false }
@@ -24,14 +26,16 @@ function buildTypeClass(
   const counts = counter.getCounts();
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
+      const message = `${typeClass} type "${typeName}" was used but is not defined.`;
+      const formattedError = formatBuildError({ context, counter, typeName, message });
       if (warnIfMissing) {
         if (typeName === '_id') {
           return;
         }
-        context.logger.warn(`${typeClass} type "${typeName}" was used but is not defined.`);
+        context.logger.warn(formattedError);
         return;
       }
-      throw new Error(`${typeClass} type "${typeName}" was used but is not defined.`);
+      throw new Error(formattedError);
     }
     store[typeName] = {
       originalTypeName: definitions[typeName].originalTypeName,

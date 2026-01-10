@@ -57,13 +57,13 @@ async function build(options) {
   buildApp({ components, context });
   validateConfig({ components, context });
   addDefaultPages({ components, context });
+  addKeys({ components, context });
   buildAuth({ components, context });
   buildConnections({ components, context });
   buildApi({ components, context });
   buildPages({ components, context });
   buildMenu({ components, context });
   buildJs({ components, context });
-  addKeys({ components, context });
   buildTypes({ components, context });
   buildImports({ components, context });
   await cleanBuildDirectory({ context });

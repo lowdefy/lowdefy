@@ -15,7 +15,7 @@
 */
 
 function countStepTypes(step, { typeCounters }) {
-  typeCounters.requests.increment(step.type);
+  typeCounters.requests.increment(step.type, step['~k']);
 }
 
 export default countStepTypes;

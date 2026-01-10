@@ -33,7 +33,7 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass }) {
           }". Received ${JSON.stringify(plugin.type)}.`
         );
       }
-      counter.increment(plugin.type);
+      counter.increment(plugin.type, plugin['~k']);
     });
   }
 }
@@ -56,7 +56,7 @@ function buildAdapter({ components, context }) {
       )}.`
     );
   }
-  context.typeCounters.auth.adapters.increment(adapter.type);
+  context.typeCounters.auth.adapters.increment(adapter.type, adapter['~k']);
 }
 
 function buildAuthPlugins({ components, context }) {

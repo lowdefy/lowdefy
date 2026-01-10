@@ -26,7 +26,7 @@ function buildRequest(request, pageContext) {
       `Request id is not a string at page "${pageId}". Received ${JSON.stringify(request.id)}.`
     );
   }
-  checkDuplicateRequestId({ id: request.id, pageId });
+  checkDuplicateRequestId({ id: request.id, configKey: request['~k'], pageId });
   if (request.id.includes('.')) {
     throw new Error(
       `Request id "${request.id}" at page "${pageId}" should not include a period (".").`
@@ -40,7 +40,7 @@ function buildRequest(request, pageContext) {
       }" at page "${pageId}". Received ${JSON.stringify(request.type)}.`
     );
   }
-  typeCounters.requests.increment(request.type);
+  typeCounters.requests.increment(request.type, request['~k']);
 
   if (type.isUndefined(request.payload)) request.payload = {};
 

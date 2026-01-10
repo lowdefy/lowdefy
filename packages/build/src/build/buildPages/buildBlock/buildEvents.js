@@ -17,7 +17,10 @@
 import { type } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
 
-function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId, typeCounters }) {
+function checkAction(
+  action,
+  { blockId, checkDuplicateActionId, eventId, linkActionRefs, pageId, requestActionRefs, typeCounters }
+) {
   if (type.isUndefined(action.id)) {
     throw new Error(
       `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
@@ -32,6 +35,7 @@ function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId,
   }
   checkDuplicateActionId({
     id: action.id,
+    configKey: action['~k'],
     eventId,
     blockId,
     pageId,
@@ -45,7 +49,38 @@ function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId,
       )}.`
     );
   }
-  typeCounters.actions.increment(action.type);
+  typeCounters.actions.increment(action.type, action['~k']);
+
+  // Collect static Request action references for validation
+  if (action.type === 'Request' && !type.isNone(action.params)) {
+    const params = action.params;
+    if (type.isString(params)) {
+      requestActionRefs.push({ requestId: params, action, blockId, eventId });
+    } else if (type.isArray(params)) {
+      params.forEach((param) => {
+        if (type.isString(param)) {
+          requestActionRefs.push({ requestId: param, action, blockId, eventId });
+        }
+      });
+    }
+  }
+
+  // Collect static Link action references for validation
+  if (action.type === 'Link' && !type.isNone(action.params)) {
+    const params = action.params;
+    // Link params can be a string (pageId) or object with pageId property
+    if (type.isString(params)) {
+      linkActionRefs.push({ pageId: params, action, blockId, eventId, sourcePageId: pageId });
+    } else if (type.isObject(params) && type.isString(params.pageId)) {
+      linkActionRefs.push({
+        pageId: params.pageId,
+        action,
+        blockId,
+        eventId,
+        sourcePageId: pageId,
+      });
+    }
+  }
 }
 
 function buildEvents(block, pageContext) {
@@ -87,6 +122,7 @@ function buildEvents(block, pageContext) {
       const checkDuplicateActionId = createCheckDuplicateId({
         message:
           'Duplicate actionId "{{ id }}" on event "{{ eventId }}" on block "{{ blockId }}" on page "{{ pageId }}".',
+        context: pageContext.context,
       });
       block.events[key].try.map((action) =>
         checkAction(action, {
@@ -94,6 +130,8 @@ function buildEvents(block, pageContext) {
           blockId: block.blockId,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
+          linkActionRefs: pageContext.linkActionRefs,
+          requestActionRefs: pageContext.requestActionRefs,
           checkDuplicateActionId,
         })
       );
@@ -103,6 +141,8 @@ function buildEvents(block, pageContext) {
           blockId: block.blockId,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
+          linkActionRefs: pageContext.linkActionRefs,
+          requestActionRefs: pageContext.requestActionRefs,
           checkDuplicateActionId,
         })
       );

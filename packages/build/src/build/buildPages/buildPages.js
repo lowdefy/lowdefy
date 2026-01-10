@@ -19,13 +19,27 @@
 import { type } from '@lowdefy/helpers';
 import buildPage from './buildPage.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import validateLinkReferences from './validateLinkReferences.js';
 
 function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
   });
+
+  // Initialize linkActionRefs to collect Link action references across all pages
+  context.linkActionRefs = [];
+
   pages.map((page, index) => buildPage({ page, index, context, checkDuplicatePageId }));
+
+  // Validate that all Link actions reference existing pages
+  const pageIds = pages.map((page) => page.pageId);
+  validateLinkReferences({
+    linkActionRefs: context.linkActionRefs,
+    pageIds,
+    context,
+  });
+
   return components;
 }
 

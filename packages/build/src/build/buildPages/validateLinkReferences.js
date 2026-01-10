@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 import { resolveConfigLocation } from '@lowdefy/helpers';
 
-function createCheckDuplicateId({ message, context }) {
-  const template = nunjucksFunction(message);
-  const ids = new Set();
-  function checkDuplicateId({ id, blockId, configKey, eventId, menuId, pageId }) {
-    if (ids.has(id.toLowerCase())) {
-      let errorMessage = template({ id, blockId, eventId, menuId, pageId });
+function validateLinkReferences({ linkActionRefs, pageIds, context }) {
+  const pageIdSet = new Set(pageIds);
 
-      if (configKey && context) {
+  linkActionRefs.forEach(({ pageId, action, blockId, eventId, sourcePageId }) => {
+    if (!pageIdSet.has(pageId)) {
+      const configKey = action['~k'];
+      let errorMessage = `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`;
+
+      if (configKey) {
         const location = resolveConfigLocation({
           configKey,
           keyMap: context.keyMap,
@@ -43,11 +43,13 @@ function createCheckDuplicateId({ message, context }) {
         errorMessage = `[Config Error] ${errorMessage}`;
       }
 
-      throw new Error(errorMessage);
+      if (context.stage === 'dev') {
+        context.logger.warn(errorMessage);
+      } else {
+        throw new Error(errorMessage);
+      }
     }
-    ids.add(id.toLowerCase());
-  }
-  return checkDuplicateId;
+  });
 }
 
-export default createCheckDuplicateId;
+export default validateLinkReferences;

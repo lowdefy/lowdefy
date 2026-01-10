@@ -42,7 +42,7 @@ function buildConnections({ components, context }) {
           }". Received ${JSON.stringify(connection.type)}.`
         );
       }
-      context.typeCounters.connections.increment(connection.type);
+      context.typeCounters.connections.increment(connection.type, connection['~k']);
       connection.connectionId = connection.id;
       connection.id = `connection:${connection.id}`;
       countOperators(connection.properties || {}, {

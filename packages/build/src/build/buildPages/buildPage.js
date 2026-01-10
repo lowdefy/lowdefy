@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import buildBlock from './buildBlock/buildBlock.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createCounter from '../../utils/createCounter.js';
+import validateRequestReferences from './validateRequestReferences.js';
 
 function buildPage({ page, index, context, checkDuplicatePageId }) {
   if (type.isUndefined(page.id)) {
@@ -33,18 +34,31 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   checkDuplicatePageId({ id: page.id });
   page.pageId = page.id;
   const requests = [];
+  const requestActionRefs = [];
   buildBlock(page, {
     auth: page.auth,
     blockIdCounter: createCounter(),
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
+      context,
     }),
+    context,
     pageId: page.pageId,
     requests,
+    requestActionRefs,
+    linkActionRefs: context.linkActionRefs,
     typeCounters: context.typeCounters,
   });
   // set page.id since buildBlock sets id as well.
   page.id = `page:${page.pageId}`;
+
+  // Validate that all Request actions reference defined requests
+  validateRequestReferences({
+    requestActionRefs,
+    requests,
+    pageId: page.pageId,
+    context,
+  });
 
   page.requests = requests;
 }
