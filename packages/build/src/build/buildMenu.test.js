@@ -491,9 +491,10 @@ test('buildMenu page does not exist', () => {
     ],
     pages: [],
   });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
-  ]);
+  expect(mockLogWarn.mock.calls.length).toBe(1);
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    '[Config Error] Page "page_1" referenced in menu link "menu_page_1" not found.'
+  );
 });
 
 test('buildMenu page does not exist, nested', () => {
@@ -569,10 +570,13 @@ test('buildMenu page does not exist, nested', () => {
     ],
     pages: [],
   });
-  expect(mockLogWarn.mock.calls).toEqual([
-    ['Page "page_1" referenced in menu link "menu_page_1" not found.'],
-    ['Page "page_2" referenced in menu link "menu_page_2" not found.'],
-  ]);
+  expect(mockLogWarn.mock.calls.length).toBe(2);
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    '[Config Error] Page "page_1" referenced in menu link "menu_page_1" not found.'
+  );
+  expect(mockLogWarn.mock.calls[1][0]).toContain(
+    '[Config Error] Page "page_2" referenced in menu link "menu_page_2" not found.'
+  );
 });
 
 test('buildMenu pages not array, menu exists', () => {

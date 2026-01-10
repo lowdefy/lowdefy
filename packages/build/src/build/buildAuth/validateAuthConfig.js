@@ -19,15 +19,23 @@
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
 import lowdefySchema from '../../lowdefySchema.js';
+import formatConfigError from '../../utils/formatConfigError.js';
 
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
-async function validateAuthConfig({ components }) {
+async function validateAuthConfig({ components, context }) {
   if (type.isNone(components.auth)) {
     components.auth = {};
   }
   if (!type.isObject(components.auth)) {
-    throw new Error('lowdefy.auth is not an object.');
+    const configKey = components.auth?.['~k'];
+    throw new Error(
+      formatConfigError({
+        message: 'lowdefy.auth is not an object.',
+        configKey,
+        context,
+      })
+    );
   }
   if (type.isNone(components.auth.api)) {
     components.auth.api = {};
@@ -65,8 +73,8 @@ async function validateAuthConfig({ components }) {
     data: components.auth,
   });
 
-  validateMutualExclusivity({ components, entity: 'api' });
-  validateMutualExclusivity({ components, entity: 'pages' });
+  validateMutualExclusivity({ components, context, entity: 'api' });
+  validateMutualExclusivity({ components, context, entity: 'pages' });
 
   return components;
 }

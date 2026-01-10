@@ -160,7 +160,7 @@ test('request type is not a string', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request type is not a string at at request at "request" at page "page_1". Received undefined.'
+    '[Config Error] Request type is not a string at request "request" at page "page_1". Received undefined.'
   );
 });
 
@@ -176,7 +176,7 @@ test('request payload not an object', () => {
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
-    'Request "my_request" at page "page_1" payload should be an object.'
+    '[Config Error] Request "my_request" at page "page_1" payload should be an object.'
   );
 });
 

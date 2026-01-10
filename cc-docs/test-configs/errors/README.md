@@ -17,35 +17,35 @@ pnpm dev
 
 Tests build-time errors that fail the build (prod) or warn (dev). Uncomment one error section at a time.
 
-| Section | Error Type                | Expected Output                                                       | Level                | Implemented         |
-| ------- | ------------------------- | --------------------------------------------------------------------- | -------------------- | ------------------- |
-| A1      | Invalid connection type   | `Connection type "NonExistentConnection" was used but is not defined` | Error                | ✓ with location     |
-| A2      | Missing connection id     | `Connection id missing`                                               | Error                | ✓ no location       |
-| A3      | Duplicate connection id   | `Duplicate connectionId "testApi"`                                    | Error                | ✓ no location       |
-| B1      | Auth config not object    | `lowdefy.auth is not an object`                                       | Error                | ✓ no location       |
-| B2      | Auth provider missing id  | `Auth provider id missing`                                            | Error                | ✓ no location       |
-| B3      | Public/protected conflict | `Protected and public pages are mutually exclusive`                   | Error                | ✓ no location       |
-| C1      | Duplicate menu id         | `Duplicate menuId "default"`                                          | Error                | ✓ no location       |
-| C2      | Menu link to missing page | `Page "nonExistentPage" referenced in menu link not found`            | Warn                 | ✓ no location       |
-| D1      | Duplicate page id         | `Duplicate pageId "home"`                                             | Error                | ✓ no location       |
-| E1      | Invalid action type       | `Action type "NonExistentAction" was used but is not defined`         | Error                | ✓ with location     |
-| E2      | Invalid block type        | `Block type "NonExistentBlockType" was used but is not defined`       | Error                | ✓ with location     |
-| E3      | Missing block id          | `Block id missing at page "home"`                                     | Error                | ✓ no location       |
-| E4      | Block id not string       | `Block id is not a string at page "home"`                             | Error                | ✓ no location       |
-| E5      | Block type not string     | `Block type is not a string`                                          | Error                | ✓ no location       |
-| F1      | Invalid request reference | `Request "nonExistentRequest" not defined on page "home"`             | Warn Dev, Error Prod | ✓ with location     |
-| F2      | Request missing id        | `Request id missing at page "home"`                                   | Error                | ✓ no location       |
-| F3      | Duplicate request id      | `Duplicate requestId "myRequest" on page "home"`                      | Error                | ✓ with location     |
-| F4      | Request id with period    | `Request id "my.request" should not include a period`                 | Error                | ✓ no location       |
-| F5      | Invalid request type      | `Request type "NonExistentRequestType" was used but is not defined`   | Error                | ✓ with location     |
-| F6      | Non-existent connectionId | `Connection "nonExistentConnection" not found`                        | Error                | ✗ not validated     |
-| G1      | Invalid page link         | `Page "nonExistentPage" not found`                                    | Warn Dev, Error Prod | ✓ with location     |
-| G2      | Duplicate action id       | `Duplicate actionId "linkAction"`                                     | Error                | ✓ with location     |
-| G3      | Missing action id         | `Action id missing on event "onClick"`                                | Error                | ✓ no location       |
-| G4      | Action type not string    | `Action type is not a string`                                         | Error                | ✓ no location       |
-| G5      | Events not array          | `Actions must be an array`                                            | Error                | ✓ no location       |
-| H1-H2   | Operator typo             | `Operator type "_staet" was used but is not defined`                  | Warn                 | ✓ with location     |
-| I1      | Missing \_ref file        | `Tried to reference file "nonexistent.yaml" but file does not exist`  | Error                | ✓ no location       |
+| Section | Error Type                | Expected Output                                                       | Level                | Implemented          |
+| ------- | ------------------------- | --------------------------------------------------------------------- | -------------------- | -------------------- |
+| A1      | Invalid connection type   | `Connection type "NonExistentConnection" was used but is not defined` | Error                | ✓ with location      |
+| A2      | Missing connection id     | `Connection id missing`                                               | Error                | ✓ with location      |
+| A3      | Duplicate connection id   | `Duplicate connectionId "testApi"`                                    | Error                | ✓ with location      |
+| B1      | Auth config not object    | `lowdefy.auth is not an object`                                       | Error                | ✓ with location      |
+| B2      | Auth provider missing id  | `Auth provider id missing`                                            | Error                | ✓ with location      |
+| B3      | Public/protected conflict | `Protected and public pages are mutually exclusive`                   | Error                | ✓ with location      |
+| C1      | Duplicate menu id         | `Duplicate menuId "default"`                                          | Error                | ✓ with location      |
+| C2      | Menu link to missing page | `Page "nonExistentPage" referenced in menu link not found`            | Warn                 | ✓ with location      |
+| D1      | Duplicate page id         | `Duplicate pageId "home"`                                             | Error                | ✓ with location      |
+| E1      | Invalid action type       | `Action type "NonExistentAction" was used but is not defined`         | Error                | ✓ with location      |
+| E2      | Invalid block type        | `Block type "NonExistentBlockType" was used but is not defined`       | Error                | ✓ with location      |
+| E3      | Missing block id          | `Block id missing at page "home"`                                     | Error                | ✓ with location      |
+| E4      | Block id not string       | `Block id is not a string at page "home"`                             | Error                | ✓ with location      |
+| E5      | Block type not string     | `Block type is not a string`                                          | Error                | ✓ with location      |
+| F1      | Invalid request reference | `Request "nonExistentRequest" not defined on page "home"`             | Warn Dev, Error Prod | ✓ with location      |
+| F2      | Request missing id        | `Request id missing at page "home"`                                   | Error                | ✓ with location      |
+| F3      | Duplicate request id      | `Duplicate requestId "myRequest" on page "home"`                      | Error                | ✓ with location      |
+| F4      | Request id with period    | `Request id "my.request" should not include a period`                 | Error                | ✓ with location      |
+| F5      | Invalid request type      | `Request type "NonExistentRequestType" was used but is not defined`   | Error                | ✓ with location      |
+| F6      | Non-existent connectionId | `Connection "nonExistentConnection" not found`                        | Error                | ✗ not validated      |
+| G1      | Invalid page link         | `Page "nonExistentPage" not found`                                    | Warn Dev, Error Prod | ✓ with location      |
+| G2      | Duplicate action id       | `Duplicate actionId "linkAction"`                                     | Error                | ✓ with location      |
+| G3      | Missing action id         | `Action id missing on event "onClick"`                                | Error                | ✓ with location      |
+| G4      | Action type not string    | `Action type is not a string`                                         | Error                | ✓ with location      |
+| G5      | Events not array          | `Actions must be an array`                                            | Error                | ✓ with location      |
+| H1-H2   | Operator typo             | `Operator type "_staet" was used but is not defined`                  | Warn                 | ✓ with location      |
+| I1      | Missing \_ref file        | `Tried to reference file "nonexistent.yaml" but file does not exist`  | Error                | ✓ file name in error |
 
 ### lowdefy-client-errors.yaml
 

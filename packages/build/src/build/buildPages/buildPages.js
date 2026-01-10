@@ -25,6 +25,7 @@ function buildPages({ components, context }) {
   const pages = type.isArray(components.pages) ? components.pages : [];
   const checkDuplicatePageId = createCheckDuplicateId({
     message: 'Duplicate pageId "{{ id }}".',
+    context,
   });
 
   // Initialize linkActionRefs to collect Link action references across all pages

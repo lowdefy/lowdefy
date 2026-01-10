@@ -14,23 +14,37 @@
   limitations under the License.
 */
 import { type } from '@lowdefy/helpers';
+import formatConfigError from '../../utils/formatConfigError.js';
 
-function buildAuthPlugin({ counter, pluginConfig, typeClass }) {
+function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
   if (type.isArray(pluginConfig)) {
     pluginConfig.forEach((plugin) => {
+      const configKey = plugin['~k'];
       if (type.isUndefined(plugin.id)) {
-        throw new Error(`Auth ${typeClass} id missing.`);
+        throw new Error(
+          formatConfigError({
+            message: `Auth ${typeClass} id missing.`,
+            configKey,
+            context,
+          })
+        );
       }
       if (!type.isString(plugin.id)) {
         throw new Error(
-          `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`
+          formatConfigError({
+            message: `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`,
+            configKey,
+            context,
+          })
         );
       }
       if (!type.isString(plugin.type)) {
         throw new Error(
-          `Auth ${typeClass} type is not a string at ${typeClass} "${
-            plugin.id
-          }". Received ${JSON.stringify(plugin.type)}.`
+          formatConfigError({
+            message: `Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}". Received ${JSON.stringify(plugin.type)}.`,
+            configKey,
+            context,
+          })
         );
       }
       counter.increment(plugin.type, plugin['~k']);
@@ -43,17 +57,32 @@ function buildAdapter({ components, context }) {
   if (type.isNone(adapter)) {
     return;
   }
+  const configKey = adapter['~k'];
   if (type.isUndefined(adapter.id)) {
-    throw new Error(`Auth adapter id missing.`);
+    throw new Error(
+      formatConfigError({
+        message: 'Auth adapter id missing.',
+        configKey,
+        context,
+      })
+    );
   }
   if (!type.isString(adapter.id)) {
-    throw new Error(`Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`);
+    throw new Error(
+      formatConfigError({
+        message: `Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`,
+        configKey,
+        context,
+      })
+    );
   }
   if (!type.isString(adapter.type)) {
     throw new Error(
-      `Auth adapter type is not a string at adapter "${adapter.id}". Received ${JSON.stringify(
-        adapter.type
-      )}.`
+      formatConfigError({
+        message: `Auth adapter type is not a string at adapter "${adapter.id}". Received ${JSON.stringify(adapter.type)}.`,
+        configKey,
+        context,
+      })
     );
   }
   context.typeCounters.auth.adapters.increment(adapter.type, adapter['~k']);
@@ -67,16 +96,19 @@ function buildAuthPlugins({ components, context }) {
     counter: counters.callbacks,
     pluginConfig: authConfig.callbacks,
     typeClass: 'callback',
+    context,
   });
   buildAuthPlugin({
     counter: counters.events,
     pluginConfig: authConfig.events,
     typeClass: 'event',
+    context,
   });
   buildAuthPlugin({
     counter: counters.providers,
     pluginConfig: authConfig.providers,
     typeClass: 'provider',
+    context,
   });
 }
 

@@ -20,18 +20,30 @@ import { type } from '@lowdefy/helpers';
 import buildBlock from './buildBlock/buildBlock.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createCounter from '../../utils/createCounter.js';
+import formatConfigError from '../../utils/formatConfigError.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
 function buildPage({ page, index, context, checkDuplicatePageId }) {
+  const configKey = page['~k'];
   if (type.isUndefined(page.id)) {
-    throw new Error(`Page id missing at page ${index}.`);
+    throw new Error(
+      formatConfigError({
+        message: `Page id missing at page ${index}.`,
+        configKey,
+        context,
+      })
+    );
   }
   if (!type.isString(page.id)) {
     throw new Error(
-      `Page id is not a string at page ${index}. Received ${JSON.stringify(page.id)}.`
+      formatConfigError({
+        message: `Page id is not a string at page ${index}. Received ${JSON.stringify(page.id)}.`,
+        configKey,
+        context,
+      })
     );
   }
-  checkDuplicatePageId({ id: page.id });
+  checkDuplicatePageId({ id: page.id, configKey });
   page.pageId = page.id;
   const requests = [];
   const requestActionRefs = [];
