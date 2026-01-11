@@ -14,25 +14,46 @@
   limitations under the License.
 */
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import Auth from '../lib/client/auth/Auth.js';
 import createLogUsage from '../lib/client/createLogUsage.js';
+import initSentryClient from '../lib/client/sentry/initSentryClient.js';
+import setSentryUser from '../lib/client/sentry/setSentryUser.js';
+
+let loggerConfig = {};
+try {
+  loggerConfig = require('../build/logger.json');
+} catch {
+  // logger.json may not exist if Sentry is not configured
+}
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
 
+// Initialize Sentry client once on module load
+initSentryClient({
+  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  sentryConfig: loggerConfig.sentry,
+});
+
 function App({ Component, pageProps: { session, rootConfig, pageConfig } }) {
   const usageDataRef = useRef({});
   const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+
   return (
     <ErrorBoundary fullPage>
       <Auth session={session}>
         {(auth) => {
           usageDataRef.current.user = auth.session?.hashed_id;
+          // Set Sentry user context when auth changes
+          setSentryUser({
+            user: auth.session,
+            sentryConfig: loggerConfig.sentry,
+          });
           return (
             <Component
               auth={auth}

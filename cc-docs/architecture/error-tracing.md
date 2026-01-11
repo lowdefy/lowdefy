@@ -144,6 +144,57 @@ Client errors are sent to server logs via `logClientError.js`:
 - Preserves stack trace
 - Categorizes error types (operator, action, render)
 
+## Sentry Integration
+
+Lowdefy includes built-in Sentry error tracking that captures both client and server errors with config location context.
+
+### Configuration
+
+Sentry is enabled by setting the `SENTRY_DSN` environment variable. Configuration options are defined in `lowdefy.yaml`:
+
+```yaml
+logger:
+  sentry:
+    client: true                    # Enable client-side capture
+    server: true                    # Enable server-side capture
+    tracesSampleRate: 0.1           # Performance trace sample rate
+    replaysOnErrorSampleRate: 0.1   # Session replay on error
+    userFields: ['id', '_id']       # User context fields (no PII by default)
+```
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `packages/build/src/build/buildLogger.js` | Processes logger config with defaults |
+| `packages/build/src/build/writeLogger.js` | Writes `logger.json` build artifact |
+| `packages/servers/server/lib/server/sentry/initSentry.js` | Server-side Sentry initialization |
+| `packages/servers/server/lib/client/sentry/initSentryClient.js` | Client-side Sentry initialization |
+| `packages/servers/server/lib/server/sentry/captureSentryError.js` | Captures errors with Lowdefy context |
+| `packages/servers/server/lib/server/sentry/setSentryUser.js` | Sets user context for authenticated sessions |
+| `packages/servers/server/sentry.server.config.js` | @sentry/nextjs server config entry |
+| `packages/servers/server/sentry.client.config.js` | @sentry/nextjs client config entry |
+| `packages/servers/server/sentry.edge.config.js` | @sentry/nextjs edge config entry |
+
+### Error Context
+
+When capturing errors to Sentry, the following Lowdefy-specific context is included:
+
+- **Tags:** `pageId`, `blockId`, `isServiceError`
+- **Extra:** `configLocation` (resolved from keyMap/refMap), `configKey`
+
+This enables filtering Sentry issues by page or block, and clicking through to the exact YAML source location.
+
+### Graceful Degradation
+
+All Sentry functions are no-ops when `SENTRY_DSN` is not set:
+- `initSentryServer()` returns early if no DSN
+- `initSentryClient()` returns early if no DSN
+- `captureSentryError()` returns early if no DSN
+- `setSentryUser()` returns early if no DSN
+
+This ensures no runtime errors when Sentry is not configured.
+
 ## Config Traversal
 
 `packages/build/src/utils/traverseConfig.js` provides depth-first traversal for validation:
@@ -195,5 +246,8 @@ traverseConfig({
 - `packages/build/src/utils/traverseConfig.js` - Config traversal utility
 - `packages/build/src/utils/findSimilarString.js` - "Did you mean?" suggestions
 - `packages/utils/helpers/src/resolveConfigLocation.js` - Location resolver
-- Issue #1940 - Original feature request
+- `packages/servers/server/lib/server/sentry/` - Sentry server utilities
+- `packages/servers/server/lib/client/sentry/` - Sentry client utilities
+- Issue #1940 - Original feature request (config-aware error tracing)
 - PR #1944 - Implementation
+- Issue #1945 - Sentry integration

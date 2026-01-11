@@ -29,6 +29,14 @@ import logRequest from './log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import getAuthOptions from './auth/getAuthOptions.js';
+import setSentryUser from './sentry/setSentryUser.js';
+
+let loggerConfig = {};
+try {
+  loggerConfig = require('../../build/logger.json');
+} catch {
+  // logger.json may not exist if logger is not configured
+}
 
 const secrets = getSecretsFromEnv();
 
@@ -54,6 +62,11 @@ function apiWrapper(handler) {
       context.authOptions = getAuthOptions(context);
       if (!req.url.startsWith('/api/auth')) {
         context.session = await getServerSession(context);
+        // Set Sentry user context for authenticated requests
+        setSentryUser({
+          user: context.session?.user,
+          sentryConfig: loggerConfig.sentry,
+        });
       }
       createApiContext(context);
       logRequest({ context });
