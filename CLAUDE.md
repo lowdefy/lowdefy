@@ -12,7 +12,7 @@ Lowdefy is a config-driven web framework built on Next.js. Apps are defined in Y
 
 **cc-docs/** structure: `Overview.md`, `Philosophy.md`, `packages/`, `plugins/`, `architecture/`
 
-**Claude Code Commands:** `/lf:docs-init`, `/lf:docs-package`, `/lf:docs-plugin`, `/lf:docs-architecture`, `/lf:docs-update`
+**Claude Code Commands:** `/lf:docs-init`, `/lf:docs-package`, `/lf:docs-plugin`, `/lf:docs-architecture`, `/lf:docs-update`, `/lf:review-extract`, `/lf:generate-tests`
 
 ## Repository Structure
 
