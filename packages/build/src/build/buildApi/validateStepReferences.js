@@ -14,30 +14,10 @@
   limitations under the License.
 */
 
-import { type, resolveConfigLocation } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
-
-function formatWarning({ message, configKey, context }) {
-  if (!configKey || !context) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const location = resolveConfigLocation({
-    configKey,
-    keyMap: context.keyMap,
-    refMap: context.refMap,
-    configDirectory: context.directories.config,
-  });
-
-  if (!location) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const source = location.source ? `${location.source} at ${location.config}` : '';
-  const link = location.link || '';
-  return `[Config Warning] ${message}\n  ${source}\n  ${link}`;
-}
 
 // Collect all step IDs from a routine (including nested control structures)
 // Note: After buildRoutine, steps have requestId (original id) and id is modified
@@ -94,7 +74,7 @@ function validateStepReferences({ endpoint, context }) {
       `Step IDs are defined by the "id" property of each step. ` +
       `Check for typos or add a step with this id.`;
 
-    context.logger.warn(formatWarning({ message, configKey, context }));
+    context.logger.warn(formatConfigWarning({ message, configKey, context }));
   });
 }
 

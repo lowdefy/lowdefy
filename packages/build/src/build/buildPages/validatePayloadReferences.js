@@ -14,30 +14,10 @@
   limitations under the License.
 */
 
-import { type, resolveConfigLocation } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
-
-function formatWarning({ message, configKey, context }) {
-  if (!configKey || !context) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const location = resolveConfigLocation({
-    configKey,
-    keyMap: context.keyMap,
-    refMap: context.refMap,
-    configDirectory: context.directories.config,
-  });
-
-  if (!location) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const source = location.source ? `${location.source} at ${location.config}` : '';
-  const link = location.link || '';
-  return `[Config Warning] ${message}\n  ${source}\n  ${link}`;
-}
 
 function validatePayloadReferences({ page, context }) {
   const requests = page.requests || [];
@@ -81,7 +61,7 @@ function validatePayloadReferences({ page, context }) {
         `Payload keys are defined in the request's "payload" property. ` +
         `Check for typos or add the key to the payload definition.`;
 
-      context.logger.warn(formatWarning({ message, configKey, context }));
+      context.logger.warn(formatConfigWarning({ message, configKey, context }));
     });
   });
 }

@@ -14,30 +14,10 @@
   limitations under the License.
 */
 
-import { type, resolveConfigLocation } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
+import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
-
-function formatWarning({ message, configKey, context }) {
-  if (!configKey || !context) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const location = resolveConfigLocation({
-    configKey,
-    keyMap: context.keyMap,
-    refMap: context.refMap,
-    configDirectory: context.directories.config,
-  });
-
-  if (!location) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const source = location.source ? `${location.source} at ${location.config}` : '';
-  const link = location.link || '';
-  return `[Config Warning] ${message}\n  ${source}\n  ${link}`;
-}
 
 function validateStateReferences({ page, context }) {
   // Single traversal collects both blockIds and _state references
@@ -80,7 +60,7 @@ function validateStateReferences({ page, context }) {
       `State keys are created from input block ids. ` +
       `Check for typos, add an input block with this id, or initialize the state with SetState.`;
 
-    context.logger.warn(formatWarning({ message, configKey, context }));
+    context.logger.warn(formatConfigWarning({ message, configKey, context }));
   });
 }
 
