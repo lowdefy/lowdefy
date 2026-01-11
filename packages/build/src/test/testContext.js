@@ -52,6 +52,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     refMap: {},
     keyMap: {},
     jsMap: {},
+    connectionIds: new Set(),
   };
 
   context.logger = {

@@ -17,18 +17,20 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlParallelFor(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
 
   const itemName = control[':parallel_for'];
   if (!itemName) {
-    throw new Error('Invalid :parallel_for - missing variable name in :parallel_for.');
+    throw new Error(
+      `Invalid :parallel_for in endpoint "${endpointId}" - missing variable name in :parallel_for.`
+    );
   }
 
   const array = evaluateOperators({
     input: control[':in'],
     items,
-    location: 'controlParallelFor',
+    location: control['~k'] ?? ':parallel_for',
   });
 
   logger.debug({
@@ -38,11 +40,13 @@ async function controlParallelFor(context, routineContext, { control }) {
   });
 
   if (!Array.isArray(array)) {
-    throw new Error('Invalid :parallel_for - evaluated :in to non-array.');
+    throw new Error(
+      `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array. Received ${JSON.stringify(array)}.`
+    );
   }
 
   if (!control[':do']) {
-    throw new Error('Invalid :parallel_for - missing :do.');
+    throw new Error(`Invalid :parallel_for in endpoint "${endpointId}" - missing :do.`);
   }
 
   const promises = array.map((item, index) => {

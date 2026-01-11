@@ -21,7 +21,9 @@ function getRefsFromFile(fileContent, parentRefDefId, refMap) {
   const reviver = (key, value) => {
     if (type.isObject(value)) {
       if (!type.isUndefined(value._ref)) {
-        const def = makeRefDefinition(value._ref, parentRefDefId, refMap);
+        // Capture line number from the object containing the _ref
+        const lineNumber = value['~l'];
+        const def = makeRefDefinition(value._ref, parentRefDefId, refMap, lineNumber);
         foundRefs.push(def);
         return {
           _ref: def,

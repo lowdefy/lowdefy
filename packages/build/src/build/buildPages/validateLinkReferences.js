@@ -14,34 +14,18 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import formatConfigError from '../../utils/formatConfigError.js';
 
 function validateLinkReferences({ linkActionRefs, pageIds, context }) {
   const pageIdSet = new Set(pageIds);
 
-  linkActionRefs.forEach(({ pageId, action, blockId, eventId, sourcePageId }) => {
+  linkActionRefs.forEach(({ pageId, action, sourcePageId }) => {
     if (!pageIdSet.has(pageId)) {
-      const configKey = action['~k'];
-      let errorMessage = `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`;
-
-      if (configKey) {
-        const location = resolveConfigLocation({
-          configKey,
-          keyMap: context.keyMap,
-          refMap: context.refMap,
-          configDirectory: context.directories.config,
-        });
-
-        if (location) {
-          const source = location.source ? `${location.source} at ${location.config}` : '';
-          const link = location.link || '';
-          errorMessage = `[Config Error] ${errorMessage}\n  ${source}\n  ${link}`;
-        } else {
-          errorMessage = `[Config Error] ${errorMessage}`;
-        }
-      } else {
-        errorMessage = `[Config Error] ${errorMessage}`;
-      }
+      const errorMessage = formatConfigError({
+        message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
+        configKey: action['~k'],
+        context,
+      });
 
       if (context.stage === 'dev') {
         context.logger.warn(errorMessage);

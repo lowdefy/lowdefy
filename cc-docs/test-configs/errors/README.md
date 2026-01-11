@@ -38,14 +38,18 @@ Tests build-time errors that fail the build (prod) or warn (dev). Uncomment one 
 | F3      | Duplicate request id      | `Duplicate requestId "myRequest" on page "home"`                      | Error                | ✓ with location      |
 | F4      | Request id with period    | `Request id "my.request" should not include a period`                 | Error                | ✓ with location      |
 | F5      | Invalid request type      | `Request type "NonExistentRequestType" was used but is not defined`   | Error                | ✓ with location      |
-| F6      | Non-existent connectionId | `Connection "nonExistentConnection" not found`                        | Error                | ✗ not validated      |
+| F6      | Non-existent connectionId | `Request references non-existent connection`                          | Error                | ✓ with location      |
 | G1      | Invalid page link         | `Page "nonExistentPage" not found`                                    | Warn Dev, Error Prod | ✓ with location      |
 | G2      | Duplicate action id       | `Duplicate actionId "linkAction"`                                     | Error                | ✓ with location      |
 | G3      | Missing action id         | `Action id missing on event "onClick"`                                | Error                | ✓ with location      |
 | G4      | Action type not string    | `Action type is not a string`                                         | Error                | ✓ with location      |
 | G5      | Events not array          | `Actions must be an array`                                            | Error                | ✓ with location      |
-| H1-H2   | Operator typo             | `Operator type "_staet" was used but is not defined`                  | Warn                 | ✓ with location      |
-| I1      | Missing \_ref file        | `Tried to reference file "nonexistent.yaml" but file does not exist`  | Error                | ✓ file name in error |
+| H1-H2   | Operator typo             | `Operator type "_staet" was used but is not defined. Did you mean?`   | Warn                 | ✓ with location      |
+| I1      | Missing \_ref file        | `Tried to reference file "nonexistent.yaml" but file does not exist`  | Error                | ✓ with location      |
+| I2      | Circular \_ref            | `Circular reference detected: a.yaml -> b.yaml -> a.yaml`             | Error                | ✓ with chain         |
+| J1      | Undefined state reference | `_state references "key" but no input block with this id exists`      | Warn                 | ✓ with location      |
+| K1      | Undefined payload reference | `_payload references "key" but no key exists in payload definition` | Warn                 | ✓ with location      |
+| L1      | Undefined step reference | `_step references "stepId" but no step with this id exists in routine` | Warn                 | ✓ with location      |
 
 ### lowdefy-client-errors.yaml
 
@@ -99,3 +103,22 @@ Example:
 
 - **Config Error**: Issue with Lowdefy configuration (shows file location)
 - **Service Error**: External service issue like network timeout, HTTP 5xx (no location shown)
+
+## DX Enhancements
+
+### "Did you mean?" Suggestions
+
+Type errors (A1, E1, E2, F5, H1-H2) now include suggestions for similar valid types:
+
+```
+[Config Error] Block type "Buton" was used but is not defined. Did you mean "Button"?
+  pages/home.yaml:15 at root.pages[0:home].blocks[0:Buton]
+```
+
+### Circular Reference Chain Display
+
+Circular `_ref` errors now show the full chain of files:
+
+```
+Circular reference detected: fileA.yaml -> fileB.yaml -> fileC.yaml -> fileA.yaml
+```

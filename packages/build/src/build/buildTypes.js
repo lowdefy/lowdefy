@@ -17,6 +17,7 @@
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 
+import findSimilarString from '../utils/findSimilarString.js';
 import formatBuildError from './formatBuildError.js';
 
 function buildTypeClass(
@@ -24,9 +25,14 @@ function buildTypeClass(
   { counter, definitions, store, typeClass, warnIfMissing = false }
 ) {
   const counts = counter.getCounts();
+  const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
-      const message = `${typeClass} type "${typeName}" was used but is not defined.`;
+      let message = `${typeClass} type "${typeName}" was used but is not defined.`;
+      const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
+      if (suggestion) {
+        message += ` Did you mean "${suggestion}"?`;
+      }
       const formattedError = formatBuildError({ context, counter, typeName, message });
       if (warnIfMissing) {
         if (typeName === '_id') {

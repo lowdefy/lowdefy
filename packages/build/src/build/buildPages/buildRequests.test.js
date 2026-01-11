@@ -396,3 +396,58 @@ test('set auth to request', () => {
     ],
   });
 });
+
+test('request connectionId is not a string', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', connectionId: 123 }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    '[Config Error] Request "my_request" at page "page_1" connectionId is not a string. Received 123.'
+  );
+});
+
+test('request references non-existent connection', () => {
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [{ id: 'my_request', type: 'Request', connectionId: 'nonExistentConnection' }],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context })).toThrow(
+    '[Config Error] Request "my_request" at page "page_1" references non-existent connection "nonExistentConnection".'
+  );
+});
+
+test('request with valid connectionId', () => {
+  const contextWithConnection = testContext({ logger });
+  contextWithConnection.connectionIds.add('validConnection');
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Container',
+        auth,
+        requests: [
+          {
+            id: 'request_1',
+            type: 'Request',
+            connectionId: 'validConnection',
+          },
+        ],
+      },
+    ],
+  };
+  const res = buildPages({ components, context: contextWithConnection });
+  expect(res.pages[0].requests[0].connectionId).toBe('validConnection');
+});

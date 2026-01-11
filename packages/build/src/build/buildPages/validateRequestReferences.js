@@ -14,34 +14,18 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import formatConfigError from '../../utils/formatConfigError.js';
 
 function validateRequestReferences({ requestActionRefs, requests, pageId, context }) {
   const requestIds = new Set(requests.map((req) => req.requestId));
 
-  requestActionRefs.forEach(({ requestId, action, blockId, eventId }) => {
+  requestActionRefs.forEach(({ requestId, action }) => {
     if (!requestIds.has(requestId)) {
-      const configKey = action['~k'];
-      let errorMessage = `Request "${requestId}" not defined on page "${pageId}".`;
-
-      if (configKey) {
-        const location = resolveConfigLocation({
-          configKey,
-          keyMap: context.keyMap,
-          refMap: context.refMap,
-          configDirectory: context.directories.config,
-        });
-
-        if (location) {
-          const source = location.source ? `${location.source} at ${location.config}` : '';
-          const link = location.link || '';
-          errorMessage = `[Config Error] ${errorMessage}\n  ${source}\n  ${link}`;
-        } else {
-          errorMessage = `[Config Error] ${errorMessage}`;
-        }
-      } else {
-        errorMessage = `[Config Error] ${errorMessage}`;
-      }
+      const errorMessage = formatConfigError({
+        message: `Request "${requestId}" not defined on page "${pageId}".`,
+        configKey: action['~k'],
+        context,
+      });
 
       if (context.stage === 'dev') {
         context.logger.warn(errorMessage);

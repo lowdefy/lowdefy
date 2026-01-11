@@ -232,8 +232,7 @@ pages:
       #       connectionId: testApi
 
       # F6: Request references non-existent connection
-      # TODO: Validation not implemented - will fail at runtime, not build time
-      # Uncomment to test: Connection "nonExistentConnection" not found
+      # Uncomment to test: Request references non-existent connection "nonExistentConnection"
       # --------------------------------------------------------
       # - id: requestBlock
       #   type: Button
@@ -346,6 +345,52 @@ pages:
       #   type: Box
       #   blocks:
       #     _ref: nonexistent.yaml
+
+      # I2: Circular reference
+      # NOTE: Cannot test in single file - requires creating circular refs between files
+      # Expected: Circular reference detected: a.yaml -> b.yaml -> a.yaml
+      # --------------------------------------------------------
+
+      # ========================================================
+      # SECTION J: STATE REFERENCE ERRORS
+      # ========================================================
+
+      # J1: Undefined state reference
+      # Uncomment to test: _state references "undefinedKey" but no input block with this id exists
+      # The warning includes: "State keys are created from input block ids. Check for typos,
+      # add an input block with this id, or initialize the state with SetState."
+      # --------------------------------------------------------
+      # - id: stateRef
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _state: undefinedKey
+      #
+      # Also works with nested paths like "user.profile.name" - validates the top-level key "user"
+
+      # ========================================================
+      # SECTION K: PAYLOAD REFERENCE ERRORS
+      # ========================================================
+
+      # K1: Undefined payload reference
+      # Uncomment to test: _payload references "undefinedKey" but no key exists in payload definition
+      # The warning includes: "Payload keys are defined in the request's payload property.
+      # Check for typos or add the key to the payload definition."
+      # --------------------------------------------------------
+      # - id: payloadRef
+      #   type: Button
+      #   properties:
+      #     title: Test Payload Reference
+      #   requests:
+      #     - id: testRequest
+      #       type: AxiosHttp
+      #       connectionId: testApi
+      #       payload:
+      #         userId: { _state: selectedUser }
+      #       properties:
+      #         url: /users
+      #         params:
+      #           id: { _payload: undefinedKey }
 
       # ========================================================
       # Working block (keep this uncommented)

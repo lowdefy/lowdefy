@@ -22,6 +22,9 @@ import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import formatConfigError from '../utils/formatConfigError.js';
 
 function buildConnections({ components, context }) {
+  // Store connection IDs for validation in buildRequests
+  context.connectionIds = new Set();
+
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
     context,
@@ -59,6 +62,7 @@ function buildConnections({ components, context }) {
       }
       context.typeCounters.connections.increment(connection.type, connection['~k']);
       connection.connectionId = connection.id;
+      context.connectionIds.add(connection.connectionId);
       connection.id = `connection:${connection.id}`;
       countOperators(connection.properties || {}, {
         counter: context.typeCounters.operators.server,

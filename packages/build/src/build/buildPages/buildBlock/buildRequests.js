@@ -60,6 +60,28 @@ function buildRequest(request, pageContext) {
   }
   typeCounters.requests.increment(request.type, configKey);
 
+  // Validate connectionId references an existing connection
+  if (!type.isNone(request.connectionId)) {
+    if (!type.isString(request.connectionId)) {
+      throw new Error(
+        formatConfigError({
+          message: `Request "${request.id}" at page "${pageId}" connectionId is not a string. Received ${JSON.stringify(request.connectionId)}.`,
+          configKey,
+          context,
+        })
+      );
+    }
+    if (!context.connectionIds.has(request.connectionId)) {
+      throw new Error(
+        formatConfigError({
+          message: `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
+          configKey,
+          context,
+        })
+      );
+    }
+  }
+
   if (type.isUndefined(request.payload)) request.payload = {};
 
   if (!type.isObject(request.payload)) {

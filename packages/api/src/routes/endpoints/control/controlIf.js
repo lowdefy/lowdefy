@@ -17,10 +17,14 @@
 import runRoutine from '../runRoutine.js';
 
 async function controlIf(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
 
-  const evaluatedIf = evaluateOperators({ input: control[':if'], items, location: 'TODO:' });
+  const evaluatedIf = evaluateOperators({
+    input: control[':if'],
+    items,
+    location: control['~k'] ?? ':if',
+  });
 
   logger.debug({
     event: 'debug_control_if',
@@ -34,7 +38,7 @@ async function controlIf(context, routineContext, { control }) {
       event: 'debug_control_if_run_then',
     });
     if (!control[':then']) {
-      throw new Error('Invalid :if - missing :then.');
+      throw new Error(`Invalid :if in endpoint "${endpointId}" - missing :then.`);
     }
     return runRoutine(context, routineContext, { routine: control[':then'] });
   } else if (control[':else']) {

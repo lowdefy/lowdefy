@@ -22,8 +22,24 @@ import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
 
-async function recursiveBuild({ context, refDef, count, referencedFrom }) {
-  // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
+async function recursiveBuild({
+  context,
+  refDef,
+  count,
+  referencedFrom,
+  refChainSet = new Set(),
+  refChainList = [],
+}) {
+  // Detect circular references by tracking the chain of files being resolved
+  const currentPath = refDef.path;
+  if (refChainSet.has(currentPath)) {
+    const chainDisplay = [...refChainList, currentPath].join(' -> ');
+    throw new Error(`Circular reference detected: ${chainDisplay}`);
+  }
+  refChainSet.add(currentPath);
+  refChainList.push(currentPath);
+
+  // Keep count as a fallback safety limit
   if (count > 10000) {
     throw new Error(`Maximum recursion depth of references exceeded.`);
   }
@@ -54,6 +70,8 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
       refDef: parsedRefDef,
       count: count + 1,
       referencedFrom: refDef.path,
+      refChainSet,
+      refChainList,
     });
 
     const transformedFile = await runTransformer({
@@ -87,6 +105,10 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
     // Use serializer.copy to preserve non-enumerable properties like ~l
     parsedFiles[newRefDef.id] = serializer.copy(withRefKey, { reviver });
   }
+  // Backtrack: remove current file from chain so sibling refs can use it
+  refChainSet.delete(currentPath);
+  refChainList.pop();
+
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
     parsedFiles,
