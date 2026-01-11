@@ -14,27 +14,10 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import formatConfigMessage from './formatConfigMessage.js';
 
 function formatConfigError({ message, configKey, context }) {
-  if (!configKey || !context) {
-    return `[Config Error] ${message}`;
-  }
-
-  const location = resolveConfigLocation({
-    configKey,
-    keyMap: context.keyMap,
-    refMap: context.refMap,
-    configDirectory: context.directories.config,
-  });
-
-  if (!location) {
-    return `[Config Error] ${message}`;
-  }
-
-  const source = location.source ? `${location.source} at ${location.config}` : '';
-  const link = location.link || '';
-  return `[Config Error] ${message}\n  ${source}\n  ${link}`;
+  return formatConfigMessage({ prefix: '[Config Error]', message, configKey, context });
 }
 
 export default formatConfigError;

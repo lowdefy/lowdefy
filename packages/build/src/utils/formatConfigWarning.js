@@ -14,27 +14,10 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import formatConfigMessage from './formatConfigMessage.js';
 
 function formatConfigWarning({ message, configKey, context }) {
-  if (!configKey || !context) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const location = resolveConfigLocation({
-    configKey,
-    keyMap: context.keyMap,
-    refMap: context.refMap,
-    configDirectory: context.directories.config,
-  });
-
-  if (!location) {
-    return `[Config Warning] ${message}`;
-  }
-
-  const source = location.source ? `${location.source} at ${location.config}` : '';
-  const link = location.link || '';
-  return `[Config Warning] ${message}\n  ${source}\n  ${link}`;
+  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
 }
 
 export default formatConfigWarning;

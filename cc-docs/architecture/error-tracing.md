@@ -45,14 +45,41 @@ const location = resolveConfigLocation({
 
 ### Error Formatting Utilities
 
-Two utilities format error messages with location info:
+Three utilities format error messages with location info:
 
 | Utility | Purpose | Prefix |
 |---------|---------|--------|
+| `formatConfigMessage` | Core formatter (shared logic) | Custom |
 | `formatConfigError` | Build errors (fatal) | `[Config Error]` |
 | `formatConfigWarning` | Build warnings (non-fatal) | `[Config Warning]` |
 
 Location: `packages/build/src/utils/`
+
+**Architecture:** `formatConfigError` and `formatConfigWarning` are thin wrappers around `formatConfigMessage`:
+
+```javascript
+// formatConfigMessage.js - shared core logic
+function formatConfigMessage({ prefix, message, configKey, context }) {
+  if (!configKey || !context) {
+    return `${prefix} ${message}`;
+  }
+  const location = resolveConfigLocation({ configKey, keyMap, refMap, configDirectory });
+  if (!location) {
+    return `${prefix} ${message}`;
+  }
+  return `${prefix} ${message}\n  ${location.source} at ${location.config}\n  ${location.link}`;
+}
+
+// formatConfigError.js - 3-line wrapper
+function formatConfigError({ message, configKey, context }) {
+  return formatConfigMessage({ prefix: '[Config Error]', message, configKey, context });
+}
+
+// formatConfigWarning.js - 3-line wrapper
+function formatConfigWarning({ message, configKey, context }) {
+  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
+}
+```
 
 **Usage:**
 ```javascript
@@ -80,6 +107,26 @@ context.logger.warn(formatConfigWarning({
   pages/home.yaml:15 at pages.0.blocks.0.type
   /Users/dev/myapp/pages/home.yaml:15
 ```
+
+### Operator Key Extraction
+
+`extractOperatorKey.js` extracts top-level keys from operator references. Used by validators to identify referenced IDs.
+
+```javascript
+import extractOperatorKey from '../../utils/extractOperatorKey.js';
+
+// Handles both string and object forms
+extractOperatorKey({ operatorValue: 'user.name' });           // 'user'
+extractOperatorKey({ operatorValue: 'items[0].value' });      // 'items'
+extractOperatorKey({ operatorValue: { key: 'user.name' } });  // 'user'
+extractOperatorKey({ operatorValue: { path: 'data[0]' } });   // 'data'
+extractOperatorKey({ operatorValue: null });                  // null
+```
+
+Used by:
+- `validateStateReferences.js` - extracts blockId from `_state` references
+- `validatePayloadReferences.js` - extracts payload key from `_payload` references
+- `validateStepReferences.js` - extracts step ID from `_step` references
 
 ## Build-Time Validations
 
@@ -200,6 +247,7 @@ This ensures no runtime errors when Sentry is not configured.
 `packages/build/src/utils/traverseConfig.js` provides depth-first traversal for validation:
 
 ```javascript
+import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 const stateRefs = new Map();
@@ -207,7 +255,10 @@ traverseConfig({
   config: page,
   visitor: (obj) => {
     if (obj._state !== undefined) {
-      stateRefs.set(extractKey(obj._state), obj['~k']);
+      const topLevelKey = extractOperatorKey({ operatorValue: obj._state });
+      if (topLevelKey && !stateRefs.has(topLevelKey)) {
+        stateRefs.set(topLevelKey, obj['~k']);
+      }
     }
   },
 });
@@ -223,13 +274,31 @@ traverseConfig({
 
 **Trade-off:** Slight increase in build artifact size, but significantly better DX.
 
-### Why Separate Error/Warning Formatters?
+### Why Extract formatConfigMessage?
 
-**Problem:** Initially used inline `formatWarning` in each validator, causing duplication.
+**Problem:** `formatConfigError.js` and `formatConfigWarning.js` were 100% identical except for the prefix string (`[Config Error]` vs `[Config Warning]`). This violated DRY and made maintenance harder.
 
-**Decision:** Extract to `formatConfigWarning.js` utility (mirrors `formatConfigError.js`).
+**Decision:** Extract shared logic to `formatConfigMessage.js` that accepts a `prefix` parameter. Both formatters become 3-line wrappers.
 
-**Trade-off:** Additional file, but eliminates 60+ lines of duplication across 3 validators.
+**Trade-off:** One more file, but:
+- Tests for edge cases (null context, missing keyMap) only need to be written once
+- Future message types (e.g., `[Config Info]`) trivial to add
+- Core formatting logic has single source of truth
+
+### Why Extract extractOperatorKey?
+
+**Problem:** Three validators (`validateStateReferences`, `validatePayloadReferences`, `validateStepReferences`) had identical 12-line blocks to extract the top-level key from operator values like `_state`, `_payload`, `_step`.
+
+**Decision:** Extract to `extractOperatorKey.js` utility that handles:
+- String values: `'user.name'` → `'user'`
+- Object with `key`: `{ key: 'user.name' }` → `'user'`
+- Object with `path`: `{ path: 'data[0]' }` → `'data'`
+- Invalid values: `null`, `undefined`, `123` → `null`
+
+**Trade-off:** One more file, but:
+- Edge case tests (null, arrays, empty objects) centralized in one test file
+- Consistent behavior across all operator validators
+- Future operator validators can reuse the utility
 
 ### Why Warn Instead of Error for Reference Validations?
 
@@ -241,13 +310,22 @@ traverseConfig({
 
 ## Related
 
-- `packages/build/src/utils/formatConfigError.js` - Fatal error formatter
-- `packages/build/src/utils/formatConfigWarning.js` - Warning formatter
+### Build Utilities
+- `packages/build/src/utils/formatConfigMessage.js` - Core message formatter (shared logic)
+- `packages/build/src/utils/formatConfigError.js` - Fatal error formatter wrapper
+- `packages/build/src/utils/formatConfigWarning.js` - Warning formatter wrapper
+- `packages/build/src/utils/extractOperatorKey.js` - Extracts top-level key from operator values
 - `packages/build/src/utils/traverseConfig.js` - Config traversal utility
 - `packages/build/src/utils/findSimilarString.js` - "Did you mean?" suggestions
+
+### Helpers
 - `packages/utils/helpers/src/resolveConfigLocation.js` - Location resolver
+
+### Sentry Integration
 - `packages/servers/server/lib/server/sentry/` - Sentry server utilities
 - `packages/servers/server/lib/client/sentry/` - Sentry client utilities
+
+### Issues & PRs
 - Issue #1940 - Original feature request (config-aware error tracing)
 - PR #1944 - Implementation
 - Issue #1945 - Sentry integration

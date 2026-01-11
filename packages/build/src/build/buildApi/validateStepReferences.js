@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
@@ -48,17 +49,9 @@ function validateStepReferences({ endpoint, context }) {
     config: endpoint.routine,
     visitor: (obj) => {
       if (obj._step !== undefined) {
-        const stepValue = type.isString(obj._step)
-          ? obj._step
-          : type.isObject(obj._step)
-            ? obj._step.key || obj._step.path
-            : null;
-        if (stepValue) {
-          // Extract the step ID (first part before any '.')
-          const stepId = stepValue.split('.')[0];
-          if (stepId && !stepRefs.has(stepId)) {
-            stepRefs.set(stepId, obj['~k']);
-          }
+        const stepId = extractOperatorKey({ operatorValue: obj._step });
+        if (stepId && !stepRefs.has(stepId)) {
+          stepRefs.set(stepId, obj['~k']);
         }
       }
     },
