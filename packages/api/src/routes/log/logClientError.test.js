@@ -53,17 +53,23 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
+      isServiceError: false,
       source: null,
+      config: null,
+      link: null,
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: 'client_error',
+        event: 'client_config_error',
         errorName: 'Error',
         errorMessage: 'Test error',
+        isServiceError: false,
         pageId: 'home',
         source: null,
+        config: null,
+        link: null,
       }),
-      'Client error: Test error'
+      'Test error'
     );
     expect(context.readConfigFile).not.toHaveBeenCalled();
   });
@@ -92,17 +98,23 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
-      source: 'pages/home.yaml:8 at root.pages[0:home].blocks[0:header]',
+      isServiceError: false,
+      source: 'pages/home.yaml:8',
+      config: 'root.pages[0:home].blocks[0:header]',
+      link: null,
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
-        event: 'client_error',
+        event: 'client_config_error',
         errorName: 'Error',
         errorMessage: 'Test error',
+        isServiceError: false,
         pageId: 'home',
-        source: 'pages/home.yaml:8 at root.pages[0:home].blocks[0:header]',
+        source: 'pages/home.yaml:8',
+        config: 'root.pages[0:home].blocks[0:header]',
+        link: null,
       }),
-      'Client error at pages/home.yaml:8 at root.pages[0:home].blocks[0:header]: Test error'
+      'Test error'
     );
   });
 
@@ -130,13 +142,18 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
+      isServiceError: false,
       source: null,
+      config: null,
+      link: null,
     });
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
         source: null,
+        config: null,
+        link: null,
       }),
-      'Client error: Test error'
+      'Test error'
     );
   });
 
@@ -161,7 +178,10 @@ describe('logClientError', () => {
 
     expect(result).toEqual({
       success: true,
+      isServiceError: false,
       source: null,
+      config: null,
+      link: null,
     });
     expect(mockLogger.warn).toHaveBeenCalledWith({
       event: 'warn_maps_load_failed',
@@ -170,8 +190,10 @@ describe('logClientError', () => {
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.objectContaining({
         source: null,
+        config: null,
+        link: null,
       }),
-      'Client error: Test error'
+      'Test error'
     );
   });
 });

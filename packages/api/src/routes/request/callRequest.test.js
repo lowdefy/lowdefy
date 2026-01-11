@@ -576,7 +576,7 @@ test('request properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
 test('connection properties operator error', async () => {
@@ -596,7 +596,7 @@ test('connection properties operator error', async () => {
   mockTestRequest.mockImplementation(defaultResolverImp);
 
   await expect(callRequest(context, defaultParams)).rejects.toThrow(Error);
-  await expect(callRequest(context, defaultParams)).rejects.toThrow('Error: Test error.');
+  await expect(callRequest(context, defaultParams)).rejects.toThrow('Test error.');
 });
 
 test('request resolver throws  error', async () => {

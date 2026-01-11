@@ -27,7 +27,7 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
         context,
       });
 
-      if (context.stage === 'dev') {
+      if (context.stage === 'dev' || context.stage === 'test') {
         context.logger.warn(errorMessage);
       } else {
         throw new Error(errorMessage);

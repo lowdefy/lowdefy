@@ -193,23 +193,20 @@ test('getActions params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'a', type: 'Action' },
-      error: {
-        error: new Error(
-          'Method Error: getActions params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
-        index: 0,
-        type: 'Action',
-      },
+      error: new Error(
+        'Method Error: getActions params must be of type string, integer, boolean or object. Received: undefined at button.'
+      ),
+      index: 0,
     },
     event: undefined,
     eventName: 'onClick',
     responses: {
       a: {
+        action: { id: 'a', type: 'Action' },
         error: new Error(
           'Method Error: getActions params must be of type string, integer, boolean or object. Received: undefined at button.'
         ),
         index: 0,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
@@ -378,21 +375,24 @@ test('getActions params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: {
-        error: new Error(
-          'Method Error: getActions params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
-        index: 0,
-        type: 'Action',
-      },
+      error: new Error(
+        'Method Error: getActions params.key must be of type string or integer. Received: {"key":{}} at button.'
+      ),
+      index: 0,
     },
     responses: {
       a: {
+        action: {
+          id: 'a',
+          params: {
+            key: {},
+          },
+          type: 'Action',
+        },
         error: new Error(
           'Method Error: getActions params.key must be of type string or integer. Received: {"key":{}} at button.'
         ),
         index: 0,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
