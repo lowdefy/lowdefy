@@ -4,10 +4,10 @@ Analyze changed code to identify functions or patterns that should be extracted 
 
 ## Usage
 
-- `/lf:review-extract` - Review uncommitted changes
-- `/lf:review-extract 123` - Review PR #123
+- `/l-review-extract` - Review uncommitted changes
+- `/l-review-extract 123` - Review PR #123
 
-**Run this before `/lf:generate-tests`** to ensure code is properly structured before writing tests.
+**Run this before `/l-generate-tests`** to ensure code is properly structured before writing tests.
 
 ## Instructions
 

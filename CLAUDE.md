@@ -12,7 +12,7 @@ Lowdefy is a config-driven web framework built on Next.js. Apps are defined in Y
 
 **cc-docs/** structure: `Overview.md`, `Philosophy.md`, `packages/`, `plugins/`, `architecture/`
 
-**Claude Code Commands:** `/lf:docs-init`, `/lf:docs-package`, `/lf:docs-plugin`, `/lf:docs-architecture`, `/lf:docs-update`, `/lf:review-extract`, `/lf:generate-tests`
+**Claude Code Commands:** `/l-docs-init`, `/l-docs-package`, `/l-docs-plugin`, `/l-docs-architecture`, `/l-docs-update`, `/l-review-extract`, `/l-generate-tests`
 
 ## Repository Structure
 
@@ -81,12 +81,14 @@ function createReadConfigFile({ directories }) {
 }
 ```
 
-**Safe iteration with defaults:**
+**Safe iteration with nullish coalescing:**
 
 ```javascript
-(components.pages || []).forEach((page) => {});
-Object.keys(block.areas || {}).forEach((area) => {});
+(components.pages ?? []).forEach((page) => {});
+Object.keys(block.areas ?? {}).forEach((area) => {});
 ```
+
+Prefer `??` over `||` - it only falls back on `null`/`undefined`, not falsy values like `0` or `''`.
 
 **Build functions mutate and return `components`:**
 
@@ -225,7 +227,18 @@ throw new Error(
 - Test files: `{name}.test.js` co-located with source
 - Run: `pnpm test` or `pnpm -r --filter=@lowdefy/helpers test`
 - **Do not create tests for blocks** (currently disabled)
-- Use descriptive test names: `test('buildConnections no connections', () => { });`
+
+**Test naming:** Use descriptive names that explain the scenario and expected outcome:
+```javascript
+// Good: Describes what is being tested and the condition
+test('buildConnections throws when connection id is missing', () => { });
+test('buildConnections returns empty array when no connections defined', () => { });
+test('_get returns default value when path does not exist', () => { });
+
+// Avoid: Vague or implementation-focused names
+test('buildConnections no connections', () => { });  // What happens with no connections?
+test('test error', () => { });  // What error? What scenario?
+```
 
 **Dynamic imports for ES module mocking:**
 

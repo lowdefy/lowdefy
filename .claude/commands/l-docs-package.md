@@ -10,9 +10,9 @@ Generate documentation for a specific core package in the Lowdefy monorepo.
 ## Usage
 
 ```
-/lf:docs-package api
-/lf:docs-package build
-/lf:docs-package engine
+/l-docs-package api
+/l-docs-package build
+/l-docs-package engine
 ```
 
 ## Valid Packages
@@ -209,7 +209,7 @@ Single file: `cc-docs/packages/{package}.md`
 
 ## Example
 
-For `lf:docs-package engine`:
+For `l-docs-package engine`:
 
 ```markdown
 ---

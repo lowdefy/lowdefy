@@ -243,10 +243,10 @@ If user confirms, create:
 
 ## Related Commands
 
-- `lf:docs-package` - Document a specific core package
-- `lf:docs-plugin` - Document a plugin package
-- `lf:docs-architecture` - Document cross-cutting architecture
-- `lf:docs-update` - Update docs based on changes
+- `l-docs-package` - Document a specific core package
+- `l-docs-plugin` - Document a plugin package
+- `l-docs-architecture` - Document cross-cutting architecture
+- `l-docs-update` - Update docs based on changes
 
 ## Key Principles
 

@@ -11,13 +11,13 @@ Generate documentation for plugin packages in the Lowdefy monorepo.
 
 ```
 # Document specific plugin
-/lf:docs-plugin blocks/antd
-/lf:docs-plugin connections/mongodb
-/lf:docs-plugin operators/js
+/l-docs-plugin blocks/antd
+/l-docs-plugin connections/mongodb
+/l-docs-plugin operators/js
 
 # Document plugin category overview
-/lf:docs-plugin blocks
-/lf:docs-plugin connections
+/l-docs-plugin blocks
+/l-docs-plugin connections
 ```
 
 ## Plugin Categories
