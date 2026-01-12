@@ -1,263 +1,224 @@
-# Update Documentation from Session Insights
+---
+description: Update cc-docs based on code changes or session insights
+argument-hint: "[#PR | branch | files...]"
+---
 
-Analyze the current session transcript, referenced GitHub issues/PRs, and extract patterns and decisions to improve documentation. Posts a summary comment to the PR.
+# Update Documentation
+
+Update cc-docs based on code changes in the Lowdefy monorepo and extract insights from the current session.
 
 ## Usage
 
-- `/l-docs-update` - Update docs based on current session (requires active PR on current branch)
-- `/l-docs-update 123` - Update docs for a specific PR number
-
-## Instructions
-
-You are a senior software engineer maintaining the Lowdefy open source repository. Your task is to extract valuable insights from the current development session and codify them into documentation improvements.
-
-### Prerequisites
-
-This skill assumes:
-1. You are on a branch with an open PR (or a PR number is provided)
-2. The session contains meaningful technical work (bug fixes, features, refactoring, investigations)
-3. You have context from the conversation that reveals patterns, decisions, or architectural insights
-
-### Step 1: Identify the PR Context
-
-**If a PR number is provided ($ARGUMENTS):**
-```bash
-gh pr view $ARGUMENTS --json number,title,body,headRefName,baseRefName,url,comments,reviews
+```
+/l-docs-update #123              # Based on PR
+/l-docs-update feature/branch    # Based on branch diff from main
+/l-docs-update path/to/file.js   # Based on specific files
+/l-docs-update                   # Auto-detect from current branch/uncommitted
 ```
 
-**If no PR number (use current branch):**
+## Workflow
+
+### Phase 1: Identify Context
+
+**For PR (recommended):**
 ```bash
-gh pr view --json number,title,body,headRefName,baseRefName,url,comments,reviews
+gh pr view {number} --json number,title,body,headRefName,baseRefName,url
+gh pr diff {number} --name-only
 ```
 
-If no PR exists, inform the user:
-> "No open PR found for the current branch. Please open a PR first or provide a PR number."
-
-### Step 2: Fetch Linked Issues and PR Comments
-
-Extract issue references from the PR body (patterns: `#123`, `fixes #123`, `closes #123`, `resolves #123`).
-
-For each linked issue:
+**For branch:**
 ```bash
-gh issue view {ISSUE_NUMBER} --json number,title,body,comments
+git diff main...{branch} --name-only
 ```
 
-Also fetch PR review comments for additional context:
+**For uncommitted:**
 ```bash
-gh api repos/{owner}/{repo}/pulls/{PR_NUMBER}/comments
+git status --porcelain
+git diff --name-only
 ```
 
-### Step 3: Analyze Session Context for Documentation Opportunities
+If no context found, inform user:
+> "No changes detected. Provide a PR number, branch name, or file paths."
 
-Review the current conversation and identify:
+### Phase 2: Analyze Session for Insights
 
-#### 3a. Architectural Decisions
-- Why was a particular approach chosen over alternatives?
+Review the current conversation and code changes for:
+
+**Architectural Decisions**
+- Why was a particular approach chosen?
 - What trade-offs were considered?
 - What constraints influenced the design?
 
-#### 3b. Code Patterns
-- New patterns introduced that others should follow
-- Anti-patterns discovered that should be avoided
-- Helper utilities or techniques used repeatedly
+**Code Patterns**
+- New patterns others should follow
+- Anti-patterns to avoid
+- Helper utilities used repeatedly
 
-#### 3c. Debugging Insights
+**Debugging Insights**
 - Non-obvious root causes discovered
-- Diagnostic approaches that worked well
+- Diagnostic approaches that worked
 - Common pitfalls and how to avoid them
 
-#### 3d. Integration Knowledge
+**Integration Knowledge**
 - How components interact
 - Data flow through the system
 - External dependencies and their quirks
 
-#### 3e. User-Facing Changes
-- New features that need user documentation
-- Changed behaviors users need to know about
-- New operators, blocks, actions, or connections
+### Phase 3: Categorize Changes
 
-### Step 4: Categorize Documentation Updates
+Map changes to documentation areas:
 
-Determine which documentation should be updated:
+| File Pattern | Affected Doc |
+|--------------|--------------|
+| `packages/{pkg}/src/**` | `cc-docs/packages/{pkg}.md` |
+| `packages/plugins/{cat}/{plugin}/**` | `cc-docs/plugins/{cat}/{plugin}.md` |
+| `packages/plugins/{cat}/**` | `cc-docs/plugins/{cat}/overview.md` |
+| `packages/servers/**` | `cc-docs/architecture/*.md` |
+| `turbo.json`, `pnpm-workspace.yaml` | `cc-docs/Overview.md` |
 
-| Insight Type | Target Location | When to Update |
-|--------------|-----------------|----------------|
-| Architecture decisions | `cc-docs/architecture/` | New patterns, system design changes |
-| Package internals | `cc-docs/packages/{package}/` | How a package works internally |
-| Plugin details | `cc-docs/plugins/{type}/{name}/` | Plugin implementation details |
-| Philosophy/principles | `cc-docs/Philosophy.md` | Core design principles discovered |
-| User features | `packages/docs/` (YAML) | New user-facing functionality |
-| API changes | `packages/docs/concepts/` | New concepts users need to understand |
+Map insights to documentation:
 
-### Step 5: Create or Update Documentation
+| Insight Type | Target Location |
+|--------------|-----------------|
+| Architecture decisions | `cc-docs/architecture/` |
+| Package internals | `cc-docs/packages/{package}.md` |
+| Plugin details | `cc-docs/plugins/{type}/{name}.md` |
+| Philosophy/principles | `cc-docs/Philosophy.md` |
 
-#### For cc-docs (Internal/Claude Code Documentation)
+### Phase 4: Determine What to Update
 
-Create the directory structure if it doesn't exist:
+**Do update when:**
+- New public exports added
+- Module structure changes
+- Dependencies added/removed between packages
+- Significant behavior changes
+- New patterns introduced
+- Architectural decisions made
+
+**Skip when:**
+- Test file changes only
+- Dependency version bumps
+- Formatting/linting fixes
+- Internal refactors (same external behavior)
+- Work is incomplete and patterns aren't clear
+
+### Phase 5: Update Documentation
+
+For each doc that needs updating:
+
+1. **Read existing doc completely**
+2. **Read changed source files**
+3. **Identify sections to update:**
+   - New modules → add to "Key Modules"
+   - New exports → add to "Files Quick Reference"
+   - New dependencies → update "Dependencies"
+   - Behavior changes → update relevant sections
+   - Decisions → add to "Decision Trace" or create architecture doc
+4. **Preserve existing content** - only update affected sections
+5. **Update frontmatter** `updated:` date
+
+**Documentation principles:**
+- Clarity over brevity
+- Include the "why", not just the "what"
+- Use real examples from the PR when possible
+- Link to source: `packages/build/src/buildPages.js:45`
+- Avoid speculation - only document what was discovered
+
+### Phase 6: Validate
+
 ```bash
-mkdir -p cc-docs/architecture cc-docs/packages cc-docs/plugins
+# Check for broken internal links
+grep -r "\]\(./" cc-docs/ | grep -v "^Binary"
 ```
 
-**File format for cc-docs:** Markdown with clear structure:
+**Accuracy checks:**
+- Property/type names match actual schema files
+- Counts are actual, not estimated
+- External library links are valid
+- Context parameters are complete
 
-```markdown
-# {Topic Title}
-
-## Context
-
-Brief explanation of what problem this addresses or what component this documents.
-
-## Key Insights
-
-- Bullet points of important learnings
-- Include the "why" behind decisions
-
-## Implementation Details
-
-Technical details that help understand the code.
-
-## Decision Trace
-
-If this documents a decision:
-- **Problem**: What problem was being solved?
-- **Options Considered**: What alternatives existed?
-- **Decision**: What was chosen and why?
-- **Trade-offs**: What was gained/lost?
-
-## Related
-
-- Links to related docs, code files, or issues
-```
-
-#### For packages/docs (User-Facing Documentation)
-
-User docs use YAML format with `_ref` system. For new features:
-
-1. **Operators**: Create/update `packages/docs/operators/{_operatorName}.yaml`
-2. **Blocks**: Create/update `packages/docs/blocks/{category}/{BlockName}.yaml`
-3. **Actions**: Create/update `packages/docs/actions/{ActionName}.yaml`
-4. **Connections**: Create/update `packages/docs/connections/{ConnectionName}.yaml`
-5. **Concepts**: Create/update `packages/docs/concepts/{concept}.yaml`
-
-Reference existing YAML files in the same directory for format patterns.
-
-### Step 6: Generate Documentation Content
-
-When writing documentation, follow these principles:
-
-1. **Clarity over brevity** - Match the codebase philosophy
-2. **Include the "why"** - Don't just document what, explain why
-3. **Real examples** - Use actual code/config from the PR when possible
-4. **Link to source** - Reference file paths like `packages/build/src/buildPages.js:45`
-5. **Avoid speculation** - Only document what was actually discovered/implemented
-
-### Step 7: Post PR Comment Summary
-
-After updating documentation, post a summary comment to the PR:
+### Phase 7: Post PR Comment (if PR context)
 
 ```bash
 gh pr comment {PR_NUMBER} --body "$(cat <<'EOF'
 ## Documentation Updates
 
-This PR triggered documentation improvements based on session insights.
+This PR triggered documentation improvements.
 
-### What was updated
+### Files Updated
+{list of cc-docs files created/modified}
 
-{List of files created or modified}
-
-### Why these updates
-
-{Brief explanation of what insights led to these docs}
-
-### Decision Traces Captured
-
-{If any architectural decisions were documented, summarize them}
-
-### Insights Extracted
-
-- {Key insight 1}
-- {Key insight 2}
-- {etc.}
+### Insights Captured
+- {insight 1}
+- {insight 2}
 
 ---
-*Documentation generated by `/l-docs-update` skill*
+*Generated by `/l-docs-update`*
 EOF
 )"
 ```
 
-### Step 8: Summary Output
+### Phase 8: Report
 
-Provide a summary to the user:
-
-```
+```markdown
 ## Documentation Update Summary
 
-**PR**: #{number} - {title}
-**Branch**: {branch}
+**Source:** PR #123 / branch feature/x / uncommitted changes
 
-### Files Updated
+### Changes Analyzed
+- {count} files changed
+- {count} packages affected
 
-**cc-docs (internal):**
-- {list of cc-docs files created/modified}
+### Documentation Updates
 
-**packages/docs (user-facing):**
-- {list of user doc files created/modified}
+**Updated:**
+- `cc-docs/packages/engine.md` - Added new state hook section
+
+**Skipped (non-behavioral):**
+- `packages/engine/src/utils.test.js` - Test only
 
 ### Insights Captured
-
 1. {insight summary}
 2. {insight summary}
-
-### Decision Traces
-
-- {decision title}: {brief summary}
-
-### PR Comment
-
-Posted summary comment to PR #{number}
 ```
 
-## Important Constraints
+## Constraints
 
-1. **Don't invent insights** - Only document things that actually came up in the session
-2. **Preserve existing docs** - Read files before editing, add to them don't replace
-3. **Follow CLAUDE.md standards** - All code examples must follow the coding patterns
-4. **No speculation** - If something is uncertain, note it as "needs investigation"
-5. **Attribution** - Reference the PR/issue that prompted the documentation
-6. **Keep cc-docs technical** - This is for Claude Code, not end users
-7. **Keep packages/docs user-friendly** - This is for Lowdefy users, not contributors
+1. **Don't invent insights** - Only document things that actually came up
+2. **Preserve existing docs** - Read before editing, add don't replace
+3. **Follow CLAUDE.md standards** - All code examples must follow patterns
+4. **No speculation** - If uncertain, note as "needs investigation"
+5. **Attribution** - Reference the PR/issue that prompted the doc
+6. **Keep cc-docs technical** - For Claude Code, not end users
 
-## When NOT to Create Documentation
+## When NOT to Update
 
-Skip documentation if:
-- The session was purely exploratory with no conclusions
+Skip if:
+- Session was purely exploratory with no conclusions
 - Changes are trivial (typos, formatting)
-- The work is incomplete and patterns aren't clear yet
+- Work is incomplete and patterns aren't clear
 - Documentation already exists and is accurate
 
-In these cases, inform the user:
-> "No documentation updates needed for this session. {reason}"
+Inform user: "No documentation updates needed. {reason}"
 
-## cc-docs Directory Structure Reference
+## cc-docs Structure Reference
 
 ```
 cc-docs/
-├── Overview.md              # High-level architecture overview
-├── Philosophy.md            # Design principles and philosophy
+├── Overview.md
+├── Philosophy.md
 ├── packages/
-│   ├── api.md               # @lowdefy/api internals
-│   ├── build.md             # @lowdefy/build internals
-│   ├── client.md            # @lowdefy/client internals
-│   ├── engine.md            # @lowdefy/engine internals
+│   ├── api.md
+│   ├── build.md
+│   ├── engine.md
 │   └── ...
 ├── plugins/
-│   ├── blocks/              # Block plugin details
-│   ├── connections/         # Connection plugin details
-│   ├── operators/           # Operator plugin details
-│   └── actions/             # Action plugin details
+│   ├── blocks/
+│   ├── connections/
+│   ├── operators/
+│   └── actions/
 └── architecture/
-    ├── build-pipeline.md    # How the build system works
-    ├── request-flow.md      # How requests are processed
-    ├── state-management.md  # How state works in the engine
-    └── ...
+    ├── build-pipeline.md
+    ├── request-lifecycle.md
+    └── state-management.md
 ```

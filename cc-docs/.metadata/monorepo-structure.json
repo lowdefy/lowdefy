@@ -1,0 +1,104 @@
+{
+  "generated": "2026-01-08T00:00:00Z",
+  "version": "4.4.0",
+  "packageManager": "pnpm@9.4.0",
+  "buildTool": "turborepo",
+  "workspaces": [
+    "packages/*",
+    "packages/plugins/**",
+    "packages/servers/*",
+    "packages/utils/*",
+    "packages/ides/*"
+  ],
+  "packages": {
+    "core": [
+      "@lowdefy/api",
+      "@lowdefy/build",
+      "lowdefy",
+      "@lowdefy/client",
+      "@lowdefy/engine",
+      "@lowdefy/layout",
+      "@lowdefy/operators"
+    ],
+    "plugins": {
+      "blocks": [
+        "@lowdefy/blocks-aggrid",
+        "@lowdefy/blocks-algolia",
+        "@lowdefy/blocks-antd",
+        "@lowdefy/blocks-basic",
+        "@lowdefy/blocks-color-selectors",
+        "@lowdefy/blocks-echarts",
+        "@lowdefy/blocks-google-maps",
+        "@lowdefy/blocks-loaders",
+        "@lowdefy/blocks-markdown",
+        "@lowdefy/blocks-qr"
+      ],
+      "connections": [
+        "@lowdefy/connection-axios-http",
+        "@lowdefy/connection-elasticsearch",
+        "@lowdefy/connection-google-sheets",
+        "@lowdefy/connection-knex",
+        "@lowdefy/connection-mongodb",
+        "@lowdefy/connection-redis",
+        "@lowdefy/connection-sendgrid",
+        "@lowdefy/connection-stripe"
+      ],
+      "operators": [
+        "@lowdefy/operators-change-case",
+        "@lowdefy/operators-diff",
+        "@lowdefy/operators-js",
+        "@lowdefy/operators-jsonata",
+        "@lowdefy/operators-moment",
+        "@lowdefy/operators-mql",
+        "@lowdefy/operators-nunjucks",
+        "@lowdefy/operators-uuid",
+        "@lowdefy/operators-yaml"
+      ],
+      "actions": [
+        "@lowdefy/actions-core",
+        "@lowdefy/actions-pdf-make"
+      ],
+      "plugins": [
+        "@lowdefy/plugin-auth0",
+        "@lowdefy/plugin-aws",
+        "@lowdefy/plugin-csv",
+        "@lowdefy/plugin-next-auth"
+      ]
+    },
+    "servers": [
+      "@lowdefy/server",
+      "@lowdefy/server-dev"
+    ],
+    "utils": [
+      "@lowdefy/ajv",
+      "@lowdefy/block-dev",
+      "@lowdefy/block-utils",
+      "@lowdefy/helpers",
+      "@lowdefy/jest-yaml-transform",
+      "@lowdefy/node-utils",
+      "@lowdefy/nunjucks"
+    ]
+  },
+  "architecture": {
+    "framework": "Next.js",
+    "auth": "Auth.js (via plugin-next-auth)",
+    "configFormat": ["YAML", "JSON", "JSON5"],
+    "runtime": "Node.js >= 18"
+  },
+  "corePackageRoles": {
+    "@lowdefy/api": "Server-side API routes, context creation, request handling",
+    "@lowdefy/build": "Compiles YAML/JSON config into build artifacts, schema validation",
+    "lowdefy": "CLI entry point - init, dev, build, start commands",
+    "@lowdefy/client": "React client rendering, page context, block mounting",
+    "@lowdefy/engine": "Runtime state management, action execution, request orchestration",
+    "@lowdefy/layout": "Grid-based responsive layout system using Ant Design",
+    "@lowdefy/operators": "Base operator parser and evaluator framework"
+  },
+  "pluginCategories": {
+    "blocks": "React UI components (inputs, displays, containers)",
+    "connections": "Data source connectors (databases, APIs)",
+    "operators": "Logic functions for config expressions",
+    "actions": "Event handler functions (navigation, mutations)",
+    "plugins": "Composite plugins (auth providers, utilities)"
+  }
+}
