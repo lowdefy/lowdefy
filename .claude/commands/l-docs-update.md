@@ -1,44 +1,29 @@
 ---
-description: Update cc-docs based on code changes (PR, branch diff, or specific files)
+description: Update cc-docs based on code changes or session insights
 argument-hint: "[#PR | branch | files...]"
 ---
 
 # Update Documentation
 
-Update cc-docs based on code changes in the Lowdefy monorepo.
+Update cc-docs based on code changes in the Lowdefy monorepo and extract insights from the current session.
 
 ## Usage
 
 ```
-# Based on PR
-/l-docs-update #123
-
-# Based on branch diff from main
-/l-docs-update feature/new-operator
-
-# Based on specific changed files
-/l-docs-update packages/engine/src/state.js
-
-# Auto-detect uncommitted changes
-/l-docs-update
+/l-docs-update #123              # Based on PR
+/l-docs-update feature/branch    # Based on branch diff from main
+/l-docs-update path/to/file.js   # Based on specific files
+/l-docs-update                   # Auto-detect from current branch/uncommitted
 ```
-
-## Purpose
-
-Keep cc-docs in sync with code changes. This command:
-1. Analyzes what changed
-2. Determines which docs are affected
-3. Updates relevant documentation
-4. Validates cross-references
 
 ## Workflow
 
-### Phase 1: Detect Changes
+### Phase 1: Identify Context
 
-**For PR:**
+**For PR (recommended):**
 ```bash
+gh pr view {number} --json number,title,body,headRefName,baseRefName,url
 gh pr diff {number} --name-only
-gh pr view {number} --json title,body,files
 ```
 
 **For branch:**
@@ -52,9 +37,36 @@ git status --porcelain
 git diff --name-only
 ```
 
-### Phase 2: Categorize Changes
+If no context found, inform user:
+> "No changes detected. Provide a PR number, branch name, or file paths."
 
-Map changed files to documentation areas:
+### Phase 2: Analyze Session for Insights
+
+Review the current conversation and code changes for:
+
+**Architectural Decisions**
+- Why was a particular approach chosen?
+- What trade-offs were considered?
+- What constraints influenced the design?
+
+**Code Patterns**
+- New patterns others should follow
+- Anti-patterns to avoid
+- Helper utilities used repeatedly
+
+**Debugging Insights**
+- Non-obvious root causes discovered
+- Diagnostic approaches that worked
+- Common pitfalls and how to avoid them
+
+**Integration Knowledge**
+- How components interact
+- Data flow through the system
+- External dependencies and their quirks
+
+### Phase 3: Categorize Changes
+
+Map changes to documentation areas:
 
 | File Pattern | Affected Doc |
 |--------------|--------------|
@@ -64,24 +76,33 @@ Map changed files to documentation areas:
 | `packages/servers/**` | `cc-docs/architecture/*.md` |
 | `turbo.json`, `pnpm-workspace.yaml` | `cc-docs/Overview.md` |
 
-### Phase 3: Semantic Analysis
+Map insights to documentation:
 
-For each affected area, determine if docs need updating:
+| Insight Type | Target Location |
+|--------------|-----------------|
+| Architecture decisions | `cc-docs/architecture/` |
+| Package internals | `cc-docs/packages/{package}.md` |
+| Plugin details | `cc-docs/plugins/{type}/{name}.md` |
+| Philosophy/principles | `cc-docs/Philosophy.md` |
 
-**Behavioral changes (update docs):**
-- New exports in `index.js`
-- New modules/files added
-- Significant logic changes
-- New dependencies on other packages
-- API changes
+### Phase 4: Determine What to Update
 
-**Skip these (no doc update):**
+**Do update when:**
+- New public exports added
+- Module structure changes
+- Dependencies added/removed between packages
+- Significant behavior changes
+- New patterns introduced
+- Architectural decisions made
+
+**Skip when:**
 - Test file changes only
 - Dependency version bumps
 - Formatting/linting fixes
-- Internal refactors with same behavior
+- Internal refactors (same external behavior)
+- Work is incomplete and patterns aren't clear
 
-### Phase 4: Update Documentation
+### Phase 5: Update Documentation
 
 For each doc that needs updating:
 
@@ -92,18 +113,52 @@ For each doc that needs updating:
    - New exports → add to "Files Quick Reference"
    - New dependencies → update "Dependencies"
    - Behavior changes → update relevant sections
-
+   - Decisions → add to "Decision Trace" or create architecture doc
 4. **Preserve existing content** - only update affected sections
 5. **Update frontmatter** `updated:` date
 
-### Phase 5: Validate
+**Documentation principles:**
+- Clarity over brevity
+- Include the "why", not just the "what"
+- Use real examples from the PR when possible
+- Link to source: `packages/build/src/buildPages.js:45`
+- Avoid speculation - only document what was discovered
+
+### Phase 6: Validate
 
 ```bash
 # Check for broken internal links
 grep -r "\]\(./" cc-docs/ | grep -v "^Binary"
 ```
 
-### Phase 6: Report
+**Accuracy checks:**
+- Property/type names match actual schema files
+- Counts are actual, not estimated
+- External library links are valid
+- Context parameters are complete
+
+### Phase 7: Post PR Comment (if PR context)
+
+```bash
+gh pr comment {PR_NUMBER} --body "$(cat <<'EOF'
+## Documentation Updates
+
+This PR triggered documentation improvements.
+
+### Files Updated
+{list of cc-docs files created/modified}
+
+### Insights Captured
+- {insight 1}
+- {insight 2}
+
+---
+*Generated by `/l-docs-update`*
+EOF
+)"
+```
+
+### Phase 8: Report
 
 ```markdown
 ## Documentation Update Summary
@@ -113,111 +168,57 @@ grep -r "\]\(./" cc-docs/ | grep -v "^Binary"
 ### Changes Analyzed
 - {count} files changed
 - {count} packages affected
-- {count} architecture areas touched
 
 ### Documentation Updates
 
 **Updated:**
 - `cc-docs/packages/engine.md` - Added new state hook section
-- `cc-docs/architecture/state-management.md` - Updated flow diagram
 
 **Skipped (non-behavioral):**
 - `packages/engine/src/utils.test.js` - Test only
-- `packages/helpers/package.json` - Version bump
 
-### Validation
-- All internal links valid
-- Cross-references intact
+### Insights Captured
+1. {insight summary}
+2. {insight summary}
 ```
 
-## Update Rules
+## Constraints
 
-### Do Update When:
-- New public exports added
-- Module structure changes
-- Dependencies added/removed between packages
-- Significant behavior changes
-- New patterns introduced
+1. **Don't invent insights** - Only document things that actually came up
+2. **Preserve existing docs** - Read before editing, add don't replace
+3. **Follow CLAUDE.md standards** - All code examples must follow patterns
+4. **No speculation** - If uncertain, note as "needs investigation"
+5. **Attribution** - Reference the PR/issue that prompted the doc
+6. **Keep cc-docs technical** - For Claude Code, not end users
 
-### Don't Update When:
-- Test files only
-- Internal refactors (same external behavior)
-- Dependency version bumps
-- Formatting/style changes
-- Documentation changes (packages/docs)
+## When NOT to Update
 
-### Update Style:
-- **Add** new information to existing sections
-- **Modify** outdated information
-- **Never remove** content unless code was deleted
-- **Preserve** existing formatting and structure
-- **Update** the `updated:` date in frontmatter
+Skip if:
+- Session was purely exploratory with no conclusions
+- Changes are trivial (typos, formatting)
+- Work is incomplete and patterns aren't clear
+- Documentation already exists and is accurate
 
-## Cross-Reference Handling
+Inform user: "No documentation updates needed. {reason}"
 
-When updating package docs, check if changes affect:
-- Architecture docs that reference this package
-- Other package docs that depend on this package
-- Plugin docs that use this package
+## cc-docs Structure Reference
 
-Note needed cross-reference updates in the summary.
-
-## Accuracy Validation
-
-Before finalizing updates, verify:
-
-1. **Property/Type Names**
-   - Check actual schema files for correct property names (e.g., `databaseUri` not `connectionString`)
-   - Verify action names from exports (e.g., `DisplayMessage` not `Message`)
-
-2. **Counts and Lists**
-   - Count actual build steps instead of estimating (e.g., "31 steps" not "25+ steps")
-   - List all output files/directories completely
-
-3. **External Library Links**
-   - When updating plugin docs, include/verify external library documentation links
-
-4. **Context Parameters**
-   - For parser documentation, include complete payload parameters
-
-5. **Advanced Features**
-   - Document debounce, catchActions, and other advanced patterns when present
-
-## Example Session
-
-**Input:** `/l-docs-update #456`
-
-**Analysis:**
 ```
-Changed files:
-- packages/engine/src/state/hooks.js (Added)
-- packages/engine/src/state/index.js (Modified)
-- packages/engine/src/index.js (Modified)
-- packages/client/src/useEngine.js (Modified)
-```
-
-**Categorization:**
-- `packages/engine` - New module added
-- `packages/client` - Uses engine, check for interface changes
-
-**Decision:**
-- Update `cc-docs/packages/engine.md` - New hooks module
-- Check `cc-docs/packages/client.md` - May need cross-reference
-- Check `cc-docs/architecture/state-management.md` - New state hooks
-
-**Updates:**
-1. Read PR description: "Adds React-style hooks for state management"
-2. Read `hooks.js` - new `usePageState`, `useBlockState` exports
-3. Update engine.md:
-   - Add hooks.js to Key Modules
-   - Add new exports to reference
-4. Update state-management.md:
-   - Add section on hook-based state access
-5. Validate links
-
-**Report:**
-```
-Updated 2 docs, skipped 0
-- cc-docs/packages/engine.md - Added hooks module
-- cc-docs/architecture/state-management.md - Added hooks section
+cc-docs/
+├── Overview.md
+├── Philosophy.md
+├── packages/
+│   ├── api.md
+│   ├── build.md
+│   ├── engine.md
+│   └── ...
+├── plugins/
+│   ├── blocks/
+│   ├── connections/
+│   ├── operators/
+│   └── actions/
+└── architecture/
+    ├── build-pipeline.md
+    ├── request-lifecycle.md
+    └── state-management.md
 ```
