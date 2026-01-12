@@ -14,10 +14,13 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
+import { serializer } from '@lowdefy/helpers';
 
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
+async function writeLogger({ components, context }) {
+  await context.writeBuildArtifact(
+    'logger.json',
+    serializer.serializeToString(components.logger ?? {})
+  );
 }
 
-export default formatConfigWarning;
+export default writeLogger;

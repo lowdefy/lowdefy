@@ -14,10 +14,28 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
+import * as Sentry from '@sentry/nextjs';
 
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
+function setSentryUser({ user, sentryConfig }) {
+  // No-op if no user
+  if (!user) {
+    Sentry.setUser(null);
+    return;
+  }
+
+  const userFields = sentryConfig?.userFields || ['id', '_id'];
+  const sentryUser = {};
+
+  userFields.forEach((field) => {
+    if (user[field] !== undefined) {
+      sentryUser[field] = user[field];
+    }
+  });
+
+  // Only set user if we have at least one field
+  if (Object.keys(sentryUser).length > 0) {
+    Sentry.setUser(sentryUser);
+  }
 }
 
-export default formatConfigWarning;
+export default setSentryUser;

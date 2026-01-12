@@ -14,10 +14,7 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
+import { initSentryServer } from './lib/server/sentry/initSentry.js';
 
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
-}
-
-export default formatConfigWarning;
+// Conditionally initialize - no-op if SENTRY_DSN not set
+initSentryServer();

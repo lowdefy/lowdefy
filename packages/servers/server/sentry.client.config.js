@@ -14,10 +14,6 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
-
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
-}
-
-export default formatConfigWarning;
+// This file is required by @sentry/nextjs but initialization
+// happens conditionally in _app.js based on SENTRY_DSN.
+// Empty initialization is valid - SDK handles missing DSN gracefully.

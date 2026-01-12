@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
@@ -36,16 +35,9 @@ function validatePayloadReferences({ page, context }) {
       config: request.properties,
       visitor: (obj) => {
         if (obj._payload !== undefined) {
-          const payloadValue = type.isString(obj._payload)
-            ? obj._payload
-            : type.isObject(obj._payload)
-              ? obj._payload.key || obj._payload.path
-              : null;
-          if (payloadValue) {
-            const topLevelKey = payloadValue.split(/[.[]/)[0];
-            if (topLevelKey && !payloadRefs.has(topLevelKey)) {
-              payloadRefs.set(topLevelKey, obj['~k']);
-            }
+          const topLevelKey = extractOperatorKey({ operatorValue: obj._payload });
+          if (topLevelKey && !payloadRefs.has(topLevelKey)) {
+            payloadRefs.set(topLevelKey, obj['~k']);
           }
         }
       },

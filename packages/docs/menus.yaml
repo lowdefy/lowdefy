@@ -123,6 +123,11 @@
           pageId: secrets
           properties:
             title: Secrets
+        - id: logger
+          type: MenuLink
+          pageId: logger
+          properties:
+            title: Logger
         - id: lists
           type: MenuLink
           pageId: lists

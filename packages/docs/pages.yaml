@@ -19,6 +19,7 @@
 - _ref: concepts/events-and-actions.yaml
 - _ref: concepts/operators.yaml
 - _ref: concepts/secrets.yaml
+- _ref: concepts/logger.yaml
 - _ref: concepts/lists.yaml
 - _ref: concepts/hosting-files.yaml
 - _ref: concepts/custom-html.yaml

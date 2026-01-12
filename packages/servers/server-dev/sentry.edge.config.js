@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
+import * as Sentry from '@sentry/nextjs';
 
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
+// Only initialize if DSN is present
+if (process.env.SENTRY_DSN) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    tracesSampleRate: 0.1,
+  });
 }
-
-export default formatConfigWarning;

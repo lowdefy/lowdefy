@@ -20,16 +20,40 @@ import dynamic from 'next/dynamic';
 import { ErrorBoundary } from '@lowdefy/block-utils';
 
 import Auth from '../lib/client/auth/Auth.js';
+import initSentryClient from '../lib/client/sentry/initSentryClient.js';
+import setSentryUser from '../lib/client/sentry/setSentryUser.js';
+
+let loggerConfig = {};
+try {
+  loggerConfig = require('../build/logger.json');
+} catch {
+  // logger.json may not exist if Sentry is not configured
+}
 
 // Must be in _app due to next specifications.
 import '../build/plugins/styles.less';
+
+// Initialize Sentry client once on module load
+initSentryClient({
+  sentryDsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  sentryConfig: loggerConfig.sentry,
+});
 
 function App({ Component }) {
   const lowdefyRef = useRef({});
   return (
     <ErrorBoundary fullPage>
       <Suspense fallback="">
-        <Auth>{(auth) => <Component auth={auth} lowdefy={lowdefyRef.current} />}</Auth>
+        <Auth>
+          {(auth) => {
+            // Set Sentry user context when auth changes
+            setSentryUser({
+              user: auth.session,
+              sentryConfig: loggerConfig.sentry,
+            });
+            return <Component auth={auth} lowdefy={lowdefyRef.current} />;
+          }}
+        </Auth>
       </Suspense>
     </ErrorBoundary>
   );

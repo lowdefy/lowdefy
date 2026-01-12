@@ -921,6 +921,81 @@ export default {
         type: 'App "pages" should be an array.',
       },
     },
+    logger: {
+      type: 'object',
+      additionalProperties: false,
+      errorMessage: {
+        type: 'App "logger" should be an object.',
+      },
+      properties: {
+        sentry: {
+          type: 'object',
+          additionalProperties: false,
+          errorMessage: {
+            type: 'App "logger.sentry" should be an object.',
+          },
+          properties: {
+            client: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.client" should be a boolean.',
+              },
+            },
+            server: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.server" should be a boolean.',
+              },
+            },
+            tracesSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.tracesSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            replaysSessionSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.replaysSessionSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            replaysOnErrorSampleRate: {
+              type: 'number',
+              minimum: 0,
+              maximum: 1,
+              errorMessage: {
+                type: 'App "logger.sentry.replaysOnErrorSampleRate" should be a number between 0 and 1.',
+              },
+            },
+            feedback: {
+              type: 'boolean',
+              errorMessage: {
+                type: 'App "logger.sentry.feedback" should be a boolean.',
+              },
+            },
+            environment: {
+              type: 'string',
+              errorMessage: {
+                type: 'App "logger.sentry.environment" should be a string.',
+              },
+            },
+            userFields: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+              errorMessage: {
+                type: 'App "logger.sentry.userFields" should be an array of strings.',
+              },
+            },
+          },
+        },
+      },
+    },
   },
   errorMessage: {
     type: 'Lowdefy configuration should be an object.',

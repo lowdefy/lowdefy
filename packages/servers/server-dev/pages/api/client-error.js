@@ -17,6 +17,7 @@
 import { logClientError } from '@lowdefy/api';
 
 import apiWrapper from '../../lib/server/apiWrapper.js';
+import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 
 async function handler({ context, req, res }) {
   if (req.method !== 'POST') {
@@ -30,6 +31,16 @@ async function handler({ context, req, res }) {
     pageId,
     timestamp,
   });
+
+  // Capture client error to Sentry (no-op if Sentry not configured)
+  captureSentryError({
+    error: new Error(message),
+    context: { ...context, pageId },
+    configLocation: response.source
+      ? { source: response.source, config: response.config, link: response.link }
+      : null,
+  });
+
   res.status(200).json(response);
 }
 

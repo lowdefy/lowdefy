@@ -14,10 +14,30 @@
   limitations under the License.
 */
 
-import formatConfigMessage from './formatConfigMessage.js';
+import * as Sentry from '@sentry/nextjs';
 
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
+function captureSentryError({ error, pageId, blockId, configLocation }) {
+  const tags = {};
+  const extra = {};
+
+  // Add Lowdefy-specific context
+  if (pageId) {
+    tags.pageId = pageId;
+  }
+
+  if (blockId) {
+    tags.blockId = blockId;
+  }
+
+  // Add config location context
+  if (configLocation) {
+    extra.configLocation = configLocation;
+  }
+
+  Sentry.captureException(error, {
+    tags,
+    extra,
+  });
 }
 
-export default formatConfigWarning;
+export default captureSentryError;

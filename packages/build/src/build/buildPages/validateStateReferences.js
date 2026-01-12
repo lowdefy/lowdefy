@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import extractOperatorKey from '../../utils/extractOperatorKey.js';
 import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
@@ -35,16 +34,9 @@ function validateStateReferences({ page, context }) {
 
       // Collect _state reference if present
       if (obj._state !== undefined) {
-        const stateValue = type.isString(obj._state)
-          ? obj._state
-          : type.isObject(obj._state)
-            ? obj._state.key || obj._state.path
-            : null;
-        if (stateValue) {
-          const topLevelKey = stateValue.split(/[.[]/)[0];
-          if (topLevelKey && !stateRefs.has(topLevelKey)) {
-            stateRefs.set(topLevelKey, obj['~k']);
-          }
+        const topLevelKey = extractOperatorKey({ operatorValue: obj._state });
+        if (topLevelKey && !stateRefs.has(topLevelKey)) {
+          stateRefs.set(topLevelKey, obj['~k']);
         }
       }
     },
