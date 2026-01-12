@@ -10,10 +10,10 @@ Generate documentation for cross-cutting architectural concerns in the Lowdefy m
 ## Usage
 
 ```
-/lf:docs-architecture build-pipeline
-/lf:docs-architecture request-lifecycle
-/lf:docs-architecture state-management
-/lf:docs-architecture plugin-system
+/l-docs-architecture build-pipeline
+/l-docs-architecture request-lifecycle
+/l-docs-architecture state-management
+/l-docs-architecture plugin-system
 ```
 
 ## Available Topics

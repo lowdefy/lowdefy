@@ -11,16 +11,16 @@ Update cc-docs based on code changes in the Lowdefy monorepo.
 
 ```
 # Based on PR
-/lf:docs-update #123
+/l-docs-update #123
 
 # Based on branch diff from main
-/lf:docs-update feature/new-operator
+/l-docs-update feature/new-operator
 
 # Based on specific changed files
-/lf:docs-update packages/engine/src/state.js
+/l-docs-update packages/engine/src/state.js
 
 # Auto-detect uncommitted changes
-/lf:docs-update
+/l-docs-update
 ```
 
 ## Purpose
@@ -185,7 +185,7 @@ Before finalizing updates, verify:
 
 ## Example Session
 
-**Input:** `/lf:docs-update #456`
+**Input:** `/l-docs-update #456`
 
 **Analysis:**
 ```
