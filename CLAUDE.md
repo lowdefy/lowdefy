@@ -65,11 +65,13 @@ function buildConnections({ components, context }) { /* ... */ }
 function createReadConfigFile({ directories }) { return async function readConfigFile(filename) { /* ... */ }; }
 ```
 
-**Safe iteration with defaults:**
+**Safe iteration with nullish coalescing:**
 ```javascript
-(components.pages || []).forEach((page) => { });
-Object.keys(block.areas || {}).forEach((area) => { });
+(components.pages ?? []).forEach((page) => { });
+Object.keys(block.areas ?? {}).forEach((area) => { });
 ```
+
+Prefer `??` over `||` - it only falls back on `null`/`undefined`, not falsy values like `0` or `''`.
 
 **Build functions mutate and return `components`:**
 ```javascript
@@ -193,7 +195,18 @@ throw new Error(`Operator Error: _if requires boolean test. Received: ${JSON.str
 - Test files: `{name}.test.js` co-located with source
 - Run: `pnpm test` or `pnpm -r --filter=@lowdefy/helpers test`
 - **Do not create tests for blocks** (currently disabled)
-- Use descriptive test names: `test('buildConnections no connections', () => { });`
+
+**Test naming:** Use descriptive names that explain the scenario and expected outcome:
+```javascript
+// Good: Describes what is being tested and the condition
+test('buildConnections throws when connection id is missing', () => { });
+test('buildConnections returns empty array when no connections defined', () => { });
+test('_get returns default value when path does not exist', () => { });
+
+// Avoid: Vague or implementation-focused names
+test('buildConnections no connections', () => { });  // What happens with no connections?
+test('test error', () => { });  // What error? What scenario?
+```
 
 **Dynamic imports for ES module mocking:**
 ```javascript
