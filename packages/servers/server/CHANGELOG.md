@@ -1,5 +1,78 @@
 # @lowdefy/server-enterprise
 
+## 4.5.2
+
+### Patch Changes
+
+- Updated dependencies [d573e8ff8]
+  - @lowdefy/client@4.5.2
+  - @lowdefy/api@4.5.2
+  - @lowdefy/layout@4.5.2
+  - @lowdefy/actions-core@4.5.2
+  - @lowdefy/blocks-antd@4.5.2
+  - @lowdefy/blocks-basic@4.5.2
+  - @lowdefy/blocks-loaders@4.5.2
+  - @lowdefy/blocks-markdown@4.5.2
+  - @lowdefy/connection-axios-http@4.5.2
+  - @lowdefy/connection-mongodb@4.5.2
+  - @lowdefy/operators-js@4.5.2
+  - @lowdefy/operators-nunjucks@4.5.2
+  - @lowdefy/operators-uuid@4.5.2
+  - @lowdefy/plugin-next-auth@4.5.2
+  - @lowdefy/block-utils@4.5.2
+  - @lowdefy/helpers@4.5.2
+  - @lowdefy/node-utils@4.5.2
+
+## 4.5.1
+
+### Patch Changes
+
+- 51f7f9dbe: Use uuid instead of crypto.randomUUID(), update uuid to v13.
+- Updated dependencies [51f7f9dbe]
+  - @lowdefy/operators-uuid@4.5.1
+  - @lowdefy/api@4.5.1
+  - @lowdefy/client@4.5.1
+  - @lowdefy/layout@4.5.1
+  - @lowdefy/actions-core@4.5.1
+  - @lowdefy/blocks-antd@4.5.1
+  - @lowdefy/blocks-basic@4.5.1
+  - @lowdefy/blocks-loaders@4.5.1
+  - @lowdefy/blocks-markdown@4.5.1
+  - @lowdefy/connection-axios-http@4.5.1
+  - @lowdefy/connection-mongodb@4.5.1
+  - @lowdefy/operators-js@4.5.1
+  - @lowdefy/operators-nunjucks@4.5.1
+  - @lowdefy/plugin-next-auth@4.5.1
+  - @lowdefy/block-utils@4.5.1
+  - @lowdefy/helpers@4.5.1
+  - @lowdefy/node-utils@4.5.1
+
+## 4.5.0
+
+### Minor Changes
+
+- abc90f3f7: Change to Apache 2.0 license for all packages. All license checks and restrictions have been removed.
+- 16084c1bd: Adds Lowdefy APIs. Lowdefy APIs allow you to create custom server-side API endpoints within your Lowdefy application. See https://docs.lowdefy.com/lowdefy-api for more info.
+
+### Patch Changes
+
+- Updated dependencies [d9512d9be]
+- Updated dependencies [4f610de5c]
+- Updated dependencies [d6c58fe97]
+- Updated dependencies [b3a2e6662]
+  - @lowdefy/client@4.5.0
+  - @lowdefy/blocks-antd@4.5.0
+  - @lowdefy/api@4.5.0
+  - @lowdefy/operators-js@4.5.0
+  - @lowdefy/layout@4.5.0
+  - @lowdefy/actions-core@4.5.0
+  - @lowdefy/blocks-basic@4.5.0
+  - @lowdefy/blocks-loaders@4.5.0
+  - @lowdefy/plugin-next-auth@4.5.0
+  - @lowdefy/block-utils@4.5.0
+  - @lowdefy/helpers@4.5.0
+  - @lowdefy/node-utils@4.5.0
+
 ## 4.4.0
 
 ### Patch Changes

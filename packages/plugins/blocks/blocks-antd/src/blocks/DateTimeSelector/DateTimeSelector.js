@@ -43,15 +43,14 @@ const DateTimeSelector = ({
         ? 'hour'
         : 'minute';
   const onChange = (newVal) => {
-    methods.setValue(
-      !newVal
-        ? null
-        : moment
-            .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
-            .startOf(timeUnit)
-            .toDate()
-    );
-    methods.triggerEvent({ name: 'onChange' });
+    const val = !newVal
+      ? null
+      : moment
+          .utc(newVal.add(properties.selectUTC ? newVal.utcOffset() : 0, 'minutes'))
+          .startOf(timeUnit)
+          .toDate();
+    methods.setValue(val);
+    methods.triggerEvent({ name: 'onChange', event: { value: val } });
   };
   return (
     <Label

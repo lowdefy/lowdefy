@@ -61,12 +61,11 @@ const ButtonSelector = ({
             size={properties.size}
             buttonStyle={properties.buttonStyle ? properties.buttonStyle : 'solid'}
             onChange={(event) => {
-              methods.setValue(
-                type.isPrimitive(uniqueValueOptions[event.target.value])
-                  ? uniqueValueOptions[event.target.value]
-                  : uniqueValueOptions[event.target.value].value
-              );
-              methods.triggerEvent({ name: 'onChange' });
+              const value = type.isPrimitive(uniqueValueOptions[event.target.value])
+                ? uniqueValueOptions[event.target.value]
+                : uniqueValueOptions[event.target.value].value;
+              methods.setValue(value);
+              methods.triggerEvent({ name: 'onChange', event: { value } });
             }}
             value={type.isNone(value) ? undefined : getValueIndex(value, properties.options || [])}
           >
