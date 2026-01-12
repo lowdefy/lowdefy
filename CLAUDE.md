@@ -59,6 +59,13 @@ When refactoring or simplifying code:
 
 ### Key Patterns
 
+**One function per file** - Each file should export a single function, with the filename matching the function name:
+```
+buildConnections.js  → export default buildConnections
+createCounter.js     → export default createCounter
+validateBlock.js     → export default validateBlock
+```
+
 **Single object parameter with destructuring:**
 ```javascript
 function buildConnections({ components, context }) { /* ... */ }

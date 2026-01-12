@@ -28,8 +28,9 @@ async function getConfigFile({ context, refDef, referencedFrom }) {
   const content = await context.readConfigFile(refDef.path);
 
   if (content === null) {
+    const lineInfo = refDef.lineNumber ? `:${refDef.lineNumber}` : '';
     throw new Error(
-      `Tried to reference file "${refDef.path}" from "${referencedFrom}", but file does not exist.`
+      `Tried to reference file "${refDef.path}" from "${referencedFrom}${lineInfo}", but file does not exist.`
     );
   }
 

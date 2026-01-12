@@ -20,10 +20,15 @@ Update cc-docs based on code changes in the Lowdefy monorepo and extract insight
 
 ### Phase 1: Identify Context
 
-**For PR (recommended):**
+**If a PR number is provided ($ARGUMENTS):**
 ```bash
-gh pr view {number} --json number,title,body,headRefName,baseRefName,url
-gh pr diff {number} --name-only
+gh pr view $ARGUMENTS --json number,title,body,headRefName,baseRefName,url,comments,reviews
+gh pr diff $ARGUMENTS --name-only
+```
+
+**If no PR number (use current branch):**
+```bash
+gh pr view --json number,title,body,headRefName,baseRefName,url,comments,reviews
 ```
 
 **For branch:**
@@ -40,7 +45,16 @@ git diff --name-only
 If no context found, inform user:
 > "No changes detected. Provide a PR number, branch name, or file paths."
 
-### Phase 2: Analyze Session for Insights
+### Phase 2: Fetch Linked Issues (if PR context)
+
+Extract issue references from the PR body (patterns: `#123`, `fixes #123`, `closes #123`, `resolves #123`).
+
+For each linked issue:
+```bash
+gh issue view {ISSUE_NUMBER} --json number,title,body,comments
+```
+
+### Phase 3: Analyze Session for Insights
 
 Review the current conversation and code changes for:
 
@@ -64,7 +78,12 @@ Review the current conversation and code changes for:
 - Data flow through the system
 - External dependencies and their quirks
 
-### Phase 3: Categorize Changes
+**User-Facing Changes**
+- New features that need user documentation
+- Changed behaviors users need to know about
+- New operators, blocks, actions, or connections
+
+### Phase 4: Categorize Changes
 
 Map changes to documentation areas:
 
@@ -78,14 +97,15 @@ Map changes to documentation areas:
 
 Map insights to documentation:
 
-| Insight Type | Target Location |
-|--------------|-----------------|
-| Architecture decisions | `cc-docs/architecture/` |
-| Package internals | `cc-docs/packages/{package}.md` |
-| Plugin details | `cc-docs/plugins/{type}/{name}.md` |
-| Philosophy/principles | `cc-docs/Philosophy.md` |
+| Insight Type | Target Location | When to Update |
+|--------------|-----------------|----------------|
+| Architecture decisions | `cc-docs/architecture/` | New patterns, system design changes |
+| Package internals | `cc-docs/packages/{package}.md` | How a package works internally |
+| Plugin details | `cc-docs/plugins/{type}/{name}.md` | Plugin implementation details |
+| Philosophy/principles | `cc-docs/Philosophy.md` | Core design principles discovered |
+| User features | `packages/docs/` (YAML) | New user-facing functionality |
 
-### Phase 4: Determine What to Update
+### Phase 5: Determine What to Update
 
 **Do update when:**
 - New public exports added
@@ -102,7 +122,7 @@ Map insights to documentation:
 - Internal refactors (same external behavior)
 - Work is incomplete and patterns aren't clear
 
-### Phase 5: Update Documentation
+### Phase 6: Update Documentation
 
 For each doc that needs updating:
 
@@ -124,7 +144,7 @@ For each doc that needs updating:
 - Link to source: `packages/build/src/buildPages.js:45`
 - Avoid speculation - only document what was discovered
 
-### Phase 6: Validate
+### Phase 7: Validate
 
 ```bash
 # Check for broken internal links
@@ -137,16 +157,19 @@ grep -r "\]\(./" cc-docs/ | grep -v "^Binary"
 - External library links are valid
 - Context parameters are complete
 
-### Phase 7: Post PR Comment (if PR context)
+### Phase 8: Post PR Comment (if PR context)
 
 ```bash
 gh pr comment {PR_NUMBER} --body "$(cat <<'EOF'
 ## Documentation Updates
 
-This PR triggered documentation improvements.
+This PR triggered documentation improvements based on session insights.
 
 ### Files Updated
 {list of cc-docs files created/modified}
+
+### Decision Traces Captured
+{If any architectural decisions were documented, summarize them}
 
 ### Insights Captured
 - {insight 1}
@@ -158,7 +181,7 @@ EOF
 )"
 ```
 
-### Phase 8: Report
+### Phase 9: Report
 
 ```markdown
 ## Documentation Update Summary
@@ -171,8 +194,11 @@ EOF
 
 ### Documentation Updates
 
-**Updated:**
+**cc-docs (internal):**
 - `cc-docs/packages/engine.md` - Added new state hook section
+
+**packages/docs (user-facing):**
+- {list of user doc files created/modified, if any}
 
 **Skipped (non-behavioral):**
 - `packages/engine/src/utils.test.js` - Test only
@@ -180,6 +206,9 @@ EOF
 ### Insights Captured
 1. {insight summary}
 2. {insight summary}
+
+### Decision Traces
+- {decision title}: {brief summary}
 ```
 
 ## Constraints
@@ -190,6 +219,7 @@ EOF
 4. **No speculation** - If uncertain, note as "needs investigation"
 5. **Attribution** - Reference the PR/issue that prompted the doc
 6. **Keep cc-docs technical** - For Claude Code, not end users
+7. **Keep packages/docs user-friendly** - For Lowdefy users, not contributors
 
 ## When NOT to Update
 
@@ -205,20 +235,22 @@ Inform user: "No documentation updates needed. {reason}"
 
 ```
 cc-docs/
-├── Overview.md
-├── Philosophy.md
+├── Overview.md              # High-level architecture overview
+├── Philosophy.md            # Design principles and philosophy
 ├── packages/
-│   ├── api.md
-│   ├── build.md
-│   ├── engine.md
+│   ├── api.md               # @lowdefy/api internals
+│   ├── build.md             # @lowdefy/build internals
+│   ├── client.md            # @lowdefy/client internals
+│   ├── engine.md            # @lowdefy/engine internals
 │   └── ...
 ├── plugins/
-│   ├── blocks/
-│   ├── connections/
-│   ├── operators/
-│   └── actions/
+│   ├── blocks/              # Block plugin details
+│   ├── connections/         # Connection plugin details
+│   ├── operators/           # Operator plugin details
+│   └── actions/             # Action plugin details
 └── architecture/
-    ├── build-pipeline.md
-    ├── request-lifecycle.md
-    └── state-management.md
+    ├── build-pipeline.md    # How the build system works
+    ├── request-flow.md      # How requests are processed
+    ├── state-management.md  # How state works in the engine
+    └── ...
 ```

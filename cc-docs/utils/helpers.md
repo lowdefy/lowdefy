@@ -183,7 +183,7 @@ type.enforceType('boolean', 'yes'); // true
 
 ## Serializer
 
-Handle JSON serialization with special types:
+Handle JSON serialization with special types. **IMPORTANT**: Always use the serializer instead of raw `JSON.stringify`/`JSON.parse` when working with Lowdefy config objects to preserve internal metadata.
 
 ```javascript
 import { serializer } from '@lowdefy/helpers';
@@ -215,7 +215,42 @@ const deserialized = serializer.deserialize(serialized);
 | `deserialize(data)` | Restore from JSON-safe object |
 | `serializeToString(data)` | Convert to JSON string |
 | `deserializeFromString(str)` | Parse JSON string |
-| `copy(data)` | Deep copy with type handling |
+| `copy(data, options)` | Deep copy with type handling |
+
+### Internal Property Handling (~r, ~k, ~l)
+
+The serializer specially handles non-enumerable internal properties used throughout Lowdefy:
+
+| Property | Description |
+|----------|-------------|
+| `~r` | Reference ID - tracks which file an object came from |
+| `~k` | Key map ID - links objects to their config location |
+| `~l` | Line number - tracks source line numbers in YAML files |
+
+These properties are:
+- Non-enumerable (hidden from `Object.keys()`, spread operators)
+- Preserved through `serializer.copy()` and `serializer.serialize()`
+- Restored as non-enumerable after `serializer.deserialize()`
+
+**Why this matters:**
+```javascript
+// BAD - loses internal properties like ~l (line numbers)
+const copy = JSON.parse(JSON.stringify(configObject));
+
+// GOOD - preserves all internal properties
+const copy = serializer.copy(configObject);
+```
+
+**Using with custom revivers:**
+```javascript
+// Copy with custom processing while preserving internal properties
+const processed = serializer.copy(data, {
+  reviver: (key, value) => {
+    if (key === 'date') return new Date(value);
+    return value;
+  }
+});
+```
 
 ## Caching
 

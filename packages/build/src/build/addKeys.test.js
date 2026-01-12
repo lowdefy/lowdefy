@@ -48,41 +48,49 @@ test('mutate keyMap and components', async () => {
     2: {
       '~k_parent': '1',
       '~r': '1',
+      '~l': undefined,
       key: 'root',
     },
     3: {
       '~k_parent': '2',
       '~r': '2',
+      '~l': undefined,
       key: 'root.pages[0:A:Box]',
     },
     4: {
       '~k_parent': '3',
       '~r': '3',
+      '~l': undefined,
       key: 'root.pages[0:A:Box].blocks[0:A1:Button]',
     },
     5: {
       '~k_parent': '3',
       '~r': '7',
+      '~l': undefined,
       key: 'root.pages[0:A:Box].blocks[1:A2:Button]',
     },
     6: {
       '~k_parent': '2',
       '~r': '5',
+      '~l': undefined,
       key: 'root.pages[1:B:Box]',
     },
     7: {
       '~k_parent': '6',
       '~r': '4',
+      '~l': undefined,
       key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
     },
     8: {
       '~k_parent': '6',
       '~r': '6',
+      '~l': undefined,
       key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
     },
     9: {
       '~k_parent': '8',
       '~r': '10',
+      '~l': undefined,
       key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
     },
   });
@@ -155,18 +163,25 @@ test('Handle nested arrays', async () => {
   };
   addKeys({ components, context });
   expect(context.keyMap).toEqual({
-    2: { key: 'root', '~r': '1', '~k_parent': '1' },
-    3: { key: 'root.pages[0:A1:Selector]', '~r': '2', '~k_parent': '2' },
-    4: { key: 'root.pages[0:A1:Selector].properties', '~r': '3', '~k_parent': '3' },
-    5: { key: 'root.pages[0:A1:Selector].properties.options[0]', '~r': '4', '~k_parent': '4' },
+    2: { key: 'root', '~r': '1', '~l': undefined, '~k_parent': '1' },
+    3: { key: 'root.pages[0:A1:Selector]', '~r': '2', '~l': undefined, '~k_parent': '2' },
+    4: { key: 'root.pages[0:A1:Selector].properties', '~r': '3', '~l': undefined, '~k_parent': '3' },
+    5: {
+      key: 'root.pages[0:A1:Selector].properties.options[0]',
+      '~r': '4',
+      '~l': undefined,
+      '~k_parent': '4',
+    },
     6: {
       key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
       '~r': '5',
+      '~l': undefined,
       '~k_parent': '5',
     },
     7: {
       key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
       '~r': '6',
+      '~l': undefined,
       '~k_parent': '5',
     },
   });
@@ -189,4 +204,48 @@ test('Handle nested arrays', async () => {
     ],
     '~k': '2',
   });
+});
+
+test('stores line numbers (~l) in keyMap when present on objects', async () => {
+  const context = testContext();
+  const addKeys = (await import('./addKeys.js')).default;
+
+  // Simulate objects with ~l property (as added by parseRefContent)
+  const root = { '~r': '1' };
+  Object.defineProperty(root, '~l', { value: 1, enumerable: false, configurable: true });
+
+  const page = { '~r': '2', id: 'home', type: 'Box' };
+  Object.defineProperty(page, '~l', { value: 3, enumerable: false, configurable: true });
+
+  const block = { '~r': '3', id: 'header', type: 'Title' };
+  Object.defineProperty(block, '~l', { value: 5, enumerable: false, configurable: true });
+
+  const props = { '~r': '4', content: 'Hello' };
+  Object.defineProperty(props, '~l', { value: 6, enumerable: false, configurable: true });
+
+  block.properties = props;
+  page.blocks = [block];
+  root.pages = [page];
+
+  addKeys({ components: root, context });
+
+  // Verify line numbers are stored in keyMap
+  const keyMapValues = Object.values(context.keyMap);
+  const rootEntry = keyMapValues.find((e) => e.key === 'root');
+  const pageEntry = keyMapValues.find((e) => e.key === 'root.pages[0:home:Box]');
+  const blockEntry = keyMapValues.find((e) => e.key === 'root.pages[0:home:Box].blocks[0:header:Title]');
+  const propsEntry = keyMapValues.find((e) =>
+    e.key === 'root.pages[0:home:Box].blocks[0:header:Title].properties'
+  );
+
+  expect(rootEntry['~l']).toBe(1);
+  expect(pageEntry['~l']).toBe(3);
+  expect(blockEntry['~l']).toBe(5);
+  expect(propsEntry['~l']).toBe(6);
+
+  // Verify ~l is removed from components after processing
+  expect(root['~l']).toBeUndefined();
+  expect(page['~l']).toBeUndefined();
+  expect(block['~l']).toBeUndefined();
+  expect(props['~l']).toBeUndefined();
 });

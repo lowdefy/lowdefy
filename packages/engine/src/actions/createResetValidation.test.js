@@ -119,17 +119,17 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: new Error('Your input has 1 validation error.'),
+      index: 0,
     },
     responses: {
       validate: {
-        type: 'Validate',
-        index: 0,
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
         error: new Error('Your input has 1 validation error.'),
+        index: 0,
       },
     },
     success: false,
@@ -164,19 +164,19 @@ test('RestValidation after required field', async () => {
         id: 'validate',
         type: 'Validate',
       },
-      error: {
-        error: new Error('Your input has 1 validation error.'),
-        index: 0,
-        type: 'Validate',
-      },
+      error: new Error('Your input has 1 validation error.'),
+      index: 0,
     },
     event: undefined,
     eventName: 'onClick',
     responses: {
       validate: {
+        action: {
+          id: 'validate',
+          type: 'Validate',
+        },
         error: new Error('Your input has 1 validation error.'),
         index: 0,
-        type: 'Validate',
       },
     },
     startTimestamp: {

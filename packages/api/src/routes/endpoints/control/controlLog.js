@@ -17,19 +17,23 @@
 import { type } from '@lowdefy/helpers';
 
 async function controlLog(context, routineContext, { control }) {
-  const { logger, evaluateOperators } = context;
+  const { endpointId, logger, evaluateOperators } = context;
   const { items } = routineContext;
+  const location = control['~k'] ?? ':log';
 
   logger.debug({ event: 'debug_control_log' });
-  const log = evaluateOperators({ input: control[':log'], items, location: 'TODO:' });
-  const logLevel =
-    evaluateOperators({ input: control[':level'], items, location: 'TODO:' }) ?? 'info';
+  const log = evaluateOperators({ input: control[':log'], items, location });
+  const logLevel = evaluateOperators({ input: control[':level'], items, location }) ?? 'info';
 
   if (!type.isString(logLevel)) {
-    throw new Error(`Unrecognised type for :level. Received ${logLevel}.`);
+    throw new Error(
+      `Invalid :log in endpoint "${endpointId}" - :level must be a string. Received ${JSON.stringify(logLevel)}.`
+    );
   }
   if (!logger[logLevel]) {
-    throw new Error(`Invalid log level for :log. Received ${logLevel}.`);
+    throw new Error(
+      `Invalid :log in endpoint "${endpointId}" - unrecognised log level. Received "${logLevel}".`
+    );
   }
 
   logger[logLevel](log);

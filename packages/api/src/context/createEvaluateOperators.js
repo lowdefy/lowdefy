@@ -19,7 +19,12 @@ function createEvaluateOperators(context) {
       location,
     });
     if (errors.length > 0) {
-      throw new Error(errors[0]);
+      // Preserve the error object with configKey for config tracing
+      const error = errors[0];
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(error);
     }
 
     return output;

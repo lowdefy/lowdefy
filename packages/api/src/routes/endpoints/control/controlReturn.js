@@ -17,7 +17,11 @@
 async function controlReturn(context, routineContext, { control }) {
   const { evaluateOperators } = context;
   const { items } = routineContext;
-  const response = evaluateOperators({ input: control[':return'], items, location: 'TODO' });
+  const response = evaluateOperators({
+    input: control[':return'],
+    items,
+    location: control['~k'] ?? ':return',
+  });
 
   context.logger.debug({
     event: 'debug_control_return',

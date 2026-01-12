@@ -61,6 +61,14 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
         configurable: true,
       });
     }
+    if (newValue['~l']) {
+      Object.defineProperty(newValue, '~l', {
+        value: newValue['~l'],
+        enumerable: true,
+        writable: true,
+        configurable: true,
+      });
+    }
     return newValue;
   }
   if (type.isArray(newValue)) {
@@ -88,6 +96,14 @@ const makeReviver = (customReviver) => (key, value) => {
     if (newValue['~k']) {
       Object.defineProperty(newValue, '~k', {
         value: newValue['~k'],
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
+    if (newValue['~l']) {
+      Object.defineProperty(newValue, '~l', {
+        value: newValue['~l'],
         enumerable: false,
         writable: true,
         configurable: true,

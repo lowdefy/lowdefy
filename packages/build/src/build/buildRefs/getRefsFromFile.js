@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import makeRefDefinition from './makeRefDefinition.js';
 
 function getRefsFromFile(fileContent, parentRefDefId, refMap) {
@@ -21,7 +21,9 @@ function getRefsFromFile(fileContent, parentRefDefId, refMap) {
   const reviver = (key, value) => {
     if (type.isObject(value)) {
       if (!type.isUndefined(value._ref)) {
-        const def = makeRefDefinition(value._ref, parentRefDefId, refMap);
+        // Capture line number from the object containing the _ref
+        const lineNumber = value['~l'];
+        const def = makeRefDefinition(value._ref, parentRefDefId, refMap, lineNumber);
         foundRefs.push(def);
         return {
           _ref: def,
@@ -30,7 +32,8 @@ function getRefsFromFile(fileContent, parentRefDefId, refMap) {
     }
     return value;
   };
-  const fileContentBuiltRefs = JSON.parse(JSON.stringify(fileContent), reviver);
+  // Use serializer.copy to preserve non-enumerable properties like ~l
+  const fileContentBuiltRefs = serializer.copy(fileContent, { reviver });
   return { foundRefs, fileContentBuiltRefs };
 }
 

@@ -15,7 +15,6 @@
 */
 
 function transformer(obj) {
-  // console.log(JSON.stringify(obj, null, 2));
   if (!obj.methods) {
     return obj.page;
   }
@@ -31,7 +30,6 @@ function transformer(obj) {
   });
 
   obj.methods.forEach((method) => {
-    // console.log(method);
     contentArray.push({
       id: `${method.name}_link`,
       type: 'Anchor',
@@ -55,7 +53,6 @@ function transformer(obj) {
 
   // const methodsBlocks = [];
   obj.methods.forEach((method) => {
-    // console.log(method);
     contentArray.push({
       id: `${method.name}_title`,
       type: 'Markdown',

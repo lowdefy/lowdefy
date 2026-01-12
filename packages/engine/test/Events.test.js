@@ -263,17 +263,20 @@ test('triggerEvent error', async () => {
         },
         type: 'Error',
       },
-      error: {
-        error: new Error('Invalid action type "Error" at "button".'),
-        index: 0,
-        type: 'Error',
-      },
+      error: new Error('Invalid action type "Error" at "button".'),
+      index: 0,
     },
     responses: {
       e: {
-        type: 'Error',
-        index: 0,
+        action: {
+          id: 'e',
+          params: {
+            a: 'a',
+          },
+          type: 'Error',
+        },
         error: new Error('Invalid action type "Error" at "button".'),
+        index: 0,
       },
     },
     success: false,

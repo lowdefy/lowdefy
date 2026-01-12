@@ -15,13 +15,36 @@
 */
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
+import { resolveConfigLocation } from '@lowdefy/helpers';
 
-function createCheckDuplicateId({ message }) {
+function createCheckDuplicateId({ message, context }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
-  function checkDuplicateId({ id, blockId, eventId, menuId, pageId }) {
-    if (ids.has(id.toLowerCase()))
-      throw new Error(template({ id, blockId, eventId, menuId, pageId }));
+  function checkDuplicateId({ id, blockId, configKey, eventId, menuId, pageId }) {
+    if (ids.has(id.toLowerCase())) {
+      let errorMessage = template({ id, blockId, eventId, menuId, pageId });
+
+      if (configKey && context) {
+        const location = resolveConfigLocation({
+          configKey,
+          keyMap: context.keyMap,
+          refMap: context.refMap,
+          configDirectory: context.directories.config,
+        });
+
+        if (location) {
+          const source = location.source ? `${location.source} at ${location.config}` : '';
+          const link = location.link || '';
+          errorMessage = `[Config Error] ${errorMessage}\n  ${source}\n  ${link}`;
+        } else {
+          errorMessage = `[Config Error] ${errorMessage}`;
+        }
+      } else {
+        errorMessage = `[Config Error] ${errorMessage}`;
+      }
+
+      throw new Error(errorMessage);
+    }
     ids.add(id.toLowerCase());
   }
   return checkDuplicateId;

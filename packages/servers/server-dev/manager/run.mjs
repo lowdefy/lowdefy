@@ -76,20 +76,10 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
-/* TODO:
-Not killing server on errors properly
-when:
-- initial build fails
-*/
-
 const context = await getContext();
 
 try {
-  try {
-    await context.initialBuild();
-  } catch (error) {
-    context.logger.error(error);
-  }
+  await context.initialBuild();
 
   // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
   // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.

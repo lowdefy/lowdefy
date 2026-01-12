@@ -1,0 +1,366 @@
+# RUNTIME CLIENT ERRORS
+# These errors occur at runtime in the browser during operator parsing.
+# Copy this file to lowdefy.yaml to test client errors.
+# Check browser console (F12) for error messages with config locations.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: header
+        type: Title
+        properties:
+          content: Runtime Client Error Test Page
+
+      - id: description
+        type: Paragraph
+        properties:
+          content: These errors occur at runtime in the browser. Check console (F12) for errors.
+
+      # ========================================================
+      # SECTION A: WORKING EXAMPLES (keep uncommented)
+      # ========================================================
+
+      - id: workingBlock
+        type: Paragraph
+        properties:
+          content:
+            _string.concat:
+              - 'Status: '
+              - 'OK'
+
+      # ========================================================
+      # SECTION B: LOGIC OPERATOR ERRORS
+      # ========================================================
+
+      # B1: _and expects array
+      # --------------------------------------------------------
+      # - id: andTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _and:
+      #         value: true
+
+      # B2: _or expects array
+      # --------------------------------------------------------
+      # - id: orTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _or: not-an-array
+
+      # B3: _if_none expects array of length 2
+      # --------------------------------------------------------
+      # - id: ifNoneError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _if_none:
+      #         - value1
+
+      # ========================================================
+      # SECTION C: MATH OPERATOR ERRORS
+      # ========================================================
+
+      # C1: _sum expects array
+      # --------------------------------------------------------
+      # - id: sumTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _sum: not-an-array
+
+      # C2: _product expects array
+      # --------------------------------------------------------
+      # - id: productTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _product: not-an-array
+
+      # C3: _divide by zero
+      # --------------------------------------------------------
+      # - id: divideByZero
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _divide:
+      #         - 1
+      #         - 0
+
+      # C4: _math.abs expects number
+      # --------------------------------------------------------
+      # - id: mathAbsTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _math.abs: not-a-number
+
+      # ========================================================
+      # SECTION D: STRING OPERATOR ERRORS
+      # ========================================================
+
+      # D1: Invalid string method
+      # --------------------------------------------------------
+      # - id: invalidStringMethod
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _string.nonExistent: hello
+
+      # D2: _string.concat expects array
+      # --------------------------------------------------------
+      # - id: stringConcatError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _string.concat: not-an-array
+
+      # ========================================================
+      # SECTION E: ARRAY OPERATOR ERRORS
+      # ========================================================
+
+      # E1: Invalid array method
+      # --------------------------------------------------------
+      # - id: invalidArrayMethod
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _array.nonExistent:
+      #         - item1
+
+      # E2: _array.length on non-array
+      # --------------------------------------------------------
+      # - id: arrayLengthError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _array.length: not-an-array
+
+      # ========================================================
+      # SECTION F: OBJECT OPERATOR ERRORS
+      # ========================================================
+
+      # F1: Invalid object method
+      # --------------------------------------------------------
+      # - id: invalidObjectMethod
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _object.nonExistent:
+      #         key: value
+
+      # F2: _object.keys on non-object
+      # --------------------------------------------------------
+      # - id: objectKeysError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _object.keys: not-an-object
+
+      # ========================================================
+      # SECTION G: REGEX OPERATOR ERRORS
+      # ========================================================
+
+      # G1: _regex pattern must be string
+      # --------------------------------------------------------
+      # - id: regexPatternError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _regex:
+      #         pattern: 123
+      #         on: test
+
+      # G2: Invalid regex pattern
+      # --------------------------------------------------------
+      # - id: invalidRegexPattern
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _regex:
+      #         pattern: '[invalid'
+      #         on: test
+
+      # ========================================================
+      # SECTION H: TYPE OPERATOR ERRORS
+      # ========================================================
+
+      # H1: _type.type must be string
+      # --------------------------------------------------------
+      # - id: typeTypeError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _type:
+      #         type: 123
+      #         on: value
+
+      # H2: Invalid type name
+      # --------------------------------------------------------
+      # - id: invalidTypeName
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _type:
+      #         type: invalidTypeName
+      #         on: value
+
+      # ========================================================
+      # SECTION I: NESTED OPERATOR ERRORS
+      # ========================================================
+
+      # I1: Error in nested operator chain
+      # --------------------------------------------------------
+      # - id: nestedOperatorError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _string.concat:
+      #         - 'Prefix: '
+      #         - _sum: not-array
+
+      # I2: Deep nested error
+      # --------------------------------------------------------
+      # - id: deepNestedError
+      #   type: Paragraph
+      #   properties:
+      #     content:
+      #       _if:
+      #         test: true
+      #         then:
+      #           _string.concat:
+      #             - 'Value: '
+      #             - _array.length: not-an-array
+      #         else: fallback
+
+      # ========================================================
+      # SECTION J: EXPRESSION CONTEXT ERRORS
+      # ========================================================
+
+      # J1: Style expression error
+      # --------------------------------------------------------
+      # - id: styleError
+      #   type: Paragraph
+      #   properties:
+      #     content: This block has a style error.
+      #   style:
+      #     color:
+      #       _and:
+      #         invalid: params
+
+      # J2: Visible expression error
+      # --------------------------------------------------------
+      # - id: visibleErrorBlock
+      #   type: Paragraph
+      #   visible:
+      #     _or:
+      #       value: true
+      #   properties:
+      #     content: This block has a visible expression error.
+
+      # J3: Required expression error
+      # --------------------------------------------------------
+      # - id: inputWithRequiredError
+      #   type: TextInput
+      #   properties:
+      #     label: Input with required error
+      #   required:
+      #     _and: not-array
+
+      # J4: Multiple errors in one block
+      # --------------------------------------------------------
+      # - id: multipleErrorsBlock
+      #   type: TextInput
+      #   properties:
+      #     label:
+      #       _and: error1
+      #     placeholder:
+      #       _or: error2
+      #   style:
+      #     width:
+      #       _sum: error3
+
+      # ========================================================
+      # SECTION K: ACTION/EVENT ERRORS
+      # ========================================================
+
+      # K1: Throw action error
+      - id: throwErrorButton
+        type: Button
+        properties:
+          title: Throw Action Error
+          type: danger
+        events:
+          onClick:
+            - id: throwAction
+              type: Throw
+              params:
+                throw: true
+                message: Intentional error thrown for testing
+
+      # K2: Operator error in action params
+      - id: actionParamsErrorButton
+        type: Button
+        properties:
+          title: Action Params Error
+          type: danger
+        events:
+          onClick:
+            - id: setStateWithError
+              type: SetState
+              params:
+                errorValue:
+                  _sum: invalid
+
+      # K3: onMount/onInit action error
+      # --------------------------------------------------------
+      # - id: onMountErrorBlock
+      #   type: Box
+      #   events:
+      #     onMount:
+      #       - id: initSetState
+      #         type: SetState
+      #         params:
+      #           initValue:
+      #             _and: not-array
+      #   blocks:
+      #     - id: initErrorContent
+      #       type: Paragraph
+      #       properties:
+      #         content: This block has an onMount error.
+
+      # K4: Try/Catch error handling
+      # --------------------------------------------------------
+      # - id: tryCatchButton
+      #   type: Button
+      #   properties:
+      #     title: Test Try/Catch Error
+      #     type: danger
+      #   events:
+      #     onClick:
+      #       try:
+      #         - id: willFail
+      #           type: Throw
+      #           params:
+      #             throw: true
+      #             message: Primary action failed
+      #       catch:
+      #         - id: handleError
+      #           type: DisplayMessage
+      #           params:
+      #             content: Caught the error!
+      #             status: warning
+
+      # ========================================================
+      # SECTION L: BLOCK-LEVEL ERRORS
+      # ========================================================
+
+      # L1: Throw block - throws error on render
+      - id: throwBlock
+        type: Throw
+        properties:
+          message: Intentional error from Throw block for testing

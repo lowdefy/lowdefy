@@ -37,6 +37,7 @@ function apiWrapper(handler) {
       // Important to give absolute path so Next can trace build files
       rid: uuid(),
       buildDirectory: path.join(process.cwd(), 'build'),
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
       config,
       connections,
       fileCache,
@@ -61,7 +62,7 @@ function apiWrapper(handler) {
       // TODO: Log response time?
       return response;
     } catch (error) {
-      logError({ error, context });
+      await logError({ error, context });
       res.status(500).json({ name: error.name, message: error.message });
     }
   };

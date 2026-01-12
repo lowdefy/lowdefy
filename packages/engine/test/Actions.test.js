@@ -426,7 +426,7 @@ test('action error in error parser', async () => {
       'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
     )
   );
-  expect(res.error.error.error).toEqual(
+  expect(res.error.error).toEqual(
     new Error(
       'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
     )
@@ -539,17 +539,18 @@ test('action throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: new Error('Test error'),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'ActionError',
-        index: 0,
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'ActionError',
+        },
         error: new Error('Test error'),
+        index: 0,
       },
     },
     success: false,
@@ -593,17 +594,18 @@ test('actions after a error are not called throws a error', async () => {
         params: 'params',
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: new Error('Test error'),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'ActionError',
-        index: 0,
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'ActionError',
+        },
         error: new Error('Test error'),
+        index: 0,
       },
     },
     success: false,
@@ -645,17 +647,18 @@ test('Invalid action type', async () => {
         params: 'params',
         type: 'Invalid',
       },
-      error: {
-        error: new Error('Invalid action type "Invalid" at "blockId".'),
-        index: 0,
-        type: 'Invalid',
-      },
+      error: new Error('Invalid action type "Invalid" at "blockId".'),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'Invalid',
-        index: 0,
+        action: {
+          id: 'test',
+          params: 'params',
+          type: 'Invalid',
+        },
         error: new Error('Invalid action type "Invalid" at "blockId".'),
+        index: 0,
       },
     },
     success: false,
@@ -697,21 +700,24 @@ test('Parser error in action', async () => {
         },
         type: 'ActionSync',
       },
-      error: {
-        error: new Error(
-          'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
-        ),
-        index: 0,
-        type: 'ActionSync',
-      },
+      error: new Error(
+        'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
+      ),
+      index: 0,
     },
     responses: {
       test: {
-        type: 'ActionSync',
-        index: 0,
+        action: {
+          id: 'test',
+          params: {
+            _state: [],
+          },
+          type: 'ActionSync',
+        },
         error: new Error(
           'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
         ),
+        index: 0,
       },
     },
     success: false,
@@ -993,11 +999,8 @@ test('Call catchActions when actions throws error', async () => {
         },
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: new Error('Test error'),
+      index: 0,
     },
     event: {},
     eventName: 'eventName',
@@ -1008,9 +1011,15 @@ test('Call catchActions when actions throws error', async () => {
         type: 'ActionAsync',
       },
       try_error: {
+        action: {
+          id: 'try_error',
+          messages: {
+            error: false,
+          },
+          type: 'ActionError',
+        },
         error: new Error('Test error'),
         index: 0,
-        type: 'ActionError',
       },
     },
     startTimestamp: {
@@ -1077,11 +1086,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'ActionError',
       },
-      error: {
-        error: new Error('Test error'),
-        index: 0,
-        type: 'ActionError',
-      },
+      error: new Error('Test error'),
+      index: 0,
     },
     errorCatch: {
       action: {
@@ -1091,11 +1097,8 @@ test('Call catchActions when actions throws error and catchActions throws error'
         },
         type: 'CatchActionError',
       },
-      error: {
-        error: new Error('Test catch error'),
-        index: 1,
-        type: 'CatchActionError',
-      },
+      error: new Error('Test catch error'),
+      index: 1,
     },
     event: {},
     eventName: 'eventName',
@@ -1106,14 +1109,26 @@ test('Call catchActions when actions throws error and catchActions throws error'
         type: 'ActionAsync',
       },
       try_error: {
+        action: {
+          id: 'try_error',
+          messages: {
+            error: false,
+          },
+          type: 'ActionError',
+        },
         error: new Error('Test error'),
         index: 0,
-        type: 'ActionError',
       },
       catch_error: {
+        action: {
+          id: 'catch_error',
+          messages: {
+            error: false,
+          },
+          type: 'CatchActionError',
+        },
         error: new Error('Test catch error'),
         index: 1,
-        type: 'CatchActionError',
       },
     },
     startTimestamp: {
@@ -1239,7 +1254,7 @@ test('call async: true with error', async () => {
         index: 1,
       },
       test1: {
-        type: 'ActionAsyncError',
+        action: { id: 'test1', type: 'ActionAsyncError', async: true, params: { ms: 100 } },
         error: new Error('Test error'),
         index: 0,
       },

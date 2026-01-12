@@ -19,31 +19,50 @@
 import { type } from '@lowdefy/helpers';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+import formatConfigError from '../utils/formatConfigError.js';
 
 function buildConnections({ components, context }) {
+  // Store connection IDs for validation in buildRequests
+  context.connectionIds = new Set();
+
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
+    context,
   });
   if (type.isArray(components.connections)) {
     components.connections.forEach((connection) => {
+      const configKey = connection['~k'];
       if (type.isUndefined(connection.id)) {
-        throw new Error(`Connection id missing.`);
+        throw new Error(
+          formatConfigError({
+            message: 'Connection id missing.',
+            configKey,
+            context,
+          })
+        );
       }
       if (!type.isString(connection.id)) {
         throw new Error(
-          `Connection id is not a string. Received ${JSON.stringify(connection.id)}.`
+          formatConfigError({
+            message: `Connection id is not a string. Received ${JSON.stringify(connection.id)}.`,
+            configKey,
+            context,
+          })
         );
       }
-      checkDuplicateConnectionId({ id: connection.id });
+      checkDuplicateConnectionId({ id: connection.id, configKey });
       if (!type.isString(connection.type)) {
         throw new Error(
-          `Connection type is not a string at connection "${
-            connection.id
-          }". Received ${JSON.stringify(connection.type)}.`
+          formatConfigError({
+            message: `Connection type is not a string at connection "${connection.id}". Received ${JSON.stringify(connection.type)}.`,
+            configKey,
+            context,
+          })
         );
       }
-      context.typeCounters.connections.increment(connection.type);
+      context.typeCounters.connections.increment(connection.type, connection['~k']);
       connection.connectionId = connection.id;
+      context.connectionIds.add(connection.connectionId);
       connection.id = `connection:${connection.id}`;
       countOperators(connection.properties || {}, {
         counter: context.typeCounters.operators.server,
