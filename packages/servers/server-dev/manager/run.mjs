@@ -93,7 +93,13 @@ try {
   }
   await new Promise(() => {});
 } catch (error) {
-  context.logger.error(error);
+  // If error is already formatted (from error collection), just show the message
+  if (error.isFormatted || error.hideStack) {
+    context.logger.error(error.message);
+  } else {
+    // Otherwise, show full error with stack trace
+    context.logger.error(error);
+  }
   context.shutdownServer();
   process.exit();
 }

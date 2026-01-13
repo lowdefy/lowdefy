@@ -75,7 +75,11 @@ async function build(options) {
 
   // Check if there are any collected errors before writing
   if (context.errors.length > 0) {
-    throw new Error(`Build failed with ${context.errors.length} error(s). See above for details.`);
+    const error = new Error(`Build failed with ${context.errors.length} error(s). See above for details.`);
+    // Mark this error as already formatted so stack trace isn't shown
+    error.isFormatted = true;
+    error.hideStack = true;
+    throw error;
   }
 
   // Write steps - only if no errors

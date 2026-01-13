@@ -59,4 +59,12 @@ async function run() {
   });
 }
 
-run();
+run().catch((error) => {
+  // If error is already formatted (from error collection), just show the message
+  if (error.isFormatted || error.hideStack) {
+    console.error(error.message);
+    process.exit(1);
+  }
+  // Otherwise, show full error with stack trace
+  throw error;
+});
