@@ -132,9 +132,8 @@ _ref: maxRecursion1.json`,
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'maxRecursion1.json -> maxRecursion2.json -> maxRecursion1.json'
-  );
+  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion1.json');
+  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion2.json');
 });
 
 test('buildRefs circular reference self-referencing file', async () => {
@@ -152,7 +151,7 @@ _ref: selfRef.yaml`,
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow('selfRef.yaml -> selfRef.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('selfRef.yaml');
 });
 
 test('buildRefs circular reference with longer chain', async () => {
@@ -176,7 +175,9 @@ test('buildRefs circular reference with longer chain', async () => {
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
-  await expect(buildRefs({ context })).rejects.toThrow('a.yaml -> b.yaml -> c.yaml -> a.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('a.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('b.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('c.yaml');
 });
 
 test('load refs to text files', async () => {

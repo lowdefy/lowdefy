@@ -16,6 +16,7 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 import evaluateBuildOperators from './evaluateBuildOperators.js';
+import formatConfigError from '../../utils/formatConfigError.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
@@ -31,17 +32,30 @@ async function recursiveBuild({
   refChainList = [],
 }) {
   // Detect circular references by tracking the chain of files being resolved
+  // Skip circular reference checking for refs without paths (e.g., resolver refs)
   const currentPath = refDef.path;
-  if (refChainSet.has(currentPath)) {
-    const chainDisplay = [...refChainList, currentPath].join(' -> ');
-    throw new Error(`Circular reference detected: ${chainDisplay}`);
+  if (currentPath) {
+    if (refChainSet.has(currentPath)) {
+      const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
+      throw new Error(
+        formatConfigError({
+          message: `Circular reference detected.\nFile "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+          context,
+        })
+      );
+    }
+    refChainSet.add(currentPath);
+    refChainList.push(currentPath);
   }
-  refChainSet.add(currentPath);
-  refChainList.push(currentPath);
 
   // Keep count as a fallback safety limit
   if (count > 10000) {
-    throw new Error(`Maximum recursion depth of references exceeded.`);
+    throw new Error(
+      formatConfigError({
+        message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
+        context,
+      })
+    );
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
@@ -110,8 +124,11 @@ async function recursiveBuild({
     parsedFiles[newRefDef.id] = serializer.copy(withRefKey, { reviver });
   }
   // Backtrack: remove current file from chain so sibling refs can use it
-  refChainSet.delete(currentPath);
-  refChainList.pop();
+  // Only remove if it was added (i.e., if currentPath exists)
+  if (currentPath) {
+    refChainSet.delete(currentPath);
+    refChainList.pop();
+  }
 
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
