@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 /**
  * Resolves a config key (~k) to source and config location.
  *
@@ -57,7 +59,7 @@ function resolveConfigLocation({ configKey, keyMap, refMap, configDirectory }) {
   // Absolute path for clickable links in VSCode terminal
   let link = null;
   if (configDirectory) {
-    const absolutePath = `${configDirectory}/${filePath}`;
+    const absolutePath = path.resolve(configDirectory, filePath);
     link = lineNumber ? `${absolutePath}:${lineNumber}` : absolutePath;
   }
 
