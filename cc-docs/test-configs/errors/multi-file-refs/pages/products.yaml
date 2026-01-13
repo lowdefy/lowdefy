@@ -1,0 +1,38 @@
+# Products page with non-existent connection error
+# Expected error: Request "loadProducts" references non-existent connection "wrongDb"
+# Expected location: pages/products.yaml:XX (this file, not lowdefy.yaml)
+
+id: products
+type: PageHeaderMenu
+
+requests:
+  # ERROR: Connection "wrongDb" doesn't exist (should show pages/products.yaml line number)
+  - id: loadProducts
+    type: MongoDBFindOne
+    connectionId: wrongDb
+    properties:
+      query:
+        id: 1
+
+blocks:
+  - id: content
+    type: Card
+    properties:
+      title: Products Page - Test Non-Existent Connection
+
+    blocks:
+      - id: loadButton
+        type: Button
+        properties:
+          title: Load Products
+        events:
+          onClick:
+            - id: callLoadProducts
+              type: Request
+              params: loadProducts
+
+      - id: result
+        type: Paragraph
+        properties:
+          content:
+            _request: loadProducts

@@ -13,6 +13,18 @@ pnpm dev
 
 ## Test Files
 
+### Multi-File Error Tracing Test
+
+**Location:** `cc-docs/test-configs/errors/multi-file-refs/`
+
+Tests that errors in `_ref` imported files show the **correct source file path** (not the parent file path).
+
+**Issue #1947:** Before the fix, errors in child files showed the parent file path with child file line numbers. For example:
+- ❌ **Before:** `lowdefy.yaml:184` (wrong file, correct line)
+- ✅ **After:** `pages/product-details.yaml:184` (correct file and line)
+
+See `cc-docs/test-configs/errors/multi-file-refs/README.md` for detailed testing instructions.
+
 ### lowdefy-build-errors.yaml
 
 Tests build-time errors that fail the build (prod) or warn (dev). Uncomment one error section at a time.

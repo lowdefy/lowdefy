@@ -94,12 +94,16 @@ async function recursiveBuild({
 
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      Object.defineProperty(value, '~r', {
-        value: refDef.id,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+      // Only set ~r if not already present to preserve original file references from nested imports.
+      // Use child file's ref ID (parsedRefDef.id) not parent's (refDef.id) for correct error tracing.
+      if (value['~r'] === undefined) {
+        Object.defineProperty(value, '~r', {
+          value: parsedRefDef.id,
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
       return value;
     };
     // Use serializer.copy to preserve non-enumerable properties like ~l
