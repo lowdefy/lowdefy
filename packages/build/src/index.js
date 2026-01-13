@@ -18,6 +18,7 @@
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
@@ -55,20 +56,30 @@ import writeTypes from './build/writeTypes.js';
 async function build(options) {
   const context = createContext(options);
   const components = await buildRefs({ context });
-  testSchema({ components, context });
-  buildApp({ components, context });
-  buildLogger({ components, context });
-  validateConfig({ components, context });
-  addDefaultPages({ components, context });
-  addKeys({ components, context });
-  buildAuth({ components, context });
-  buildConnections({ components, context });
-  buildApi({ components, context });
-  buildPages({ components, context });
-  buildMenu({ components, context });
-  buildJs({ components, context });
-  buildTypes({ components, context });
-  buildImports({ components, context });
+
+  // Build steps - collect all errors before stopping
+  tryBuildStep(testSchema, 'testSchema', { components, context });
+  tryBuildStep(buildApp, 'buildApp', { components, context });
+  tryBuildStep(buildLogger, 'buildLogger', { components, context });
+  tryBuildStep(validateConfig, 'validateConfig', { components, context });
+  tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
+  tryBuildStep(addKeys, 'addKeys', { components, context });
+  tryBuildStep(buildAuth, 'buildAuth', { components, context });
+  tryBuildStep(buildConnections, 'buildConnections', { components, context });
+  tryBuildStep(buildApi, 'buildApi', { components, context });
+  tryBuildStep(buildPages, 'buildPages', { components, context });
+  tryBuildStep(buildMenu, 'buildMenu', { components, context });
+  tryBuildStep(buildJs, 'buildJs', { components, context });
+  tryBuildStep(buildTypes, 'buildTypes', { components, context });
+  tryBuildStep(buildImports, 'buildImports', { components, context });
+
+  // Check if there are any collected errors before writing
+  if (context.errors.length > 0) {
+    context.logger.error(`\nBuild failed with ${context.errors.length} error(s):\n`);
+    throw new Error(`Build failed with ${context.errors.length} error(s). See above for details.`);
+  }
+
+  // Write steps - only if no errors
   await cleanBuildDirectory({ context });
   await writeApp({ components, context });
   await writeAuth({ components, context });

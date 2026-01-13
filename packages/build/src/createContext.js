@@ -27,6 +27,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   const context = {
     connectionIds: new Set(),
     directories,
+    errors: [],
     jsMap: {},
     keyMap: {},
     logger,
