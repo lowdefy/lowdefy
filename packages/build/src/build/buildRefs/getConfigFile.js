@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 async function getConfigFile({ context, refDef, referencedFrom }) {
@@ -28,10 +29,26 @@ async function getConfigFile({ context, refDef, referencedFrom }) {
   const content = await context.readConfigFile(refDef.path);
 
   if (content === null) {
+    // Build helpful error message with resolved path information
     const lineInfo = refDef.lineNumber ? `:${refDef.lineNumber}` : '';
-    throw new Error(
-      `Tried to reference file "${refDef.path}" from "${referencedFrom}${lineInfo}", but file does not exist.`
-    );
+    const absolutePath = path.resolve(context.directories.config, refDef.path);
+
+    let message = `[Config Error] Referenced file does not exist: "${refDef.path}"\n`;
+    message += `  Referenced from: ${referencedFrom}${lineInfo}\n`;
+    message += `  Resolved to: ${absolutePath}\n`;
+
+    // Help with common mistakes
+    if (refDef.path.startsWith('../')) {
+      const suggestedPath = refDef.path.replace(/^(\.\.\/)+/, '');
+      message += `\n  Tip: Paths in _ref are resolved from your config directory root.`;
+      message += `\n  Did you mean: "${suggestedPath}"?`;
+    } else if (refDef.path.startsWith('./')) {
+      const suggestedPath = refDef.path.substring(2);
+      message += `\n  Tip: Remove the "./" prefix - paths are resolved from config root.`;
+      message += `\n  Did you mean: "${suggestedPath}"?`;
+    }
+
+    throw new Error(message);
   }
 
   return content;

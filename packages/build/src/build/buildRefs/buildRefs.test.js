@@ -110,7 +110,7 @@ doesNotExist:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
-    'Tried to reference file "doesNotExist" from "lowdefy.yaml:3", but file does not exist.'
+    'Referenced file does not exist: "doesNotExist"'
   );
 });
 
@@ -278,7 +278,7 @@ invalid:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
-    'Tried to reference file "no_file.yaml" from "lowdefy.yaml:3", but file does not exist.'
+    'Referenced file does not exist: "no_file.yaml"'
   );
 });
 
