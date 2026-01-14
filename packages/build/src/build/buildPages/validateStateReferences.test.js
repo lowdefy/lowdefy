@@ -235,3 +235,196 @@ test('validateStateReferences deduplicates warnings for same key', () => {
   expect(mockLogWarn).toHaveBeenCalledTimes(1);
   expect(mockLogWarn.mock.calls[0][0]).toContain('_state references "missing"');
 });
+
+test('validateStateReferences allows state keys set by SetState in page events', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    events: {
+      onMount: [
+        {
+          id: 'initialize',
+          type: 'SetState',
+          params: {
+            selector_options: [
+              { label: 'Option 1', value: 'opt1' },
+              { label: 'Option 2', value: 'opt2' },
+            ],
+          },
+        },
+      ],
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'mySelector',
+            type: 'Selector',
+            properties: {
+              options: {
+                _state: 'selector_options',
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateStateReferences allows state keys set by SetState in block events', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'button',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'setData',
+                  type: 'SetState',
+                  params: {
+                    clickData: { clicked: true },
+                  },
+                },
+              ],
+            },
+          },
+          {
+            blockId: 'display',
+            type: 'Paragraph',
+            properties: {
+              content: {
+                _state: 'clickData.clicked',
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateStateReferences handles SetState with nested path keys', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    events: {
+      onMount: [
+        {
+          id: 'setNested',
+          type: 'SetState',
+          params: {
+            'user.profile.name': 'John',
+          },
+        },
+      ],
+    },
+    properties: {
+      title: {
+        _state: 'user.profile.name',
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateStateReferences handles SetState with array bracket notation', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    events: {
+      onMount: [
+        {
+          id: 'setArray',
+          type: 'SetState',
+          params: {
+            'items[0].value': 'first',
+          },
+        },
+      ],
+    },
+    properties: {
+      content: {
+        _state: 'items[0].value',
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateStateReferences allows both input blocks and SetState keys', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    events: {
+      onMount: [
+        {
+          id: 'setDefaults',
+          type: 'SetState',
+          params: {
+            config: { theme: 'dark' },
+          },
+        },
+      ],
+    },
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'username',
+            type: 'TextInput',
+          },
+        ],
+      },
+    },
+    properties: {
+      field1: { _state: 'username' },
+      field2: { _state: 'config.theme' },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('validateStateReferences still warns for truly undefined keys with SetState present', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    events: {
+      onMount: [
+        {
+          id: 'setData',
+          type: 'SetState',
+          params: {
+            validKey: 'value',
+          },
+        },
+      ],
+    },
+    properties: {
+      title: {
+        _state: 'typoKey',
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).toHaveBeenCalledTimes(1);
+  expect(mockLogWarn.mock.calls[0][0]).toContain('_state references "typoKey"');
+});
