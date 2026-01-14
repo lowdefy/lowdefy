@@ -19,9 +19,10 @@ import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 function validateStateReferences({ page, context }) {
-  // Single traversal collects both blockIds and _state references
+  // Single traversal collects blockIds, _state references, and SetState keys
   // More memory-efficient than stringify+regex for massive pages
   const blockIds = new Set();
+  const setStateKeys = new Set();
   const stateRefs = new Map(); // topLevelKey -> configKey (first occurrence)
 
   traverseConfig({
@@ -30,6 +31,14 @@ function validateStateReferences({ page, context }) {
       // Collect blockId if present
       if (obj.blockId) {
         blockIds.add(obj.blockId);
+      }
+
+      // Collect SetState action params to track state keys being initialized
+      if (obj.type === 'SetState' && obj.params) {
+        Object.keys(obj.params).forEach((key) => {
+          const topLevelKey = key.split(/[.\[]/)[0];
+          setStateKeys.add(topLevelKey);
+        });
       }
 
       // Collect _state reference if present
@@ -44,7 +53,8 @@ function validateStateReferences({ page, context }) {
 
   // Filter to only undefined references and warn
   stateRefs.forEach((configKey, topLevelKey) => {
-    if (blockIds.has(topLevelKey)) return;
+    // Skip if state key is from an input block or SetState action
+    if (blockIds.has(topLevelKey) || setStateKeys.has(topLevelKey)) return;
 
     const message =
       `_state references "${topLevelKey}" on page "${page.pageId}", ` +
