@@ -16,6 +16,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 import { BuildParser } from '@lowdefy/operators';
+import collectConfigError from '../../utils/collectConfigError.js';
 
 async function evaluateStaticOperators({ components, context }) {
   // Build dynamic operator registry for O(1) lookups
@@ -49,7 +50,10 @@ async function evaluateStaticOperators({ components, context }) {
             });
           }
         } catch (error) {
-          await context.logger.warn(`Failed to load operator ${opName}: ${error.message}`);
+          collectConfigError({
+            message: `Failed to load operator ${opName}: ${error.message}`,
+            context,
+          });
         }
       }
     })
@@ -112,7 +116,10 @@ async function evaluateStaticOperators({ components, context }) {
 
         if (errors.length > 0) {
           errors.forEach((error) => {
-            context.logger.warn(`Static operator evaluation error at ${location}: ${error.message}`);
+            collectConfigError({
+              message: `Static operator evaluation error at ${location}: ${error.message}`,
+              context,
+            });
           });
           return value;
         }
