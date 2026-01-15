@@ -124,7 +124,9 @@ Map insights to documentation:
 
 ### Phase 6: Update Documentation
 
-For each doc that needs updating:
+**Step 6A: Update cc-docs (Internal Documentation)**
+
+For each cc-doc that needs updating:
 
 1. **Read existing doc completely**
 2. **Read changed source files**
@@ -137,12 +139,36 @@ For each doc that needs updating:
 4. **Preserve existing content** - only update affected sections
 5. **Update frontmatter** `updated:` date
 
+**Step 6B: Update packages/docs (User-Facing Documentation) - REQUIRED**
+
+**CRITICAL: Always check if user documentation is needed!** After updating cc-docs, determine if users need to know about the changes:
+
+**When to update user docs:**
+- New configuration properties (operators, blocks, actions, connections)
+- Changed behavior in existing features
+- New examples or use cases
+- Breaking changes or deprecations
+
+**User documentation structure:**
+- `packages/docs/` contains YAML files that define the Lowdefy documentation site itself
+- Each concept/feature has its own YAML file (e.g., `operators.yaml`, `blocks.yaml`)
+- Documentation follows the same Lowdefy config structure (pages, blocks, properties)
+
+**Steps to update user docs:**
+1. Search `packages/docs/` for related topics using `grep -r "topic" packages/docs/`
+2. Read the existing YAML documentation file
+3. Add new sections, properties, or examples following existing patterns
+4. Include practical examples that users can copy
+5. Link to related documentation using Link blocks
+6. Test that YAML is valid
+
 **Documentation principles:**
 - Clarity over brevity
 - Include the "why", not just the "what"
 - Use real examples from the PR when possible
-- Link to source: `packages/build/src/buildPages.js:45`
+- Link to source: `packages/build/src/buildPages.js:45` (cc-docs only)
 - Avoid speculation - only document what was discovered
+- User docs must be beginner-friendly - no internal implementation details
 
 ### Phase 7: Validate
 

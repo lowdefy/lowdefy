@@ -334,6 +334,60 @@ await wait(1000);  // Wait 1 second
 
 - `lodash.merge` (4.6.2)
 
+## Config Location Resolution
+
+### resolveConfigLocation({ configKey, keyMap, refMap, configDirectory })
+
+Resolves a `~k` (configKey) to human-readable location with file path and line number. Used by error formatting utilities to provide precise error locations.
+
+```javascript
+import { resolveConfigLocation } from '@lowdefy/helpers';
+
+const location = resolveConfigLocation({
+  configKey: 'abc123',
+  keyMap: context.keyMap,
+  refMap: context.refMap,
+  configDirectory: '/Users/dev/myapp',
+});
+// Returns:
+// {
+//   source: 'pages/home.yaml:15',                    // file:line
+//   config: 'pages.0.blocks.0',                      // config path
+//   link: '/Users/dev/myapp/pages/home.yaml:15'      // absolute path with line
+// }
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `configKey` | string | The `~k` value from a config object |
+| `keyMap` | object | Maps keys to config locations (from `keyMap.json`) |
+| `refMap` | object | Maps ref IDs to source files (from `refMap.json`) |
+| `configDirectory` | string | Absolute path to config root |
+
+**Returns:** Object with `source`, `config`, and `link` properties, or `null` if location cannot be resolved.
+
+**Usage in Error Formatting:**
+
+```javascript
+import formatConfigError from './formatConfigError.js';
+
+throw new Error(
+  formatConfigError({
+    message: 'Block type "Buton" not found.',
+    configKey: block['~k'],
+    context,
+  })
+);
+// Output:
+// [Config Error] Block type "Buton" not found.
+//   pages/home.yaml:15 at pages.0.blocks.0.type
+//   /Users/dev/myapp/pages/home.yaml:15
+```
+
+See [Error Tracing System](../architecture/error-tracing.md) for complete documentation.
+
 ## Key Files
 
 | File | Purpose |
@@ -342,5 +396,6 @@ await wait(1000);  // Wait 1 second
 | `src/set.js` | Deep property assignment |
 | `src/type.js` | Type checking module |
 | `src/serializer.js` | Serialization utilities |
+| `src/resolveConfigLocation.js` | Config location resolver for error tracing |
 | `src/mergeObjects.js` | Object merging |
 | `src/LRUCache.js` | LRU cache implementation |

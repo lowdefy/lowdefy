@@ -105,3 +105,24 @@ test('formatConfigWarning includes source file info', () => {
   expect(result).toContain('[Config Warning] Step reference not found');
   expect(result).toContain('api/endpoints.yaml:42');
 });
+
+test('suppresses warning when object has ~throw: false', () => {
+  const result = formatConfigWarning({
+    message: '_state reference not found',
+    configKey: 'key-123',
+    context: {
+      keyMap: {
+        'key-123': {
+          key: 'blocks.0.properties',
+          '~r': 'ref-1',
+          '~l': 15,
+          '~throw': false,
+        },
+      },
+      refMap: { 'ref-1': { path: 'pages/home.yaml' } },
+      directories: { config: '/app' },
+    },
+  });
+
+  expect(result).toBe('');
+});

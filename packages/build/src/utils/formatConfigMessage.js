@@ -16,7 +16,22 @@
 
 import { resolveConfigLocation } from '@lowdefy/helpers';
 
+function shouldSuppressError({ configKey, keyMap }) {
+  if (!configKey || !keyMap || !keyMap[configKey]) {
+    return false;
+  }
+
+  const keyMapEntry = keyMap[configKey];
+  // Check if the ~throw property is explicitly false
+  return keyMapEntry['~throw'] === false;
+}
+
 function formatConfigMessage({ prefix, message, configKey, context }) {
+  // Check for ~throw: false suppression
+  if (shouldSuppressError({ configKey, keyMap: context?.keyMap })) {
+    return ''; // Silent suppression - return empty string
+  }
+
   if (!configKey || !context) {
     return `${prefix} ${message}`;
   }

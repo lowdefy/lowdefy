@@ -28,6 +28,10 @@ import formatConfigError from './formatConfigError.js';
 function collectConfigError({ message, configKey, context }) {
   const errorMessage = formatConfigError({ message, configKey, context });
 
+  if (!errorMessage) {
+    return; // Suppressed - don't collect or log
+  }
+
   if (!context.errors) {
     // If no error collection array, throw immediately (fallback for tests)
     throw new Error(errorMessage);
