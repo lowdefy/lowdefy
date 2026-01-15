@@ -487,12 +487,11 @@ test('if condition is true with no else', async () => {
   expect(res.response).toEqual(undefined);
 });
 
-// TODO: NOt catching err in test
 test('missing :then', async () => {
   const routine = {
     ':if': true,
   };
   const { res } = await runTest({ routine });
   expect(res.status).toBe('error');
-  expect(res.error.message).toEqual('Invalid :if - missing :then.');
+  expect(res.error.message).toEqual('Invalid :if in endpoint "endpointId" - missing :then.');
 });

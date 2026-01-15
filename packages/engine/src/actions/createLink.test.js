@@ -153,15 +153,18 @@ test('Link error', async () => {
         },
         type: 'Link',
       },
-      error: {
-        error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
-        index: 0,
-        type: 'Link',
-      },
+      error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'Link',
+        action: {
+          id: 'a',
+          params: {
+            invalid: true,
+          },
+          type: 'Link',
+        },
         error: new Error('Invalid Link, check action params. Received "{"invalid":true}".'),
         index: 0,
       },

@@ -17,23 +17,32 @@
 /* eslint-disable max-classes-per-file */
 
 class ConfigurationError extends Error {
-  constructor(message) {
+  constructor(message, { configKey } = {}) {
     super(message);
     this.name = 'ConfigurationError';
+    if (configKey) {
+      this.configKey = configKey;
+    }
   }
 }
 
 class RequestError extends Error {
-  constructor(message) {
+  constructor(message, { configKey } = {}) {
     super(message);
     this.name = 'RequestError';
+    if (configKey) {
+      this.configKey = configKey;
+    }
   }
 }
 
 class ServerError extends Error {
-  constructor(message) {
+  constructor(message, { configKey } = {}) {
     super(message);
     this.name = 'ServerError';
+    if (configKey) {
+      this.configKey = configKey;
+    }
   }
 }
 

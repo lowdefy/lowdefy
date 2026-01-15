@@ -16,8 +16,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { type, resolveConfigLocation } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
+import formatConfigError from '../utils/formatConfigError.js';
 
 function buildDefaultMenu({ components, context }) {
   context.logger.warn('No menus found. Building default menu.');
@@ -39,9 +40,17 @@ function buildDefaultMenu({ components, context }) {
   return menus;
 }
 
-function loopItems({ parent, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId }) {
+function loopItems({
+  parent,
+  menuId,
+  pages,
+  missingPageWarnings,
+  checkDuplicateMenuItemId,
+  context,
+}) {
   if (type.isArray(parent.links)) {
     parent.links.forEach((menuItem) => {
+      const configKey = menuItem['~k'];
       if (menuItem.type === 'MenuLink') {
         if (type.isString(menuItem.pageId)) {
           const page = pages.find((pg) => pg.pageId === menuItem.pageId);
@@ -49,6 +58,7 @@ function loopItems({ parent, menuId, pages, missingPageWarnings, checkDuplicateM
             missingPageWarnings.push({
               menuItemId: menuItem.id,
               pageId: menuItem.pageId,
+              configKey,
             });
             // remove menuItem from menu
             menuItem.remove = true;
@@ -63,10 +73,17 @@ function loopItems({ parent, menuId, pages, missingPageWarnings, checkDuplicateM
       if (menuItem.type === 'MenuGroup') {
         menuItem.auth = { public: true };
       }
-      checkDuplicateMenuItemId({ id: menuItem.id, menuId });
+      checkDuplicateMenuItemId({ id: menuItem.id, menuId, configKey });
       menuItem.menuItemId = menuItem.id;
       menuItem.id = `menuitem:${menuId}:${menuItem.id}`;
-      loopItems({ parent: menuItem, menuId, pages, missingPageWarnings, checkDuplicateMenuItemId });
+      loopItems({
+        parent: menuItem,
+        menuId,
+        pages,
+        missingPageWarnings,
+        checkDuplicateMenuItemId,
+        context,
+      });
     });
     parent.links = parent.links.filter((item) => item.remove !== true);
   }
@@ -78,19 +95,36 @@ function buildMenu({ components, context }) {
     components.menus = buildDefaultMenu({ components, context });
   }
   const missingPageWarnings = [];
-  const checkDuplicateMenuId = createCheckDuplicateId({ message: 'Duplicate menuId "{{ id }}".' });
+  const checkDuplicateMenuId = createCheckDuplicateId({
+    message: 'Duplicate menuId "{{ id }}".',
+    context,
+  });
   components.menus.forEach((menu) => {
+    const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      throw new Error(`Menu id missing.`);
+      throw new Error(
+        formatConfigError({
+          message: 'Menu id missing.',
+          configKey,
+          context,
+        })
+      );
     }
     if (!type.isString(menu.id)) {
-      throw new Error(`Menu id is not a string. Received ${JSON.stringify(menu.id)}.`);
+      throw new Error(
+        formatConfigError({
+          message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
+          configKey,
+          context,
+        })
+      );
     }
-    checkDuplicateMenuId({ id: menu.id });
+    checkDuplicateMenuId({ id: menu.id, configKey });
     menu.menuId = menu.id;
     menu.id = `menu:${menu.id}`;
     const checkDuplicateMenuItemId = createCheckDuplicateId({
       message: 'Duplicate menuItemId "{{ id }}" on menu "{{ menuId }}".',
+      context,
     });
     loopItems({
       parent: menu,
@@ -98,12 +132,20 @@ function buildMenu({ components, context }) {
       pages,
       missingPageWarnings,
       checkDuplicateMenuItemId,
+      context,
     });
   });
-  missingPageWarnings.map(async (warning) => {
-    context.logger.warn(
-      `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`
-    );
+  missingPageWarnings.forEach((warning) => {
+    const location = resolveConfigLocation({
+      configKey: warning.configKey,
+      keyMap: context.keyMap,
+      refMap: context.refMap,
+      configDirectory: context.directories.config,
+    });
+    const source = location?.source ? `${location.source} at ${location.config}` : '';
+    const link = location?.link || '';
+    const message = `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`;
+    context.logger.warn(`[Config Error] ${message}\n  ${source}\n  ${link}`);
   });
   return components;
 }

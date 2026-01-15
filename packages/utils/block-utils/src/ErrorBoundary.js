@@ -31,6 +31,16 @@ class ErrorBoundary extends Component {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error) {
+    const { configKey, onError } = this.props;
+    if (configKey && !error.configKey) {
+      error.configKey = configKey;
+    }
+    if (onError) {
+      onError(error);
+    }
+  }
+
   render() {
     const { children, description, fallback, fullPage, message, name } = this.props;
     const { hasError, error } = this.state;

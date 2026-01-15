@@ -545,3 +545,62 @@ test('deserialize with ~k and ~r value first', () => {
     y: new Date(0),
   });
 });
+
+test('deserialize with ~l values', () => {
+  let object = {
+    x: 1,
+    '~l': 42,
+  };
+  let res = serializer.deserialize(object);
+  expect(res).toEqual({
+    x: 1,
+  });
+  expect(res['~l']).toEqual(42);
+  expect(Object.keys(res)).toEqual(['x']);
+});
+
+test('serialize with ~l values', () => {
+  let object = {
+    x: 1,
+  };
+  Object.defineProperty(object, '~l', {
+    value: 42,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  let res = serializer.serialize(object);
+  expect(res).toEqual({
+    x: 1,
+    '~l': 42,
+  });
+});
+
+test('copy preserves non-enumerable ~l values', () => {
+  let object = {
+    x: 1,
+    nested: { y: 2 },
+  };
+  Object.defineProperty(object, '~l', {
+    value: 10,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object.nested, '~l', {
+    value: 20,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  let res = serializer.copy(object);
+
+  // Values are preserved
+  expect(res['~l']).toEqual(10);
+  expect(res.nested['~l']).toEqual(20);
+
+  // But they're non-enumerable
+  expect(Object.keys(res)).toEqual(['x', 'nested']);
+  expect(Object.keys(res.nested)).toEqual(['y']);
+});

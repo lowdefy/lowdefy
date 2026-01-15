@@ -13,19 +13,49 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import evaluateBuildOperators from './evaluateBuildOperators.js';
+import formatConfigError from '../../utils/formatConfigError.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
 import populateRefs from './populateRefs.js';
 import runTransformer from './runTransformer.js';
 
-async function recursiveBuild({ context, refDef, count, referencedFrom }) {
-  // TODO: Maybe it would be better to detect a cycle, since this is the real issue here?
+async function recursiveBuild({
+  context,
+  refDef,
+  count,
+  referencedFrom,
+  refChainSet = new Set(),
+  refChainList = [],
+}) {
+  // Detect circular references by tracking the chain of files being resolved
+  // Skip circular reference checking for refs without paths (e.g., resolver refs)
+  const currentPath = refDef.path;
+  if (currentPath) {
+    if (refChainSet.has(currentPath)) {
+      const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
+      throw new Error(
+        formatConfigError({
+          message: `Circular reference detected.\nFile "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+          context,
+        })
+      );
+    }
+    refChainSet.add(currentPath);
+    refChainList.push(currentPath);
+  }
+
+  // Keep count as a fallback safety limit
   if (count > 10000) {
-    throw new Error(`Maximum recursion depth of references exceeded.`);
+    throw new Error(
+      formatConfigError({
+        message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
+        context,
+      })
+    );
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(
@@ -54,6 +84,8 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
       refDef: parsedRefDef,
       count: count + 1,
       referencedFrom: refDef.path,
+      refChainSet,
+      refChainList,
     });
 
     const transformedFile = await runTransformer({
@@ -76,16 +108,28 @@ async function recursiveBuild({ context, refDef, count, referencedFrom }) {
 
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
-      Object.defineProperty(value, '~r', {
-        value: refDef.id,
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+      // Only set ~r if not already present to preserve original file references from nested imports.
+      // Use child file's ref ID (parsedRefDef.id) not parent's (refDef.id) for correct error tracing.
+      if (value['~r'] === undefined) {
+        Object.defineProperty(value, '~r', {
+          value: parsedRefDef.id,
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
       return value;
     };
-    parsedFiles[newRefDef.id] = JSON.parse(JSON.stringify(withRefKey), reviver);
+    // Use serializer.copy to preserve non-enumerable properties like ~l
+    parsedFiles[newRefDef.id] = serializer.copy(withRefKey, { reviver });
   }
+  // Backtrack: remove current file from chain so sibling refs can use it
+  // Only remove if it was added (i.e., if currentPath exists)
+  if (currentPath) {
+    refChainSet.delete(currentPath);
+    refChainList.pop();
+  }
+
   return populateRefs({
     toPopulate: fileContentBuiltRefs,
     parsedFiles,

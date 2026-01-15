@@ -26,7 +26,6 @@ async function request({ url, method = 'GET', body }) {
     return null;
   }
   if (!res.ok) {
-    // TODO: check
     const body = await res.json();
     console.log(res);
     console.log(body);

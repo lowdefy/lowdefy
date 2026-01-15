@@ -110,11 +110,11 @@ doesNotExist:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
-    'Tried to reference file "doesNotExist" from "lowdefy.yaml", but file does not exist.'
+    'Referenced file does not exist: "doesNotExist"'
   );
 });
 
-test('buildRefs max recursion depth', async () => {
+test('buildRefs circular reference detection', async () => {
   const files = [
     {
       path: 'lowdefy.yaml',
@@ -131,10 +131,53 @@ _ref: maxRecursion1.json`,
     },
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
-  await expect(buildRefs({ context })).rejects.toThrow();
-  await expect(buildRefs({ context })).rejects.toThrow(
-    'Maximum recursion depth of references exceeded.'
-  );
+  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
+  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion1.json');
+  await expect(buildRefs({ context })).rejects.toThrow('maxRecursion2.json');
+});
+
+test('buildRefs circular reference self-referencing file', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `
+_ref: selfRef.yaml`,
+    },
+    {
+      path: 'selfRef.yaml',
+      content: `nested:
+  _ref: selfRef.yaml`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
+  await expect(buildRefs({ context })).rejects.toThrow('selfRef.yaml');
+});
+
+test('buildRefs circular reference with longer chain', async () => {
+  const files = [
+    {
+      path: 'lowdefy.yaml',
+      content: `_ref: a.yaml`,
+    },
+    {
+      path: 'a.yaml',
+      content: `ref: { "_ref": "b.yaml" }`,
+    },
+    {
+      path: 'b.yaml',
+      content: `ref: { "_ref": "c.yaml" }`,
+    },
+    {
+      path: 'c.yaml',
+      content: `ref: { "_ref": "a.yaml" }`,
+    },
+  ];
+  mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
+  await expect(buildRefs({ context })).rejects.toThrow('Circular reference detected');
+  await expect(buildRefs({ context })).rejects.toThrow('a.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('b.yaml');
+  await expect(buildRefs({ context })).rejects.toThrow('c.yaml');
 });
 
 test('load refs to text files', async () => {
@@ -235,7 +278,7 @@ invalid:
   ];
   mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
   await expect(buildRefs({ context })).rejects.toThrow(
-    'Tried to reference file "no_file.yaml" from "lowdefy.yaml", but file does not exist.'
+    'Referenced file does not exist: "no_file.yaml"'
   );
 });
 

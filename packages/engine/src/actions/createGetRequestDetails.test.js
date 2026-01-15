@@ -239,13 +239,10 @@ test('getRequestDetails params is none', async () => {
     endTimestamp: { date: 0 },
     error: {
       action: { id: 'b', type: 'Action' },
-      error: {
-        error: new Error(
-          'Method Error: getRequestDetails params must be of type string, integer, boolean or object. Received: undefined at button.'
-        ),
-        index: 1,
-        type: 'Action',
-      },
+      error: new Error(
+        'Method Error: getRequestDetails params must be of type string, integer, boolean or object. Received: undefined at button.'
+      ),
+      index: 1,
     },
     event: undefined,
     eventName: 'onClick',
@@ -256,11 +253,11 @@ test('getRequestDetails params is none', async () => {
         type: 'Request',
       },
       b: {
+        action: { id: 'b', type: 'Action' },
         error: new Error(
           'Method Error: getRequestDetails params must be of type string, integer, boolean or object. Received: undefined at button.'
         ),
         index: 1,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },
@@ -445,13 +442,10 @@ test('getRequestDetails params.key is not string or int', async () => {
         },
         type: 'Action',
       },
-      error: {
-        error: new Error(
-          'Method Error: getRequestDetails params.key must be of type string or integer. Received: {"key":{}} at button.'
-        ),
-        index: 1,
-        type: 'Action',
-      },
+      error: new Error(
+        'Method Error: getRequestDetails params.key must be of type string or integer. Received: {"key":{}} at button.'
+      ),
+      index: 1,
     },
     responses: {
       a: {
@@ -460,11 +454,17 @@ test('getRequestDetails params.key is not string or int', async () => {
         type: 'Request',
       },
       b: {
+        action: {
+          id: 'b',
+          params: {
+            key: {},
+          },
+          type: 'Action',
+        },
         error: new Error(
           'Method Error: getRequestDetails params.key must be of type string or integer. Received: {"key":{}} at button.'
         ),
         index: 1,
-        type: 'Action',
       },
     },
     startTimestamp: { date: 0 },

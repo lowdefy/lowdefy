@@ -20,7 +20,7 @@ import buildAuth from '../buildAuth/buildAuth.js';
 import buildPages from './buildPages.js';
 import createContext from '../../createContext.js';
 
-function buildTestPage({ pageConfig }) {
+function buildTestPage({ pageConfig, connectionIds = [] }) {
   const context = createContext({
     customTypesMap: {},
     directories: {},
@@ -31,6 +31,14 @@ function buildTestPage({ pageConfig }) {
       error: () => {},
     },
     stage: 'test',
+  });
+  // Add any connectionIds from test config to allow validation to pass
+  connectionIds.forEach((id) => context.connectionIds.add(id));
+  // Also extract connectionIds from requests in the pageConfig
+  (pageConfig.requests || []).forEach((request) => {
+    if (request.connectionId) {
+      context.connectionIds.add(request.connectionId);
+    }
   });
   const components = {
     pages: [pageConfig],

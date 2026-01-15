@@ -19,10 +19,11 @@ import { get } from '@lowdefy/helpers';
 import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
-function makeRefDefinition(refDefinition, parent, refMap) {
+function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
   const id = makeId();
   const refDef = {
     parent,
+    lineNumber,
   };
   refMap[id] = refDef;
   return {

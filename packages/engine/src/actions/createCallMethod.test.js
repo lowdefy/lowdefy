@@ -230,21 +230,26 @@ test('CallMethod with args not an array', async () => {
         },
         type: 'CallMethod',
       },
-      error: {
-        error: new Error(
-          'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
-        ),
-        index: 0,
-        type: 'CallMethod',
-      },
+      error: new Error(
+        'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
+      ),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'CallMethod',
-        index: 0,
+        action: {
+          id: 'a',
+          params: {
+            args: 'arg',
+            blockId: 'textInput',
+            method: 'blockMethod',
+          },
+          type: 'CallMethod',
+        },
         error: new Error(
           'Failed to call method "blockMethod" on block "textInput": "args" should be an array. Received "{"blockId":"textInput","method":"blockMethod","args":"arg"}".'
         ),
+        index: 0,
       },
     },
     success: false,
@@ -497,21 +502,25 @@ test('CallMethod with method does not exist', async () => {
         },
         type: 'CallMethod',
       },
-      error: {
-        error: new Error(
-          'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
-        ),
-        index: 0,
-        type: 'CallMethod',
-      },
+      error: new Error(
+        'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
+      ),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'CallMethod',
-        index: 0,
+        action: {
+          id: 'a',
+          params: {
+            blockId: 'textInput',
+            method: 'no-method',
+          },
+          type: 'CallMethod',
+        },
         error: new Error(
           'Failed to call method "no-method" on block "textInput". Check if "no-method" is a valid block method for block "textInput". Received "{"blockId":"textInput","method":"no-method"}".'
         ),
+        index: 0,
       },
     },
     success: false,

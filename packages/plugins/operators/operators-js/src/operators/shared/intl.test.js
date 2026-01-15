@@ -22,6 +22,7 @@ describe('_intl.dateTimeFormat', () => {
       intl({
         params: {
           on: new Date(1560414023345),
+          locale: 'en-US',
         },
         location: 'locationId',
         methodName,
@@ -45,6 +46,7 @@ describe('_intl.dateTimeFormat', () => {
       intl({
         params: {
           on: new Date(1560414023345),
+          locale: 'en-US',
           options: { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' },
         },
         location: 'locationId',
@@ -61,6 +63,7 @@ describe('_intl.listFormat', () => {
       intl({
         params: {
           on: ['Motorcycle', 'Bus', 'Car'],
+          locale: 'en-US',
         },
         location: 'locationId',
         methodName,
@@ -100,6 +103,7 @@ describe('_intl.listFormat', () => {
       intl({
         params: {
           on: ['Motorcycle', 'Bus', 'Car'],
+          locale: 'en-US',
         },
         location: 'locationId',
         methodName,
@@ -139,6 +143,7 @@ describe('_intl.numberFormat', () => {
       intl({
         params: {
           on: 13182375813.47422,
+          locale: 'en-US',
         },
         location: 'locationId',
         methodName,
@@ -162,6 +167,7 @@ describe('_intl.numberFormat', () => {
       intl({
         params: {
           on: 13182375813.47422,
+          locale: 'en-US',
           options: { style: 'unit', unit: 'mile-per-hour' },
         },
         location: 'locationId',

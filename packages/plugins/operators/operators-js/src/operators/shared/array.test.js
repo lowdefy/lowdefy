@@ -237,7 +237,7 @@ describe('_array.every', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.every - 1 is not a function Received: {\\"_array.every\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.every - number 1 is not a function Received: {\\"_array.every\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -374,7 +374,7 @@ describe('_array.filter', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.filter - 1 is not a function Received: {\\"_array.filter\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.filter - number 1 is not a function Received: {\\"_array.filter\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -448,7 +448,7 @@ describe('_array.find', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.find - 1 is not a function Received: {\\"_array.find\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.find - number 1 is not a function Received: {\\"_array.find\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -522,7 +522,7 @@ describe('_array.findIndex', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.findIndex - 1 is not a function Received: {\\"_array.findIndex\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.findIndex - number 1 is not a function Received: {\\"_array.findIndex\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -932,7 +932,7 @@ describe('_array.map', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.map - 1 is not a function Received: {\\"_array.map\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.map - number 1 is not a function Received: {\\"_array.map\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -1030,7 +1030,7 @@ describe('_array.reduce', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.reduce - 1 is not a function Received: {\\"_array.reduce\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.reduce - number 1 is not a function Received: {\\"_array.reduce\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -1123,7 +1123,7 @@ describe('_array.reduceRight', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.reduceRight - 1 is not a function Received: {\\"_array.reduceRight\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.reduceRight - number 1 is not a function Received: {\\"_array.reduceRight\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({
@@ -1381,7 +1381,7 @@ describe('_array.some', () => {
         location,
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Operator Error: _array.some - 1 is not a function Received: {\\"_array.some\\":{\\"on\\":[],\\"callback\\":1}} at location."`
+      `"Operator Error: _array.some - number 1 is not a function Received: {\\"_array.some\\":{\\"on\\":[],\\"callback\\":1}} at location."`
     );
     expect(() =>
       _array({

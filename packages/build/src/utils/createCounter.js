@@ -16,10 +16,15 @@
 
 function createCounter() {
   const counts = new Map();
+  const locations = new Map();
 
-  function increment(key) {
+  function increment(key, configKey) {
     const count = counts.get(key) || 0;
     counts.set(key, count + 1);
+    // Store first occurrence location for error reporting
+    if (configKey && !locations.has(key)) {
+      locations.set(key, configKey);
+    }
   }
 
   function getCount(key) {
@@ -30,10 +35,20 @@ function createCounter() {
     return Object.fromEntries(counts);
   }
 
+  function getLocation(key) {
+    return locations.get(key) || null;
+  }
+
+  function getLocations() {
+    return Object.fromEntries(locations);
+  }
+
   return {
     increment,
     getCount,
     getCounts,
+    getLocation,
+    getLocations,
   };
 }
 

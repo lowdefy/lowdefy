@@ -1,0 +1,30 @@
+# Home page with undefined request reference error
+# Expected error: Request "fetchData" not defined on page "home"
+# Expected location: pages/home.yaml:15 (this file, not lowdefy.yaml)
+
+id: home
+type: PageHeaderMenu
+
+blocks:
+  - id: content
+    type: Card
+    properties:
+      title: Home Page - Test Undefined Request
+
+    blocks:
+      - id: loadButton
+        type: Button
+        properties:
+          title: Load Data
+        events:
+          onClick:
+            # ERROR: This request doesn't exist (should show pages/home.yaml line number)
+            - id: callFetchData
+              type: Request
+              params: fetchData
+
+      - id: result
+        type: Paragraph
+        properties:
+          content:
+            _state: result

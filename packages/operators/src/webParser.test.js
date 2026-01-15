@@ -315,3 +315,41 @@ test('operator errors', () => {
   expect(res.output).toEqual({ a: null });
   expect(res.errors).toEqual([new Error('Test error.')]);
 });
+
+test('operator errors include configKey from ~k', () => {
+  const input = { a: { _error: { params: true }, '~k': 'config-key-123' } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'config-key-123',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new WebParser({ context, operators });
+  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0].configKey).toBe('config-key-123');
+});
+
+test('operator errors preserve existing configKey', () => {
+  const errorWithConfigKey = new Error('Pre-configured error');
+  errorWithConfigKey.configKey = 'existing-key';
+  const operatorsWithPreConfiguredError = {
+    ...operators,
+    _errorWithKey: jest.fn(() => {
+      throw errorWithConfigKey;
+    }),
+  };
+  const input = { a: { _errorWithKey: { params: true } } };
+  Object.defineProperty(input.a, '~k', {
+    value: 'new-key',
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  const parser = new WebParser({ context, operators: operatorsWithPreConfiguredError });
+  const res = parser.parse({ actions, args, arrayIndices, event, input, location });
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].configKey).toBe('existing-key'); // Should preserve existing key
+});

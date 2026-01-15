@@ -14,21 +14,71 @@
   limitations under the License.
 */
 
-function logError({ context, error }) {
-  try {
-    const { user = {} } = context;
+import { resolveConfigLocation } from '@lowdefy/helpers';
 
-    context.logger.error({
-      err: error,
-      user: {
-        id: user.id,
-        roles: user.roles,
-        sub: user.sub,
-        session_id: user.session_id,
+import captureSentryError from '../sentry/captureSentryError.js';
+
+async function resolveErrorConfigLocation(context, error) {
+  if (!error.configKey) {
+    return null;
+  }
+  try {
+    const [keyMap, refMap] = await Promise.all([
+      context.readConfigFile('keyMap.json'),
+      context.readConfigFile('refMap.json'),
+    ]);
+    const location = resolveConfigLocation({
+      configKey: error.configKey,
+      keyMap,
+      refMap,
+      configDirectory: context.configDirectory,
+    });
+    return location || null;
+  } catch {
+    return null;
+  }
+}
+
+async function logError({ context, error }) {
+  try {
+    const message = error?.message || 'Unknown error';
+    const isServiceError = error?.isServiceError === true;
+
+    // For service errors, don't resolve config location (not a config issue)
+    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
+
+    // Human-readable console output (single log entry)
+    const errorType = isServiceError ? 'Service Error' : 'Config Error';
+    const source = location?.source ? `${location.source} at ${location.config}` : '';
+    const link = location?.link || '';
+
+    if (isServiceError) {
+      console.error(`[${errorType}] ${message}`);
+    } else {
+      console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
+    }
+
+    // Structured logging
+    context.logger.error(
+      {
+        event: isServiceError ? 'service_error' : 'config_error',
+        errorName: error?.name || 'Error',
+        errorMessage: message,
+        isServiceError,
+        pageId: context.pageId || null,
+        timestamp: new Date().toISOString(),
+        source: location?.source || null,
+        config: location?.config || null,
+        link: location?.link || null,
       },
-      url: context.req.url,
-      method: context.req.method,
-      resolvedUrl: context.nextContext?.resolvedUrl,
+      message
+    );
+
+    // Capture error to Sentry (no-op if Sentry not configured)
+    captureSentryError({
+      error,
+      context,
+      configLocation: location,
     });
   } catch (e) {
     console.error(error);

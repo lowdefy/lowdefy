@@ -16,49 +16,105 @@
 
 import { type } from '@lowdefy/helpers';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
+import formatConfigError from '../../../utils/formatConfigError.js';
 
-function checkAction(action, { blockId, checkDuplicateActionId, eventId, pageId, typeCounters }) {
+function checkAction(
+  action,
+  {
+    blockId,
+    checkDuplicateActionId,
+    context,
+    eventId,
+    linkActionRefs,
+    pageId,
+    requestActionRefs,
+    typeCounters,
+  }
+) {
+  const configKey = action['~k'];
   if (type.isUndefined(action.id)) {
     throw new Error(
-      `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`
+      formatConfigError({
+        message: `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+        configKey,
+        context,
+      })
     );
   }
   if (!type.isString(action.id)) {
     throw new Error(
-      `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
-        action.id
-      )}.`
+      formatConfigError({
+        message: `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.id)}.`,
+        configKey,
+        context,
+      })
     );
   }
   checkDuplicateActionId({
     id: action.id,
+    configKey,
     eventId,
     blockId,
     pageId,
   });
   if (!type.isString(action.type)) {
     throw new Error(
-      `Action type is not a string on action "${
-        action.id
-      }" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
-        action.type
-      )}.`
+      formatConfigError({
+        message: `Action type is not a string on action "${action.id}" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.type)}.`,
+        configKey,
+        context,
+      })
     );
   }
-  typeCounters.actions.increment(action.type);
+  typeCounters.actions.increment(action.type, configKey);
+
+  // Collect static Request action references for validation
+  if (action.type === 'Request' && !type.isNone(action.params)) {
+    const params = action.params;
+    if (type.isString(params)) {
+      requestActionRefs.push({ requestId: params, action, blockId, eventId });
+    } else if (type.isArray(params)) {
+      params.forEach((param) => {
+        if (type.isString(param)) {
+          requestActionRefs.push({ requestId: param, action, blockId, eventId });
+        }
+      });
+    }
+  }
+
+  // Collect static Link action references for validation
+  if (action.type === 'Link' && !type.isNone(action.params)) {
+    const params = action.params;
+    // Link params can be a string (pageId) or object with pageId property
+    if (type.isString(params)) {
+      linkActionRefs.push({ pageId: params, action, blockId, eventId, sourcePageId: pageId });
+    } else if (type.isObject(params) && type.isString(params.pageId)) {
+      linkActionRefs.push({
+        pageId: params.pageId,
+        action,
+        blockId,
+        eventId,
+        sourcePageId: pageId,
+      });
+    }
+  }
 }
 
 function buildEvents(block, pageContext) {
+  const { context } = pageContext;
   if (block.events) {
     Object.keys(block.events).map((key) => {
+      const eventConfigKey = block.events[key]?.['~k'] || block['~k'];
       if (
         (!type.isArray(block.events[key]) && !type.isObject(block.events[key])) ||
         (type.isObject(block.events[key]) && type.isNone(block.events[key].try))
       ) {
         throw new Error(
-          `Actions must be an array at "${block.blockId}" in event "${key}" on page "${
-            pageContext.pageId
-          }". Received ${JSON.stringify(block.events[key].try)}`
+          formatConfigError({
+            message: `Actions must be an array at "${block.blockId}" in event "${key}" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key]?.try)}`,
+            configKey: eventConfigKey,
+            context,
+          })
         );
       }
       if (type.isArray(block.events[key])) {
@@ -69,9 +125,11 @@ function buildEvents(block, pageContext) {
       }
       if (!type.isArray(block.events[key].try)) {
         throw new Error(
-          `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${
-            pageContext.pageId
-          }". Received ${JSON.stringify(block.events[key].try)}`
+          formatConfigError({
+            message: `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].try)}`,
+            configKey: eventConfigKey,
+            context,
+          })
         );
       }
       if (type.isNone(block.events[key].catch)) {
@@ -79,21 +137,27 @@ function buildEvents(block, pageContext) {
       }
       if (!type.isArray(block.events[key].catch)) {
         throw new Error(
-          `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${
-            pageContext.pageId
-          }". Received ${JSON.stringify(block.events[key].catch)}`
+          formatConfigError({
+            message: `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].catch)}`,
+            configKey: eventConfigKey,
+            context,
+          })
         );
       }
       const checkDuplicateActionId = createCheckDuplicateId({
         message:
           'Duplicate actionId "{{ id }}" on event "{{ eventId }}" on block "{{ blockId }}" on page "{{ pageId }}".',
+        context,
       });
       block.events[key].try.map((action) =>
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          context,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
+          linkActionRefs: pageContext.linkActionRefs,
+          requestActionRefs: pageContext.requestActionRefs,
           checkDuplicateActionId,
         })
       );
@@ -101,8 +165,11 @@ function buildEvents(block, pageContext) {
         checkAction(action, {
           eventId: key,
           blockId: block.blockId,
+          context,
           typeCounters: pageContext.typeCounters,
           pageId: pageContext.pageId,
+          linkActionRefs: pageContext.linkActionRefs,
+          requestActionRefs: pageContext.requestActionRefs,
           checkDuplicateActionId,
         })
       );

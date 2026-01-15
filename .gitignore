@@ -5,7 +5,6 @@
 **/.lowdefy/*
 **/.next/*
 **/.env
-**/lowdefy.yaml
 
 .turbo
 

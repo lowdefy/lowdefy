@@ -30,7 +30,7 @@ async function installServer({ context, directory }) {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error('Dependency installation failed.');
   }
   context.print.log('Dependencies install successfully.');

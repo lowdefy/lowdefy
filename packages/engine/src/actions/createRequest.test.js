@@ -405,17 +405,18 @@ test('Request call request error', async () => {
         params: 'req_error',
         type: 'Request',
       },
-      error: {
-        error: new Error('Request error'),
-        index: 0,
-        type: 'Request',
-      },
+      error: new Error('Request error'),
+      index: 0,
     },
     responses: {
       a: {
-        type: 'Request',
-        index: 0,
+        action: {
+          id: 'a',
+          params: 'req_error',
+          type: 'Request',
+        },
         error: new Error('Request error'),
+        index: 0,
       },
     },
     success: false,
