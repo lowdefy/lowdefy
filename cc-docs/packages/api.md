@@ -195,3 +195,63 @@ Three error types for different scenarios:
 | `ConfigurationError` | Invalid config (wrong schema, missing connection) |
 | `RequestError` | Expected errors (validation failed, unauthorized) |
 | `ServerError` | Unexpected errors (connection failed, bug) |
+
+### Error Classes with Config Tracing
+
+All error classes support optional `configKey` parameter for build artifact tracing:
+
+```javascript
+import { ConfigurationError, RequestError, ServerError } from '@lowdefy/api';
+
+// Throw error with config location tracking
+throw new ConfigurationError({
+  message: 'Connection "mongoDB" not found',
+  configKey: request['~k'],  // Links error to source YAML location
+});
+
+// Error without location (still valid)
+throw new ServerError({ message: 'Database connection failed' });
+```
+
+**Implementation:** `packages/api/src/context/errors.js`
+
+The error classes accept an options object:
+- `message` (string, required): Error message
+- `configKey` (string, optional): The `~k` value for error tracing
+
+When errors reach the client or logs, the `configKey` can be resolved to show file:line location using `resolveConfigLocation` from `@lowdefy/helpers`.
+
+### Client Error Logging
+
+Client-side errors are sent to the server for centralized logging via the `logClientError` route.
+
+**Client-side usage:**
+
+```javascript
+// In blocks or client code
+try {
+  // ... code that might error
+} catch (error) {
+  // Error automatically includes configKey if thrown from block with ~k
+  throw error;
+}
+```
+
+**Server route:** `packages/api/src/routes/log/logClientError.js`
+
+Processes client errors and:
+1. Extracts `configKey` from error
+2. Resolves location using `resolveConfigLocation`
+3. Formats error with file:line information
+4. Logs to console with structured data
+5. Optionally sends to Sentry with config context
+
+**Output format:**
+
+```
+[Config Error] Block type "Buton" not found
+  pages/home.yaml:15 at root.pages[0:home].blocks[0:header]
+  /Users/dev/app/pages/home.yaml:15
+```
+
+See [Error Tracing System](../architecture/error-tracing.md) for complete documentation.
