@@ -105,3 +105,67 @@ test('formatConfigError includes source file info', () => {
   expect(result).toContain('[Config Error] Connection not found');
   expect(result).toContain('connections/mongodb.yaml:3');
 });
+
+test('suppresses error when object has ~throw: false', () => {
+  const result = formatConfigError({
+    message: 'Block type not found',
+    configKey: 'key-123',
+    context: {
+      keyMap: {
+        'key-123': {
+          key: 'blocks.0',
+          '~r': 'ref-1',
+          '~l': 10,
+          '~throw': false,
+        },
+      },
+      refMap: { 'ref-1': { path: 'pages/home.yaml' } },
+      directories: { config: '/app' },
+    },
+  });
+
+  expect(result).toBe('');
+});
+
+test('shows error when object has ~throw: true', () => {
+  const result = formatConfigError({
+    message: 'Block type not found',
+    configKey: 'key-123',
+    context: {
+      keyMap: {
+        'key-123': {
+          key: 'blocks.0',
+          '~r': 'ref-1',
+          '~l': 10,
+          '~throw': true, // Explicitly true - should NOT suppress
+        },
+      },
+      refMap: { 'ref-1': { path: 'pages/home.yaml' } },
+      directories: { config: '/app' },
+    },
+  });
+
+  expect(result).toContain('[Config Error]');
+  expect(result).toContain('Block type not found');
+});
+
+test('shows error when ~throw property not present', () => {
+  const result = formatConfigError({
+    message: 'Block type not found',
+    configKey: 'key-123',
+    context: {
+      keyMap: {
+        'key-123': {
+          key: 'blocks.0',
+          '~r': 'ref-1',
+          '~l': 10,
+          // No ~throw property - should validate normally
+        },
+      },
+      refMap: { 'ref-1': { path: 'pages/home.yaml' } },
+      directories: { config: '/app' },
+    },
+  });
+
+  expect(result).toContain('[Config Error]');
+});

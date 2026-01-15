@@ -229,6 +229,33 @@ _ref:
                   path: pages/page1.yaml
                   transformer: transformers/addFooter.js
             ```
+
+            ## Suppressing Build Validation with ~throw
+
+            The `~throw: false` property suppresses build-time validation errors for references that only exist at runtime, such as state registered dynamically by custom blocks.
+
+            ### Example
+
+            Custom blocks can register state at runtime using `methods.registerEvent`. Since this state doesn't exist during build, you can suppress the validation warning:
+
+            ###### pages/custom-feature.yaml
+            ```yaml
+            blocks:
+              - id: custom_block
+                type: CustomBlock
+                properties:
+                  onClick:
+                    _state: dynamicState  # Created by block at runtime
+                    ~throw: false         # Suppress build validation
+            ```
+
+            Without `~throw: false`, the build would fail with:
+            ```
+            [Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
+            ```
+
+            > **Note:** `~throw: false` only affects build-time validation. Runtime errors still occur if references don't exist. Only use this for references you know will exist at runtime.
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:

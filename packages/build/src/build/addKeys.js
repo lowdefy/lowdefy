@@ -56,6 +56,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
     key,
     '~r': object['~r'],
     '~l': object['~l'],
+    '~throw': object['~throw'],
     '~k_parent': parentKeyMapId,
   };
   Object.defineProperty(object, '~k', {
@@ -66,6 +67,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
   });
   delete object['~r'];
   delete object['~l'];
+  delete object['~throw'];
   Object.keys(object).forEach((nextKey) => {
     if (type.isObject(object[nextKey])) {
       recAddKeys({
