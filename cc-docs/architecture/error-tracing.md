@@ -169,6 +169,48 @@ Validates block, operator, request, and action types with suggestions:
 | `validateLinkReferences`    | `Link` action references pageIds       | `Link action references page "homePage" but page does not exist`         |
 | `validateRequestReferences` | `Request` action references requestIds | `Request "getData" not defined on page "home"`                           |
 
+#### Skip Condition Handling
+
+**`validateRequestReferences`** intelligently skips validation for conditionally-executed actions.
+
+**Rule:** Validation is skipped when an action has a `skip` property that is:
+
+- `skip: true` (explicitly skipped)
+- `skip: { operator }` (any operator object, e.g., `{ _eq: [...] }`)
+
+**Validation runs normally when:**
+
+- `skip: false` (explicitly enabled)
+- `skip: undefined` (property not set)
+- No `skip` property present
+
+**Rationale:** When a Request action has a skip condition, the request may only be defined in certain app contexts. Validating these would create false positives.
+
+**Example:** Multi-app monorepo where some requests only exist in specific apps:
+
+```yaml
+events:
+  onClick:
+    - id: fetch_companies
+      type: Request
+      skip:
+        _eq:
+          - _ref: { path: app_config.yaml, key: app_name }
+          - support
+      params: contact_companies_search # Only exists in non-support apps
+```
+
+In this case, `contact_companies_search` may not be defined on the current page (because it's only used in other apps), but validation is skipped because the action has a conditional `skip`.
+
+**Implementation:** `packages/build/src/build/buildPages/validateRequestReferences.js:26-28`
+
+```javascript
+// Skip validation if action has skip condition (true or operator object)
+if (action.skip === true || type.isObject(action.skip)) {
+  return;
+}
+```
+
 ### Circular Reference Detection (`recursiveBuild.js`)
 
 Detects circular `_ref` imports using Set-based cycle detection:

@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import formatConfigError from '../../utils/formatConfigError.js';
 
 function validateRequestReferences({ requestActionRefs, requests, pageId, context }) {
   const requestIds = new Set(requests.map((req) => req.requestId));
 
   requestActionRefs.forEach(({ requestId, action }) => {
+    // Skip validation if action has skip condition (true or operator object)
+    if (action.skip === true || type.isObject(action.skip)) {
+      return;
+    }
+
     if (!requestIds.has(requestId)) {
       const errorMessage = formatConfigError({
         message: `Request "${requestId}" not defined on page "${pageId}".`,
