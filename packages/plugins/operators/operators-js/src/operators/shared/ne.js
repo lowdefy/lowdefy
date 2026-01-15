@@ -34,4 +34,6 @@ function _ne({ params, location }) {
   return params[0] !== params[1];
 }
 
+_ne.dynamic = false;
+
 export default _ne;

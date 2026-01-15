@@ -34,4 +34,6 @@ function _lt({ params, location }) {
   return params[0] < params[1];
 }
 
+_lt.dynamic = false;
+
 export default _lt;

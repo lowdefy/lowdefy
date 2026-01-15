@@ -25,7 +25,7 @@ const prep = (args) => {
 };
 
 const meta = {
-  concat: { prep, validTypes: ['array'] },
+  concat: { prep, validTypes: ['array'] , dynamic: false},
   copyWithin: {
     namedArgs: ['on', 'target', 'start', 'end'],
     prep,
@@ -56,11 +56,11 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
-  flat: { namedArgs: ['on', 'depth'], prep, validTypes: ['array', 'object'] },
-  includes: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
-  indexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
-  join: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] },
-  lastIndexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
+  flat: { namedArgs: ['on', 'depth'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  includes: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  indexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  join: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  lastIndexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] , dynamic: false},
   map: {
     namedArgs: ['on', 'callback'],
     prep,
@@ -76,14 +76,14 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
-  reverse: { prep, validTypes: ['array', 'null'], singleArg: true },
-  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
+  reverse: { prep, validTypes: ['array', 'null'], singleArg: true , dynamic: false},
+  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] , dynamic: false},
   some: {
     namedArgs: ['on', 'callback'],
     prep,
     validTypes: ['array', 'object'],
   },
-  sort: { namedArgs: ['on'], prep, validTypes: ['array'] },
+  sort: { namedArgs: ['on'], prep, validTypes: ['array'] , dynamic: false},
   splice: {
     namedArgs: ['on', 'start', 'deleteCount'],
     spreadArgs: 'insert',
@@ -91,7 +91,7 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
-  length: { validTypes: ['array', 'null'], prep, property: true },
+  length: { validTypes: ['array', 'null'], prep, property: true , dynamic: false},
   // some,
   // forEach,
   // pop: { namedArgs: ['on'] },
@@ -111,5 +111,7 @@ function _array({ params, location, methodName }) {
     instanceType: 'array',
   });
 }
+
+_array.dynamic = false;
 
 export default _array;

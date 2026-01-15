@@ -26,4 +26,6 @@ function _input({ arrayIndices, input, location, params }) {
   });
 }
 
+_input.dynamic = true;
+
 export default _input;

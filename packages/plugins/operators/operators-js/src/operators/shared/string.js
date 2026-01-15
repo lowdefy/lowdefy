@@ -35,16 +35,16 @@ const prep = (args) => {
 };
 
 const meta = {
-  charAt: { namedArgs: ['on', 'index'], prep, validTypes: ['array', 'object'] },
+  charAt: { namedArgs: ['on', 'index'], prep, validTypes: ['array', 'object'] , dynamic: false},
   // 'charCodeAt',
-  concat: { prep, validTypes: ['array'] },
-  endsWith: { namedArgs: ['on', 'searchString', 'length'], prep, validTypes: ['array', 'object'] },
+  concat: { prep, validTypes: ['array'] , dynamic: false},
+  endsWith: { namedArgs: ['on', 'searchString', 'length'], prep, validTypes: ['array', 'object'] , dynamic: false},
   includes: {
     namedArgs: ['on', 'searchString', 'position'],
     prep,
     validTypes: ['array', 'object'],
   },
-  indexOf: { namedArgs: ['on', 'searchValue', 'fromIndex'], prep, validTypes: ['array', 'object'] },
+  indexOf: { namedArgs: ['on', 'searchValue', 'fromIndex'], prep, validTypes: ['array', 'object'] , dynamic: false},
   lastIndexOf: {
     namedArgs: ['on', 'searchValue', 'fromIndex'],
     prep,
@@ -57,14 +57,14 @@ const meta = {
     validTypes: ['array', 'object'],
   },
   // 'matchAll',
-  normalize: { namedArgs: ['on', 'form'], prep, validTypes: ['array', 'object'] },
-  padEnd: { namedArgs: ['on', 'targetLength', 'padString'], prep, validTypes: ['array', 'object'] },
+  normalize: { namedArgs: ['on', 'form'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  padEnd: { namedArgs: ['on', 'targetLength', 'padString'], prep, validTypes: ['array', 'object'] , dynamic: false},
   padStart: {
     namedArgs: ['on', 'targetLength', 'padString'],
     prep,
     validTypes: ['array', 'object'],
   },
-  repeat: { namedArgs: ['on', 'count'], prep, validTypes: ['array', 'object'] },
+  repeat: { namedArgs: ['on', 'count'], prep, validTypes: ['array', 'object'] , dynamic: false},
   replace: {
     namedArgs: ['on', 'regex', 'newSubstr', 'regexFlags'],
     prep: prepRegex(1, 3),
@@ -75,22 +75,22 @@ const meta = {
     prep: prepRegex(1, 2),
     validTypes: ['array', 'object'],
   },
-  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
-  split: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] },
+  slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] , dynamic: false},
+  split: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] , dynamic: false},
   startsWith: {
     namedArgs: ['on', 'searchString', 'position'],
     prep,
     validTypes: ['array', 'object'],
   },
-  substring: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
+  substring: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] , dynamic: false},
   // toLocaleLowerCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
   // toLocaleUpperCase: { namedArgs: ['on', 'locale'], validTypes: ['array', 'object'] },
-  toLowerCase: { validTypes: ['string', 'null'], singleArg: true, prep },
-  toUpperCase: { validTypes: ['string', 'null'], singleArg: true, prep },
-  trim: { validTypes: ['string', 'null'], singleArg: true, prep },
-  trimEnd: { validTypes: ['string', 'null'], singleArg: true, prep },
-  trimStart: { validTypes: ['string', 'null'], singleArg: true, prep },
-  length: { validTypes: ['string', 'null'], property: true, prep },
+  toLowerCase: { validTypes: ['string', 'null'], singleArg: true, prep , dynamic: false},
+  toUpperCase: { validTypes: ['string', 'null'], singleArg: true, prep , dynamic: false},
+  trim: { validTypes: ['string', 'null'], singleArg: true, prep , dynamic: false},
+  trimEnd: { validTypes: ['string', 'null'], singleArg: true, prep , dynamic: false},
+  trimStart: { validTypes: ['string', 'null'], singleArg: true, prep , dynamic: false},
+  length: { validTypes: ['string', 'null'], property: true, prep , dynamic: false},
 };
 
 function _string({ params, location, methodName }) {
@@ -103,5 +103,7 @@ function _string({ params, location, methodName }) {
     instanceType: 'string',
   });
 }
+
+_string.dynamic = false;
 
 export default _string;

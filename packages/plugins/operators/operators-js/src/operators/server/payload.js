@@ -25,4 +25,6 @@ function _payload({ location, params, payload }) {
   });
 }
 
+_payload.dynamic = true;
+
 export default _payload;

@@ -34,4 +34,6 @@ function _eq({ params, location }) {
   return params[0] === params[1];
 }
 
+_eq.dynamic = false;
+
 export default _eq;

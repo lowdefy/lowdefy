@@ -26,4 +26,6 @@ function _env({ arrayIndices, env, location, params }) {
   });
 }
 
+_env.dynamic = true;
+
 export default _env;

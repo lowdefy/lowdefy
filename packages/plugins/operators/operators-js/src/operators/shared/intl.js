@@ -24,9 +24,9 @@ function createFormatter({ IntlClass }) {
 }
 
 const meta = {
-  dateTimeFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
-  listFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
-  numberFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] },
+  dateTimeFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] , dynamic: false},
+  listFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] , dynamic: false},
+  numberFormat: { namedArgs: ['on', 'options', 'locale'], validTypes: ['array', 'object'] , dynamic: false},
   relativeTimeFormat: {
     namedArgs: ['on', 'unit', 'options', 'locale'],
     validTypes: ['array', 'object'],

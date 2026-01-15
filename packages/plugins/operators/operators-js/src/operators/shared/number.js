@@ -17,25 +17,25 @@
 import { runClass, runInstance } from '@lowdefy/operators';
 
 const meta = {
-  EPSILON: { property: true },
-  MAX_SAFE_INTEGER: { property: true },
-  MAX_VALUE: { property: true },
-  MIN_SAFE_INTEGER: { property: true },
-  MIN_VALUE: { property: true },
-  NaN: { property: true },
-  NEGATIVE_INFINITY: { property: true },
-  POSITIVE_INFINITY: { property: true },
-  isFinite: { singleArg: true },
-  isInteger: { singleArg: true },
-  isNaN: { singleArg: true },
-  isSafeInteger: { singleArg: true },
-  parseFloat: { singleArg: true, validTypes: ['string'] },
-  parseInt: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] },
-  toExponential: { namedArgs: ['on', 'fractionDigits'], validTypes: ['array', 'object'] },
-  toFixed: { namedArgs: ['on', 'digits'], validTypes: ['array', 'object'] },
-  toLocaleString: { namedArgs: ['on', 'locales'], validTypes: ['array', 'object'] },
-  toPrecision: { namedArgs: ['on', 'precision'], validTypes: ['array', 'object'] },
-  toString: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] },
+  EPSILON: { property: true , dynamic: false},
+  MAX_SAFE_INTEGER: { property: true , dynamic: false},
+  MAX_VALUE: { property: true , dynamic: false},
+  MIN_SAFE_INTEGER: { property: true , dynamic: false},
+  MIN_VALUE: { property: true , dynamic: false},
+  NaN: { property: true , dynamic: false},
+  NEGATIVE_INFINITY: { property: true , dynamic: false},
+  POSITIVE_INFINITY: { property: true , dynamic: false},
+  isFinite: { singleArg: true , dynamic: false},
+  isInteger: { singleArg: true , dynamic: false},
+  isNaN: { singleArg: true , dynamic: false},
+  isSafeInteger: { singleArg: true , dynamic: false},
+  parseFloat: { singleArg: true, validTypes: ['string'] , dynamic: false},
+  parseInt: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] , dynamic: false},
+  toExponential: { namedArgs: ['on', 'fractionDigits'], validTypes: ['array', 'object'] , dynamic: false},
+  toFixed: { namedArgs: ['on', 'digits'], validTypes: ['array', 'object'] , dynamic: false},
+  toLocaleString: { namedArgs: ['on', 'locales'], validTypes: ['array', 'object'] , dynamic: false},
+  toPrecision: { namedArgs: ['on', 'precision'], validTypes: ['array', 'object'] , dynamic: false},
+  toString: { namedArgs: ['on', 'radix'], validTypes: ['array', 'object'] , dynamic: false},
 };
 
 function _number({ params, location, methodName }) {
@@ -60,5 +60,7 @@ function _number({ params, location, methodName }) {
     params,
   });
 }
+
+_number.dynamic = false;
 
 export default _number;

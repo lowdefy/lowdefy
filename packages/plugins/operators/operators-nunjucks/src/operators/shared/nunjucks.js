@@ -44,4 +44,6 @@ function _nunjucks({ location, params, state, payload, runtime }) {
   return null;
 }
 
+_nunjucks.dynamic = false;
+
 export default _nunjucks;

@@ -32,4 +32,6 @@ function _product({ params, location }) {
   }, 1);
 }
 
+_product.dynamic = false;
+
 export default _product;

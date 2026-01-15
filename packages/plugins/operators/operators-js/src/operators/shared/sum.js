@@ -32,4 +32,6 @@ function _sum({ params, location }) {
   }, 0);
 }
 
+_sum.dynamic = false;
+
 export default _sum;

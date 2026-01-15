@@ -26,8 +26,8 @@ function encode(input) {
 
 const functions = { encode, decode };
 const meta = {
-  encode: { singleArg: true, validTypes: ['string'] },
-  decode: { singleArg: true, validTypes: ['string'] },
+  encode: { singleArg: true, validTypes: ['string'] , dynamic: false},
+  decode: { singleArg: true, validTypes: ['string'] , dynamic: false},
 };
 
 function _uri({ params, location, methodName }) {
@@ -40,5 +40,7 @@ function _uri({ params, location, methodName }) {
     params,
   });
 }
+
+_uri.dynamic = false;
 
 export default _uri;

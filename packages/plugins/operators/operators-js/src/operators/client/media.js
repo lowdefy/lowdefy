@@ -68,4 +68,6 @@ function _media({ arrayIndices, location, params, globals }) {
   });
 }
 
+_media.dynamic = true;
+
 export default _media;

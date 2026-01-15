@@ -26,4 +26,6 @@ function _actions({ actions, arrayIndices, location, params }) {
   });
 }
 
+_actions.dynamic = true;
+
 export default _actions;

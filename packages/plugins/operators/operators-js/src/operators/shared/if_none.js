@@ -37,4 +37,6 @@ function _if_none({ params, location }) {
   return params[0];
 }
 
+_if_none.dynamic = false;
+
 export default _if_none;

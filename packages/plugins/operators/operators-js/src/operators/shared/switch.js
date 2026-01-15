@@ -39,4 +39,6 @@ function _switch({ location, params }) {
   return params.default;
 }
 
+_switch.dynamic = false;
+
 export default _switch;

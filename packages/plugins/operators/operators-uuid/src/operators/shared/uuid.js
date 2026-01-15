@@ -20,10 +20,10 @@ import { type } from '@lowdefy/helpers';
 import { runClass } from '@lowdefy/operators';
 
 const meta = {
-  v1: { noArgs: true },
-  v3: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'] },
-  v4: { noArgs: true },
-  v5: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'] },
+  v1: { noArgs: true, dynamic: true },
+  v3: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'], dynamic: false },
+  v4: { noArgs: true, dynamic: true },
+  v5: { namedArgs: ['name', 'namespace'], validTypes: ['array', 'object'], dynamic: false },
 };
 
 const functions = { v1, v3, v4, v5 };
@@ -41,5 +41,7 @@ function _uuid({ params, location, methodName }) {
     params,
   });
 }
+
+_uuid.dynamic = true;
 
 export default _uuid;

@@ -46,4 +46,6 @@ function _moment({ params, location, methodName }) {
   });
 }
 
+_moment.dynamic = true;
+
 export default _moment;

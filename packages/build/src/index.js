@@ -31,6 +31,7 @@ import buildMenu from './build/buildMenu.js';
 import buildPages from './build/buildPages/buildPages.js';
 import buildRefs from './build/buildRefs/buildRefs.js';
 import buildTypes from './build/buildTypes.js';
+import evaluateStaticOperators from './build/buildRefs/evaluateStaticOperators.js';
 import cleanBuildDirectory from './build/cleanBuildDirectory.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
@@ -53,6 +54,7 @@ import writeTypes from './build/writeTypes.js';
 async function build(options) {
   const context = createContext(options);
   const components = await buildRefs({ context });
+  await evaluateStaticOperators({ components, context });
   testSchema({ components, context });
   buildApp({ components, context });
   validateConfig({ components, context });

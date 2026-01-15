@@ -25,4 +25,6 @@ function _step({ location, params, steps }) {
   });
 }
 
+_step.dynamic = true;
+
 export default _step;

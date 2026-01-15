@@ -35,4 +35,6 @@ function _secret({ location, params, secrets = {} }) {
   });
 }
 
+_secret.dynamic = true;
+
 export default _secret;

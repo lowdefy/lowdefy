@@ -41,4 +41,6 @@ function _subtract({ params, location }) {
   return params[0] - params[1];
 }
 
+_subtract.dynamic = false;
+
 export default _subtract;

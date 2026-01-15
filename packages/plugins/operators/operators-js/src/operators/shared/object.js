@@ -46,20 +46,21 @@ const prepDescriptor = (args) => {
 };
 
 const metaInstance = {
-  hasOwnProperty: { namedArgs: ['on', 'prop'], validTypes: ['array', 'object'], prep },
+  hasOwnProperty: { namedArgs: ['on', 'prop'], validTypes: ['array', 'object'], prep, dynamic: false },
 };
 
 const metaClass = {
-  assign: { spreadArgs: true, validTypes: ['array'], prep },
+  assign: { spreadArgs: true, validTypes: ['array'], prep, dynamic: false },
   defineProperty: {
     namedArgs: ['on', 'key', 'descriptor'],
     validTypes: ['array', 'object'],
     prep: prepDescriptor,
+    dynamic: false,
   },
-  entries: { singleArg: true, validTypes: ['object', 'null'], prep },
-  fromEntries: { singleArg: true, validTypes: ['array', 'null'], prep: prepArray },
-  keys: { singleArg: true, validTypes: ['object', 'null'], prep },
-  values: { singleArg: true, validTypes: ['object', 'null'], prep },
+  entries: { singleArg: true, validTypes: ['object', 'null'], prep, dynamic: false },
+  fromEntries: { singleArg: true, validTypes: ['array', 'null'], prep: prepArray, dynamic: false },
+  keys: { singleArg: true, validTypes: ['object', 'null'], prep, dynamic: false },
+  values: { singleArg: true, validTypes: ['object', 'null'], prep, dynamic: false },
 };
 
 function _object({ params, location, methodName }) {
@@ -82,5 +83,7 @@ function _object({ params, location, methodName }) {
     params,
   });
 }
+
+_object.dynamic = false;
 
 export default _object;

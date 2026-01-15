@@ -29,8 +29,8 @@ function stringify(input, options) {
 const functions = { parse, stringify };
 
 const meta = {
-  stringify: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] },
-  parse: { singleArg: true, validTypes: ['string'] },
+  stringify: { namedArgs: ['on', 'options'], validTypes: ['object', 'array'] , dynamic: false},
+  parse: { singleArg: true, validTypes: ['string'] , dynamic: false},
 };
 
 function _json({ params, location, methodName }) {
@@ -43,5 +43,7 @@ function _json({ params, location, methodName }) {
     params,
   });
 }
+
+_json.dynamic = false;
 
 export default _json;

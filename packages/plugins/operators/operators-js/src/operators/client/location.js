@@ -70,4 +70,6 @@ function _location({ arrayIndices, basePath, home, location, pageId, params, glo
   });
 }
 
+_location.dynamic = true;
+
 export default _location;

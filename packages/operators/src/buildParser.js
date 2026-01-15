@@ -25,6 +25,28 @@ class BuildParser {
     this.secrets = secrets;
     this.user = user;
     this.verbose = verbose;
+    this.validateOperatorsDynamic();
+  }
+
+  validateOperatorsDynamic() {
+    Object.keys(this.operators).forEach((opName) => {
+      const operatorFn = this.operators[opName];
+      if (type.isUndefined(operatorFn.dynamic)) {
+        throw new Error(
+          `Plugin Error: Operator ${opName} must have a dynamic property set to true or false.`
+        );
+      }
+      if (operatorFn.meta) {
+        Object.keys(operatorFn.meta).forEach((methodName) => {
+          const methodMeta = operatorFn.meta[methodName];
+          if (type.isUndefined(methodMeta.dynamic)) {
+            throw new Error(
+              `Plugin Error: Operator ${opName}.${methodName} must have a dynamic property in meta.`
+            );
+          }
+        });
+      }
+    });
   }
 
   // TODO: Look at logging here

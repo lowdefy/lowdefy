@@ -34,4 +34,6 @@ function _lte({ params, location }) {
   return params[0] <= params[1];
 }
 
+_lte.dynamic = false;
+
 export default _lte;

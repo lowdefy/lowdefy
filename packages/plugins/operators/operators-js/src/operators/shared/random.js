@@ -91,4 +91,6 @@ function _random({ location, params }) {
   return generateRandomString(params.length);
 }
 
+_random.dynamic = true;
+
 export default _random;
