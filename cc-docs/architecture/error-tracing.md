@@ -171,20 +171,20 @@ Validates block, operator, request, and action types with suggestions:
 
 #### Skip Condition Handling
 
-**`validateRequestReferences`** intelligently skips validation for conditionally-executed actions.
+Request and Link actions have **different validation behaviors** for skip conditions because of their scope differences:
 
-**Rule:** Validation is skipped when an action has a `skip` property that is:
+| Action Type | Skip Behavior | Rationale |
+|-------------|---------------|-----------|
+| **Request** | Skips validation for `skip: true` OR `skip: { operator }` | Requests are page-scoped and may not be defined in all contexts |
+| **Link** | Skips validation ONLY for `skip: true` | Pages are app-scoped and must exist regardless of conditional navigation |
 
-- `skip: true` (explicitly skipped)
+**`validateRequestReferences` - Lenient**
+
+Validation is skipped when `skip` is:
+- `skip: true` (explicitly disabled)
 - `skip: { operator }` (any operator object, e.g., `{ _eq: [...] }`)
 
-**Validation runs normally when:**
-
-- `skip: false` (explicitly enabled)
-- `skip: undefined` (property not set)
-- No `skip` property present
-
-**Rationale:** When a Request action has a skip condition, the request may only be defined in certain app contexts. Validating these would create false positives.
+**Rationale:** In multi-app monorepos, requests may only be defined in certain app contexts. Validating conditional requests would create false positives.
 
 **Example:** Multi-app monorepo where some requests only exist in specific apps:
 
@@ -196,17 +196,55 @@ events:
       skip:
         _eq:
           - _ref: { path: app_config.yaml, key: app_name }
-          - support
-      params: contact_companies_search # Only exists in non-support apps
+          - prp-support
+      params: contact_companies_search  # Only exists in non-support apps
 ```
 
-In this case, `contact_companies_search` may not be defined on the current page (because it's only used in other apps), but validation is skipped because the action has a conditional `skip`.
+In this case, `contact_companies_search` may not be defined on the current page (because it's only used in non-support apps), but validation is skipped because the action has a conditional `skip` operator.
 
 **Implementation:** `packages/build/src/build/buildPages/validateRequestReferences.js:26-28`
 
 ```javascript
 // Skip validation if action has skip condition (true or operator object)
 if (action.skip === true || type.isObject(action.skip)) {
+  return;
+}
+```
+
+**`validateLinkReferences` - Strict**
+
+Validation is skipped ONLY when:
+- `skip: true` (explicitly disabled)
+
+Validation runs normally for:
+- `skip: { operator }` (operator objects - page must exist)
+- `skip: false` (explicitly enabled)
+- `skip: undefined` (property not set)
+- No `skip` property
+
+**Rationale:** Pages are defined at the app level and must exist in the app regardless of whether the Link is conditionally executed. A conditional skip only controls navigation timing, not page existence.
+
+**Example:** Conditional navigation to admin page:
+
+```yaml
+events:
+  onClick:
+    - id: go_to_admin
+      type: Link
+      skip:
+        _not:
+          _state: user.isAdmin
+      params: admin_dashboard  # Page MUST exist even if user isn't admin
+```
+
+The `admin_dashboard` page must be defined in the app. The skip condition only controls whether the navigation happens at runtime, not whether the page exists.
+
+**Implementation:** `packages/build/src/build/buildPages/validateLinkReferences.js:23-27`
+
+```javascript
+// Only skip validation if skip is explicitly true
+// Pages must exist in app even if Link is conditional
+if (action.skip === true) {
   return;
 }
 ```

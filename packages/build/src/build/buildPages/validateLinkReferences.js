@@ -20,6 +20,12 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
   const pageIdSet = new Set(pageIds);
 
   linkActionRefs.forEach(({ pageId, action, sourcePageId }) => {
+    // Only skip validation if skip is explicitly true
+    // Pages must exist in app even if Link is conditional
+    if (action.skip === true) {
+      return;
+    }
+
     if (!pageIdSet.has(pageId)) {
       const errorMessage = formatConfigError({
         message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
