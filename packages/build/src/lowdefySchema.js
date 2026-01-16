@@ -9,7 +9,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         async: {
@@ -46,7 +46,7 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         html: {
@@ -78,7 +78,7 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         advanced: {
@@ -124,7 +124,7 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
-            '~throw': {},
+            '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
             protected: {
@@ -178,7 +178,7 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~throw': {},
+            '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
             signIn: {
@@ -282,7 +282,7 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
-            '~throw': {},
+            '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
             protected: {
@@ -379,7 +379,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -469,7 +469,7 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
-                    '~throw': {},
+                    '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
                     try: {
@@ -488,7 +488,7 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
-                        '~throw': {},
+                        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
                         immediate: {
@@ -553,7 +553,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -591,7 +591,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -626,7 +626,7 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -663,7 +663,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -717,7 +717,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -776,7 +776,7 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         name: {
@@ -811,7 +811,7 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         id: {
@@ -858,7 +858,7 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
-    '~throw': {},
+    '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
     name: {
@@ -904,7 +904,7 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         basePath: {
@@ -982,7 +982,7 @@ export default {
         type: 'App "logger" should be an object.',
       },
       properties: {
-        '~throw': {},
+        '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
         sentry: {
@@ -992,7 +992,7 @@ export default {
             type: 'App "logger.sentry" should be an object.',
           },
           properties: {
-            '~throw': {},
+            '~ignoreBuildCheck': {},
         '~r': {},
         '~l': {},
             client: {

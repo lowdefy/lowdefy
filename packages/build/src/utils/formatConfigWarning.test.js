@@ -106,7 +106,7 @@ test('formatConfigWarning includes source file info', () => {
   expect(result).toContain('api/endpoints.yaml:42');
 });
 
-test('suppresses warning when object has ~throw: false', () => {
+test('suppresses warning when object has ~ignoreBuildCheck: true', () => {
   const result = formatConfigWarning({
     message: '_state reference not found',
     configKey: 'key-123',
@@ -116,7 +116,7 @@ test('suppresses warning when object has ~throw: false', () => {
           key: 'blocks.0.properties',
           '~r': 'ref-1',
           '~l': 15,
-          '~throw': false,
+          '~ignoreBuildCheck': true,
         },
       },
       refMap: { 'ref-1': { path: 'pages/home.yaml' } },

@@ -106,7 +106,7 @@ test('formatConfigError includes source file info', () => {
   expect(result).toContain('connections/mongodb.yaml:3');
 });
 
-test('suppresses error when object has ~throw: false', () => {
+test('suppresses error when object has ~ignoreBuildCheck: true', () => {
   const result = formatConfigError({
     message: 'Block type not found',
     configKey: 'key-123',
@@ -116,7 +116,7 @@ test('suppresses error when object has ~throw: false', () => {
           key: 'blocks.0',
           '~r': 'ref-1',
           '~l': 10,
-          '~throw': false,
+          '~ignoreBuildCheck': true,
         },
       },
       refMap: { 'ref-1': { path: 'pages/home.yaml' } },
@@ -127,7 +127,7 @@ test('suppresses error when object has ~throw: false', () => {
   expect(result).toBe('');
 });
 
-test('shows error when object has ~throw: true', () => {
+test('shows error when object has ~ignoreBuildCheck: false', () => {
   const result = formatConfigError({
     message: 'Block type not found',
     configKey: 'key-123',
@@ -137,7 +137,7 @@ test('shows error when object has ~throw: true', () => {
           key: 'blocks.0',
           '~r': 'ref-1',
           '~l': 10,
-          '~throw': true, // Explicitly true - should NOT suppress
+          '~ignoreBuildCheck': false, // Explicitly false - should NOT suppress
         },
       },
       refMap: { 'ref-1': { path: 'pages/home.yaml' } },
@@ -149,7 +149,7 @@ test('shows error when object has ~throw: true', () => {
   expect(result).toContain('Block type not found');
 });
 
-test('shows error when ~throw property not present', () => {
+test('shows error when ~ignoreBuildCheck property not present', () => {
   const result = formatConfigError({
     message: 'Block type not found',
     configKey: 'key-123',
@@ -159,7 +159,7 @@ test('shows error when ~throw property not present', () => {
           key: 'blocks.0',
           '~r': 'ref-1',
           '~l': 10,
-          // No ~throw property - should validate normally
+          // No ~ignoreBuildCheck property - should validate normally
         },
       },
       refMap: { 'ref-1': { path: 'pages/home.yaml' } },

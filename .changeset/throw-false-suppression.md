@@ -3,11 +3,11 @@
 '@lowdefy/docs': minor
 ---
 
-feat(build): Add ~throw: false flag to suppress build validation
+feat(build): Add ~ignoreBuildCheck: true flag to suppress build validation
 
 **Build Validation Suppression (#1949)**
 
-- New `~throw: false` property suppresses build-time validation errors and warnings
+- New `~ignoreBuildCheck: true` property suppresses build-time validation errors and warnings
 - Enables advanced patterns where references only exist at runtime (e.g., state registered by custom blocks via `methods.registerEvent`)
 - Silent suppression - no log output when validation is skipped
 - Non-traversing - only affects the object with the flag, not children or parents
@@ -30,5 +30,5 @@ blocks:
     properties:
       onClick:
         _state: dynamicState  # Created by block at runtime
-        ~throw: false         # Suppress build validation
+        ~ignoreBuildCheck: true  # Suppress build validation
 ```

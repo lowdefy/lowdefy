@@ -22,12 +22,12 @@ function shouldSuppressError({ configKey, keyMap }) {
   }
 
   const keyMapEntry = keyMap[configKey];
-  // Check if the ~throw property is explicitly false
-  return keyMapEntry['~throw'] === false;
+  // Check if the ~ignoreBuildCheck property is explicitly true
+  return keyMapEntry['~ignoreBuildCheck'] === true;
 }
 
 function formatConfigMessage({ prefix, message, configKey, context }) {
-  // Check for ~throw: false suppression
+  // Check for ~ignoreBuildCheck: true suppression
   if (shouldSuppressError({ configKey, keyMap: context?.keyMap })) {
     return ''; // Silent suppression - return empty string
   }

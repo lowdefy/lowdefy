@@ -249,9 +249,9 @@ if (action.skip === true) {
 }
 ```
 
-### Suppressing Build Validation with ~throw
+### Suppressing Build Validation with ~ignoreBuildCheck
 
-The `~throw: false` property allows developers to explicitly suppress build-time validation errors and warnings for specific config objects.
+The `~ignoreBuildCheck: true` property allows developers to explicitly suppress build-time validation errors and warnings for specific config objects.
 
 **Use Cases:**
 - Dynamic config patterns where references only exist at runtime
@@ -263,7 +263,7 @@ The `~throw: false` property allows developers to explicitly suppress build-time
 - Applies **only** to the object with the flag - does not traverse to children or parents
 - Only affects **build-time** validation - runtime errors still occur normally
 - Works on all config objects: blocks, operators, requests, connections, actions
-- `~throw: false` is the **only** extra key allowed on operator objects
+- `~ignoreBuildCheck: true` is the **only** extra key allowed on operator objects
 
 **Example:** State reference from dynamic registration
 
@@ -274,10 +274,10 @@ blocks:
     properties:
       onClick:
         _state: dynamicState  # Created by methods.registerEvent at runtime
-        ~throw: false         # Suppress build-time "state not found" warning
+        ~ignoreBuildCheck: true  # Suppress build-time "state not found" warning
 ```
 
-The `dynamicState` reference is created by `methods.registerEvent` in the block's code, which runs at runtime. Build-time validation would fail because the state doesn't exist yet, but `~throw: false` suppresses the warning.
+The `dynamicState` reference is created by `methods.registerEvent` in the block's code, which runs at runtime. Build-time validation would fail because the state doesn't exist yet, but `~ignoreBuildCheck: true` suppresses the warning.
 
 **Implementation:** `packages/build/src/utils/formatConfigMessage.js:19-27`
 
@@ -286,7 +286,7 @@ function shouldSuppressError({ configKey, keyMap }) {
   if (!configKey || !keyMap || !keyMap[configKey]) {
     return false;
   }
-  return keyMap[configKey]['~throw'] === false;
+  return keyMap[configKey]['~ignoreBuildCheck'] === true;
 }
 ```
 

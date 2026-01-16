@@ -230,9 +230,9 @@ _ref:
                   transformer: transformers/addFooter.js
             ```
 
-            ## Suppressing Build Validation with ~throw
+            ## Suppressing Build Validation with ~ignoreBuildCheck
 
-            The `~throw: false` property suppresses build-time validation errors for references that only exist at runtime, such as state registered dynamically by custom blocks.
+            The `~ignoreBuildCheck: true` property suppresses build-time validation errors for references that only exist at runtime, such as state registered dynamically by custom blocks.
 
             ### Example
 
@@ -246,15 +246,15 @@ _ref:
                 properties:
                   onClick:
                     _state: dynamicState  # Created by block at runtime
-                    ~throw: false         # Suppress build validation
+                    ~ignoreBuildCheck: true  # Suppress build validation
             ```
 
-            Without `~throw: false`, the build would fail with:
+            Without `~ignoreBuildCheck: true`, the build would fail with:
             ```
             [Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
             ```
 
-            > **Note:** `~throw: false` only affects build-time validation. Runtime errors still occur if references don't exist. Only use this for references you know will exist at runtime.
+            > **Note:** `~ignoreBuildCheck: true` only affects build-time validation. Runtime errors still occur if references don't exist. Only use this for references you know will exist at runtime.
 
       - _ref:
           path: templates/navigation_buttons.yaml
