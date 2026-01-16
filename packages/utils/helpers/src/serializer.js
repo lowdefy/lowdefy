@@ -72,12 +72,17 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
     return newValue;
   }
   if (type.isArray(newValue)) {
-    return newValue.map((item) => {
+    const mappedArray = newValue.map((item) => {
       if (type.isDate(item)) {
         return dateReplacer(item);
       }
       return item;
     });
+    // Preserve ~l on arrays by wrapping in a marker object
+    if (newValue['~l']) {
+      return { '~arr': mappedArray, '~l': newValue['~l'] };
+    }
+    return mappedArray;
   }
   return newValue;
 };
@@ -85,33 +90,47 @@ const makeReplacer = (customReplacer, isoStringDates) => (key, value) => {
 const makeReviver = (customReviver) => (key, value) => {
   let newValue = value;
   if (type.isObject(newValue)) {
-    if (newValue['~r']) {
-      Object.defineProperty(newValue, '~r', {
-        value: newValue['~r'],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue['~k']) {
-      Object.defineProperty(newValue, '~k', {
-        value: newValue['~k'],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
-    }
-    if (newValue['~l']) {
-      Object.defineProperty(newValue, '~l', {
-        value: newValue['~l'],
-        enumerable: false,
-        writable: true,
-        configurable: true,
-      });
+    // Restore arrays that were wrapped with ~arr marker
+    if (type.isArray(newValue['~arr'])) {
+      const arr = newValue['~arr'];
+      if (newValue['~l']) {
+        Object.defineProperty(arr, '~l', {
+          value: newValue['~l'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      newValue = arr;
+    } else {
+      if (newValue['~r']) {
+        Object.defineProperty(newValue, '~r', {
+          value: newValue['~r'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~k']) {
+        Object.defineProperty(newValue, '~k', {
+          value: newValue['~k'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
+      if (newValue['~l']) {
+        Object.defineProperty(newValue, '~l', {
+          value: newValue['~l'],
+          enumerable: false,
+          writable: true,
+          configurable: true,
+        });
+      }
     }
   }
   if (customReviver) {
-    newValue = customReviver(key, value);
+    newValue = customReviver(key, newValue);
   }
   if (type.isObject(newValue)) {
     if (!type.isUndefined(newValue['~e'])) {

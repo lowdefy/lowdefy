@@ -43,10 +43,32 @@ function addLineNumbers(node, content, result) {
       if (isPair(pair) && isScalar(pair.key)) {
         const key = pair.key.value;
         const value = pair.value;
+        // Use key's line number for the value's ~l (more useful for error messages)
+        const keyLineNumber = pair.key.range ? getLineNumber(content, pair.key.range[0]) : null;
         if (isMap(value)) {
-          obj[key] = addLineNumbers(value, content, {});
+          const mapResult = addLineNumbers(value, content, {});
+          // Override ~l with key's line number if available
+          if (keyLineNumber) {
+            Object.defineProperty(mapResult, '~l', {
+              value: keyLineNumber,
+              enumerable: false,
+              writable: true,
+              configurable: true,
+            });
+          }
+          obj[key] = mapResult;
         } else if (isSeq(value)) {
-          obj[key] = addLineNumbers(value, content, []);
+          const arrResult = addLineNumbers(value, content, []);
+          // Override ~l with key's line number if available
+          if (keyLineNumber) {
+            Object.defineProperty(arrResult, '~l', {
+              value: keyLineNumber,
+              enumerable: false,
+              writable: true,
+              configurable: true,
+            });
+          }
+          obj[key] = arrResult;
         } else if (isScalar(value)) {
           obj[key] = value.value;
         } else {
@@ -59,6 +81,14 @@ function addLineNumbers(node, content, result) {
 
   if (isSeq(node)) {
     const arr = result || [];
+    if (node.range) {
+      Object.defineProperty(arr, '~l', {
+        value: getLineNumber(content, node.range[0]),
+        enumerable: false,
+        writable: true,
+        configurable: true,
+      });
+    }
     for (const item of node.items) {
       if (isMap(item)) {
         arr.push(addLineNumbers(item, content, {}));

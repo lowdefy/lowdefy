@@ -9,6 +9,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         async: {
           type: 'boolean',
           errorMessage: {
@@ -43,6 +46,9 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         html: {
           type: 'object',
           errorMessage: {
@@ -72,6 +78,9 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         advanced: {
           type: 'object',
           properties: {
@@ -115,6 +124,9 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
+            '~throw': {},
+        '~r': {},
+        '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -166,6 +178,9 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
+            '~throw': {},
+        '~r': {},
+        '~l': {},
             signIn: {
               type: 'string',
               default: '/auth/signin',
@@ -267,6 +282,9 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
+            '~throw': {},
+        '~r': {},
+        '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -361,6 +379,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -448,6 +469,9 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
+                    '~throw': {},
+        '~r': {},
+        '~l': {},
                     try: {
                       type: 'array',
                       items: {
@@ -464,6 +488,9 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
+                        '~throw': {},
+        '~r': {},
+        '~l': {},
                         immediate: {
                           type: 'boolean',
                           errorMessage: {
@@ -526,6 +553,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -561,6 +591,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -593,6 +626,9 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -627,6 +663,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -678,6 +717,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -734,6 +776,9 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         name: {
           type: 'string',
           errorMessage: {
@@ -766,6 +811,9 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         id: {
           type: 'string',
           errorMessage: {
@@ -810,6 +858,9 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
+    '~throw': {},
+        '~r': {},
+        '~l': {},
     name: {
       type: 'string',
       errorMessage: {
@@ -853,6 +904,9 @@ export default {
       },
       additionalProperties: false,
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         basePath: {
           type: 'string',
           description: 'App base path to apply to all routes. Base path must start with "/".',
@@ -928,6 +982,9 @@ export default {
         type: 'App "logger" should be an object.',
       },
       properties: {
+        '~throw': {},
+        '~r': {},
+        '~l': {},
         sentry: {
           type: 'object',
           additionalProperties: false,
@@ -935,6 +992,9 @@ export default {
             type: 'App "logger.sentry" should be an object.',
           },
           properties: {
+            '~throw': {},
+        '~r': {},
+        '~l': {},
             client: {
               type: 'boolean',
               errorMessage: {

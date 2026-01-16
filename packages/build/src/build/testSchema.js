@@ -26,8 +26,7 @@ function testSchema({ components, context }) {
   });
 
   if (!valid) {
-    context.logger.warn('Schema not valid.');
-    errors.map((error) => context.logger.warn(formatErrorMessage({ error, components })));
+    errors.map((error) => context.logger.warn(formatErrorMessage({ error, components, context })));
   }
 }
 
