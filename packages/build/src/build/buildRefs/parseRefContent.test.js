@@ -48,9 +48,9 @@ properties:
     // Root object should have line 1
     expect(result['~l']).toBe(1);
 
-    // Properties object reports line 4 where the nested map content starts,
-    // not line 3 where the key "properties:" appears
-    expect(result.properties['~l']).toBe(4);
+    // Properties object reports line 3 where the key "properties:" appears
+    // (more useful for error messages pointing to where the property is defined)
+    expect(result.properties['~l']).toBe(3);
   });
 
   test('adds ~l (line numbers) to nested objects in arrays', () => {
@@ -95,7 +95,8 @@ properties:
     expect(result.pages[0]['~l']).toBe(2);
     expect(result.pages[0].blocks[0]['~l']).toBe(5);
     expect(result.pages[0].blocks[0].blocks[0]['~l']).toBe(8);
-    expect(result.pages[0].blocks[0].blocks[0].properties['~l']).toBe(11);
+    // properties ~l points to line 10 where "properties:" key appears
+    expect(result.pages[0].blocks[0].blocks[0].properties['~l']).toBe(10);
   });
 
   test('parses JSON content without line numbers', () => {

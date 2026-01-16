@@ -604,3 +604,44 @@ test('copy preserves non-enumerable ~l values', () => {
   expect(Object.keys(res)).toEqual(['x', 'nested']);
   expect(Object.keys(res.nested)).toEqual(['y']);
 });
+
+test('copy preserves non-enumerable ~l values on arrays', () => {
+  const object = {
+    x: 1,
+    items: [{ id: 'a' }, { id: 'b' }],
+  };
+  Object.defineProperty(object, '~l', {
+    value: 1,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object.items, '~l', {
+    value: 5,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+  Object.defineProperty(object.items[0], '~l', {
+    value: 6,
+    enumerable: false,
+    writable: true,
+    configurable: true,
+  });
+
+  const res = serializer.copy(object);
+
+  // Values are preserved
+  expect(res['~l']).toEqual(1);
+  expect(res.items['~l']).toEqual(5);
+  expect(res.items[0]['~l']).toEqual(6);
+
+  // Array is still an array
+  expect(Array.isArray(res.items)).toBe(true);
+  expect(res.items).toEqual([{ id: 'a' }, { id: 'b' }]);
+
+  // ~l is non-enumerable (not in keys)
+  expect(Object.keys(res)).toEqual(['x', 'items']);
+  expect(Object.keys(res.items)).toEqual(['0', '1']);
+  expect(Object.keys(res.items[0])).toEqual(['id']);
+});

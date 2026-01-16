@@ -96,11 +96,10 @@ test('invalid schema', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-App "global" should be an object.
-- global`,
+      `[Config Schema Error] App "global" should be an object.
+  lowdefy.yaml at root.global
+  `,
     ],
   ]);
 });
@@ -124,30 +123,25 @@ test('multiple schema errors', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Block should have required property "id".
-- pages
- - [0]`,
+      `[Config Schema Error] Block should have required property "id".
+  lowdefy.yaml at root.pages[0]
+  `,
     ],
     [
-      `Schema Error
-Block should have required property "type".
-- pages
- - [0]`,
+      `[Config Schema Error] Block should have required property "type".
+  lowdefy.yaml at root.pages[0]
+  `,
     ],
     [
-      `Schema Error
-Block "id" should be a string.
-- pages
- - [1:1:_ERROR_MISSING_TYPE_].id`,
+      `[Config Schema Error] Block "id" should be a string.
+  lowdefy.yaml at root.pages[1].id
+  `,
     ],
     [
-      `Schema Error
-Block should have required property "type".
-- pages
- - [1:1:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] Block should have required property "type".
+  lowdefy.yaml at root.pages[1]
+  `,
     ],
   ]);
 });
@@ -187,31 +181,20 @@ test('nested schema error', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Action should have required property "type".
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick
-    - [0:set_state:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] Action should have required property "type".
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].blocks[0:box_1:Box].areas.footer.blocks[0:button:Button].events.onClick[0:set_state]
+  `,
     ],
     [
-      `Schema Error
-must be object
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick`,
+      `[Config Schema Error] must be object
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].blocks[0:box_1:Box].areas.footer.blocks[0:button:Button].events.onClick
+  `,
     ],
     [
-      `Schema Error
-must match a schema in anyOf
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:button:Button].events.onClick`,
+      `[Config Schema Error] must match a schema in anyOf
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].blocks[0:box_1:Box].areas.footer.blocks[0:button:Button].events.onClick
+  `,
     ],
   ]);
 });
@@ -245,14 +228,10 @@ test('nested schema error 2', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Block "blocks" should be an array.
-- pages
- - [0:page_1:PageHeaderMenu].blocks
-  - [0:box_1:Box].areas.footer.blocks
-   - [0:box_2:Box].blocks`,
+      `[Config Schema Error] Block "blocks" should be an array.
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].blocks[0:box_1:Box].areas.footer.blocks[0:box_2:Box].blocks
+  `,
     ],
   ]);
 });
@@ -281,18 +260,15 @@ test('connections schema error', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Connection should have required property "type".
-- connections
- - [0:email-surveys:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] Connection should have required property "type".
+  lowdefy.yaml at root.connections[0:email-surveys]
+  `,
     ],
     [
-      `Schema Error
-Connection should have required property "id".
-- connections
- - [1:_ERROR_MISSING_ID_:MongoDBCollection]`,
+      `[Config Schema Error] Connection should have required property "id".
+  lowdefy.yaml at root.connections[1:MongoDBCollection]
+  `,
     ],
   ]);
 });
@@ -348,27 +324,20 @@ test('requests schema error', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Request should have required property "id".
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [0:_ERROR_MISSING_ID_:MongoDBAggregation]`,
+      `[Config Schema Error] Request should have required property "id".
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].requests[0:MongoDBAggregation]
+  `,
     ],
     [
-      `Schema Error
-Request should have required property "type".
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [1:request_1:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] Request should have required property "type".
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].requests[1:request_1]
+  `,
     ],
     [
-      `Schema Error
-Request "properties" should be an object.
-- pages
- - [0:page_1:PageHeaderMenu].requests
-  - [2:request_1:MongoDBAggregation].properties`,
+      `[Config Schema Error] Request "properties" should be an object.
+  lowdefy.yaml at root.pages[0:page_1:PageHeaderMenu].requests[2:request_1:MongoDBAggregation].properties
+  `,
     ],
   ]);
 });
@@ -399,55 +368,40 @@ test('menus schema error', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-must NOT have additional properties
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+      `[Config Schema Error] must NOT have additional properties - "pageId"
+  lowdefy.yaml at root.menus[0:default].links[0:MenuLink]
+  `,
     ],
     [
-      `Schema Error
-MenuGroup should have required property "id".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+      `[Config Schema Error] MenuGroup should have required property "id".
+  lowdefy.yaml at root.menus[0:default].links[0:MenuLink]
+  `,
     ],
     [
-      `Schema Error
-MenuLink should have required property "id".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+      `[Config Schema Error] MenuLink should have required property "id".
+  lowdefy.yaml at root.menus[0:default].links[0:MenuLink]
+  `,
     ],
     [
-      `Schema Error
-must match a schema in anyOf
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [0:_ERROR_MISSING_ID_:MenuLink]`,
+      `[Config Schema Error] must match a schema in anyOf
+  lowdefy.yaml at root.menus[0:default].links[0:MenuLink]
+  `,
     ],
     [
-      `Schema Error
-MenuGroup should have required property "type".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] MenuGroup should have required property "type".
+  lowdefy.yaml at root.menus[0:default].links[1:menu-2]
+  `,
     ],
     [
-      `Schema Error
-MenuLink should have required property "type".
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] MenuLink should have required property "type".
+  lowdefy.yaml at root.menus[0:default].links[1:menu-2]
+  `,
     ],
     [
-      `Schema Error
-must match a schema in anyOf
-- menus
- - [0:default:_ERROR_MISSING_TYPE_].links
-  - [1:menu-2:_ERROR_MISSING_TYPE_]`,
+      `[Config Schema Error] must match a schema in anyOf
+  lowdefy.yaml at root.menus[0:default].links[1:menu-2]
+  `,
     ],
   ]);
 });
@@ -480,11 +434,10 @@ test('missing lowdefy version schema error', () => {
   };
   testSchema({ components, context });
   expect(mockLogWarn.mock.calls).toEqual([
-    ['Schema not valid.'],
     [
-      `Schema Error
-Lowdefy configuration should have required property "lowdefy".
-`,
+      `[Config Schema Error] Lowdefy configuration should have required property "lowdefy".
+  lowdefy.yaml at root
+  `,
     ],
   ]);
 });
