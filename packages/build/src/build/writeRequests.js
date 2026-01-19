@@ -14,19 +14,17 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-import formatConfigError from '../utils/formatConfigError.js';
+import { ConfigError } from '@lowdefy/node-utils';
 
 async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];
 
   if (!type.isArray(requests)) {
-    throw new Error(
-      formatConfigError({
-        message: `Page requests must be an array. Received ${JSON.stringify(requests)}.`,
-        configKey: page['~k'],
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: `Page requests must be an array. Received ${JSON.stringify(requests)}.`,
+      configKey: page['~k'],
+      context,
+    });
   }
 
   return Promise.all(

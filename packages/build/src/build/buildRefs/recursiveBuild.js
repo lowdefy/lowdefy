@@ -14,9 +14,8 @@
   limitations under the License.
 */
 import { serializer, type } from '@lowdefy/helpers';
-
+import { ConfigError } from '@lowdefy/node-utils';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
-import formatConfigError from '../../utils/formatConfigError.js';
 import getKey from './getKey.js';
 import getRefContent from './getRefContent.js';
 import getRefsFromFile from './getRefsFromFile.js';
@@ -37,12 +36,10 @@ async function recursiveBuild({
   if (currentPath) {
     if (refChainSet.has(currentPath)) {
       const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
-      throw new Error(
-        formatConfigError({
-          message: `Circular reference detected.\nFile "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
-          context,
-        })
-      );
+      throw new ConfigError({
+        message: `Circular reference detected.\nFile "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+        context,
+      });
     }
     refChainSet.add(currentPath);
     refChainList.push(currentPath);
@@ -50,12 +47,10 @@ async function recursiveBuild({
 
   // Keep count as a fallback safety limit
   if (count > 10000) {
-    throw new Error(
-      formatConfigError({
-        message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: `Maximum recursion depth of references exceeded (10000 levels). This likely indicates a circular reference.`,
+      context,
+    });
   }
   let fileContent = await getRefContent({ context, refDef, referencedFrom });
   const { foundRefs, fileContentBuiltRefs } = getRefsFromFile(

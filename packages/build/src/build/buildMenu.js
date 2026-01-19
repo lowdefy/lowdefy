@@ -16,9 +16,9 @@
   limitations under the License.
 */
 
-import { type, resolveConfigLocation } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+import { ConfigError, resolveConfigLocation } from '@lowdefy/node-utils';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
-import formatConfigError from '../utils/formatConfigError.js';
 
 function buildDefaultMenu({ components, context }) {
   context.logger.warn('No menus found. Building default menu.');
@@ -102,22 +102,18 @@ function buildMenu({ components, context }) {
   components.menus.forEach((menu) => {
     const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      throw new Error(
-        formatConfigError({
-          message: 'Menu id missing.',
-          configKey,
-          context,
-        })
-      );
+      throw new ConfigError({
+        message: 'Menu id missing.',
+        configKey,
+        context,
+      });
     }
     if (!type.isString(menu.id)) {
-      throw new Error(
-        formatConfigError({
-          message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
-          configKey,
-          context,
-        })
-      );
+      throw new ConfigError({
+        message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
+        configKey,
+        context,
+      });
     }
     checkDuplicateMenuId({ id: menu.id, configKey });
     menu.menuId = menu.id;

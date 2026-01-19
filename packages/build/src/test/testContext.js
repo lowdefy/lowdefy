@@ -55,10 +55,26 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     connectionIds: new Set(),
   };
 
-  context.logger = {
+  const mergedLogger = {
     ...defaultLogger,
     ...logger,
   };
+
+  // Wrap logger with configWarning/configError methods that delegate to warn/error
+  context.logger = {
+    ...mergedLogger,
+    configWarning: ({ message, prodError }) => {
+      // Mirror ConfigWarning.format behavior: throw in prod mode when prodError is true
+      if (prodError && context.stage === 'prod') {
+        throw new Error(message);
+      }
+      mergedLogger.warn(message);
+    },
+    configError: ({ message }) => {
+      mergedLogger.error(message);
+    },
+  };
+
   return context;
 }
 

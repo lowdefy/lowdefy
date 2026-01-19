@@ -17,6 +17,7 @@
 */
 
 import { mergeObjects } from '@lowdefy/helpers';
+import { ConfigError, ConfigWarning } from '@lowdefy/node-utils';
 
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/readConfigFile.js';
@@ -24,13 +25,14 @@ import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+  // Create context object first (needed for logger methods)
   const context = {
     connectionIds: new Set(),
     directories,
     errors: [],
     jsMap: {},
     keyMap: {},
-    logger,
+    logger: null, // Set below
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
@@ -55,6 +57,23 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     writeBuildArtifact: createWriteBuildArtifact({ directories }),
   };
+
+  // Add config-aware methods to logger (don't spread - pino uses Symbol-keyed internals)
+  logger.configWarning = ({ message, configKey, operatorLocation, prodError }) => {
+    // ConfigWarning.format throws ConfigError in prod mode when prodError is true
+    const formatted = ConfigWarning.format({ message, configKey, operatorLocation, context, prodError });
+    if (formatted) {
+      logger.warn(formatted);
+    }
+  };
+  logger.configError = ({ message, configKey, operatorLocation }) => {
+    const formatted = ConfigError.format({ message, configKey, operatorLocation, context });
+    if (formatted) {
+      logger.error(formatted);
+    }
+  };
+  context.logger = logger;
+
   return context;
 }
 

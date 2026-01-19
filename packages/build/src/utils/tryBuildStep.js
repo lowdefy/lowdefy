@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/node-utils';
+
 /**
  * Wraps a build step to collect errors instead of stopping immediately.
  * Errors are collected in context.errors[] and logged, allowing the build to
  * continue and report all errors at once before stopping.
+ *
+ * ConfigErrors with suppressed=true (via ~ignoreBuildCheck) are ignored.
  *
  * @param {Function} stepFn - Build step function to execute
  * @param {string} stepName - Name of the build step (for debugging)
@@ -30,6 +34,10 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
   try {
     return stepFn({ components, context });
   } catch (error) {
+    // Skip suppressed ConfigErrors (via ~ignoreBuildCheck: true)
+    if (error instanceof ConfigError && error.suppressed) {
+      return;
+    }
     // Collect error to show all errors at once
     context.errors.push(error.message);
     context.logger.error(error.message);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import formatConfigError from './formatConfigError.js';
+import { ConfigError } from '@lowdefy/node-utils';
 
 /**
  * Collects a config error instead of throwing immediately.
@@ -26,7 +26,7 @@ import formatConfigError from './formatConfigError.js';
  * @param {Object} params.context - Build context
  */
 function collectConfigError({ message, configKey, context }) {
-  const errorMessage = formatConfigError({ message, configKey, context });
+  const errorMessage = ConfigError.format({ message, configKey, context });
 
   if (!errorMessage) {
     return; // Suppressed - don't collect or log

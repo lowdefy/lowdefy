@@ -15,7 +15,6 @@
 */
 
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
-import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 function validateStateReferences({ page, context }) {
@@ -62,7 +61,7 @@ function validateStateReferences({ page, context }) {
       `State keys are created from input block ids. ` +
       `Check for typos, add an input block with this id, or initialize the state with SetState.`;
 
-    context.logger.warn(formatConfigWarning({ message, configKey, context }));
+    context.logger.configWarning({ message, configKey });
   });
 }
 

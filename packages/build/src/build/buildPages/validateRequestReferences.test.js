@@ -19,17 +19,27 @@ import { jest } from '@jest/globals';
 import validateRequestReferences from './validateRequestReferences.js';
 
 describe('validateRequestReferences', () => {
-  const createContext = (stage = 'dev') => ({
-    stage,
-    logger: {
-      warn: jest.fn(),
-    },
-    directories: {
-      config: '/test',
-    },
-    keyMap: {},
-    refMap: {},
-  });
+  const createContext = (stage = 'dev') => {
+    const warnFn = jest.fn();
+    const context = {
+      stage,
+      logger: {
+        warn: warnFn,
+      },
+      directories: {
+        config: '/test',
+      },
+      keyMap: {},
+      refMap: {},
+    };
+    context.logger.configWarning = ({ message, prodError }) => {
+      if (prodError && context.stage === 'prod') {
+        throw new Error(message);
+      }
+      warnFn(message);
+    };
+    return context;
+  };
 
   test('validates successfully when request exists on page', () => {
     const context = createContext();

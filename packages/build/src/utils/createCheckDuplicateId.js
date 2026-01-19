@@ -15,7 +15,7 @@
 */
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import { resolveConfigLocation } from '@lowdefy/node-utils';
 
 function createCheckDuplicateId({ message, context }) {
   const template = nunjucksFunction(message);

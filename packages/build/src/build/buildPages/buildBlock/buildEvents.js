@@ -15,8 +15,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/node-utils';
 import createCheckDuplicateId from '../../../utils/createCheckDuplicateId.js';
-import formatConfigError from '../../../utils/formatConfigError.js';
 
 function checkAction(
   action,
@@ -33,22 +33,18 @@ function checkAction(
 ) {
   const configKey = action['~k'];
   if (type.isUndefined(action.id)) {
-    throw new Error(
-      formatConfigError({
-        message: `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
-        configKey,
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: `Action id missing on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      configKey,
+      context,
+    });
   }
   if (!type.isString(action.id)) {
-    throw new Error(
-      formatConfigError({
-        message: `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.id)}.`,
-        configKey,
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.id)}.`,
+      configKey,
+      context,
+    });
   }
   checkDuplicateActionId({
     id: action.id,
@@ -58,13 +54,11 @@ function checkAction(
     pageId,
   });
   if (!type.isString(action.type)) {
-    throw new Error(
-      formatConfigError({
-        message: `Action type is not a string on action "${action.id}" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.type)}.`,
-        configKey,
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: `Action type is not a string on action "${action.id}" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(action.type)}.`,
+      configKey,
+      context,
+    });
   }
   typeCounters.actions.increment(action.type, configKey);
 
@@ -109,13 +103,11 @@ function buildEvents(block, pageContext) {
         (!type.isArray(block.events[key]) && !type.isObject(block.events[key])) ||
         (type.isObject(block.events[key]) && type.isNone(block.events[key].try))
       ) {
-        throw new Error(
-          formatConfigError({
-            message: `Actions must be an array at "${block.blockId}" in event "${key}" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key]?.try)}`,
-            configKey: eventConfigKey,
-            context,
-          })
-        );
+        throw new ConfigError({
+          message: `Actions must be an array at "${block.blockId}" in event "${key}" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key]?.try)}`,
+          configKey: eventConfigKey,
+          context,
+        });
       }
       if (type.isArray(block.events[key])) {
         block.events[key] = {
@@ -124,25 +116,21 @@ function buildEvents(block, pageContext) {
         };
       }
       if (!type.isArray(block.events[key].try)) {
-        throw new Error(
-          formatConfigError({
-            message: `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].try)}`,
-            configKey: eventConfigKey,
-            context,
-          })
-        );
+        throw new ConfigError({
+          message: `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].try)}`,
+          configKey: eventConfigKey,
+          context,
+        });
       }
       if (type.isNone(block.events[key].catch)) {
         block.events[key].catch = [];
       }
       if (!type.isArray(block.events[key].catch)) {
-        throw new Error(
-          formatConfigError({
-            message: `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].catch)}`,
-            configKey: eventConfigKey,
-            context,
-          })
-        );
+        throw new ConfigError({
+          message: `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${pageContext.pageId}". Received ${JSON.stringify(block.events[key].catch)}`,
+          configKey: eventConfigKey,
+          context,
+        });
       }
       const checkDuplicateActionId = createCheckDuplicateId({
         message:

@@ -16,8 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-import formatConfigError from '../../utils/formatConfigError.js';
-
 function validateRequestReferences({ requestActionRefs, requests, pageId, context }) {
   const requestIds = new Set(requests.map((req) => req.requestId));
 
@@ -28,17 +26,11 @@ function validateRequestReferences({ requestActionRefs, requests, pageId, contex
     }
 
     if (!requestIds.has(requestId)) {
-      const errorMessage = formatConfigError({
+      context.logger.configWarning({
         message: `Request "${requestId}" not defined on page "${pageId}".`,
         configKey: action['~k'],
-        context,
+        prodError: true,
       });
-
-      if (context.stage === 'dev' || context.stage === 'test') {
-        context.logger.warn(errorMessage);
-      } else {
-        throw new Error(errorMessage);
-      }
     }
   });
 }

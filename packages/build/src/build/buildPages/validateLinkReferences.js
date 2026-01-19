@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import formatConfigError from '../../utils/formatConfigError.js';
-
 function validateLinkReferences({ linkActionRefs, pageIds, context }) {
   const pageIdSet = new Set(pageIds);
 
@@ -27,17 +25,11 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
     }
 
     if (!pageIdSet.has(pageId)) {
-      const errorMessage = formatConfigError({
+      context.logger.configWarning({
         message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
         configKey: action['~k'],
-        context,
+        prodError: true,
       });
-
-      if (context.stage === 'dev' || context.stage === 'test') {
-        context.logger.warn(errorMessage);
-      } else {
-        throw new Error(errorMessage);
-      }
     }
   });
 }

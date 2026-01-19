@@ -16,7 +16,6 @@
 
 import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
-
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
 import collectTypeNames from '../collectTypeNames.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
@@ -45,7 +44,10 @@ function evaluateStaticOperators({ context, input, refDef }) {
 
   if (errors.length > 0) {
     errors.forEach((error) => {
-      context.logger.warn(`Static operator error at ${location}: ${error.message}`);
+      context.logger.configWarning({
+        message: error.message,
+        operatorLocation: error.operatorLocation,
+      });
     });
   }
 

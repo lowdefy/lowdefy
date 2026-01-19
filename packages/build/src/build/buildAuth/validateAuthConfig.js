@@ -18,9 +18,8 @@
 
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
+import { ConfigError } from '@lowdefy/node-utils';
 import lowdefySchema from '../../lowdefySchema.js';
-import formatConfigError from '../../utils/formatConfigError.js';
-
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
 async function validateAuthConfig({ components, context }) {
@@ -29,13 +28,11 @@ async function validateAuthConfig({ components, context }) {
   }
   if (!type.isObject(components.auth)) {
     const configKey = components.auth?.['~k'];
-    throw new Error(
-      formatConfigError({
-        message: 'lowdefy.auth is not an object.',
-        configKey,
-        context,
-      })
-    );
+    throw new ConfigError({
+      message: 'lowdefy.auth is not an object.',
+      configKey,
+      context,
+    });
   }
   if (type.isNone(components.auth.api)) {
     components.auth.api = {};

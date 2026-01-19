@@ -128,12 +128,16 @@ class BuildParser {
         return BuildParser.setDynamicMarker(value);
       }
 
+      // Build location with line number if available
+      const lineNumber = value['~l'];
+      const operatorLocation = lineNumber ? `${location}:${lineNumber}` : location;
+
       try {
         const res = this.operators[op]({
           args,
           arrayIndices: [],
           env: this.env,
-          location,
+          location: operatorLocation,
           methodName,
           operators: this.operators,
           params: value[key],
@@ -146,6 +150,11 @@ class BuildParser {
         });
         return res;
       } catch (e) {
+        // Attach location info for error formatting
+        e.operatorLocation = {
+          line: value['~l'],
+          ref: value['~r'],
+        };
         errors.push(e);
         if (this.verbose) {
           console.error(e);

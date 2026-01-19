@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/node-utils';
 import tryBuildStep from './tryBuildStep.js';
 
 const mockLogger = {
@@ -177,4 +178,73 @@ test('tryBuildStep uses stepName parameter', () => {
 
   // stepName is currently only used for debugging, function should still work
   expect(stepFn).toHaveBeenCalled();
+});
+
+test('tryBuildStep ignores suppressed ConfigError', () => {
+  const mockContext = {
+    errors: [],
+    logger: mockLogger,
+    keyMap: {
+      suppressedKey: {
+        '~r': 'ref1',
+        '~l': 10,
+        '~ignoreBuildCheck': true,
+      },
+    },
+    refMap: {
+      ref1: { path: 'test.yaml' },
+    },
+    directories: { config: '/app' },
+  };
+
+  const stepFn = jest.fn(() => {
+    throw new ConfigError({
+      message: 'This error should be suppressed.',
+      configKey: 'suppressedKey',
+      context: mockContext,
+    });
+  });
+
+  const components = {};
+
+  tryBuildStep(stepFn, 'testStep', { components, context: mockContext });
+
+  expect(stepFn).toHaveBeenCalled();
+  expect(mockContext.errors).toHaveLength(0);
+  expect(mockLogger.error).not.toHaveBeenCalled();
+});
+
+test('tryBuildStep collects non-suppressed ConfigError', () => {
+  const mockContext = {
+    errors: [],
+    logger: mockLogger,
+    keyMap: {
+      normalKey: {
+        '~r': 'ref1',
+        '~l': 10,
+      },
+    },
+    refMap: {
+      ref1: { path: 'test.yaml' },
+    },
+    directories: { config: '/app' },
+  };
+
+  const stepFn = jest.fn(() => {
+    throw new ConfigError({
+      message: 'This error should be collected.',
+      configKey: 'normalKey',
+      context: mockContext,
+    });
+  });
+
+  const components = {};
+
+  tryBuildStep(stepFn, 'testStep', { components, context: mockContext });
+
+  expect(stepFn).toHaveBeenCalled();
+  expect(mockContext.errors).toHaveLength(1);
+  expect(mockContext.errors[0]).toContain('[Config Error]');
+  expect(mockContext.errors[0]).toContain('This error should be collected.');
+  expect(mockLogger.error).toHaveBeenCalled();
 });

@@ -20,7 +20,6 @@ import get from './get.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
-import resolveConfigLocation from './resolveConfigLocation.js';
 import serializer from './serializer.js';
 import set from './set.js';
 import stableStringify from './stableStringify.js';
@@ -37,7 +36,6 @@ export {
   LRUCache,
   mergeObjects,
   omit,
-  resolveConfigLocation,
   serializer,
   set,
   stableStringify,

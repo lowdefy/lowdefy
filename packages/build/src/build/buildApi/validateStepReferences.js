@@ -15,9 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
 import extractOperatorKey from '../../utils/extractOperatorKey.js';
-import formatConfigWarning from '../../utils/formatConfigWarning.js';
 import traverseConfig from '../../utils/traverseConfig.js';
 
 // Collect all step IDs from a routine (including nested control structures)
@@ -67,7 +65,7 @@ function validateStepReferences({ endpoint, context }) {
       `Step IDs are defined by the "id" property of each step. ` +
       `Check for typos or add a step with this id.`;
 
-    context.logger.warn(formatConfigWarning({ message, configKey, context }));
+    context.logger.configWarning({ message, configKey });
   });
 }
 

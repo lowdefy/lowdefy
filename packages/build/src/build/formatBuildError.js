@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/helpers';
+import { resolveConfigLocation } from '@lowdefy/node-utils';
 
 function formatBuildError({ context, counter, typeName, message }) {
   const configKey = counter.getLocation(typeName);

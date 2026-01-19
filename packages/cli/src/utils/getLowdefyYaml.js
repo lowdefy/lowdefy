@@ -16,11 +16,12 @@
 
 import path from 'path';
 import { get, type } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
+import { ConfigError, readFile } from '@lowdefy/node-utils';
 import YAML from 'yaml';
 
 async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
-  let lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yaml'));
+  const filePath = 'lowdefy.yaml';
+  let lowdefyYaml = await readFile(path.join(configDirectory, filePath));
   if (!lowdefyYaml) {
     lowdefyYaml = await readFile(path.join(configDirectory, 'lowdefy.yml'));
   }
@@ -36,7 +37,11 @@ async function getLowdefyYaml({ configDirectory, requiresLowdefyYaml }) {
   try {
     lowdefy = YAML.parse(lowdefyYaml);
   } catch (error) {
-    throw new Error(`Could not parse "lowdefy.yaml" file. Received error ${error.message}.`);
+    throw new ConfigError({
+      error,
+      filePath,
+      configDirectory,
+    });
   }
   if (!lowdefy.lowdefy) {
     throw new Error(
