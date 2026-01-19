@@ -34,4 +34,6 @@ function js(operatorContext) {
   }
 }
 
+js.dynamic = true;
+
 export default js;

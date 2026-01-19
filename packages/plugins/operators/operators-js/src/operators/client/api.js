@@ -42,4 +42,6 @@ function _api({ params, apiResponses, location }) {
   return null;
 }
 
+_api.dynamic = true;
+
 export default _api;

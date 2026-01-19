@@ -62,4 +62,6 @@ function _hash({ params, location, methodName }) {
   });
 }
 
+_hash.dynamic = false;
+
 export default _hash;

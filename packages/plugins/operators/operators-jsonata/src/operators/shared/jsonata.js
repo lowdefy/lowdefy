@@ -60,4 +60,6 @@ function _jsonata({ params, location, methodName }) {
   });
 }
 
+_jsonata.dynamic = false;
+
 export default _jsonata;

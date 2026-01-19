@@ -16,29 +16,23 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _switch({ location, params }) {
-  if (!type.isArray(params.branches)) {
+function validateOperatorsDynamic({ operators }) {
+  const missingDynamic = [];
+
+  Object.entries(operators).forEach(([operatorName, operatorFn]) => {
+    if (!type.isFunction(operatorFn)) return;
+
+    if (!type.isBoolean(operatorFn.dynamic)) {
+      missingDynamic.push(operatorName);
+    }
+  });
+
+  if (missingDynamic.length > 0) {
     throw new Error(
-      `Operator Error: switch takes an array type as input for the branches. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
+      `Operator validation failed: The following operators are missing the 'dynamic' property: ${missingDynamic.join(', ')}. ` +
+        `All operators must have a 'dynamic' boolean property (true for runtime-only, false for build-time safe).`
     );
   }
-  for (const branch of params.branches) {
-    if (!type.isBoolean(branch.if)) {
-      throw new Error(
-        `Operator Error: switch takes a boolean type for parameter "if". Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
-    }
-    if (branch.if === true) {
-      return branch.then;
-    }
-  }
-  return params.default;
 }
 
-_switch.dynamic = false;
-
-export default _switch;
+export default validateOperatorsDynamic;

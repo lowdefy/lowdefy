@@ -48,4 +48,6 @@ function _divide({ params, location }) {
   return params[0] / params[1];
 }
 
+_divide.dynamic = false;
+
 export default _divide;

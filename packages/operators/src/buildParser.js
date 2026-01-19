@@ -17,7 +17,46 @@
 import { serializer, type } from '@lowdefy/helpers';
 
 class BuildParser {
-  constructor({ env, payload, secrets, user, operators, verbose }) {
+  // Check if value or its immediate children have the dynamic marker
+  // Note: Only checks immediate children because bubble-up happens bottom-up in reviver
+  static hasDynamicMarker(value) {
+    if (type.isArray(value) && value['~dyn'] === true) return true;
+    if (type.isObject(value) && value['~dyn'] === true) return true;
+    if (type.isArray(value)) {
+      return value.some((item) => {
+        if (type.isArray(item) && item['~dyn'] === true) return true;
+        if (type.isObject(item) && item['~dyn'] === true) return true;
+        return false;
+      });
+    }
+    if (type.isObject(value)) {
+      return Object.values(value).some((item) => {
+        if (type.isArray(item) && item['~dyn'] === true) return true;
+        if (type.isObject(item) && item['~dyn'] === true) return true;
+        return false;
+      });
+    }
+    return false;
+  }
+
+  // Set dynamic marker as non-enumerable property
+  static setDynamicMarker(value) {
+    if (type.isObject(value) || type.isArray(value)) {
+      Object.defineProperty(value, '~dyn', { value: true, enumerable: false });
+    }
+    return value;
+  }
+
+  constructor({
+    env,
+    payload,
+    secrets,
+    user,
+    operators,
+    verbose,
+    dynamicIdentifiers,
+    typeNames,
+  }) {
     this.env = env;
     this.operators = operators;
     this.parse = this.parse.bind(this);
@@ -25,6 +64,8 @@ class BuildParser {
     this.secrets = secrets;
     this.user = user;
     this.verbose = verbose;
+    this.dynamicIdentifiers = dynamicIdentifiers ?? new Set();
+    this.typeNames = typeNames ?? new Set();
   }
 
   // TODO: Look at logging here
@@ -41,14 +82,52 @@ class BuildParser {
     }
     const errors = [];
     const reviver = (_, value) => {
+      // Handle arrays: bubble up dynamic marker if any element is dynamic
+      if (type.isArray(value)) {
+        if (BuildParser.hasDynamicMarker(value)) {
+          return BuildParser.setDynamicMarker(value);
+        }
+        return value;
+      }
+
       if (!type.isObject(value)) return value;
       // TODO: pass ~r in errors. Build does not have ~k.
       if (type.isString(value['~r'])) return value;
+
+      // Type boundary reset: if object has a 'type' key matching a registered type,
+      // delete the ~dyn marker and skip bubble-up to prevent propagation past this boundary
+      const isTypeBoundary = type.isString(value.type) && this.typeNames.has(value.type);
+      if (isTypeBoundary) {
+        delete value['~dyn'];
+      }
+
+      // Check if params contain dynamic content (bubble up), but not at type boundaries
+      if (!isTypeBoundary && BuildParser.hasDynamicMarker(value)) {
+        return BuildParser.setDynamicMarker(value);
+      }
+
       if (Object.keys(value).length !== 1) return value;
       const key = Object.keys(value)[0];
       if (!key.startsWith(operatorPrefix)) return value;
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
-      if (type.isUndefined(this.operators[op])) return value;
+
+      // Check if this operator/method is dynamic
+      const fullIdentifier = methodName ? `${op}.${methodName}` : op;
+      if (this.dynamicIdentifiers.has(fullIdentifier) || this.dynamicIdentifiers.has(op)) {
+        return BuildParser.setDynamicMarker(value);
+      }
+
+      // If operator is not in our operators map, it's a runtime-only operator
+      // Mark it as dynamic to preserve it for runtime evaluation
+      if (type.isUndefined(this.operators[op])) {
+        return BuildParser.setDynamicMarker(value);
+      }
+
+      // Check if params contain dynamic content before evaluating
+      if (BuildParser.hasDynamicMarker(value[key])) {
+        return BuildParser.setDynamicMarker(value);
+      }
+
       try {
         const res = this.operators[op]({
           args,

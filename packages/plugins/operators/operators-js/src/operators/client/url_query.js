@@ -35,4 +35,6 @@ function _url_query({ arrayIndices, globals, location, params }) {
   });
 }
 
+_url_query.dynamic = true;
+
 export default _url_query;

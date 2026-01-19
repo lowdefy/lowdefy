@@ -32,4 +32,6 @@ function _function({ actions, arrayIndices, event, location, operatorPrefix, par
   };
 }
 
+_function.dynamic = true;
+
 export default _function;

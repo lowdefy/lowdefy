@@ -44,4 +44,6 @@ function _get({ arrayIndices, location, params }) {
   });
 }
 
+_get.dynamic = false;
+
 export default _get;

@@ -55,4 +55,6 @@ function _operator(options) {
   );
 }
 
+_operator.dynamic = true;
+
 export default _operator;

@@ -18,4 +18,6 @@ function _not({ params }) {
   return !params;
 }
 
+_not.dynamic = false;
+
 export default _not;

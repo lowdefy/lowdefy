@@ -26,4 +26,6 @@ function _args({ args, arrayIndices, location, params }) {
   });
 }
 
+_args.dynamic = false;
+
 export default _args;

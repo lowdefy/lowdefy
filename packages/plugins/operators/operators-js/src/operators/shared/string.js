@@ -104,4 +104,6 @@ function _string({ params, location, methodName }) {
   });
 }
 
+_string.dynamic = false;
+
 export default _string;

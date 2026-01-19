@@ -34,4 +34,6 @@ function _gte({ params, location }) {
   return params[0] >= params[1];
 }
 
+_gte.dynamic = false;
+
 export default _gte;

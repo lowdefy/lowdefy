@@ -28,4 +28,6 @@ function _if({ location, params }) {
   );
 }
 
+_if.dynamic = false;
+
 export default _if;

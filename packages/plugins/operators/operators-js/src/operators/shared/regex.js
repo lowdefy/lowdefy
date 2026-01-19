@@ -60,4 +60,6 @@ function _regex({ location, params, state }) {
   }
 }
 
+_regex.dynamic = false;
+
 export default _regex;

@@ -26,4 +26,6 @@ function _user({ arrayIndices, location, params, user }) {
   });
 }
 
+_user.dynamic = true;
+
 export default _user;

@@ -120,4 +120,6 @@ function change_case({ params, location, methodName }) {
   });
 }
 
+change_case.dynamic = false;
+
 export default change_case;

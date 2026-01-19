@@ -39,4 +39,6 @@ function _request({ arrayIndices, params, requests, location }) {
   return null;
 }
 
+_request.dynamic = true;
+
 export default _request;

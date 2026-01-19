@@ -52,4 +52,6 @@ function _yaml({ params, location, methodName }) {
   });
 }
 
+_yaml.dynamic = false;
+
 export default _yaml;

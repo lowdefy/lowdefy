@@ -18,30 +18,38 @@ import { BuildParser } from '@lowdefy/operators';
 import operators from '@lowdefy/operators-js/operators/build';
 
 import collectDynamicIdentifiers from '../collectDynamicIdentifiers.js';
+import collectTypeNames from '../collectTypeNames.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 
 // Validate and collect dynamic identifiers once at module load
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-async function evaluateBuildOperators({ context, input, refDef }) {
+function evaluateStaticOperators({ context, input, refDef }) {
+  // Collect type names from context.typesMap for type boundary detection
+  const typeNames = collectTypeNames({ typesMap: context.typesMap });
+
   const operatorsParser = new BuildParser({
     env: process.env,
     operators,
     dynamicIdentifiers,
+    typeNames,
   });
 
+  const location = refDef.path ?? refDef.resolver;
   const { output, errors } = operatorsParser.parse({
     input,
-    location: refDef.path ?? refDef.resolver,
-    operatorPrefix: '_build.',
+    location,
+    operatorPrefix: '_',
   });
+
   if (errors.length > 0) {
-    await context.logger.warn('Build operator errors.');
-    const promises = errors.map((error) => context.logger.warn(error.message));
-    await promises;
+    errors.forEach((error) => {
+      context.logger.warn(`Static operator error at ${location}: ${error.message}`);
+    });
   }
+
   return output;
 }
 
-export default evaluateBuildOperators;
+export default evaluateStaticOperators;

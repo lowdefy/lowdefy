@@ -62,4 +62,6 @@ function _type({ location, params, state }) {
   }
 }
 
+_type.dynamic = false;
+
 export default _type;

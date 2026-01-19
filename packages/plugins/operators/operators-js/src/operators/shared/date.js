@@ -63,7 +63,7 @@ const meta = {
   getUTCMinutes: { singleArg: true, prep, validTypes: ['date', 'null'] },
   getUTCMonth: { singleArg: true, prep, validTypes: ['date', 'null'] },
   getUTCSeconds: { singleArg: true, prep, validTypes: ['date', 'null'] },
-  now: { noArgs: true },
+  now: { noArgs: true, dynamic: true },
   parse: { singleArg: true, prep, validTypes: ['string', 'null'] },
   setDate: { namedArgs: ['on', 'dayOfMonth'], validTypes: ['array', 'object'] },
   setFullYear: { namedArgs: ['on', 'year'], validTypes: ['array', 'object'] },
@@ -115,5 +115,8 @@ function _date({ params, location, methodName }) {
     instanceType: 'date',
   });
 }
+
+_date.dynamic = false;
+_date.meta = meta;
 
 export default _date;

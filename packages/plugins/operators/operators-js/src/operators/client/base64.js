@@ -41,4 +41,6 @@ function _base64({ params, location, methodName }) {
   });
 }
 
+_base64.dynamic = true;
+
 export default _base64;

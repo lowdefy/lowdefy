@@ -34,4 +34,6 @@ function _gt({ params, location }) {
   return params[0] > params[1];
 }
 
+_gt.dynamic = false;
+
 export default _gt;

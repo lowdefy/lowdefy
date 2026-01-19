@@ -41,4 +41,6 @@ function _uri({ params, location, methodName }) {
   });
 }
 
+_uri.dynamic = false;
+
 export default _uri;

@@ -25,4 +25,6 @@ function _or({ location, params }) {
   return !!params.reduce((acc, el) => acc || el, false);
 }
 
+_or.dynamic = false;
+
 export default _or;

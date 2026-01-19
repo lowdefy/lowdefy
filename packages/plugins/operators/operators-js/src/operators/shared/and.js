@@ -27,4 +27,6 @@ function _and({ params, location }) {
   return !!params.reduce((acc, el) => acc && el, true);
 }
 
+_and.dynamic = false;
+
 export default _and;

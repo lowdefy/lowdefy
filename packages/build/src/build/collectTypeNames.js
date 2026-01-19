@@ -14,18 +14,24 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
+import { type } from '@lowdefy/helpers';
 
-function _state({ arrayIndices, location, params, state }) {
-  return getFromObject({
-    arrayIndices,
-    location,
-    object: state,
-    operator: '_state',
-    params,
+function collectTypeNames({ typesMap }) {
+  const typeNames = new Set();
+
+  if (!type.isObject(typesMap)) {
+    return typeNames;
+  }
+
+  ['blocks', 'requests', 'connections', 'actions', 'controls'].forEach((category) => {
+    if (type.isObject(typesMap[category])) {
+      Object.keys(typesMap[category]).forEach((typeName) => {
+        typeNames.add(typeName);
+      });
+    }
   });
+
+  return typeNames;
 }
 
-_state.dynamic = true;
-
-export default _state;
+export default collectTypeNames;

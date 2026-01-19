@@ -83,4 +83,6 @@ function _object({ params, location, methodName }) {
   });
 }
 
+_object.dynamic = false;
+
 export default _object;

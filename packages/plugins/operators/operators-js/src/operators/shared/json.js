@@ -44,4 +44,6 @@ function _json({ params, location, methodName }) {
   });
 }
 
+_json.dynamic = false;
+
 export default _json;

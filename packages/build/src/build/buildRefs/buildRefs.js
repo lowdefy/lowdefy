@@ -17,6 +17,7 @@
 import recursiveBuild from './recursiveBuild.js';
 import makeRefDefinition from './makeRefDefinition.js';
 import evaluateBuildOperators from './evaluateBuildOperators.js';
+import evaluateStaticOperators from './evaluateStaticOperators.js';
 
 async function buildRefs({ context }) {
   const refDef = makeRefDefinition('lowdefy.yaml', null, context.refMap);
@@ -25,7 +26,14 @@ async function buildRefs({ context }) {
     refDef,
     count: 0,
   });
+  // First: evaluate _build.* operators (e.g., _build.env)
   components = await evaluateBuildOperators({
+    context,
+    input: components,
+    refDef,
+  });
+  // Second: evaluate static operators (_sum, _if, etc.) that don't depend on runtime data
+  components = evaluateStaticOperators({
     context,
     input: components,
     refDef,
