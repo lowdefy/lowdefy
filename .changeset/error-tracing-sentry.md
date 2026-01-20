@@ -4,6 +4,7 @@
 '@lowdefy/client': minor
 '@lowdefy/engine': minor
 '@lowdefy/helpers': minor
+'@lowdefy/node-utils': minor
 '@lowdefy/block-utils': minor
 '@lowdefy/operators': minor
 '@lowdefy/server': minor
@@ -21,6 +22,14 @@ feat: Config-aware error tracing and Sentry integration
 - Clickable VSCode links in terminal and browser
 - Build-time validation catches typos with "Did you mean?" suggestions
 - Service vs Config error classification
+
+**Error Class Refactoring**
+
+- New `ConfigError`, `ConfigWarning`, `ConfigMessage` classes in `@lowdefy/node-utils` for build-time errors
+- New client-side `ConfigError` class in `@lowdefy/helpers` with async location resolution
+- `ConfigWarning` supports `prodError` flag to throw in production builds
+- Logger convenience methods: `context.logger.configWarning()`, `context.logger.configError()`
+- Plugin/core boundary maintained: plugins throw plain errors, core wraps with ConfigError
 
 **Sentry Integration (#1945)**
 

@@ -371,15 +371,13 @@ const location = resolveConfigLocation({
 **Usage in Error Formatting:**
 
 ```javascript
-import formatConfigError from './formatConfigError.js';
+import { ConfigError } from '@lowdefy/node-utils';
 
-throw new Error(
-  formatConfigError({
-    message: 'Block type "Buton" not found.',
-    configKey: block['~k'],
-    context,
-  })
-);
+throw new ConfigError({
+  message: 'Block type "Buton" not found.',
+  configKey: block['~k'],
+  context,
+});
 // Output:
 // [Config Error] Block type "Buton" not found.
 //   pages/home.yaml:15 at pages.0.blocks.0.type
@@ -387,6 +385,115 @@ throw new Error(
 ```
 
 See [Error Tracing System](../architecture/error-tracing.md) for complete documentation.
+
+## ConfigError (Client-Side)
+
+Client-side error class for configuration errors with async location resolution. Used by the client to wrap operator errors and resolve their source locations from the server.
+
+```javascript
+import { ConfigError } from '@lowdefy/helpers';
+
+// Create directly
+const error = new ConfigError({ message: 'Invalid config', configKey: 'key-123' });
+
+// Wrap an existing error (preserves stack trace)
+const configError = ConfigError.from({ error: originalError, configKey: 'key-456' });
+
+// Resolve location and log (non-blocking)
+await error.log(lowdefy);
+
+// Or resolve separately
+await error.resolve(lowdefy);
+console.error(error.format());
+```
+
+### Constructor
+
+```javascript
+new ConfigError({ message, configKey })
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `message` | string | Error message |
+| `configKey` | string | The `~k` value for location resolution (optional) |
+
+### Instance Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | string | Always `'ConfigError'` |
+| `configKey` | string | Config key for location lookup |
+| `source` | string | Resolved: `'pages/home.yaml:10'` |
+| `config` | string | Resolved: `'root.pages[0].blocks[0]'` |
+| `link` | string | Resolved: `'/app/pages/home.yaml:10'` |
+| `resolved` | boolean | Whether location has been resolved |
+
+### Methods
+
+#### `resolve(lowdefy, options)`
+
+Asynchronously resolves the error location from the server via `/api/client-error`.
+
+```javascript
+await error.resolve(lowdefy, { timeout: 1000 });
+```
+
+- **Non-blocking**: Uses 1-second timeout by default
+- **Graceful degradation**: If server unreachable, `resolved` is set to `true` but location fields remain `null`
+- **Returns**: `this` for chaining
+
+#### `format()`
+
+Returns formatted error message for console output.
+
+```javascript
+error.format();
+// Without location: "[Config Error] Invalid config"
+// With location:
+// "[Config Error] Invalid config
+//   pages/home.yaml:10 at root.pages[0].blocks[0]
+//   vscode://file/app/pages/home.yaml?line=10"
+```
+
+#### `log(lowdefy, options)`
+
+Resolves location and logs to console in one call.
+
+```javascript
+await error.log(lowdefy);
+// Equivalent to:
+// await error.resolve(lowdefy);
+// console.error(error.format());
+```
+
+#### `static from({ error, configKey })`
+
+Creates a ConfigError from an existing error, preserving the stack trace.
+
+```javascript
+const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
+```
+
+- Preserves original error's `configKey` if present
+- Falls back to provided `configKey` if original has none
+- Copies stack trace from original error
+
+### Architecture Note
+
+**Plugin/Core Boundary**: Plugins throw plain errors without knowing about `configKey`. The core (WebParser, initLowdefyContext) wraps these errors with ConfigError:
+
+```javascript
+// In WebParser.parse() - core handles the configKey
+try {
+  return operator({ params, ... });
+} catch (e) {
+  errors.push(ConfigError.from({ error: e, configKey }));
+  return null;
+}
+```
+
+See [Error Tracing System](../architecture/error-tracing.md) for the complete client/server error flow.
 
 ## Key Files
 
@@ -397,5 +504,6 @@ See [Error Tracing System](../architecture/error-tracing.md) for complete docume
 | `src/type.js` | Type checking module |
 | `src/serializer.js` | Serialization utilities |
 | `src/resolveConfigLocation.js` | Config location resolver for error tracing |
+| `src/ConfigError.js` | Client-side config error with async resolution |
 | `src/mergeObjects.js` | Object merging |
 | `src/LRUCache.js` | LRU cache implementation |

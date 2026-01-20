@@ -149,6 +149,103 @@ const secrets = getSecretsFromEnv(process.env);
 
 Typically filtered by prefix or naming convention in calling code.
 
+## Error Classes
+
+Build-time error and warning classes for config validation with location resolution.
+
+### ConfigMessage (Base Class)
+
+Shared formatting logic for config messages. Not used directly - use ConfigError or ConfigWarning.
+
+```javascript
+import { ConfigMessage } from '@lowdefy/node-utils';
+
+// Internal use only - provides format() static method
+const message = ConfigMessage.format({
+  prefix: '[Custom]',
+  message: 'Something happened',
+  configKey: obj['~k'],
+  operatorLocation: 'pages[0].blocks[0]',
+  context,
+});
+```
+
+### ConfigError
+
+Build-time error class that extends Error with config location resolution.
+
+```javascript
+import { ConfigError } from '@lowdefy/node-utils';
+
+// Standard error
+throw new ConfigError({
+  message: 'Block type "Buton" not found.',
+  configKey: block['~k'],
+  context,
+});
+
+// YAML parse error (constructor overload)
+throw new ConfigError({
+  error: yamlParseError,  // Extracts line number from error.message
+  filePath: 'pages/home.yaml',
+  configDirectory: '/app',
+});
+```
+
+**Output format:**
+```
+[Config Error] Block type "Buton" not found.
+  pages/home.yaml:15 at pages.0.blocks.0.type
+  /Users/dev/myapp/pages/home.yaml:15
+```
+
+### ConfigWarning
+
+Build-time warning class with optional `prodError` flag. **Prefer using `context.logger.configWarning()` instead of calling directly.**
+
+**prodError behavior:**
+- `stage === 'dev'` or `stage === 'test'`: Returns formatted warning string
+- `stage === 'prod'`: Throws `ConfigError` instead
+
+### Logger Integration (Preferred)
+
+The build context logger has convenience methods that wrap ConfigError and ConfigWarning:
+
+```javascript
+// Warning - logs but continues build
+context.logger.configWarning({
+  message: '_state references "userName" but no block exists.',
+  configKey: obj['~k'],
+});
+
+// Warning that becomes error in prod builds
+context.logger.configWarning({
+  message: 'Deprecated feature used.',
+  configKey: obj['~k'],
+  prodError: true,
+});
+
+// Throws ConfigError with location
+context.logger.configError({
+  message: 'Invalid block type.',
+  configKey: block['~k'],
+});
+```
+
+**Implementation** (in `createContext.js`):
+```javascript
+logger.configWarning = ({ message, configKey, operatorLocation, prodError }) => {
+  const formatted = ConfigWarning.format({ message, configKey, operatorLocation, context, prodError });
+  if (formatted) {
+    logger.warn(formatted);
+  }
+};
+
+logger.configError = ({ message, configKey, operatorLocation }) => {
+  throw new ConfigError({ message, configKey, operatorLocation, context });
+};
+```
+
 ## Dependencies
 
 - `@lowdefy/helpers` (4.4.0)
@@ -165,6 +262,10 @@ Typically filtered by prefix or naming convention in calling code.
 | `src/getFileExtension.js` | Extension parsing |
 | `src/spawnProcess.js` | Process spawning |
 | `src/getSecretsFromEnv.js` | Environment secrets |
+| `src/ConfigMessage.js` | Base class for config messages |
+| `src/ConfigError.js` | Build-time error with location |
+| `src/ConfigWarning.js` | Build-time warning with prodError flag |
+| `src/resolveConfigLocation.js` | Config location resolver |
 
 ## Usage Examples
 

@@ -83,6 +83,7 @@ import Client from '@lowdefy/client';
 | Module | Purpose |
 |--------|---------|
 | `initLowdefyContext.js` | Sets up the global lowdefy context |
+| `createLogError.js` | Creates error logging function with deduplication |
 | `setupLink.js` | Configures navigation links |
 | `createLinkComponent.js` | Creates the Link component for navigation |
 | `createIcon.js` | Creates icon rendering function |
@@ -115,6 +116,7 @@ lowdefy = {
     displayMessage: fn,          // Show toast messages
     callRequest: fn,             // Call data requests
     callEndpoint: fn,            // Call API endpoints
+    logError: fn,                // Log errors with location resolution
     ...
   }
 }

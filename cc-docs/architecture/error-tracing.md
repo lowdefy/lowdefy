@@ -44,69 +44,44 @@ const location = resolveConfigLocation({
 // }
 ```
 
-### Error Formatting Utilities
+### Error Formatting Classes
 
-Four utilities format error messages with location info:
+Error and warning formatting is handled by classes in `@lowdefy/node-utils`:
 
-| Utility               | Purpose                              | Prefix             |
-| --------------------- | ------------------------------------ | ------------------ |
-| `formatConfigMessage` | Core formatter (shared logic)        | Custom             |
-| `formatConfigError`   | Build errors (fatal)                 | `[Config Error]`   |
-| `formatConfigWarning` | Build warnings (non-fatal)           | `[Config Warning]` |
-| `collectConfigError`  | Collect errors before stopping build | `[Config Error]`   |
-| `tryBuildStep`        | Wrapper to catch build step errors   | N/A                |
+| Class            | Purpose                              | Prefix             |
+| ---------------- | ------------------------------------ | ------------------ |
+| `ConfigMessage`  | Base formatter (shared logic)        | Custom             |
+| `ConfigError`    | Build errors (fatal, extends Error)  | `[Config Error]`   |
+| `ConfigWarning`  | Build warnings (non-fatal)           | `[Config Warning]` |
 
-Location: `packages/build/src/utils/`
+Location: `packages/utils/node-utils/src/`
 
-**Architecture:** `formatConfigError` and `formatConfigWarning` are thin wrappers around `formatConfigMessage`:
+**Architecture:** `ConfigError` and `ConfigWarning` use `ConfigMessage.format()` internally for consistent formatting.
 
-```javascript
-// formatConfigMessage.js - shared core logic
-function formatConfigMessage({ prefix, message, configKey, context }) {
-  if (!configKey || !context) {
-    return `${prefix} ${message}`;
-  }
-  const location = resolveConfigLocation({ configKey, keyMap, refMap, configDirectory });
-  if (!location) {
-    return `${prefix} ${message}`;
-  }
-  return `${prefix} ${message}\n  ${location.source} at ${location.config}\n  ${location.link}`;
-}
-
-// formatConfigError.js - 3-line wrapper
-function formatConfigError({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Error]', message, configKey, context });
-}
-
-// formatConfigWarning.js - 3-line wrapper
-function formatConfigWarning({ message, configKey, context }) {
-  return formatConfigMessage({ prefix: '[Config Warning]', message, configKey, context });
-}
-```
-
-**Usage:**
+**Usage (preferred - via logger methods):**
 
 ```javascript
-import formatConfigError from '../../utils/formatConfigError.js';
-import formatConfigWarning from '../../utils/formatConfigWarning.js';
+import { ConfigError } from '@lowdefy/node-utils';
 
 // For fatal errors that stop the build
-throw new Error(
-  formatConfigError({
-    message: `Block type "Buton" not found.`,
-    configKey: block['~k'],
-    context,
-  })
-);
+throw new ConfigError({
+  message: `Block type "Buton" not found.`,
+  configKey: block['~k'],
+  context,
+});
 
 // For warnings that don't stop the build
-context.logger.warn(
-  formatConfigWarning({
-    message: `_state references "userName" but no block with id "userName" exists.`,
-    configKey: obj['~k'],
-    context,
-  })
-);
+context.logger.configWarning({
+  message: `_state references "userName" but no block with id "userName" exists.`,
+  configKey: obj['~k'],
+});
+
+// Warning that becomes error in prod builds
+context.logger.configWarning({
+  message: 'Deprecated feature used.',
+  configKey: obj['~k'],
+  prodError: true,
+});
 ```
 
 **Output format:**
@@ -322,11 +297,80 @@ const array = evaluateOperators({
 
 ### Client Error Logging
 
-Client errors are sent to server logs via `logClientError.js`:
+Client errors use the `ConfigError` class from `@lowdefy/helpers` for standardized error handling with async location resolution.
 
-- Includes block ID and page context
-- Preserves stack trace
-- Categorizes error types (operator, action, render)
+#### ConfigError Class (Client-Side)
+
+Located at `packages/utils/helpers/src/ConfigError.js`, this class:
+
+- Wraps errors with `configKey` for location resolution
+- Resolves location asynchronously from `/api/client-error` endpoint
+- Formats errors with source location and VSCode links
+- Handles graceful degradation when server is unreachable
+
+```javascript
+import { ConfigError } from '@lowdefy/helpers';
+
+// Wrap an error (preserves stack trace)
+const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
+
+// Resolve location and log (non-blocking, 1s timeout)
+await configError.log(lowdefy);
+```
+
+#### createLogError Factory
+
+Located at `packages/client/src/createLogError.js`, creates the `logError` function attached to `lowdefy._internal`:
+
+```javascript
+function createLogError(lowdefy) {
+  const loggedErrors = new Set();
+
+  return async function logError(error) {
+    // Deduplicate by message + configKey
+    const errorKey = `${error.message}:${error.configKey || ''}`;
+    if (loggedErrors.has(errorKey)) return;
+    loggedErrors.add(errorKey);
+
+    // Service errors log without location resolution
+    if (error.isServiceError === true) {
+      console.error(`[Service Error] ${error.message}`);
+      return;
+    }
+
+    // Wrap in ConfigError and resolve location
+    const configError = error instanceof ConfigError
+      ? error
+      : ConfigError.from({ error, configKey: error.configKey });
+
+    await configError.log(lowdefy);
+  };
+}
+```
+
+**Key behaviors:**
+- **Deduplication**: Same error logged only once per session
+- **Service vs Config**: Service errors skip location resolution
+- **Non-blocking**: Location resolution has 1s timeout
+- **Graceful degradation**: Logs without location if server unreachable
+
+#### Plugin/Core Boundary
+
+Plugins throw plain errors without knowing about `configKey`. The core wraps them:
+
+```javascript
+// WebParser.parse() - packages/operators/src/webParser.js
+try {
+  return operator({ params, ... });
+} catch (e) {
+  errors.push(ConfigError.from({ error: e, configKey }));
+  return null;
+}
+```
+
+This maintains separation of concerns:
+- **Plugins**: Throw descriptive errors about what went wrong
+- **Core**: Attaches `configKey` and handles location resolution
 
 ## Sentry Integration
 
@@ -423,7 +467,8 @@ Instead of stopping on the first error, the build system collects all errors and
 3. `collectConfigError` utility collects errors instead of throwing:
    ```javascript
    function collectConfigError({ message, configKey, context }) {
-     const errorMessage = formatConfigError({ message, configKey, context });
+     const errorMessage = ConfigError.format({ message, configKey, context });
+     if (!errorMessage) return; // Suppressed
      if (!context.errors) {
        throw new Error(errorMessage); // Fallback for tests
      }
@@ -495,17 +540,21 @@ Build failed with 3 error(s):
 
 **Trade-off:** Slight increase in build artifact size, but significantly better DX.
 
-### Why Extract formatConfigMessage?
+### Why Use Classes for Config Errors/Warnings?
 
-**Problem:** `formatConfigError.js` and `formatConfigWarning.js` were 100% identical except for the prefix string (`[Config Error]` vs `[Config Warning]`). This violated DRY and made maintenance harder.
+**Problem:** `formatConfigError()` and `formatConfigWarning()` were nearly identical functions. Also, throwing `new Error(formatConfigError(...))` was awkward.
 
-**Decision:** Extract shared logic to `formatConfigMessage.js` that accepts a `prefix` parameter. Both formatters become 3-line wrappers.
+**Decision:** Use classes in `@lowdefy/node-utils`:
+- `ConfigMessage` - Base class with shared `format()` logic
+- `ConfigError` - Extends Error, can be thrown directly
+- `ConfigWarning` - Static `format()` method with `prodError` flag
 
-**Trade-off:** One more file, but:
+**Trade-off:** More structured but:
 
-- Tests for edge cases (null context, missing keyMap) only need to be written once
-- Future message types (e.g., `[Config Info]`) trivial to add
-- Core formatting logic has single source of truth
+- `throw new ConfigError({...})` is cleaner than `throw new Error(formatConfigError({...}))`
+- `prodError` flag centralizes dev/prod warning behavior
+- Logger convenience methods (`context.logger.configWarning()`) hide implementation details
+- Tests centralized in class test files
 
 ### Why Extract extractOperatorKey?
 
@@ -532,15 +581,36 @@ Build failed with 3 error(s):
 
 **Trade-off:** More permissive in dev (faster iteration) but catches issues before production.
 
+### Why Separate Client and Build ConfigError Classes?
+
+**Problem:** Both client and build need ConfigError, but with different capabilities.
+
+**Decision:** Two separate implementations:
+- `@lowdefy/helpers` - Client-side, async location resolution via HTTP
+- `@lowdefy/node-utils` - Build-time, sync resolution with direct keyMap/refMap access
+
+**Rationale:**
+- Client cannot access keyMap/refMap directly (server-side only)
+- Client needs non-blocking resolution (can't freeze UI)
+- Build has synchronous access to all artifacts
+- Different timeout/fallback requirements
+
+### Why Plugin/Core Boundary for configKey?
+
+**Problem:** Should plugins know about `configKey` and throw ConfigError directly?
+
+**Decision:** Plugins throw plain errors. Core (WebParser, engine) wraps them with ConfigError.
+
+**Rationale:**
+- Plugins are user-facing, should have simple error interface
+- `configKey` is an internal implementation detail
+- Core already tracks `~k` during operator evaluation
+- Keeps plugin API stable even if error tracking changes
+
 ## Related
 
 ### Build Utilities
 
-- `packages/build/src/utils/formatConfigMessage.js` - Core message formatter (shared logic)
-- `packages/build/src/utils/formatConfigError.js` - Fatal error formatter wrapper
-- `packages/build/src/utils/formatConfigWarning.js` - Warning formatter wrapper
-- `packages/build/src/utils/collectConfigError.js` - Error collector for multi-error reporting
-- `packages/build/src/utils/tryBuildStep.js` - Build step wrapper to catch errors
 - `packages/build/src/utils/extractOperatorKey.js` - Extracts top-level key from operator values
 - `packages/build/src/utils/traverseConfig.js` - Config traversal utility
 - `packages/build/src/utils/findSimilarString.js` - "Did you mean?" suggestions
@@ -548,12 +618,24 @@ Build failed with 3 error(s):
 ### Build Core
 
 - `packages/build/src/index.js` - Main build orchestration with error collection
-- `packages/build/src/createContext.js` - Build context with errors array
+- `packages/build/src/createContext.js` - Build context with errors array and logger methods
 - `packages/build/src/build/buildRefs/recursiveBuild.js:95-110` - Multi-file ref handling
 
 ### Helpers
 
 - `packages/utils/helpers/src/resolveConfigLocation.js` - Location resolver
+- `packages/utils/helpers/src/ConfigError.js` - Client-side ConfigError class
+
+### Node Utils
+
+- `packages/utils/node-utils/src/ConfigMessage.js` - Base message formatter
+- `packages/utils/node-utils/src/ConfigError.js` - Build-time ConfigError class
+- `packages/utils/node-utils/src/ConfigWarning.js` - Build-time warning with prodError
+
+### Client
+
+- `packages/client/src/createLogError.js` - Error logging with deduplication
+- `packages/operators/src/webParser.js` - Wraps operator errors with ConfigError
 
 ### Sentry Integration
 

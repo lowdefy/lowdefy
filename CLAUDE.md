@@ -214,13 +214,62 @@ export default SetState;
 
 ## Error Handling
 
-Include location and received value in error messages:
+Include location and received value in error messages.
+
+### Build-Time Errors (in `packages/build/`)
+
+Use `ConfigError` from `@lowdefy/node-utils` for errors with config location. Use `context.logger.configWarning()` for warnings:
 
 ```javascript
+import { ConfigError } from '@lowdefy/node-utils';
+
+// Fatal error - stops build
+throw new ConfigError({
+  message: 'Block type "Buton" not found.',
+  configKey: block['~k'],
+  context,
+});
+
+// Warning - logs but continues build
+context.logger.configWarning({
+  message: '_state references undefined blockId.',
+  configKey: obj['~k'],
+});
+
+// Warning that becomes error in prod builds
+context.logger.configWarning({
+  message: 'Deprecated feature used.',
+  configKey: obj['~k'],
+  prodError: true,
+});
+```
+
+### Plugin Errors (operators, actions, connections)
+
+Plugins throw plain errors - **never use ConfigError in plugins**. The core wraps them with location info:
+
+```javascript
+// In operator plugin - just throw descriptive error
 throw new Error(
   `Operator Error: _if requires boolean test. Received: ${JSON.stringify(params)} at ${location}.`
 );
 ```
+
+### Client-Side Errors
+
+Client code uses `ConfigError` from `@lowdefy/helpers` for async location resolution:
+
+```javascript
+import { ConfigError } from '@lowdefy/helpers';
+
+// Wrap error with configKey (in WebParser, engine)
+const configError = ConfigError.from({ error: e, configKey: obj['~k'] });
+
+// Log with resolved location (non-blocking)
+await configError.log(lowdefy);
+```
+
+See `cc-docs/architecture/error-tracing.md` for the complete error system.
 
 ## Testing
 

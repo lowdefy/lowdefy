@@ -239,8 +239,6 @@ Located in `packages/build/src/utils/`:
 
 | Utility | Purpose |
 |---------|---------|
-| `formatConfigError.js` | Format fatal errors with config location |
-| `formatConfigWarning.js` | Format warnings with config location |
 | `traverseConfig.js` | Depth-first config traversal for validation |
 | `findSimilarString.js` | "Did you mean?" suggestions using Levenshtein distance |
 | `createCheckDuplicateId.js` | Factory for duplicate ID detection |
@@ -248,13 +246,20 @@ Located in `packages/build/src/utils/`:
 
 **Error formatting pattern:**
 ```javascript
-import formatConfigError from '../../utils/formatConfigError.js';
+import { ConfigError } from '@lowdefy/node-utils';
 
-throw new Error(formatConfigError({
+// Fatal error - stops build
+throw new ConfigError({
   message: `Block type "${type}" not found.`,
   configKey: block['~k'],
-  context
-}));
+  context,
+});
+
+// Warning - logs but continues build
+context.logger.configWarning({
+  message: `Deprecated feature used.`,
+  configKey: obj['~k'],
+});
 ```
 
 ## Entry Points
