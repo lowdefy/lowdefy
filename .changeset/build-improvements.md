@@ -11,3 +11,4 @@ Improve build error handling and test infrastructure:
 - Fix addKeys to not store undefined values in keyMap
 - Menu link to missing page is warning in dev, error in prod
 - Handle areas with no blocks gracefully - render as empty page instead of crashing
+- Filter out anyOf/oneOf cascade errors in schema validation - only show the specific error

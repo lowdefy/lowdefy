@@ -28,7 +28,13 @@ function testSchema({ components, context }) {
   });
 
   if (!valid) {
-    errors.forEach((error) => {
+    // Filter out anyOf/oneOf cascade errors - these are always accompanied by
+    // more specific validation errors and just add noise
+    const filteredErrors = errors.filter(
+      (error) => error.keyword !== 'anyOf' && error.keyword !== 'oneOf'
+    );
+
+    filteredErrors.forEach((error) => {
       const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
       const configKey = findConfigKey({ components, instancePath });
 
