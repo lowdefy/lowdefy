@@ -447,7 +447,15 @@ describe('File Reference Errors (I)', () => {
     expect(result.thrownError).not.toBeNull();
     // Error is logged, then a formatted error is thrown
     expect(result.errors.length).toBeGreaterThan(0);
-    expect(result.errors[0]).toContain('Circular reference detected');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Circular reference detected. File "a.yaml" references itself through:\n' +
+        '  -> lowdefy.yaml\n' +
+        '  -> a.yaml\n' +
+        '  -> b.yaml\n' +
+        '  -> a.yaml\n' +
+        '  b.yaml:4\n' +
+        `  ${path.join(fixturesDir, 'I2-circular-ref', 'b.yaml:4')}`
+    );
   });
 });
 

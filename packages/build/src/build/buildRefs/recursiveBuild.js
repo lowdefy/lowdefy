@@ -37,8 +37,10 @@ async function recursiveBuild({
     if (refChainSet.has(currentPath)) {
       const chainDisplay = [...refChainList, currentPath].join('\n  -> ');
       throw new ConfigError({
-        message: `Circular reference detected.\nFile "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
-        context,
+        message: `Circular reference detected. File "${currentPath}" references itself through:\n  -> ${chainDisplay}`,
+        filePath: referencedFrom,
+        lineNumber: refDef.lineNumber,
+        configDirectory: context.directories.config,
       });
     }
     refChainSet.add(currentPath);
