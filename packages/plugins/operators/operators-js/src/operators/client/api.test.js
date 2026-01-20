@@ -128,11 +128,10 @@ test('_api true gives null', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _api accepts a string value. Received: true at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _api accepts a string value. Received: {"_api":true} at locationId.'
+  );
 });
 
 test('_api return first element', () => {
@@ -147,11 +146,10 @@ test('_api null', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId' });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _api accepts a string value. Received: null at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _api accepts a string value. Received: {"_api":null} at locationId.'
+  );
 });
 
 test('_api dot notation', () => {

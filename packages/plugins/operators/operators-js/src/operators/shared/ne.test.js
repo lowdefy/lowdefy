@@ -45,18 +45,18 @@ test('_ne param 0 not eq 1', () => {
 
 test('_ne params not an array', () => {
   expect(() => ne({ params: '1, 0', location })).toThrow(
-    'Operator Error: _ne takes an array type as input. Received: "1, 0" at locationId.'
+    '_ne takes an array type as input.'
   );
 });
 
 test('_ne params array with length 1', () => {
   expect(() => ne({ params: [1], location })).toThrow(
-    'Operator Error: _ne takes an array of length 2 as input. Received: [1] at locationId.'
+    '_ne takes an array of length 2 as input.'
   );
 });
 
 test('_ne params array with length 3', () => {
   expect(() => ne({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _ne takes an array of length 2 as input. Received: [1,2,3] at locationId.'
+    '_ne takes an array of length 2 as input.'
   );
 });

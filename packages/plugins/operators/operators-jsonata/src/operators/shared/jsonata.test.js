@@ -146,7 +146,7 @@ test('_jsonata non-string expression throws', () => {
       location: 'locationId',
     })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _jsonata.evaluate - Expression must be a string. Received: {\\"_jsonata.evaluate\\":{\\"on\\":{\\"a\\":1},\\"expr\\":123}} at locationId."`
+    `"_jsonata.evaluate - Expression must be a string."`
   );
 });
 

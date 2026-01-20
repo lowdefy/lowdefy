@@ -16,27 +16,15 @@
 
 import { type } from '@lowdefy/helpers';
 
-function _subtract({ params, location }) {
+function _subtract({ params }) {
   if (!type.isArray(params)) {
-    throw new Error(
-      `Operator Error: _subtract takes an array type as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_subtract takes an array type as input.`);
   }
   if (params.length !== 2) {
-    throw new Error(
-      `Operator Error: _subtract takes an array of length 2 as input. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_subtract takes an array of length 2 as input.`);
   }
   if (!type.isNumber(params[0]) || !type.isNumber(params[1])) {
-    throw new Error(
-      `Operator Error: _subtract takes an array of 2 numbers. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_subtract takes an array of 2 numbers.`);
   }
   return params[0] - params[1];
 }

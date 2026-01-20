@@ -131,6 +131,7 @@ class BuildParser {
       // Build location with line number if available
       const lineNumber = value['~l'];
       const operatorLocation = lineNumber ? `${location}:${lineNumber}` : location;
+      const params = value[key];
 
       try {
         const res = this.operators[op]({
@@ -140,7 +141,7 @@ class BuildParser {
           location: operatorLocation,
           methodName,
           operators: this.operators,
-          params: value[key],
+          params,
           operatorPrefix,
           parser: this,
           payload: this.payload,
@@ -150,14 +151,17 @@ class BuildParser {
         });
         return res;
       } catch (e) {
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${operatorLocation}.`;
+        const formattedError = new Error(formattedMessage);
+        formattedError.stack = e.stack;
         // Attach location info for error formatting
-        e.operatorLocation = {
+        formattedError.operatorLocation = {
           line: value['~l'],
           ref: value['~r'],
         };
-        errors.push(e);
+        errors.push(formattedError);
         if (this.verbose) {
-          console.error(e);
+          console.error(formattedError);
         }
         return null;
       }

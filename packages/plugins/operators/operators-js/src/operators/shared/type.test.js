@@ -60,7 +60,7 @@ test('_type with null key', () => {
 });
 test('_type null', () => {
   expect(() => _type({ params: null, location })).toThrow(
-    'Operator Error: _type.type must be a string. Received: null at location.'
+    '_type.type must be a string.'
   );
 });
 test('_type with non-string on', () => {
@@ -68,7 +68,7 @@ test('_type with non-string on', () => {
 });
 test('_type with unknown type', () => {
   expect(() => _type({ params: { type: 'strings' }, location })).toThrow(
-    'Operator Error: "strings" is not a valid _type test. Received: {"type":"strings"} at location.'
+    '"strings" is not a valid _type test.'
   );
 });
 test('_type date on string date fail', () => {

@@ -34,18 +34,10 @@ const validProperties = [
 function _location({ arrayIndices, basePath, home, location, pageId, params, globals }) {
   const { window } = globals;
   if (!window?.location) {
-    throw new Error(
-      `Operator Error: Browser window.location not available for _location. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Browser window.location not available for _location.`);
   }
   if (!validProperties.includes(params)) {
-    throw new Error(
-      `Operator Error: _location only returns values for ${validProperties.join(
-        ', '
-      )}. Received: ${JSON.stringify(params)} at ${location}.`
-    );
+    throw new Error(`_location only returns values for ${validProperties.join(', ')}.`);
   }
   const windowLocation = {
     basePath,

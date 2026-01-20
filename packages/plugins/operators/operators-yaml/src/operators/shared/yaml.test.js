@@ -54,7 +54,7 @@ test('_yaml.parse object not allowed', () => {
   expect(() =>
     yaml({ params: [{ a: 'b' }], location: 'locationId', methodName: 'parse' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[{\\"a\\":\\"b\\"}]} at locationId."`
+    `"_yaml.parse - requires a string type to parse."`
   );
 });
 
@@ -62,7 +62,7 @@ test('_yaml.parse date not supported', () => {
   expect(() =>
     yaml({ params: [new Date(0)], location: 'locationId', methodName: 'parse' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[\\"1970-01-01T00:00:00.000Z\\"]} at locationId."`
+    `"_yaml.parse - requires a string type to parse."`
   );
 });
 
@@ -119,7 +119,7 @@ test('_yaml.parse non string', () => {
   expect(() =>
     yaml({ params: [123], location: 'locationId', methodName: 'parse' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: _yaml.parse - requires a string type to parse. Received: {\\"_yaml.parse\\":[123]} at locationId."`
+    `"_yaml.parse - requires a string type to parse."`
   );
 });
 

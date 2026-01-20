@@ -66,17 +66,17 @@ test('_regex with null key', () => {
       state: { string: 'Some String' },
     })
   ).toThrow(
-    'Operator Error: _regex.key must be a string. Received: {"key":null,"pattern":"^a$"} at location.'
+    '_regex.key must be a string.'
   );
 });
 test('_regex null', () => {
   expect(() => _regex({ params: null, location })).toThrow(
-    'Operator Error: _regex.pattern must be a string. Received: null at location.'
+    '_regex.pattern must be a string.'
   );
 });
 test('_regex with non-string on', () => {
   expect(() => _regex({ params: { pattern: '^a$', on: 5 }, location })).toThrow(
-    'Operator Error: _regex.on must be a string. Received: {"pattern":"^a$","on":5} at location.'
+    '_regex.on must be a string.'
   );
 });
 test('_regex flags', () => {
@@ -84,6 +84,6 @@ test('_regex flags', () => {
 });
 test('_regex invalid flags', () => {
   expect(() => _regex({ params: { pattern: '^a$', on: 'A', flags: 1 }, location })).toThrow(
-    'Operator Error: _regex failed to execute RegExp.test. Received: {"pattern":"^a$","on":"A","flags":1} at location.'
+    '_regex failed to execute RegExp.test.'
   );
 });

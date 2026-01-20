@@ -49,18 +49,18 @@ test('_gt param 0 less than param 1', () => {
 
 test('_gt params not an array', () => {
   expect(() => gt({ params: '1, 0', location })).toThrow(
-    'Operator Error: _gt takes an array type as input. Received: "1, 0" at locationId.'
+    '_gt takes an array type as input.'
   );
 });
 
 test('_gt params array with length 1', () => {
   expect(() => gt({ params: [1], location })).toThrow(
-    'Operator Error: _gt takes an array of length 2 as input. Received: [1] at locationId.'
+    '_gt takes an array of length 2 as input.'
   );
 });
 
 test('_gt params array with length 3', () => {
   expect(() => gt({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _gt takes an array of length 2 as input. Received: [1,2,3] at locationId.'
+    '_gt takes an array of length 2 as input.'
   );
 });

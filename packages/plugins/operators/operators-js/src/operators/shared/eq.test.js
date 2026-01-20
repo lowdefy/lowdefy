@@ -32,18 +32,18 @@ test('_eq true', () => {
 });
 test('_eq errors', () => {
   expect(() => eq({ params: 'hello', location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: "hello" at location.'
+    '_eq takes an array type as input.'
   );
   expect(() => eq({ params: null, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: null at location.'
+    '_eq takes an array type as input.'
   );
   expect(() => eq({ params: true, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: true at location.'
+    '_eq takes an array type as input.'
   );
   expect(() => eq({ params: false, location })).toThrow(
-    'Operator Error: _eq takes an array type as input. Received: false at location.'
+    '_eq takes an array type as input.'
   );
   expect(() => eq({ params: [1, 2, 3], location })).toThrow(
-    'Operator Error: _eq takes an array of length 2 as input. Received: [1,2,3] at location.'
+    '_eq takes an array of length 2 as input.'
   );
 });

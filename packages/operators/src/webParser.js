@@ -52,6 +52,8 @@ class WebParser {
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
 
+      const params = value[key];
+      const operatorLocation = applyArrayIndices(arrayIndices, location);
       try {
         const res = this.operators[op]({
           actions,
@@ -65,14 +67,14 @@ class WebParser {
           home,
           input: inputs[this.context.id],
           jsMap: this.context.jsMap,
-          location: applyArrayIndices(arrayIndices, location),
+          location: operatorLocation,
           lowdefyGlobal,
           menus,
           methodName,
           operatorPrefix,
           operators: this.operators,
           pageId,
-          params: value[key],
+          params,
           parser: this,
           requests: this.context.requests,
           runtime: 'browser',
@@ -81,7 +83,11 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        errors.push(ConfigError.from({ error: e, configKey }));
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${operatorLocation}.`;
+        const formattedError = new Error(formattedMessage);
+        formattedError.stack = e.stack;
+        formattedError.configKey = e.configKey; // Preserve original configKey if present
+        errors.push(ConfigError.from({ error: formattedError, configKey }));
         return null;
       }
     };

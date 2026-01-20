@@ -54,6 +54,7 @@ class ServerParser {
 
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
       if (type.isUndefined(this.operators[op])) return value;
+      const params = value[key];
       try {
         const res = this.operators[op]({
           args,
@@ -65,7 +66,7 @@ class ServerParser {
           methodName,
           operatorPrefix,
           operators: this.operators,
-          params: value[key],
+          params,
           parser: this,
           payload: this.payload,
           runtime: 'node',
@@ -76,10 +77,13 @@ class ServerParser {
         });
         return res;
       } catch (e) {
-        e.configKey = e.configKey ?? configKey;
-        errors.push(e);
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${location}.`;
+        const formattedError = new Error(formattedMessage);
+        formattedError.stack = e.stack;
+        formattedError.configKey = e.configKey ?? configKey;
+        errors.push(formattedError);
         if (this.verbose) {
-          console.error(e);
+          console.error(formattedError);
         }
         return null;
       }

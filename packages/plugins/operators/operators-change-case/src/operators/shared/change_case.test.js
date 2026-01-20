@@ -130,7 +130,7 @@ test('_change_case.capitalCase on: string, options: [] throw', () => {
       location: 'locationId',
       methodName: 'capitalCase',
     })
-  ).toThrow('Operator Error: options must be an object.');
+  ).toThrow('options must be an object.');
 });
 
 test('_change_case.capitalCase on: array, options: {delimiter: "-"}', () => {

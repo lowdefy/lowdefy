@@ -131,11 +131,10 @@ test('_menu null', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu must be of type string, number or object. Received: null at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _menu must be of type string, number or object. Received: {"_menu":null} at locationId.'
+  );
 });
 
 test('_menu param object value', () => {
@@ -171,11 +170,10 @@ test('_menu params object value not string', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu.value must be of type string. Received: {"value":1} at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _menu.value must be of type string. Received: {"_menu":{"value":1}} at locationId.'
+  );
 });
 
 test('_menu params object index not number', () => {
@@ -187,11 +185,10 @@ test('_menu params object index not number', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu.index must be of type number. Received: {"index":"a"} at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _menu.index must be of type number. Received: {"_menu":{"index":"a"}} at locationId.'
+  );
 });
 
 test('_menu param object all', () => {
@@ -248,9 +245,8 @@ test('_menu param object invalid', () => {
   const parser = new WebParser({ context, operators });
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
-  expect(res.errors).toMatchInlineSnapshot(`
-    Array [
-      [Error: Operator Error: _menu must be of type string, number or object. Received: {"other":true} at locationId.],
-    ]
-  `);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: _menu must be of type string, number or object. Received: {"_menu":{"other":true}} at locationId.'
+  );
 });

@@ -189,14 +189,13 @@ export default MongoDBFindOne;
 
 Located in `operators/shared/` (everywhere), `operators/client/`, `operators/server/`, or `operators/build/`.
 
+Operators throw simple error messages without formatting. The parsers (WebParser, ServerParser, BuildParser) add the "Operator Error:" prefix, received value, and location:
+
 ```javascript
-function _myOperator({ location, params }) {
+function _myOperator({ params }) {
   if (typeof params !== 'object') {
-    throw new Error(
-      `Operator Error: _myOperator requires object. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    // Simple error - parsers will format with prefix, received value, and location
+    throw new Error('_myOperator requires an object.');
   }
   return result;
 }
@@ -214,7 +213,7 @@ export default SetState;
 
 ## Error Handling
 
-Include location and received value in error messages.
+Build-time code and parsers format errors with location and received value. Plugins throw simple error messages.
 
 ### Build-Time Errors (in `packages/build/`)
 
@@ -246,13 +245,12 @@ context.logger.configWarning({
 
 ### Plugin Errors (operators, actions, connections)
 
-Plugins throw plain errors - **never use ConfigError in plugins**. The core wraps them with location info:
+Plugins throw plain errors - **never use ConfigError in plugins**. Parsers format operator errors with prefix, received value, and location:
 
 ```javascript
-// In operator plugin - just throw descriptive error
-throw new Error(
-  `Operator Error: _if requires boolean test. Received: ${JSON.stringify(params)} at ${location}.`
-);
+// In operator plugin - throw simple, descriptive error
+throw new Error('_if requires boolean test.');
+// Parser formats to: "Operator Error: _if requires boolean test. Received: {...} at location."
 ```
 
 ### Client-Side Errors

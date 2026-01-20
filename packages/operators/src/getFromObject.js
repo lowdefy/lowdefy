@@ -21,9 +21,7 @@ function getFromObject({ params, object, arrayIndices, operator, location }) {
   if (type.isString(params) || type.isInt(params)) params = { key: params };
   if (!type.isObject(params)) {
     throw new Error(
-      `Operator Error: ${operator} params must be of type string, integer, boolean or object. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
+      `${operator} params must be of type string, integer, boolean or object.`
     );
   }
 
@@ -31,11 +29,7 @@ function getFromObject({ params, object, arrayIndices, operator, location }) {
 
   if (params.all === true) return serializer.copy(object);
   if (!type.isString(params.key) && !type.isInt(params.key)) {
-    throw new Error(
-      `Operator Error: ${operator}.key must be of type string or integer. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`${operator}.key must be of type string or integer.`);
   }
   return get(object, applyArrayIndices(arrayIndices, params.key), {
     default: get(params, 'default', { default: null, copy: true }),

@@ -35,50 +35,44 @@ test('_uri.decode strings', () => {
 
 test('_uri.decode a number', () => {
   expect(() => uri({ params: 10, location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":10} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.decode a boolean', () => {
   expect(() => uri({ params: true, location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":true} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.decode a object', () => {
   expect(() => uri({ params: { a: 1 }, location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":{\\"a\\":1}} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.decode a array', () => {
   expect(() => uri({ params: ['a', 'b'], location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":[\\"a\\",\\"b\\"]} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.decode undefined', () => {
   expect(() => uri({ params: undefined, location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":undefined} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.decode null', () => {
   expect(() => uri({ params: null, location: 'locationId', methodName: 'decode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.decode accepts one of the following types: string.
-          Received: {\\"_uri.decode\\":null} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.decode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode strings', () => {
@@ -96,48 +90,42 @@ test('_uri.encode strings', () => {
 
 test('_uri.encode a number', () => {
   expect(() => uri({ params: 10, location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":10} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode a boolean', () => {
   expect(() => uri({ params: true, location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":true} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode a object', () => {
   expect(() => uri({ params: { a: 1 }, location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":{\\"a\\":1}} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode a array', () => {
   expect(() => uri({ params: ['a', 'b'], location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":[\\"a\\",\\"b\\"]} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode undefined', () => {
   expect(() => uri({ params: undefined, location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":undefined} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });
 
 test('_uri.encode null', () => {
   expect(() => uri({ params: null, location: 'locationId', methodName: 'encode' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _uri.encode accepts one of the following types: string.
-          Received: {\\"_uri.encode\\":null} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_uri.encode accepts one of the following types: string."`
+    );
 });

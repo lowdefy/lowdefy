@@ -7,6 +7,15 @@
 '@lowdefy/node-utils': minor
 '@lowdefy/block-utils': minor
 '@lowdefy/operators': minor
+'@lowdefy/operators-js': minor
+'@lowdefy/operators-change-case': minor
+'@lowdefy/operators-diff': minor
+'@lowdefy/operators-jsonata': minor
+'@lowdefy/operators-moment': minor
+'@lowdefy/operators-mql': minor
+'@lowdefy/operators-nunjucks': minor
+'@lowdefy/operators-uuid': minor
+'@lowdefy/operators-yaml': minor
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
 'lowdefy': minor
@@ -22,6 +31,13 @@ feat: Config-aware error tracing and Sentry integration
 - Clickable VSCode links in terminal and browser
 - Build-time validation catches typos with "Did you mean?" suggestions
 - Service vs Config error classification
+
+**Operator Error Refactoring**
+
+- Operators now throw simple error messages without formatting
+- Parsers (WebParser, ServerParser, BuildParser) format errors with "Operator Error:" prefix, received value, and location
+- Utility functions `runClass`, `runInstance`, `getFromObject`, `getFromArray` simplified
+- Consistent error format: "Operator Error: {message} Received: {params} at {location}."
 
 **Error Class Refactoring**
 

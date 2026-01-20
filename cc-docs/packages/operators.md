@@ -338,17 +338,17 @@ The `_js` operator (from `@lowdefy/operators-js`) is the controlled escape hatch
 
 ## Error Handling
 
-Operators throw descriptive errors:
+Operators throw simple, descriptive errors. Parsers format them with prefix, received value, and location:
 
 ```javascript
-throw new Error(
-  `Operator Error: _sum at block:total requires array of numbers. ` +
-  `Received: ${JSON.stringify(params)}`
-);
+// In operator - throw simple error
+throw new Error('_sum requires array of numbers.');
+
+// Parser formats to:
+// "Operator Error: _sum requires array of numbers. Received: {...} at block:total."
 ```
 
-Errors include:
-- Operator name
+The parsers (WebParser, ServerParser, BuildParser) catch operator errors and format them with:
+- "Operator Error:" prefix
+- Received value as JSON
 - Location in config
-- What was expected
-- What was received

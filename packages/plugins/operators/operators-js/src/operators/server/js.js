@@ -26,11 +26,7 @@ function js(operatorContext) {
       state: (p) => operators._state({ ...operatorContext, params: p }),
     });
   } catch (error) {
-    throw new Error(
-      `Operator Error: ${error.message} at ${location}. Received function: ${jsMap[
-        params
-      ].toString()}`
-    );
+    throw new Error(`${error.message} Function: ${jsMap[params].toString()}`);
   }
 }
 

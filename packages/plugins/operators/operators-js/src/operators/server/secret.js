@@ -18,11 +18,7 @@ import { getFromObject } from '@lowdefy/operators';
 
 function _secret({ location, params, secrets = {} }) {
   if (params === true || params.all) {
-    throw new Error(
-      `Operator Error: Getting all secrets is not allowed. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Getting all secrets is not allowed.`);
   }
   // Filter out OpenID Connect and JSON web token secrets
   // eslint-disable-next-line no-unused-vars

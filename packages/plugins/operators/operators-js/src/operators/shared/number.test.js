@@ -17,34 +17,30 @@
 import _number from './number.js';
 
 test('_number called with no method or params', () => {
-  expect(() => _number({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _number requires a valid method name, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString.
-            Received: {\\"_number.undefined\\":undefined} at locationId."
-  `);
+  expect(() => _number({ location: 'locationId' })).toThrowErrorMatchingInlineSnapshot(
+    `"_number requires a valid method name, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString."`
+  );
 });
 
 test('_number invalid method or params', () => {
   expect(() => _number({ params: 'X', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _number requires a valid method name, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString.
-            Received: {\\"_number.undefined\\":\\"X\\"} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_number requires a valid method name, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString."`
+    );
 });
 
 test('_number invalid method', () => {
   expect(() => _number({ params: [1], methodName: 'X', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _number.X is not supported, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString.
-          Received: {\\"_number.X\\":[1]} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_number.X is not supported, use one of the following: EPSILON, MAX_SAFE_INTEGER, MAX_VALUE, MIN_SAFE_INTEGER, MIN_VALUE, NaN, NEGATIVE_INFINITY, POSITIVE_INFINITY, isFinite, isInteger, isNaN, isSafeInteger, parseFloat, parseInt, toExponential, toFixed, toLocaleString, toPrecision, toString."`
+    );
 });
 
 test('_number invalid method args', () => {
   expect(() => _number({ params: 'X', methodName: 'toFixed', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(`
-    "Operator Error: _number.toFixed accepts one of the following types: array, object.
-          Received: {\\"_number.toFixed\\":\\"X\\"} at locationId."
-  `);
+    .toThrowErrorMatchingInlineSnapshot(
+      `"_number.toFixed accepts one of the following types: array, object."`
+    );
 });
 
 test('_number valid functions', () => {

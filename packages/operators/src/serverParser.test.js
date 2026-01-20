@@ -200,7 +200,10 @@ test('operator errors with verbose', () => {
   const parser = new ServerParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toEqual([new Error('Test error.')]);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+  );
 });
 
 test('operator errors include configKey from ~k', () => {
@@ -215,7 +218,9 @@ test('operator errors include configKey from ~k', () => {
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
-  expect(res.errors[0].message).toBe('Test error.');
+  expect(res.errors[0].message).toBe(
+    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+  );
   expect(res.errors[0].configKey).toBe('config-key-456');
 });
 

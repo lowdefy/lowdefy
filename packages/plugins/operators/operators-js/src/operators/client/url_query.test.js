@@ -52,6 +52,6 @@ test('url_query calls getFromObject', async () => {
       })
     )
   ).toThrowErrorMatchingInlineSnapshot(
-    `"Operator Error: Browser window.location not available for _url_query. Received: \\"params\\" at location."`
+    `"Browser window.location not available for _url_query."`
   );
 });

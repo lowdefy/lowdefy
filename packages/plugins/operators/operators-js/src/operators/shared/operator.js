@@ -19,25 +19,13 @@ import { type } from '@lowdefy/helpers';
 function _operator(options) {
   const { operators, params, location } = options;
   if (!type.isString(params.name)) {
-    throw new Error(
-      `Operator Error: _operator.name must be a valid operator name as string. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_operator.name must be a valid operator name as string.`);
   }
   if (params.name === '_operator') {
-    throw new Error(
-      `Operator Error: _operator.name cannot be set to _operator to infinite avoid loop reference. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_operator.name cannot be set to _operator to avoid infinite loop reference.`);
   }
   if (params.name.includes('experimental')) {
-    throw new Error(
-      `Operator Error: Experimental operators cannot be used with _operator. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`Experimental operators cannot be used with _operator.`);
   }
   const [operator, methodName] = params.name.split('.');
   if (Object.prototype.hasOwnProperty.call(operators, operator)) {
@@ -48,11 +36,7 @@ function _operator(options) {
       methodName,
     });
   }
-  throw new Error(
-    `Operator Error: _operator - Invalid operator name. Received: ${JSON.stringify(
-      params
-    )} at ${location}.`
-  );
+  throw new Error(`_operator - Invalid operator name.`);
 }
 
 _operator.dynamic = true;

@@ -179,7 +179,10 @@ test('operator errors', () => {
   const parser = new BuildParser({ operators, payload, secrets, user });
   const res = parser.parse({ args, input, location });
   expect(res.output).toEqual({ a: null });
-  expect(res.errors).toEqual([new Error('Test error.')]);
+  expect(res.errors.length).toBe(1);
+  expect(res.errors[0].message).toBe(
+    'Operator Error: Test error. Received: {"_error":{"params":true}} at location.'
+  );
 });
 
 // ==================== hasDynamicMarker tests ====================

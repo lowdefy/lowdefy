@@ -19,20 +19,12 @@ import { get, type } from '@lowdefy/helpers';
 function _regex({ location, params, state }) {
   const pattern = type.isObject(params) ? params.pattern : params;
   if (!type.isString(pattern)) {
-    throw new Error(
-      `Operator Error: _regex.pattern must be a string. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_regex.pattern must be a string.`);
   }
   let on = !type.isUndefined(params.on) ? params.on : get(state, location);
   if (!type.isUndefined(params.key)) {
     if (!type.isString(params.key)) {
-      throw new Error(
-        `Operator Error: _regex.key must be a string. Received: ${JSON.stringify(
-          params
-        )} at ${location}.`
-      );
+      throw new Error(`_regex.key must be a string.`);
     }
     on = get(state, params.key);
   }
@@ -41,22 +33,14 @@ function _regex({ location, params, state }) {
     return false;
   }
   if (!type.isString(on)) {
-    throw new Error(
-      `Operator Error: _regex.on must be a string. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_regex.on must be a string.`);
   }
   try {
     const re = new RegExp(pattern, params.flags || 'gm');
     return re.test(on);
   } catch (e) {
     // log e to LowdefyError
-    throw new Error(
-      `Operator Error: _regex failed to execute RegExp.test. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
-    );
+    throw new Error(`_regex failed to execute RegExp.test.`);
   }
 }
 
