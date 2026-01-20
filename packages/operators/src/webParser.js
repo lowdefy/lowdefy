@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
+import { applyArrayIndices, ConfigError, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
   constructor({ context, operators }) {
@@ -81,9 +81,7 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        e.configKey = e.configKey ?? configKey;
-        errors.push(e);
-        // Don't log here - errors are logged via logError for deduplication
+        errors.push(ConfigError.from({ error: e, configKey }));
         return null;
       }
     };

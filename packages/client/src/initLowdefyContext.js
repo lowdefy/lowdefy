@@ -19,80 +19,8 @@ import createAuthMethods from './auth/createAuthMethods.js';
 import createCallRequest from './createCallRequest.js';
 import createIcon from './createIcon.js';
 import createLinkComponent from './createLinkComponent.js';
+import createLogError from './createLogError.js';
 import setupLink from './setupLink.js';
-
-function createLogError(lowdefy, windowObj) {
-  // Track logged errors for deduplication
-  const loggedErrors = new Set();
-
-  return async function logError(error) {
-    // Deduplicate by message + configKey
-    const errorKey = `${error.message}:${error.configKey || ''}`;
-    if (loggedErrors.has(errorKey)) {
-      return;
-    }
-    loggedErrors.add(errorKey);
-
-    const isServiceError = error.isServiceError === true;
-
-    const errorData = {
-      message: error.message,
-      name: error.name,
-      configKey: error.configKey,
-      isServiceError,
-      pageId: lowdefy.pageId,
-      timestamp: new Date().toISOString(),
-    };
-
-    // Try to send to server first with 1s timeout (same-origin)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1000);
-
-    try {
-      const response = await windowObj.fetch(`${lowdefy.basePath}/api/client-error`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(errorData),
-        signal: controller.signal,
-        credentials: 'same-origin',
-      });
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const result = await response.json();
-        const errorType = result.isServiceError ? 'Service Error' : 'Config Error';
-
-        if (result.isServiceError) {
-          // Service errors don't need config location
-          console.error(`[${errorType}] ${error.message}`);
-        } else {
-          // Config errors show location info
-          let vscodeLink = '';
-          if (result.link) {
-            const match = result.link.match(/^(.+):(\d+)$/);
-            if (match) {
-              const [, filePath, line] = match;
-              vscodeLink = `vscode://file${filePath}?line=${line}`;
-            } else {
-              vscodeLink = `vscode://file${result.link}`;
-            }
-          }
-          const source = result.source ? `${result.source} at ${result.config}` : '';
-          console.error(`[${errorType}] ${error.message}\n  ${source}\n  ${vscodeLink}`);
-        }
-      } else {
-        // Server returned error - log locally as fallback
-        const errorType = isServiceError ? 'Service Error' : 'Config Error';
-        console.error(`[${errorType}] ${error.message}`);
-      }
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      // Server unreachable or timeout - log locally as fallback
-      const errorType = isServiceError ? 'Service Error' : 'Config Error';
-      console.error(`[${errorType}] ${error.message}`);
-    }
-  };
-}
 
 function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
   if (!lowdefy._internal?.initialised) {
@@ -136,7 +64,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
     lowdefy._internal.link = setupLink(lowdefy);
     lowdefy._internal.updateBlock = (blockId) =>
       lowdefy._internal.updaters[blockId] && lowdefy._internal.updaters[blockId]();
-    lowdefy._internal.logError = createLogError(lowdefy, window);
+    lowdefy._internal.logError = createLogError(lowdefy);
 
     if (stage === 'dev') {
       window.lowdefy = lowdefy;
