@@ -1,5 +1,6 @@
 ---
 '@lowdefy/build': patch
+'@lowdefy/engine': patch
 ---
 
 Improve build error handling and test infrastructure:
@@ -8,3 +9,5 @@ Improve build error handling and test infrastructure:
 - Add parseTestYaml helper for realistic YAML-based test fixtures
 - Simplify buildConnections by removing duplicate validations handled by schema
 - Fix addKeys to not store undefined values in keyMap
+- Menu link to missing page is warning in dev, error in prod
+- Handle areas with no blocks gracefully - render as empty page instead of crashing
