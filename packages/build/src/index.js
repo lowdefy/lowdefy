@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/node-utils';
+
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import makeId from './utils/makeId.js';
@@ -59,7 +61,21 @@ async function build(options) {
   makeId.reset();
 
   const context = createContext(options);
-  const components = await buildRefs({ context });
+
+  let components;
+  try {
+    components = await buildRefs({ context });
+  } catch (err) {
+    // Handle ConfigError from buildRefs (e.g., missing _ref files)
+    if (err instanceof ConfigError) {
+      context.logger.error(err.message);
+      const error = new Error('Build failed with 1 error(s). See above for details.');
+      error.isFormatted = true;
+      error.hideStack = true;
+      throw error;
+    }
+    throw err;
+  }
 
   // Build steps - collect all errors before stopping
   // addKeys runs first so testSchema has ~k markers for error location info

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/node-utils';
+
 import getConfigFile from './getConfigFile.js';
 import parseRefContent from './parseRefContent.js';
 import runRefResolver from './runRefResolver.js';
@@ -28,7 +30,16 @@ async function getRefContent({ context, refDef, referencedFrom }) {
     content = await getConfigFile({ context, refDef, referencedFrom });
   }
 
-  return parseRefContent({ content, refDef });
+  try {
+    return parseRefContent({ content, refDef });
+  } catch (error) {
+    // Re-throw parse errors as ConfigError with location info
+    throw new ConfigError({
+      message: `Error parsing "${refDef.path}": ${error.message}`,
+      filePath: refDef.path,
+      configDirectory: context.directories.config,
+    });
+  }
 }
 
 export default getRefContent;

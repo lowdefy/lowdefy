@@ -437,13 +437,17 @@ describe('File Reference Errors (I)', () => {
   test('I1: Missing _ref file throws error', async () => {
     const result = await runBuild('I1-missing-ref-file', 'prod');
     expect(result.thrownError).not.toBeNull();
-    expect(result.thrownError.message).toContain('does not exist');
+    // Error is logged, then a formatted error is thrown
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]).toContain('does not exist');
   });
 
   test('I2: Circular _ref throws error', async () => {
     const result = await runBuild('I2-circular-ref', 'prod');
     expect(result.thrownError).not.toBeNull();
-    expect(result.thrownError.message).toContain('Circular reference detected');
+    // Error is logged, then a formatted error is thrown
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]).toContain('Circular reference detected');
   });
 });
 
