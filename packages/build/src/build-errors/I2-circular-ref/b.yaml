@@ -1,1 +1,4 @@
+# Part of I2: Circular _ref test
+# This file references a.yaml, completing the circular reference.
+
 _ref: a.yaml

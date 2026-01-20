@@ -1,3 +1,13 @@
+# E1: Invalid Action Type
+# ========================
+# Tests that using an undefined action type throws an error with a suggestion.
+#
+# Expected error:
+#   [Config Error] Action type "SetStat" was used but is not defined.
+#   Did you mean "SetState"?
+#
+# The error points to line 22 where the invalid action is defined.
+
 lowdefy: local
 
 pages:

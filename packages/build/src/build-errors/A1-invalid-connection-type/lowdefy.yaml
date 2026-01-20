@@ -1,3 +1,13 @@
+# A1: Invalid Connection Type
+# ============================
+# Tests that using an undefined connection type throws an error with location.
+#
+# Expected error:
+#   [Config Error] Connection type "NonExistentConnection" was used but is not defined.
+#   Did you mean "AxiosHttp"?
+#
+# The error points to line 13 where the invalid connection is defined.
+
 lowdefy: local
 
 connections:

@@ -1,3 +1,12 @@
+# A3: Duplicate Connection ID
+# ============================
+# Tests that duplicate connection ids throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate connectionId "testApi".
+#
+# The error points to line 17 where the duplicate connection is defined.
+
 lowdefy: local
 
 connections:

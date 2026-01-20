@@ -1,6 +1,14 @@
+# Part of multi-file-error test
+# This file contains an invalid block type to test that errors show
+# the correct file path (pages/home.yaml, not lowdefy.yaml).
+
 - id: home
   type: Box
   blocks:
+    - id: validBlock
+      type: Paragraph
+      properties:
+        content: This block is valid
     - id: invalidBlock
       type: NonExistentBlockType
       properties:

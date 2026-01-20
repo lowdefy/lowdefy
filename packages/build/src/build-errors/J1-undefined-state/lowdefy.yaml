@@ -1,3 +1,14 @@
+# J1: Undefined State Reference
+# ==============================
+# Tests that _state references to undefined keys warn in dev mode.
+# State keys are created from input block ids.
+#
+# Expected warning:
+#   [Config Warning] _state references "undefinedKey" on page "home",
+#   but no input block with id "undefinedKey" exists.
+#
+# The error points to line 19 where the _state operator is used.
+
 lowdefy: local
 
 pages:

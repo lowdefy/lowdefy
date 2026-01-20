@@ -1,3 +1,12 @@
+# A2: Missing Connection ID
+# ==========================
+# Tests that a connection without an id throws an error with location.
+#
+# Expected error:
+#   [Config Error] Connection id missing.
+#
+# The error points to line 13 where the connection without id is defined.
+
 lowdefy: local
 
 connections:

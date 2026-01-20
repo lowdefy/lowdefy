@@ -1,3 +1,12 @@
+# F3: Duplicate Request ID
+# =========================
+# Tests that duplicate request ids on the same page throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate requestId "myRequest" on page "home".
+#
+# The error points to line 27 where the duplicate request is defined.
+
 lowdefy: local
 
 connections:

@@ -1,3 +1,13 @@
+# F5: Invalid Request Type
+# =========================
+# Tests that using an undefined request type throws an error with a suggestion.
+#
+# Expected error:
+#   [Config Error] Request type "AxiosHtt" was used but is not defined.
+#   Did you mean "AxiosHttp"?
+#
+# The error points to line 22 where the request with invalid type is defined.
+
 lowdefy: local
 
 connections:

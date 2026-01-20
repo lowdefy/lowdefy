@@ -1,3 +1,17 @@
+# Multi-file Error Tracking
+# ==========================
+# Tests that errors in _ref imported files show the correct source file path.
+#
+# Before the fix (issue #1947), errors in child files showed the parent file path
+# with child file line numbers (wrong file, correct line). Now errors correctly
+# show the actual source file path.
+#
+# Expected error:
+#   [Config Error] Block type "NonExistentBlockType" was used but is not defined.
+#   pages/home.yaml:13 at root.pages[0:home:Box].blocks[0:invalidBlock:NonExistentBlockType]
+#
+# The error correctly shows pages/home.yaml, not lowdefy.yaml.
+
 lowdefy: local
 
 pages:

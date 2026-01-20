@@ -1,3 +1,12 @@
+# I1: Missing _ref File
+# ======================
+# Tests that referencing a non-existent file throws an error.
+#
+# Expected error:
+#   [Config Error] Tried to reference file "nonexistent.yaml" but file does not exist.
+#
+# The error points to line 16 where the _ref is used.
+
 lowdefy: local
 
 pages:

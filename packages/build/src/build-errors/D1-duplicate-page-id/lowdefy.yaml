@@ -1,3 +1,12 @@
+# D1: Duplicate Page ID
+# ======================
+# Tests that duplicate page ids throw an error with location.
+#
+# Expected error:
+#   [Config Error] Duplicate pageId "home".
+#
+# The error points to line 15 where the duplicate page is defined.
+
 lowdefy: local
 
 pages:

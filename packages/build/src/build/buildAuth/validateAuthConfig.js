@@ -27,10 +27,9 @@ function validateAuthConfig({ components, context }) {
     components.auth = {};
   }
   if (!type.isObject(components.auth)) {
-    const configKey = components.auth?.['~k'];
     throw new ConfigError({
       message: 'lowdefy.auth is not an object.',
-      configKey,
+      configKey: components['~k'],
       context,
     });
   }
@@ -65,10 +64,38 @@ function validateAuthConfig({ components, context }) {
     components.auth.theme = {};
   }
 
-  validate({
+  const { valid, errors } = validate({
     schema: lowdefySchema.definitions.authConfig,
     data: components.auth,
+    returnErrors: true,
   });
+
+  if (!valid) {
+    errors.forEach((error) => {
+      // Try to get configKey from the item in the error path
+      const instancePath = error.instancePath.split('/').filter(Boolean);
+      let configKey = components.auth['~k'];
+      let currentData = components.auth;
+
+      for (const part of instancePath) {
+        if (type.isArray(currentData)) {
+          const index = parseInt(part, 10);
+          currentData = currentData[index];
+        } else {
+          currentData = currentData?.[part];
+        }
+        if (currentData?.['~k']) {
+          configKey = currentData['~k'];
+        }
+      }
+
+      throw new ConfigError({
+        message: `Auth ${error.message}.`,
+        configKey,
+        context,
+      });
+    });
+  }
 
   validateMutualExclusivity({ components, context, entity: 'api' });
   validateMutualExclusivity({ components, context, entity: 'pages' });

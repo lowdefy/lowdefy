@@ -37,398 +37,316 @@ const fixturesDir = path.join(__dirname, 'build-errors');
 const runBuild = createRunBuild(build, fixturesDir);
 
 /**
- * Error format template (full location):
- *   [{error_type}] {message}
+ * Error format:
+ *   [Config Error] {message}
  *     {filePath}:{lineNumber} at {configPath}
  *     {absoluteFilePath}:{lineNumber}
  *
- * Some errors may have partial or no location info.
+ * See build-errors/ fixtures for documented test cases.
  */
-const FULL_ERROR_FORMAT_REGEX =
-  /^\[(Config Error|Config Warning|Config Schema Error)\] .+\n {2}.+\.yaml:\d+ at root\..+\n {2}\/.+\.yaml:\d+$/;
-
-const SIMPLE_ERROR_FORMAT_REGEX = /^\[(Config Error|Config Warning|Config Schema Error)\] .+$/;
-
-/**
- * Checks if an error/warning message matches the expected format.
- * @param {string} message - The error message to check
- * @param {string} expectedPrefix - Expected prefix ('Config Error', 'Config Warning', etc.)
- * @param {object} options - Options for validation
- * @param {boolean} [options.expectFullLocation=true] - Whether to expect full location info
- */
-function expectValidErrorFormat(message, expectedPrefix, options = {}) {
-  const { expectFullLocation = true } = options;
-
-  if (expectFullLocation) {
-    expect(message).toMatch(FULL_ERROR_FORMAT_REGEX);
-  } else {
-    expect(message).toMatch(SIMPLE_ERROR_FORMAT_REGEX);
-  }
-  expect(message).toMatch(new RegExp(`^\\[${expectedPrefix}\\]`));
-}
 
 describe('Connection Errors (A)', () => {
   test('A1: Invalid connection type throws error with location', async () => {
     const result = await runBuild('A1-invalid-connection-type', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain(
-      'Connection type "NonExistentConnection" was used but is not defined'
+    expect(result.errors[0]).toContain(
+      '[Config Error] Connection type "NonExistentConnection" was used but is not defined.\n' +
+        '  lowdefy.yaml:14 at root.connections[0:invalidConnection:NonExistentConnection]\n' +
+        `  ${path.join(fixturesDir, 'A1-invalid-connection-type', 'lowdefy.yaml:14')}`
     );
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.connections[0:invalidConnection:NonExistentConnection]');
-    expect(errorMsg).toContain(path.join(fixturesDir, 'A1-invalid-connection-type'));
   });
 
   test('A2: Missing connection id throws error', async () => {
     const result = await runBuild('A2-missing-connection-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Connection id missing');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.connections[0:AxiosHttp]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Connection id missing.\n' +
+        '  lowdefy.yaml:13 at root.connections[0:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'A2-missing-connection-id', 'lowdefy.yaml:13')}`
+    );
   });
 
   test('A3: Duplicate connection id throws error', async () => {
     const result = await runBuild('A3-duplicate-connection-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Duplicate connectionId "testApi"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.connections[1:testApi:AxiosHttp]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Duplicate connectionId "testApi".\n' +
+        '  lowdefy.yaml:17 at root.connections[1:testApi:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'A3-duplicate-connection-id', 'lowdefy.yaml:17')}`
+    );
   });
 });
 
 describe('Auth Errors (B)', () => {
   test('B1: Auth not object throws error', async () => {
     const result = await runBuild('B1-auth-not-object', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    // B1 error doesn't have full location tracking yet
-    expectValidErrorFormat(errorMsg, 'Config Error', { expectFullLocation: false });
-    expect(errorMsg).toContain('lowdefy.auth is not an object');
+    // Note: Primitive values don't have their own ~k, so path points to parent (root)
+    expect(result.errors[0]).toContain(
+      '[Config Error] lowdefy.auth is not an object.\n' +
+        '  lowdefy.yaml:11 at root\n' +
+        `  ${path.join(fixturesDir, 'B1-auth-not-object', 'lowdefy.yaml:11')}`
+    );
   });
 
   test('B2: Auth provider missing id throws error', async () => {
     const result = await runBuild('B2-auth-provider-missing-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    // B2 is a schema validation error without standard format
-    expect(errorMsg).toContain('Auth provider should have required property "id"');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Auth Auth provider should have required property "id"..\n' +
+        '  lowdefy.yaml:14 at root.auth.providers[0:GoogleProvider]\n' +
+        `  ${path.join(fixturesDir, 'B2-auth-provider-missing-id', 'lowdefy.yaml:14')}`
+    );
   });
 
   test('B3: Public/protected conflict throws error', async () => {
     const result = await runBuild('B3-public-protected-conflict', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('mutually exclusive');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.auth');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.\n' +
+        '  lowdefy.yaml:13 at root.auth.pages\n' +
+        `  ${path.join(fixturesDir, 'B3-public-protected-conflict', 'lowdefy.yaml:13')}`
+    );
   });
 });
 
 describe('Menu Errors (C)', () => {
   test('C1: Duplicate menu id throws error', async () => {
     const result = await runBuild('C1-duplicate-menu-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Duplicate menuId "default"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.menus[1:default]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Duplicate menuId "default".\n' +
+        '  lowdefy.yaml:17 at root.menus[1:default]\n' +
+        `  ${path.join(fixturesDir, 'C1-duplicate-menu-id', 'lowdefy.yaml:17')}`
+    );
   });
 
   test('C2: Menu link to missing page warns in dev mode', async () => {
     const result = await runBuild('C2-menu-missing-page', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('nonExistentPage'));
-    expect(warnMsg).toBeDefined();
-    // Note: Uses Config Error prefix but goes to warnings in dev mode
-    expectValidErrorFormat(warnMsg, 'Config Error');
-    expect(warnMsg).toContain('referenced in menu');
-    expect(warnMsg).toContain('not found');
-    expect(warnMsg).toContain('lowdefy.yaml:');
-    expect(warnMsg).toContain('at root.menus[0:default].links[0:badLink:MenuLink]');
+    expect(result.warnings[0]).toContain(
+      '[Config Error] Page "nonExistentPage" referenced in menu link "badLink" not found.\n' +
+        '  lowdefy.yaml:15 at root.menus[0:default].links[0:badLink:MenuLink]\n' +
+        `  ${path.join(fixturesDir, 'C2-menu-missing-page', 'lowdefy.yaml:15')}`
+    );
   });
 });
 
 describe('Page/Block Errors (D, E)', () => {
   test('D1: Duplicate page id throws error', async () => {
     const result = await runBuild('D1-duplicate-page-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Duplicate pageId "home"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[1:home:Box]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Duplicate pageId "home".\n' +
+        '  lowdefy.yaml:15 at root.pages[1:home:Box]\n' +
+        `  ${path.join(fixturesDir, 'D1-duplicate-page-id', 'lowdefy.yaml:15')}`
+    );
   });
 
   test('E1: Invalid action type throws error with suggestion', async () => {
     const result = await runBuild('E1-invalid-action-type', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('Action type'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Action type "SetStat" was used but is not defined');
-    expect(errorMsg).toContain('Did you mean "SetState"?');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:invalidAction:SetStat]'
+    expect(result.errors[0]).toContain(
+      '[Config Error] Action type "SetStat" was used but is not defined. Did you mean "SetState"?\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:invalidAction:SetStat]\n' +
+        `  ${path.join(fixturesDir, 'E1-invalid-action-type', 'lowdefy.yaml:23')}`
     );
   });
 
   test('E2: Invalid block type throws error with suggestion', async () => {
     const result = await runBuild('E2-invalid-block-type', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('Block type'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Block type "Buton" was used but is not defined');
-    expect(errorMsg).toContain('Did you mean "Button"?');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:invalidBlock:Buton]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Block type "Buton" was used but is not defined. Did you mean "Button"?\n' +
+        '  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:invalidBlock:Buton]\n' +
+        `  ${path.join(fixturesDir, 'E2-invalid-block-type', 'lowdefy.yaml:17')}`
+    );
   });
 
   test('E3: Missing block id throws error', async () => {
     const result = await runBuild('E3-missing-block-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Block id missing');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:Button]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Block id missing at page "home".\n' +
+        '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:Button]\n' +
+        `  ${path.join(fixturesDir, 'E3-missing-block-id', 'lowdefy.yaml:16')}`
+    );
   });
 
   test('E4: Block id not string throws error', async () => {
     const result = await runBuild('E4-block-id-not-string', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Block id is not a string');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:123:Button]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Block id is not a string at page "home". Received 123.\n' +
+        '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:123:Button]\n' +
+        `  ${path.join(fixturesDir, 'E4-block-id-not-string', 'lowdefy.yaml:16')}`
+    );
   });
 
   test('E5: Block type not string throws error', async () => {
     const result = await runBuild('E5-block-type-not-string', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Block type is not a string');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:badType');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Block type is not a string at "badType" on page "home". Received {"invalid":"object"}.\n' +
+        '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:badType:[object Object]]\n' +
+        `  ${path.join(fixturesDir, 'E5-block-type-not-string', 'lowdefy.yaml:16')}`
+    );
   });
 });
 
 describe('Request Errors (F)', () => {
   test('F1: Invalid request reference warns in dev mode', async () => {
     const result = await runBuild('F1-invalid-request-reference', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('not defined on page'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Warning');
-    expect(warnMsg).toContain('Request "nonExistentRequest" not defined on page "home"');
-    expect(warnMsg).toContain('lowdefy.yaml:');
+    expect(result.warnings[0]).toContain(
+      '[Config Warning] Request "nonExistentRequest" not defined on page "home".\n' +
+        '  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n' +
+        `  ${path.join(fixturesDir, 'F1-invalid-request-reference', 'lowdefy.yaml:29')}`
+    );
   });
 
   test('F1: Invalid request reference throws in prod mode', async () => {
     const result = await runBuild('F1-invalid-request-reference', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('not defined on page'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Request "nonExistentRequest" not defined on page "home"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Request "nonExistentRequest" not defined on page "home".\n' +
+        '  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n' +
+        `  ${path.join(fixturesDir, 'F1-invalid-request-reference', 'lowdefy.yaml:29')}`
+    );
   });
 
   test('F2: Request missing id throws error', async () => {
     const result = await runBuild('F2-request-missing-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Request id missing');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Request id missing at page "home".\n' +
+        '  lowdefy.yaml:22 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'F2-request-missing-id', 'lowdefy.yaml:22')}`
+    );
   });
 
   test('F3: Duplicate request id throws error', async () => {
     const result = await runBuild('F3-duplicate-request-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Duplicate requestId "myRequest"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].requests[1:testApi:AxiosHttp]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Duplicate requestId "myRequest" on page "home".\n' +
+        '  lowdefy.yaml:27 at root.pages[0:home:Box].requests[1:testApi:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'F3-duplicate-request-id', 'lowdefy.yaml:27')}`
+    );
   });
 
   test('F4: Request id with period throws error', async () => {
     const result = await runBuild('F4-request-id-with-period', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Request id "my.request"');
-    expect(errorMsg).toContain('should not include a period');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    // Path shows connectionId (testApi) in the identifier segment
-    expect(errorMsg).toContain('at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Request id "my.request" at page "home" should not include a period (".").\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'F4-request-id-with-period', 'lowdefy.yaml:23')}`
+    );
   });
 
   test('F5: Invalid request type throws error with suggestion', async () => {
     const result = await runBuild('F5-invalid-request-type', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('Request type'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Request type "AxiosHtt" was used but is not defined');
-    expect(errorMsg).toContain('Did you mean "AxiosHttp"?');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    // Path shows connectionId (testApi) in the identifier segment
-    expect(errorMsg).toContain('at root.pages[0:home:Box].requests[0:testApi:AxiosHtt]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Request type "AxiosHtt" was used but is not defined. Did you mean "AxiosHttp"?\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHtt]\n' +
+        `  ${path.join(fixturesDir, 'F5-invalid-request-type', 'lowdefy.yaml:23')}`
+    );
   });
 
   test('F6: Non-existent connection throws error', async () => {
     const result = await runBuild('F6-nonexistent-connection', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('connection');
-    expect(errorMsg).toContain('lowdefy.yaml:');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Request "badConnectionRequest" at page "home" references non-existent connection "nonExistentConnection".\n' +
+        '  lowdefy.yaml:17 at root.pages[0:home:Box].requests[0:nonExistentConnection:AxiosHttp]\n' +
+        `  ${path.join(fixturesDir, 'F6-nonexistent-connection', 'lowdefy.yaml:17')}`
+    );
   });
 });
 
 describe('Action/Event Errors (G)', () => {
   test('G1: Invalid page link warns in dev mode', async () => {
     const result = await runBuild('G1-invalid-page-link', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('not found'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Warning');
-    expect(warnMsg).toContain('Page "nonExistentPage" not found');
-    expect(warnMsg).toContain('lowdefy.yaml:');
-    expect(warnMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]'
+    expect(result.warnings[0]).toContain(
+      '[Config Warning] Page "nonExistentPage" not found. Link on page "home" references non-existent page.\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n' +
+        `  ${path.join(fixturesDir, 'G1-invalid-page-link', 'lowdefy.yaml:23')}`
     );
   });
 
   test('G1: Invalid page link throws in prod mode', async () => {
     const result = await runBuild('G1-invalid-page-link', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('not found'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Page "nonExistentPage" not found');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]'
+    expect(result.errors[0]).toContain(
+      '[Config Error] Page "nonExistentPage" not found. Link on page "home" references non-existent page.\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n' +
+        `  ${path.join(fixturesDir, 'G1-invalid-page-link', 'lowdefy.yaml:23')}`
     );
   });
 
   test('G2: Duplicate action id throws error', async () => {
     const result = await runBuild('G2-duplicate-action-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Duplicate actionId "linkAction"');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[1:linkAction:SetState]'
+    expect(result.errors[0]).toContain(
+      '[Config Error] Duplicate actionId "linkAction" on event "onClick" on block "button" on page "home".\n' +
+        '  lowdefy.yaml:26 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[1:linkAction:SetState]\n' +
+        `  ${path.join(fixturesDir, 'G2-duplicate-action-id', 'lowdefy.yaml:26')}`
     );
   });
 
   test('G3: Missing action id throws error', async () => {
     const result = await runBuild('G3-missing-action-id', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Action id missing');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:SetState]'
+    expect(result.errors[0]).toContain(
+      '[Config Error] Action id missing on event "onClick" on block "button" on page "home".\n' +
+        '  lowdefy.yaml:22 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:SetState]\n' +
+        `  ${path.join(fixturesDir, 'G3-missing-action-id', 'lowdefy.yaml:22')}`
     );
   });
 
   test('G4: Action type not string throws error', async () => {
     const result = await runBuild('G4-action-type-not-string', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('Action type is not a string');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Action type is not a string on action "action1" on event "onClick" on block "button" on page "home". Received {"invalid":"object"}.\n' +
+        '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1'
+    );
   });
 
   test('G5: Events not array throws error', async () => {
     const result = await runBuild('G5-events-not-array', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors[0];
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    expect(errorMsg).toContain('must be an array');
-    expect(errorMsg).toContain('lowdefy.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box]');
+    expect(result.errors[0]).toContain(
+      '[Config Error] Actions must be an array at "button" in event "onClick" on page "home". Received undefined\n' +
+        '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick\n' +
+        `  ${path.join(fixturesDir, 'G5-events-not-array', 'lowdefy.yaml:21')}`
+    );
   });
 });
 
 describe('Operator Errors (H)', () => {
   test('H1: Operator typo (_staet) throws error with suggestion', async () => {
     const result = await runBuild('H1-operator-typo-state', 'dev');
-
-    // Unknown operators go to warnings array with Config Error prefix
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('_staet'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Error');
-    expect(warnMsg).toContain('Operator type "_staet" was used but is not defined');
-    expect(warnMsg).toContain('Did you mean "_state"?');
-    expect(warnMsg).toContain('lowdefy.yaml:');
-    expect(warnMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:typoBlock:Paragraph].properties.content'
+    const operatorWarning = result.warnings.find((w) => w.includes('_staet'));
+    expect(operatorWarning).toContain(
+      '[Config Error] Operator type "_staet" was used but is not defined. Did you mean "_state"?\n' +
+        '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:typoBlock:Paragraph].properties.content\n' +
+        `  ${path.join(fixturesDir, 'H1-operator-typo-state', 'lowdefy.yaml:21')}`
     );
   });
 
   test('H2: Operator typo (_iff) throws error with suggestion', async () => {
     const result = await runBuild('H2-operator-typo-if', 'dev');
-
-    // Unknown operators go to warnings array with Config Error prefix
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('_iff'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Error');
-    expect(warnMsg).toContain('Operator type "_iff" was used but is not defined');
-    expect(warnMsg).toContain('Did you mean "_if"?');
-    expect(warnMsg).toContain('lowdefy.yaml:');
-    expect(warnMsg).toContain(
-      'at root.pages[0:home:Box].blocks[0:typoBlock:Paragraph].properties.content'
+    const operatorWarning = result.warnings.find((w) => w.includes('_iff'));
+    expect(operatorWarning).toContain(
+      '[Config Error] Operator type "_iff" was used but is not defined. Did you mean "_if"?\n' +
+        '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:typoBlock:Paragraph].properties.content\n' +
+        `  ${path.join(fixturesDir, 'H2-operator-typo-if', 'lowdefy.yaml:21')}`
     );
   });
 });
@@ -436,14 +354,12 @@ describe('Operator Errors (H)', () => {
 describe('File Reference Errors (I)', () => {
   test('I1: Missing _ref file throws error', async () => {
     const result = await runBuild('I1-missing-ref-file', 'prod');
-
     expect(result.thrownError).not.toBeNull();
     expect(result.thrownError.message).toContain('does not exist');
   });
 
   test('I2: Circular _ref throws error', async () => {
     const result = await runBuild('I2-circular-ref', 'prod');
-
     expect(result.thrownError).not.toBeNull();
     expect(result.thrownError.message).toContain('Circular reference detected');
   });
@@ -452,54 +368,53 @@ describe('File Reference Errors (I)', () => {
 describe('State Reference Errors (J)', () => {
   test('J1: Undefined state reference warns', async () => {
     const result = await runBuild('J1-undefined-state', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('_state'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Warning');
-    expect(warnMsg).toContain('_state');
-    expect(warnMsg).toContain('no input block');
-    expect(warnMsg).toContain('lowdefy.yaml:');
+    expect(result.warnings[0]).toContain(
+      '[Config Warning] _state references "undefinedKey" on page "home", but no input block with id "undefinedKey" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState.\n' +
+        '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:stateRef:Paragraph].properties.content\n' +
+        `  ${path.join(fixturesDir, 'J1-undefined-state', 'lowdefy.yaml:21')}`
+    );
   });
 });
 
 describe('Payload Reference Errors (K)', () => {
   test('K1: Undefined payload reference warns', async () => {
     const result = await runBuild('K1-undefined-payload', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('_payload'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Warning');
-    expect(warnMsg).toContain('_payload');
-    expect(warnMsg).toContain('lowdefy.yaml:');
+    const payloadWarning = result.warnings.find((w) => w.includes('undefinedKey'));
+    expect(payloadWarning).toContain(
+      '[Config Warning] _payload references "undefinedKey" in request "testRequest" on page "home", but no key "undefinedKey" exists in the request payload definition.'
+    );
+    expect(payloadWarning).toContain(
+      '  lowdefy.yaml:33 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp].properties.params.id\n' +
+        `  ${path.join(fixturesDir, 'K1-undefined-payload', 'lowdefy.yaml:33')}`
+    );
   });
 });
 
 describe('Step Reference Errors (L)', () => {
   test('L1: Undefined step reference warns', async () => {
     const result = await runBuild('L1-undefined-step', 'dev');
-
     expect(result.warnings.length).toBeGreaterThan(0);
-    const warnMsg = result.warnings.find((w) => w.includes('_step'));
-    expect(warnMsg).toBeDefined();
-    expectValidErrorFormat(warnMsg, 'Config Warning');
-    expect(warnMsg).toContain('_step');
-    expect(warnMsg).toContain('lowdefy.yaml:');
+    const stepWarning = result.warnings.find((w) => w.includes('nonExistentStep'));
+    expect(stepWarning).toContain(
+      '[Config Warning] _step references "nonExistentStep" in endpoint "testEndpoint", but no step with id "nonExistentStep" exists in the routine.'
+    );
+    expect(stepWarning).toContain(
+      '  lowdefy.yaml:32 at root.api[0:testEndpoint:Endpoint].routine[1].:return\n' +
+        `  ${path.join(fixturesDir, 'L1-undefined-step', 'lowdefy.yaml:32')}`
+    );
   });
 });
 
 describe('Multi-file Error Tracking', () => {
   test('Error in child file shows correct file path', async () => {
     const result = await runBuild('multi-file-error', 'prod');
-
     expect(result.errors.length).toBeGreaterThan(0);
-    const errorMsg = result.errors.find((e) => e.includes('Block type'));
-    expect(errorMsg).toBeDefined();
-    expectValidErrorFormat(errorMsg, 'Config Error');
-    // Error should reference pages/home.yaml, not lowdefy.yaml
-    expect(errorMsg).toContain('pages/home.yaml:');
-    expect(errorMsg).toContain('at root.pages[0:home:Box].blocks[0:invalidBlock:NonExistentBlockType]');
-    expect(errorMsg).toContain(path.join(fixturesDir, 'multi-file-error', 'pages/home.yaml'));
+    expect(result.errors[0]).toContain(
+      '[Config Error] Block type "NonExistentBlockType" was used but is not defined.\n' +
+        '  pages/home.yaml:12 at root.pages[0:home:Box].blocks[1:invalidBlock:NonExistentBlockType]\n' +
+        `  ${path.join(fixturesDir, 'multi-file-error', 'pages/home.yaml:12')}`
+    );
   });
 });

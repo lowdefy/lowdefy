@@ -1,3 +1,13 @@
+# B1: Auth Not Object
+# ====================
+# Tests that auth config must be an object, not a primitive value.
+#
+# Expected error:
+#   [Config Error] lowdefy.auth is not an object.
+#
+# Note: Primitive values don't have their own ~k metadata, so the error
+# points to the parent object (root) at line 10.
+
 lowdefy: local
 
 auth: invalid_string
