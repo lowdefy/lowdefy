@@ -147,6 +147,16 @@ describe('Menu Errors (C)', () => {
     const result = await runBuild('C2-menu-missing-page', 'dev');
     expect(result.warnings.length).toBeGreaterThan(0);
     expect(result.warnings[0]).toContain(
+      '[Config Warning] Page "nonExistentPage" referenced in menu link "badLink" not found.\n' +
+        '  lowdefy.yaml:15 at root.menus[0:default].links[0:badLink:MenuLink]\n' +
+        `  ${path.join(fixturesDir, 'C2-menu-missing-page', 'lowdefy.yaml:15')}`
+    );
+  });
+
+  test('C2: Menu link to missing page throws in prod mode', async () => {
+    const result = await runBuild('C2-menu-missing-page', 'prod');
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]).toContain(
       '[Config Error] Page "nonExistentPage" referenced in menu link "badLink" not found.\n' +
         '  lowdefy.yaml:15 at root.menus[0:default].links[0:badLink:MenuLink]\n' +
         `  ${path.join(fixturesDir, 'C2-menu-missing-page', 'lowdefy.yaml:15')}`
