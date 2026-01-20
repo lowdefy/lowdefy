@@ -29,9 +29,11 @@ function walkAndCount(value, counter, parentConfigKey) {
   const configKey = value['~k'] || parentConfigKey;
   const keys = Object.keys(value);
 
-  // Check if this object is an operator (single key starting with _)
-  if (keys.length === 1) {
-    const key = keys[0];
+  // Check if this object is an operator (single key starting with _, ignoring ~ prefixed keys)
+  // This allows ~ignoreBuildCheck to be on the same object as an operator
+  const nonTildeKeys = keys.filter((k) => !k.startsWith('~'));
+  if (nonTildeKeys.length === 1) {
+    const key = nonTildeKeys[0];
     const [op] = key.split('.');
     const operator = op.replace(/^(_+)/gm, '_');
     if (operator.length > 1 && operator[0] === '_') {

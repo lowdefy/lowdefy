@@ -300,6 +300,13 @@ describe('Request Errors (F)', () => {
         `  ${path.join(fixturesDir, 'F6-nonexistent-connection', 'lowdefy.yaml:17')}`
     );
   });
+
+  test('F7: Non-existent connection with ~ignoreBuildCheck suppresses error', async () => {
+    const result = await runBuild('F7-nonexistent-connection-ignored', 'prod');
+    // Should have no errors about nonExistentConnection since ~ignoreBuildCheck is set
+    const connectionError = result.errors.find((e) => e.includes('nonExistentConnection'));
+    expect(connectionError).toBeUndefined();
+  });
 });
 
 describe('Action/Event Errors (G)', () => {
@@ -389,6 +396,41 @@ describe('Operator Errors (H)', () => {
         `  ${path.join(fixturesDir, 'H2-operator-typo-if', 'lowdefy.yaml:21')}`
     );
   });
+
+  test('H3: Operator typo with ~ignoreBuildCheck suppresses warning', async () => {
+    const result = await runBuild('H3-operator-typo-ignored', 'dev');
+    // Should have no warnings about _staet since ~ignoreBuildCheck is set
+    const operatorWarning = result.warnings.find((w) => w.includes('_staet'));
+    expect(operatorWarning).toBeUndefined();
+  });
+
+  test('H4: Invalid action type with ~ignoreBuildCheck suppresses error', async () => {
+    const result = await runBuild('H4-action-type-ignored', 'prod');
+    // Should have no errors about NonExistentAction since ~ignoreBuildCheck is set
+    const actionError = result.errors.find((e) => e.includes('NonExistentAction'));
+    expect(actionError).toBeUndefined();
+  });
+
+  test('H5: Invalid block type with ~ignoreBuildCheck suppresses error', async () => {
+    const result = await runBuild('H5-block-type-ignored', 'prod');
+    // Should have no errors about NonExistentBlock since ~ignoreBuildCheck is set
+    const blockError = result.errors.find((e) => e.includes('NonExistentBlock'));
+    expect(blockError).toBeUndefined();
+  });
+
+  test('H6: Invalid connection type with ~ignoreBuildCheck suppresses error', async () => {
+    const result = await runBuild('H6-connection-type-ignored', 'prod');
+    // Should have no errors about NonExistentConnection since ~ignoreBuildCheck is set
+    const connectionError = result.errors.find((e) => e.includes('NonExistentConnection'));
+    expect(connectionError).toBeUndefined();
+  });
+
+  test('H7: Invalid request type with ~ignoreBuildCheck suppresses error', async () => {
+    const result = await runBuild('H7-request-type-ignored', 'prod');
+    // Should have no errors about NonExistentRequest since ~ignoreBuildCheck is set
+    const requestError = result.errors.find((e) => e.includes('NonExistentRequest'));
+    expect(requestError).toBeUndefined();
+  });
 });
 
 describe('File Reference Errors (I)', () => {
@@ -415,6 +457,13 @@ describe('State Reference Errors (J)', () => {
         `  ${path.join(fixturesDir, 'J1-undefined-state', 'lowdefy.yaml:21')}`
     );
   });
+
+  test('J2: Undefined state reference with ~ignoreBuildCheck suppresses warning', async () => {
+    const result = await runBuild('J2-undefined-state-ignored', 'dev');
+    // Should have no warnings about undefinedKey since ~ignoreBuildCheck is set
+    const stateWarning = result.warnings.find((w) => w.includes('undefinedKey'));
+    expect(stateWarning).toBeUndefined();
+  });
 });
 
 describe('Payload Reference Errors (K)', () => {
@@ -430,6 +479,13 @@ describe('Payload Reference Errors (K)', () => {
         `  ${path.join(fixturesDir, 'K1-undefined-payload', 'lowdefy.yaml:33')}`
     );
   });
+
+  test('K2: Undefined payload reference with ~ignoreBuildCheck suppresses warning', async () => {
+    const result = await runBuild('K2-undefined-payload-ignored', 'dev');
+    // Should have no warnings about undefinedKey since ~ignoreBuildCheck is set
+    const payloadWarning = result.warnings.find((w) => w.includes('undefinedKey'));
+    expect(payloadWarning).toBeUndefined();
+  });
 });
 
 describe('Step Reference Errors (L)', () => {
@@ -444,6 +500,13 @@ describe('Step Reference Errors (L)', () => {
       '  lowdefy.yaml:32 at root.api[0:testEndpoint:Endpoint].routine[1].:return\n' +
         `  ${path.join(fixturesDir, 'L1-undefined-step', 'lowdefy.yaml:32')}`
     );
+  });
+
+  test('L2: Undefined step reference with ~ignoreBuildCheck suppresses warning', async () => {
+    const result = await runBuild('L2-undefined-step-ignored', 'dev');
+    // Should have no warnings about nonExistentStep since ~ignoreBuildCheck is set
+    const stepWarning = result.warnings.find((w) => w.includes('nonExistentStep'));
+    expect(stepWarning).toBeUndefined();
   });
 });
 
