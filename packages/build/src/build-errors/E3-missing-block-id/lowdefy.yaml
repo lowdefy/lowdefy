@@ -1,0 +1,9 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - type: Button
+        properties:
+          title: No ID

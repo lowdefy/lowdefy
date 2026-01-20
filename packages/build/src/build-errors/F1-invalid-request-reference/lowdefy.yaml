@@ -1,0 +1,21 @@
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Call Invalid Request
+        events:
+          onClick:
+            - id: callRequest
+              type: Request
+              params: nonExistentRequest

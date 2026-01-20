@@ -1,0 +1,7 @@
+lowdefy: local
+
+auth: invalid_string
+
+pages:
+  - id: home
+    type: Box

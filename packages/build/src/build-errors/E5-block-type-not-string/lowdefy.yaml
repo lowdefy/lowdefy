@@ -1,0 +1,11 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: badType
+        type:
+          invalid: object
+        properties:
+          title: Type is object

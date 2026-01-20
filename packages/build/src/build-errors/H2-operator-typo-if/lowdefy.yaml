@@ -1,0 +1,14 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: typoBlock
+        type: Paragraph
+        properties:
+          content:
+            _iff:
+              test: true
+              then: yes
+              else: no

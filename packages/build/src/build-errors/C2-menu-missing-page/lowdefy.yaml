@@ -1,0 +1,12 @@
+lowdefy: local
+
+menus:
+  - id: default
+    links:
+      - id: badLink
+        type: MenuLink
+        pageId: nonExistentPage
+
+pages:
+  - id: home
+    type: Box

@@ -1,0 +1,17 @@
+lowdefy: local
+
+menus:
+  - id: default
+    links:
+      - id: home
+        pageId: home
+  - id: default
+    links:
+      - id: about
+        pageId: about
+
+pages:
+  - id: home
+    type: Box
+  - id: about
+    type: Box

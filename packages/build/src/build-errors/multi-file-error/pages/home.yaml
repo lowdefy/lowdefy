@@ -1,0 +1,7 @@
+- id: home
+  type: Box
+  blocks:
+    - id: invalidBlock
+      type: NonExistentBlockType
+      properties:
+        content: This block type does not exist

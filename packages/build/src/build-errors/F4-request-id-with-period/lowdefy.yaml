@@ -1,0 +1,17 @@
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: my.request
+        type: AxiosHttp
+        connectionId: testApi
+        properties:
+          url: /test

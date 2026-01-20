@@ -22,7 +22,7 @@ import { ConfigError } from '@lowdefy/node-utils';
 import lowdefySchema from '../../lowdefySchema.js';
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 
-async function validateAuthConfig({ components, context }) {
+function validateAuthConfig({ components, context }) {
   if (type.isNone(components.auth)) {
     components.auth = {};
   }

@@ -1,0 +1,15 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Missing Action ID
+        events:
+          onClick:
+            - type: SetState
+              params:
+                key: value

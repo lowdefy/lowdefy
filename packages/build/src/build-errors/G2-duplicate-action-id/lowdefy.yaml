@@ -1,0 +1,20 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Duplicate Actions
+        events:
+          onClick:
+            - id: linkAction
+              type: SetState
+              params:
+                key: value1
+            - id: linkAction
+              type: SetState
+              params:
+                key: value2

@@ -1,0 +1,16 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Click Me
+        events:
+          onClick:
+            - id: invalidAction
+              type: SetStat
+              params:
+                value: test

@@ -1,0 +1,11 @@
+lowdefy: local
+
+connections:
+  - id: invalidConnection
+    type: NonExistentConnection
+    properties:
+      url: http://example.com
+
+pages:
+  - id: home
+    type: Box

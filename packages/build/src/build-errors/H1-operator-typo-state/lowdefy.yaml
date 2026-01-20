@@ -1,0 +1,11 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: typoBlock
+        type: Paragraph
+        properties:
+          content:
+            _staet: someValue

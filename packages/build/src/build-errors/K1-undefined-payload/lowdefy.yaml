@@ -1,0 +1,23 @@
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: testRequest
+        type: AxiosHttp
+        connectionId: testApi
+        payload:
+          userId:
+            _state: selectedUser
+        properties:
+          url: /users
+          params:
+            id:
+              _payload: undefinedKey

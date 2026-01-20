@@ -1,0 +1,17 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Bad Action Type
+        events:
+          onClick:
+            - id: action1
+              type:
+                invalid: object
+              params:
+                key: value

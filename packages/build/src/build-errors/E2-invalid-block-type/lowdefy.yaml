@@ -1,0 +1,10 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: invalidBlock
+        type: Buton
+        properties:
+          title: Click Me

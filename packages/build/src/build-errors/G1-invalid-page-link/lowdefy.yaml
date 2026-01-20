@@ -1,0 +1,16 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: invalidLink
+        type: Button
+        properties:
+          title: Go to Invalid Page
+        events:
+          onClick:
+            - id: linkAction
+              type: Link
+              params:
+                pageId: nonExistentPage

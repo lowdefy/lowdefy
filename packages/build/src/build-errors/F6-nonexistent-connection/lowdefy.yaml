@@ -1,0 +1,11 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: badConnectionRequest
+        type: AxiosHttp
+        connectionId: nonExistentConnection
+        properties:
+          url: /test

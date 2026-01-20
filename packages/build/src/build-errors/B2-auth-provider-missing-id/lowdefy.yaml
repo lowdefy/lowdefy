@@ -1,0 +1,9 @@
+lowdefy: local
+
+auth:
+  providers:
+    - type: GoogleProvider
+
+pages:
+  - id: home
+    type: Box

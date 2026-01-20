@@ -1,0 +1,7 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      _ref: nonexistent.yaml

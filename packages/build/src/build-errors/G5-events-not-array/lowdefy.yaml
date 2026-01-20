@@ -1,0 +1,16 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Events Not Array
+        events:
+          onClick:
+            id: action1
+            type: SetState
+            params:
+              key: value

@@ -1,0 +1,10 @@
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: 123
+        type: Button
+        properties:
+          title: Invalid ID type

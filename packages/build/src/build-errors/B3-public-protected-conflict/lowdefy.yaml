@@ -1,0 +1,14 @@
+lowdefy: local
+
+auth:
+  pages:
+    public:
+      - home
+    protected:
+      - dashboard
+
+pages:
+  - id: home
+    type: Box
+  - id: dashboard
+    type: Box

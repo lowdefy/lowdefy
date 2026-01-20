@@ -1,0 +1,26 @@
+lowdefy: local
+
+connections:
+  - id: testDb
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _env: MONGO_URI
+      collection: test
+
+api:
+  - id: testEndpoint
+    type: Endpoint
+    routine:
+      - id: step1
+        type: MongoDBInsertOne
+        connectionId: testDb
+        properties:
+          doc:
+            name: test
+      - :return:
+          _step: nonExistentStep
+
+pages:
+  - id: home
+    type: Box
