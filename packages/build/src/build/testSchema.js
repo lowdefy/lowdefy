@@ -45,6 +45,17 @@ function testSchema({ components, context }) {
       return !hasChildError;
     });
 
+    // Same-path deduplication: only show first error per unique path
+    // (multiple errors at same path are usually cascade errors from schema branches)
+    const seenPaths = new Set();
+    filteredErrors = filteredErrors.filter((error) => {
+      if (seenPaths.has(error.instancePath)) {
+        return false;
+      }
+      seenPaths.add(error.instancePath);
+      return true;
+    });
+
     filteredErrors.forEach((error) => {
       const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
       const configKey = findConfigKey({ components, instancePath });
