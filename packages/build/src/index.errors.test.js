@@ -108,6 +108,27 @@ describe('Auth Errors (B)', () => {
         `  ${path.join(fixturesDir, 'B3-public-protected-conflict', 'lowdefy.yaml:13')}`
     );
   });
+
+  test('B4: Missing NEXTAUTH_SECRET throws error when auth providers configured', async () => {
+    const originalEnv = process.env.NEXTAUTH_SECRET;
+    delete process.env.NEXTAUTH_SECRET;
+
+    try {
+      const result = await runBuild('B4-missing-nextauth-secret', 'prod');
+      expect(result.errors.length).toBeGreaterThan(0);
+      expect(result.errors[0]).toContain(
+        '[Config Error] Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
+      );
+      expect(result.errors[0]).toContain(
+        '  lowdefy.yaml:13 at root.auth\n' +
+          `  ${path.join(fixturesDir, 'B4-missing-nextauth-secret', 'lowdefy.yaml:13')}`
+      );
+    } finally {
+      if (originalEnv !== undefined) {
+        process.env.NEXTAUTH_SECRET = originalEnv;
+      }
+    }
+  });
 });
 
 describe('Menu Errors (C)', () => {

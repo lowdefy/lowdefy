@@ -122,3 +122,64 @@ test('validateAuthConfig config error when protected or public are false.', () =
     'Public pages can not be set to false.'
   );
 });
+
+test('validateAuthConfig throws when auth providers configured but NEXTAUTH_SECRET not set', () => {
+  const originalEnv = process.env.NEXTAUTH_SECRET;
+  delete process.env.NEXTAUTH_SECRET;
+
+  const components = {
+    auth: {
+      providers: [
+        {
+          id: 'google',
+          type: 'GoogleProvider',
+          properties: {
+            clientId: 'test-id',
+            clientSecret: 'test-secret',
+          },
+        },
+      ],
+    },
+  };
+
+  try {
+    expect(() => validateAuthConfig({ components, context })).toThrow(
+      'Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
+    );
+  } finally {
+    if (originalEnv !== undefined) {
+      process.env.NEXTAUTH_SECRET = originalEnv;
+    }
+  }
+});
+
+test('validateAuthConfig passes when auth providers configured and NEXTAUTH_SECRET is set', () => {
+  const originalEnv = process.env.NEXTAUTH_SECRET;
+  process.env.NEXTAUTH_SECRET = 'test-secret-value';
+
+  const components = {
+    auth: {
+      providers: [
+        {
+          id: 'google',
+          type: 'GoogleProvider',
+          properties: {
+            clientId: 'test-id',
+            clientSecret: 'test-secret',
+          },
+        },
+      ],
+    },
+  };
+
+  try {
+    const result = validateAuthConfig({ components, context });
+    expect(result.auth.providers).toHaveLength(1);
+  } finally {
+    if (originalEnv !== undefined) {
+      process.env.NEXTAUTH_SECRET = originalEnv;
+    } else {
+      delete process.env.NEXTAUTH_SECRET;
+    }
+  }
+});
