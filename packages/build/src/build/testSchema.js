@@ -30,9 +30,20 @@ function testSchema({ components, context }) {
   if (!valid) {
     // Filter out anyOf/oneOf cascade errors - these are always accompanied by
     // more specific validation errors and just add noise
-    const filteredErrors = errors.filter(
+    let filteredErrors = errors.filter(
       (error) => error.keyword !== 'anyOf' && error.keyword !== 'oneOf'
     );
+
+    // Hierarchical deduplication: if an error exists at a child path,
+    // filter out errors at parent paths (prefer more specific errors)
+    filteredErrors = filteredErrors.filter((error) => {
+      const hasChildError = filteredErrors.some(
+        (other) =>
+          other !== error &&
+          other.instancePath.startsWith(error.instancePath + '/')
+      );
+      return !hasChildError;
+    });
 
     filteredErrors.forEach((error) => {
       const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
