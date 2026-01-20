@@ -18,6 +18,7 @@
 
 import createContext from './createContext.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
+import makeId from './utils/makeId.js';
 import tryBuildStep from './utils/tryBuildStep.js';
 
 import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
@@ -54,15 +55,32 @@ import writeRequests from './build/writeRequests.js';
 import writeTypes from './build/writeTypes.js';
 
 async function build(options) {
+  // Reset makeId counter for each build (dev server may run multiple builds)
+  makeId.reset();
+
   const context = createContext(options);
   const components = await buildRefs({ context });
 
   // Build steps - collect all errors before stopping
+  // addKeys runs first so testSchema has ~k markers for error location info
+  tryBuildStep(addKeys, 'addKeys', { components, context });
   tryBuildStep(testSchema, 'testSchema', { components, context });
+
+  // Schema errors mean structurally invalid data - stop before processing further
+  if (context.errors.length > 0) {
+    const error = new Error(
+      `Build failed with ${context.errors.length} error(s). See above for details.`
+    );
+    error.isFormatted = true;
+    error.hideStack = true;
+    throw error;
+  }
+
   tryBuildStep(buildApp, 'buildApp', { components, context });
   tryBuildStep(buildLogger, 'buildLogger', { components, context });
   tryBuildStep(validateConfig, 'validateConfig', { components, context });
   tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
+  // addKeys runs again to add keys to any new objects created by earlier build steps
   tryBuildStep(addKeys, 'addKeys', { components, context });
   tryBuildStep(buildAuth, 'buildAuth', { components, context });
   tryBuildStep(buildConnections, 'buildConnections', { components, context });

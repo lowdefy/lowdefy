@@ -15,8 +15,10 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { ConfigError } from '@lowdefy/node-utils';
+
+import findConfigKey from '../utils/findConfigKey.js';
 import lowdefySchema from '../lowdefySchema.js';
-import formatErrorMessage from '../utils/formatErrorMessage.js';
 
 function testSchema({ components, context }) {
   const { valid, errors } = validate({
@@ -26,7 +28,25 @@ function testSchema({ components, context }) {
   });
 
   if (!valid) {
-    errors.map((error) => context.logger.warn(formatErrorMessage({ error, components, context })));
+    errors.forEach((error) => {
+      const instancePath = error.instancePath.split('/').slice(1).filter(Boolean);
+      const configKey = findConfigKey({ components, instancePath });
+
+      let message = error.message;
+      if (error.params?.additionalProperty) {
+        message = `${message} - "${error.params.additionalProperty}"`;
+      }
+
+      const configError = new ConfigError({ message, configKey, context });
+      if (!configError.suppressed) {
+        if (!context.errors) {
+          // If no error collection array, throw immediately (fallback for tests)
+          throw new Error(configError.message);
+        }
+        context.errors.push(configError.message);
+        context.logger.error(configError.message);
+      }
+    });
   }
 }
 

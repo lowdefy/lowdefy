@@ -60,7 +60,7 @@ describe('Connection Errors (A)', () => {
     const result = await runBuild('A2-missing-connection-id', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0]).toContain(
-      '[Config Error] Connection id missing.\n' +
+      '[Config Error] Connection should have required property "id".\n' +
         '  lowdefy.yaml:13 at root.connections[0:AxiosHttp]\n' +
         `  ${path.join(fixturesDir, 'A2-missing-connection-id', 'lowdefy.yaml:13')}`
     );
@@ -81,9 +81,9 @@ describe('Auth Errors (B)', () => {
   test('B1: Auth not object throws error', async () => {
     const result = await runBuild('B1-auth-not-object', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
-    // Note: Primitive values don't have their own ~k, so path points to parent (root)
+    // Schema validation catches this first
     expect(result.errors[0]).toContain(
-      '[Config Error] lowdefy.auth is not an object.\n' +
+      '[Config Error] App "auth" should be an object.\n' +
         '  lowdefy.yaml:11 at root\n' +
         `  ${path.join(fixturesDir, 'B1-auth-not-object', 'lowdefy.yaml:11')}`
     );
@@ -92,8 +92,9 @@ describe('Auth Errors (B)', () => {
   test('B2: Auth provider missing id throws error', async () => {
     const result = await runBuild('B2-auth-provider-missing-id', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first
     expect(result.errors[0]).toContain(
-      '[Config Error] Auth Auth provider should have required property "id"..\n' +
+      '[Config Error] Auth provider should have required property "id".\n' +
         '  lowdefy.yaml:14 at root.auth.providers[0:GoogleProvider]\n' +
         `  ${path.join(fixturesDir, 'B2-auth-provider-missing-id', 'lowdefy.yaml:14')}`
     );
@@ -137,8 +138,8 @@ describe('Menu Errors (C)', () => {
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate menuId "default".\n' +
-        '  lowdefy.yaml:17 at root.menus[1:default]\n' +
-        `  ${path.join(fixturesDir, 'C1-duplicate-menu-id', 'lowdefy.yaml:17')}`
+        '  lowdefy.yaml:20 at root.menus[1:default]\n' +
+        `  ${path.join(fixturesDir, 'C1-duplicate-menu-id', 'lowdefy.yaml:20')}`
     );
   });
 
@@ -187,8 +188,9 @@ describe('Page/Block Errors (D, E)', () => {
   test('E3: Missing block id throws error', async () => {
     const result = await runBuild('E3-missing-block-id', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first
     expect(result.errors[0]).toContain(
-      '[Config Error] Block id missing at page "home".\n' +
+      '[Config Error] Block should have required property "id".\n' +
         '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:Button]\n' +
         `  ${path.join(fixturesDir, 'E3-missing-block-id', 'lowdefy.yaml:16')}`
     );
@@ -197,8 +199,9 @@ describe('Page/Block Errors (D, E)', () => {
   test('E4: Block id not string throws error', async () => {
     const result = await runBuild('E4-block-id-not-string', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first - note: numeric id appears in path since keyMap captures it
     expect(result.errors[0]).toContain(
-      '[Config Error] Block id is not a string at page "home". Received 123.\n' +
+      '[Config Error] Block "id" should be a string.\n' +
         '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:123:Button]\n' +
         `  ${path.join(fixturesDir, 'E4-block-id-not-string', 'lowdefy.yaml:16')}`
     );
@@ -207,10 +210,11 @@ describe('Page/Block Errors (D, E)', () => {
   test('E5: Block type not string throws error', async () => {
     const result = await runBuild('E5-block-type-not-string', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first - note: object type serializes to [object Object], path points to .type property
     expect(result.errors[0]).toContain(
-      '[Config Error] Block type is not a string at "badType" on page "home". Received {"invalid":"object"}.\n' +
-        '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:badType:[object Object]]\n' +
-        `  ${path.join(fixturesDir, 'E5-block-type-not-string', 'lowdefy.yaml:16')}`
+      '[Config Error] Block "type" should be a string.\n' +
+        '  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:badType:[object Object]].type\n' +
+        `  ${path.join(fixturesDir, 'E5-block-type-not-string', 'lowdefy.yaml:17')}`
     );
   });
 });
@@ -239,8 +243,9 @@ describe('Request Errors (F)', () => {
   test('F2: Request missing id throws error', async () => {
     const result = await runBuild('F2-request-missing-id', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first - note: connectionId appears in path when id is missing
     expect(result.errors[0]).toContain(
-      '[Config Error] Request id missing at page "home".\n' +
+      '[Config Error] Request should have required property "id".\n' +
         '  lowdefy.yaml:22 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n' +
         `  ${path.join(fixturesDir, 'F2-request-missing-id', 'lowdefy.yaml:22')}`
     );
@@ -321,8 +326,9 @@ describe('Action/Event Errors (G)', () => {
   test('G3: Missing action id throws error', async () => {
     const result = await runBuild('G3-missing-action-id', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first
     expect(result.errors[0]).toContain(
-      '[Config Error] Action id missing on event "onClick" on block "button" on page "home".\n' +
+      '[Config Error] Action should have required property "id".\n' +
         '  lowdefy.yaml:22 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:SetState]\n' +
         `  ${path.join(fixturesDir, 'G3-missing-action-id', 'lowdefy.yaml:22')}`
     );
@@ -331,17 +337,20 @@ describe('Action/Event Errors (G)', () => {
   test('G4: Action type not string throws error', async () => {
     const result = await runBuild('G4-action-type-not-string', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first - note: object type serializes to [object Object]
     expect(result.errors[0]).toContain(
-      '[Config Error] Action type is not a string on action "action1" on event "onClick" on block "button" on page "home". Received {"invalid":"object"}.\n' +
-        '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1'
+      '[Config Error] Action "type" should be a string.\n' +
+        '  lowdefy.yaml:24 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1:[object Object]].type\n' +
+        `  ${path.join(fixturesDir, 'G4-action-type-not-string', 'lowdefy.yaml:24')}`
     );
   });
 
   test('G5: Events not array throws error', async () => {
     const result = await runBuild('G5-events-not-array', 'prod');
     expect(result.errors.length).toBeGreaterThan(0);
+    // Schema validation catches this first
     expect(result.errors[0]).toContain(
-      '[Config Error] Actions must be an array at "button" in event "onClick" on page "home". Received undefined\n' +
+      '[Config Error] must be array\n' +
         '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick\n' +
         `  ${path.join(fixturesDir, 'G5-events-not-array', 'lowdefy.yaml:21')}`
     );

@@ -5,7 +5,7 @@
 # Expected error:
 #   [Config Error] Duplicate menuId "default".
 #
-# The error points to line 17 where the duplicate menu is defined.
+# The error points to line 20 where the duplicate menu is defined.
 
 lowdefy: local
 
@@ -14,10 +14,16 @@ menus:
     links:
       - id: home
         pageId: home
+        type: MenuLink
+        properties:
+          title: Home
   - id: default
     links:
       - id: about
         pageId: about
+        type: MenuLink
+        properties:
+          title: About
 
 pages:
   - id: home

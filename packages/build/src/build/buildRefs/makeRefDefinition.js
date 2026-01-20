@@ -20,7 +20,7 @@ import getRefPath from './getRefPath.js';
 import makeId from '../../utils/makeId.js';
 
 function makeRefDefinition(refDefinition, parent, refMap, lineNumber) {
-  const id = makeId();
+  const id = makeId.next();
   const refDef = {
     parent,
     lineNumber,
