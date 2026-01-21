@@ -148,6 +148,33 @@ function createRunBuild(build, fixturesDir) {
       });
     } catch (err) {
       thrownError = err;
+      // Extract errors embedded in the thrown message (format: "✖ [Config Error] ...")
+      // This handles the case where errors are bundled in the thrown message to avoid interleaving
+      // Each error is multi-line: message line + indented location lines
+      if (err.message) {
+        const lines = err.message.split('\n');
+        let currentError = null;
+        for (const line of lines) {
+          if (line.startsWith('✖ [Config Error]')) {
+            // Start of a new error - save previous if exists
+            if (currentError !== null) {
+              errors.push(currentError);
+            }
+            currentError = line.slice(2); // Remove "✖ " prefix
+          } else if (currentError !== null && line.startsWith('  ')) {
+            // Continuation line (indented) - append to current error
+            currentError += '\n' + line;
+          } else if (currentError !== null) {
+            // Non-continuation line - save current error and reset
+            errors.push(currentError);
+            currentError = null;
+          }
+        }
+        // Don't forget the last error
+        if (currentError !== null) {
+          errors.push(currentError);
+        }
+      }
     }
 
     return { errors, warnings, thrownError, logger };

@@ -460,13 +460,21 @@ describe('File Reference Errors (I)', () => {
 });
 
 describe('State Reference Errors (J)', () => {
-  test('J1: Undefined state reference warns', async () => {
+  test('J1: Undefined state reference warns in dev mode', async () => {
     const result = await runBuild('J1-undefined-state', 'dev');
     expect(result.warnings.length).toBeGreaterThan(0);
     expect(result.warnings[0]).toContain(
       '[Config Warning] _state references "undefinedKey" on page "home", but no input block with id "undefinedKey" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState.\n' +
         '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:stateRef:Paragraph].properties.content\n' +
         `  ${path.join(fixturesDir, 'J1-undefined-state', 'lowdefy.yaml:21')}`
+    );
+  });
+
+  test('J1: Undefined state reference throws in prod mode', async () => {
+    const result = await runBuild('J1-undefined-state', 'prod');
+    expect(result.errors.length).toBeGreaterThan(0);
+    expect(result.errors[0]).toContain(
+      '[Config Error] _state references "undefinedKey" on page "home", but no input block with id "undefinedKey" exists on this page.'
     );
   });
 
@@ -479,7 +487,7 @@ describe('State Reference Errors (J)', () => {
 });
 
 describe('Payload Reference Errors (K)', () => {
-  test('K1: Undefined payload reference warns', async () => {
+  test('K1: Undefined payload reference warns in dev mode', async () => {
     const result = await runBuild('K1-undefined-payload', 'dev');
     expect(result.warnings.length).toBeGreaterThan(0);
     const payloadWarning = result.warnings.find((w) => w.includes('undefinedKey'));
@@ -492,6 +500,15 @@ describe('Payload Reference Errors (K)', () => {
     );
   });
 
+  test('K1: Undefined payload reference throws in prod mode', async () => {
+    const result = await runBuild('K1-undefined-payload', 'prod');
+    expect(result.errors.length).toBeGreaterThan(0);
+    const payloadError = result.errors.find((e) => e.includes('undefinedKey'));
+    expect(payloadError).toContain(
+      '[Config Error] _payload references "undefinedKey" in request "testRequest" on page "home", but no key "undefinedKey" exists in the request payload definition.'
+    );
+  });
+
   test('K2: Undefined payload reference with ~ignoreBuildCheck suppresses warning', async () => {
     const result = await runBuild('K2-undefined-payload-ignored', 'dev');
     // Should have no warnings about undefinedKey since ~ignoreBuildCheck is set
@@ -501,7 +518,7 @@ describe('Payload Reference Errors (K)', () => {
 });
 
 describe('Step Reference Errors (L)', () => {
-  test('L1: Undefined step reference warns', async () => {
+  test('L1: Undefined step reference warns in dev mode', async () => {
     const result = await runBuild('L1-undefined-step', 'dev');
     expect(result.warnings.length).toBeGreaterThan(0);
     const stepWarning = result.warnings.find((w) => w.includes('nonExistentStep'));
@@ -511,6 +528,15 @@ describe('Step Reference Errors (L)', () => {
     expect(stepWarning).toContain(
       '  lowdefy.yaml:32 at root.api[0:testEndpoint:Endpoint].routine[1].:return\n' +
         `  ${path.join(fixturesDir, 'L1-undefined-step', 'lowdefy.yaml:32')}`
+    );
+  });
+
+  test('L1: Undefined step reference throws in prod mode', async () => {
+    const result = await runBuild('L1-undefined-step', 'prod');
+    expect(result.errors.length).toBeGreaterThan(0);
+    const stepError = result.errors.find((e) => e.includes('nonExistentStep'));
+    expect(stepError).toContain(
+      '[Config Error] _step references "nonExistentStep" in endpoint "testEndpoint", but no step with id "nonExistentStep" exists in the routine.'
     );
   });
 
@@ -530,6 +556,50 @@ describe('Multi-file Error Tracking', () => {
       '[Config Error] Block type "NonExistentBlockType" was used but is not defined.\n' +
         '  pages/home.yaml:12 at root.pages[0:home:Box].blocks[1:invalidBlock:NonExistentBlockType]\n' +
         `  ${path.join(fixturesDir, 'multi-file-error', 'pages/home.yaml:12')}`
+    );
+  });
+});
+
+describe('Multiple Validation Errors Collection', () => {
+  test('All validation errors are collected and reported in prod mode', async () => {
+    const result = await runBuild('multi-validation-errors', 'prod');
+    // Should have all three errors, not just the first one
+    expect(result.errors.length).toBe(3);
+
+    // Check for each error type
+    const stateError1 = result.errors.find((e) => e.includes('undefinedState'));
+    const stateError2 = result.errors.find((e) => e.includes('anotherUndefined'));
+    const payloadError = result.errors.find((e) => e.includes('undefinedPayload'));
+
+    expect(stateError1).toContain(
+      '[Config Error] _state references "undefinedState" on page "home"'
+    );
+    expect(stateError2).toContain(
+      '[Config Error] _state references "anotherUndefined" on page "home"'
+    );
+    expect(payloadError).toContain(
+      '[Config Error] _payload references "undefinedPayload" in request "testRequest"'
+    );
+  });
+
+  test('All validation warnings are collected and reported in dev mode', async () => {
+    const result = await runBuild('multi-validation-errors', 'dev');
+    // Should have at least the three validation warnings (may have "No menus found" warning too)
+    expect(result.warnings.length).toBeGreaterThanOrEqual(3);
+
+    // Check for each warning type
+    const stateWarning1 = result.warnings.find((w) => w.includes('undefinedState'));
+    const stateWarning2 = result.warnings.find((w) => w.includes('anotherUndefined'));
+    const payloadWarning = result.warnings.find((w) => w.includes('undefinedPayload'));
+
+    expect(stateWarning1).toContain(
+      '[Config Warning] _state references "undefinedState" on page "home"'
+    );
+    expect(stateWarning2).toContain(
+      '[Config Warning] _state references "anotherUndefined" on page "home"'
+    );
+    expect(payloadWarning).toContain(
+      '[Config Warning] _payload references "undefinedPayload" in request "testRequest"'
     );
   });
 });
