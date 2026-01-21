@@ -37,11 +37,8 @@ function collectConfigError({ message, configKey, context }) {
     throw new Error(errorMessage);
   }
 
-  // Collect error to show all errors at once
+  // Collect error - logging happens at checkpoints in index.js
   context.errors.push(errorMessage);
-  if (context.logger && context.logger.error) {
-    context.logger.error(errorMessage);
-  }
 }
 
 export default collectConfigError;
