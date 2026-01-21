@@ -18,8 +18,9 @@ import { ConfigError } from '@lowdefy/node-utils';
 
 /**
  * Wraps a build step to collect errors instead of stopping immediately.
- * Errors are collected in context.errors[] and logged, allowing the build to
- * continue and report all errors at once before stopping.
+ * Errors are collected in context.errors[], allowing the build to continue
+ * and report all errors at once. Errors are logged together at checkpoints
+ * in index.js to ensure proper ordering before the summary message.
  *
  * ConfigErrors with suppressed=true (via ~ignoreBuildCheck) are ignored.
  *
@@ -38,9 +39,8 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     if (error instanceof ConfigError && error.suppressed) {
       return;
     }
-    // Collect error to show all errors at once
+    // Collect error - logging happens at checkpoints in index.js
     context.errors.push(error.message);
-    context.logger.error(error.message);
   }
 }
 

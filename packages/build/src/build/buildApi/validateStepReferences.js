@@ -65,7 +65,7 @@ function validateStepReferences({ endpoint, context }) {
       `Step IDs are defined by the "id" property of each step. ` +
       `Check for typos or add a step with this id.`;
 
-    context.logger.configWarning({ message, configKey });
+    context.logger.configWarning({ message, configKey, prodError: true });
   });
 }
 

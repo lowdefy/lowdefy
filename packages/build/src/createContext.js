@@ -60,10 +60,29 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
 
   // Add config-aware methods to logger (don't spread - pino uses Symbol-keyed internals)
   logger.configWarning = ({ message, configKey, operatorLocation, prodError }) => {
-    // ConfigWarning.format throws ConfigError in prod mode when prodError is true
-    const formatted = ConfigWarning.format({ message, configKey, operatorLocation, context, prodError });
-    if (formatted) {
-      logger.warn(formatted);
+    try {
+      // ConfigWarning.format throws ConfigError in prod mode when prodError is true
+      const formatted = ConfigWarning.format({
+        message,
+        configKey,
+        operatorLocation,
+        context,
+        prodError,
+      });
+      if (formatted) {
+        logger.warn(formatted);
+      }
+    } catch (err) {
+      // ConfigError thrown in prod mode - collect instead of throwing
+      // This allows validation to continue and report all errors
+      if (err instanceof ConfigError) {
+        // Skip suppressed errors (empty message means ~ignoreBuildCheck: true)
+        if (!err.suppressed) {
+          context.errors.push(err.message);
+        }
+      } else {
+        throw err;
+      }
     }
   };
   logger.configError = ({ message, configKey, operatorLocation }) => {

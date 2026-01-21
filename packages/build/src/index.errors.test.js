@@ -45,10 +45,31 @@ const runBuild = createRunBuild(build, fixturesDir);
  * See build-errors/ fixtures for documented test cases.
  */
 
+/**
+ * Helper to count occurrences of a substring in an array of strings.
+ * Used to verify errors are not logged multiple times.
+ */
+function countOccurrences(arr, searchStr) {
+  return arr.filter((item) => item.includes(searchStr)).length;
+}
+
+/**
+ * Helper to verify error is logged exactly once via logger.error (shows as ✖ in red).
+ * Checks that the error appears in result.errors exactly once.
+ * @param {Object} result - Build result from runBuild
+ * @param {string} errorSubstring - Substring to search for in errors
+ * @param {string} description - Description for error message
+ */
+function expectSingleError(result, errorSubstring, description = errorSubstring) {
+  const count = countOccurrences(result.errors, errorSubstring);
+  expect(count).toBe(1);
+}
+
 describe('Connection Errors (A)', () => {
   test('A1: Invalid connection type throws error with location', async () => {
     const result = await runBuild('A1-invalid-connection-type', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'NonExistentConnection');
     expect(result.errors[0]).toContain(
       '[Config Error] Connection type "NonExistentConnection" was used but is not defined.\n' +
         '  lowdefy.yaml:14 at root.connections[0:invalidConnection:NonExistentConnection]\n' +
@@ -58,7 +79,8 @@ describe('Connection Errors (A)', () => {
 
   test('A2: Missing connection id throws error', async () => {
     const result = await runBuild('A2-missing-connection-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'should have required property "id"');
     expect(result.errors[0]).toContain(
       '[Config Error] Connection should have required property "id".\n' +
         '  lowdefy.yaml:13 at root.connections[0:AxiosHttp]\n' +
@@ -68,7 +90,8 @@ describe('Connection Errors (A)', () => {
 
   test('A3: Duplicate connection id throws error', async () => {
     const result = await runBuild('A3-duplicate-connection-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Duplicate connectionId');
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate connectionId "testApi".\n' +
         '  lowdefy.yaml:17 at root.connections[1:testApi:AxiosHttp]\n' +
@@ -80,8 +103,8 @@ describe('Connection Errors (A)', () => {
 describe('Auth Errors (B)', () => {
   test('B1: Auth not object throws error', async () => {
     const result = await runBuild('B1-auth-not-object', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'should be an object');
     expect(result.errors[0]).toContain(
       '[Config Error] App "auth" should be an object.\n' +
         '  lowdefy.yaml:11 at root\n' +
@@ -91,8 +114,8 @@ describe('Auth Errors (B)', () => {
 
   test('B2: Auth provider missing id throws error', async () => {
     const result = await runBuild('B2-auth-provider-missing-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'should have required property "id"');
     expect(result.errors[0]).toContain(
       '[Config Error] Auth provider should have required property "id".\n' +
         '  lowdefy.yaml:14 at root.auth.providers[0:GoogleProvider]\n' +
@@ -102,7 +125,8 @@ describe('Auth Errors (B)', () => {
 
   test('B3: Public/protected conflict throws error', async () => {
     const result = await runBuild('B3-public-protected-conflict', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'mutually exclusive');
     expect(result.errors[0]).toContain(
       '[Config Error] Protected and public pages are mutually exclusive. When protected pages are listed, all unlisted pages are public by default and vice versa.\n' +
         '  lowdefy.yaml:13 at root.auth.pages\n' +
@@ -116,7 +140,8 @@ describe('Auth Errors (B)', () => {
 
     try {
       const result = await runBuild('B4-missing-nextauth-secret', 'prod');
-      expect(result.errors.length).toBeGreaterThan(0);
+      // Verify error logged exactly once via logger.error (✖ in red)
+      expectSingleError(result, 'NEXTAUTH_SECRET');
       expect(result.errors[0]).toContain(
         '[Config Error] Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.'
       );
@@ -135,7 +160,8 @@ describe('Auth Errors (B)', () => {
 describe('Menu Errors (C)', () => {
   test('C1: Duplicate menu id throws error', async () => {
     const result = await runBuild('C1-duplicate-menu-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Duplicate menuId');
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate menuId "default".\n' +
         '  lowdefy.yaml:20 at root.menus[1:default]\n' +
@@ -145,7 +171,8 @@ describe('Menu Errors (C)', () => {
 
   test('C2: Menu link to missing page warns in dev mode', async () => {
     const result = await runBuild('C2-menu-missing-page', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'nonExistentPage')).toBe(1);
     expect(result.warnings[0]).toContain(
       '[Config Warning] Page "nonExistentPage" referenced in menu link "badLink" not found.\n' +
         '  lowdefy.yaml:15 at root.menus[0:default].links[0:badLink:MenuLink]\n' +
@@ -155,7 +182,8 @@ describe('Menu Errors (C)', () => {
 
   test('C2: Menu link to missing page throws in prod mode', async () => {
     const result = await runBuild('C2-menu-missing-page', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'nonExistentPage');
     expect(result.errors[0]).toContain(
       '[Config Error] Page "nonExistentPage" referenced in menu link "badLink" not found.\n' +
         '  lowdefy.yaml:15 at root.menus[0:default].links[0:badLink:MenuLink]\n' +
@@ -167,7 +195,8 @@ describe('Menu Errors (C)', () => {
 describe('Page/Block Errors (D, E)', () => {
   test('D1: Duplicate page id throws error', async () => {
     const result = await runBuild('D1-duplicate-page-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Duplicate pageId');
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate pageId "home".\n' +
         '  lowdefy.yaml:15 at root.pages[1:home:Box]\n' +
@@ -177,7 +206,8 @@ describe('Page/Block Errors (D, E)', () => {
 
   test('E1: Invalid action type throws error with suggestion', async () => {
     const result = await runBuild('E1-invalid-action-type', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'SetStat');
     expect(result.errors[0]).toContain(
       '[Config Error] Action type "SetStat" was used but is not defined. Did you mean "SetState"?\n' +
         '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:invalidAction:SetStat]\n' +
@@ -187,7 +217,8 @@ describe('Page/Block Errors (D, E)', () => {
 
   test('E2: Invalid block type throws error with suggestion', async () => {
     const result = await runBuild('E2-invalid-block-type', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Buton');
     expect(result.errors[0]).toContain(
       '[Config Error] Block type "Buton" was used but is not defined. Did you mean "Button"?\n' +
         '  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:invalidBlock:Buton]\n' +
@@ -197,8 +228,8 @@ describe('Page/Block Errors (D, E)', () => {
 
   test('E3: Missing block id throws error', async () => {
     const result = await runBuild('E3-missing-block-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Block should have required property "id"');
     expect(result.errors[0]).toContain(
       '[Config Error] Block should have required property "id".\n' +
         '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:Button]\n' +
@@ -208,8 +239,8 @@ describe('Page/Block Errors (D, E)', () => {
 
   test('E4: Block id not string throws error', async () => {
     const result = await runBuild('E4-block-id-not-string', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first - note: numeric id appears in path since keyMap captures it
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'should be a string');
     expect(result.errors[0]).toContain(
       '[Config Error] Block "id" should be a string.\n' +
         '  lowdefy.yaml:16 at root.pages[0:home:Box].blocks[0:123:Button]\n' +
@@ -219,8 +250,8 @@ describe('Page/Block Errors (D, E)', () => {
 
   test('E5: Block type not string throws error', async () => {
     const result = await runBuild('E5-block-type-not-string', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first - note: object type serializes to [object Object], path points to .type property
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Block "type" should be a string');
     expect(result.errors[0]).toContain(
       '[Config Error] Block "type" should be a string.\n' +
         '  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:badType:[object Object]].type\n' +
@@ -232,7 +263,8 @@ describe('Page/Block Errors (D, E)', () => {
 describe('Request Errors (F)', () => {
   test('F1: Invalid request reference warns in dev mode', async () => {
     const result = await runBuild('F1-invalid-request-reference', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'nonExistentRequest')).toBe(1);
     expect(result.warnings[0]).toContain(
       '[Config Warning] Request "nonExistentRequest" not defined on page "home".\n' +
         '  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n' +
@@ -242,7 +274,8 @@ describe('Request Errors (F)', () => {
 
   test('F1: Invalid request reference throws in prod mode', async () => {
     const result = await runBuild('F1-invalid-request-reference', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'nonExistentRequest');
     expect(result.errors[0]).toContain(
       '[Config Error] Request "nonExistentRequest" not defined on page "home".\n' +
         '  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n' +
@@ -252,8 +285,8 @@ describe('Request Errors (F)', () => {
 
   test('F2: Request missing id throws error', async () => {
     const result = await runBuild('F2-request-missing-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first - note: connectionId appears in path when id is missing
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Request should have required property "id"');
     expect(result.errors[0]).toContain(
       '[Config Error] Request should have required property "id".\n' +
         '  lowdefy.yaml:22 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n' +
@@ -263,7 +296,8 @@ describe('Request Errors (F)', () => {
 
   test('F3: Duplicate request id throws error', async () => {
     const result = await runBuild('F3-duplicate-request-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Duplicate requestId');
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate requestId "myRequest" on page "home".\n' +
         '  lowdefy.yaml:27 at root.pages[0:home:Box].requests[1:testApi:AxiosHttp]\n' +
@@ -273,7 +307,8 @@ describe('Request Errors (F)', () => {
 
   test('F4: Request id with period throws error', async () => {
     const result = await runBuild('F4-request-id-with-period', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'should not include a period');
     expect(result.errors[0]).toContain(
       '[Config Error] Request id "my.request" at page "home" should not include a period (".").\n' +
         '  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n' +
@@ -283,7 +318,8 @@ describe('Request Errors (F)', () => {
 
   test('F5: Invalid request type throws error with suggestion', async () => {
     const result = await runBuild('F5-invalid-request-type', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'AxiosHtt');
     expect(result.errors[0]).toContain(
       '[Config Error] Request type "AxiosHtt" was used but is not defined. Did you mean "AxiosHttp"?\n' +
         '  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHtt]\n' +
@@ -293,7 +329,8 @@ describe('Request Errors (F)', () => {
 
   test('F6: Non-existent connection throws error', async () => {
     const result = await runBuild('F6-nonexistent-connection', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'nonExistentConnection');
     expect(result.errors[0]).toContain(
       '[Config Error] Request "badConnectionRequest" at page "home" references non-existent connection "nonExistentConnection".\n' +
         '  lowdefy.yaml:17 at root.pages[0:home:Box].requests[0:nonExistentConnection:AxiosHttp]\n' +
@@ -312,7 +349,8 @@ describe('Request Errors (F)', () => {
 describe('Action/Event Errors (G)', () => {
   test('G1: Invalid page link warns in dev mode', async () => {
     const result = await runBuild('G1-invalid-page-link', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'nonExistentPage')).toBe(1);
     expect(result.warnings[0]).toContain(
       '[Config Warning] Page "nonExistentPage" not found. Link on page "home" references non-existent page.\n' +
         '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n' +
@@ -322,7 +360,8 @@ describe('Action/Event Errors (G)', () => {
 
   test('G1: Invalid page link throws in prod mode', async () => {
     const result = await runBuild('G1-invalid-page-link', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'nonExistentPage');
     expect(result.errors[0]).toContain(
       '[Config Error] Page "nonExistentPage" not found. Link on page "home" references non-existent page.\n' +
         '  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n' +
@@ -332,7 +371,8 @@ describe('Action/Event Errors (G)', () => {
 
   test('G2: Duplicate action id throws error', async () => {
     const result = await runBuild('G2-duplicate-action-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Duplicate actionId');
     expect(result.errors[0]).toContain(
       '[Config Error] Duplicate actionId "linkAction" on event "onClick" on block "button" on page "home".\n' +
         '  lowdefy.yaml:26 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[1:linkAction:SetState]\n' +
@@ -342,8 +382,8 @@ describe('Action/Event Errors (G)', () => {
 
   test('G3: Missing action id throws error', async () => {
     const result = await runBuild('G3-missing-action-id', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Action should have required property "id"');
     expect(result.errors[0]).toContain(
       '[Config Error] Action should have required property "id".\n' +
         '  lowdefy.yaml:22 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:SetState]\n' +
@@ -353,8 +393,8 @@ describe('Action/Event Errors (G)', () => {
 
   test('G4: Action type not string throws error', async () => {
     const result = await runBuild('G4-action-type-not-string', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first - note: object type serializes to [object Object]
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Action "type" should be a string');
     expect(result.errors[0]).toContain(
       '[Config Error] Action "type" should be a string.\n' +
         '  lowdefy.yaml:24 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1:[object Object]].type\n' +
@@ -364,8 +404,8 @@ describe('Action/Event Errors (G)', () => {
 
   test('G5: Events not array throws error', async () => {
     const result = await runBuild('G5-events-not-array', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
-    // Schema validation catches this first
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'must be array');
     expect(result.errors[0]).toContain(
       '[Config Error] must be array\n' +
         '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick\n' +
@@ -377,7 +417,8 @@ describe('Action/Event Errors (G)', () => {
 describe('Operator Errors (H)', () => {
   test('H1: Operator typo (_staet) throws error with suggestion', async () => {
     const result = await runBuild('H1-operator-typo-state', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, '_staet')).toBe(1);
     const operatorWarning = result.warnings.find((w) => w.includes('_staet'));
     expect(operatorWarning).toContain(
       '[Config Error] Operator type "_staet" was used but is not defined. Did you mean "_state"?\n' +
@@ -388,7 +429,8 @@ describe('Operator Errors (H)', () => {
 
   test('H2: Operator typo (_iff) throws error with suggestion', async () => {
     const result = await runBuild('H2-operator-typo-if', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, '_iff')).toBe(1);
     const operatorWarning = result.warnings.find((w) => w.includes('_iff'));
     expect(operatorWarning).toContain(
       '[Config Error] Operator type "_iff" was used but is not defined. Did you mean "_if"?\n' +
@@ -437,16 +479,15 @@ describe('File Reference Errors (I)', () => {
   test('I1: Missing _ref file throws error', async () => {
     const result = await runBuild('I1-missing-ref-file', 'prod');
     expect(result.thrownError).not.toBeNull();
-    // Error is logged, then a formatted error is thrown
-    expect(result.errors.length).toBeGreaterThan(0);
-    expect(result.errors[0]).toContain('does not exist');
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'does not exist');
   });
 
   test('I2: Circular _ref throws error', async () => {
     const result = await runBuild('I2-circular-ref', 'prod');
     expect(result.thrownError).not.toBeNull();
-    // Error is logged, then a formatted error is thrown
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'Circular reference');
     expect(result.errors[0]).toContain(
       '[Config Error] Circular reference detected. File "a.yaml" references itself through:\n' +
         '  -> lowdefy.yaml\n' +
@@ -460,13 +501,23 @@ describe('File Reference Errors (I)', () => {
 });
 
 describe('State Reference Errors (J)', () => {
-  test('J1: Undefined state reference warns', async () => {
+  test('J1: Undefined state reference warns in dev mode', async () => {
     const result = await runBuild('J1-undefined-state', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'undefinedKey')).toBe(1);
     expect(result.warnings[0]).toContain(
       '[Config Warning] _state references "undefinedKey" on page "home", but no input block with id "undefinedKey" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState.\n' +
         '  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:stateRef:Paragraph].properties.content\n' +
         `  ${path.join(fixturesDir, 'J1-undefined-state', 'lowdefy.yaml:21')}`
+    );
+  });
+
+  test('J1: Undefined state reference throws in prod mode', async () => {
+    const result = await runBuild('J1-undefined-state', 'prod');
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'undefinedKey');
+    expect(result.errors[0]).toContain(
+      '[Config Error] _state references "undefinedKey" on page "home", but no input block with id "undefinedKey" exists on this page.'
     );
   });
 
@@ -479,9 +530,10 @@ describe('State Reference Errors (J)', () => {
 });
 
 describe('Payload Reference Errors (K)', () => {
-  test('K1: Undefined payload reference warns', async () => {
+  test('K1: Undefined payload reference warns in dev mode', async () => {
     const result = await runBuild('K1-undefined-payload', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'undefinedKey')).toBe(1);
     const payloadWarning = result.warnings.find((w) => w.includes('undefinedKey'));
     expect(payloadWarning).toContain(
       '[Config Warning] _payload references "undefinedKey" in request "testRequest" on page "home", but no key "undefinedKey" exists in the request payload definition.'
@@ -489,6 +541,16 @@ describe('Payload Reference Errors (K)', () => {
     expect(payloadWarning).toContain(
       '  lowdefy.yaml:33 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp].properties.params.id\n' +
         `  ${path.join(fixturesDir, 'K1-undefined-payload', 'lowdefy.yaml:33')}`
+    );
+  });
+
+  test('K1: Undefined payload reference throws in prod mode', async () => {
+    const result = await runBuild('K1-undefined-payload', 'prod');
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'undefinedKey');
+    const payloadError = result.errors.find((e) => e.includes('undefinedKey'));
+    expect(payloadError).toContain(
+      '[Config Error] _payload references "undefinedKey" in request "testRequest" on page "home", but no key "undefinedKey" exists in the request payload definition.'
     );
   });
 
@@ -501,9 +563,10 @@ describe('Payload Reference Errors (K)', () => {
 });
 
 describe('Step Reference Errors (L)', () => {
-  test('L1: Undefined step reference warns', async () => {
+  test('L1: Undefined step reference warns in dev mode', async () => {
     const result = await runBuild('L1-undefined-step', 'dev');
-    expect(result.warnings.length).toBeGreaterThan(0);
+    // Verify warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'nonExistentStep')).toBe(1);
     const stepWarning = result.warnings.find((w) => w.includes('nonExistentStep'));
     expect(stepWarning).toContain(
       '[Config Warning] _step references "nonExistentStep" in endpoint "testEndpoint", but no step with id "nonExistentStep" exists in the routine.'
@@ -511,6 +574,16 @@ describe('Step Reference Errors (L)', () => {
     expect(stepWarning).toContain(
       '  lowdefy.yaml:32 at root.api[0:testEndpoint:Endpoint].routine[1].:return\n' +
         `  ${path.join(fixturesDir, 'L1-undefined-step', 'lowdefy.yaml:32')}`
+    );
+  });
+
+  test('L1: Undefined step reference throws in prod mode', async () => {
+    const result = await runBuild('L1-undefined-step', 'prod');
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'nonExistentStep');
+    const stepError = result.errors.find((e) => e.includes('nonExistentStep'));
+    expect(stepError).toContain(
+      '[Config Error] _step references "nonExistentStep" in endpoint "testEndpoint", but no step with id "nonExistentStep" exists in the routine.'
     );
   });
 
@@ -525,11 +598,80 @@ describe('Step Reference Errors (L)', () => {
 describe('Multi-file Error Tracking', () => {
   test('Error in child file shows correct file path', async () => {
     const result = await runBuild('multi-file-error', 'prod');
-    expect(result.errors.length).toBeGreaterThan(0);
+    // Verify error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'NonExistentBlockType');
     expect(result.errors[0]).toContain(
       '[Config Error] Block type "NonExistentBlockType" was used but is not defined.\n' +
         '  pages/home.yaml:12 at root.pages[0:home:Box].blocks[1:invalidBlock:NonExistentBlockType]\n' +
         `  ${path.join(fixturesDir, 'multi-file-error', 'pages/home.yaml:12')}`
     );
+  });
+});
+
+describe('Multiple Validation Errors Collection', () => {
+  test('All validation errors are collected and reported in prod mode', async () => {
+    const result = await runBuild('multi-validation-errors', 'prod');
+    // Should have all three errors, not just the first one
+    expect(result.errors.length).toBe(3);
+
+    // Verify each error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'undefinedState');
+    expectSingleError(result, 'anotherUndefined');
+    expectSingleError(result, 'undefinedPayload');
+
+    // Check for each error type
+    const stateError1 = result.errors.find((e) => e.includes('undefinedState'));
+    const stateError2 = result.errors.find((e) => e.includes('anotherUndefined'));
+    const payloadError = result.errors.find((e) => e.includes('undefinedPayload'));
+
+    expect(stateError1).toContain(
+      '[Config Error] _state references "undefinedState" on page "home"'
+    );
+    expect(stateError2).toContain(
+      '[Config Error] _state references "anotherUndefined" on page "home"'
+    );
+    expect(payloadError).toContain(
+      '[Config Error] _payload references "undefinedPayload" in request "testRequest"'
+    );
+  });
+
+  test('All validation warnings are collected and reported in dev mode', async () => {
+    const result = await runBuild('multi-validation-errors', 'dev');
+    // Should have at least the three validation warnings (may have "No menus found" warning too)
+    expect(result.warnings.length).toBeGreaterThanOrEqual(3);
+
+    // Verify each warning logged exactly once via logger.warn (⚠ in yellow)
+    expect(countOccurrences(result.warnings, 'undefinedState')).toBe(1);
+    expect(countOccurrences(result.warnings, 'anotherUndefined')).toBe(1);
+    expect(countOccurrences(result.warnings, 'undefinedPayload')).toBe(1);
+
+    // Check for each warning type
+    const stateWarning1 = result.warnings.find((w) => w.includes('undefinedState'));
+    const stateWarning2 = result.warnings.find((w) => w.includes('anotherUndefined'));
+    const payloadWarning = result.warnings.find((w) => w.includes('undefinedPayload'));
+
+    expect(stateWarning1).toContain(
+      '[Config Warning] _state references "undefinedState" on page "home"'
+    );
+    expect(stateWarning2).toContain(
+      '[Config Warning] _state references "anotherUndefined" on page "home"'
+    );
+    expect(payloadWarning).toContain(
+      '[Config Warning] _payload references "undefinedPayload" in request "testRequest"'
+    );
+  });
+
+  test('Errors are not logged twice (no duplicates)', async () => {
+    const result = await runBuild('multi-validation-errors', 'prod');
+    // Verify each error logged exactly once via logger.error (✖ in red)
+    expectSingleError(result, 'undefinedState');
+    expectSingleError(result, 'anotherUndefined');
+    expectSingleError(result, 'undefinedPayload');
+  });
+
+  test('Schema errors are not logged twice', async () => {
+    // A2-missing-connection-id has a schema error - verify it only appears once via logger.error (✖ in red)
+    const result = await runBuild('A2-missing-connection-id', 'prod');
+    expectSingleError(result, 'should have required property "id"');
   });
 });
