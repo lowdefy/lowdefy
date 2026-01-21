@@ -51,40 +51,53 @@ function recArray({ array, nextKey, key, keyMap, keyMapId }) {
 }
 
 function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
-  const keyMapId = makeId();
-  keyMap[keyMapId] = {
-    key,
-    '~r': object['~r'],
-    '~l': object['~l'],
-    '~ignoreBuildCheck': object['~ignoreBuildCheck'],
-    '~k_parent': parentKeyMapId,
-  };
-  Object.defineProperty(object, '~k', {
-    value: keyMapId,
-    enumerable: false,
-    writable: true,
-    configurable: true,
-  });
-  delete object['~r'];
-  delete object['~l'];
-  delete object['~ignoreBuildCheck'];
+  let keyMapId;
+  let storedKey = key;
+
+  // Skip objects that already have a ~k (already processed)
+  if (object['~k']) {
+    keyMapId = object['~k'];
+    // Use the stored key from keyMap for correct child paths
+    storedKey = keyMap[keyMapId]?.key ?? key;
+  } else {
+    keyMapId = makeId.next();
+    const entry = {
+      key,
+      '~k_parent': parentKeyMapId,
+    };
+    if (object['~r'] !== undefined) entry['~r'] = object['~r'];
+    if (object['~l'] !== undefined) entry['~l'] = object['~l'];
+    if (object['~ignoreBuildCheck'] !== undefined) entry['~ignoreBuildCheck'] = object['~ignoreBuildCheck'];
+    keyMap[keyMapId] = entry;
+    Object.defineProperty(object, '~k', {
+      value: keyMapId,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+    delete object['~r'];
+    delete object['~l'];
+    delete object['~ignoreBuildCheck'];
+  }
+
+  // Always recurse into children (they may be new objects without keys)
   Object.keys(object).forEach((nextKey) => {
     if (type.isObject(object[nextKey])) {
       recAddKeys({
         object: object[nextKey],
-        key: `${key}.${nextKey}`,
+        key: `${storedKey}.${nextKey}`,
         keyMap: keyMap,
         parentKeyMapId: keyMapId,
       });
     }
     if (type.isArray(object[nextKey])) {
-      recArray({ array: object[nextKey], nextKey, key, keyMap, keyMapId });
+      recArray({ array: object[nextKey], nextKey, key: storedKey, keyMap, keyMapId });
     }
   });
 }
 
 function addKeys({ components, context }) {
-  const keyMapId = makeId(true);
+  const keyMapId = makeId.next();
   recAddKeys({ object: components, key: 'root', keyMap: context.keyMap, parentKeyMapId: keyMapId });
 }
 

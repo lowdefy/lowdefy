@@ -16,39 +16,40 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/node-utils';
 
 async function getConfigFile({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
-    throw new Error(
-      `Invalid _ref definition ${JSON.stringify({
-        _ref: refDef.original,
-      })} in file ${referencedFrom}`
-    );
+    throw new ConfigError({
+      message: `Invalid _ref definition: ${JSON.stringify({ _ref: refDef.original })}`,
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+      configDirectory: context.directories.config,
+    });
   }
 
   const content = await context.readConfigFile(refDef.path);
 
   if (content === null) {
-    // Build helpful error message with resolved path information
-    const lineInfo = refDef.lineNumber ? `:${refDef.lineNumber}` : '';
     const absolutePath = path.resolve(context.directories.config, refDef.path);
 
-    let message = `[Config Error] Referenced file does not exist: "${refDef.path}"\n`;
-    message += `  Referenced from: ${referencedFrom}${lineInfo}\n`;
-    message += `  Resolved to: ${absolutePath}\n`;
+    let message = `Referenced file does not exist: "${refDef.path}". Resolved to: ${absolutePath}`;
 
     // Help with common mistakes
     if (refDef.path.startsWith('../')) {
       const suggestedPath = refDef.path.replace(/^(\.\.\/)+/, '');
-      message += `\n  Tip: Paths in _ref are resolved from your config directory root.`;
-      message += `\n  Did you mean: "${suggestedPath}"?`;
+      message += ` Tip: Paths in _ref are resolved from config root. Did you mean "${suggestedPath}"?`;
     } else if (refDef.path.startsWith('./')) {
       const suggestedPath = refDef.path.substring(2);
-      message += `\n  Tip: Remove the "./" prefix - paths are resolved from config root.`;
-      message += `\n  Did you mean: "${suggestedPath}"?`;
+      message += ` Tip: Remove "./" prefix - paths are resolved from config root. Did you mean "${suggestedPath}"?`;
     }
 
-    throw new Error(message);
+    throw new ConfigError({
+      message,
+      filePath: referencedFrom,
+      lineNumber: refDef.lineNumber,
+      configDirectory: context.directories.config,
+    });
   }
 
   return content;

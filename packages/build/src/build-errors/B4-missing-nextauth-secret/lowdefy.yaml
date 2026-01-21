@@ -1,0 +1,23 @@
+# B4: Missing NEXTAUTH_SECRET Environment Variable
+# ================================================
+# Tests that NEXTAUTH_SECRET must be set when auth providers are configured.
+#
+# Expected error:
+#   [Config Error] Auth providers are configured but NEXTAUTH_SECRET environment
+#   variable is not set.
+#
+# The error points to line 14 where the providers array is defined.
+
+lowdefy: local
+
+auth:
+  providers:
+    - id: google
+      type: GoogleProvider
+      properties:
+        clientId: test-client-id
+        clientSecret: test-client-secret
+
+pages:
+  - id: home
+    type: Box

@@ -1,0 +1,21 @@
+# F6: Non-existent Connection
+# ============================
+# Tests that requests referencing undefined connections throw an error.
+#
+# Expected error:
+#   [Config Error] Request "badConnectionRequest" references connection
+#   "nonExistentConnection" which does not exist.
+#
+# The error points to line 16 where the request is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: badConnectionRequest
+        type: AxiosHttp
+        connectionId: nonExistentConnection
+        properties:
+          url: /test

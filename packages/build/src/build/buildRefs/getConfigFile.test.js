@@ -65,7 +65,7 @@ test('getConfigFile error includes line number when available', async () => {
 
   await expect(
     getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' })
-  ).rejects.toThrow('Referenced from: pages/home.yaml:25');
+  ).rejects.toThrow('pages/home.yaml:25');
 });
 
 test('getConfigFile error shows resolved absolute path', async () => {
@@ -87,10 +87,8 @@ test('getConfigFile suggests correct path for ../ prefix', async () => {
     referencedFrom: 'pages/products.yaml',
   });
 
-  await expect(errorPromise).rejects.toThrow(
-    'Paths in _ref are resolved from your config directory root'
-  );
-  await expect(errorPromise).rejects.toThrow('Did you mean: "filters/productFilter.yaml"?');
+  await expect(errorPromise).rejects.toThrow('Paths in _ref are resolved from config root');
+  await expect(errorPromise).rejects.toThrow('Did you mean "filters/productFilter.yaml"?');
 });
 
 test('getConfigFile suggests correct path for multiple ../ prefixes', async () => {
@@ -99,7 +97,7 @@ test('getConfigFile suggests correct path for multiple ../ prefixes', async () =
 
   const errorPromise = getConfigFile({ context, refDef, referencedFrom: 'pages/about.yaml' });
 
-  await expect(errorPromise).rejects.toThrow('Did you mean: "shared/template.yaml"?');
+  await expect(errorPromise).rejects.toThrow('Did you mean "shared/template.yaml"?');
 });
 
 test('getConfigFile suggests correct path for ./ prefix', async () => {
@@ -108,8 +106,8 @@ test('getConfigFile suggests correct path for ./ prefix', async () => {
 
   const errorPromise = getConfigFile({ context, refDef, referencedFrom: 'pages/home.yaml' });
 
-  await expect(errorPromise).rejects.toThrow('Remove the "./" prefix');
-  await expect(errorPromise).rejects.toThrow('Did you mean: "components/header.yaml"?');
+  await expect(errorPromise).rejects.toThrow('Remove "./" prefix');
+  await expect(errorPromise).rejects.toThrow('Did you mean "components/header.yaml"?');
 });
 
 test('getConfigFile does not suggest path for normal paths', async () => {
@@ -133,8 +131,8 @@ test('getConfigFile includes all error details in message', async () => {
   } catch (error) {
     expect(error.message).toContain('[Config Error]');
     expect(error.message).toContain('Referenced file does not exist: "../missing.yaml"');
-    expect(error.message).toContain('Referenced from: pages/test.yaml:42');
+    expect(error.message).toContain('pages/test.yaml:42');
     expect(error.message).toContain('Resolved to: /test/missing.yaml'); // path.resolve normalizes ../
-    expect(error.message).toContain('Did you mean: "missing.yaml"?');
+    expect(error.message).toContain('Did you mean "missing.yaml"?');
   }
 });

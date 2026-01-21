@@ -1,0 +1,25 @@
+# F2: Request Missing ID
+# =======================
+# Tests that requests without an id throw an error with location.
+#
+# Expected error:
+#   [Config Error] Request id missing at page "home".
+#
+# The error points to line 22 where the request without id is defined.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - type: AxiosHttp
+        connectionId: testApi
+        properties:
+          url: /test

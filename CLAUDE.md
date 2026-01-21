@@ -46,7 +46,21 @@ packages/
 
 ## Code Principles
 
-**Core Philosophy**: Clarity over brevity. Explicit code over clever code.
+### CRITICAL: Fix at the Source, Not the Symptom
+
+**A guard clause is a code smell. Ask "why" before "how"**
+
+1. **Ask: "Why is this happening here?"**
+2. **Trace backwards** to find where the problem originated
+3. **Fix at the source**
+
+Example: If `connection.id.toLowerCase()` crashes because `id` is undefined, the fix is NOT `if (!connection.id) return`. The fix is ensuring invalid connections don't reach this code - e.g., schema validation should stop the build before processing invalid data.
+
+**The urge to add a guard clause is a red flag that you're treating symptoms, not causes. The WHY needs to be understood before adding.**
+
+### Core Philosophy
+
+Clarity over brevity. Explicit code over clever code.
 
 ### Simplification Balance
 
@@ -276,15 +290,16 @@ See `cc-docs/architecture/error-tracing.md` for the complete error system.
 - **Do not create tests for blocks** (currently disabled)
 
 **Test naming:** Use descriptive names that explain the scenario and expected outcome:
+
 ```javascript
 // Good: Describes what is being tested and the condition
-test('buildConnections throws when connection id is missing', () => { });
-test('buildConnections returns empty array when no connections defined', () => { });
-test('_get returns default value when path does not exist', () => { });
+test('buildConnections throws when connection id is missing', () => {});
+test('buildConnections returns empty array when no connections defined', () => {});
+test('_get returns default value when path does not exist', () => {});
 
 // Avoid: Vague or implementation-focused names
-test('buildConnections no connections', () => { });  // What happens with no connections?
-test('test error', () => { });  // What error? What scenario?
+test('buildConnections no connections', () => {}); // What happens with no connections?
+test('test error', () => {}); // What error? What scenario?
 ```
 
 **Dynamic imports for ES module mocking:**

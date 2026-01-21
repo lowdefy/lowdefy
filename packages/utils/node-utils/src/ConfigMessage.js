@@ -137,10 +137,7 @@ class ConfigMessage {
       return `${prefix} ${message}`;
     }
 
-    // With configKey we have config path; with operatorLocation/raw we don't
-    const source = location.config
-      ? `${location.source} at ${location.config}`
-      : location.source;
+    const source = location.config ? `${location.source} at ${location.config}` : location.source;
     const link = location.link || '';
     return `${prefix} ${message}\n  ${source}\n  ${link}`;
   }

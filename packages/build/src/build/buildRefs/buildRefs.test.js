@@ -1279,7 +1279,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Error calling resolver "src/test/buildRefs/testBuildRefsErrorResolver.js" from "lowdefy.yaml": Test error'
+      'Error calling resolver "src/test/buildRefs/testBuildRefsErrorResolver.js": Test error'
     );
   });
 
@@ -1295,7 +1295,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Tried to reference with resolver "src/test/buildRefs/testBuildRefsNullResolver.js" from "lowdefy.yaml", but received "null".'
+      'Resolver "src/test/buildRefs/testBuildRefsNullResolver.js" returned "null".'
     );
   });
 
@@ -1310,7 +1310,7 @@ _ref:
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Tried to reference with resolver "src/test/buildRefs/testBuildRefsNullResolver.js" from "lowdefy.yaml", but received "undefined".'
+      'Resolver "src/test/buildRefs/testBuildRefsNullResolver.js" returned "undefined".'
     );
   });
 
@@ -1398,7 +1398,9 @@ answer:
     });
     expect(mockLogWarn.mock.calls).toEqual([
       ['Build operator errors.'],
-      ['Operator Error: _sum takes an array type as input. Received: "A" at lowdefy.yaml:2.'],
+      [
+        'Operator Error: _sum takes an array type as input. Received: {"_build.sum":"A"} at lowdefy.yaml:2.',
+      ],
     ]);
   });
 
@@ -1423,7 +1425,9 @@ _build.sum: A`,
     });
     expect(mockLogWarn.mock.calls).toEqual([
       ['Build operator errors.'],
-      ['Operator Error: _sum takes an array type as input. Received: "A" at file.yaml:2.'],
+      [
+        'Operator Error: _sum takes an array type as input. Received: {"_build.sum":"A"} at file.yaml:2.',
+      ],
     ]);
   });
 });

@@ -1,0 +1,18 @@
+# B2: Auth Provider Missing ID
+# =============================
+# Tests that auth providers must have an id property.
+#
+# Expected error:
+#   [Config Error] Auth provider should have required property "id".
+#
+# The error points to line 14 where the provider without id is defined.
+
+lowdefy: local
+
+auth:
+  providers:
+    - type: GoogleProvider
+
+pages:
+  - id: home
+    type: Box

@@ -1,0 +1,19 @@
+# E4: Block ID Not String
+# ========================
+# Tests that block ids must be strings, not numbers or other types.
+#
+# Expected error:
+#   [Config Error] Block id is not a string at page "home". Received 123.
+#
+# The error points to line 16 where the block with numeric id is defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: 123
+        type: Button
+        properties:
+          title: Invalid ID type

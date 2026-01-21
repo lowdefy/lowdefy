@@ -24,7 +24,7 @@ import validateAuthConfig from './validateAuthConfig.js';
 
 function buildAuth({ components, context }) {
   const configured = !type.isNone(components.auth);
-  validateAuthConfig({ components });
+  validateAuthConfig({ components, context });
   components.auth.configured = configured;
   buildApiAuth({ components });
   buildPageAuth({ components });

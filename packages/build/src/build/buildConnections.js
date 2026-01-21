@@ -16,8 +16,6 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-import collectConfigError from '../utils/collectConfigError.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
@@ -25,44 +23,33 @@ function buildConnections({ components, context }) {
   // Store connection IDs for validation in buildRequests
   context.connectionIds = new Set();
 
+  // Schema validates: id required, id is string, type is string
+  // Only check for duplicates here (schema can't do that)
   const checkDuplicateConnectionId = createCheckDuplicateId({
     message: 'Duplicate connectionId "{{ id }}".',
     context,
   });
-  if (type.isArray(components.connections)) {
-    components.connections.forEach((connection) => {
-      const configKey = connection['~k'];
-      if (type.isUndefined(connection.id)) {
-        collectConfigError({
-          message: 'Connection id missing.',
-          configKey,
-          context,
-        });
-      }
-      if (!type.isString(connection.id)) {
-        collectConfigError({
-          message: `Connection id is not a string. Received ${JSON.stringify(connection.id)}.`,
-          configKey,
-          context,
-        });
-      }
-      checkDuplicateConnectionId({ id: connection.id, configKey });
-      if (!type.isString(connection.type)) {
-        collectConfigError({
-          message: `Connection type is not a string at connection "${connection.id}". Received ${JSON.stringify(connection.type)}.`,
-          configKey,
-          context,
-        });
-      }
-      context.typeCounters.connections.increment(connection.type, connection['~k']);
-      connection.connectionId = connection.id;
-      context.connectionIds.add(connection.connectionId);
-      connection.id = `connection:${connection.id}`;
-      countOperators(connection.properties || {}, {
-        counter: context.typeCounters.operators.server,
-      });
+
+  (components.connections ?? []).forEach((connection) => {
+    const configKey = connection['~k'];
+
+    // Check duplicates (schema can't validate this)
+    checkDuplicateConnectionId({ id: connection.id, configKey });
+
+    // Track type usage for buildTypes validation
+    context.typeCounters.connections.increment(connection.type, configKey);
+
+    // Store connectionId for request validation and rename id
+    connection.connectionId = connection.id;
+    context.connectionIds.add(connection.connectionId);
+    connection.id = `connection:${connection.id}`;
+
+    // Count operators in connection properties
+    countOperators(connection.properties ?? {}, {
+      counter: context.typeCounters.operators.server,
     });
-  }
+  });
+
   return components;
 }
 

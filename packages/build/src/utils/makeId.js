@@ -14,14 +14,21 @@
   limitations under the License.
 */
 
-let id_counter = 0;
-
-function makeId(reset) {
-  if (reset) {
-    id_counter = 0;
+class MakeId {
+  constructor() {
+    this.counter = 0;
   }
-  id_counter++;
-  return id_counter.toString(36);
+
+  next() {
+    this.counter++;
+    return this.counter.toString(36);
+  }
+
+  reset() {
+    this.counter = 0;
+  }
 }
+
+const makeId = new MakeId();
 
 export default makeId;

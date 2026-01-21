@@ -25,15 +25,8 @@ test('buildConnections no connections', () => {
   expect(res.connections).toBe(undefined);
 });
 
-test('buildConnections connections not an array', () => {
-  const components = {
-    connections: 'connections',
-  };
-  const res = buildConnections({ components, context });
-  expect(res).toEqual({
-    connections: 'connections',
-  });
-});
+// Note: "connections not an array" is validated by schema (testSchema.js)
+// buildConnections assumes valid input after schema validation
 
 test('buildConnections', () => {
   const components = {
@@ -63,30 +56,8 @@ test('buildConnections', () => {
   ]);
 });
 
-test('throw on missing id', () => {
-  const components = {
-    connections: [{ type: 'ConnectionType' }],
-  };
-  expect(() => buildConnections({ components, context })).toThrow('Connection id missing.');
-});
-
-test('connection id is not a string', () => {
-  const components = {
-    connections: [{ id: 1 }],
-  };
-  expect(() => buildConnections({ components, context })).toThrow(
-    'Connection id is not a string. Received 1.'
-  );
-});
-
-test('throw on missing type', () => {
-  const components = {
-    connections: [{ id: 'connection1' }],
-  };
-  expect(() => buildConnections({ components, context })).toThrow(
-    'Connection type is not a string at connection "connection1". Received undefined.'
-  );
-});
+// Note: Missing id, invalid id type, and missing/invalid type are validated by schema
+// See index.errors.test.js for A2 (missing id), A1 (invalid type)
 
 test('throw on Duplicate ids', () => {
   const components = {

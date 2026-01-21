@@ -125,8 +125,8 @@ export default {
           },
           properties: {
             '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+            '~r': {},
+            '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -179,8 +179,8 @@ export default {
           additionalProperties: false,
           properties: {
             '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+            '~r': {},
+            '~l': {},
             signIn: {
               type: 'string',
               default: '/auth/signin',
@@ -283,8 +283,8 @@ export default {
           },
           properties: {
             '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+            '~r': {},
+            '~l': {},
             protected: {
               type: ['array', 'boolean'],
               errorMessage: {
@@ -470,8 +470,8 @@ export default {
                   additionalProperties: false,
                   properties: {
                     '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+                    '~r': {},
+                    '~l': {},
                     try: {
                       type: 'array',
                       items: {
@@ -489,8 +489,8 @@ export default {
                       additionalProperties: false,
                       properties: {
                         '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+                        '~r': {},
+                        '~l': {},
                         immediate: {
                           type: 'boolean',
                           errorMessage: {
@@ -859,8 +859,8 @@ export default {
   required: ['lowdefy'],
   properties: {
     '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+    '~r': {},
+    '~l': {},
     name: {
       type: 'string',
       errorMessage: {
@@ -993,8 +993,8 @@ export default {
           },
           properties: {
             '~ignoreBuildCheck': {},
-        '~r': {},
-        '~l': {},
+            '~r': {},
+            '~l': {},
             client: {
               type: 'boolean',
               errorMessage: {

@@ -1,0 +1,22 @@
+# H1: Operator Typo (_staet)
+# ===========================
+# Tests that unknown operators throw an error with a "Did you mean?" suggestion.
+# This example uses "_staet" which is a typo for "_state".
+#
+# Expected warning:
+#   [Config Error] Operator type "_staet" was used but is not defined.
+#   Did you mean "_state"?
+#
+# The error points to line 19 where the operator is used.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: typoBlock
+        type: Paragraph
+        properties:
+          content:
+            _staet: someValue

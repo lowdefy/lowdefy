@@ -132,16 +132,11 @@ function buildMenu({ components, context }) {
     });
   });
   missingPageWarnings.forEach((warning) => {
-    const location = resolveConfigLocation({
+    context.logger.configWarning({
+      message: `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`,
       configKey: warning.configKey,
-      keyMap: context.keyMap,
-      refMap: context.refMap,
-      configDirectory: context.directories.config,
+      prodError: true,
     });
-    const source = location?.source ? `${location.source} at ${location.config}` : '';
-    const link = location?.link || '';
-    const message = `Page "${warning.pageId}" referenced in menu link "${warning.menuItemId}" not found.`;
-    context.logger.warn(`[Config Error] ${message}\n  ${source}\n  ${link}`);
   });
   return components;
 }

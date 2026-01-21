@@ -1,0 +1,34 @@
+# L2: Undefined Step Reference with ~ignoreBuildCheck
+# ====================================================
+# Tests that _step reference warnings are suppressed with ~ignoreBuildCheck: true.
+# The ~ignoreBuildCheck flag is on the same object as the operator.
+#
+# Expected: NO warning should be shown.
+
+lowdefy: local
+
+connections:
+  - id: testDb
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _env: MONGO_URI
+      collection: test
+
+api:
+  - id: testEndpoint
+    type: Endpoint
+    routine:
+      - id: step1
+        type: MongoDBInsertOne
+        connectionId: testDb
+        properties:
+          doc:
+            name: test
+      - :return:
+          _step: nonExistentStep
+          ~ignoreBuildCheck: true
+
+pages:
+  - id: home
+    type: Box

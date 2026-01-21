@@ -20,6 +20,11 @@ import loaderTypes from '@lowdefy/blocks-loaders/types';
 import findSimilarString from '../utils/findSimilarString.js';
 import formatBuildError from './formatBuildError.js';
 
+// Check if a configKey has ~ignoreBuildCheck set
+function hasIgnoreBuildCheck(keyMap, configKey) {
+  return keyMap[configKey]?.['~ignoreBuildCheck'] === true;
+}
+
 function buildTypeClass(
   context,
   { counter, definitions, store, typeClass, warnIfMissing = false }
@@ -28,6 +33,12 @@ function buildTypeClass(
   const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
+      // Check if this type usage has ~ignoreBuildCheck flag
+      const configKey = counter.getLocation(typeName);
+      if (configKey && hasIgnoreBuildCheck(context.keyMap, configKey)) {
+        return; // Skip warning/error for this type
+      }
+
       let message = `${typeClass} type "${typeName}" was used but is not defined.`;
       const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
       if (suggestion) {

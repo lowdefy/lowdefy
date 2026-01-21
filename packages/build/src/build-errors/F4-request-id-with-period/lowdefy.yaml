@@ -1,0 +1,27 @@
+# F4: Request ID with Period
+# ===========================
+# Tests that request ids containing periods throw an error with location.
+# Periods are reserved for path notation in _request operator.
+#
+# Expected error:
+#   [Config Error] Request id "my.request" should not include a period (".").
+#
+# The error points to line 22 where the request with period in id is defined.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: my.request
+        type: AxiosHttp
+        connectionId: testApi
+        properties:
+          url: /test

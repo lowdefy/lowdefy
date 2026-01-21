@@ -1,0 +1,34 @@
+# K1: Undefined Payload Reference
+# =================================
+# Tests that _payload references to undefined keys warn in dev mode.
+# Payload keys are defined in the request's "payload" property.
+#
+# Expected warning:
+#   [Config Warning] _payload references "undefinedKey" in request "testRequest"
+#   on page "home", but no key "undefinedKey" exists in the request payload definition.
+#
+# The error points to line 31 where the _payload operator is used.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: testRequest
+        type: AxiosHttp
+        connectionId: testApi
+        payload:
+          userId:
+            _state: selectedUser
+        properties:
+          url: /users
+          params:
+            id:
+              _payload: undefinedKey

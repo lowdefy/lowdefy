@@ -1,0 +1,25 @@
+# G5: Events Not Array
+# =====================
+# Tests that event actions must be defined as an array, not an object.
+#
+# Expected error:
+#   [Config Error] Actions at "onClick" on "button" on page "home" must be an array.
+#
+# The error points to line 21 where the events are defined on the block.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: button
+        type: Button
+        properties:
+          title: Events Not Array
+        events:
+          onClick:
+            id: action1
+            type: SetState
+            params:
+              key: value
