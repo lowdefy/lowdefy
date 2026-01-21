@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["undefinedKey", "selectedUser"],
+      "warningContains": [
+        "[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition."
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["undefinedKey", "selectedUser"],
+      "errorContains": [
+        "[Config Error] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition."
+      ],
+      "expectThrow": true
+    }
+  ]
+}

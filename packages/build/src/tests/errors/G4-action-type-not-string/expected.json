@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Action \"type\" should be a string"],
+      "errorContains": [
+        "[Config Error] Action \"type\" should be a string.\n  lowdefy.yaml:24 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:action1:[object Object]].type\n  {{fixturesDir}}/G4-action-type-not-string/lowdefy.yaml:24"
+      ]
+    }
+  ]
+}

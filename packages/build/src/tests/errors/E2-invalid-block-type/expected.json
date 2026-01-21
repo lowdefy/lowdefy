@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Buton"],
+      "errorContains": [
+        "[Config Error] Block type \"Buton\" was used but is not defined. Did you mean \"Button\"?\n  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:invalidBlock:Buton]\n  {{fixturesDir}}/E2-invalid-block-type/lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

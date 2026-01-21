@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["undefinedKey"],
+      "warningContains": [
+        "[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page."
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["undefinedKey"],
+      "errorContains": [
+        "[Config Error] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page."
+      ],
+      "expectThrow": true
+    }
+  ]
+}

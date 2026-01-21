@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["should not include a period"],
+      "errorContains": [
+        "[Config Error] Request id \"my.request\" at page \"home\" should not include a period (\".\").\n  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n  {{fixturesDir}}/F4-request-id-with-period/lowdefy.yaml:23"
+      ]
+    }
+  ]
+}

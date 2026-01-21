@@ -1,0 +1,18 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["nonExistentRequest"],
+      "warningContains": [
+        "[Config Warning] Request \"nonExistentRequest\" not defined on page \"home\".\n  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n  {{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["nonExistentRequest"],
+      "errorContains": [
+        "[Config Error] Request \"nonExistentRequest\" not defined on page \"home\".\n  lowdefy.yaml:29 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:callRequest:Request]\n  {{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29"
+      ]
+    }
+  ]
+}

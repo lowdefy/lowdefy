@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["anotherUndefined", "undefinedState", "undefinedPayload"]
+    },
+    {
+      "mode": "prod",
+      "errors": ["anotherUndefined", "undefinedState", "undefinedPayload"],
+      "errorCount": 3,
+      "expectThrow": true
+    }
+  ]
+}

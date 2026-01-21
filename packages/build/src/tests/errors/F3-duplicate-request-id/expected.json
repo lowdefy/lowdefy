@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Duplicate requestId"],
+      "errorContains": [
+        "[Config Error] Duplicate requestId \"myRequest\" on page \"home\".\n  lowdefy.yaml:27 at root.pages[0:home:Box].requests[1:testApi:AxiosHttp]\n  {{fixturesDir}}/F3-duplicate-request-id/lowdefy.yaml:27"
+      ]
+    }
+  ]
+}

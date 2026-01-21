@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["nonExistentConnection"],
+      "errorContains": [
+        "[Config Error] Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\".\n  lowdefy.yaml:17 at root.pages[0:home:Box].requests[0:nonExistentConnection:AxiosHttp]\n  {{fixturesDir}}/F6-nonexistent-connection/lowdefy.yaml:17"
+      ]
+    }
+  ]
+}

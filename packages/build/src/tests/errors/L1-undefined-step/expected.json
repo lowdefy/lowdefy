@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["nonExistentStep"],
+      "warningContains": [
+        "[Config Warning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine."
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["nonExistentStep"],
+      "errorContains": [
+        "[Config Error] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine."
+      ],
+      "expectThrow": true
+    }
+  ]
+}

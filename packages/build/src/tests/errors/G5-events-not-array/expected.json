@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["must be array"],
+      "errorContains": [
+        "[Config Error] must be array\n  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick\n  {{fixturesDir}}/G5-events-not-array/lowdefy.yaml:21"
+      ]
+    }
+  ]
+}

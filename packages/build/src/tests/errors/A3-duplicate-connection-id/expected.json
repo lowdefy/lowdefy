@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["Duplicate connectionId"],
+      "errorContains": [
+        "[Config Error] Duplicate connectionId \"testApi\".\n  lowdefy.yaml:17 at root.connections[1:testApi:AxiosHttp]\n  {{fixturesDir}}/A3-duplicate-connection-id/lowdefy.yaml:17"
+      ]
+    }
+  ]
+}
