@@ -1,0 +1,21 @@
+id: contact
+type: Box
+properties:
+  title: Contact Us
+blocks:
+  - id: heading
+    type: Title
+    properties:
+      content: Get In Touch
+  - id: email
+    type: TextInput
+    properties:
+      title: Your Email
+  - id: message
+    type: TextArea
+    properties:
+      title: Message
+  - id: submit
+    type: Button
+    properties:
+      title: Send Message

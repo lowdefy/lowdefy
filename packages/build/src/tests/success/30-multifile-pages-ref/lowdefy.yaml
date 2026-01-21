@@ -1,0 +1,7 @@
+# 30: Multi-file App with Pages via _ref
+lowdefy: local
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/about.yaml
+  - _ref: pages/contact.yaml

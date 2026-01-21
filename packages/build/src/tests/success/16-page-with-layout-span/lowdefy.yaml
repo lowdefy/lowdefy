@@ -1,0 +1,15 @@
+# 16: Page with Layout Span
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: col1
+        type: Box
+        layout:
+          span: 12
+      - id: col2
+        type: Box
+        layout:
+          span: 12

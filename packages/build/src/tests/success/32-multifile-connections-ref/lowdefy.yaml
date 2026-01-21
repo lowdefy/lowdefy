@@ -1,0 +1,20 @@
+# 32: Multi-file App with Connections via _ref
+lowdefy: local
+
+connections:
+  _ref: config/connections.yaml
+
+pages:
+  - id: home
+    type: Box
+    requests:
+      - id: getUsers
+        type: AxiosHttp
+        connectionId: api
+        properties:
+          url: /users
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Users

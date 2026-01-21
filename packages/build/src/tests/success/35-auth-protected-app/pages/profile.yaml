@@ -1,0 +1,22 @@
+id: profile
+type: Box
+properties:
+  title: Profile
+blocks:
+  - id: avatar
+    type: Avatar
+    properties:
+      src:
+        _user: image
+      size: 80
+  - id: name
+    type: Title
+    properties:
+      level: 2
+      content:
+        _user: name
+  - id: email
+    type: Paragraph
+    properties:
+      content:
+        _user: email

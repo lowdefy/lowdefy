@@ -1,0 +1,29 @@
+# 51: Config Options Application
+lowdefy: local
+name: Config Options Demo
+version: 1.0.0
+license: Apache-2.0
+
+config:
+  homePageId: landing
+  basePath: /app
+
+pages:
+  - id: landing
+    type: Box
+    properties:
+      title: Landing Page
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Welcome to the App
+  - id: about
+    type: Box
+    properties:
+      title: About
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: About Us

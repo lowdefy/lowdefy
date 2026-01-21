@@ -1,0 +1,5177 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "8y"
+    },
+    "git_sha": "bcc9442f117ebc1a73a297b941a7b3073f1c4a22",
+    "~k": "8x"
+  },
+  "auth.json": {
+    "providers": {
+      "~arr": [
+        {
+          "id": "google",
+          "type": "GoogleProvider",
+          "properties": {
+            "clientId": {
+              "_secret": "GOOGLE_CLIENT_ID",
+              "~k": "q"
+            },
+            "clientSecret": {
+              "_secret": "GOOGLE_CLIENT_SECRET",
+              "~k": "r"
+            },
+            "~k": "p"
+          },
+          "~k": "o"
+        },
+        {
+          "id": "credentials",
+          "type": "CredentialsProvider",
+          "properties": {
+            "name": "Enterprise Login",
+            "credentials": {
+              "email": {
+                "label": "Email",
+                "type": "email",
+                "~k": "v"
+              },
+              "password": {
+                "label": "Password",
+                "type": "password",
+                "~k": "w"
+              },
+              "~k": "u"
+            },
+            "~k": "t"
+          },
+          "~k": "s"
+        }
+      ],
+      "~l": 1
+    },
+    "pages": {
+      "protected": true,
+      "public": {
+        "~arr": [
+          "login"
+        ],
+        "~l": 22
+      },
+      "roles": {
+        "admin": {
+          "~arr": [
+            "settings",
+            "reports"
+          ],
+          "~l": 25
+        },
+        "sales": {
+          "~arr": [
+            "customers",
+            "customer-detail",
+            "orders"
+          ],
+          "~l": 28
+        },
+        "~k": "y"
+      },
+      "~k": "x"
+    },
+    "callbacks": {
+      "~arr": [
+        {
+          "id": "jwt",
+          "type": "JwtCallback",
+          "~k": "z"
+        },
+        {
+          "id": "session",
+          "type": "SessionCallback",
+          "~k": "10"
+        }
+      ],
+      "~l": 32
+    },
+    "session": {
+      "maxAge": 28800,
+      "~k": "11"
+    },
+    "theme": {
+      "colorScheme": "light",
+      "brandColor": "#1890ff",
+      "logo": "https://enterprise.com/logo.png",
+      "~k": "12"
+    },
+    "userFields": {
+      "id": "sub",
+      "email": "email",
+      "name": "name",
+      "roles": "roles",
+      "~k": "13"
+    },
+    "~k": "n",
+    "api": {
+      "roles": {
+        "~k": "91"
+      },
+      "~k": "90"
+    },
+    "authPages": {
+      "~k": "92"
+    },
+    "events": [],
+    "configured": true
+  },
+  "config.json": {
+    "homePageId": "dashboard",
+    "basePath": "/crm",
+    "~k": "f"
+  },
+  "connections/api.json": {
+    "id": "connection:api",
+    "type": "AxiosHttp",
+    "properties": {
+      "baseURL": "https://api.enterprise.com",
+      "headers": {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "~k": "i"
+      },
+      "~k": "h"
+    },
+    "~k": "g",
+    "connectionId": "api"
+  },
+  "connections/db.json": {
+    "id": "connection:db",
+    "type": "MongoDBCollection",
+    "properties": {
+      "databaseUri": "mongodb://localhost:27017/enterprise_crm",
+      "collection": "customers",
+      "write": true,
+      "~k": "k"
+    },
+    "~k": "j",
+    "connectionId": "db"
+  },
+  "connections/ordersDb.json": {
+    "id": "connection:ordersDb",
+    "type": "MongoDBCollection",
+    "properties": {
+      "databaseUri": "mongodb://localhost:27017/enterprise_crm",
+      "collection": "orders",
+      "write": true,
+      "~k": "m"
+    },
+    "~k": "l",
+    "connectionId": "ordersDb"
+  },
+  "global.json": {
+    "appName": "Enterprise CRM",
+    "version": "2.0.0",
+    "features": {
+      "darkMode": true,
+      "notifications": true,
+      "analytics": true,
+      "~k": "15"
+    },
+    "settings": {
+      "itemsPerPage": 25,
+      "currency": "USD",
+      "timezone": "America/New_York",
+      "dateFormat": "MM/DD/YYYY",
+      "~k": "16"
+    },
+    "~k": "14"
+  },
+  "keyMap.json": {
+    "10": {
+      "key": "root.auth.callbacks[1:session:SessionCallback]",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 35
+    },
+    "11": {
+      "key": "root.auth.session",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 37
+    },
+    "12": {
+      "key": "root.auth.theme",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 39
+    },
+    "13": {
+      "key": "root.auth.userFields",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 43
+    },
+    "14": {
+      "key": "root.global",
+      "~k_parent": "e",
+      "~r": "4",
+      "~l": 1
+    },
+    "15": {
+      "key": "root.global.features",
+      "~k_parent": "14",
+      "~r": "4",
+      "~l": 3
+    },
+    "16": {
+      "key": "root.global.settings",
+      "~k_parent": "14",
+      "~r": "4",
+      "~l": 7
+    },
+    "17": {
+      "key": "root.logger",
+      "~k_parent": "e",
+      "~l": 20
+    },
+    "18": {
+      "key": "root.logger.sentry",
+      "~k_parent": "17",
+      "~l": 21
+    },
+    "19": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "e",
+      "~r": "5",
+      "~l": 1
+    },
+    "20": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box]",
+      "~k_parent": "1v",
+      "~r": "6",
+      "~l": 26
+    },
+    "21": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card]",
+      "~k_parent": "20",
+      "~r": "6",
+      "~l": 29
+    },
+    "22": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].layout",
+      "~k_parent": "21",
+      "~r": "6",
+      "~l": 31
+    },
+    "23": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].blocks[0:customerStat:Statistic]",
+      "~k_parent": "21",
+      "~r": "6",
+      "~l": 34
+    },
+    "24": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].blocks[0:customerStat:Statistic].properties",
+      "~k_parent": "23",
+      "~r": "6",
+      "~l": 36
+    },
+    "25": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].blocks[0:customerStat:Statistic].properties.value",
+      "~k_parent": "24",
+      "~r": "6",
+      "~l": 38
+    },
+    "26": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card]",
+      "~k_parent": "20",
+      "~r": "6",
+      "~l": 40
+    },
+    "27": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].layout",
+      "~k_parent": "26",
+      "~r": "6",
+      "~l": 42
+    },
+    "28": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].blocks[0:orderStat:Statistic]",
+      "~k_parent": "26",
+      "~r": "6",
+      "~l": 45
+    },
+    "29": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].blocks[0:orderStat:Statistic].properties",
+      "~k_parent": "28",
+      "~r": "6",
+      "~l": 47
+    },
+    "30": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1]",
+      "~k_parent": "2s",
+      "~r": "7",
+      "~l": 26
+    },
+    "31": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status",
+      "~k_parent": "30",
+      "~r": "7",
+      "~l": 26
+    },
+    "32": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if",
+      "~k_parent": "31",
+      "~r": "7",
+      "~l": 27
+    },
+    "33": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.test",
+      "~k_parent": "32",
+      "~r": "7",
+      "~l": 28
+    },
+    "34": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.then",
+      "~k_parent": "32",
+      "~r": "7",
+      "~l": 30
+    },
+    "35": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[1].status._if.else",
+      "~k_parent": "32",
+      "~r": "7",
+      "~l": 32
+    },
+    "36": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.options",
+      "~k_parent": "2r",
+      "~r": "7",
+      "~l": 34
+    },
+    "37": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.options.sort",
+      "~k_parent": "36",
+      "~r": "7",
+      "~l": 35
+    },
+    "38": {
+      "key": "root.pages[1:customers:PageHeaderMenu].events",
+      "~k_parent": "2l",
+      "~r": "7",
+      "~l": 38
+    },
+    "39": {
+      "key": "root.pages[1:customers:PageHeaderMenu].events.onInit[0:loadCustomers:Request]",
+      "~k_parent": "38",
+      "~r": "7",
+      "~l": 40
+    },
+    "40": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].properties.data",
+      "~k_parent": "3z",
+      "~r": "7",
+      "~l": 100
+    },
+    "41": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card]",
+      "~k_parent": "3y",
+      "~r": "7",
+      "~l": 103
+    },
+    "42": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].properties",
+      "~k_parent": "41",
+      "~r": "7",
+      "~l": 105
+    },
+    "43": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].properties.title",
+      "~k_parent": "42",
+      "~r": "7",
+      "~l": 107
+    },
+    "44": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events",
+      "~k_parent": "41",
+      "~r": "7",
+      "~l": 109
+    },
+    "45": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick[0:goToDetail:Link]",
+      "~k_parent": "44",
+      "~r": "7",
+      "~l": 111
+    },
+    "46": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick[0:goToDetail:Link].params",
+      "~k_parent": "45",
+      "~r": "7",
+      "~l": 113
+    },
+    "47": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick[0:goToDetail:Link].params.urlQuery",
+      "~k_parent": "46",
+      "~r": "7",
+      "~l": 115
+    },
+    "48": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick[0:goToDetail:Link].params.urlQuery.id",
+      "~k_parent": "47",
+      "~r": "7",
+      "~l": 116
+    },
+    "49": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[0:email:Paragraph]",
+      "~k_parent": "41",
+      "~r": "7",
+      "~l": 119
+    },
+    "50": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.phone",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 26
+    },
+    "51": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.status",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 28
+    },
+    "52": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.notes",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 30
+    },
+    "53": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties",
+      "~k_parent": "4v",
+      "~r": "8",
+      "~l": 32
+    },
+    "54": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.filter",
+      "~k_parent": "53",
+      "~r": "8",
+      "~l": 33
+    },
+    "55": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.filter._id",
+      "~k_parent": "54",
+      "~r": "8",
+      "~l": 34
+    },
+    "56": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update",
+      "~k_parent": "53",
+      "~r": "8",
+      "~l": 36
+    },
+    "57": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set",
+      "~k_parent": "56",
+      "~r": "8",
+      "~l": 37
+    },
+    "58": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.name",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 38
+    },
+    "59": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.email",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 40
+    },
+    "60": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].properties.title",
+      "~k_parent": "5z",
+      "~r": "8",
+      "~l": 89
+    },
+    "61": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].properties.title._if",
+      "~k_parent": "60",
+      "~r": "8",
+      "~l": 90
+    },
+    "62": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].properties.title._if.test",
+      "~k_parent": "61",
+      "~r": "8",
+      "~l": 91
+    },
+    "63": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[0:name:TextInput]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 96
+    },
+    "64": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[0:name:TextInput].properties",
+      "~k_parent": "63",
+      "~r": "8",
+      "~l": 99
+    },
+    "65": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[1:email:TextInput]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 101
+    },
+    "66": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[1:email:TextInput].properties",
+      "~k_parent": "65",
+      "~r": "8",
+      "~l": 104
+    },
+    "67": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[2:phone:TextInput]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 106
+    },
+    "68": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[2:phone:TextInput].properties",
+      "~k_parent": "67",
+      "~r": "8",
+      "~l": 108
+    },
+    "69": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[3:status:Selector]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 110
+    },
+    "70": {
+      "key": "root.pages[3:orders:PageHeaderMenu].blocks[1:placeholder:Paragraph].properties",
+      "~k_parent": "6z",
+      "~r": "9",
+      "~l": 12
+    },
+    "71": {
+      "key": "root.pages[4:reports:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "a",
+      "~l": 1
+    },
+    "72": {
+      "key": "root.pages[4:reports:PageHeaderMenu].properties",
+      "~k_parent": "71",
+      "~r": "a",
+      "~l": 3
+    },
+    "73": {
+      "key": "root.pages[4:reports:PageHeaderMenu].blocks[0:title:Title]",
+      "~k_parent": "71",
+      "~r": "a",
+      "~l": 6
+    },
+    "74": {
+      "key": "root.pages[4:reports:PageHeaderMenu].blocks[0:title:Title].properties",
+      "~k_parent": "73",
+      "~r": "a",
+      "~l": 8
+    },
+    "75": {
+      "key": "root.pages[4:reports:PageHeaderMenu].blocks[1:placeholder:Paragraph]",
+      "~k_parent": "71",
+      "~r": "a",
+      "~l": 10
+    },
+    "76": {
+      "key": "root.pages[4:reports:PageHeaderMenu].blocks[1:placeholder:Paragraph].properties",
+      "~k_parent": "75",
+      "~r": "a",
+      "~l": 12
+    },
+    "77": {
+      "key": "root.pages[5:settings:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "b",
+      "~l": 1
+    },
+    "78": {
+      "key": "root.pages[5:settings:PageHeaderMenu].properties",
+      "~k_parent": "77",
+      "~r": "b",
+      "~l": 3
+    },
+    "79": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[0:title:Title]",
+      "~k_parent": "77",
+      "~r": "b",
+      "~l": 6
+    },
+    "80": {
+      "key": "root.pages[6:login:Result].properties",
+      "~k_parent": "7z",
+      "~r": "c",
+      "~l": 3
+    },
+    "81": {
+      "key": "root.pages[6:login:Result].areas",
+      "~k_parent": "7z",
+      "~r": "c",
+      "~l": 7
+    },
+    "82": {
+      "key": "root.pages[6:login:Result].areas.extra",
+      "~k_parent": "81",
+      "~r": "c",
+      "~l": 8
+    },
+    "83": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button]",
+      "~k_parent": "82",
+      "~r": "c",
+      "~l": 10
+    },
+    "84": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].properties",
+      "~k_parent": "83",
+      "~r": "c",
+      "~l": 12
+    },
+    "85": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events",
+      "~k_parent": "83",
+      "~r": "c",
+      "~l": 16
+    },
+    "86": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events.onClick[0:googleLogin:Login]",
+      "~k_parent": "85",
+      "~r": "c",
+      "~l": 18
+    },
+    "87": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events.onClick[0:googleLogin:Login].params",
+      "~k_parent": "86",
+      "~r": "c",
+      "~l": 20
+    },
+    "88": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[1:divider:Divider]",
+      "~k_parent": "82",
+      "~r": "c",
+      "~l": 22
+    },
+    "89": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[1:divider:Divider].properties",
+      "~k_parent": "88",
+      "~r": "c",
+      "~l": 24
+    },
+    "90": {
+      "key": "root.auth.api",
+      "~k_parent": "n"
+    },
+    "91": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "90"
+    },
+    "92": {
+      "key": "root.auth.authPages",
+      "~k_parent": "n"
+    },
+    "93": {
+      "key": "root.menus[0:default].links[0:dashboard:MenuLink].auth",
+      "~k_parent": "1a"
+    },
+    "94": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[0:all-customers:MenuLink].auth",
+      "~k_parent": "1e"
+    },
+    "95": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink].auth",
+      "~k_parent": "1g"
+    },
+    "96": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].auth",
+      "~k_parent": "1c"
+    },
+    "97": {
+      "key": "root.menus[0:default].links[2:orders:MenuLink].auth",
+      "~k_parent": "1i"
+    },
+    "98": {
+      "key": "root.menus[0:default].links[3:reports:MenuLink].auth",
+      "~k_parent": "1k"
+    },
+    "99": {
+      "key": "root.menus[0:default].links[4:settings:MenuLink].auth",
+      "~k_parent": "1m"
+    },
+    "e": {
+      "key": "root",
+      "~k_parent": "d",
+      "~l": 2
+    },
+    "f": {
+      "key": "root.config",
+      "~k_parent": "e",
+      "~l": 7
+    },
+    "g": {
+      "key": "root.connections[0:api:AxiosHttp]",
+      "~k_parent": "e",
+      "~r": "2",
+      "~l": 1
+    },
+    "h": {
+      "key": "root.connections[0:api:AxiosHttp].properties",
+      "~k_parent": "g",
+      "~r": "2",
+      "~l": 3
+    },
+    "i": {
+      "key": "root.connections[0:api:AxiosHttp].properties.headers",
+      "~k_parent": "h",
+      "~r": "2",
+      "~l": 5
+    },
+    "j": {
+      "key": "root.connections[1:db:MongoDBCollection]",
+      "~k_parent": "e",
+      "~r": "2",
+      "~l": 8
+    },
+    "k": {
+      "key": "root.connections[1:db:MongoDBCollection].properties",
+      "~k_parent": "j",
+      "~r": "2",
+      "~l": 10
+    },
+    "l": {
+      "key": "root.connections[2:ordersDb:MongoDBCollection]",
+      "~k_parent": "e",
+      "~r": "2",
+      "~l": 14
+    },
+    "m": {
+      "key": "root.connections[2:ordersDb:MongoDBCollection].properties",
+      "~k_parent": "l",
+      "~r": "2",
+      "~l": 16
+    },
+    "n": {
+      "key": "root.auth",
+      "~k_parent": "e",
+      "~r": "3",
+      "~l": 1
+    },
+    "o": {
+      "key": "root.auth.providers[0:google:GoogleProvider]",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 2
+    },
+    "p": {
+      "key": "root.auth.providers[0:google:GoogleProvider].properties",
+      "~k_parent": "o",
+      "~r": "3",
+      "~l": 4
+    },
+    "q": {
+      "key": "root.auth.providers[0:google:GoogleProvider].properties.clientId",
+      "~k_parent": "p",
+      "~r": "3",
+      "~l": 5
+    },
+    "r": {
+      "key": "root.auth.providers[0:google:GoogleProvider].properties.clientSecret",
+      "~k_parent": "p",
+      "~r": "3",
+      "~l": 7
+    },
+    "s": {
+      "key": "root.auth.providers[1:credentials:CredentialsProvider]",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 9
+    },
+    "t": {
+      "key": "root.auth.providers[1:credentials:CredentialsProvider].properties",
+      "~k_parent": "s",
+      "~r": "3",
+      "~l": 11
+    },
+    "u": {
+      "key": "root.auth.providers[1:credentials:CredentialsProvider].properties.credentials",
+      "~k_parent": "t",
+      "~r": "3",
+      "~l": 13
+    },
+    "v": {
+      "key": "root.auth.providers[1:credentials:CredentialsProvider].properties.credentials.email",
+      "~k_parent": "u",
+      "~r": "3",
+      "~l": 14
+    },
+    "w": {
+      "key": "root.auth.providers[1:credentials:CredentialsProvider].properties.credentials.password",
+      "~k_parent": "u",
+      "~r": "3",
+      "~l": 17
+    },
+    "x": {
+      "key": "root.auth.pages",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 20
+    },
+    "y": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "x",
+      "~r": "3",
+      "~l": 24
+    },
+    "z": {
+      "key": "root.auth.callbacks[0:jwt:JwtCallback]",
+      "~k_parent": "n",
+      "~r": "3",
+      "~l": 33
+    },
+    "1a": {
+      "key": "root.menus[0:default].links[0:dashboard:MenuLink]",
+      "~k_parent": "19",
+      "~r": "5",
+      "~l": 3
+    },
+    "1b": {
+      "key": "root.menus[0:default].links[0:dashboard:MenuLink].properties",
+      "~k_parent": "1a",
+      "~r": "5",
+      "~l": 6
+    },
+    "1c": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup]",
+      "~k_parent": "19",
+      "~r": "5",
+      "~l": 9
+    },
+    "1d": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].properties",
+      "~k_parent": "1c",
+      "~r": "5",
+      "~l": 11
+    },
+    "1e": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[0:all-customers:MenuLink]",
+      "~k_parent": "1c",
+      "~r": "5",
+      "~l": 15
+    },
+    "1f": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[0:all-customers:MenuLink].properties",
+      "~k_parent": "1e",
+      "~r": "5",
+      "~l": 18
+    },
+    "1g": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink]",
+      "~k_parent": "1c",
+      "~r": "5",
+      "~l": 20
+    },
+    "1h": {
+      "key": "root.menus[0:default].links[1:customers:MenuGroup].links[1:add-customer:MenuLink].properties",
+      "~k_parent": "1g",
+      "~r": "5",
+      "~l": 23
+    },
+    "1i": {
+      "key": "root.menus[0:default].links[2:orders:MenuLink]",
+      "~k_parent": "19",
+      "~r": "5",
+      "~l": 25
+    },
+    "1j": {
+      "key": "root.menus[0:default].links[2:orders:MenuLink].properties",
+      "~k_parent": "1i",
+      "~r": "5",
+      "~l": 28
+    },
+    "1k": {
+      "key": "root.menus[0:default].links[3:reports:MenuLink]",
+      "~k_parent": "19",
+      "~r": "5",
+      "~l": 31
+    },
+    "1l": {
+      "key": "root.menus[0:default].links[3:reports:MenuLink].properties",
+      "~k_parent": "1k",
+      "~r": "5",
+      "~l": 34
+    },
+    "1m": {
+      "key": "root.menus[0:default].links[4:settings:MenuLink]",
+      "~k_parent": "19",
+      "~r": "5",
+      "~l": 37
+    },
+    "1n": {
+      "key": "root.menus[0:default].links[4:settings:MenuLink].properties",
+      "~k_parent": "1m",
+      "~r": "5",
+      "~l": 40
+    },
+    "1o": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "6",
+      "~l": 1
+    },
+    "1p": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].properties",
+      "~k_parent": "1o",
+      "~r": "6",
+      "~l": 3
+    },
+    "1q": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp]",
+      "~k_parent": "1o",
+      "~r": "6",
+      "~l": 6
+    },
+    "1r": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].properties",
+      "~k_parent": "1q",
+      "~r": "6",
+      "~l": 9
+    },
+    "1s": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].events",
+      "~k_parent": "1o",
+      "~r": "6",
+      "~l": 11
+    },
+    "1t": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].events.onInitAsync[0:loadStats:Request]",
+      "~k_parent": "1s",
+      "~r": "6",
+      "~l": 13
+    },
+    "1u": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas",
+      "~k_parent": "1o",
+      "~r": "6",
+      "~l": 16
+    },
+    "1v": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content",
+      "~k_parent": "1u",
+      "~r": "6",
+      "~l": 17
+    },
+    "1w": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[0:welcomeTitle:Title]",
+      "~k_parent": "1v",
+      "~r": "6",
+      "~l": 19
+    },
+    "1x": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[0:welcomeTitle:Title].properties",
+      "~k_parent": "1w",
+      "~r": "6",
+      "~l": 21
+    },
+    "1y": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[0:welcomeTitle:Title].properties.content",
+      "~k_parent": "1x",
+      "~r": "6",
+      "~l": 22
+    },
+    "1z": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[0:welcomeTitle:Title].properties.content.user",
+      "~k_parent": "1y",
+      "~r": "6",
+      "~l": 24
+    },
+    "2a": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].blocks[0:orderStat:Statistic].properties.value",
+      "~k_parent": "29",
+      "~r": "6",
+      "~l": 49
+    },
+    "2b": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card]",
+      "~k_parent": "20",
+      "~r": "6",
+      "~l": 51
+    },
+    "2c": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].layout",
+      "~k_parent": "2b",
+      "~r": "6",
+      "~l": 53
+    },
+    "2d": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].blocks[0:revenueStat:Statistic]",
+      "~k_parent": "2b",
+      "~r": "6",
+      "~l": 56
+    },
+    "2e": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].blocks[0:revenueStat:Statistic].properties",
+      "~k_parent": "2d",
+      "~r": "6",
+      "~l": 58
+    },
+    "2f": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].blocks[0:revenueStat:Statistic].properties.value",
+      "~k_parent": "2e",
+      "~r": "6",
+      "~l": 61
+    },
+    "2g": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card]",
+      "~k_parent": "20",
+      "~r": "6",
+      "~l": 63
+    },
+    "2h": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].layout",
+      "~k_parent": "2g",
+      "~r": "6",
+      "~l": 65
+    },
+    "2i": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].blocks[0:growthStat:Statistic]",
+      "~k_parent": "2g",
+      "~r": "6",
+      "~l": 68
+    },
+    "2j": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].blocks[0:growthStat:Statistic].properties",
+      "~k_parent": "2i",
+      "~r": "6",
+      "~l": 70
+    },
+    "2k": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].blocks[0:growthStat:Statistic].properties.value",
+      "~k_parent": "2j",
+      "~r": "6",
+      "~l": 73
+    },
+    "2l": {
+      "key": "root.pages[1:customers:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "7",
+      "~l": 1
+    },
+    "2m": {
+      "key": "root.pages[1:customers:PageHeaderMenu].properties",
+      "~k_parent": "2l",
+      "~r": "7",
+      "~l": 3
+    },
+    "2n": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind]",
+      "~k_parent": "2l",
+      "~r": "7",
+      "~l": 6
+    },
+    "2o": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload",
+      "~k_parent": "2n",
+      "~r": "7",
+      "~l": 9
+    },
+    "2p": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload.search",
+      "~k_parent": "2o",
+      "~r": "7",
+      "~l": 10
+    },
+    "2q": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].payload.status",
+      "~k_parent": "2o",
+      "~r": "7",
+      "~l": 12
+    },
+    "2r": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties",
+      "~k_parent": "2n",
+      "~r": "7",
+      "~l": 14
+    },
+    "2s": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query",
+      "~k_parent": "2r",
+      "~r": "7",
+      "~l": 15
+    },
+    "2t": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0]",
+      "~k_parent": "2s",
+      "~r": "7",
+      "~l": 17
+    },
+    "2u": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0]",
+      "~k_parent": "2t",
+      "~r": "7",
+      "~l": 18
+    },
+    "2v": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0].name",
+      "~k_parent": "2u",
+      "~r": "7",
+      "~l": 18
+    },
+    "2w": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[0].name.$regex",
+      "~k_parent": "2v",
+      "~r": "7",
+      "~l": 19
+    },
+    "2x": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1]",
+      "~k_parent": "2t",
+      "~r": "7",
+      "~l": 22
+    },
+    "2y": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1].email",
+      "~k_parent": "2x",
+      "~r": "7",
+      "~l": 22
+    },
+    "2z": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].properties.query.$and[0].$or[1].email.$regex",
+      "~k_parent": "2y",
+      "~r": "7",
+      "~l": 23
+    },
+    "3a": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas",
+      "~k_parent": "2l",
+      "~r": "7",
+      "~l": 43
+    },
+    "3b": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content",
+      "~k_parent": "3a",
+      "~r": "7",
+      "~l": 44
+    },
+    "3c": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box]",
+      "~k_parent": "3b",
+      "~r": "7",
+      "~l": 46
+    },
+    "3d": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput]",
+      "~k_parent": "3c",
+      "~r": "7",
+      "~l": 49
+    },
+    "3e": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].layout",
+      "~k_parent": "3d",
+      "~r": "7",
+      "~l": 51
+    },
+    "3f": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].properties",
+      "~k_parent": "3d",
+      "~r": "7",
+      "~l": 53
+    },
+    "3g": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events",
+      "~k_parent": "3d",
+      "~r": "7",
+      "~l": 56
+    },
+    "3h": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events.onChange",
+      "~k_parent": "3g",
+      "~r": "7",
+      "~l": 57
+    },
+    "3i": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events.onChange.debounce",
+      "~k_parent": "3h",
+      "~r": "7",
+      "~l": 58
+    },
+    "3j": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[0:searchQuery:TextInput].events.onChange.try[0:search:Request]",
+      "~k_parent": "3h",
+      "~r": "7",
+      "~l": 61
+    },
+    "3k": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector]",
+      "~k_parent": "3c",
+      "~r": "7",
+      "~l": 64
+    },
+    "3l": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].layout",
+      "~k_parent": "3k",
+      "~r": "7",
+      "~l": 66
+    },
+    "3m": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].properties",
+      "~k_parent": "3k",
+      "~r": "7",
+      "~l": 68
+    },
+    "3n": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].properties.options[0]",
+      "~k_parent": "3m",
+      "~r": "7",
+      "~l": 72
+    },
+    "3o": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].properties.options[1]",
+      "~k_parent": "3m",
+      "~r": "7",
+      "~l": 74
+    },
+    "3p": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].properties.options[2]",
+      "~k_parent": "3m",
+      "~r": "7",
+      "~l": 76
+    },
+    "3q": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events",
+      "~k_parent": "3k",
+      "~r": "7",
+      "~l": 78
+    },
+    "3r": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange[0:filter:Request]",
+      "~k_parent": "3q",
+      "~r": "7",
+      "~l": 80
+    },
+    "3s": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button]",
+      "~k_parent": "3c",
+      "~r": "7",
+      "~l": 83
+    },
+    "3t": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].layout",
+      "~k_parent": "3s",
+      "~r": "7",
+      "~l": 85
+    },
+    "3u": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].properties",
+      "~k_parent": "3s",
+      "~r": "7",
+      "~l": 87
+    },
+    "3v": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events",
+      "~k_parent": "3s",
+      "~r": "7",
+      "~l": 91
+    },
+    "3w": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events.onClick[0:goToAdd:Link]",
+      "~k_parent": "3v",
+      "~r": "7",
+      "~l": 93
+    },
+    "3x": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events.onClick[0:goToAdd:Link].params",
+      "~k_parent": "3w",
+      "~r": "7",
+      "~l": 95
+    },
+    "3y": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List]",
+      "~k_parent": "3b",
+      "~r": "7",
+      "~l": 97
+    },
+    "3z": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].properties",
+      "~k_parent": "3y",
+      "~r": "7",
+      "~l": 99
+    },
+    "4a": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[0:email:Paragraph].properties",
+      "~k_parent": "49",
+      "~r": "7",
+      "~l": 121
+    },
+    "4b": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[0:email:Paragraph].properties.content",
+      "~k_parent": "4a",
+      "~r": "7",
+      "~l": 122
+    },
+    "4c": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag]",
+      "~k_parent": "41",
+      "~r": "7",
+      "~l": 124
+    },
+    "4d": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties",
+      "~k_parent": "4c",
+      "~r": "7",
+      "~l": 126
+    },
+    "4e": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.title",
+      "~k_parent": "4d",
+      "~r": "7",
+      "~l": 127
+    },
+    "4f": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color",
+      "~k_parent": "4d",
+      "~r": "7",
+      "~l": 129
+    },
+    "4g": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if",
+      "~k_parent": "4f",
+      "~r": "7",
+      "~l": 130
+    },
+    "4h": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.test",
+      "~k_parent": "4g",
+      "~r": "7",
+      "~l": 131
+    },
+    "4i": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.test._eq[0]",
+      "~k_parent": "4h",
+      "~r": "7",
+      "~l": 133
+    },
+    "4j": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.else",
+      "~k_parent": "4g",
+      "~r": "7",
+      "~l": 136
+    },
+    "4k": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.else._if",
+      "~k_parent": "4j",
+      "~r": "7",
+      "~l": 137
+    },
+    "4l": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.else._if.test",
+      "~k_parent": "4k",
+      "~r": "7",
+      "~l": 138
+    },
+    "4m": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].blocks[1:status:Tag].properties.color._if.else._if.test._eq[0]",
+      "~k_parent": "4l",
+      "~r": "7",
+      "~l": 140
+    },
+    "4n": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "8",
+      "~l": 1
+    },
+    "4o": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].properties",
+      "~k_parent": "4n",
+      "~r": "8",
+      "~l": 3
+    },
+    "4p": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne]",
+      "~k_parent": "4n",
+      "~r": "8",
+      "~l": 6
+    },
+    "4q": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].payload",
+      "~k_parent": "4p",
+      "~r": "8",
+      "~l": 9
+    },
+    "4r": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].payload.id",
+      "~k_parent": "4q",
+      "~r": "8",
+      "~l": 10
+    },
+    "4s": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties",
+      "~k_parent": "4p",
+      "~r": "8",
+      "~l": 12
+    },
+    "4t": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties.query",
+      "~k_parent": "4s",
+      "~r": "8",
+      "~l": 13
+    },
+    "4u": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].properties.query._id",
+      "~k_parent": "4t",
+      "~r": "8",
+      "~l": 14
+    },
+    "4v": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne]",
+      "~k_parent": "4n",
+      "~r": "8",
+      "~l": 16
+    },
+    "4w": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload",
+      "~k_parent": "4v",
+      "~r": "8",
+      "~l": 19
+    },
+    "4x": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.id",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 20
+    },
+    "4y": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.name",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 22
+    },
+    "4z": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].payload.email",
+      "~k_parent": "4w",
+      "~r": "8",
+      "~l": 24
+    },
+    "5a": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.phone",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 42
+    },
+    "5b": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.status",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 44
+    },
+    "5c": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.notes",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 46
+    },
+    "5d": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.update.$set.updatedAt",
+      "~k_parent": "57",
+      "~r": "8",
+      "~l": 48
+    },
+    "5e": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].properties.options",
+      "~k_parent": "53",
+      "~r": "8",
+      "~l": 50
+    },
+    "5f": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events",
+      "~k_parent": "4n",
+      "~r": "8",
+      "~l": 52
+    },
+    "5g": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[0:checkIfEdit:SetState]",
+      "~k_parent": "5f",
+      "~r": "8",
+      "~l": 54
+    },
+    "5h": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[0:checkIfEdit:SetState].skip",
+      "~k_parent": "5g",
+      "~r": "8",
+      "~l": 56
+    },
+    "5i": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[0:checkIfEdit:SetState].skip._not",
+      "~k_parent": "5h",
+      "~r": "8",
+      "~l": 57
+    },
+    "5j": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[0:checkIfEdit:SetState].params",
+      "~k_parent": "5g",
+      "~r": "8",
+      "~l": 59
+    },
+    "5k": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[1:loadCustomer:Request]",
+      "~k_parent": "5f",
+      "~r": "8",
+      "~l": 61
+    },
+    "5l": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[1:loadCustomer:Request].skip",
+      "~k_parent": "5k",
+      "~r": "8",
+      "~l": 63
+    },
+    "5m": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[1:loadCustomer:Request].skip._not",
+      "~k_parent": "5l",
+      "~r": "8",
+      "~l": 64
+    },
+    "5n": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState]",
+      "~k_parent": "5f",
+      "~r": "8",
+      "~l": 67
+    },
+    "5o": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].skip",
+      "~k_parent": "5n",
+      "~r": "8",
+      "~l": 69
+    },
+    "5p": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].skip._not",
+      "~k_parent": "5o",
+      "~r": "8",
+      "~l": 70
+    },
+    "5q": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params",
+      "~k_parent": "5n",
+      "~r": "8",
+      "~l": 72
+    },
+    "5r": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params.name",
+      "~k_parent": "5q",
+      "~r": "8",
+      "~l": 73
+    },
+    "5s": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params.email",
+      "~k_parent": "5q",
+      "~r": "8",
+      "~l": 75
+    },
+    "5t": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params.phone",
+      "~k_parent": "5q",
+      "~r": "8",
+      "~l": 77
+    },
+    "5u": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params.status",
+      "~k_parent": "5q",
+      "~r": "8",
+      "~l": 79
+    },
+    "5v": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit[2:populateForm:SetState].params.notes",
+      "~k_parent": "5q",
+      "~r": "8",
+      "~l": 81
+    },
+    "5w": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas",
+      "~k_parent": "4n",
+      "~r": "8",
+      "~l": 83
+    },
+    "5x": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content",
+      "~k_parent": "5w",
+      "~r": "8",
+      "~l": 84
+    },
+    "5y": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card]",
+      "~k_parent": "5x",
+      "~r": "8",
+      "~l": 86
+    },
+    "5z": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].properties",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 88
+    },
+    "6a": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[3:status:Selector].properties",
+      "~k_parent": "69",
+      "~r": "8",
+      "~l": 112
+    },
+    "6b": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[3:status:Selector].properties.options[0]",
+      "~k_parent": "6a",
+      "~r": "8",
+      "~l": 115
+    },
+    "6c": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[3:status:Selector].properties.options[1]",
+      "~k_parent": "6a",
+      "~r": "8",
+      "~l": 117
+    },
+    "6d": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[3:status:Selector].properties.options[2]",
+      "~k_parent": "6a",
+      "~r": "8",
+      "~l": 119
+    },
+    "6e": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[4:notes:TextArea]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 121
+    },
+    "6f": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[4:notes:TextArea].properties",
+      "~k_parent": "6e",
+      "~r": "8",
+      "~l": 123
+    },
+    "6g": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box]",
+      "~k_parent": "5y",
+      "~r": "8",
+      "~l": 126
+    },
+    "6h": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button]",
+      "~k_parent": "6g",
+      "~r": "8",
+      "~l": 129
+    },
+    "6i": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].properties",
+      "~k_parent": "6h",
+      "~r": "8",
+      "~l": 131
+    },
+    "6j": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events",
+      "~k_parent": "6h",
+      "~r": "8",
+      "~l": 134
+    },
+    "6k": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[0:validate:Validate]",
+      "~k_parent": "6j",
+      "~r": "8",
+      "~l": 136
+    },
+    "6l": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[1:save:Request]",
+      "~k_parent": "6j",
+      "~r": "8",
+      "~l": 138
+    },
+    "6m": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[2:success:DisplayMessage]",
+      "~k_parent": "6j",
+      "~r": "8",
+      "~l": 141
+    },
+    "6n": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[2:success:DisplayMessage].params",
+      "~k_parent": "6m",
+      "~r": "8",
+      "~l": 143
+    },
+    "6o": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[3:redirect:Link]",
+      "~k_parent": "6j",
+      "~r": "8",
+      "~l": 146
+    },
+    "6p": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick[3:redirect:Link].params",
+      "~k_parent": "6o",
+      "~r": "8",
+      "~l": 148
+    },
+    "6q": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button]",
+      "~k_parent": "6g",
+      "~r": "8",
+      "~l": 150
+    },
+    "6r": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].properties",
+      "~k_parent": "6q",
+      "~r": "8",
+      "~l": 152
+    },
+    "6s": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events",
+      "~k_parent": "6q",
+      "~r": "8",
+      "~l": 154
+    },
+    "6t": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick[0:goBack:Link]",
+      "~k_parent": "6s",
+      "~r": "8",
+      "~l": 156
+    },
+    "6u": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick[0:goBack:Link].params",
+      "~k_parent": "6t",
+      "~r": "8",
+      "~l": 158
+    },
+    "6v": {
+      "key": "root.pages[3:orders:PageHeaderMenu]",
+      "~k_parent": "e",
+      "~r": "9",
+      "~l": 1
+    },
+    "6w": {
+      "key": "root.pages[3:orders:PageHeaderMenu].properties",
+      "~k_parent": "6v",
+      "~r": "9",
+      "~l": 3
+    },
+    "6x": {
+      "key": "root.pages[3:orders:PageHeaderMenu].blocks[0:title:Title]",
+      "~k_parent": "6v",
+      "~r": "9",
+      "~l": 6
+    },
+    "6y": {
+      "key": "root.pages[3:orders:PageHeaderMenu].blocks[0:title:Title].properties",
+      "~k_parent": "6x",
+      "~r": "9",
+      "~l": 8
+    },
+    "6z": {
+      "key": "root.pages[3:orders:PageHeaderMenu].blocks[1:placeholder:Paragraph]",
+      "~k_parent": "6v",
+      "~r": "9",
+      "~l": 10
+    },
+    "7a": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[0:title:Title].properties",
+      "~k_parent": "79",
+      "~r": "b",
+      "~l": 8
+    },
+    "7b": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card]",
+      "~k_parent": "77",
+      "~r": "b",
+      "~l": 10
+    },
+    "7c": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].properties",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 12
+    },
+    "7d": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[0:itemsPerPage:NumberInput]",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 15
+    },
+    "7e": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[0:itemsPerPage:NumberInput].properties",
+      "~k_parent": "7d",
+      "~r": "b",
+      "~l": 17
+    },
+    "7f": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector]",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 21
+    },
+    "7g": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector].properties",
+      "~k_parent": "7f",
+      "~r": "b",
+      "~l": 23
+    },
+    "7h": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector].properties.options[0]",
+      "~k_parent": "7g",
+      "~r": "b",
+      "~l": 26
+    },
+    "7i": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector].properties.options[1]",
+      "~k_parent": "7g",
+      "~r": "b",
+      "~l": 28
+    },
+    "7j": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector].properties.options[2]",
+      "~k_parent": "7g",
+      "~r": "b",
+      "~l": 30
+    },
+    "7k": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[1:timezone:Selector].properties.options[3]",
+      "~k_parent": "7g",
+      "~r": "b",
+      "~l": 32
+    },
+    "7l": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[2:darkMode:Switch]",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 34
+    },
+    "7m": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[2:darkMode:Switch].properties",
+      "~k_parent": "7l",
+      "~r": "b",
+      "~l": 36
+    },
+    "7n": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[3:notifications:Switch]",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 38
+    },
+    "7o": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[3:notifications:Switch].properties",
+      "~k_parent": "7n",
+      "~r": "b",
+      "~l": 40
+    },
+    "7p": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button]",
+      "~k_parent": "7b",
+      "~r": "b",
+      "~l": 42
+    },
+    "7q": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].properties",
+      "~k_parent": "7p",
+      "~r": "b",
+      "~l": 44
+    },
+    "7r": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events",
+      "~k_parent": "7p",
+      "~r": "b",
+      "~l": 47
+    },
+    "7s": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[0:saveSettings:SetGlobal]",
+      "~k_parent": "7r",
+      "~r": "b",
+      "~l": 49
+    },
+    "7t": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[0:saveSettings:SetGlobal].params",
+      "~k_parent": "7s",
+      "~r": "b",
+      "~l": 51
+    },
+    "7u": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[0:saveSettings:SetGlobal].params.settings",
+      "~k_parent": "7t",
+      "~r": "b",
+      "~l": 52
+    },
+    "7v": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[0:saveSettings:SetGlobal].params.settings.itemsPerPage",
+      "~k_parent": "7u",
+      "~r": "b",
+      "~l": 53
+    },
+    "7w": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[0:saveSettings:SetGlobal].params.settings.timezone",
+      "~k_parent": "7u",
+      "~r": "b",
+      "~l": 55
+    },
+    "7x": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[1:success:DisplayMessage]",
+      "~k_parent": "7r",
+      "~r": "b",
+      "~l": 57
+    },
+    "7y": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick[1:success:DisplayMessage].params",
+      "~k_parent": "7x",
+      "~r": "b",
+      "~l": 59
+    },
+    "7z": {
+      "key": "root.pages[6:login:Result]",
+      "~k_parent": "e",
+      "~r": "c",
+      "~l": 1
+    },
+    "8a": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[2:emailInput:TextInput]",
+      "~k_parent": "82",
+      "~r": "c",
+      "~l": 27
+    },
+    "8b": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[2:emailInput:TextInput].properties",
+      "~k_parent": "8a",
+      "~r": "c",
+      "~l": 29
+    },
+    "8c": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[3:passwordInput:PasswordInput]",
+      "~k_parent": "82",
+      "~r": "c",
+      "~l": 32
+    },
+    "8d": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[3:passwordInput:PasswordInput].properties",
+      "~k_parent": "8c",
+      "~r": "c",
+      "~l": 34
+    },
+    "8e": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button]",
+      "~k_parent": "82",
+      "~r": "c",
+      "~l": 36
+    },
+    "8f": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].properties",
+      "~k_parent": "8e",
+      "~r": "c",
+      "~l": 38
+    },
+    "8g": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events",
+      "~k_parent": "8e",
+      "~r": "c",
+      "~l": 42
+    },
+    "8h": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick[0:credentialsLogin:Login]",
+      "~k_parent": "8g",
+      "~r": "c",
+      "~l": 44
+    },
+    "8i": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick[0:credentialsLogin:Login].params",
+      "~k_parent": "8h",
+      "~r": "c",
+      "~l": 46
+    },
+    "8j": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick[0:credentialsLogin:Login].params.email",
+      "~k_parent": "8i",
+      "~r": "c",
+      "~l": 48
+    },
+    "8k": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick[0:credentialsLogin:Login].params.password",
+      "~k_parent": "8i",
+      "~r": "c",
+      "~l": 50
+    },
+    "8m": {
+      "key": "root.logger.sentry",
+      "~k_parent": "17"
+    },
+    "8n": {
+      "key": "root.pages[7:404:Result]",
+      "~k_parent": "e"
+    },
+    "8o": {
+      "key": "root.pages[7:404:Result].style",
+      "~k_parent": "8n"
+    },
+    "8p": {
+      "key": "root.pages[7:404:Result].properties",
+      "~k_parent": "8n"
+    },
+    "8q": {
+      "key": "root.pages[7:404:Result].areas",
+      "~k_parent": "8n"
+    },
+    "8r": {
+      "key": "root.pages[7:404:Result].areas.extra",
+      "~k_parent": "8q"
+    },
+    "8s": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "8r"
+    },
+    "8t": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "8s"
+    },
+    "8u": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "8s"
+    },
+    "8v": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "8u"
+    },
+    "8w": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "8v"
+    },
+    "8x": {
+      "key": "root.app",
+      "~k_parent": "e"
+    },
+    "8y": {
+      "key": "root.app.html",
+      "~k_parent": "8x"
+    },
+    "9a": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "9b": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].events.onInitAsync",
+      "~k_parent": "1s"
+    },
+    "9c": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].areas",
+      "~k_parent": "20"
+    },
+    "9d": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].areas.content",
+      "~k_parent": "9c"
+    },
+    "9e": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].areas",
+      "~k_parent": "21"
+    },
+    "9f": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[0:totalCustomers:Card].areas.content",
+      "~k_parent": "9e"
+    },
+    "9g": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].areas",
+      "~k_parent": "26"
+    },
+    "9h": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[1:totalOrders:Card].areas.content",
+      "~k_parent": "9g"
+    },
+    "9i": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].areas",
+      "~k_parent": "2b"
+    },
+    "9j": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[2:revenue:Card].areas.content",
+      "~k_parent": "9i"
+    },
+    "9k": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].areas",
+      "~k_parent": "2g"
+    },
+    "9l": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].areas.content.blocks[1:statsRow:Box].blocks[3:growth:Card].areas.content",
+      "~k_parent": "9k"
+    },
+    "9m": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].auth",
+      "~k_parent": "9a"
+    },
+    "9n": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].payload",
+      "~k_parent": "1q"
+    },
+    "9o": {
+      "key": "root.pages[0:dashboard:PageHeaderMenu].requests[0:api:AxiosHttp].auth",
+      "~k_parent": "1q"
+    },
+    "9p": {
+      "key": "root.pages[1:customers:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "9q": {
+      "key": "root.pages[1:customers:PageHeaderMenu].events.onInit",
+      "~k_parent": "38"
+    },
+    "9r": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].areas",
+      "~k_parent": "3c"
+    },
+    "9s": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].areas.content",
+      "~k_parent": "9r"
+    },
+    "9t": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[1:statusFilter:Selector].events.onChange",
+      "~k_parent": "3q"
+    },
+    "9u": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[0:toolbar:Box].blocks[2:addBtn:Button].events.onClick",
+      "~k_parent": "3v"
+    },
+    "9v": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].areas",
+      "~k_parent": "3y"
+    },
+    "9w": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].areas.content",
+      "~k_parent": "9v"
+    },
+    "9x": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].events.onClick",
+      "~k_parent": "44"
+    },
+    "9y": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].areas",
+      "~k_parent": "41"
+    },
+    "9z": {
+      "key": "root.pages[1:customers:PageHeaderMenu].areas.content.blocks[1:customerList:List].blocks[0:customerCard:Card].areas.content",
+      "~k_parent": "9y"
+    },
+    "a0": {
+      "key": "root.pages[1:customers:PageHeaderMenu].auth",
+      "~k_parent": "9p"
+    },
+    "a1": {
+      "key": "root.pages[1:customers:PageHeaderMenu].requests[0:db:MongoDBFind].auth",
+      "~k_parent": "2n"
+    },
+    "a2": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "a3": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].events.onInit",
+      "~k_parent": "5f"
+    },
+    "a4": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].areas",
+      "~k_parent": "5y"
+    },
+    "a5": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].areas.content",
+      "~k_parent": "a4"
+    },
+    "a6": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].areas",
+      "~k_parent": "6g"
+    },
+    "a7": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].areas.content",
+      "~k_parent": "a6"
+    },
+    "a8": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[0:saveBtn:Button].events.onClick",
+      "~k_parent": "6j"
+    },
+    "a9": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].areas.content.blocks[0:form:Card].blocks[5:actions:Box].blocks[1:cancelBtn:Button].events.onClick",
+      "~k_parent": "6s"
+    },
+    "aa": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].auth",
+      "~k_parent": "a2"
+    },
+    "ab": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[0:db:MongoDBFindOne].auth",
+      "~k_parent": "4p"
+    },
+    "ac": {
+      "key": "root.pages[2:customer-detail:PageHeaderMenu].requests[1:db:MongoDBUpdateOne].auth",
+      "~k_parent": "4v"
+    },
+    "ad": {
+      "key": "root.pages[3:orders:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "ae": {
+      "key": "root.pages[3:orders:PageHeaderMenu].auth",
+      "~k_parent": "ad"
+    },
+    "af": {
+      "key": "root.pages[3:orders:PageHeaderMenu].areas",
+      "~k_parent": "ad"
+    },
+    "ag": {
+      "key": "root.pages[3:orders:PageHeaderMenu].areas.content",
+      "~k_parent": "af"
+    },
+    "ah": {
+      "key": "root.pages[4:reports:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "ai": {
+      "key": "root.pages[4:reports:PageHeaderMenu].auth",
+      "~k_parent": "ah"
+    },
+    "aj": {
+      "key": "root.pages[4:reports:PageHeaderMenu].areas",
+      "~k_parent": "ah"
+    },
+    "ak": {
+      "key": "root.pages[4:reports:PageHeaderMenu].areas.content",
+      "~k_parent": "aj"
+    },
+    "al": {
+      "key": "root.pages[5:settings:PageHeaderMenu]",
+      "~k_parent": "e"
+    },
+    "am": {
+      "key": "root.pages[5:settings:PageHeaderMenu].auth",
+      "~k_parent": "al"
+    },
+    "an": {
+      "key": "root.pages[5:settings:PageHeaderMenu].areas",
+      "~k_parent": "al"
+    },
+    "ao": {
+      "key": "root.pages[5:settings:PageHeaderMenu].areas.content",
+      "~k_parent": "an"
+    },
+    "ap": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].areas",
+      "~k_parent": "7b"
+    },
+    "aq": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].areas.content",
+      "~k_parent": "ap"
+    },
+    "ar": {
+      "key": "root.pages[5:settings:PageHeaderMenu].blocks[1:settingsForm:Card].blocks[4:saveSettingsBtn:Button].events.onClick",
+      "~k_parent": "7r"
+    },
+    "as": {
+      "key": "root.pages[6:login:Result]",
+      "~k_parent": "e"
+    },
+    "at": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[0:googleBtn:Button].events.onClick",
+      "~k_parent": "85"
+    },
+    "au": {
+      "key": "root.pages[6:login:Result].areas.extra.blocks[4:credentialsBtn:Button].events.onClick",
+      "~k_parent": "8g"
+    },
+    "av": {
+      "key": "root.pages[6:login:Result].auth",
+      "~k_parent": "as"
+    },
+    "aw": {
+      "key": "root.pages[7:404:Result]",
+      "~k_parent": "e"
+    },
+    "ax": {
+      "key": "root.pages[7:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "8u"
+    },
+    "ay": {
+      "key": "root.pages[7:404:Result].auth",
+      "~k_parent": "aw"
+    },
+    "az": {
+      "key": "root.types",
+      "~k_parent": "e"
+    },
+    "b0": {
+      "key": "root.types.actions",
+      "~k_parent": "az"
+    },
+    "b1": {
+      "key": "root.types.actions.Request",
+      "~k_parent": "b0"
+    },
+    "b2": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "b0"
+    },
+    "b3": {
+      "key": "root.types.actions.SetState",
+      "~k_parent": "b0"
+    },
+    "b4": {
+      "key": "root.types.actions.Validate",
+      "~k_parent": "b0"
+    },
+    "b5": {
+      "key": "root.types.actions.DisplayMessage",
+      "~k_parent": "b0"
+    },
+    "b6": {
+      "key": "root.types.actions.SetGlobal",
+      "~k_parent": "b0"
+    },
+    "b7": {
+      "key": "root.types.actions.Login",
+      "~k_parent": "b0"
+    },
+    "b8": {
+      "key": "root.types.auth",
+      "~k_parent": "az"
+    },
+    "b9": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "b8"
+    },
+    "ba": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "b8"
+    },
+    "bb": {
+      "key": "root.types.auth.callbacks.JwtCallback",
+      "~k_parent": "ba"
+    },
+    "bc": {
+      "key": "root.types.auth.callbacks.SessionCallback",
+      "~k_parent": "ba"
+    },
+    "bd": {
+      "key": "root.types.auth.events",
+      "~k_parent": "b8"
+    },
+    "be": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "b8"
+    },
+    "bf": {
+      "key": "root.types.auth.providers.GoogleProvider",
+      "~k_parent": "be"
+    },
+    "bg": {
+      "key": "root.types.auth.providers.CredentialsProvider",
+      "~k_parent": "be"
+    },
+    "bh": {
+      "key": "root.types.blocks",
+      "~k_parent": "az"
+    },
+    "bi": {
+      "key": "root.types.blocks.PageHeaderMenu",
+      "~k_parent": "bh"
+    },
+    "bj": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "bh"
+    },
+    "bk": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "bh"
+    },
+    "bl": {
+      "key": "root.types.blocks.Card",
+      "~k_parent": "bh"
+    },
+    "bm": {
+      "key": "root.types.blocks.Statistic",
+      "~k_parent": "bh"
+    },
+    "bn": {
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "bh"
+    },
+    "bo": {
+      "key": "root.types.blocks.Selector",
+      "~k_parent": "bh"
+    },
+    "bp": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "bh"
+    },
+    "bq": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "bh"
+    },
+    "br": {
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "bh"
+    },
+    "bs": {
+      "key": "root.types.blocks.Tag",
+      "~k_parent": "bh"
+    },
+    "bt": {
+      "key": "root.types.blocks.TextArea",
+      "~k_parent": "bh"
+    },
+    "bu": {
+      "key": "root.types.blocks.NumberInput",
+      "~k_parent": "bh"
+    },
+    "bv": {
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "bh"
+    },
+    "bw": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "bh"
+    },
+    "bx": {
+      "key": "root.types.blocks.Divider",
+      "~k_parent": "bh"
+    },
+    "by": {
+      "key": "root.types.blocks.PasswordInput",
+      "~k_parent": "bh"
+    },
+    "bz": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "bh"
+    },
+    "c0": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "bh"
+    },
+    "c1": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "bh"
+    },
+    "c2": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "bh"
+    },
+    "c3": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "bh"
+    },
+    "c4": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "bh"
+    },
+    "c5": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "bh"
+    },
+    "c6": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "bh"
+    },
+    "c7": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "bh"
+    },
+    "c8": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "bh"
+    },
+    "c9": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "bh"
+    },
+    "ca": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "bh"
+    },
+    "cb": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "bh"
+    },
+    "cc": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "bh"
+    },
+    "cd": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "bh"
+    },
+    "ce": {
+      "key": "root.types.connections",
+      "~k_parent": "az"
+    },
+    "cf": {
+      "key": "root.types.connections.AxiosHttp",
+      "~k_parent": "ce"
+    },
+    "cg": {
+      "key": "root.types.connections.MongoDBCollection",
+      "~k_parent": "ce"
+    },
+    "ch": {
+      "key": "root.types.requests",
+      "~k_parent": "az"
+    },
+    "ci": {
+      "key": "root.types.requests.AxiosHttp",
+      "~k_parent": "ch"
+    },
+    "cj": {
+      "key": "root.types.requests.MongoDBFind",
+      "~k_parent": "ch"
+    },
+    "ck": {
+      "key": "root.types.requests.MongoDBFindOne",
+      "~k_parent": "ch"
+    },
+    "cl": {
+      "key": "root.types.requests.MongoDBUpdateOne",
+      "~k_parent": "ch"
+    },
+    "cm": {
+      "key": "root.types.api",
+      "~k_parent": "az"
+    },
+    "cn": {
+      "key": "root.types.operators",
+      "~k_parent": "az"
+    },
+    "co": {
+      "key": "root.types.operators.client",
+      "~k_parent": "cn"
+    },
+    "cp": {
+      "key": "root.types.operators.client._user",
+      "~k_parent": "co"
+    },
+    "cq": {
+      "key": "root.types.operators.client._request",
+      "~k_parent": "co"
+    },
+    "cr": {
+      "key": "root.types.operators.client._state",
+      "~k_parent": "co"
+    },
+    "cs": {
+      "key": "root.types.operators.client._if",
+      "~k_parent": "co"
+    },
+    "ct": {
+      "key": "root.types.operators.client._eq",
+      "~k_parent": "co"
+    },
+    "cu": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "co"
+    },
+    "cv": {
+      "key": "root.types.operators.client._url_query",
+      "~k_parent": "co"
+    },
+    "cw": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "co"
+    },
+    "cx": {
+      "key": "root.types.operators.server",
+      "~k_parent": "cn"
+    },
+    "cy": {
+      "key": "root.types.operators.server._payload",
+      "~k_parent": "cx"
+    },
+    "cz": {
+      "key": "root.types.operators.server._if",
+      "~k_parent": "cx"
+    },
+    "d0": {
+      "key": "root.types.operators.server._date",
+      "~k_parent": "cx"
+    },
+    "d1": {
+      "key": "root.imports",
+      "~k_parent": "e"
+    },
+    "d2": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "d1"
+    },
+    "d3": {
+      "key": "root.imports.actions[1]",
+      "~k_parent": "d1"
+    },
+    "d4": {
+      "key": "root.imports.actions[2]",
+      "~k_parent": "d1"
+    },
+    "d5": {
+      "key": "root.imports.actions[3]",
+      "~k_parent": "d1"
+    },
+    "d6": {
+      "key": "root.imports.actions[4]",
+      "~k_parent": "d1"
+    },
+    "d7": {
+      "key": "root.imports.actions[5]",
+      "~k_parent": "d1"
+    },
+    "d8": {
+      "key": "root.imports.actions[6]",
+      "~k_parent": "d1"
+    },
+    "d9": {
+      "key": "root.imports.auth",
+      "~k_parent": "d1"
+    },
+    "da": {
+      "key": "root.imports.auth.callbacks[0]",
+      "~k_parent": "d9"
+    },
+    "db": {
+      "key": "root.imports.auth.callbacks[1]",
+      "~k_parent": "d9"
+    },
+    "dc": {
+      "key": "root.imports.auth.providers[0]",
+      "~k_parent": "d9"
+    },
+    "dd": {
+      "key": "root.imports.auth.providers[1]",
+      "~k_parent": "d9"
+    },
+    "de": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "d1"
+    },
+    "df": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "d1"
+    },
+    "dg": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "d1"
+    },
+    "dh": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "d1"
+    },
+    "di": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "d1"
+    },
+    "dj": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "d1"
+    },
+    "dk": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "d1"
+    },
+    "dl": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "d1"
+    },
+    "dm": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "d1"
+    },
+    "dn": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "d1"
+    },
+    "do": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "d1"
+    },
+    "dp": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "d1"
+    },
+    "dq": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "d1"
+    },
+    "dr": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "d1"
+    },
+    "ds": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "d1"
+    },
+    "dt": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "d1"
+    },
+    "du": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "d1"
+    },
+    "dv": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "d1"
+    },
+    "dw": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "d1"
+    },
+    "dx": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "d1"
+    },
+    "dy": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "d1"
+    },
+    "dz": {
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "d1"
+    },
+    "e0": {
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "d1"
+    },
+    "e1": {
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "d1"
+    },
+    "e2": {
+      "key": "root.imports.blocks[24]",
+      "~k_parent": "d1"
+    },
+    "e3": {
+      "key": "root.imports.blocks[25]",
+      "~k_parent": "d1"
+    },
+    "e4": {
+      "key": "root.imports.blocks[26]",
+      "~k_parent": "d1"
+    },
+    "e5": {
+      "key": "root.imports.blocks[27]",
+      "~k_parent": "d1"
+    },
+    "e6": {
+      "key": "root.imports.blocks[28]",
+      "~k_parent": "d1"
+    },
+    "e7": {
+      "key": "root.imports.blocks[29]",
+      "~k_parent": "d1"
+    },
+    "e8": {
+      "key": "root.imports.blocks[30]",
+      "~k_parent": "d1"
+    },
+    "e9": {
+      "key": "root.imports.blocks[31]",
+      "~k_parent": "d1"
+    },
+    "ea": {
+      "key": "root.imports.connections[0]",
+      "~k_parent": "d1"
+    },
+    "eb": {
+      "key": "root.imports.connections[1]",
+      "~k_parent": "d1"
+    },
+    "ec": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "d1"
+    },
+    "ed": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "d1"
+    },
+    "ee": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "d1"
+    },
+    "ef": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "d1"
+    },
+    "eg": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "d1"
+    },
+    "eh": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "d1"
+    },
+    "ei": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "d1"
+    },
+    "ej": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "d1"
+    },
+    "ek": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "d1"
+    },
+    "el": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "d1"
+    },
+    "em": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "d1"
+    },
+    "en": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "d1"
+    },
+    "eo": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "d1"
+    },
+    "ep": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "d1"
+    },
+    "eq": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "d1"
+    },
+    "er": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "d1"
+    },
+    "es": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "d1"
+    },
+    "et": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "d1"
+    },
+    "eu": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "d1"
+    },
+    "ev": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "d1"
+    },
+    "ew": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "d1"
+    },
+    "ex": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "d1"
+    },
+    "ey": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "d1"
+    },
+    "ez": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "d1"
+    },
+    "f0": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "d1"
+    },
+    "f1": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "d1"
+    },
+    "f2": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "d1"
+    },
+    "f3": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "d1"
+    },
+    "f4": {
+      "key": "root.imports.requests[0]",
+      "~k_parent": "d1"
+    },
+    "f5": {
+      "key": "root.imports.requests[1]",
+      "~k_parent": "d1"
+    },
+    "f6": {
+      "key": "root.imports.requests[2]",
+      "~k_parent": "d1"
+    },
+    "f7": {
+      "key": "root.imports.requests[3]",
+      "~k_parent": "d1"
+    },
+    "f8": {
+      "key": "root.imports.operators",
+      "~k_parent": "d1"
+    },
+    "f9": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "f8"
+    },
+    "fa": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "f8"
+    },
+    "fb": {
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "f8"
+    },
+    "fc": {
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "f8"
+    },
+    "fd": {
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "f8"
+    },
+    "fe": {
+      "key": "root.imports.operators.client[5]",
+      "~k_parent": "f8"
+    },
+    "ff": {
+      "key": "root.imports.operators.client[6]",
+      "~k_parent": "f8"
+    },
+    "fg": {
+      "key": "root.imports.operators.client[7]",
+      "~k_parent": "f8"
+    },
+    "fh": {
+      "key": "root.imports.operators.server[0]",
+      "~k_parent": "f8"
+    },
+    "fi": {
+      "key": "root.imports.operators.server[1]",
+      "~k_parent": "f8"
+    },
+    "fj": {
+      "key": "root.imports.operators.server[2]",
+      "~k_parent": "f8"
+    }
+  },
+  "logger.json": {
+    "sentry": {
+      "client": true,
+      "server": true,
+      "tracesSampleRate": 0.1,
+      "replaysSessionSampleRate": 0,
+      "replaysOnErrorSampleRate": 0.5,
+      "feedback": true,
+      "userFields": {
+        "~arr": [
+          "id",
+          "email",
+          "roles"
+        ],
+        "~l": 27
+      },
+      "~k": "8m"
+    },
+    "~k": "17"
+  },
+  "menus.json": {
+    "~arr": [
+      {
+        "id": "menu:default",
+        "links": [
+          {
+            "id": "menuitem:default:dashboard",
+            "type": "MenuLink",
+            "pageId": "dashboard",
+            "properties": {
+              "title": "Dashboard",
+              "icon": "AiOutlineDashboard",
+              "~k": "1b"
+            },
+            "~k": "1a",
+            "auth": {
+              "public": false,
+              "~k": "93"
+            },
+            "menuItemId": "dashboard"
+          },
+          {
+            "id": "menuitem:default:customers",
+            "type": "MenuGroup",
+            "properties": {
+              "title": "Customers",
+              "icon": "AiOutlineTeam",
+              "~k": "1d"
+            },
+            "links": [
+              {
+                "id": "menuitem:default:all-customers",
+                "type": "MenuLink",
+                "pageId": "customers",
+                "properties": {
+                  "title": "All Customers",
+                  "~k": "1f"
+                },
+                "~k": "1e",
+                "auth": {
+                  "public": false,
+                  "roles": [
+                    "sales"
+                  ],
+                  "~k": "94"
+                },
+                "menuItemId": "all-customers"
+              },
+              {
+                "id": "menuitem:default:add-customer",
+                "type": "MenuLink",
+                "pageId": "customer-detail",
+                "properties": {
+                  "title": "Add Customer",
+                  "~k": "1h"
+                },
+                "~k": "1g",
+                "auth": {
+                  "public": false,
+                  "roles": [
+                    "sales"
+                  ],
+                  "~k": "95"
+                },
+                "menuItemId": "add-customer"
+              }
+            ],
+            "~k": "1c",
+            "auth": {
+              "public": true,
+              "~k": "96"
+            },
+            "menuItemId": "customers"
+          },
+          {
+            "id": "menuitem:default:orders",
+            "type": "MenuLink",
+            "pageId": "orders",
+            "properties": {
+              "title": "Orders",
+              "icon": "AiOutlineShoppingCart",
+              "~k": "1j"
+            },
+            "~k": "1i",
+            "auth": {
+              "public": false,
+              "roles": [
+                "sales"
+              ],
+              "~k": "97"
+            },
+            "menuItemId": "orders"
+          },
+          {
+            "id": "menuitem:default:reports",
+            "type": "MenuLink",
+            "pageId": "reports",
+            "properties": {
+              "title": "Reports",
+              "icon": "AiOutlineBarChart",
+              "~k": "1l"
+            },
+            "~k": "1k",
+            "auth": {
+              "public": false,
+              "roles": [
+                "admin"
+              ],
+              "~k": "98"
+            },
+            "menuItemId": "reports"
+          },
+          {
+            "id": "menuitem:default:settings",
+            "type": "MenuLink",
+            "pageId": "settings",
+            "properties": {
+              "title": "Settings",
+              "icon": "AiOutlineSetting",
+              "~k": "1n"
+            },
+            "~k": "1m",
+            "auth": {
+              "public": false,
+              "roles": [
+                "admin"
+              ],
+              "~k": "99"
+            },
+            "menuItemId": "settings"
+          }
+        ],
+        "~k": "19",
+        "menuId": "default"
+      }
+    ],
+    "~l": 1
+  },
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "8o"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "8p"
+    },
+    "areas": {
+      "extra": {
+        "blocks": [
+          {
+            "id": "block:404:home:0",
+            "type": "Button",
+            "properties": {
+              "title": "Go to home page",
+              "~k": "8t"
+            },
+            "events": {
+              "onClick": {
+                "try": [
+                  {
+                    "id": "home",
+                    "type": "Link",
+                    "params": {
+                      "home": true,
+                      "~k": "8w"
+                    },
+                    "~k": "8v"
+                  }
+                ],
+                "catch": [],
+                "~k": "ax"
+              },
+              "~k": "8u"
+            },
+            "~k": "8s",
+            "blockId": "home"
+          }
+        ],
+        "~k": "8r"
+      },
+      "~k": "8q"
+    },
+    "auth": {
+      "public": false,
+      "~k": "ay"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": [],
+    "~k": "aw"
+  },
+  "pages/customer-detail/customer-detail.json": {
+    "id": "page:customer-detail",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Customer Details",
+      "~k": "4o"
+    },
+    "events": {
+      "onInit": {
+        "try": {
+          "~arr": [
+            {
+              "id": "checkIfEdit",
+              "type": "SetState",
+              "skip": {
+                "_not": {
+                  "_url_query": "id",
+                  "~k": "5i"
+                },
+                "~k": "5h"
+              },
+              "params": {
+                "isEdit": true,
+                "~k": "5j"
+              },
+              "~k": "5g"
+            },
+            {
+              "id": "loadCustomer",
+              "type": "Request",
+              "skip": {
+                "_not": {
+                  "_url_query": "id",
+                  "~k": "5m"
+                },
+                "~k": "5l"
+              },
+              "params": "getCustomer",
+              "~k": "5k"
+            },
+            {
+              "id": "populateForm",
+              "type": "SetState",
+              "skip": {
+                "_not": {
+                  "_url_query": "id",
+                  "~k": "5p"
+                },
+                "~k": "5o"
+              },
+              "params": {
+                "name": {
+                  "_request": "getCustomer.name",
+                  "~k": "5r"
+                },
+                "email": {
+                  "_request": "getCustomer.email",
+                  "~k": "5s"
+                },
+                "phone": {
+                  "_request": "getCustomer.phone",
+                  "~k": "5t"
+                },
+                "status": {
+                  "_request": "getCustomer.status",
+                  "~k": "5u"
+                },
+                "notes": {
+                  "_request": "getCustomer.notes",
+                  "~k": "5v"
+                },
+                "~k": "5q"
+              },
+              "~k": "5n"
+            }
+          ],
+          "~l": 53
+        },
+        "catch": [],
+        "~k": "a3"
+      },
+      "~k": "5f"
+    },
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:customer-detail:form:0",
+              "type": "Card",
+              "properties": {
+                "title": {
+                  "_if": {
+                    "test": {
+                      "_state": "isEdit",
+                      "~k": "62"
+                    },
+                    "then": "Edit Customer",
+                    "else": "New Customer",
+                    "~k": "61"
+                  },
+                  "~k": "60"
+                },
+                "~k": "5z"
+              },
+              "~k": "5y",
+              "blockId": "form",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:customer-detail:name:0",
+                        "type": "TextInput",
+                        "required": "Name is required",
+                        "properties": {
+                          "title": "Name",
+                          "~k": "64"
+                        },
+                        "~k": "63",
+                        "blockId": "name"
+                      },
+                      {
+                        "id": "block:customer-detail:email:0",
+                        "type": "TextInput",
+                        "required": "Email is required",
+                        "properties": {
+                          "title": "Email",
+                          "~k": "66"
+                        },
+                        "~k": "65",
+                        "blockId": "email"
+                      },
+                      {
+                        "id": "block:customer-detail:phone:0",
+                        "type": "TextInput",
+                        "properties": {
+                          "title": "Phone",
+                          "~k": "68"
+                        },
+                        "~k": "67",
+                        "blockId": "phone"
+                      },
+                      {
+                        "id": "block:customer-detail:status:0",
+                        "type": "Selector",
+                        "properties": {
+                          "title": "Status",
+                          "options": {
+                            "~arr": [
+                              {
+                                "value": "active",
+                                "label": "Active",
+                                "~k": "6b"
+                              },
+                              {
+                                "value": "inactive",
+                                "label": "Inactive",
+                                "~k": "6c"
+                              },
+                              {
+                                "value": "pending",
+                                "label": "Pending",
+                                "~k": "6d"
+                              }
+                            ],
+                            "~l": 114
+                          },
+                          "~k": "6a"
+                        },
+                        "~k": "69",
+                        "blockId": "status"
+                      },
+                      {
+                        "id": "block:customer-detail:notes:0",
+                        "type": "TextArea",
+                        "properties": {
+                          "title": "Notes",
+                          "rows": 4,
+                          "~k": "6f"
+                        },
+                        "~k": "6e",
+                        "blockId": "notes"
+                      },
+                      {
+                        "id": "block:customer-detail:actions:0",
+                        "type": "Box",
+                        "~k": "6g",
+                        "blockId": "actions",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:customer-detail:saveBtn:0",
+                                  "type": "Button",
+                                  "properties": {
+                                    "title": "Save",
+                                    "type": "primary",
+                                    "~k": "6i"
+                                  },
+                                  "events": {
+                                    "onClick": {
+                                      "try": {
+                                        "~arr": [
+                                          {
+                                            "id": "validate",
+                                            "type": "Validate",
+                                            "~k": "6k"
+                                          },
+                                          {
+                                            "id": "save",
+                                            "type": "Request",
+                                            "params": "saveCustomer",
+                                            "~k": "6l"
+                                          },
+                                          {
+                                            "id": "success",
+                                            "type": "DisplayMessage",
+                                            "params": {
+                                              "content": "Customer saved successfully!",
+                                              "status": "success",
+                                              "~k": "6n"
+                                            },
+                                            "~k": "6m"
+                                          },
+                                          {
+                                            "id": "redirect",
+                                            "type": "Link",
+                                            "params": {
+                                              "pageId": "customers",
+                                              "~k": "6p"
+                                            },
+                                            "~k": "6o"
+                                          }
+                                        ],
+                                        "~l": 135
+                                      },
+                                      "catch": [],
+                                      "~k": "a8"
+                                    },
+                                    "~k": "6j"
+                                  },
+                                  "~k": "6h",
+                                  "blockId": "saveBtn"
+                                },
+                                {
+                                  "id": "block:customer-detail:cancelBtn:0",
+                                  "type": "Button",
+                                  "properties": {
+                                    "title": "Cancel",
+                                    "~k": "6r"
+                                  },
+                                  "events": {
+                                    "onClick": {
+                                      "try": {
+                                        "~arr": [
+                                          {
+                                            "id": "goBack",
+                                            "type": "Link",
+                                            "params": {
+                                              "pageId": "customers",
+                                              "~k": "6u"
+                                            },
+                                            "~k": "6t"
+                                          }
+                                        ],
+                                        "~l": 155
+                                      },
+                                      "catch": [],
+                                      "~k": "a9"
+                                    },
+                                    "~k": "6s"
+                                  },
+                                  "~k": "6q",
+                                  "blockId": "cancelBtn"
+                                }
+                              ],
+                              "~l": 128
+                            },
+                            "~k": "a7"
+                          },
+                          "~k": "a6"
+                        }
+                      }
+                    ],
+                    "~l": 95
+                  },
+                  "~k": "a5"
+                },
+                "~k": "a4"
+              }
+            }
+          ],
+          "~l": 85
+        },
+        "~k": "5x"
+      },
+      "~k": "5w"
+    },
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "aa"
+    },
+    "pageId": "customer-detail",
+    "blockId": "customer-detail",
+    "requests": [
+      {
+        "id": "request:customer-detail:getCustomer",
+        "payload": {
+          "id": {
+            "_url_query": "id",
+            "~k": "4r"
+          },
+          "~k": "4q"
+        },
+        "~k": "4p",
+        "requestId": "getCustomer",
+        "pageId": "customer-detail"
+      },
+      {
+        "id": "request:customer-detail:saveCustomer",
+        "payload": {
+          "id": {
+            "_url_query": "id",
+            "~k": "4x"
+          },
+          "name": {
+            "_state": "name",
+            "~k": "4y"
+          },
+          "email": {
+            "_state": "email",
+            "~k": "4z"
+          },
+          "phone": {
+            "_state": "phone",
+            "~k": "50"
+          },
+          "status": {
+            "_state": "status",
+            "~k": "51"
+          },
+          "notes": {
+            "_state": "notes",
+            "~k": "52"
+          },
+          "~k": "4w"
+        },
+        "~k": "4v",
+        "requestId": "saveCustomer",
+        "pageId": "customer-detail"
+      }
+    ],
+    "~k": "a2"
+  },
+  "pages/customer-detail/requests/getCustomer.json": {
+    "id": "request:customer-detail:getCustomer",
+    "type": "MongoDBFindOne",
+    "connectionId": "db",
+    "payload": {
+      "id": {
+        "_url_query": "id",
+        "~k": "4r"
+      },
+      "~k": "4q"
+    },
+    "properties": {
+      "query": {
+        "_id": {
+          "_payload": "id",
+          "~k": "4u"
+        },
+        "~k": "4t"
+      },
+      "~k": "4s"
+    },
+    "~k": "4p",
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "ab"
+    },
+    "requestId": "getCustomer",
+    "pageId": "customer-detail"
+  },
+  "pages/customer-detail/requests/saveCustomer.json": {
+    "id": "request:customer-detail:saveCustomer",
+    "type": "MongoDBUpdateOne",
+    "connectionId": "db",
+    "payload": {
+      "id": {
+        "_url_query": "id",
+        "~k": "4x"
+      },
+      "name": {
+        "_state": "name",
+        "~k": "4y"
+      },
+      "email": {
+        "_state": "email",
+        "~k": "4z"
+      },
+      "phone": {
+        "_state": "phone",
+        "~k": "50"
+      },
+      "status": {
+        "_state": "status",
+        "~k": "51"
+      },
+      "notes": {
+        "_state": "notes",
+        "~k": "52"
+      },
+      "~k": "4w"
+    },
+    "properties": {
+      "filter": {
+        "_id": {
+          "_payload": "id",
+          "~k": "55"
+        },
+        "~k": "54"
+      },
+      "update": {
+        "$set": {
+          "name": {
+            "_payload": "name",
+            "~k": "58"
+          },
+          "email": {
+            "_payload": "email",
+            "~k": "59"
+          },
+          "phone": {
+            "_payload": "phone",
+            "~k": "5a"
+          },
+          "status": {
+            "_payload": "status",
+            "~k": "5b"
+          },
+          "notes": {
+            "_payload": "notes",
+            "~k": "5c"
+          },
+          "updatedAt": {
+            "_date": "2024-01-15T12:00:00.000Z",
+            "~k": "5d"
+          },
+          "~k": "57"
+        },
+        "~k": "56"
+      },
+      "options": {
+        "upsert": true,
+        "~k": "5e"
+      },
+      "~k": "53"
+    },
+    "~k": "4v",
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "ac"
+    },
+    "requestId": "saveCustomer",
+    "pageId": "customer-detail"
+  },
+  "pages/customers/customers.json": {
+    "id": "page:customers",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Customers",
+      "~k": "2m"
+    },
+    "events": {
+      "onInit": {
+        "try": {
+          "~arr": [
+            {
+              "id": "loadCustomers",
+              "type": "Request",
+              "params": "getCustomers",
+              "~k": "39"
+            }
+          ],
+          "~l": 39
+        },
+        "catch": [],
+        "~k": "9q"
+      },
+      "~k": "38"
+    },
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:customers:toolbar:0",
+              "type": "Box",
+              "~k": "3c",
+              "blockId": "toolbar",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:customers:searchQuery:0",
+                        "type": "TextInput",
+                        "layout": {
+                          "span": 8,
+                          "~k": "3e"
+                        },
+                        "properties": {
+                          "placeholder": "Search customers...",
+                          "prefix": "AiOutlineSearch",
+                          "~k": "3f"
+                        },
+                        "events": {
+                          "onChange": {
+                            "debounce": {
+                              "ms": 300,
+                              "~k": "3i"
+                            },
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "search",
+                                  "type": "Request",
+                                  "params": "getCustomers",
+                                  "~k": "3j"
+                                }
+                              ],
+                              "~l": 60
+                            },
+                            "~k": "3h",
+                            "catch": []
+                          },
+                          "~k": "3g"
+                        },
+                        "~k": "3d",
+                        "blockId": "searchQuery"
+                      },
+                      {
+                        "id": "block:customers:statusFilter:0",
+                        "type": "Selector",
+                        "layout": {
+                          "span": 4,
+                          "~k": "3l"
+                        },
+                        "properties": {
+                          "placeholder": "Filter by status",
+                          "allowClear": true,
+                          "options": {
+                            "~arr": [
+                              {
+                                "value": "active",
+                                "label": "Active",
+                                "~k": "3n"
+                              },
+                              {
+                                "value": "inactive",
+                                "label": "Inactive",
+                                "~k": "3o"
+                              },
+                              {
+                                "value": "pending",
+                                "label": "Pending",
+                                "~k": "3p"
+                              }
+                            ],
+                            "~l": 71
+                          },
+                          "~k": "3m"
+                        },
+                        "events": {
+                          "onChange": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "filter",
+                                  "type": "Request",
+                                  "params": "getCustomers",
+                                  "~k": "3r"
+                                }
+                              ],
+                              "~l": 79
+                            },
+                            "catch": [],
+                            "~k": "9t"
+                          },
+                          "~k": "3q"
+                        },
+                        "~k": "3k",
+                        "blockId": "statusFilter"
+                      },
+                      {
+                        "id": "block:customers:addBtn:0",
+                        "type": "Button",
+                        "layout": {
+                          "span": 4,
+                          "~k": "3t"
+                        },
+                        "properties": {
+                          "title": "Add Customer",
+                          "type": "primary",
+                          "icon": "AiOutlinePlus",
+                          "~k": "3u"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "goToAdd",
+                                  "type": "Link",
+                                  "params": {
+                                    "pageId": "customer-detail",
+                                    "~k": "3x"
+                                  },
+                                  "~k": "3w"
+                                }
+                              ],
+                              "~l": 92
+                            },
+                            "catch": [],
+                            "~k": "9u"
+                          },
+                          "~k": "3v"
+                        },
+                        "~k": "3s",
+                        "blockId": "addBtn"
+                      }
+                    ],
+                    "~l": 48
+                  },
+                  "~k": "9s"
+                },
+                "~k": "9r"
+              }
+            },
+            {
+              "id": "block:customers:customerList:0",
+              "type": "List",
+              "properties": {
+                "data": {
+                  "_request": "getCustomers",
+                  "~k": "40"
+                },
+                "~k": "3z"
+              },
+              "~k": "3y",
+              "blockId": "customerList",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:customers:customerCard:0",
+                        "type": "Card",
+                        "properties": {
+                          "hoverable": true,
+                          "title": {
+                            "_state": "customerList.$.name",
+                            "~k": "43"
+                          },
+                          "~k": "42"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "goToDetail",
+                                  "type": "Link",
+                                  "params": {
+                                    "pageId": "customer-detail",
+                                    "urlQuery": {
+                                      "id": {
+                                        "_state": "customerList.$._id",
+                                        "~k": "48"
+                                      },
+                                      "~k": "47"
+                                    },
+                                    "~k": "46"
+                                  },
+                                  "~k": "45"
+                                }
+                              ],
+                              "~l": 110
+                            },
+                            "catch": [],
+                            "~k": "9x"
+                          },
+                          "~k": "44"
+                        },
+                        "~k": "41",
+                        "blockId": "customerCard",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:customers:email:0",
+                                  "type": "Paragraph",
+                                  "properties": {
+                                    "content": {
+                                      "_state": "customerList.$.email",
+                                      "~k": "4b"
+                                    },
+                                    "~k": "4a"
+                                  },
+                                  "~k": "49",
+                                  "blockId": "email"
+                                },
+                                {
+                                  "id": "block:customers:status:0",
+                                  "type": "Tag",
+                                  "properties": {
+                                    "title": {
+                                      "_state": "customerList.$.status",
+                                      "~k": "4e"
+                                    },
+                                    "color": {
+                                      "_if": {
+                                        "test": {
+                                          "_eq": {
+                                            "~arr": [
+                                              {
+                                                "_state": "customerList.$.status",
+                                                "~k": "4i"
+                                              },
+                                              "active"
+                                            ],
+                                            "~l": 132
+                                          },
+                                          "~k": "4h"
+                                        },
+                                        "then": "green",
+                                        "else": {
+                                          "_if": {
+                                            "test": {
+                                              "_eq": {
+                                                "~arr": [
+                                                  {
+                                                    "_state": "customerList.$.status",
+                                                    "~k": "4m"
+                                                  },
+                                                  "pending"
+                                                ],
+                                                "~l": 139
+                                              },
+                                              "~k": "4l"
+                                            },
+                                            "then": "orange",
+                                            "else": "red",
+                                            "~k": "4k"
+                                          },
+                                          "~k": "4j"
+                                        },
+                                        "~k": "4g"
+                                      },
+                                      "~k": "4f"
+                                    },
+                                    "~k": "4d"
+                                  },
+                                  "~k": "4c",
+                                  "blockId": "status"
+                                }
+                              ],
+                              "~l": 118
+                            },
+                            "~k": "9z"
+                          },
+                          "~k": "9y"
+                        }
+                      }
+                    ],
+                    "~l": 102
+                  },
+                  "~k": "9w"
+                },
+                "~k": "9v"
+              }
+            }
+          ],
+          "~l": 45
+        },
+        "~k": "3b"
+      },
+      "~k": "3a"
+    },
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "a0"
+    },
+    "pageId": "customers",
+    "blockId": "customers",
+    "requests": [
+      {
+        "id": "request:customers:getCustomers",
+        "payload": {
+          "search": {
+            "_state": "searchQuery",
+            "~k": "2p"
+          },
+          "status": {
+            "_state": "statusFilter",
+            "~k": "2q"
+          },
+          "~k": "2o"
+        },
+        "~k": "2n",
+        "requestId": "getCustomers",
+        "pageId": "customers"
+      }
+    ],
+    "~k": "9p"
+  },
+  "pages/customers/requests/getCustomers.json": {
+    "id": "request:customers:getCustomers",
+    "type": "MongoDBFind",
+    "connectionId": "db",
+    "payload": {
+      "search": {
+        "_state": "searchQuery",
+        "~k": "2p"
+      },
+      "status": {
+        "_state": "statusFilter",
+        "~k": "2q"
+      },
+      "~k": "2o"
+    },
+    "properties": {
+      "query": {
+        "$and": {
+          "~arr": [
+            {
+              "$or": {
+                "~arr": [
+                  {
+                    "name": {
+                      "$regex": {
+                        "_payload": "search",
+                        "~k": "2w"
+                      },
+                      "$options": "i",
+                      "~k": "2v"
+                    },
+                    "~k": "2u"
+                  },
+                  {
+                    "email": {
+                      "$regex": {
+                        "_payload": "search",
+                        "~k": "2z"
+                      },
+                      "$options": "i",
+                      "~k": "2y"
+                    },
+                    "~k": "2x"
+                  }
+                ],
+                "~l": 17
+              },
+              "~k": "2t"
+            },
+            {
+              "status": {
+                "_if": {
+                  "test": {
+                    "_payload": "status",
+                    "~k": "33"
+                  },
+                  "then": {
+                    "_payload": "status",
+                    "~k": "34"
+                  },
+                  "else": {
+                    "$exists": true,
+                    "~k": "35"
+                  },
+                  "~k": "32"
+                },
+                "~k": "31"
+              },
+              "~k": "30"
+            }
+          ],
+          "~l": 16
+        },
+        "~k": "2s"
+      },
+      "options": {
+        "sort": {
+          "createdAt": -1,
+          "~k": "37"
+        },
+        "limit": 50,
+        "~k": "36"
+      },
+      "~k": "2r"
+    },
+    "~k": "2n",
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "a1"
+    },
+    "requestId": "getCustomers",
+    "pageId": "customers"
+  },
+  "pages/dashboard/dashboard.json": {
+    "id": "page:dashboard",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Dashboard",
+      "~k": "1p"
+    },
+    "events": {
+      "onInitAsync": {
+        "try": {
+          "~arr": [
+            {
+              "id": "loadStats",
+              "type": "Request",
+              "params": "getStats",
+              "~k": "1t"
+            }
+          ],
+          "~l": 12
+        },
+        "catch": [],
+        "~k": "9b"
+      },
+      "~k": "1s"
+    },
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:dashboard:welcomeTitle:0",
+              "type": "Title",
+              "properties": {
+                "content": {
+                  "_nunjucks": "Welcome back, {{ user.name }}!",
+                  "user": {
+                    "_user": true,
+                    "~k": "1z"
+                  },
+                  "~k": "1y"
+                },
+                "~k": "1x"
+              },
+              "~k": "1w",
+              "blockId": "welcomeTitle"
+            },
+            {
+              "id": "block:dashboard:statsRow:0",
+              "type": "Box",
+              "~k": "20",
+              "blockId": "statsRow",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:dashboard:totalCustomers:0",
+                        "type": "Card",
+                        "layout": {
+                          "span": 6,
+                          "~k": "22"
+                        },
+                        "~k": "21",
+                        "blockId": "totalCustomers",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:dashboard:customerStat:0",
+                                  "type": "Statistic",
+                                  "properties": {
+                                    "title": "Total Customers",
+                                    "value": {
+                                      "_request": "getStats.totalCustomers",
+                                      "~k": "25"
+                                    },
+                                    "~k": "24"
+                                  },
+                                  "~k": "23",
+                                  "blockId": "customerStat"
+                                }
+                              ],
+                              "~l": 33
+                            },
+                            "~k": "9f"
+                          },
+                          "~k": "9e"
+                        }
+                      },
+                      {
+                        "id": "block:dashboard:totalOrders:0",
+                        "type": "Card",
+                        "layout": {
+                          "span": 6,
+                          "~k": "27"
+                        },
+                        "~k": "26",
+                        "blockId": "totalOrders",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:dashboard:orderStat:0",
+                                  "type": "Statistic",
+                                  "properties": {
+                                    "title": "Total Orders",
+                                    "value": {
+                                      "_request": "getStats.totalOrders",
+                                      "~k": "2a"
+                                    },
+                                    "~k": "29"
+                                  },
+                                  "~k": "28",
+                                  "blockId": "orderStat"
+                                }
+                              ],
+                              "~l": 44
+                            },
+                            "~k": "9h"
+                          },
+                          "~k": "9g"
+                        }
+                      },
+                      {
+                        "id": "block:dashboard:revenue:0",
+                        "type": "Card",
+                        "layout": {
+                          "span": 6,
+                          "~k": "2c"
+                        },
+                        "~k": "2b",
+                        "blockId": "revenue",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:dashboard:revenueStat:0",
+                                  "type": "Statistic",
+                                  "properties": {
+                                    "title": "Revenue",
+                                    "prefix": "$",
+                                    "value": {
+                                      "_request": "getStats.revenue",
+                                      "~k": "2f"
+                                    },
+                                    "~k": "2e"
+                                  },
+                                  "~k": "2d",
+                                  "blockId": "revenueStat"
+                                }
+                              ],
+                              "~l": 55
+                            },
+                            "~k": "9j"
+                          },
+                          "~k": "9i"
+                        }
+                      },
+                      {
+                        "id": "block:dashboard:growth:0",
+                        "type": "Card",
+                        "layout": {
+                          "span": 6,
+                          "~k": "2h"
+                        },
+                        "~k": "2g",
+                        "blockId": "growth",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:dashboard:growthStat:0",
+                                  "type": "Statistic",
+                                  "properties": {
+                                    "title": "Growth",
+                                    "suffix": "%",
+                                    "value": {
+                                      "_request": "getStats.growth",
+                                      "~k": "2k"
+                                    },
+                                    "~k": "2j"
+                                  },
+                                  "~k": "2i",
+                                  "blockId": "growthStat"
+                                }
+                              ],
+                              "~l": 67
+                            },
+                            "~k": "9l"
+                          },
+                          "~k": "9k"
+                        }
+                      }
+                    ],
+                    "~l": 28
+                  },
+                  "~k": "9d"
+                },
+                "~k": "9c"
+              }
+            }
+          ],
+          "~l": 18
+        },
+        "~k": "1v"
+      },
+      "~k": "1u"
+    },
+    "auth": {
+      "public": false,
+      "~k": "9m"
+    },
+    "pageId": "dashboard",
+    "blockId": "dashboard",
+    "requests": [
+      {
+        "id": "request:dashboard:getStats",
+        "~k": "1q",
+        "payload": {
+          "~k": "9n"
+        },
+        "requestId": "getStats",
+        "pageId": "dashboard"
+      }
+    ],
+    "~k": "9a"
+  },
+  "pages/dashboard/requests/getStats.json": {
+    "id": "request:dashboard:getStats",
+    "type": "AxiosHttp",
+    "connectionId": "api",
+    "properties": {
+      "url": "/stats",
+      "~k": "1r"
+    },
+    "~k": "1q",
+    "payload": {
+      "~k": "9n"
+    },
+    "auth": {
+      "public": false,
+      "~k": "9o"
+    },
+    "requestId": "getStats",
+    "pageId": "dashboard"
+  },
+  "pages/login/login.json": {
+    "id": "page:login",
+    "type": "Result",
+    "properties": {
+      "title": "Enterprise CRM",
+      "subTitle": "Please sign in to continue",
+      "status": "info",
+      "~k": "80"
+    },
+    "areas": {
+      "extra": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:login:googleBtn:0",
+              "type": "Button",
+              "properties": {
+                "title": "Sign in with Google",
+                "icon": "AiOutlineGoogle",
+                "block": true,
+                "~k": "84"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "googleLogin",
+                        "type": "Login",
+                        "params": {
+                          "providerId": "google",
+                          "~k": "87"
+                        },
+                        "~k": "86"
+                      }
+                    ],
+                    "~l": 17
+                  },
+                  "catch": [],
+                  "~k": "at"
+                },
+                "~k": "85"
+              },
+              "~k": "83",
+              "blockId": "googleBtn"
+            },
+            {
+              "id": "block:login:divider:0",
+              "type": "Divider",
+              "properties": {
+                "orientation": "center",
+                "content": "or",
+                "~k": "89"
+              },
+              "~k": "88",
+              "blockId": "divider"
+            },
+            {
+              "id": "block:login:emailInput:0",
+              "type": "TextInput",
+              "properties": {
+                "title": "Email",
+                "placeholder": "your@email.com",
+                "~k": "8b"
+              },
+              "~k": "8a",
+              "blockId": "emailInput"
+            },
+            {
+              "id": "block:login:passwordInput:0",
+              "type": "PasswordInput",
+              "properties": {
+                "title": "Password",
+                "~k": "8d"
+              },
+              "~k": "8c",
+              "blockId": "passwordInput"
+            },
+            {
+              "id": "block:login:credentialsBtn:0",
+              "type": "Button",
+              "properties": {
+                "title": "Sign In",
+                "type": "primary",
+                "block": true,
+                "~k": "8f"
+              },
+              "events": {
+                "onClick": {
+                  "try": {
+                    "~arr": [
+                      {
+                        "id": "credentialsLogin",
+                        "type": "Login",
+                        "params": {
+                          "providerId": "credentials",
+                          "email": {
+                            "_state": "emailInput",
+                            "~k": "8j"
+                          },
+                          "password": {
+                            "_state": "passwordInput",
+                            "~k": "8k"
+                          },
+                          "~k": "8i"
+                        },
+                        "~k": "8h"
+                      }
+                    ],
+                    "~l": 43
+                  },
+                  "catch": [],
+                  "~k": "au"
+                },
+                "~k": "8g"
+              },
+              "~k": "8e",
+              "blockId": "credentialsBtn"
+            }
+          ],
+          "~l": 9
+        },
+        "~k": "82"
+      },
+      "~k": "81"
+    },
+    "auth": {
+      "public": true,
+      "~k": "av"
+    },
+    "pageId": "login",
+    "blockId": "login",
+    "requests": [],
+    "~k": "as"
+  },
+  "pages/orders/orders.json": {
+    "id": "page:orders",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Orders",
+      "~k": "6w"
+    },
+    "auth": {
+      "public": false,
+      "roles": [
+        "sales"
+      ],
+      "~k": "ae"
+    },
+    "pageId": "orders",
+    "blockId": "orders",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:orders:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Order Management",
+                "~k": "6y"
+              },
+              "~k": "6x",
+              "blockId": "title"
+            },
+            {
+              "id": "block:orders:placeholder:0",
+              "type": "Paragraph",
+              "properties": {
+                "content": "Order management interface",
+                "~k": "70"
+              },
+              "~k": "6z",
+              "blockId": "placeholder"
+            }
+          ],
+          "~l": 5
+        },
+        "~k": "ag"
+      },
+      "~k": "af"
+    },
+    "requests": [],
+    "~k": "ad"
+  },
+  "pages/reports/reports.json": {
+    "id": "page:reports",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Reports",
+      "~k": "72"
+    },
+    "auth": {
+      "public": false,
+      "roles": [
+        "admin"
+      ],
+      "~k": "ai"
+    },
+    "pageId": "reports",
+    "blockId": "reports",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:reports:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Analytics & Reports",
+                "~k": "74"
+              },
+              "~k": "73",
+              "blockId": "title"
+            },
+            {
+              "id": "block:reports:placeholder:0",
+              "type": "Paragraph",
+              "properties": {
+                "content": "Reports and analytics interface",
+                "~k": "76"
+              },
+              "~k": "75",
+              "blockId": "placeholder"
+            }
+          ],
+          "~l": 5
+        },
+        "~k": "ak"
+      },
+      "~k": "aj"
+    },
+    "requests": [],
+    "~k": "ah"
+  },
+  "pages/settings/settings.json": {
+    "id": "page:settings",
+    "type": "PageHeaderMenu",
+    "properties": {
+      "title": "Settings",
+      "~k": "78"
+    },
+    "auth": {
+      "public": false,
+      "roles": [
+        "admin"
+      ],
+      "~k": "am"
+    },
+    "pageId": "settings",
+    "blockId": "settings",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:settings:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "Application Settings",
+                "~k": "7a"
+              },
+              "~k": "79",
+              "blockId": "title"
+            },
+            {
+              "id": "block:settings:settingsForm:0",
+              "type": "Card",
+              "properties": {
+                "title": "General Settings",
+                "~k": "7c"
+              },
+              "~k": "7b",
+              "blockId": "settingsForm",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:settings:itemsPerPage:0",
+                        "type": "NumberInput",
+                        "properties": {
+                          "title": "Items Per Page",
+                          "min": 10,
+                          "max": 100,
+                          "~k": "7e"
+                        },
+                        "~k": "7d",
+                        "blockId": "itemsPerPage"
+                      },
+                      {
+                        "id": "block:settings:timezone:0",
+                        "type": "Selector",
+                        "properties": {
+                          "title": "Timezone",
+                          "options": {
+                            "~arr": [
+                              {
+                                "value": "America/New_York",
+                                "label": "Eastern Time",
+                                "~k": "7h"
+                              },
+                              {
+                                "value": "America/Chicago",
+                                "label": "Central Time",
+                                "~k": "7i"
+                              },
+                              {
+                                "value": "America/Los_Angeles",
+                                "label": "Pacific Time",
+                                "~k": "7j"
+                              },
+                              {
+                                "value": "UTC",
+                                "label": "UTC",
+                                "~k": "7k"
+                              }
+                            ],
+                            "~l": 25
+                          },
+                          "~k": "7g"
+                        },
+                        "~k": "7f",
+                        "blockId": "timezone"
+                      },
+                      {
+                        "id": "block:settings:darkMode:0",
+                        "type": "Switch",
+                        "properties": {
+                          "title": "Dark Mode",
+                          "~k": "7m"
+                        },
+                        "~k": "7l",
+                        "blockId": "darkMode"
+                      },
+                      {
+                        "id": "block:settings:notifications:0",
+                        "type": "Switch",
+                        "properties": {
+                          "title": "Enable Notifications",
+                          "~k": "7o"
+                        },
+                        "~k": "7n",
+                        "blockId": "notifications"
+                      },
+                      {
+                        "id": "block:settings:saveSettingsBtn:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Save Settings",
+                          "type": "primary",
+                          "~k": "7q"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "saveSettings",
+                                  "type": "SetGlobal",
+                                  "params": {
+                                    "settings": {
+                                      "itemsPerPage": {
+                                        "_state": "itemsPerPage",
+                                        "~k": "7v"
+                                      },
+                                      "timezone": {
+                                        "_state": "timezone",
+                                        "~k": "7w"
+                                      },
+                                      "~k": "7u"
+                                    },
+                                    "~k": "7t"
+                                  },
+                                  "~k": "7s"
+                                },
+                                {
+                                  "id": "success",
+                                  "type": "DisplayMessage",
+                                  "params": {
+                                    "content": "Settings saved!",
+                                    "status": "success",
+                                    "~k": "7y"
+                                  },
+                                  "~k": "7x"
+                                }
+                              ],
+                              "~l": 48
+                            },
+                            "catch": [],
+                            "~k": "ar"
+                          },
+                          "~k": "7r"
+                        },
+                        "~k": "7p",
+                        "blockId": "saveSettingsBtn"
+                      }
+                    ],
+                    "~l": 14
+                  },
+                  "~k": "aq"
+                },
+                "~k": "ap"
+              }
+            }
+          ],
+          "~l": 5
+        },
+        "~k": "ao"
+      },
+      "~k": "an"
+    },
+    "requests": [],
+    "~k": "al"
+  },
+  "plugins/actions.js": "import {  as Request } from '@lowdefy/actions-core/actions';\nimport {  as Link } from '@lowdefy/actions-core/actions';\nimport {  as SetState } from '@lowdefy/actions-core/actions';\nimport {  as Validate } from '@lowdefy/actions-core/actions';\nimport {  as DisplayMessage } from '@lowdefy/actions-core/actions';\nimport {  as SetGlobal } from '@lowdefy/actions-core/actions';\nimport {  as Login } from '@lowdefy/actions-core/actions';\nexport default {\n  Request,\n  Link,\n  SetState,\n  Validate,\n  DisplayMessage,\n  SetGlobal,\n  Login,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "import {  as JwtCallback } from '@lowdefy/plugin-next-auth/auth/callbacks';\nimport {  as SessionCallback } from '@lowdefy/plugin-next-auth/auth/callbacks';\nexport default {\n  JwtCallback,\n  SessionCallback,\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "import {  as GoogleProvider } from 'next-auth/auth/providers';\nimport {  as CredentialsProvider } from 'next-auth/auth/providers';\nexport default {\n  GoogleProvider,\n  CredentialsProvider,\n  };",
+  "plugins/blocks.js": "import {  as PageHeaderMenu } from '@lowdefy/blocks-antd/blocks';\nimport {  as Title } from '@lowdefy/blocks-basic/blocks';\nimport {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Card } from '@lowdefy/blocks-antd/blocks';\nimport {  as Statistic } from '@lowdefy/blocks-antd/blocks';\nimport {  as TextInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as Selector } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Paragraph } from '@lowdefy/blocks-basic/blocks';\nimport {  as Tag } from '@lowdefy/blocks-antd/blocks';\nimport {  as TextArea } from '@lowdefy/blocks-antd/blocks';\nimport {  as NumberInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as Switch } from '@lowdefy/blocks-antd/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Divider } from '@lowdefy/blocks-antd/blocks';\nimport {  as PasswordInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  PageHeaderMenu,\n  Title,\n  Box,\n  Card,\n  Statistic,\n  TextInput,\n  Selector,\n  Button,\n  List,\n  Paragraph,\n  Tag,\n  TextArea,\n  NumberInput,\n  Switch,\n  Result,\n  Divider,\n  PasswordInput,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "import {  as AxiosHttp } from '@lowdefy/connection-axios-http/connections';\nimport {  as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  AxiosHttp,\n  MongoDBCollection,\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters, AiOutlineDashboard, AiOutlineTeam, AiOutlineShoppingCart, AiOutlineBarChart, AiOutlineSetting, AiOutlineSearch, AiOutlinePlus, AiOutlineGoogle } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n  AiOutlineDashboard,\n  AiOutlineTeam,\n  AiOutlineShoppingCart,\n  AiOutlineBarChart,\n  AiOutlineSetting,\n  AiOutlineSearch,\n  AiOutlinePlus,\n  AiOutlineGoogle,\n};",
+  "plugins/operators/client.js": "import {  as _user } from '@lowdefy/operators-js/operators/client';\nimport {  as _request } from '@lowdefy/operators-js/operators/client';\nimport {  as _state } from '@lowdefy/operators-js/operators/client';\nimport {  as _if } from '@lowdefy/operators-js/operators/client';\nimport {  as _eq } from '@lowdefy/operators-js/operators/client';\nimport {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _url_query } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _user,\n  _request,\n  _state,\n  _if,\n  _eq,\n  _not,\n  _url_query,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "import {  as _payload } from '@lowdefy/operators-js/operators/server';\nimport {  as _if } from '@lowdefy/operators-js/operators/server';\nimport {  as _date } from '@lowdefy/operators-js/operators/server';\nexport default {\n  _payload,\n  _if,\n  _date,\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    },
+    "2": {
+      "parent": "1",
+      "lineNumber": 11,
+      "path": "config/connections.yaml"
+    },
+    "3": {
+      "parent": "1",
+      "lineNumber": 14,
+      "path": "config/auth.yaml"
+    },
+    "4": {
+      "parent": "1",
+      "lineNumber": 17,
+      "path": "config/global.yaml"
+    },
+    "5": {
+      "parent": "1",
+      "lineNumber": 32,
+      "path": "config/menus.yaml"
+    },
+    "6": {
+      "parent": "1",
+      "lineNumber": 36,
+      "path": "pages/dashboard.yaml"
+    },
+    "7": {
+      "parent": "1",
+      "lineNumber": 37,
+      "path": "pages/customers.yaml"
+    },
+    "8": {
+      "parent": "1",
+      "lineNumber": 38,
+      "path": "pages/customer-detail.yaml"
+    },
+    "9": {
+      "parent": "1",
+      "lineNumber": 39,
+      "path": "pages/orders.yaml"
+    },
+    "a": {
+      "parent": "1",
+      "lineNumber": 40,
+      "path": "pages/reports.yaml"
+    },
+    "b": {
+      "parent": "1",
+      "lineNumber": 41,
+      "path": "pages/settings.yaml"
+    },
+    "c": {
+      "parent": "1",
+      "lineNumber": 42,
+      "path": "pages/login.yaml"
+    }
+  },
+  "types.json": {
+    "actions": {
+      "Request": {
+        "package": "@lowdefy/actions-core",
+        "count": 6,
+        "~k": "b1"
+      },
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 5,
+        "~k": "b2"
+      },
+      "SetState": {
+        "package": "@lowdefy/actions-core",
+        "count": 2,
+        "~k": "b3"
+      },
+      "Validate": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "b4"
+      },
+      "DisplayMessage": {
+        "package": "@lowdefy/actions-core",
+        "count": 2,
+        "~k": "b5"
+      },
+      "SetGlobal": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "b6"
+      },
+      "Login": {
+        "package": "@lowdefy/actions-core",
+        "count": 2,
+        "~k": "b7"
+      },
+      "~k": "b0"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "b9"
+      },
+      "callbacks": {
+        "JwtCallback": {
+          "package": "@lowdefy/plugin-next-auth",
+          "count": 1,
+          "~k": "bb"
+        },
+        "SessionCallback": {
+          "package": "@lowdefy/plugin-next-auth",
+          "count": 1,
+          "~k": "bc"
+        },
+        "~k": "ba"
+      },
+      "events": {
+        "~k": "bd"
+      },
+      "providers": {
+        "GoogleProvider": {
+          "package": "next-auth",
+          "count": 1,
+          "~k": "bf"
+        },
+        "CredentialsProvider": {
+          "package": "next-auth",
+          "count": 1,
+          "~k": "bg"
+        },
+        "~k": "be"
+      },
+      "~k": "b8"
+    },
+    "blocks": {
+      "PageHeaderMenu": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 6,
+        "~k": "bi"
+      },
+      "Title": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 4,
+        "~k": "bj"
+      },
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 4,
+        "~k": "bk"
+      },
+      "Card": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 7,
+        "~k": "bl"
+      },
+      "Statistic": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 4,
+        "~k": "bm"
+      },
+      "TextInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 5,
+        "~k": "bn"
+      },
+      "Selector": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 3,
+        "~k": "bo"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 7,
+        "~k": "bp"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "bq"
+      },
+      "Paragraph": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 3,
+        "~k": "br"
+      },
+      "Tag": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "bs"
+      },
+      "TextArea": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "bt"
+      },
+      "NumberInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "bu"
+      },
+      "Switch": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "bv"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "bw"
+      },
+      "Divider": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "bx"
+      },
+      "PasswordInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "by"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "bz"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c0"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c1"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c2"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c3"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c4"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "c5"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "c6"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "c7"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "c8"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "c9"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "ca"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "cb"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "cc"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "cd"
+      },
+      "~k": "bh"
+    },
+    "connections": {
+      "AxiosHttp": {
+        "package": "@lowdefy/connection-axios-http",
+        "count": 1,
+        "~k": "cf"
+      },
+      "MongoDBCollection": {
+        "package": "@lowdefy/connection-mongodb",
+        "count": 2,
+        "~k": "cg"
+      },
+      "~k": "ce"
+    },
+    "requests": {
+      "AxiosHttp": {
+        "package": "@lowdefy/connection-axios-http",
+        "count": 1,
+        "~k": "ci"
+      },
+      "MongoDBFind": {
+        "package": "@lowdefy/connection-mongodb",
+        "count": 1,
+        "~k": "cj"
+      },
+      "MongoDBFindOne": {
+        "package": "@lowdefy/connection-mongodb",
+        "count": 1,
+        "~k": "ck"
+      },
+      "MongoDBUpdateOne": {
+        "package": "@lowdefy/connection-mongodb",
+        "count": 1,
+        "~k": "cl"
+      },
+      "~k": "ch"
+    },
+    "api": {
+      "~k": "cm"
+    },
+    "operators": {
+      "client": {
+        "_user": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "cp"
+        },
+        "_request": {
+          "package": "@lowdefy/operators-js",
+          "count": 10,
+          "~k": "cq"
+        },
+        "_state": {
+          "package": "@lowdefy/operators-js",
+          "count": 18,
+          "~k": "cr"
+        },
+        "_if": {
+          "package": "@lowdefy/operators-js",
+          "count": 3,
+          "~k": "cs"
+        },
+        "_eq": {
+          "package": "@lowdefy/operators-js",
+          "count": 2,
+          "~k": "ct"
+        },
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 4,
+          "~k": "cu"
+        },
+        "_url_query": {
+          "package": "@lowdefy/operators-js",
+          "count": 5,
+          "~k": "cv"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "cw"
+        },
+        "~k": "co"
+      },
+      "server": {
+        "_payload": {
+          "package": "@lowdefy/operators-js",
+          "count": 11,
+          "~k": "cy"
+        },
+        "_if": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "cz"
+        },
+        "_date": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "d0"
+        },
+        "~k": "cx"
+      },
+      "~k": "cn"
+    },
+    "~k": "az"
+  }
+}

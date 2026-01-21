@@ -15,7 +15,7 @@
 */
 
 import buildAuthPlugins from './buildAuthPlugins.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 test('Count adapter type', () => {
   const context = testContext();

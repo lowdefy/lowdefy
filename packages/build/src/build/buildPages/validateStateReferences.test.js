@@ -17,7 +17,7 @@
 import { jest } from '@jest/globals';
 
 import validateStateReferences from './validateStateReferences.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const mockLogWarn = jest.fn();
 

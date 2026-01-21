@@ -1,0 +1,30 @@
+- id: getCustomerStats
+  type: Endpoint
+  routine:
+    - id: logRequest
+      type: Log
+      params:
+        message: Getting customer stats
+    - id: returnStats
+      type: Return
+      params:
+        stats:
+          total: 100
+          active: 85
+- id: exportCustomers
+  type: Endpoint
+  routine:
+    - id: logExport
+      type: Log
+      params:
+        message: Exporting customers
+    - id: returnData
+      type: Return
+      params:
+        customers:
+          - id: 1
+            name: Customer 1
+          - id: 2
+            name: Customer 2
+        exportedAt:
+          _date: '2024-01-15T12:00:00.000Z'

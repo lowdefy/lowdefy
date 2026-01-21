@@ -1,0 +1,1609 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "1z"
+    },
+    "git_sha": "bcc9442f117ebc1a73a297b941a7b3073f1c4a22",
+    "~k": "1y"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "2f"
+      },
+      "~k": "2e"
+    },
+    "authPages": {
+      "~k": "2g"
+    },
+    "pages": {
+      "roles": {
+        "~k": "2i"
+      },
+      "~k": "2h"
+    },
+    "callbacks": [],
+    "events": [],
+    "providers": [],
+    "session": {
+      "~k": "2j"
+    },
+    "theme": {
+      "~k": "2k"
+    },
+    "configured": false,
+    "~k": "2d"
+  },
+  "config.json": {
+    "~k": "21"
+  },
+  "global.json": {},
+  "keyMap.json": {
+    "3": {
+      "key": "root",
+      "~k_parent": "2",
+      "~l": 2
+    },
+    "4": {
+      "key": "root.pages[0:registration:Box]",
+      "~k_parent": "3",
+      "~l": 6
+    },
+    "5": {
+      "key": "root.pages[0:registration:Box].properties",
+      "~k_parent": "4",
+      "~l": 8
+    },
+    "6": {
+      "key": "root.pages[0:registration:Box].blocks[0:title:Title]",
+      "~k_parent": "4",
+      "~l": 11
+    },
+    "7": {
+      "key": "root.pages[0:registration:Box].blocks[0:title:Title].properties",
+      "~k_parent": "6",
+      "~l": 13
+    },
+    "8": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card]",
+      "~k_parent": "4",
+      "~l": 15
+    },
+    "9": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput]",
+      "~k_parent": "8",
+      "~l": 18
+    },
+    "10": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput].validate[0].pass",
+      "~k_parent": "z",
+      "~l": 78
+    },
+    "11": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput].validate[0].pass._eq[0]",
+      "~k_parent": "10",
+      "~l": 80
+    },
+    "12": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput].validate[0].pass._eq[1]",
+      "~k_parent": "10",
+      "~l": 81
+    },
+    "13": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput].properties",
+      "~k_parent": "y",
+      "~l": 82
+    },
+    "14": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput]",
+      "~k_parent": "8",
+      "~l": 84
+    },
+    "15": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[0]",
+      "~k_parent": "14",
+      "~l": 88
+    },
+    "16": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[0].pass",
+      "~k_parent": "15",
+      "~l": 90
+    },
+    "17": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[0].pass._gte[0]",
+      "~k_parent": "16",
+      "~l": 92
+    },
+    "18": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[1]",
+      "~k_parent": "14",
+      "~l": 94
+    },
+    "19": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[1].pass",
+      "~k_parent": "18",
+      "~l": 96
+    },
+    "20": {
+      "key": "root.logger",
+      "~k_parent": "3"
+    },
+    "21": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "23": {
+      "key": "root.pages[0:registration:Box]",
+      "~k_parent": "3"
+    },
+    "24": {
+      "key": "root.pages[0:registration:Box].auth",
+      "~k_parent": "23"
+    },
+    "25": {
+      "key": "root.pages[0:registration:Box].areas",
+      "~k_parent": "23"
+    },
+    "26": {
+      "key": "root.pages[0:registration:Box].areas.content",
+      "~k_parent": "25"
+    },
+    "27": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].areas",
+      "~k_parent": "8"
+    },
+    "28": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].areas.content",
+      "~k_parent": "27"
+    },
+    "29": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].events.onClick",
+      "~k_parent": "1j"
+    },
+    "30": {
+      "key": "root.types.blocks.Title",
+      "~k_parent": "2y"
+    },
+    "31": {
+      "key": "root.types.blocks.Card",
+      "~k_parent": "2y"
+    },
+    "32": {
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "2y"
+    },
+    "33": {
+      "key": "root.types.blocks.PasswordInput",
+      "~k_parent": "2y"
+    },
+    "34": {
+      "key": "root.types.blocks.NumberInput",
+      "~k_parent": "2y"
+    },
+    "35": {
+      "key": "root.types.blocks.Switch",
+      "~k_parent": "2y"
+    },
+    "36": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "2y"
+    },
+    "37": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "2y"
+    },
+    "38": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "2y"
+    },
+    "39": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "2y"
+    },
+    "40": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "3s"
+    },
+    "41": {
+      "key": "root.types.operators.server",
+      "~k_parent": "3r"
+    },
+    "42": {
+      "key": "root.imports",
+      "~k_parent": "3"
+    },
+    "43": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "42"
+    },
+    "44": {
+      "key": "root.imports.actions[1]",
+      "~k_parent": "42"
+    },
+    "45": {
+      "key": "root.imports.actions[2]",
+      "~k_parent": "42"
+    },
+    "46": {
+      "key": "root.imports.auth",
+      "~k_parent": "42"
+    },
+    "47": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "42"
+    },
+    "48": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "42"
+    },
+    "49": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "42"
+    },
+    "50": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "42"
+    },
+    "51": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "42"
+    },
+    "52": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "42"
+    },
+    "53": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "42"
+    },
+    "54": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "42"
+    },
+    "55": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "42"
+    },
+    "56": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "42"
+    },
+    "57": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "42"
+    },
+    "58": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "42"
+    },
+    "59": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "42"
+    },
+    "a": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[0]",
+      "~k_parent": "9",
+      "~l": 22
+    },
+    "b": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[0].pass",
+      "~k_parent": "a",
+      "~l": 24
+    },
+    "c": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[0].pass._gte[0]",
+      "~k_parent": "b",
+      "~l": 26
+    },
+    "d": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[1]",
+      "~k_parent": "9",
+      "~l": 28
+    },
+    "e": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[1].pass",
+      "~k_parent": "d",
+      "~l": 30
+    },
+    "f": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[1].pass._regex",
+      "~k_parent": "e",
+      "~l": 31
+    },
+    "g": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].validate[1].pass._regex.on",
+      "~k_parent": "f",
+      "~l": 33
+    },
+    "h": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[0:username:TextInput].properties",
+      "~k_parent": "9",
+      "~l": 35
+    },
+    "i": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput]",
+      "~k_parent": "8",
+      "~l": 38
+    },
+    "j": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput].validate[0]",
+      "~k_parent": "i",
+      "~l": 42
+    },
+    "k": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput].validate[0].pass",
+      "~k_parent": "j",
+      "~l": 44
+    },
+    "l": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput].validate[0].pass._regex",
+      "~k_parent": "k",
+      "~l": 45
+    },
+    "m": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput].validate[0].pass._regex.on",
+      "~k_parent": "l",
+      "~l": 47
+    },
+    "n": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[1:email:TextInput].properties",
+      "~k_parent": "i",
+      "~l": 49
+    },
+    "o": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput]",
+      "~k_parent": "8",
+      "~l": 52
+    },
+    "p": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[0]",
+      "~k_parent": "o",
+      "~l": 56
+    },
+    "q": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[0].pass",
+      "~k_parent": "p",
+      "~l": 58
+    },
+    "r": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[0].pass._gte[0]",
+      "~k_parent": "q",
+      "~l": 60
+    },
+    "s": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[0].pass._gte[0]._string.length",
+      "~k_parent": "r",
+      "~l": 60
+    },
+    "t": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[1]",
+      "~k_parent": "o",
+      "~l": 63
+    },
+    "u": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[1].pass",
+      "~k_parent": "t",
+      "~l": 65
+    },
+    "v": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[1].pass._regex",
+      "~k_parent": "u",
+      "~l": 66
+    },
+    "w": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].validate[1].pass._regex.on",
+      "~k_parent": "v",
+      "~l": 68
+    },
+    "x": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[2:password:PasswordInput].properties",
+      "~k_parent": "o",
+      "~l": 70
+    },
+    "y": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput]",
+      "~k_parent": "8",
+      "~l": 72
+    },
+    "z": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[3:confirmPassword:PasswordInput].validate[0]",
+      "~k_parent": "y",
+      "~l": 76
+    },
+    "1a": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].validate[1].pass._lte[0]",
+      "~k_parent": "19",
+      "~l": 98
+    },
+    "1b": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[4:age:NumberInput].properties",
+      "~k_parent": "14",
+      "~l": 100
+    },
+    "1c": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[5:terms:Switch]",
+      "~k_parent": "8",
+      "~l": 104
+    },
+    "1d": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[5:terms:Switch].validate[0]",
+      "~k_parent": "1c",
+      "~l": 108
+    },
+    "1e": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[5:terms:Switch].validate[0].pass",
+      "~k_parent": "1d",
+      "~l": 110
+    },
+    "1f": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[5:terms:Switch].validate[0].pass._eq[0]",
+      "~k_parent": "1e",
+      "~l": 112
+    },
+    "1g": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[5:terms:Switch].properties",
+      "~k_parent": "1c",
+      "~l": 114
+    },
+    "1h": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button]",
+      "~k_parent": "8",
+      "~l": 116
+    },
+    "1i": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].properties",
+      "~k_parent": "1h",
+      "~l": 118
+    },
+    "1j": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].events",
+      "~k_parent": "1h",
+      "~l": 122
+    },
+    "1k": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].events.onClick[0:validate:Validate]",
+      "~k_parent": "1j",
+      "~l": 124
+    },
+    "1l": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].events.onClick[1:success:DisplayMessage]",
+      "~k_parent": "1j",
+      "~l": 126
+    },
+    "1m": {
+      "key": "root.pages[0:registration:Box].blocks[1:form:Card].blocks[6:submitBtn:Button].events.onClick[1:success:DisplayMessage].params",
+      "~k_parent": "1l",
+      "~l": 128
+    },
+    "1o": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "1p": {
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "1o"
+    },
+    "1q": {
+      "key": "root.pages[1:404:Result].properties",
+      "~k_parent": "1o"
+    },
+    "1r": {
+      "key": "root.pages[1:404:Result].areas",
+      "~k_parent": "1o"
+    },
+    "1s": {
+      "key": "root.pages[1:404:Result].areas.extra",
+      "~k_parent": "1r"
+    },
+    "1t": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "1s"
+    },
+    "1u": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "1t"
+    },
+    "1v": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "1t"
+    },
+    "1w": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "1v"
+    },
+    "1x": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "1w"
+    },
+    "1y": {
+      "key": "root.app",
+      "~k_parent": "3"
+    },
+    "1z": {
+      "key": "root.app.html",
+      "~k_parent": "1y"
+    },
+    "2a": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "2b": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "1v"
+    },
+    "2c": {
+      "key": "root.pages[1:404:Result].auth",
+      "~k_parent": "2a"
+    },
+    "2d": {
+      "key": "root.auth",
+      "~k_parent": "3"
+    },
+    "2e": {
+      "key": "root.auth.api",
+      "~k_parent": "2d"
+    },
+    "2f": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "2e"
+    },
+    "2g": {
+      "key": "root.auth.authPages",
+      "~k_parent": "2d"
+    },
+    "2h": {
+      "key": "root.auth.pages",
+      "~k_parent": "2d"
+    },
+    "2i": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "2h"
+    },
+    "2j": {
+      "key": "root.auth.session",
+      "~k_parent": "2d"
+    },
+    "2k": {
+      "key": "root.auth.theme",
+      "~k_parent": "2d"
+    },
+    "2l": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "3"
+    },
+    "2m": {
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "2l"
+    },
+    "2n": {
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "2m"
+    },
+    "2o": {
+      "key": "root.types",
+      "~k_parent": "3"
+    },
+    "2p": {
+      "key": "root.types.actions",
+      "~k_parent": "2o"
+    },
+    "2q": {
+      "key": "root.types.actions.Validate",
+      "~k_parent": "2p"
+    },
+    "2r": {
+      "key": "root.types.actions.DisplayMessage",
+      "~k_parent": "2p"
+    },
+    "2s": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "2p"
+    },
+    "2t": {
+      "key": "root.types.auth",
+      "~k_parent": "2o"
+    },
+    "2u": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "2t"
+    },
+    "2v": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "2t"
+    },
+    "2w": {
+      "key": "root.types.auth.events",
+      "~k_parent": "2t"
+    },
+    "2x": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "2t"
+    },
+    "2y": {
+      "key": "root.types.blocks",
+      "~k_parent": "2o"
+    },
+    "2z": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "2y"
+    },
+    "3a": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "2y"
+    },
+    "3b": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "2y"
+    },
+    "3c": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "2y"
+    },
+    "3d": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "2y"
+    },
+    "3e": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "2y"
+    },
+    "3f": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "2y"
+    },
+    "3g": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "2y"
+    },
+    "3h": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "2y"
+    },
+    "3i": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "2y"
+    },
+    "3j": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "2y"
+    },
+    "3k": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "2y"
+    },
+    "3l": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "2y"
+    },
+    "3m": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "2y"
+    },
+    "3n": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "2y"
+    },
+    "3o": {
+      "key": "root.types.connections",
+      "~k_parent": "2o"
+    },
+    "3p": {
+      "key": "root.types.requests",
+      "~k_parent": "2o"
+    },
+    "3q": {
+      "key": "root.types.api",
+      "~k_parent": "2o"
+    },
+    "3r": {
+      "key": "root.types.operators",
+      "~k_parent": "2o"
+    },
+    "3s": {
+      "key": "root.types.operators.client",
+      "~k_parent": "3r"
+    },
+    "3t": {
+      "key": "root.types.operators.client._gte",
+      "~k_parent": "3s"
+    },
+    "3u": {
+      "key": "root.types.operators.client._state",
+      "~k_parent": "3s"
+    },
+    "3v": {
+      "key": "root.types.operators.client._regex",
+      "~k_parent": "3s"
+    },
+    "3w": {
+      "key": "root.types.operators.client._string",
+      "~k_parent": "3s"
+    },
+    "3x": {
+      "key": "root.types.operators.client._eq",
+      "~k_parent": "3s"
+    },
+    "3y": {
+      "key": "root.types.operators.client._lte",
+      "~k_parent": "3s"
+    },
+    "3z": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "3s"
+    },
+    "4a": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "42"
+    },
+    "4b": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "42"
+    },
+    "4c": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "42"
+    },
+    "4d": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "42"
+    },
+    "4e": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "42"
+    },
+    "4f": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "42"
+    },
+    "4g": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "42"
+    },
+    "4h": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "42"
+    },
+    "4i": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "42"
+    },
+    "4j": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "42"
+    },
+    "4k": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "42"
+    },
+    "4l": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "42"
+    },
+    "4m": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "42"
+    },
+    "4n": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "42"
+    },
+    "4o": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "42"
+    },
+    "4p": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "42"
+    },
+    "4q": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "42"
+    },
+    "4r": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "42"
+    },
+    "4s": {
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "42"
+    },
+    "4t": {
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "42"
+    },
+    "4u": {
+      "key": "root.imports.blocks[23]",
+      "~k_parent": "42"
+    },
+    "4v": {
+      "key": "root.imports.blocks[24]",
+      "~k_parent": "42"
+    },
+    "4w": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "42"
+    },
+    "4x": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "42"
+    },
+    "4y": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "42"
+    },
+    "4z": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "42"
+    },
+    "5a": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "42"
+    },
+    "5b": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "42"
+    },
+    "5c": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "42"
+    },
+    "5d": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "42"
+    },
+    "5e": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "42"
+    },
+    "5f": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "42"
+    },
+    "5g": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "42"
+    },
+    "5h": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "42"
+    },
+    "5i": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "42"
+    },
+    "5j": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "42"
+    },
+    "5k": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "42"
+    },
+    "5l": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "42"
+    },
+    "5m": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "42"
+    },
+    "5n": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "42"
+    },
+    "5o": {
+      "key": "root.imports.operators",
+      "~k_parent": "42"
+    },
+    "5p": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "5o"
+    },
+    "5q": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "5o"
+    },
+    "5r": {
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "5o"
+    },
+    "5s": {
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "5o"
+    },
+    "5t": {
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "5o"
+    },
+    "5u": {
+      "key": "root.imports.operators.client[5]",
+      "~k_parent": "5o"
+    },
+    "5v": {
+      "key": "root.imports.operators.client[6]",
+      "~k_parent": "5o"
+    },
+    "5w": {
+      "key": "root.imports.operators.client[7]",
+      "~k_parent": "5o"
+    }
+  },
+  "logger.json": {
+    "~k": "20"
+  },
+  "menus.json": [
+    {
+      "id": "menu:default",
+      "links": [
+        {
+          "id": "menuitem:default:0",
+          "type": "MenuLink",
+          "pageId": "registration",
+          "auth": {
+            "public": true,
+            "~k": "2n"
+          },
+          "menuItemId": "0",
+          "~k": "2m"
+        }
+      ],
+      "menuId": "default",
+      "~k": "2l"
+    }
+  ],
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "1p"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "1q"
+    },
+    "areas": {
+      "extra": {
+        "blocks": [
+          {
+            "id": "block:404:home:0",
+            "type": "Button",
+            "properties": {
+              "title": "Go to home page",
+              "~k": "1u"
+            },
+            "events": {
+              "onClick": {
+                "try": [
+                  {
+                    "id": "home",
+                    "type": "Link",
+                    "params": {
+                      "home": true,
+                      "~k": "1x"
+                    },
+                    "~k": "1w"
+                  }
+                ],
+                "catch": [],
+                "~k": "2b"
+              },
+              "~k": "1v"
+            },
+            "~k": "1t",
+            "blockId": "home"
+          }
+        ],
+        "~k": "1s"
+      },
+      "~k": "1r"
+    },
+    "auth": {
+      "public": true,
+      "~k": "2c"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": [],
+    "~k": "2a"
+  },
+  "pages/registration/registration.json": {
+    "id": "page:registration",
+    "type": "Box",
+    "properties": {
+      "title": "Registration",
+      "~k": "5"
+    },
+    "auth": {
+      "public": true,
+      "~k": "24"
+    },
+    "pageId": "registration",
+    "blockId": "registration",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:registration:title:0",
+              "type": "Title",
+              "properties": {
+                "content": "User Registration",
+                "~k": "7"
+              },
+              "~k": "6",
+              "blockId": "title"
+            },
+            {
+              "id": "block:registration:form:0",
+              "type": "Card",
+              "~k": "8",
+              "blockId": "form",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:registration:username:0",
+                        "type": "TextInput",
+                        "required": "Username is required",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "Username must be at least 3 characters",
+                              "pass": {
+                                "_gte": {
+                                  "~arr": [
+                                    {
+                                      "_state": "username",
+                                      "~k": "c"
+                                    },
+                                    3
+                                  ],
+                                  "~l": 25
+                                },
+                                "~k": "b"
+                              },
+                              "~k": "a"
+                            },
+                            {
+                              "status": "error",
+                              "message": "Username can only contain letters and numbers",
+                              "pass": {
+                                "_regex": {
+                                  "pattern": "^[a-zA-Z0-9]+$",
+                                  "on": {
+                                    "_state": "username",
+                                    "~k": "g"
+                                  },
+                                  "~k": "f"
+                                },
+                                "~k": "e"
+                              },
+                              "~k": "d"
+                            }
+                          ],
+                          "~l": 21
+                        },
+                        "properties": {
+                          "title": "Username",
+                          "placeholder": "Choose a username",
+                          "~k": "h"
+                        },
+                        "~k": "9",
+                        "blockId": "username"
+                      },
+                      {
+                        "id": "block:registration:email:0",
+                        "type": "TextInput",
+                        "required": "Email is required",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "Please enter a valid email address",
+                              "pass": {
+                                "_regex": {
+                                  "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                                  "on": {
+                                    "_state": "email",
+                                    "~k": "m"
+                                  },
+                                  "~k": "l"
+                                },
+                                "~k": "k"
+                              },
+                              "~k": "j"
+                            }
+                          ],
+                          "~l": 41
+                        },
+                        "properties": {
+                          "title": "Email",
+                          "placeholder": "your@email.com",
+                          "~k": "n"
+                        },
+                        "~k": "i",
+                        "blockId": "email"
+                      },
+                      {
+                        "id": "block:registration:password:0",
+                        "type": "PasswordInput",
+                        "required": "Password is required",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "Password must be at least 8 characters",
+                              "pass": {
+                                "_gte": {
+                                  "~arr": [
+                                    {
+                                      "_string.length": {
+                                        "_state": "password",
+                                        "~k": "s"
+                                      },
+                                      "~k": "r"
+                                    },
+                                    8
+                                  ],
+                                  "~l": 59
+                                },
+                                "~k": "q"
+                              },
+                              "~k": "p"
+                            },
+                            {
+                              "status": "warning",
+                              "message": "Consider using a stronger password",
+                              "pass": {
+                                "_regex": {
+                                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)",
+                                  "on": {
+                                    "_state": "password",
+                                    "~k": "w"
+                                  },
+                                  "~k": "v"
+                                },
+                                "~k": "u"
+                              },
+                              "~k": "t"
+                            }
+                          ],
+                          "~l": 55
+                        },
+                        "properties": {
+                          "title": "Password",
+                          "~k": "x"
+                        },
+                        "~k": "o",
+                        "blockId": "password"
+                      },
+                      {
+                        "id": "block:registration:confirmPassword:0",
+                        "type": "PasswordInput",
+                        "required": "Please confirm your password",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "Passwords do not match",
+                              "pass": {
+                                "_eq": {
+                                  "~arr": [
+                                    {
+                                      "_state": "password",
+                                      "~k": "11"
+                                    },
+                                    {
+                                      "_state": "confirmPassword",
+                                      "~k": "12"
+                                    }
+                                  ],
+                                  "~l": 79
+                                },
+                                "~k": "10"
+                              },
+                              "~k": "z"
+                            }
+                          ],
+                          "~l": 75
+                        },
+                        "properties": {
+                          "title": "Confirm Password",
+                          "~k": "13"
+                        },
+                        "~k": "y",
+                        "blockId": "confirmPassword"
+                      },
+                      {
+                        "id": "block:registration:age:0",
+                        "type": "NumberInput",
+                        "required": "Age is required",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "You must be at least 18 years old",
+                              "pass": {
+                                "_gte": {
+                                  "~arr": [
+                                    {
+                                      "_state": "age",
+                                      "~k": "17"
+                                    },
+                                    18
+                                  ],
+                                  "~l": 91
+                                },
+                                "~k": "16"
+                              },
+                              "~k": "15"
+                            },
+                            {
+                              "status": "error",
+                              "message": "Please enter a valid age",
+                              "pass": {
+                                "_lte": {
+                                  "~arr": [
+                                    {
+                                      "_state": "age",
+                                      "~k": "1a"
+                                    },
+                                    120
+                                  ],
+                                  "~l": 97
+                                },
+                                "~k": "19"
+                              },
+                              "~k": "18"
+                            }
+                          ],
+                          "~l": 87
+                        },
+                        "properties": {
+                          "title": "Age",
+                          "min": 0,
+                          "max": 150,
+                          "~k": "1b"
+                        },
+                        "~k": "14",
+                        "blockId": "age"
+                      },
+                      {
+                        "id": "block:registration:terms:0",
+                        "type": "Switch",
+                        "required": "You must accept the terms",
+                        "validate": {
+                          "~arr": [
+                            {
+                              "status": "error",
+                              "message": "You must accept the terms and conditions",
+                              "pass": {
+                                "_eq": {
+                                  "~arr": [
+                                    {
+                                      "_state": "terms",
+                                      "~k": "1f"
+                                    },
+                                    true
+                                  ],
+                                  "~l": 111
+                                },
+                                "~k": "1e"
+                              },
+                              "~k": "1d"
+                            }
+                          ],
+                          "~l": 107
+                        },
+                        "properties": {
+                          "title": "I accept the terms and conditions",
+                          "~k": "1g"
+                        },
+                        "~k": "1c",
+                        "blockId": "terms"
+                      },
+                      {
+                        "id": "block:registration:submitBtn:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Register",
+                          "type": "primary",
+                          "block": true,
+                          "~k": "1i"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "validate",
+                                  "type": "Validate",
+                                  "~k": "1k"
+                                },
+                                {
+                                  "id": "success",
+                                  "type": "DisplayMessage",
+                                  "params": {
+                                    "content": "Registration successful!",
+                                    "status": "success",
+                                    "~k": "1m"
+                                  },
+                                  "~k": "1l"
+                                }
+                              ],
+                              "~l": 123
+                            },
+                            "catch": [],
+                            "~k": "29"
+                          },
+                          "~k": "1j"
+                        },
+                        "~k": "1h",
+                        "blockId": "submitBtn"
+                      }
+                    ],
+                    "~l": 17
+                  },
+                  "~k": "28"
+                },
+                "~k": "27"
+              }
+            }
+          ],
+          "~l": 10
+        },
+        "~k": "26"
+      },
+      "~k": "25"
+    },
+    "requests": [],
+    "~k": "23"
+  },
+  "plugins/actions.js": "import {  as Validate } from '@lowdefy/actions-core/actions';\nimport {  as DisplayMessage } from '@lowdefy/actions-core/actions';\nimport {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  Validate,\n  DisplayMessage,\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Title } from '@lowdefy/blocks-basic/blocks';\nimport {  as Card } from '@lowdefy/blocks-antd/blocks';\nimport {  as TextInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as PasswordInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as NumberInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as Switch } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Title,\n  Card,\n  TextInput,\n  PasswordInput,\n  NumberInput,\n  Switch,\n  Button,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "export default {\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "plugins/operators/client.js": "import {  as _gte } from '@lowdefy/operators-js/operators/client';\nimport {  as _state } from '@lowdefy/operators-js/operators/client';\nimport {  as _regex } from '@lowdefy/operators-js/operators/client';\nimport {  as _string } from '@lowdefy/operators-js/operators/client';\nimport {  as _eq } from '@lowdefy/operators-js/operators/client';\nimport {  as _lte } from '@lowdefy/operators-js/operators/client';\nimport {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _gte,\n  _state,\n  _regex,\n  _string,\n  _eq,\n  _lte,\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "Validate": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "2q"
+      },
+      "DisplayMessage": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "2r"
+      },
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "2s"
+      },
+      "~k": "2p"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "2u"
+      },
+      "callbacks": {
+        "~k": "2v"
+      },
+      "events": {
+        "~k": "2w"
+      },
+      "providers": {
+        "~k": "2x"
+      },
+      "~k": "2t"
+    },
+    "blocks": {
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "2z"
+      },
+      "Title": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "30"
+      },
+      "Card": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "31"
+      },
+      "TextInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "32"
+      },
+      "PasswordInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "33"
+      },
+      "NumberInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "34"
+      },
+      "Switch": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "35"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "36"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "37"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "38"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "39"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3a"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3b"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3c"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3d"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3e"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3f"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3g"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3h"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3i"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3j"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3k"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3l"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "3m"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "3n"
+      },
+      "~k": "2y"
+    },
+    "connections": {
+      "~k": "3o"
+    },
+    "requests": {
+      "~k": "3p"
+    },
+    "api": {
+      "~k": "3q"
+    },
+    "operators": {
+      "client": {
+        "_gte": {
+          "package": "@lowdefy/operators-js",
+          "count": 3,
+          "~k": "3t"
+        },
+        "_state": {
+          "package": "@lowdefy/operators-js",
+          "count": 10,
+          "~k": "3u"
+        },
+        "_regex": {
+          "package": "@lowdefy/operators-js",
+          "count": 3,
+          "~k": "3v"
+        },
+        "_string": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "3w"
+        },
+        "_eq": {
+          "package": "@lowdefy/operators-js",
+          "count": 2,
+          "~k": "3x"
+        },
+        "_lte": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "3y"
+        },
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "3z"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "40"
+        },
+        "~k": "3s"
+      },
+      "server": {
+        "~k": "41"
+      },
+      "~k": "3r"
+    },
+    "~k": "2o"
+  }
+}

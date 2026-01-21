@@ -1,0 +1,57 @@
+# 35: Auth Protected Application
+lowdefy: local
+name: Protected App
+
+auth:
+  providers:
+    - id: google
+      type: GoogleProvider
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  pages:
+    protected: true
+    public:
+      - login
+      - public-page
+  session:
+    maxAge: 86400
+  theme:
+    colorScheme: auto
+    brandColor: '#1890ff'
+  userFields:
+    id: sub
+    name: name
+    email: email
+    image: picture
+
+menus:
+  - id: default
+    links:
+      - id: dashboard
+        type: MenuLink
+        pageId: dashboard
+        properties:
+          title: Dashboard
+          icon: AiOutlineDashboard
+      - id: profile
+        type: MenuLink
+        pageId: profile
+        properties:
+          title: Profile
+          icon: AiOutlineUser
+      - id: settings
+        type: MenuLink
+        pageId: settings
+        properties:
+          title: Settings
+          icon: AiOutlineSetting
+
+pages:
+  - _ref: pages/login.yaml
+  - _ref: pages/public-page.yaml
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/profile.yaml
+  - _ref: pages/settings.yaml

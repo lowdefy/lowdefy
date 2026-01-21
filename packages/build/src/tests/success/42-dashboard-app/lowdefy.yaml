@@ -1,0 +1,86 @@
+# 42: Dashboard Application
+lowdefy: local
+
+pages:
+  - id: dashboard
+    type: PageSiderMenu
+    properties:
+      title: Dashboard
+    areas:
+      content:
+        blocks:
+          - id: row1
+            type: Box
+            blocks:
+              - id: card1
+                type: Card
+                layout:
+                  span: 6
+                properties:
+                  title: Users
+                blocks:
+                  - id: userStat
+                    type: Statistic
+                    properties:
+                      value: 1234
+                      suffix: users
+              - id: card2
+                type: Card
+                layout:
+                  span: 6
+                properties:
+                  title: Revenue
+                blocks:
+                  - id: revStat
+                    type: Statistic
+                    properties:
+                      prefix: $
+                      value: 45678
+              - id: card3
+                type: Card
+                layout:
+                  span: 6
+                properties:
+                  title: Orders
+                blocks:
+                  - id: orderStat
+                    type: Statistic
+                    properties:
+                      value: 890
+              - id: card4
+                type: Card
+                layout:
+                  span: 6
+                properties:
+                  title: Growth
+                blocks:
+                  - id: growthStat
+                    type: Statistic
+                    properties:
+                      value: 12.5
+                      suffix: '%'
+          - id: chartsRow
+            type: Box
+            blocks:
+              - id: mainChart
+                type: Card
+                layout:
+                  span: 16
+                properties:
+                  title: Revenue Over Time
+                blocks:
+                  - id: placeholder
+                    type: Paragraph
+                    properties:
+                      content: Chart placeholder
+              - id: pieChart
+                type: Card
+                layout:
+                  span: 8
+                properties:
+                  title: Distribution
+                blocks:
+                  - id: placeholder2
+                    type: Paragraph
+                    properties:
+                      content: Pie chart placeholder

@@ -15,7 +15,7 @@
 */
 
 import buildAuth from './buildAuth.js';
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 
 const context = testContext();
 

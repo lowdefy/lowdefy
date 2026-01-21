@@ -56,7 +56,7 @@ test('tryBuildStep collects error when function throws', () => {
   expect(stepFn).toHaveBeenCalledWith({ components, context });
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0]).toBe('Build step failed');
-  expect(mockLogger.error).toHaveBeenCalledWith('Build step failed');
+  // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
 test('tryBuildStep collects multiple errors from different steps', () => {
@@ -77,7 +77,7 @@ test('tryBuildStep collects multiple errors from different steps', () => {
   expect(context.errors).toHaveLength(2);
   expect(context.errors[0]).toBe('First error');
   expect(context.errors[1]).toBe('Second error');
-  expect(mockLogger.error).toHaveBeenCalledTimes(2);
+  // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
 test('tryBuildStep returns result from successful function', () => {
@@ -143,9 +143,7 @@ test('tryBuildStep catches errors with detailed messages', () => {
   tryBuildStep(stepFn, 'validateStep', { components, context });
 
   expect(context.errors[0]).toBe('[Config Error] Invalid configuration at pages.0.blocks.0');
-  expect(mockLogger.error).toHaveBeenCalledWith(
-    '[Config Error] Invalid configuration at pages.0.blocks.0'
-  );
+  // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });
 
 test('tryBuildStep continues after error', () => {
@@ -246,5 +244,5 @@ test('tryBuildStep collects non-suppressed ConfigError', () => {
   expect(mockContext.errors).toHaveLength(1);
   expect(mockContext.errors[0]).toContain('[Config Error]');
   expect(mockContext.errors[0]).toContain('This error should be collected.');
-  expect(mockLogger.error).toHaveBeenCalled();
+  // Note: Logging happens at checkpoints in index.js, not in tryBuildStep
 });

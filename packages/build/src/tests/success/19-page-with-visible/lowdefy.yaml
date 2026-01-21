@@ -1,0 +1,17 @@
+# 19: Page with Visible Property
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: alwaysVisible
+        type: Paragraph
+        visible: true
+        properties:
+          content: Always visible
+      - id: hidden
+        type: Paragraph
+        visible: false
+        properties:
+          content: Hidden block

@@ -108,6 +108,8 @@ async function build(options) {
   tryBuildStep(buildJs, 'buildJs', { components, context });
   tryBuildStep(buildTypes, 'buildTypes', { components, context });
   tryBuildStep(buildImports, 'buildImports', { components, context });
+  // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
+  tryBuildStep(addKeys, 'addKeys', { components, context });
 
   // Check if there are any collected errors before writing
   if (context.errors.length > 0) {

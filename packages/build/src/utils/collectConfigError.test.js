@@ -56,7 +56,7 @@ test('collectConfigError collects error when context.errors exists', () => {
 
   expect(context.errors).toHaveLength(1);
   expect(context.errors[0]).toContain('[Config Error] Test error');
-  expect(mockLogger.error).toHaveBeenCalledTimes(1);
+  // Note: Logging happens at checkpoints in index.js, not in collectConfigError
 });
 
 test('collectConfigError collects multiple errors', () => {
@@ -83,7 +83,7 @@ test('collectConfigError collects multiple errors', () => {
   expect(context.errors).toHaveLength(2);
   expect(context.errors[0]).toContain('[Config Error] First error');
   expect(context.errors[1]).toContain('[Config Error] Second error');
-  expect(mockLogger.error).toHaveBeenCalledTimes(2);
+  // Note: Logging happens at checkpoints in index.js, not in collectConfigError
 });
 
 test('collectConfigError includes location information', () => {

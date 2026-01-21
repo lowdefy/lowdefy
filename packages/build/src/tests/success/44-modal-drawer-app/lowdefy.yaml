@@ -1,0 +1,107 @@
+# 44: Modal and Drawer Application
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    properties:
+      title: Modal & Drawer Demo
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Modal & Drawer Demo
+      - id: openModalBtn
+        type: Button
+        properties:
+          title: Open Modal
+          type: primary
+        events:
+          onClick:
+            - id: openModal
+              type: CallMethod
+              params:
+                blockId: myModal
+                method: open
+      - id: openDrawerBtn
+        type: Button
+        properties:
+          title: Open Drawer
+        events:
+          onClick:
+            - id: openDrawer
+              type: CallMethod
+              params:
+                blockId: myDrawer
+                method: open
+      - id: myModal
+        type: Modal
+        properties:
+          title: Example Modal
+          okText: Save
+          cancelText: Cancel
+        events:
+          onOk:
+            - id: handleOk
+              type: DisplayMessage
+              params:
+                content: Modal OK clicked!
+                status: success
+          onCancel:
+            - id: handleCancel
+              type: DisplayMessage
+              params:
+                content: Modal cancelled
+                status: info
+        blocks:
+          - id: modalContent
+            type: Box
+            blocks:
+              - id: modalForm
+                type: TextInput
+                properties:
+                  title: Enter Value
+              - id: modalSwitch
+                type: Switch
+                properties:
+                  title: Enable Feature
+      - id: myDrawer
+        type: Drawer
+        properties:
+          title: Settings Drawer
+          width: 500
+          placement: right
+        events:
+          onClose:
+            - id: drawerClosed
+              type: DisplayMessage
+              params:
+                content: Drawer closed
+        blocks:
+          - id: drawerContent
+            type: Box
+            blocks:
+              - id: settingName
+                type: TextInput
+                properties:
+                  title: Name
+              - id: settingEmail
+                type: TextInput
+                properties:
+                  title: Email
+              - id: settingNotif
+                type: Switch
+                properties:
+                  title: Notifications
+              - id: saveSettings
+                type: Button
+                properties:
+                  title: Save Settings
+                  type: primary
+                events:
+                  onClick:
+                    - id: saveAndClose
+                      type: CallMethod
+                      params:
+                        blockId: myDrawer
+                        method: close

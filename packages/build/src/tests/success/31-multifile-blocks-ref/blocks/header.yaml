@@ -1,0 +1,13 @@
+id: header
+type: Box
+style:
+  backgroundColor: '#1890ff'
+  padding: 16
+blocks:
+  - id: logo
+    type: Title
+    style:
+      color: white
+    properties:
+      content: My App
+      level: 3

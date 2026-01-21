@@ -1,0 +1,1781 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "2f"
+    },
+    "git_sha": "bcc9442f117ebc1a73a297b941a7b3073f1c4a22",
+    "~k": "2e"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "34"
+      },
+      "~k": "33"
+    },
+    "authPages": {
+      "~k": "35"
+    },
+    "pages": {
+      "roles": {
+        "~k": "37"
+      },
+      "~k": "36"
+    },
+    "callbacks": [],
+    "events": [],
+    "providers": [],
+    "session": {
+      "~k": "38"
+    },
+    "theme": {
+      "~k": "39"
+    },
+    "configured": false,
+    "~k": "32"
+  },
+  "config.json": {
+    "~k": "2h"
+  },
+  "global.json": {},
+  "keyMap.json": {
+    "3": {
+      "key": "root",
+      "~k_parent": "2",
+      "~l": 2
+    },
+    "4": {
+      "key": "root.pages[0:wizard:Box]",
+      "~k_parent": "3",
+      "~l": 5
+    },
+    "5": {
+      "key": "root.pages[0:wizard:Box].properties",
+      "~k_parent": "4",
+      "~l": 7
+    },
+    "6": {
+      "key": "root.pages[0:wizard:Box].events",
+      "~k_parent": "4",
+      "~l": 9
+    },
+    "7": {
+      "key": "root.pages[0:wizard:Box].events.onInit[0:initStep:SetState]",
+      "~k_parent": "6",
+      "~l": 11
+    },
+    "8": {
+      "key": "root.pages[0:wizard:Box].events.onInit[0:initStep:SetState].params",
+      "~k_parent": "7",
+      "~l": 13
+    },
+    "9": {
+      "key": "root.pages[0:wizard:Box].blocks[0:steps:Progress]",
+      "~k_parent": "4",
+      "~l": 16
+    },
+    "10": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button]",
+      "~k_parent": "s",
+      "~l": 75
+    },
+    "11": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button].properties",
+      "~k_parent": "10",
+      "~l": 77
+    },
+    "12": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button].events",
+      "~k_parent": "10",
+      "~l": 79
+    },
+    "13": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button].events.onClick[0:goBack1:SetState]",
+      "~k_parent": "12",
+      "~l": 81
+    },
+    "14": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button].events.onClick[0:goBack1:SetState].params",
+      "~k_parent": "13",
+      "~l": 83
+    },
+    "15": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button]",
+      "~k_parent": "s",
+      "~l": 85
+    },
+    "16": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].properties",
+      "~k_parent": "15",
+      "~l": 87
+    },
+    "17": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].events",
+      "~k_parent": "15",
+      "~l": 90
+    },
+    "18": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].events.onClick[0:validate2:Validate]",
+      "~k_parent": "17",
+      "~l": 92
+    },
+    "19": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].events.onClick[1:goStep3:SetState]",
+      "~k_parent": "17",
+      "~l": 94
+    },
+    "20": {
+      "key": "root.pages[0:wizard:Box].blocks[4:complete:Result].visible",
+      "~k_parent": "1z",
+      "~l": 147
+    },
+    "21": {
+      "key": "root.pages[0:wizard:Box].blocks[4:complete:Result].visible._eq[0]",
+      "~k_parent": "20",
+      "~l": 149
+    },
+    "22": {
+      "key": "root.pages[0:wizard:Box].blocks[4:complete:Result].properties",
+      "~k_parent": "1z",
+      "~l": 151
+    },
+    "24": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "25": {
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "24"
+    },
+    "26": {
+      "key": "root.pages[1:404:Result].properties",
+      "~k_parent": "24"
+    },
+    "27": {
+      "key": "root.pages[1:404:Result].areas",
+      "~k_parent": "24"
+    },
+    "28": {
+      "key": "root.pages[1:404:Result].areas.extra",
+      "~k_parent": "27"
+    },
+    "29": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "28"
+    },
+    "30": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "2b"
+    },
+    "31": {
+      "key": "root.pages[1:404:Result].auth",
+      "~k_parent": "2z"
+    },
+    "32": {
+      "key": "root.auth",
+      "~k_parent": "3"
+    },
+    "33": {
+      "key": "root.auth.api",
+      "~k_parent": "32"
+    },
+    "34": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "33"
+    },
+    "35": {
+      "key": "root.auth.authPages",
+      "~k_parent": "32"
+    },
+    "36": {
+      "key": "root.auth.pages",
+      "~k_parent": "32"
+    },
+    "37": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "36"
+    },
+    "38": {
+      "key": "root.auth.session",
+      "~k_parent": "32"
+    },
+    "39": {
+      "key": "root.auth.theme",
+      "~k_parent": "32"
+    },
+    "40": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "3n"
+    },
+    "41": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "3n"
+    },
+    "42": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "3n"
+    },
+    "43": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "3n"
+    },
+    "44": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "3n"
+    },
+    "45": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "3n"
+    },
+    "46": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "3n"
+    },
+    "47": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "3n"
+    },
+    "48": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "3n"
+    },
+    "49": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "3n"
+    },
+    "50": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "4n"
+    },
+    "51": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "4n"
+    },
+    "52": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "4n"
+    },
+    "53": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "4n"
+    },
+    "54": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "4n"
+    },
+    "55": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "4n"
+    },
+    "56": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "4n"
+    },
+    "57": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "4n"
+    },
+    "58": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "4n"
+    },
+    "59": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "4n"
+    },
+    "60": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "4n"
+    },
+    "61": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "4n"
+    },
+    "62": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "4n"
+    },
+    "63": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "4n"
+    },
+    "64": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "4n"
+    },
+    "65": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "4n"
+    },
+    "66": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "4n"
+    },
+    "67": {
+      "key": "root.imports.operators",
+      "~k_parent": "4n"
+    },
+    "68": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "67"
+    },
+    "69": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "67"
+    },
+    "a": {
+      "key": "root.pages[0:wizard:Box].blocks[0:steps:Progress].properties",
+      "~k_parent": "9",
+      "~l": 18
+    },
+    "b": {
+      "key": "root.pages[0:wizard:Box].blocks[0:steps:Progress].properties.percent",
+      "~k_parent": "a",
+      "~l": 19
+    },
+    "c": {
+      "key": "root.pages[0:wizard:Box].blocks[0:steps:Progress].properties.percent._product[0]",
+      "~k_parent": "b",
+      "~l": 21
+    },
+    "d": {
+      "key": "root.pages[0:wizard:Box].blocks[0:steps:Progress].properties.percent._product[0]._divide[0]",
+      "~k_parent": "c",
+      "~l": 22
+    },
+    "e": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card]",
+      "~k_parent": "4",
+      "~l": 25
+    },
+    "f": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].visible",
+      "~k_parent": "e",
+      "~l": 27
+    },
+    "g": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].visible._eq[0]",
+      "~k_parent": "f",
+      "~l": 29
+    },
+    "h": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].properties",
+      "~k_parent": "e",
+      "~l": 31
+    },
+    "i": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[0:firstName:TextInput]",
+      "~k_parent": "e",
+      "~l": 34
+    },
+    "j": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[0:firstName:TextInput].properties",
+      "~k_parent": "i",
+      "~l": 37
+    },
+    "k": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[1:lastName:TextInput]",
+      "~k_parent": "e",
+      "~l": 39
+    },
+    "l": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[1:lastName:TextInput].properties",
+      "~k_parent": "k",
+      "~l": 42
+    },
+    "m": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button]",
+      "~k_parent": "e",
+      "~l": 44
+    },
+    "n": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].properties",
+      "~k_parent": "m",
+      "~l": 46
+    },
+    "o": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].events",
+      "~k_parent": "m",
+      "~l": 49
+    },
+    "p": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].events.onClick[0:validate1:Validate]",
+      "~k_parent": "o",
+      "~l": 51
+    },
+    "q": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].events.onClick[1:goStep2:SetState]",
+      "~k_parent": "o",
+      "~l": 53
+    },
+    "r": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].events.onClick[1:goStep2:SetState].params",
+      "~k_parent": "q",
+      "~l": 55
+    },
+    "s": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card]",
+      "~k_parent": "4",
+      "~l": 57
+    },
+    "t": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].visible",
+      "~k_parent": "s",
+      "~l": 59
+    },
+    "u": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].visible._eq[0]",
+      "~k_parent": "t",
+      "~l": 61
+    },
+    "v": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].properties",
+      "~k_parent": "s",
+      "~l": 63
+    },
+    "w": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[0:email:TextInput]",
+      "~k_parent": "s",
+      "~l": 66
+    },
+    "x": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[0:email:TextInput].properties",
+      "~k_parent": "w",
+      "~l": 69
+    },
+    "y": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[1:phone:TextInput]",
+      "~k_parent": "s",
+      "~l": 71
+    },
+    "z": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[1:phone:TextInput].properties",
+      "~k_parent": "y",
+      "~l": 73
+    },
+    "1a": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].events.onClick[1:goStep3:SetState].params",
+      "~k_parent": "19",
+      "~l": 96
+    },
+    "1b": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card]",
+      "~k_parent": "4",
+      "~l": 98
+    },
+    "1c": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].visible",
+      "~k_parent": "1b",
+      "~l": 100
+    },
+    "1d": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].visible._eq[0]",
+      "~k_parent": "1c",
+      "~l": 102
+    },
+    "1e": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].properties",
+      "~k_parent": "1b",
+      "~l": 104
+    },
+    "1f": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions]",
+      "~k_parent": "1b",
+      "~l": 107
+    },
+    "1g": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties",
+      "~k_parent": "1f",
+      "~l": 109
+    },
+    "1h": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[0]",
+      "~k_parent": "1g",
+      "~l": 111
+    },
+    "1i": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[0].value",
+      "~k_parent": "1h",
+      "~l": 112
+    },
+    "1j": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[0].value.first",
+      "~k_parent": "1i",
+      "~l": 114
+    },
+    "1k": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[0].value.last",
+      "~k_parent": "1i",
+      "~l": 116
+    },
+    "1l": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[1]",
+      "~k_parent": "1g",
+      "~l": 118
+    },
+    "1m": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[1].value",
+      "~k_parent": "1l",
+      "~l": 119
+    },
+    "1n": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[2]",
+      "~k_parent": "1g",
+      "~l": 121
+    },
+    "1o": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[0:summary:Descriptions].properties.items[2].value",
+      "~k_parent": "1n",
+      "~l": 122
+    },
+    "1p": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button]",
+      "~k_parent": "1b",
+      "~l": 124
+    },
+    "1q": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button].properties",
+      "~k_parent": "1p",
+      "~l": 126
+    },
+    "1r": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button].events",
+      "~k_parent": "1p",
+      "~l": 128
+    },
+    "1s": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button].events.onClick[0:goBack2:SetState]",
+      "~k_parent": "1r",
+      "~l": 130
+    },
+    "1t": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button].events.onClick[0:goBack2:SetState].params",
+      "~k_parent": "1s",
+      "~l": 132
+    },
+    "1u": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button]",
+      "~k_parent": "1b",
+      "~l": 134
+    },
+    "1v": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button].properties",
+      "~k_parent": "1u",
+      "~l": 136
+    },
+    "1w": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button].events",
+      "~k_parent": "1u",
+      "~l": 139
+    },
+    "1x": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button].events.onClick[0:complete:SetState]",
+      "~k_parent": "1w",
+      "~l": 141
+    },
+    "1y": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button].events.onClick[0:complete:SetState].params",
+      "~k_parent": "1x",
+      "~l": 143
+    },
+    "1z": {
+      "key": "root.pages[0:wizard:Box].blocks[4:complete:Result]",
+      "~k_parent": "4",
+      "~l": 145
+    },
+    "2a": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "29"
+    },
+    "2b": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "29"
+    },
+    "2c": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "2b"
+    },
+    "2d": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "2c"
+    },
+    "2e": {
+      "key": "root.app",
+      "~k_parent": "3"
+    },
+    "2f": {
+      "key": "root.app.html",
+      "~k_parent": "2e"
+    },
+    "2g": {
+      "key": "root.logger",
+      "~k_parent": "3"
+    },
+    "2h": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "2j": {
+      "key": "root.pages[0:wizard:Box]",
+      "~k_parent": "3"
+    },
+    "2k": {
+      "key": "root.pages[0:wizard:Box].events.onInit",
+      "~k_parent": "6"
+    },
+    "2l": {
+      "key": "root.pages[0:wizard:Box].auth",
+      "~k_parent": "2j"
+    },
+    "2m": {
+      "key": "root.pages[0:wizard:Box].areas",
+      "~k_parent": "2j"
+    },
+    "2n": {
+      "key": "root.pages[0:wizard:Box].areas.content",
+      "~k_parent": "2m"
+    },
+    "2o": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].areas",
+      "~k_parent": "e"
+    },
+    "2p": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].areas.content",
+      "~k_parent": "2o"
+    },
+    "2q": {
+      "key": "root.pages[0:wizard:Box].blocks[1:step1:Card].blocks[2:nextBtn1:Button].events.onClick",
+      "~k_parent": "o"
+    },
+    "2r": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].areas",
+      "~k_parent": "s"
+    },
+    "2s": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].areas.content",
+      "~k_parent": "2r"
+    },
+    "2t": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[2:backBtn2:Button].events.onClick",
+      "~k_parent": "12"
+    },
+    "2u": {
+      "key": "root.pages[0:wizard:Box].blocks[2:step2:Card].blocks[3:nextBtn2:Button].events.onClick",
+      "~k_parent": "17"
+    },
+    "2v": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].areas",
+      "~k_parent": "1b"
+    },
+    "2w": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].areas.content",
+      "~k_parent": "2v"
+    },
+    "2x": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[1:backBtn3:Button].events.onClick",
+      "~k_parent": "1r"
+    },
+    "2y": {
+      "key": "root.pages[0:wizard:Box].blocks[3:step3:Card].blocks[2:submitBtn:Button].events.onClick",
+      "~k_parent": "1w"
+    },
+    "2z": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "3a": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "3"
+    },
+    "3b": {
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "3a"
+    },
+    "3c": {
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "3b"
+    },
+    "3d": {
+      "key": "root.types",
+      "~k_parent": "3"
+    },
+    "3e": {
+      "key": "root.types.actions",
+      "~k_parent": "3d"
+    },
+    "3f": {
+      "key": "root.types.actions.SetState",
+      "~k_parent": "3e"
+    },
+    "3g": {
+      "key": "root.types.actions.Validate",
+      "~k_parent": "3e"
+    },
+    "3h": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "3e"
+    },
+    "3i": {
+      "key": "root.types.auth",
+      "~k_parent": "3d"
+    },
+    "3j": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "3i"
+    },
+    "3k": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "3i"
+    },
+    "3l": {
+      "key": "root.types.auth.events",
+      "~k_parent": "3i"
+    },
+    "3m": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "3i"
+    },
+    "3n": {
+      "key": "root.types.blocks",
+      "~k_parent": "3d"
+    },
+    "3o": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "3n"
+    },
+    "3p": {
+      "key": "root.types.blocks.Progress",
+      "~k_parent": "3n"
+    },
+    "3q": {
+      "key": "root.types.blocks.Card",
+      "~k_parent": "3n"
+    },
+    "3r": {
+      "key": "root.types.blocks.TextInput",
+      "~k_parent": "3n"
+    },
+    "3s": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "3n"
+    },
+    "3t": {
+      "key": "root.types.blocks.Descriptions",
+      "~k_parent": "3n"
+    },
+    "3u": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "3n"
+    },
+    "3v": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "3n"
+    },
+    "3w": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "3n"
+    },
+    "3x": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "3n"
+    },
+    "3y": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "3n"
+    },
+    "3z": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "3n"
+    },
+    "4a": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "3n"
+    },
+    "4b": {
+      "key": "root.types.connections",
+      "~k_parent": "3d"
+    },
+    "4c": {
+      "key": "root.types.requests",
+      "~k_parent": "3d"
+    },
+    "4d": {
+      "key": "root.types.api",
+      "~k_parent": "3d"
+    },
+    "4e": {
+      "key": "root.types.operators",
+      "~k_parent": "3d"
+    },
+    "4f": {
+      "key": "root.types.operators.client",
+      "~k_parent": "4e"
+    },
+    "4g": {
+      "key": "root.types.operators.client._product",
+      "~k_parent": "4f"
+    },
+    "4h": {
+      "key": "root.types.operators.client._divide",
+      "~k_parent": "4f"
+    },
+    "4i": {
+      "key": "root.types.operators.client._state",
+      "~k_parent": "4f"
+    },
+    "4j": {
+      "key": "root.types.operators.client._eq",
+      "~k_parent": "4f"
+    },
+    "4k": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "4f"
+    },
+    "4l": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "4f"
+    },
+    "4m": {
+      "key": "root.types.operators.server",
+      "~k_parent": "4e"
+    },
+    "4n": {
+      "key": "root.imports",
+      "~k_parent": "3"
+    },
+    "4o": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "4n"
+    },
+    "4p": {
+      "key": "root.imports.actions[1]",
+      "~k_parent": "4n"
+    },
+    "4q": {
+      "key": "root.imports.actions[2]",
+      "~k_parent": "4n"
+    },
+    "4r": {
+      "key": "root.imports.auth",
+      "~k_parent": "4n"
+    },
+    "4s": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "4n"
+    },
+    "4t": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "4n"
+    },
+    "4u": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "4n"
+    },
+    "4v": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "4n"
+    },
+    "4w": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "4n"
+    },
+    "4x": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "4n"
+    },
+    "4y": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "4n"
+    },
+    "4z": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "4n"
+    },
+    "5a": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "4n"
+    },
+    "5b": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "4n"
+    },
+    "5c": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "4n"
+    },
+    "5d": {
+      "key": "root.imports.blocks[21]",
+      "~k_parent": "4n"
+    },
+    "5e": {
+      "key": "root.imports.blocks[22]",
+      "~k_parent": "4n"
+    },
+    "5f": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "4n"
+    },
+    "5g": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "4n"
+    },
+    "5h": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "4n"
+    },
+    "5i": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "4n"
+    },
+    "5j": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "4n"
+    },
+    "5k": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "4n"
+    },
+    "5l": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "4n"
+    },
+    "5m": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "4n"
+    },
+    "5n": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "4n"
+    },
+    "5o": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "4n"
+    },
+    "5p": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "4n"
+    },
+    "5q": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "4n"
+    },
+    "5r": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "4n"
+    },
+    "5s": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "4n"
+    },
+    "5t": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "4n"
+    },
+    "5u": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "4n"
+    },
+    "5v": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "4n"
+    },
+    "5w": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "4n"
+    },
+    "5x": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "4n"
+    },
+    "5y": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "4n"
+    },
+    "5z": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "4n"
+    },
+    "6a": {
+      "key": "root.imports.operators.client[2]",
+      "~k_parent": "67"
+    },
+    "6b": {
+      "key": "root.imports.operators.client[3]",
+      "~k_parent": "67"
+    },
+    "6c": {
+      "key": "root.imports.operators.client[4]",
+      "~k_parent": "67"
+    },
+    "6d": {
+      "key": "root.imports.operators.client[5]",
+      "~k_parent": "67"
+    }
+  },
+  "logger.json": {
+    "~k": "2g"
+  },
+  "menus.json": [
+    {
+      "id": "menu:default",
+      "links": [
+        {
+          "id": "menuitem:default:0",
+          "type": "MenuLink",
+          "pageId": "wizard",
+          "auth": {
+            "public": true,
+            "~k": "3c"
+          },
+          "menuItemId": "0",
+          "~k": "3b"
+        }
+      ],
+      "menuId": "default",
+      "~k": "3a"
+    }
+  ],
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "25"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "26"
+    },
+    "areas": {
+      "extra": {
+        "blocks": [
+          {
+            "id": "block:404:home:0",
+            "type": "Button",
+            "properties": {
+              "title": "Go to home page",
+              "~k": "2a"
+            },
+            "events": {
+              "onClick": {
+                "try": [
+                  {
+                    "id": "home",
+                    "type": "Link",
+                    "params": {
+                      "home": true,
+                      "~k": "2d"
+                    },
+                    "~k": "2c"
+                  }
+                ],
+                "catch": [],
+                "~k": "30"
+              },
+              "~k": "2b"
+            },
+            "~k": "29",
+            "blockId": "home"
+          }
+        ],
+        "~k": "28"
+      },
+      "~k": "27"
+    },
+    "auth": {
+      "public": true,
+      "~k": "31"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": [],
+    "~k": "2z"
+  },
+  "pages/wizard/wizard.json": {
+    "id": "page:wizard",
+    "type": "Box",
+    "properties": {
+      "title": "Setup Wizard",
+      "~k": "5"
+    },
+    "events": {
+      "onInit": {
+        "try": {
+          "~arr": [
+            {
+              "id": "initStep",
+              "type": "SetState",
+              "params": {
+                "currentStep": 0,
+                "~k": "8"
+              },
+              "~k": "7"
+            }
+          ],
+          "~l": 10
+        },
+        "catch": [],
+        "~k": "2k"
+      },
+      "~k": "6"
+    },
+    "auth": {
+      "public": true,
+      "~k": "2l"
+    },
+    "pageId": "wizard",
+    "blockId": "wizard",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:wizard:steps:0",
+              "type": "Progress",
+              "properties": {
+                "percent": {
+                  "_product": {
+                    "~arr": [
+                      {
+                        "_divide": {
+                          "~arr": [
+                            {
+                              "_state": "currentStep",
+                              "~k": "d"
+                            },
+                            3
+                          ],
+                          "~l": 21
+                        },
+                        "~k": "c"
+                      },
+                      100
+                    ],
+                    "~l": 20
+                  },
+                  "~k": "b"
+                },
+                "~k": "a"
+              },
+              "~k": "9",
+              "blockId": "steps"
+            },
+            {
+              "id": "block:wizard:step1:0",
+              "type": "Card",
+              "visible": {
+                "_eq": {
+                  "~arr": [
+                    {
+                      "_state": "currentStep",
+                      "~k": "g"
+                    },
+                    0
+                  ],
+                  "~l": 28
+                },
+                "~k": "f"
+              },
+              "properties": {
+                "title": "Step 1 - Personal Info",
+                "~k": "h"
+              },
+              "~k": "e",
+              "blockId": "step1",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:wizard:firstName:0",
+                        "type": "TextInput",
+                        "required": true,
+                        "properties": {
+                          "title": "First Name",
+                          "~k": "j"
+                        },
+                        "~k": "i",
+                        "blockId": "firstName"
+                      },
+                      {
+                        "id": "block:wizard:lastName:0",
+                        "type": "TextInput",
+                        "required": true,
+                        "properties": {
+                          "title": "Last Name",
+                          "~k": "l"
+                        },
+                        "~k": "k",
+                        "blockId": "lastName"
+                      },
+                      {
+                        "id": "block:wizard:nextBtn1:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Next",
+                          "type": "primary",
+                          "~k": "n"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "validate1",
+                                  "type": "Validate",
+                                  "~k": "p"
+                                },
+                                {
+                                  "id": "goStep2",
+                                  "type": "SetState",
+                                  "params": {
+                                    "currentStep": 1,
+                                    "~k": "r"
+                                  },
+                                  "~k": "q"
+                                }
+                              ],
+                              "~l": 50
+                            },
+                            "catch": [],
+                            "~k": "2q"
+                          },
+                          "~k": "o"
+                        },
+                        "~k": "m",
+                        "blockId": "nextBtn1"
+                      }
+                    ],
+                    "~l": 33
+                  },
+                  "~k": "2p"
+                },
+                "~k": "2o"
+              }
+            },
+            {
+              "id": "block:wizard:step2:0",
+              "type": "Card",
+              "visible": {
+                "_eq": {
+                  "~arr": [
+                    {
+                      "_state": "currentStep",
+                      "~k": "u"
+                    },
+                    1
+                  ],
+                  "~l": 60
+                },
+                "~k": "t"
+              },
+              "properties": {
+                "title": "Step 2 - Contact Info",
+                "~k": "v"
+              },
+              "~k": "s",
+              "blockId": "step2",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:wizard:email:0",
+                        "type": "TextInput",
+                        "required": true,
+                        "properties": {
+                          "title": "Email",
+                          "~k": "x"
+                        },
+                        "~k": "w",
+                        "blockId": "email"
+                      },
+                      {
+                        "id": "block:wizard:phone:0",
+                        "type": "TextInput",
+                        "properties": {
+                          "title": "Phone",
+                          "~k": "z"
+                        },
+                        "~k": "y",
+                        "blockId": "phone"
+                      },
+                      {
+                        "id": "block:wizard:backBtn2:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Back",
+                          "~k": "11"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "goBack1",
+                                  "type": "SetState",
+                                  "params": {
+                                    "currentStep": 0,
+                                    "~k": "14"
+                                  },
+                                  "~k": "13"
+                                }
+                              ],
+                              "~l": 80
+                            },
+                            "catch": [],
+                            "~k": "2t"
+                          },
+                          "~k": "12"
+                        },
+                        "~k": "10",
+                        "blockId": "backBtn2"
+                      },
+                      {
+                        "id": "block:wizard:nextBtn2:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Next",
+                          "type": "primary",
+                          "~k": "16"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "validate2",
+                                  "type": "Validate",
+                                  "~k": "18"
+                                },
+                                {
+                                  "id": "goStep3",
+                                  "type": "SetState",
+                                  "params": {
+                                    "currentStep": 2,
+                                    "~k": "1a"
+                                  },
+                                  "~k": "19"
+                                }
+                              ],
+                              "~l": 91
+                            },
+                            "catch": [],
+                            "~k": "2u"
+                          },
+                          "~k": "17"
+                        },
+                        "~k": "15",
+                        "blockId": "nextBtn2"
+                      }
+                    ],
+                    "~l": 65
+                  },
+                  "~k": "2s"
+                },
+                "~k": "2r"
+              }
+            },
+            {
+              "id": "block:wizard:step3:0",
+              "type": "Card",
+              "visible": {
+                "_eq": {
+                  "~arr": [
+                    {
+                      "_state": "currentStep",
+                      "~k": "1d"
+                    },
+                    2
+                  ],
+                  "~l": 101
+                },
+                "~k": "1c"
+              },
+              "properties": {
+                "title": "Step 3 - Confirmation",
+                "~k": "1e"
+              },
+              "~k": "1b",
+              "blockId": "step3",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:wizard:summary:0",
+                        "type": "Descriptions",
+                        "properties": {
+                          "items": {
+                            "~arr": [
+                              {
+                                "label": "Name",
+                                "value": {
+                                  "_nunjucks": "{{ first }} {{ last }}",
+                                  "first": {
+                                    "_state": "firstName",
+                                    "~k": "1j"
+                                  },
+                                  "last": {
+                                    "_state": "lastName",
+                                    "~k": "1k"
+                                  },
+                                  "~k": "1i"
+                                },
+                                "~k": "1h"
+                              },
+                              {
+                                "label": "Email",
+                                "value": {
+                                  "_state": "email",
+                                  "~k": "1m"
+                                },
+                                "~k": "1l"
+                              },
+                              {
+                                "label": "Phone",
+                                "value": {
+                                  "_state": "phone",
+                                  "~k": "1o"
+                                },
+                                "~k": "1n"
+                              }
+                            ],
+                            "~l": 110
+                          },
+                          "~k": "1g"
+                        },
+                        "~k": "1f",
+                        "blockId": "summary"
+                      },
+                      {
+                        "id": "block:wizard:backBtn3:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Back",
+                          "~k": "1q"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "goBack2",
+                                  "type": "SetState",
+                                  "params": {
+                                    "currentStep": 1,
+                                    "~k": "1t"
+                                  },
+                                  "~k": "1s"
+                                }
+                              ],
+                              "~l": 129
+                            },
+                            "catch": [],
+                            "~k": "2x"
+                          },
+                          "~k": "1r"
+                        },
+                        "~k": "1p",
+                        "blockId": "backBtn3"
+                      },
+                      {
+                        "id": "block:wizard:submitBtn:0",
+                        "type": "Button",
+                        "properties": {
+                          "title": "Submit",
+                          "type": "primary",
+                          "~k": "1v"
+                        },
+                        "events": {
+                          "onClick": {
+                            "try": {
+                              "~arr": [
+                                {
+                                  "id": "complete",
+                                  "type": "SetState",
+                                  "params": {
+                                    "currentStep": 3,
+                                    "~k": "1y"
+                                  },
+                                  "~k": "1x"
+                                }
+                              ],
+                              "~l": 140
+                            },
+                            "catch": [],
+                            "~k": "2y"
+                          },
+                          "~k": "1w"
+                        },
+                        "~k": "1u",
+                        "blockId": "submitBtn"
+                      }
+                    ],
+                    "~l": 106
+                  },
+                  "~k": "2w"
+                },
+                "~k": "2v"
+              }
+            },
+            {
+              "id": "block:wizard:complete:0",
+              "type": "Result",
+              "visible": {
+                "_eq": {
+                  "~arr": [
+                    {
+                      "_state": "currentStep",
+                      "~k": "21"
+                    },
+                    3
+                  ],
+                  "~l": 148
+                },
+                "~k": "20"
+              },
+              "properties": {
+                "status": "success",
+                "title": "Setup Complete!",
+                "subTitle": "Your account has been created.",
+                "~k": "22"
+              },
+              "~k": "1z",
+              "blockId": "complete"
+            }
+          ],
+          "~l": 15
+        },
+        "~k": "2n"
+      },
+      "~k": "2m"
+    },
+    "requests": [],
+    "~k": "2j"
+  },
+  "plugins/actions.js": "import {  as SetState } from '@lowdefy/actions-core/actions';\nimport {  as Validate } from '@lowdefy/actions-core/actions';\nimport {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  SetState,\n  Validate,\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Progress } from '@lowdefy/blocks-antd/blocks';\nimport {  as Card } from '@lowdefy/blocks-antd/blocks';\nimport {  as TextInput } from '@lowdefy/blocks-antd/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Descriptions } from '@lowdefy/blocks-antd/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Progress,\n  Card,\n  TextInput,\n  Button,\n  Descriptions,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "export default {\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "plugins/operators/client.js": "import {  as _product } from '@lowdefy/operators-js/operators/client';\nimport {  as _divide } from '@lowdefy/operators-js/operators/client';\nimport {  as _state } from '@lowdefy/operators-js/operators/client';\nimport {  as _eq } from '@lowdefy/operators-js/operators/client';\nimport {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _product,\n  _divide,\n  _state,\n  _eq,\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "SetState": {
+        "package": "@lowdefy/actions-core",
+        "count": 6,
+        "~k": "3f"
+      },
+      "Validate": {
+        "package": "@lowdefy/actions-core",
+        "count": 2,
+        "~k": "3g"
+      },
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "3h"
+      },
+      "~k": "3e"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "3j"
+      },
+      "callbacks": {
+        "~k": "3k"
+      },
+      "events": {
+        "~k": "3l"
+      },
+      "providers": {
+        "~k": "3m"
+      },
+      "~k": "3i"
+    },
+    "blocks": {
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "3o"
+      },
+      "Progress": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "3p"
+      },
+      "Card": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 3,
+        "~k": "3q"
+      },
+      "TextInput": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 4,
+        "~k": "3r"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 6,
+        "~k": "3s"
+      },
+      "Descriptions": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "3t"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 2,
+        "~k": "3u"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3v"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3w"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3x"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3y"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "3z"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "40"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "41"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "42"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "43"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "44"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "45"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "46"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "47"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "48"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "49"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "4a"
+      },
+      "~k": "3n"
+    },
+    "connections": {
+      "~k": "4b"
+    },
+    "requests": {
+      "~k": "4c"
+    },
+    "api": {
+      "~k": "4d"
+    },
+    "operators": {
+      "client": {
+        "_product": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "4g"
+        },
+        "_divide": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "4h"
+        },
+        "_state": {
+          "package": "@lowdefy/operators-js",
+          "count": 9,
+          "~k": "4i"
+        },
+        "_eq": {
+          "package": "@lowdefy/operators-js",
+          "count": 4,
+          "~k": "4j"
+        },
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "4k"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "4l"
+        },
+        "~k": "4f"
+      },
+      "server": {
+        "~k": "4m"
+      },
+      "~k": "4e"
+    },
+    "~k": "3d"
+  }
+}

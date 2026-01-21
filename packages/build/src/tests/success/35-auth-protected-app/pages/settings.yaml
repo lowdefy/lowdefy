@@ -1,0 +1,33 @@
+id: settings
+type: Box
+properties:
+  title: Settings
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Account Settings
+  - id: notifications
+    type: Switch
+    properties:
+      title: Enable Notifications
+  - id: theme
+    type: Selector
+    properties:
+      title: Theme
+      options:
+        - value: light
+          label: Light
+        - value: dark
+          label: Dark
+        - value: auto
+          label: Auto
+  - id: logoutBtn
+    type: Button
+    properties:
+      title: Sign Out
+      danger: true
+    events:
+      onClick:
+        - id: logout
+          type: Logout

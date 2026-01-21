@@ -1,0 +1,12 @@
+# 23: Custom 404 Page
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+  - id: '404'
+    type: Result
+    properties:
+      status: warning
+      title: Page Not Found
+      subTitle: The page you are looking for does not exist.

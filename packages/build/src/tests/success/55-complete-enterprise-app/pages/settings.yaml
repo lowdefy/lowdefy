@@ -1,0 +1,61 @@
+id: settings
+type: PageHeaderMenu
+properties:
+  title: Settings
+blocks:
+  - id: title
+    type: Title
+    properties:
+      content: Application Settings
+  - id: settingsForm
+    type: Card
+    properties:
+      title: General Settings
+    blocks:
+      - id: itemsPerPage
+        type: NumberInput
+        properties:
+          title: Items Per Page
+          min: 10
+          max: 100
+      - id: timezone
+        type: Selector
+        properties:
+          title: Timezone
+          options:
+            - value: America/New_York
+              label: Eastern Time
+            - value: America/Chicago
+              label: Central Time
+            - value: America/Los_Angeles
+              label: Pacific Time
+            - value: UTC
+              label: UTC
+      - id: darkMode
+        type: Switch
+        properties:
+          title: Dark Mode
+      - id: notifications
+        type: Switch
+        properties:
+          title: Enable Notifications
+      - id: saveSettingsBtn
+        type: Button
+        properties:
+          title: Save Settings
+          type: primary
+        events:
+          onClick:
+            - id: saveSettings
+              type: SetGlobal
+              params:
+                settings:
+                  itemsPerPage:
+                    _state: itemsPerPage
+                  timezone:
+                    _state: timezone
+            - id: success
+              type: DisplayMessage
+              params:
+                content: Settings saved!
+                status: success

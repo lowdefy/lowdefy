@@ -1,0 +1,13 @@
+# 33: Multi-file App with Nested _ref Structure
+lowdefy: local
+name: Nested Refs App
+
+config:
+  homePageId: dashboard
+
+global:
+  appName: Nested Refs Demo
+
+pages:
+  - _ref: pages/dashboard.yaml
+  - _ref: pages/settings.yaml

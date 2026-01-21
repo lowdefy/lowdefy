@@ -16,7 +16,7 @@
 
 import { jest } from '@jest/globals';
 
-import testContext from '../../test/testContext.js';
+import testContext from '../../test-utils/testContext.js';
 import buildRefs from './buildRefs.js';
 
 const mockLogWarn = jest.fn();
@@ -800,7 +800,7 @@ ref1:
 ref2:
   _ref:
     path: file2.yaml
-    transformer: src/test/buildRefs/testBuildRefsTransformIdentity.js
+    transformer: src/test-utils/buildRefs/testBuildRefsTransformIdentity.js
     vars:
       var2:
         _var: var1`,
@@ -1068,7 +1068,7 @@ describe('transformer functions', () => {
         content: `
   _ref:
     path: target.yaml
-    transformer: src/test/buildRefs/testBuildRefsTransform.js
+    transformer: src/test-utils/buildRefs/testBuildRefsTransform.js
     vars:
       var1: var1`,
       },
@@ -1093,7 +1093,7 @@ describe('transformer functions', () => {
         content: `
 _ref:
   path: target.yaml
-  transformer: src/test/buildRefs/testBuildRefsAsyncFunction.js`,
+  transformer: src/test-utils/buildRefs/testBuildRefsAsyncFunction.js`,
       },
       {
         path: 'target.yaml',
@@ -1113,7 +1113,7 @@ describe('resolver functions', () => {
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsResolver.js`,
+  resolver: src/test-utils/buildRefs/testBuildRefsResolver.js`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
@@ -1133,7 +1133,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsResolver.js
   path: target
   vars:
     var: var1`,
@@ -1158,7 +1158,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsAsyncFunction.js`,
+  resolver: src/test-utils/buildRefs/testBuildRefsAsyncFunction.js`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
@@ -1172,7 +1172,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.yaml
   vars:
     var: var1`,
@@ -1189,7 +1189,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.yml
   vars:
     var: var1`,
@@ -1206,7 +1206,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.json
   vars:
     var: var1`,
@@ -1223,7 +1223,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.yaml.njk
   vars:
     var: var1`,
@@ -1240,7 +1240,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.yaml.njk
   vars:
     var: var1`,
@@ -1257,7 +1257,7 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsParsingResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsParsingResolver.js
   path: target.json.njk
   vars:
     var: var1`,
@@ -1274,12 +1274,12 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsErrorResolver.js`,
+  resolver: src/test-utils/buildRefs/testBuildRefsErrorResolver.js`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Error calling resolver "src/test/buildRefs/testBuildRefsErrorResolver.js": Test error'
+      'Error calling resolver "src/test-utils/buildRefs/testBuildRefsErrorResolver.js": Test error'
     );
   });
 
@@ -1289,13 +1289,13 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsNullResolver.js
+  resolver: src/test-utils/buildRefs/testBuildRefsNullResolver.js
   path: "null"`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Resolver "src/test/buildRefs/testBuildRefsNullResolver.js" returned "null".'
+      'Resolver "src/test-utils/buildRefs/testBuildRefsNullResolver.js" returned "null".'
     );
   });
 
@@ -1305,12 +1305,12 @@ _ref:
         path: 'lowdefy.yaml',
         content: `
 _ref:
-  resolver: src/test/buildRefs/testBuildRefsNullResolver.js`,
+  resolver: src/test-utils/buildRefs/testBuildRefsNullResolver.js`,
       },
     ];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await expect(buildRefs({ context })).rejects.toThrow(
-      'Resolver "src/test/buildRefs/testBuildRefsNullResolver.js" returned "undefined".'
+      'Resolver "src/test-utils/buildRefs/testBuildRefsNullResolver.js" returned "undefined".'
     );
   });
 
@@ -1326,7 +1326,7 @@ _ref: target`,
     const res = await buildRefs({
       context: {
         ...context,
-        refResolver: 'src/test/buildRefs/testBuildRefsResolver.js',
+        refResolver: 'src/test-utils/buildRefs/testBuildRefsResolver.js',
       },
     });
     expect(mockReadConfigFile.mock.calls).toEqual([['lowdefy.yaml']]);

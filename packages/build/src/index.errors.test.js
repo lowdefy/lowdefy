@@ -18,7 +18,7 @@ import { jest } from '@jest/globals';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { createRunBuild } from './test/runBuild.js';
+import { createRunBuild } from './test-utils/runBuild.js';
 
 // Get the directory of this test file
 const __filename = fileURLToPath(import.meta.url);
@@ -33,7 +33,7 @@ jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
 const { default: build } = await import('./index.js');
 
 // Create runBuild helper with fixtures directory
-const fixturesDir = path.join(__dirname, 'build-errors');
+const fixturesDir = path.join(__dirname, 'tests/errors');
 const runBuild = createRunBuild(build, fixturesDir);
 
 /**

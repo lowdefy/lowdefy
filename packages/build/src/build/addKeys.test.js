@@ -15,8 +15,8 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
-import parseTestYaml from '../test/parseTestYaml.js';
-import testContext from '../test/testContext.js';
+import parseTestYaml from '../test-utils/parseTestYaml.js';
+import testContext from '../test-utils/testContext.js';
 import makeId from '../utils/makeId.js';
 
 test('mutate keyMap and components', async () => {

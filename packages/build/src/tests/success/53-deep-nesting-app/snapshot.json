@@ -1,0 +1,1095 @@
+{
+  "app.json": {
+    "html": {
+      "appendBody": "",
+      "appendHead": "",
+      "~k": "v"
+    },
+    "git_sha": "bcc9442f117ebc1a73a297b941a7b3073f1c4a22",
+    "~k": "u"
+  },
+  "auth.json": {
+    "api": {
+      "roles": {
+        "~k": "1k"
+      },
+      "~k": "1j"
+    },
+    "authPages": {
+      "~k": "1l"
+    },
+    "pages": {
+      "roles": {
+        "~k": "1n"
+      },
+      "~k": "1m"
+    },
+    "callbacks": [],
+    "events": [],
+    "providers": [],
+    "session": {
+      "~k": "1o"
+    },
+    "theme": {
+      "~k": "1p"
+    },
+    "configured": false,
+    "~k": "1i"
+  },
+  "config.json": {
+    "~k": "x"
+  },
+  "global.json": {},
+  "keyMap.json": {
+    "3": {
+      "key": "root",
+      "~k_parent": "2",
+      "~l": 2
+    },
+    "4": {
+      "key": "root.pages[0:nested:Box]",
+      "~k_parent": "3",
+      "~l": 5
+    },
+    "5": {
+      "key": "root.pages[0:nested:Box].properties",
+      "~k_parent": "4",
+      "~l": 7
+    },
+    "6": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card]",
+      "~k_parent": "4",
+      "~l": 10
+    },
+    "7": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].properties",
+      "~k_parent": "6",
+      "~l": 12
+    },
+    "8": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box]",
+      "~k_parent": "6",
+      "~l": 15
+    },
+    "9": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card]",
+      "~k_parent": "8",
+      "~l": 18
+    },
+    "10": {
+      "key": "root.pages[0:nested:Box].auth",
+      "~k_parent": "z"
+    },
+    "11": {
+      "key": "root.pages[0:nested:Box].areas",
+      "~k_parent": "z"
+    },
+    "12": {
+      "key": "root.pages[0:nested:Box].areas.content",
+      "~k_parent": "11"
+    },
+    "13": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].areas",
+      "~k_parent": "6"
+    },
+    "14": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].areas.content",
+      "~k_parent": "13"
+    },
+    "15": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].areas",
+      "~k_parent": "8"
+    },
+    "16": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].areas.content",
+      "~k_parent": "15"
+    },
+    "17": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].areas",
+      "~k_parent": "9"
+    },
+    "18": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].areas.content",
+      "~k_parent": "17"
+    },
+    "19": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].areas",
+      "~k_parent": "b"
+    },
+    "20": {
+      "key": "root.types.auth.providers",
+      "~k_parent": "1w"
+    },
+    "21": {
+      "key": "root.types.blocks",
+      "~k_parent": "1t"
+    },
+    "22": {
+      "key": "root.types.blocks.Box",
+      "~k_parent": "21"
+    },
+    "23": {
+      "key": "root.types.blocks.Card",
+      "~k_parent": "21"
+    },
+    "24": {
+      "key": "root.types.blocks.Paragraph",
+      "~k_parent": "21"
+    },
+    "25": {
+      "key": "root.types.blocks.Button",
+      "~k_parent": "21"
+    },
+    "26": {
+      "key": "root.types.blocks.Result",
+      "~k_parent": "21"
+    },
+    "27": {
+      "key": "root.types.blocks.Anchor",
+      "~k_parent": "21"
+    },
+    "28": {
+      "key": "root.types.blocks.DangerousHtml",
+      "~k_parent": "21"
+    },
+    "29": {
+      "key": "root.types.blocks.Html",
+      "~k_parent": "21"
+    },
+    "30": {
+      "key": "root.imports.blocks[2]",
+      "~k_parent": "2v"
+    },
+    "31": {
+      "key": "root.imports.blocks[3]",
+      "~k_parent": "2v"
+    },
+    "32": {
+      "key": "root.imports.blocks[4]",
+      "~k_parent": "2v"
+    },
+    "33": {
+      "key": "root.imports.blocks[5]",
+      "~k_parent": "2v"
+    },
+    "34": {
+      "key": "root.imports.blocks[6]",
+      "~k_parent": "2v"
+    },
+    "35": {
+      "key": "root.imports.blocks[7]",
+      "~k_parent": "2v"
+    },
+    "36": {
+      "key": "root.imports.blocks[8]",
+      "~k_parent": "2v"
+    },
+    "37": {
+      "key": "root.imports.blocks[9]",
+      "~k_parent": "2v"
+    },
+    "38": {
+      "key": "root.imports.blocks[10]",
+      "~k_parent": "2v"
+    },
+    "39": {
+      "key": "root.imports.blocks[11]",
+      "~k_parent": "2v"
+    },
+    "40": {
+      "key": "root.imports.icons[17]",
+      "~k_parent": "2v"
+    },
+    "41": {
+      "key": "root.imports.icons[18]",
+      "~k_parent": "2v"
+    },
+    "42": {
+      "key": "root.imports.icons[19]",
+      "~k_parent": "2v"
+    },
+    "43": {
+      "key": "root.imports.icons[20]",
+      "~k_parent": "2v"
+    },
+    "44": {
+      "key": "root.imports.icons[21]",
+      "~k_parent": "2v"
+    },
+    "45": {
+      "key": "root.imports.icons[22]",
+      "~k_parent": "2v"
+    },
+    "46": {
+      "key": "root.imports.icons[23]",
+      "~k_parent": "2v"
+    },
+    "47": {
+      "key": "root.imports.icons[24]",
+      "~k_parent": "2v"
+    },
+    "48": {
+      "key": "root.imports.icons[25]",
+      "~k_parent": "2v"
+    },
+    "49": {
+      "key": "root.imports.icons[26]",
+      "~k_parent": "2v"
+    },
+    "a": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].properties",
+      "~k_parent": "9",
+      "~l": 20
+    },
+    "b": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box]",
+      "~k_parent": "9",
+      "~l": 23
+    },
+    "c": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card]",
+      "~k_parent": "b",
+      "~l": 26
+    },
+    "d": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].properties",
+      "~k_parent": "c",
+      "~l": 28
+    },
+    "e": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box]",
+      "~k_parent": "c",
+      "~l": 31
+    },
+    "f": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].blocks[0:level7:Paragraph]",
+      "~k_parent": "e",
+      "~l": 34
+    },
+    "g": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].blocks[0:level7:Paragraph].properties",
+      "~k_parent": "f",
+      "~l": 36
+    },
+    "h": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].blocks[1:level7b:Button]",
+      "~k_parent": "e",
+      "~l": 38
+    },
+    "i": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].blocks[1:level7b:Button].properties",
+      "~k_parent": "h",
+      "~l": 40
+    },
+    "k": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "l": {
+      "key": "root.pages[1:404:Result].style",
+      "~k_parent": "k"
+    },
+    "m": {
+      "key": "root.pages[1:404:Result].properties",
+      "~k_parent": "k"
+    },
+    "n": {
+      "key": "root.pages[1:404:Result].areas",
+      "~k_parent": "k"
+    },
+    "o": {
+      "key": "root.pages[1:404:Result].areas.extra",
+      "~k_parent": "n"
+    },
+    "p": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button]",
+      "~k_parent": "o"
+    },
+    "q": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].properties",
+      "~k_parent": "p"
+    },
+    "r": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events",
+      "~k_parent": "p"
+    },
+    "s": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link]",
+      "~k_parent": "r"
+    },
+    "t": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick[0:home:Link].params",
+      "~k_parent": "s"
+    },
+    "u": {
+      "key": "root.app",
+      "~k_parent": "3"
+    },
+    "v": {
+      "key": "root.app.html",
+      "~k_parent": "u"
+    },
+    "w": {
+      "key": "root.logger",
+      "~k_parent": "3"
+    },
+    "x": {
+      "key": "root.config",
+      "~k_parent": "3"
+    },
+    "z": {
+      "key": "root.pages[0:nested:Box]",
+      "~k_parent": "3"
+    },
+    "1a": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].areas.content",
+      "~k_parent": "19"
+    },
+    "1b": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].areas",
+      "~k_parent": "c"
+    },
+    "1c": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].areas.content",
+      "~k_parent": "1b"
+    },
+    "1d": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].areas",
+      "~k_parent": "e"
+    },
+    "1e": {
+      "key": "root.pages[0:nested:Box].blocks[0:level1:Card].blocks[0:level2:Box].blocks[0:level3:Card].blocks[0:level4:Box].blocks[0:level5:Card].blocks[0:level6:Box].areas.content",
+      "~k_parent": "1d"
+    },
+    "1f": {
+      "key": "root.pages[1:404:Result]",
+      "~k_parent": "3"
+    },
+    "1g": {
+      "key": "root.pages[1:404:Result].areas.extra.blocks[0:home:Button].events.onClick",
+      "~k_parent": "r"
+    },
+    "1h": {
+      "key": "root.pages[1:404:Result].auth",
+      "~k_parent": "1f"
+    },
+    "1i": {
+      "key": "root.auth",
+      "~k_parent": "3"
+    },
+    "1j": {
+      "key": "root.auth.api",
+      "~k_parent": "1i"
+    },
+    "1k": {
+      "key": "root.auth.api.roles",
+      "~k_parent": "1j"
+    },
+    "1l": {
+      "key": "root.auth.authPages",
+      "~k_parent": "1i"
+    },
+    "1m": {
+      "key": "root.auth.pages",
+      "~k_parent": "1i"
+    },
+    "1n": {
+      "key": "root.auth.pages.roles",
+      "~k_parent": "1m"
+    },
+    "1o": {
+      "key": "root.auth.session",
+      "~k_parent": "1i"
+    },
+    "1p": {
+      "key": "root.auth.theme",
+      "~k_parent": "1i"
+    },
+    "1q": {
+      "key": "root.menus[0:default]",
+      "~k_parent": "3"
+    },
+    "1r": {
+      "key": "root.menus[0:default].links[0:0:MenuLink]",
+      "~k_parent": "1q"
+    },
+    "1s": {
+      "key": "root.menus[0:default].links[0:0:MenuLink].auth",
+      "~k_parent": "1r"
+    },
+    "1t": {
+      "key": "root.types",
+      "~k_parent": "3"
+    },
+    "1u": {
+      "key": "root.types.actions",
+      "~k_parent": "1t"
+    },
+    "1v": {
+      "key": "root.types.actions.Link",
+      "~k_parent": "1u"
+    },
+    "1w": {
+      "key": "root.types.auth",
+      "~k_parent": "1t"
+    },
+    "1x": {
+      "key": "root.types.auth.adapters",
+      "~k_parent": "1w"
+    },
+    "1y": {
+      "key": "root.types.auth.callbacks",
+      "~k_parent": "1w"
+    },
+    "1z": {
+      "key": "root.types.auth.events",
+      "~k_parent": "1w"
+    },
+    "2a": {
+      "key": "root.types.blocks.Icon",
+      "~k_parent": "21"
+    },
+    "2b": {
+      "key": "root.types.blocks.Img",
+      "~k_parent": "21"
+    },
+    "2c": {
+      "key": "root.types.blocks.List",
+      "~k_parent": "21"
+    },
+    "2d": {
+      "key": "root.types.blocks.Span",
+      "~k_parent": "21"
+    },
+    "2e": {
+      "key": "root.types.blocks.Throw",
+      "~k_parent": "21"
+    },
+    "2f": {
+      "key": "root.types.blocks.ProgressBar",
+      "~k_parent": "21"
+    },
+    "2g": {
+      "key": "root.types.blocks.Skeleton",
+      "~k_parent": "21"
+    },
+    "2h": {
+      "key": "root.types.blocks.SkeletonAvatar",
+      "~k_parent": "21"
+    },
+    "2i": {
+      "key": "root.types.blocks.SkeletonButton",
+      "~k_parent": "21"
+    },
+    "2j": {
+      "key": "root.types.blocks.SkeletonInput",
+      "~k_parent": "21"
+    },
+    "2k": {
+      "key": "root.types.blocks.SkeletonParagraph",
+      "~k_parent": "21"
+    },
+    "2l": {
+      "key": "root.types.blocks.Spinner",
+      "~k_parent": "21"
+    },
+    "2m": {
+      "key": "root.types.blocks.Message",
+      "~k_parent": "21"
+    },
+    "2n": {
+      "key": "root.types.connections",
+      "~k_parent": "1t"
+    },
+    "2o": {
+      "key": "root.types.requests",
+      "~k_parent": "1t"
+    },
+    "2p": {
+      "key": "root.types.api",
+      "~k_parent": "1t"
+    },
+    "2q": {
+      "key": "root.types.operators",
+      "~k_parent": "1t"
+    },
+    "2r": {
+      "key": "root.types.operators.client",
+      "~k_parent": "2q"
+    },
+    "2s": {
+      "key": "root.types.operators.client._not",
+      "~k_parent": "2r"
+    },
+    "2t": {
+      "key": "root.types.operators.client._type",
+      "~k_parent": "2r"
+    },
+    "2u": {
+      "key": "root.types.operators.server",
+      "~k_parent": "2q"
+    },
+    "2v": {
+      "key": "root.imports",
+      "~k_parent": "3"
+    },
+    "2w": {
+      "key": "root.imports.actions[0]",
+      "~k_parent": "2v"
+    },
+    "2x": {
+      "key": "root.imports.auth",
+      "~k_parent": "2v"
+    },
+    "2y": {
+      "key": "root.imports.blocks[0]",
+      "~k_parent": "2v"
+    },
+    "2z": {
+      "key": "root.imports.blocks[1]",
+      "~k_parent": "2v"
+    },
+    "3a": {
+      "key": "root.imports.blocks[12]",
+      "~k_parent": "2v"
+    },
+    "3b": {
+      "key": "root.imports.blocks[13]",
+      "~k_parent": "2v"
+    },
+    "3c": {
+      "key": "root.imports.blocks[14]",
+      "~k_parent": "2v"
+    },
+    "3d": {
+      "key": "root.imports.blocks[15]",
+      "~k_parent": "2v"
+    },
+    "3e": {
+      "key": "root.imports.blocks[16]",
+      "~k_parent": "2v"
+    },
+    "3f": {
+      "key": "root.imports.blocks[17]",
+      "~k_parent": "2v"
+    },
+    "3g": {
+      "key": "root.imports.blocks[18]",
+      "~k_parent": "2v"
+    },
+    "3h": {
+      "key": "root.imports.blocks[19]",
+      "~k_parent": "2v"
+    },
+    "3i": {
+      "key": "root.imports.blocks[20]",
+      "~k_parent": "2v"
+    },
+    "3j": {
+      "key": "root.imports.icons[0]",
+      "~k_parent": "2v"
+    },
+    "3k": {
+      "key": "root.imports.icons[1]",
+      "~k_parent": "2v"
+    },
+    "3l": {
+      "key": "root.imports.icons[2]",
+      "~k_parent": "2v"
+    },
+    "3m": {
+      "key": "root.imports.icons[3]",
+      "~k_parent": "2v"
+    },
+    "3n": {
+      "key": "root.imports.icons[4]",
+      "~k_parent": "2v"
+    },
+    "3o": {
+      "key": "root.imports.icons[5]",
+      "~k_parent": "2v"
+    },
+    "3p": {
+      "key": "root.imports.icons[6]",
+      "~k_parent": "2v"
+    },
+    "3q": {
+      "key": "root.imports.icons[7]",
+      "~k_parent": "2v"
+    },
+    "3r": {
+      "key": "root.imports.icons[8]",
+      "~k_parent": "2v"
+    },
+    "3s": {
+      "key": "root.imports.icons[9]",
+      "~k_parent": "2v"
+    },
+    "3t": {
+      "key": "root.imports.icons[10]",
+      "~k_parent": "2v"
+    },
+    "3u": {
+      "key": "root.imports.icons[11]",
+      "~k_parent": "2v"
+    },
+    "3v": {
+      "key": "root.imports.icons[12]",
+      "~k_parent": "2v"
+    },
+    "3w": {
+      "key": "root.imports.icons[13]",
+      "~k_parent": "2v"
+    },
+    "3x": {
+      "key": "root.imports.icons[14]",
+      "~k_parent": "2v"
+    },
+    "3y": {
+      "key": "root.imports.icons[15]",
+      "~k_parent": "2v"
+    },
+    "3z": {
+      "key": "root.imports.icons[16]",
+      "~k_parent": "2v"
+    },
+    "4a": {
+      "key": "root.imports.icons[27]",
+      "~k_parent": "2v"
+    },
+    "4b": {
+      "key": "root.imports.operators",
+      "~k_parent": "2v"
+    },
+    "4c": {
+      "key": "root.imports.operators.client[0]",
+      "~k_parent": "4b"
+    },
+    "4d": {
+      "key": "root.imports.operators.client[1]",
+      "~k_parent": "4b"
+    }
+  },
+  "logger.json": {
+    "~k": "w"
+  },
+  "menus.json": [
+    {
+      "id": "menu:default",
+      "links": [
+        {
+          "id": "menuitem:default:0",
+          "type": "MenuLink",
+          "pageId": "nested",
+          "auth": {
+            "public": true,
+            "~k": "1s"
+          },
+          "menuItemId": "0",
+          "~k": "1r"
+        }
+      ],
+      "menuId": "default",
+      "~k": "1q"
+    }
+  ],
+  "pages/404/404.json": {
+    "id": "page:404",
+    "type": "Result",
+    "style": {
+      "minHeight": "100vh",
+      "~k": "l"
+    },
+    "properties": {
+      "status": "info",
+      "title": "404",
+      "subTitle": "Sorry, the page you are visiting does not exist.",
+      "~k": "m"
+    },
+    "areas": {
+      "extra": {
+        "blocks": [
+          {
+            "id": "block:404:home:0",
+            "type": "Button",
+            "properties": {
+              "title": "Go to home page",
+              "~k": "q"
+            },
+            "events": {
+              "onClick": {
+                "try": [
+                  {
+                    "id": "home",
+                    "type": "Link",
+                    "params": {
+                      "home": true,
+                      "~k": "t"
+                    },
+                    "~k": "s"
+                  }
+                ],
+                "catch": [],
+                "~k": "1g"
+              },
+              "~k": "r"
+            },
+            "~k": "p",
+            "blockId": "home"
+          }
+        ],
+        "~k": "o"
+      },
+      "~k": "n"
+    },
+    "auth": {
+      "public": true,
+      "~k": "1h"
+    },
+    "pageId": "404",
+    "blockId": "404",
+    "requests": [],
+    "~k": "1f"
+  },
+  "pages/nested/nested.json": {
+    "id": "page:nested",
+    "type": "Box",
+    "properties": {
+      "title": "Deep Nesting Test",
+      "~k": "5"
+    },
+    "auth": {
+      "public": true,
+      "~k": "10"
+    },
+    "pageId": "nested",
+    "blockId": "nested",
+    "areas": {
+      "content": {
+        "blocks": {
+          "~arr": [
+            {
+              "id": "block:nested:level1:0",
+              "type": "Card",
+              "properties": {
+                "title": "Level 1",
+                "~k": "7"
+              },
+              "~k": "6",
+              "blockId": "level1",
+              "areas": {
+                "content": {
+                  "blocks": {
+                    "~arr": [
+                      {
+                        "id": "block:nested:level2:0",
+                        "type": "Box",
+                        "~k": "8",
+                        "blockId": "level2",
+                        "areas": {
+                          "content": {
+                            "blocks": {
+                              "~arr": [
+                                {
+                                  "id": "block:nested:level3:0",
+                                  "type": "Card",
+                                  "properties": {
+                                    "title": "Level 3",
+                                    "~k": "a"
+                                  },
+                                  "~k": "9",
+                                  "blockId": "level3",
+                                  "areas": {
+                                    "content": {
+                                      "blocks": {
+                                        "~arr": [
+                                          {
+                                            "id": "block:nested:level4:0",
+                                            "type": "Box",
+                                            "~k": "b",
+                                            "blockId": "level4",
+                                            "areas": {
+                                              "content": {
+                                                "blocks": {
+                                                  "~arr": [
+                                                    {
+                                                      "id": "block:nested:level5:0",
+                                                      "type": "Card",
+                                                      "properties": {
+                                                        "title": "Level 5",
+                                                        "~k": "d"
+                                                      },
+                                                      "~k": "c",
+                                                      "blockId": "level5",
+                                                      "areas": {
+                                                        "content": {
+                                                          "blocks": {
+                                                            "~arr": [
+                                                              {
+                                                                "id": "block:nested:level6:0",
+                                                                "type": "Box",
+                                                                "~k": "e",
+                                                                "blockId": "level6",
+                                                                "areas": {
+                                                                  "content": {
+                                                                    "blocks": {
+                                                                      "~arr": [
+                                                                        {
+                                                                          "id": "block:nested:level7:0",
+                                                                          "type": "Paragraph",
+                                                                          "properties": {
+                                                                            "content": "Deeply nested content",
+                                                                            "~k": "g"
+                                                                          },
+                                                                          "~k": "f",
+                                                                          "blockId": "level7"
+                                                                        },
+                                                                        {
+                                                                          "id": "block:nested:level7b:0",
+                                                                          "type": "Button",
+                                                                          "properties": {
+                                                                            "title": "Deep Button",
+                                                                            "~k": "i"
+                                                                          },
+                                                                          "~k": "h",
+                                                                          "blockId": "level7b"
+                                                                        }
+                                                                      ],
+                                                                      "~l": 33
+                                                                    },
+                                                                    "~k": "1e"
+                                                                  },
+                                                                  "~k": "1d"
+                                                                }
+                                                              }
+                                                            ],
+                                                            "~l": 30
+                                                          },
+                                                          "~k": "1c"
+                                                        },
+                                                        "~k": "1b"
+                                                      }
+                                                    }
+                                                  ],
+                                                  "~l": 25
+                                                },
+                                                "~k": "1a"
+                                              },
+                                              "~k": "19"
+                                            }
+                                          }
+                                        ],
+                                        "~l": 22
+                                      },
+                                      "~k": "18"
+                                    },
+                                    "~k": "17"
+                                  }
+                                }
+                              ],
+                              "~l": 17
+                            },
+                            "~k": "16"
+                          },
+                          "~k": "15"
+                        }
+                      }
+                    ],
+                    "~l": 14
+                  },
+                  "~k": "14"
+                },
+                "~k": "13"
+              }
+            }
+          ],
+          "~l": 9
+        },
+        "~k": "12"
+      },
+      "~k": "11"
+    },
+    "requests": [],
+    "~k": "z"
+  },
+  "plugins/actions.js": "import {  as Link } from '@lowdefy/actions-core/actions';\nexport default {\n  Link,\n  };",
+  "plugins/auth/adapters.js": "export default {\n  };",
+  "plugins/auth/callbacks.js": "export default {\n  };",
+  "plugins/auth/events.js": "export default {\n  };",
+  "plugins/auth/providers.js": "export default {\n  };",
+  "plugins/blocks.js": "import {  as Box } from '@lowdefy/blocks-basic/blocks';\nimport {  as Card } from '@lowdefy/blocks-antd/blocks';\nimport {  as Paragraph } from '@lowdefy/blocks-basic/blocks';\nimport {  as Button } from '@lowdefy/blocks-basic/blocks';\nimport {  as Result } from '@lowdefy/blocks-antd/blocks';\nimport {  as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport {  as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport {  as Html } from '@lowdefy/blocks-basic/blocks';\nimport {  as Icon } from '@lowdefy/blocks-basic/blocks';\nimport {  as Img } from '@lowdefy/blocks-basic/blocks';\nimport {  as List } from '@lowdefy/blocks-basic/blocks';\nimport {  as Span } from '@lowdefy/blocks-basic/blocks';\nimport {  as Throw } from '@lowdefy/blocks-basic/blocks';\nimport {  as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport {  as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport {  as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Card,\n  Paragraph,\n  Button,\n  Result,\n  Anchor,\n  DangerousHtml,\n  Html,\n  Icon,\n  Img,\n  List,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/connections.js": "export default {\n  };",
+  "plugins/icons.js": "import { AiOutlineExclamationCircle, AiOutlineLoading3Quarters } from 'react-icons/ai';\nexport default {\n  AiOutlineExclamationCircle,\n  AiOutlineLoading3Quarters,\n};",
+  "plugins/operators/client.js": "import {  as _not } from '@lowdefy/operators-js/operators/client';\nimport {  as _type } from '@lowdefy/operators-js/operators/client';\nexport default {\n  _not,\n  _type,\n  };",
+  "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
+  "plugins/operators/server.js": "export default {\n  };",
+  "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
+  "plugins/styles.less": "@import '@lowdefy/layout/style.less';\n@import '@lowdefy/client/style.less';\n\n",
+  "refMap.json": {
+    "1": {
+      "parent": null
+    }
+  },
+  "types.json": {
+    "actions": {
+      "Link": {
+        "package": "@lowdefy/actions-core",
+        "count": 1,
+        "~k": "1v"
+      },
+      "~k": "1u"
+    },
+    "auth": {
+      "adapters": {
+        "~k": "1x"
+      },
+      "callbacks": {
+        "~k": "1y"
+      },
+      "events": {
+        "~k": "1z"
+      },
+      "providers": {
+        "~k": "20"
+      },
+      "~k": "1w"
+    },
+    "blocks": {
+      "Box": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 5,
+        "~k": "22"
+      },
+      "Card": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 3,
+        "~k": "23"
+      },
+      "Paragraph": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "24"
+      },
+      "Button": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 2,
+        "~k": "25"
+      },
+      "Result": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "26"
+      },
+      "Anchor": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "27"
+      },
+      "DangerousHtml": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "28"
+      },
+      "Html": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "29"
+      },
+      "Icon": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2a"
+      },
+      "Img": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2b"
+      },
+      "List": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2c"
+      },
+      "Span": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2d"
+      },
+      "Throw": {
+        "package": "@lowdefy/blocks-basic",
+        "count": 1,
+        "~k": "2e"
+      },
+      "ProgressBar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2f"
+      },
+      "Skeleton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2g"
+      },
+      "SkeletonAvatar": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2h"
+      },
+      "SkeletonButton": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2i"
+      },
+      "SkeletonInput": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2j"
+      },
+      "SkeletonParagraph": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2k"
+      },
+      "Spinner": {
+        "package": "@lowdefy/blocks-loaders",
+        "count": 1,
+        "~k": "2l"
+      },
+      "Message": {
+        "package": "@lowdefy/blocks-antd",
+        "count": 1,
+        "~k": "2m"
+      },
+      "~k": "21"
+    },
+    "connections": {
+      "~k": "2n"
+    },
+    "requests": {
+      "~k": "2o"
+    },
+    "api": {
+      "~k": "2p"
+    },
+    "operators": {
+      "client": {
+        "_not": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "2s"
+        },
+        "_type": {
+          "package": "@lowdefy/operators-js",
+          "count": 1,
+          "~k": "2t"
+        },
+        "~k": "2r"
+      },
+      "server": {
+        "~k": "2u"
+      },
+      "~k": "2q"
+    },
+    "~k": "1t"
+  }
+}
