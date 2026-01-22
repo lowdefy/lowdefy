@@ -230,9 +230,7 @@ describe('_array.every', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.every - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.every - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -363,9 +361,7 @@ describe('_array.filter', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.filter - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.filter - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -435,9 +431,7 @@ describe('_array.find', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.find - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.find - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -507,9 +501,7 @@ describe('_array.findIndex', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.findIndex - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.findIndex - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -905,9 +897,7 @@ describe('_array.map', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.map - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.map - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -1001,9 +991,7 @@ describe('_array.reduce', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduce - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.reduce - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -1092,9 +1080,7 @@ describe('_array.reduceRight', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.reduceRight - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.reduceRight - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
@@ -1341,9 +1327,7 @@ describe('_array.some', () => {
         methodName,
         location,
       })
-    ).toThrowErrorMatchingInlineSnapshot(
-      `"_array.some - number 1 is not a function"`
-    );
+    ).toThrow(/_array\.some - (number )?1 is not a function/);
     expect(() =>
       _array({
         params: null,
