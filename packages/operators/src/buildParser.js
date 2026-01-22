@@ -120,12 +120,17 @@ class BuildParser {
 
       if (!isSingleKeyObject) return value;
       if (!isOperatorObject) return value;
+
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
 
       // Check if this operator/method is dynamic
+      // Skip this check for _build.* operators (operatorPrefix === '_build.') because
+      // build operators should ALWAYS be evaluated at build time
       const fullIdentifier = methodName ? `${op}.${methodName}` : op;
-      if (this.dynamicIdentifiers.has(fullIdentifier) || this.dynamicIdentifiers.has(op)) {
-        return BuildParser.setDynamicMarker(value);
+      if (operatorPrefix !== '_build.') {
+        if (this.dynamicIdentifiers.has(fullIdentifier) || this.dynamicIdentifiers.has(op)) {
+          return BuildParser.setDynamicMarker(value);
+        }
       }
 
       // If operator is not in our operators map, it's a runtime-only operator

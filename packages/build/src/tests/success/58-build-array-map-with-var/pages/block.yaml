@@ -1,0 +1,9 @@
+id: text
+type: Paragraph
+properties:
+  content:
+    _build.string.concat:
+      - 'IDs: '
+      - _build.json.stringify:
+          on:
+            _var: ids
