@@ -1,0 +1,25 @@
+# M3: Nunjucks Template Error Location Test
+# ==========================================
+# Tests error location when using Nunjucks (.yaml.njk) templates.
+#
+# Nunjucks templates process vars via {{ }} syntax before YAML parsing.
+# Line numbers come from the generated YAML content (after Nunjucks processing).
+#
+# Expected behavior:
+#   Error location: page-template.yaml.njk:11
+#   The file is the .njk template, line number is from the generated YAML.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - _ref:
+      path: page-template.yaml.njk
+      vars:
+        pageId: templatePage
+        blockId: undefinedBlockId

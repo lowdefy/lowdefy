@@ -1,0 +1,21 @@
+# Page template that uses _var to get a state reference from parent.
+# The parent's var has ~ignoreBuildCheck: true, which should suppress warnings.
+id: templatePage
+type: Box
+requests:
+  - id: testRequest
+    type: AxiosHttp
+    connectionId: testApi
+    payload:
+      # _var gets the _state reference with ~ignoreBuildCheck from parent's vars.
+      # The warning should be suppressed.
+      userData:
+        _var: stateValue
+    properties:
+      url: /api/test
+      params:
+        data:
+          _payload: userData
+blocks:
+  - id: content
+    type: TextInput

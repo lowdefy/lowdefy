@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["undefinedBlockId"],
+      "warningContains": [
+        "_state references \"undefinedBlockId\" on page \"templatePage\"",
+        "page-template.yaml.njk:11 at root.pages",
+        "{{fixturesDir}}/M3-ref-njk-template/page-template.yaml.njk:11"
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["undefinedBlockId"],
+      "errorContains": [
+        "_state references \"undefinedBlockId\" on page \"templatePage\"",
+        "page-template.yaml.njk:11 at root.pages",
+        "{{fixturesDir}}/M3-ref-njk-template/page-template.yaml.njk:11"
+      ],
+      "expectThrow": true
+    }
+  ]
+}

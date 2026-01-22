@@ -1,0 +1,17 @@
+# Nunjucks template with ~ignoreBuildCheck to suppress warning.
+id: {{ pageId }}
+type: Box
+requests:
+  - id: testRequest
+    type: AxiosHttp
+    connectionId: testApi
+    payload:
+      # ~ignoreBuildCheck suppresses the undefined state warning
+      userData:
+        _state: {{ blockId }}
+        ~ignoreBuildCheck: true
+    properties:
+      url: /api/test
+blocks:
+  - id: content
+    type: TextInput

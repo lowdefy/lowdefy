@@ -1,0 +1,23 @@
+# M4: Nunjucks Template with ~ignoreBuildCheck
+# =============================================
+# Tests that ~ignoreBuildCheck suppresses warnings in Nunjucks templates.
+#
+# The template includes ~ignoreBuildCheck: true alongside the _state operator.
+# The warning should be suppressed in both dev and prod modes.
+#
+# Expected: NO warning should be shown for undefinedBlockId.
+
+lowdefy: local
+
+connections:
+  - id: testApi
+    type: AxiosHttp
+    properties:
+      baseURL: http://example.com
+
+pages:
+  - _ref:
+      path: page-template.yaml.njk
+      vars:
+        pageId: templatePage
+        blockId: undefinedBlockId

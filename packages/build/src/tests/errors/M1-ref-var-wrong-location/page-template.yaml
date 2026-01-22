@@ -1,0 +1,20 @@
+# Page template that uses _var to get a state reference from parent.
+id: templatePage
+type: Box
+requests:
+  - id: testRequest
+    type: AxiosHttp
+    connectionId: testApi
+    payload:
+      # _var gets the _state reference from parent's vars.
+      # Error location correctly shows "lowdefy.yaml:30" (where stateValue is defined).
+      userData:
+        _var: stateValue
+    properties:
+      url: /api/test
+      params:
+        data:
+          _payload: userData
+blocks:
+  - id: content
+    type: TextInput
