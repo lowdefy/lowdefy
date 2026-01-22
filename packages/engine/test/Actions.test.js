@@ -17,6 +17,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/helpers';
 
 import testContext from './testContext.js';
 
@@ -421,15 +422,13 @@ test('action error in error parser', async () => {
     event: {},
     eventName,
   });
-  expect(res.responses.two.error).toEqual(
-    new Error(
-      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
-    )
+  expect(res.responses.two.error).toBeInstanceOf(ConfigError);
+  expect(res.responses.two.error.message).toBe(
+    'Operator Error: _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"Error"}]} at blockId.'
   );
-  expect(res.error.error).toEqual(
-    new Error(
-      'Operator Error: _divide takes an array of 2 numbers. Received: [3,{"name":"Error"}] at blockId.'
-    )
+  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error.message).toBe(
+    'Operator Error: _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"Error"}]} at blockId.'
   );
 });
 
@@ -687,43 +686,37 @@ test('Parser error in action', async () => {
     event: {},
     eventName,
   });
-  expect(res).toEqual({
-    blockId: 'blockId',
-    bounced: false,
-    event: {},
-    eventName: 'eventName',
-    error: {
-      action: {
-        id: 'test',
-        params: {
-          _state: [],
-        },
-        type: 'ActionSync',
-      },
-      error: new Error(
-        'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
-      ),
-      index: 0,
-    },
-    responses: {
-      test: {
-        action: {
-          id: 'test',
-          params: {
-            _state: [],
-          },
-          type: 'ActionSync',
-        },
-        error: new Error(
-          'Operator Error: _state params must be of type string, integer, boolean or object. Received: [] at blockId.'
-        ),
-        index: 0,
-      },
-    },
-    success: false,
-    startTimestamp: { date: 0 },
-    endTimestamp: { date: 0 },
+  expect(res.blockId).toBe('blockId');
+  expect(res.bounced).toBe(false);
+  expect(res.event).toEqual({});
+  expect(res.eventName).toBe('eventName');
+  expect(res.success).toBe(false);
+  expect(res.startTimestamp).toEqual({ date: 0 });
+  expect(res.endTimestamp).toEqual({ date: 0 });
+
+  // Check error structure
+  expect(res.error.action).toEqual({
+    id: 'test',
+    params: { _state: [] },
+    type: 'ActionSync',
   });
+  expect(res.error.index).toBe(0);
+  expect(res.error.error).toBeInstanceOf(ConfigError);
+  expect(res.error.error.message).toBe(
+    'Operator Error: _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+  );
+
+  // Check responses structure
+  expect(res.responses.test.action).toEqual({
+    id: 'test',
+    params: { _state: [] },
+    type: 'ActionSync',
+  });
+  expect(res.responses.test.index).toBe(0);
+  expect(res.responses.test.error).toBeInstanceOf(ConfigError);
+  expect(res.responses.test.error.message).toBe(
+    'Operator Error: _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+  );
 });
 
 test('Display default loading and success messages when value == true ', async () => {
