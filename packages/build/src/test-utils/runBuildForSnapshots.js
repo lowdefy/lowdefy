@@ -216,6 +216,8 @@ const snapshotTypesMap = {
       _base64: { package: '@lowdefy/operators-js' },
       _uri: { package: '@lowdefy/operators-js' },
       _url_query: { package: '@lowdefy/operators-js' },
+      _switch: { package: '@lowdefy/operators-js' },
+      _if_none: { package: '@lowdefy/operators-js' },
       _intl: { package: '@lowdefy/operators-js' },
       _change_case: { package: '@lowdefy/operators-change-case' },
       _diff: { package: '@lowdefy/operators-diff' },
