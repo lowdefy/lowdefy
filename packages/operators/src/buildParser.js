@@ -91,8 +91,17 @@ class BuildParser {
       }
 
       if (!type.isObject(value)) return value;
-      // TODO: pass ~r in errors. Build does not have ~k.
-      if (type.isString(value['~r'])) return value;
+
+      // Check if this is an operator object BEFORE checking ~r
+      // Operators in vars have ~r set by copyVarValue, but should still be evaluated
+      const keys = Object.keys(value);
+      const isSingleKeyObject = keys.length === 1;
+      const key = isSingleKeyObject ? keys[0] : null;
+      const isOperatorObject = key && key.startsWith(operatorPrefix);
+
+      // Skip non-operator objects that have already been processed (have ~r marker)
+      // But allow operator objects to be evaluated even if they have ~r
+      if (type.isString(value['~r']) && !isOperatorObject) return value;
 
       // Type boundary reset: if object has a 'type' key matching a registered type,
       // delete the ~dyn marker and skip bubble-up to prevent propagation past this boundary
@@ -106,9 +115,8 @@ class BuildParser {
         return BuildParser.setDynamicMarker(value);
       }
 
-      if (Object.keys(value).length !== 1) return value;
-      const key = Object.keys(value)[0];
-      if (!key.startsWith(operatorPrefix)) return value;
+      if (!isSingleKeyObject) return value;
+      if (!isOperatorObject) return value;
       const [op, methodName] = `_${key.substring(operatorPrefix.length)}`.split('.');
 
       // Check if this operator/method is dynamic
