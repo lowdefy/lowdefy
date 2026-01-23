@@ -516,6 +516,81 @@ Page Component
 | _user Operator | `packages/plugins/operators/operators-js/src/operators/shared/user.js` |
 | API Route | `packages/servers/server/pages/api/auth/[...nextauth].js` |
 
+## Mock User for E2E Testing (Dev Server Only)
+
+The dev server supports mock users for e2e testing, bypassing the login flow.
+
+### Configuration
+
+**Environment Variable (takes precedence):**
+```bash
+LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+**Config File:**
+```yaml
+auth:
+  providers:
+    - id: credentials
+      type: CredentialsProvider
+      # ...
+  dev:
+    mockUser:
+      sub: test-user
+      email: test@example.com
+      roles:
+        - admin
+```
+
+### How It Works
+
+**File:** `packages/servers/server-dev/lib/server/auth/getMockSession.js`
+
+```javascript
+async function getMockSession() {
+  // 1. Check env var first (takes precedence)
+  const mockUserJson = process.env.LOWDEFY_DEV_USER;
+  let mockUser = mockUserJson ? JSON.parse(mockUserJson) : authJson.dev?.mockUser;
+
+  if (!mockUser) return undefined;
+
+  // 2. Validate auth is configured
+  if (authJson.configured !== true) {
+    throw new Error('Mock user configured but auth is not configured');
+  }
+
+  // 3. Transform through session callback (userFields, custom callbacks apply)
+  const sessionCallback = createSessionCallback({ authConfig: authJson, plugins: { callbacks } });
+  const session = await sessionCallback({
+    session: { user: {} },
+    token: mockUser,
+    user: mockUser,
+  });
+
+  return session;
+}
+```
+
+### Integration Points
+
+1. **Server-side requests:** `getServerSession.js` returns mock session before calling NextAuth
+2. **Client-side session:** `[...nextauth].js` returns mock session for `/api/auth/session` requests
+3. **Startup warning:** `checkMockUserWarning.js` logs "Mock user active - login bypassed"
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `server-dev/lib/server/auth/getMockSession.js` | Core mock session logic |
+| `server-dev/lib/server/auth/checkMockUserWarning.js` | Startup warning |
+| `server-dev/lib/server/auth/getServerSession.js` | Server-side integration |
+| `server-dev/pages/api/auth/[...nextauth].js` | Client-side integration |
+| `build/src/lowdefySchema.js` | Schema for `auth.dev.mockUser` |
+
+### Security Note
+
+Mock user is **only available in server-dev**. The production server (`@lowdefy/server`) has no mock user code paths.
+
 ## Security Considerations
 
 1. **404 for Unauthorized**: Returns 404 instead of 403 to hide existence
