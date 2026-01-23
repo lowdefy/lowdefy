@@ -24,7 +24,7 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => {
   };
 });
 
-test('createReadConfigFile', async () => {
+test('createReadConfigFile returns file content for non-json files', async () => {
   const nodeUtils = await import('@lowdefy/node-utils');
 
   const fileCache = new Map();
@@ -33,4 +33,19 @@ test('createReadConfigFile', async () => {
   const readConfigFile = createReadConfigFile({ buildDirectory: '/build', fileCache });
   const res = await readConfigFile('file');
   expect(res).toEqual('config value');
+});
+
+test('createReadConfigFile deserializes json files with ~arr markers', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+
+  const fileCache = new Map();
+  // Simulates serializer output with ~arr wrapper for arrays with ~l property
+  nodeUtils.readFile.mockImplementation(() =>
+    Promise.resolve('{"~arr":[{"id":"item1"},{"id":"item2"}],"~l":2}')
+  );
+  const createReadConfigFile = (await import('./createReadConfigFile.js')).default;
+  const readConfigFile = createReadConfigFile({ buildDirectory: '/build', fileCache });
+  const res = await readConfigFile('menus.json');
+  expect(res).toEqual([{ id: 'item1' }, { id: 'item2' }]);
+  expect(Array.isArray(res)).toBe(true);
 });

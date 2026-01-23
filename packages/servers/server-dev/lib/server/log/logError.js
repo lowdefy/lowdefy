@@ -52,7 +52,7 @@ async function logError({ context, error }) {
     const source = location?.source ? `${location.source} at ${location.config}` : '';
     const link = location?.link || '';
 
-    if (isServiceError) {
+    if (isServiceError || !location) {
       console.error(`[${errorType}] ${message}`);
     } else {
       console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
