@@ -44,6 +44,6 @@ function _regex({ location, params, state }) {
   }
 }
 
-_regex.dynamic = false;
+_regex.dynamic = true;
 
 export default _regex;

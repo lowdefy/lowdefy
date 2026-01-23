@@ -15,7 +15,7 @@
 */
 
 function js(operatorContext) {
-  const { jsMap, operators, location, params } = operatorContext;
+  const { jsMap, operators, params } = operatorContext;
   try {
     return jsMap[params]({
       actions: (p) => operators._actions({ ...operatorContext, params: p }),
