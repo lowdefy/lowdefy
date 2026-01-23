@@ -15,10 +15,13 @@
   limitations under the License.
 */
 
+import checkMockUserWarning from '../../lib/server/auth/checkMockUserWarning.js';
+
 function initialBuild(context) {
   return async () => {
     context.readDotEnv();
     await context.lowdefyBuild();
+    await checkMockUserWarning(context);
     await context.installPlugins();
     await context.nextBuild();
   };

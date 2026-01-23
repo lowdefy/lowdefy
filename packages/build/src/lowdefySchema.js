@@ -372,6 +372,20 @@ export default {
         userFields: {
           type: 'object',
         },
+        dev: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            '~ignoreBuildCheck': {},
+            '~r': {},
+            '~l': {},
+            mockUser: {
+              type: 'object',
+              description:
+                'Mock user object for e2e testing in dev server. Any JSON structure accepted.',
+            },
+          },
+        },
       },
     },
     block: {
