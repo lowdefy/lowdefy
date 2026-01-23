@@ -64,10 +64,21 @@ function refReviver(key, value) {
         return copyVarValue(varValue, this.sourceRefId);
       }
       if (type.isObject(value._var) && type.isString(value._var.key)) {
-        const varValue = get(this.vars, value._var.key, {
-          default: type.isNone(value._var.default) ? null : value._var.default,
-        });
-        return copyVarValue(varValue, this.sourceRefId);
+        const varKey = value._var.key;
+        const varFromParent = get(this.vars, varKey);
+
+        // Check if var was explicitly provided (even if null) vs not provided at all (undefined)
+        // - Var provided (including null): use parent's sourceRefId for location
+        // - Var not provided (undefined): use default, preserve template's location
+        if (!type.isUndefined(varFromParent)) {
+          // Var was explicitly provided from parent file - use parent's location
+          return copyVarValue(varFromParent, this.sourceRefId);
+        }
+
+        // Using default value defined in template - preserve template's location markers
+        // Pass null for sourceRefId so we don't override the template file's ~r
+        const defaultValue = type.isNone(value._var.default) ? null : value._var.default;
+        return copyVarValue(defaultValue, null);
       }
       throw new Error(
         `"_var" operator takes a string or object with "key" field as arguments. Received "${JSON.stringify(

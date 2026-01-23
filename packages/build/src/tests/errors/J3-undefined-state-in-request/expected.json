@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["contact_company_ids"],
+      "warningContains": [
+        "[Config Warning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page."
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["contact_company_ids"],
+      "errorContains": [
+        "[Config Error] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page."
+      ],
+      "expectThrow": true
+    }
+  ]
+}
