@@ -17,24 +17,26 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 
-async function checkMockUserWarning({ directories, logger }) {
-  // Check env var first
-  if (process.env.LOWDEFY_DEV_USER) {
-    logger.warn('Mock user active - login bypassed');
-    return;
-  }
-
-  // Check auth.json after build
-  try {
-    const authJsonPath = path.join(directories.build, 'auth.json');
-    const authJsonContent = await readFile(authJsonPath, 'utf8');
-    const authJson = JSON.parse(authJsonContent);
-    if (authJson.dev?.mockUser) {
-      logger.warn('Mock user active - login bypassed');
+function checkMockUserWarning(context) {
+  return async () => {
+    // Check env var first
+    if (process.env.LOWDEFY_DEV_USER) {
+      context.logger.warn('Mock user active - login bypassed');
+      return;
     }
-  } catch {
-    // auth.json may not exist if auth is not configured
-  }
+
+    // Check auth.json after build
+    try {
+      const authJsonPath = path.join(context.directories.build, 'auth.json');
+      const authJsonContent = await readFile(authJsonPath, 'utf8');
+      const authJson = JSON.parse(authJsonContent);
+      if (authJson.dev?.mockUser) {
+        context.logger.warn('Mock user active - login bypassed');
+      }
+    } catch {
+      // auth.json may not exist if auth is not configured
+    }
+  };
 }
 
 export default checkMockUserWarning;
