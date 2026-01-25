@@ -16,14 +16,10 @@
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
+import { ConfigMessage } from '@lowdefy/node-utils';
 
 import findSimilarString from '../utils/findSimilarString.js';
 import formatBuildError from './formatBuildError.js';
-
-// Check if a configKey has ~ignoreBuildCheck set
-function hasIgnoreBuildCheck(keyMap, configKey) {
-  return keyMap[configKey]?.['~ignoreBuildCheck'] === true;
-}
 
 function buildTypeClass(
   context,
@@ -33,9 +29,9 @@ function buildTypeClass(
   const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
-      // Check if this type usage has ~ignoreBuildCheck flag
+      // Check if this type usage has ~ignoreBuildChecks flag
       const configKey = counter.getLocation(typeName);
-      if (configKey && hasIgnoreBuildCheck(context.keyMap, configKey)) {
+      if (ConfigMessage.shouldSuppress({ configKey, keyMap: context.keyMap, checkSlug: 'types' })) {
         return; // Skip warning/error for this type
       }
 

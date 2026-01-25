@@ -59,7 +59,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   };
 
   // Add config-aware methods to logger (don't spread - pino uses Symbol-keyed internals)
-  logger.configWarning = ({ message, configKey, operatorLocation, prodError }) => {
+  logger.configWarning = ({ message, configKey, operatorLocation, prodError, checkSlug }) => {
     try {
       // ConfigWarning.format throws ConfigError in prod mode when prodError is true
       const formatted = ConfigWarning.format({
@@ -68,6 +68,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         operatorLocation,
         context,
         prodError,
+        checkSlug,
       });
       if (formatted) {
         logger.warn(formatted);
@@ -85,8 +86,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       }
     }
   };
-  logger.configError = ({ message, configKey, operatorLocation }) => {
-    const formatted = ConfigError.format({ message, configKey, operatorLocation, context });
+  logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
+    const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
     if (formatted) {
       logger.error(formatted);
     }

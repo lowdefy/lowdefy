@@ -66,6 +66,7 @@ function buildRequest(request, pageContext) {
         message: `Request "${request.id}" at page "${pageId}" references non-existent connection "${request.connectionId}".`,
         configKey,
         context,
+        checkSlug: 'connection-refs',
       });
     }
   }

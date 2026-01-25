@@ -253,14 +253,18 @@ throw new ConfigError({
   message: `Block type "${type}" not found.`,
   configKey: block['~k'],
   context,
+  checkSlug: 'types',  // For ~ignoreBuildChecks suppression
 });
 
 // Warning - logs but continues build
 context.logger.configWarning({
   message: `Deprecated feature used.`,
   configKey: obj['~k'],
+  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
 });
 ```
+
+Errors and warnings can be suppressed using `~ignoreBuildChecks` in config. See [architecture/error-tracing.md](../architecture/error-tracing.md) for details.
 
 ## Entry Points
 

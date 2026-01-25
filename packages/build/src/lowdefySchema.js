@@ -9,7 +9,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         async: {
@@ -46,7 +66,27 @@ export default {
       type: 'object',
       additionalProperties: false,
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         html: {
@@ -78,7 +118,27 @@ export default {
         type: 'App "auth" should be an object.',
       },
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         advanced: {
@@ -124,7 +184,27 @@ export default {
             type: 'App "config.auth.api" should be an object.',
           },
           properties: {
-            '~ignoreBuildCheck': {},
+            '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
             '~r': {},
             '~l': {},
             protected: {
@@ -178,7 +258,27 @@ export default {
           type: 'object',
           additionalProperties: false,
           properties: {
-            '~ignoreBuildCheck': {},
+            '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
             '~r': {},
             '~l': {},
             signIn: {
@@ -282,7 +382,27 @@ export default {
             type: 'App "config.auth.pages" should be an object.',
           },
           properties: {
-            '~ignoreBuildCheck': {},
+            '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
             '~r': {},
             '~l': {},
             protected: {
@@ -379,7 +499,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -469,7 +609,27 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
-                    '~ignoreBuildCheck': {},
+                    '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
                     '~r': {},
                     '~l': {},
                     try: {
@@ -488,7 +648,27 @@ export default {
                       type: 'object',
                       additionalProperties: false,
                       properties: {
-                        '~ignoreBuildCheck': {},
+                        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
                         '~r': {},
                         '~l': {},
                         immediate: {
@@ -553,7 +733,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -591,7 +791,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -626,7 +846,27 @@ export default {
       additionalProperties: false,
       required: ['id'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -663,7 +903,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -717,7 +977,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -776,7 +1056,27 @@ export default {
       additionalProperties: false,
       required: ['name', 'version'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         name: {
@@ -811,7 +1111,27 @@ export default {
       additionalProperties: false,
       required: ['id', 'type', 'connectionId'],
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         id: {
@@ -858,7 +1178,27 @@ export default {
   additionalProperties: false,
   required: ['lowdefy'],
   properties: {
-    '~ignoreBuildCheck': {},
+    '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
     '~r': {},
     '~l': {},
     name: {
@@ -904,7 +1244,27 @@ export default {
       },
       additionalProperties: false,
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         basePath: {
@@ -982,7 +1342,27 @@ export default {
         type: 'App "logger" should be an object.',
       },
       properties: {
-        '~ignoreBuildCheck': {},
+        '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
         '~r': {},
         '~l': {},
         sentry: {
@@ -992,7 +1372,27 @@ export default {
             type: 'App "logger.sentry" should be an object.',
           },
           properties: {
-            '~ignoreBuildCheck': {},
+            '~ignoreBuildChecks': {
+          oneOf: [
+            { const: true },
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'state-refs',
+                  'payload-refs',
+                  'step-refs',
+                  'link-refs',
+                  'request-refs',
+                  'connection-refs',
+                  'types',
+                  'schema',
+                ],
+              },
+            },
+          ],
+        },
             '~r': {},
             '~l': {},
             client: {

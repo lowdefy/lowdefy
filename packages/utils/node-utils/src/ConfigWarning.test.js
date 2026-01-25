@@ -29,7 +29,7 @@ const mockContext = {
       key: 'root.pages[0].blocks[1]',
       '~r': 'ref1',
       '~l': 20,
-      '~ignoreBuildCheck': true,
+      '~ignoreBuildChecks': true,
     },
   },
   refMap: {

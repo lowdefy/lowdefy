@@ -15,10 +15,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
 
 import makeId from '../utils/makeId.js';
 
-function recArray({ array, nextKey, key, keyMap, keyMapId }) {
+function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
   array.forEach((item, index) => {
     if (type.isObject(item)) {
       let path = `${key}.${nextKey}[${index}]`;
@@ -42,15 +43,16 @@ function recArray({ array, nextKey, key, keyMap, keyMapId }) {
         key: path,
         keyMap: keyMap,
         parentKeyMapId: keyMapId,
+        context,
       });
     }
     if (type.isArray(item)) {
-      recArray({ array: item, nextKey, key, keyMap, keyMapId });
+      recArray({ array: item, nextKey, key, keyMap, keyMapId, context });
     }
   });
 }
 
-function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
+function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
   let keyMapId;
   let storedKey = key;
 
@@ -67,7 +69,44 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
     };
     if (object['~r'] !== undefined) entry['~r'] = object['~r'];
     if (object['~l'] !== undefined) entry['~l'] = object['~l'];
-    if (object['~ignoreBuildCheck'] !== undefined) entry['~ignoreBuildCheck'] = object['~ignoreBuildCheck'];
+
+    // Migration error for old property name
+    if (object['~ignoreBuildCheck'] !== undefined) {
+      throw new ConfigError({
+        message:
+          '~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. ' +
+          'Use ~ignoreBuildChecks: true to suppress all checks, or ' +
+          "~ignoreBuildChecks: ['state-refs', 'types'] to suppress specific checks.",
+        configKey: keyMapId,
+        context,
+      });
+    }
+
+    // Handle new ~ignoreBuildChecks property
+    if (object['~ignoreBuildChecks'] !== undefined) {
+      const checks = object['~ignoreBuildChecks'];
+
+      if (Array.isArray(checks)) {
+        const validSlugs = Object.keys(VALID_CHECK_SLUGS);
+        const invalid = checks.filter((slug) => !validSlugs.includes(slug));
+        if (invalid.length > 0) {
+          throw new ConfigError({
+            message: `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+            configKey: keyMapId,
+            context,
+          });
+        }
+      } else if (checks !== true) {
+        throw new ConfigError({
+          message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(checks)}`,
+          configKey: keyMapId,
+          context,
+        });
+      }
+
+      entry['~ignoreBuildChecks'] = checks;
+    }
+
     keyMap[keyMapId] = entry;
     Object.defineProperty(object, '~k', {
       value: keyMapId,
@@ -77,7 +116,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
     });
     delete object['~r'];
     delete object['~l'];
-    delete object['~ignoreBuildCheck'];
+    delete object['~ignoreBuildChecks'];
   }
 
   // Always recurse into children (they may be new objects without keys)
@@ -88,17 +127,18 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
         key: `${storedKey}.${nextKey}`,
         keyMap: keyMap,
         parentKeyMapId: keyMapId,
+        context,
       });
     }
     if (type.isArray(object[nextKey])) {
-      recArray({ array: object[nextKey], nextKey, key: storedKey, keyMap, keyMapId });
+      recArray({ array: object[nextKey], nextKey, key: storedKey, keyMap, keyMapId, context });
     }
   });
 }
 
 function addKeys({ components, context }) {
   const keyMapId = makeId.next();
-  recAddKeys({ object: components, key: 'root', keyMap: context.keyMap, parentKeyMapId: keyMapId });
+  recAddKeys({ object: components, key: 'root', keyMap: context.keyMap, parentKeyMapId: keyMapId, context });
 }
 
 export default addKeys;

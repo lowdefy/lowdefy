@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["undefinedKey"],
+      "warningContains": [
+        "[Config Warning] _state references \"undefinedKey\" on page \"home\""
+      ]
+    },
+    {
+      "mode": "prod",
+      "errors": ["undefinedKey"],
+      "errorContains": [
+        "[Config Error] _state references \"undefinedKey\" on page \"home\""
+      ],
+      "expectThrow": true
+    }
+  ]
+}

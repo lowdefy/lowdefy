@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["Invalid check slug(s)"],
+      "errorContains": ["invalid-slug", "Valid slugs:"],
+      "expectThrow": true
+    }
+  ]
+}

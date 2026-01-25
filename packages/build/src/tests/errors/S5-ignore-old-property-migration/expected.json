@@ -1,0 +1,9 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "errors": ["~ignoreBuildCheck has been renamed to ~ignoreBuildChecks"],
+      "expectThrow": true
+    }
+  ]
+}
