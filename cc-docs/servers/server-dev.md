@@ -464,9 +464,9 @@ const nextConfig = {
 | Plugin change | nextBuildWatcher | Next build | Hard restart |
 | package.json | nextBuildWatcher | Install + build | Hard restart |
 
-## Mock User for E2E Testing
+## Mock User for Testing
 
-The dev server supports mock users for e2e testing, bypassing the login flow.
+The dev server supports mock users for testing, bypassing the login flow.
 
 ### Configuration
 
@@ -493,7 +493,7 @@ auth:
 | `lib/server/auth/getServerSession.js` | Server-side integration |
 | `pages/api/auth/[...nextauth].js` | Client-side integration |
 
-See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-e2e-testing-dev-server-only) for full details.
+See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
 
 ## Environment Variables
 
@@ -503,4 +503,4 @@ See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-e2e-
 | `LOWDEFY_DIRECTORY_CONFIG` | Config directory path |
 | `PORT` | Server port (default: 3000) |
 | `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver |
-| `LOWDEFY_DEV_USER` | Mock user JSON for e2e testing |
+| `LOWDEFY_DEV_USER` | Mock user JSON for testing |

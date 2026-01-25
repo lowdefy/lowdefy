@@ -516,9 +516,9 @@ Page Component
 | _user Operator | `packages/plugins/operators/operators-js/src/operators/shared/user.js` |
 | API Route | `packages/servers/server/pages/api/auth/[...nextauth].js` |
 
-## Mock User for E2E Testing (Dev Server Only)
+## Mock User for Testing (Dev Server Only)
 
-The dev server supports mock users for e2e testing, bypassing the login flow.
+The dev server supports mock users for testing, bypassing the login flow.
 
 ### Configuration
 
