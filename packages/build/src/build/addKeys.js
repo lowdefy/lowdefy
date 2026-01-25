@@ -70,6 +70,9 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
     if (object['~r'] !== undefined) entry['~r'] = object['~r'];
     if (object['~l'] !== undefined) entry['~l'] = object['~l'];
 
+    // Add entry to keyMap BEFORE validation so errors can resolve location
+    keyMap[keyMapId] = entry;
+
     // Migration error for old property name
     if (object['~ignoreBuildCheck'] !== undefined) {
       throw new ConfigError({
@@ -106,8 +109,6 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
       entry['~ignoreBuildChecks'] = checks;
     }
-
-    keyMap[keyMapId] = entry;
     Object.defineProperty(object, '~k', {
       value: keyMapId,
       enumerable: false,

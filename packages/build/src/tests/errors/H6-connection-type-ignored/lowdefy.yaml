@@ -1,6 +1,6 @@
 # H6: Invalid Connection Type with ~ignoreBuildCheck
 # ===================================================
-# Tests that invalid connection type errors are suppressed with ~ignoreBuildCheck: true.
+# Tests that invalid connection type errors are suppressed with ~ignoreBuildChecks: true.
 # The ~ignoreBuildCheck flag is on the connection object.
 #
 # Expected: NO error should be shown for NonExistentConnection.
@@ -10,7 +10,7 @@ lowdefy: local
 connections:
   - id: ignoredConnection
     type: NonExistentConnection
-    ~ignoreBuildCheck: true
+    ~ignoreBuildChecks: true
 
 pages:
   - id: home

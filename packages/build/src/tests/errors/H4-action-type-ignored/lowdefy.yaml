@@ -1,6 +1,6 @@
 # H4: Invalid Action Type with ~ignoreBuildCheck
 # ===============================================
-# Tests that invalid action type errors are suppressed with ~ignoreBuildCheck: true.
+# Tests that invalid action type errors are suppressed with ~ignoreBuildChecks: true.
 # The ~ignoreBuildCheck flag is on the action object.
 #
 # Expected: NO error should be shown for NonExistentAction.
@@ -17,4 +17,4 @@ pages:
           onClick:
             - id: ignoredAction
               type: NonExistentAction
-              ~ignoreBuildCheck: true
+              ~ignoreBuildChecks: true

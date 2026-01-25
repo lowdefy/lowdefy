@@ -1,6 +1,6 @@
 # K2: Undefined Payload Reference with ~ignoreBuildCheck
 # =======================================================
-# Tests that _payload reference warnings are suppressed with ~ignoreBuildCheck: true.
+# Tests that _payload reference warnings are suppressed with ~ignoreBuildChecks: true.
 # The ~ignoreBuildCheck flag is on the same object as the operator.
 #
 # Expected: NO warning should be shown.
@@ -23,10 +23,10 @@ pages:
         payload:
           userId:
             _state: selectedUser
-            ~ignoreBuildCheck: true
+            ~ignoreBuildChecks: true
         properties:
           url: /users
           params:
             id:
               _payload: undefinedKey
-              ~ignoreBuildCheck: true
+              ~ignoreBuildChecks: true
