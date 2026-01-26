@@ -1,0 +1,16 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "description": "Multiple schema errors across pages should ALL be collected",
+      "errorContains": [
+        "[Config Error] Block should have required property \"id\"",
+        "root.pages[0:page1:Box].blocks[0:Paragraph]",
+        "root.pages[1:page2:Box].blocks[0:Paragraph]",
+        "root.pages[2:page3:Box].blocks[0:Paragraph]"
+      ],
+      "errorCount": 3,
+      "expectThrow": true
+    }
+  ]
+}

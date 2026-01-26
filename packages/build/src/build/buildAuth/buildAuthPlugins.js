@@ -14,34 +14,37 @@
   limitations under the License.
 */
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import collectConfigError from '../../utils/collectConfigError.js';
 
 function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
   if (type.isArray(pluginConfig)) {
     pluginConfig.forEach((plugin) => {
       const configKey = plugin['~k'];
       if (type.isUndefined(plugin.id)) {
-        throw new ConfigError({
+        collectConfigError({
           message: `Auth ${typeClass} id missing.`,
           configKey,
           context,
         });
+        return;
       }
       if (!type.isString(plugin.id)) {
-        throw new ConfigError({
+        collectConfigError({
           message: `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`,
           configKey,
           context,
         });
+        return;
       }
       if (!type.isString(plugin.type)) {
-        throw new ConfigError({
+        collectConfigError({
           message: `Auth ${typeClass} type is not a string at ${typeClass} "${
             plugin.id
           }". Received ${JSON.stringify(plugin.type)}.`,
           configKey,
           context,
         });
+        return;
       }
       counter.increment(plugin.type, plugin['~k']);
     });
@@ -55,27 +58,30 @@ function buildAdapter({ components, context }) {
   }
   const configKey = adapter['~k'];
   if (type.isUndefined(adapter.id)) {
-    throw new ConfigError({
+    collectConfigError({
       message: 'Auth adapter id missing.',
       configKey,
       context,
     });
+    return;
   }
   if (!type.isString(adapter.id)) {
-    throw new ConfigError({
+    collectConfigError({
       message: `Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`,
       configKey,
       context,
     });
+    return;
   }
   if (!type.isString(adapter.type)) {
-    throw new ConfigError({
+    collectConfigError({
       message: `Auth adapter type is not a string at adapter "${
         adapter.id
       }". Received ${JSON.stringify(adapter.type)}.`,
       configKey,
       context,
     });
+    return;
   }
   context.typeCounters.auth.adapters.increment(adapter.type, adapter['~k']);
 }

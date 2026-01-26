@@ -17,7 +17,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, resolveConfigLocation } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/node-utils';
+import collectConfigError from '../utils/collectConfigError.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 
 function buildDefaultMenu({ components, context }) {
@@ -99,21 +100,28 @@ function buildMenu({ components, context }) {
     message: 'Duplicate menuId "{{ id }}".',
     context,
   });
-  components.menus.forEach((menu) => {
+  // Track which menus failed validation so we skip processing them
+  const failedMenuIndices = new Set();
+
+  components.menus.forEach((menu, menuIndex) => {
     const configKey = menu['~k'];
     if (type.isUndefined(menu.id)) {
-      throw new ConfigError({
+      collectConfigError({
         message: 'Menu id missing.',
         configKey,
         context,
       });
+      failedMenuIndices.add(menuIndex);
+      return;
     }
     if (!type.isString(menu.id)) {
-      throw new ConfigError({
+      collectConfigError({
         message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
         configKey,
         context,
       });
+      failedMenuIndices.add(menuIndex);
+      return;
     }
     checkDuplicateMenuId({ id: menu.id, configKey });
     menu.menuId = menu.id;

@@ -2,6 +2,21 @@
 
 Config-aware error tracing that maps runtime and build-time errors back to their source YAML configuration files.
 
+> **IMPORTANT: Collect Errors, Don't Throw Immediately**
+>
+> Build-time validation errors MUST be collected using `collectConfigError()` instead of throwing `ConfigError` directly. This allows the build to continue and report ALL errors at once, rather than stopping at the first error.
+>
+> ```javascript
+> // WRONG - stops build at first error
+> throw new ConfigError({ message: '...', configKey, context });
+>
+> // CORRECT - collects error, build continues
+> import collectConfigError from '../utils/collectConfigError.js';
+> collectConfigError({ message: '...', configKey, context });
+> ```
+>
+> When using `collectConfigError`, return early from the current function to avoid continuing with invalid data. The error will be reported with all other errors at the build checkpoint.
+
 ## Context
 
 When Lowdefy throws errors (client, server, or build), developers need to trace them back to the specific location in their YAML configuration. This system uses build artifacts (`keyMap.json` and `refMap.json`) to resolve error locations with file paths and line numbers.

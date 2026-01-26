@@ -15,8 +15,9 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError, VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
+import { VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
 
+import collectConfigError from '../utils/collectConfigError.js';
 import makeId from '../utils/makeId.js';
 
 function recArray({ array, nextKey, key, keyMap, keyMapId, context }) {
@@ -75,7 +76,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
     // Migration error for old property name
     if (object['~ignoreBuildCheck'] !== undefined) {
-      throw new ConfigError({
+      collectConfigError({
         message:
           '~ignoreBuildCheck has been renamed to ~ignoreBuildChecks. ' +
           'Use ~ignoreBuildChecks: true to suppress all checks, or ' +
@@ -93,7 +94,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         const validSlugs = Object.keys(VALID_CHECK_SLUGS);
         const invalid = checks.filter((slug) => !validSlugs.includes(slug));
         if (invalid.length > 0) {
-          throw new ConfigError({
+          collectConfigError({
             message: `Invalid check slug(s): "${invalid.join(
               '", "'
             )}". Valid slugs: ${validSlugs.join(', ')}`,
@@ -102,7 +103,7 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
           });
         }
       } else if (checks !== true) {
-        throw new ConfigError({
+        collectConfigError({
           message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(
             checks
           )}`,
