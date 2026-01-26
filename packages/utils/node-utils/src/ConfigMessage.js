@@ -19,23 +19,72 @@ import path from 'path';
 import resolveConfigLocation from './resolveConfigLocation.js';
 
 /**
+ * Valid check slugs for ~ignoreBuildChecks.
+ * Keys are the slug names, values are descriptions for error messages.
+ * These suppress BUILD-TIME validation only - runtime errors still occur.
+ */
+export const VALID_CHECK_SLUGS = {
+  'state-refs': 'Undefined _state reference warnings',
+  'payload-refs': 'Undefined _payload reference warnings',
+  'step-refs': 'Undefined _step reference warnings',
+  'link-refs': 'Invalid Link action page reference warnings',
+  'request-refs': 'Invalid Request action reference warnings',
+  'connection-refs': 'Nonexistent connection ID references',
+  'types': 'All type validation (blocks, operators, actions, requests, connections)',
+  'schema': 'JSON schema validation errors',
+};
+
+/**
  * Base class for config message formatting.
  * Provides shared utilities for ConfigError and ConfigWarning.
  */
 class ConfigMessage {
   /**
-   * Checks if a message should be suppressed based on ~ignoreBuildCheck flag.
+   * Checks if a message should be suppressed based on ~ignoreBuildChecks.
+   * Walks up the parent chain looking for suppressions that cover this check.
+   * This walk happens ONLY when an error/warning is about to be logged.
+   *
    * @param {Object} params
-   * @param {string} params.configKey - Config key (~k)
+   * @param {string} params.configKey - Config key (~k) of the error location
    * @param {Object} params.keyMap - The keyMap from build context
+   * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
+   * @param {boolean} [params.verbose] - Log suppressions when true
    * @returns {boolean} True if message should be suppressed
    */
-  static shouldSuppress({ configKey, keyMap }) {
-    if (!configKey || !keyMap || !keyMap[configKey]) {
-      return false;
+  static shouldSuppress({ configKey, keyMap, checkSlug, verbose }) {
+    if (!configKey || !keyMap) return false;
+
+    let currentKey = configKey;
+    let depth = 0;
+    const MAX_DEPTH = 100; // Guard against circular parents
+
+    while (currentKey && depth < MAX_DEPTH) {
+      const entry = keyMap[currentKey];
+      if (!entry) break;
+
+      const ignoredChecks = entry['~ignoreBuildChecks'];
+
+      if (ignoredChecks === true) {
+        if (verbose) {
+          // eslint-disable-next-line no-console
+          console.log(`[Debug] Suppressed all checks at ${currentKey} (inherited to ${configKey})`);
+        }
+        return true;
+      }
+
+      if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
+        if (verbose) {
+          // eslint-disable-next-line no-console
+          console.log(`[Debug] Suppressed ${checkSlug} at ${currentKey} (inherited to ${configKey})`);
+        }
+        return true;
+      }
+
+      currentKey = entry['~k_parent'];
+      depth++;
     }
-    const keyMapEntry = keyMap[configKey];
-    return keyMapEntry['~ignoreBuildCheck'] === true;
+
+    return false;
   }
 
   /**
@@ -89,6 +138,7 @@ class ConfigMessage {
    * @param {number|string} [params.lineNumber] - Direct line number (for raw mode)
    * @param {Object} [params.context] - Build context with keyMap, refMap, directories
    * @param {string} [params.configDirectory] - Config directory (for raw mode without context)
+   * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
    * @returns {string} Formatted message or empty string if suppressed
    */
   static format({
@@ -100,9 +150,11 @@ class ConfigMessage {
     lineNumber,
     context,
     configDirectory,
+    checkSlug,
   }) {
-    // Check for ~ignoreBuildCheck: true suppression
-    if (ConfigMessage.shouldSuppress({ configKey, keyMap: context?.keyMap })) {
+    // Check for ~ignoreBuildChecks suppression
+    const verbose = context?.logger?.level === 'debug';
+    if (ConfigMessage.shouldSuppress({ configKey, keyMap: context?.keyMap, checkSlug, verbose })) {
       return '';
     }
 

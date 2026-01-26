@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["should be an object"],
       "errorContains": [
-        "[Config Error] App \"auth\" should be an object.\n  lowdefy.yaml:11 at root\n  {{fixturesDir}}/B1-auth-not-object/lowdefy.yaml:11"
+        "[Config Error] App \"auth\" should be an object.",
+        "lowdefy.yaml:11",
+        "{{fixturesDir}}/B1-auth-not-object/lowdefy.yaml:11"
       ]
     }
   ]

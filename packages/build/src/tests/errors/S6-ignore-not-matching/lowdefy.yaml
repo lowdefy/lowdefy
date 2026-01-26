@@ -1,0 +1,22 @@
+# S6: Wrong Slug Does Not Suppress
+# =================================
+# Tests that specifying the wrong check slug does not suppress warnings.
+#
+# The block has ~ignoreBuildChecks: ['types'] but the warning is for
+# a state-refs issue. The warning should still appear.
+#
+# Expected: Warning for undefinedKey should still appear.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef
+        type: Paragraph
+        ~ignoreBuildChecks:
+          - types
+        properties:
+          content:
+            _state: undefinedKey

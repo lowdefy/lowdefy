@@ -16,6 +16,7 @@
 
 import cleanDirectory from './cleanDirectory.js';
 import ConfigError from './ConfigError.js';
+import ConfigMessage, { VALID_CHECK_SLUGS } from './ConfigMessage.js';
 import ConfigWarning from './ConfigWarning.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
@@ -28,6 +29,7 @@ import writeFile from './writeFile.js';
 export {
   cleanDirectory,
   ConfigError,
+  ConfigMessage,
   ConfigWarning,
   copyFileOrDirectory,
   getFileExtension,
@@ -36,5 +38,6 @@ export {
   resolveConfigLocation,
   spawnProcess,
   readFile,
+  VALID_CHECK_SLUGS,
   writeFile,
 };

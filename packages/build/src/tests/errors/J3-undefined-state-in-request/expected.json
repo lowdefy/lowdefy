@@ -4,14 +4,18 @@
       "mode": "dev",
       "warnings": ["contact_company_ids"],
       "warningContains": [
-        "[Config Warning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page."
+        "[Config Warning] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
+        "lowdefy.yaml:33",
+        "{{fixturesDir}}/J3-undefined-state-in-request/lowdefy.yaml:33"
       ]
     },
     {
       "mode": "prod",
       "errors": ["contact_company_ids"],
       "errorContains": [
-        "[Config Error] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page."
+        "[Config Error] _state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
+        "lowdefy.yaml:33",
+        "{{fixturesDir}}/J3-undefined-state-in-request/lowdefy.yaml:33"
       ],
       "expectThrow": true
     }

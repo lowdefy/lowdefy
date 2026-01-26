@@ -4,14 +4,18 @@
       "mode": "dev",
       "warnings": ["nonExistentStep"],
       "warningContains": [
-        "[Config Warning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine."
+        "[Config Warning] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine.",
+        "lowdefy.yaml:32",
+        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32"
       ]
     },
     {
       "mode": "prod",
       "errors": ["nonExistentStep"],
       "errorContains": [
-        "[Config Error] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine."
+        "[Config Error] _step references \"nonExistentStep\" in endpoint \"testEndpoint\", but no step with id \"nonExistentStep\" exists in the routine.",
+        "lowdefy.yaml:32",
+        "{{fixturesDir}}/L1-undefined-step/lowdefy.yaml:32"
       ],
       "expectThrow": true
     }

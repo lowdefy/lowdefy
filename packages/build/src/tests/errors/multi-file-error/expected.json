@@ -4,12 +4,19 @@
       "mode": "dev",
       "errors": ["NonExistentBlockType"],
       "errorContains": [
-        "[Config Error] Block type \"NonExistentBlockType\" was used but is not defined.\n  pages/home.yaml:12 at root.pages[0:home:Box].blocks[1:invalidBlock:NonExistentBlockType]\n  {{fixturesDir}}/multi-file-error/pages/home.yaml:12"
+        "[Config Error] Block type \"NonExistentBlockType\" was used but is not defined.",
+        "pages/home.yaml:12",
+        "{{fixturesDir}}/multi-file-error/pages/home.yaml:12"
       ]
     },
     {
       "mode": "prod",
       "errors": ["NonExistentBlockType"],
+      "errorContains": [
+        "[Config Error] Block type \"NonExistentBlockType\" was used but is not defined.",
+        "pages/home.yaml:12",
+        "{{fixturesDir}}/multi-file-error/pages/home.yaml:12"
+      ],
       "expectThrow": true
     }
   ]

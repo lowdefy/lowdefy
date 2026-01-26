@@ -224,23 +224,49 @@ if (action.skip === true) {
 }
 ```
 
-### Suppressing Build Validation with ~ignoreBuildCheck
+### Suppressing Build Validation with ~ignoreBuildChecks
 
-The `~ignoreBuildCheck: true` property allows developers to explicitly suppress build-time validation errors and warnings for specific config objects.
+The `~ignoreBuildChecks` property allows developers to suppress specific or all build-time validation errors and warnings. Suppression cascades down to all descendant config objects.
+
+**Syntax:**
+
+```yaml
+# Suppress all checks for this object and descendants
+~ignoreBuildChecks: true
+
+# Suppress only specific check types
+~ignoreBuildChecks:
+  - state-refs
+  - types
+```
+
+**Available Check Slugs:**
+
+| Slug             | Description                                                     |
+|------------------|------------------------------------------------------------------|
+| `state-refs`     | Undefined `_state` reference warnings                            |
+| `payload-refs`   | Undefined `_payload` reference warnings                          |
+| `step-refs`      | Undefined `_step` reference warnings                             |
+| `link-refs`      | Invalid Link action page reference warnings                      |
+| `request-refs`   | Invalid Request action reference warnings                        |
+| `connection-refs`| Nonexistent connection ID references                             |
+| `types`          | All type validation (blocks, operators, actions, requests, connections) |
+| `schema`         | JSON schema validation errors                                    |
 
 **Use Cases:**
 - Dynamic config patterns where references only exist at runtime
 - Work-in-progress config during development
 - Conditional features that may not be valid in all contexts
+- Plugin development with custom types not yet registered
 
 **Behavior:**
-- Suppression is **silent** - no log output when errors are suppressed
-- Applies **only** to the object with the flag - does not traverse to children or parents
+- Suppression is **silent** by default - no log output when errors are suppressed
+- With `--log-level debug`, suppressions are logged for debugging
+- **Cascades to descendants** - setting on a page suppresses all child blocks
 - Only affects **build-time** validation - runtime errors still occur normally
 - Works on all config objects: blocks, operators, requests, connections, actions
-- `~ignoreBuildCheck: true` is the **only** extra key allowed on operator objects
 
-**Example:** State reference from dynamic registration
+**Example 1:** State reference from dynamic registration
 
 ```yaml
 blocks:
@@ -249,21 +275,64 @@ blocks:
     properties:
       onClick:
         _state: dynamicState  # Created by methods.registerEvent at runtime
-        ~ignoreBuildCheck: true  # Suppress build-time "state not found" warning
+        ~ignoreBuildChecks: true  # Suppress all build-time checks
 ```
 
-The `dynamicState` reference is created by `methods.registerEvent` in the block's code, which runs at runtime. Build-time validation would fail because the state doesn't exist yet, but `~ignoreBuildCheck: true` suppresses the warning.
+**Example 2:** Suppress only state references for an entire page
 
-**Implementation:** `packages/build/src/utils/formatConfigMessage.js:19-27`
+```yaml
+pages:
+  - id: dynamic-page
+    type: Box
+    ~ignoreBuildChecks:
+      - state-refs  # Only suppress state reference warnings
+    blocks:
+      - id: block1
+        type: TextInput
+        properties:
+          value:
+            _state: dynamicField  # No warning (inherited from page)
+```
+
+**Example 3:** Suppress type validation for custom plugin blocks
+
+```yaml
+blocks:
+  - id: custom_block
+    type: MyCustomBlock  # Custom type not in types registry
+    ~ignoreBuildChecks:
+      - types
+    properties:
+      title: Hello
+```
+
+**Implementation:**
+
+The suppression check happens lazily when an error/warning is about to be logged. It walks up the parent chain (`~k_parent`) looking for `~ignoreBuildChecks` settings:
 
 ```javascript
-function shouldSuppressError({ configKey, keyMap }) {
-  if (!configKey || !keyMap || !keyMap[configKey]) {
-    return false;
+// packages/utils/node-utils/src/ConfigMessage.js
+static shouldSuppress({ configKey, keyMap, checkSlug, verbose }) {
+  if (!configKey || !keyMap) return false;
+
+  let currentKey = configKey;
+  while (currentKey) {
+    const entry = keyMap[currentKey];
+    if (!entry) break;
+
+    const ignoredChecks = entry['~ignoreBuildChecks'];
+    if (ignoredChecks === true) return true;  // Suppress all
+    if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
+      return true;  // Suppress specific check
+    }
+
+    currentKey = entry['~k_parent'];
   }
-  return keyMap[configKey]['~ignoreBuildCheck'] === true;
+  return false;
 }
 ```
+
+**Migration:** The old `~ignoreBuildCheck` property is no longer supported. Using it will throw a migration error explaining the rename to `~ignoreBuildChecks`.
 
 ### Circular Reference Detection (`recursiveBuild.js`)
 

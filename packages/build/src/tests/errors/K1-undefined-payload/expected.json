@@ -2,16 +2,20 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["undefinedKey", "selectedUser"],
+      "warnings": ["undefinedKey"],
       "warningContains": [
-        "[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition."
+        "[Config Warning] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition.",
+        "lowdefy.yaml:33",
+        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33"
       ]
     },
     {
       "mode": "prod",
-      "errors": ["undefinedKey", "selectedUser"],
+      "errors": ["undefinedKey"],
       "errorContains": [
-        "[Config Error] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition."
+        "[Config Error] _payload references \"undefinedKey\" in request \"testRequest\" on page \"home\", but no key \"undefinedKey\" exists in the request payload definition.",
+        "lowdefy.yaml:33",
+        "{{fixturesDir}}/K1-undefined-payload/lowdefy.yaml:33"
       ],
       "expectThrow": true
     }

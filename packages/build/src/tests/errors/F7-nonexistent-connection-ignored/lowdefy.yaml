@@ -1,6 +1,6 @@
 # F7: Non-existent Connection with ~ignoreBuildCheck
 # ===================================================
-# Tests that non-existent connectionId errors are suppressed with ~ignoreBuildCheck: true.
+# Tests that non-existent connectionId errors are suppressed with ~ignoreBuildChecks: true.
 # The ~ignoreBuildCheck flag is on the request object.
 #
 # Expected: NO error should be shown.
@@ -14,6 +14,6 @@ pages:
       - id: ignoredRequest
         type: AxiosHttp
         connectionId: nonExistentConnection
-        ~ignoreBuildCheck: true
+        ~ignoreBuildChecks: true
         properties:
           url: /test

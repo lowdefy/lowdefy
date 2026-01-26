@@ -230,11 +230,36 @@ _ref:
                   transformer: transformers/addFooter.js
             ```
 
-            ## Suppressing Build Validation with ~ignoreBuildCheck
+            ## Suppressing Build Validation with ~ignoreBuildChecks
 
-            The `~ignoreBuildCheck: true` property suppresses build-time validation errors for references that only exist at runtime, such as state registered dynamically by custom blocks.
+            The `~ignoreBuildChecks` property suppresses build-time validation errors and warnings. Suppression cascades down to all descendant config objects.
 
-            ### Example
+            ### Syntax
+
+            ```yaml
+            # Suppress all checks for this object and descendants
+            ~ignoreBuildChecks: true
+
+            # Suppress only specific check types
+            ~ignoreBuildChecks:
+              - state-refs
+              - types
+            ```
+
+            ### Available Check Slugs
+
+            | Slug | What it suppresses |
+            |------|-------------------|
+            | `state-refs` | Undefined `_state` reference warnings |
+            | `payload-refs` | Undefined `_payload` reference warnings |
+            | `step-refs` | Undefined `_step` reference warnings |
+            | `link-refs` | Invalid Link action page reference warnings |
+            | `request-refs` | Invalid Request action reference warnings |
+            | `connection-refs` | Nonexistent connection ID references |
+            | `types` | All type validation (blocks, operators, actions, requests, connections) |
+            | `schema` | JSON schema validation errors |
+
+            ### Example: Dynamic State
 
             Custom blocks can register state at runtime using `methods.registerEvent`. Since this state doesn't exist during build, you can suppress the validation warning:
 
@@ -246,15 +271,47 @@ _ref:
                 properties:
                   onClick:
                     _state: dynamicState  # Created by block at runtime
-                    ~ignoreBuildCheck: true  # Suppress build validation
+                    ~ignoreBuildChecks: true  # Suppress all build checks
             ```
 
-            Without `~ignoreBuildCheck: true`, the build would fail with:
+            Without `~ignoreBuildChecks`, the build would warn:
             ```
             [Config Warning] _state references "dynamicState" but no block with id "dynamicState" exists
             ```
 
-            > **Note:** `~ignoreBuildCheck: true` only affects build-time validation. Runtime errors still occur if references don't exist. Only use this for references you know will exist at runtime.
+            ### Example: Page-Level Suppression
+
+            Suppression cascades to all children, so you can set it on a page to affect all blocks:
+
+            ```yaml
+            pages:
+              - id: dynamic-page
+                type: Box
+                ~ignoreBuildChecks:
+                  - state-refs  # Only suppress state reference warnings
+                blocks:
+                  - id: block1
+                    type: TextInput
+                    properties:
+                      value:
+                        _state: dynamicField  # No warning (inherited from page)
+            ```
+
+            ### Example: Custom Plugin Types
+
+            When using custom plugin types that aren't registered, you can suppress type validation:
+
+            ```yaml
+            blocks:
+              - id: custom_block
+                type: MyCustomBlock  # Custom type not in registry
+                ~ignoreBuildChecks:
+                  - types
+                properties:
+                  title: Hello
+            ```
+
+            > **Note:** `~ignoreBuildChecks` only affects build-time validation. Runtime errors still occur if references don't exist. Only use this for references you know will be valid at runtime.
 
       - _ref:
           path: templates/navigation_buttons.yaml

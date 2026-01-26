@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["Block \"type\" should be a string"],
       "errorContains": [
-        "[Config Error] Block \"type\" should be a string.\n  lowdefy.yaml:17 at root.pages[0:home:Box].blocks[0:badType:[object Object]].type\n  {{fixturesDir}}/E5-block-type-not-string/lowdefy.yaml:17"
+        "[Config Error] Block \"type\" should be a string.",
+        "lowdefy.yaml:17",
+        "{{fixturesDir}}/E5-block-type-not-string/lowdefy.yaml:17"
       ]
     }
   ]

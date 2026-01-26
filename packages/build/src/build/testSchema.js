@@ -63,7 +63,7 @@ function testSchema({ components, context }) {
         message = `${message} - "${error.params.additionalProperty}"`;
       }
 
-      const configError = new ConfigError({ message, configKey, context });
+      const configError = new ConfigError({ message, configKey, context, checkSlug: 'schema' });
       if (!configError.suppressed) {
         if (!context.errors) {
           // If no error collection array, throw immediately (fallback for tests)

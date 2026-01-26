@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["AxiosHtt"],
       "errorContains": [
-        "[Config Error] Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?\n  lowdefy.yaml:23 at root.pages[0:home:Box].requests[0:testApi:AxiosHtt]\n  {{fixturesDir}}/F5-invalid-request-type/lowdefy.yaml:23"
+        "[Config Error] Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?",
+        "lowdefy.yaml:23",
+        "{{fixturesDir}}/F5-invalid-request-type/lowdefy.yaml:23"
       ]
     }
   ]

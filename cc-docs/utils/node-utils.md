@@ -155,19 +155,46 @@ Build-time error and warning classes for config validation with location resolut
 
 ### ConfigMessage (Base Class)
 
-Shared formatting logic for config messages. Not used directly - use ConfigError or ConfigWarning.
+Shared formatting logic for config messages with suppression support. Not used directly - use ConfigError or ConfigWarning.
 
 ```javascript
-import { ConfigMessage } from '@lowdefy/node-utils';
+import { ConfigMessage, VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
 
-// Internal use only - provides format() static method
+// Check if a message should be suppressed based on ~ignoreBuildChecks
+const shouldSkip = ConfigMessage.shouldSuppress({
+  configKey: obj['~k'],
+  keyMap: context.keyMap,
+  checkSlug: 'state-refs',  // Optional - omit to only match ~ignoreBuildChecks: true
+  verbose: false,           // Set true to log suppressions
+});
+
+// Format a message with location
 const message = ConfigMessage.format({
   prefix: '[Custom]',
   message: 'Something happened',
   configKey: obj['~k'],
-  operatorLocation: 'pages[0].blocks[0]',
   context,
+  checkSlug: 'state-refs',  // For suppression check
 });
+```
+
+### VALID_CHECK_SLUGS
+
+Available check slugs for `~ignoreBuildChecks`:
+
+```javascript
+import { VALID_CHECK_SLUGS } from '@lowdefy/node-utils';
+
+// VALID_CHECK_SLUGS = {
+//   'state-refs': 'Undefined _state reference warnings',
+//   'payload-refs': 'Undefined _payload reference warnings',
+//   'step-refs': 'Undefined _step reference warnings',
+//   'link-refs': 'Invalid Link action page reference warnings',
+//   'request-refs': 'Invalid Request action reference warnings',
+//   'connection-refs': 'Nonexistent connection ID references',
+//   'types': 'All type validation (blocks, operators, actions, requests, connections)',
+//   'schema': 'JSON schema validation errors',
+// }
 ```
 
 ### ConfigError
@@ -216,6 +243,7 @@ The build context logger has convenience methods that wrap ConfigError and Confi
 context.logger.configWarning({
   message: '_state references "userName" but no block exists.',
   configKey: obj['~k'],
+  checkSlug: 'state-refs',  // For ~ignoreBuildChecks suppression
 });
 
 // Warning that becomes error in prod builds
@@ -223,26 +251,33 @@ context.logger.configWarning({
   message: 'Deprecated feature used.',
   configKey: obj['~k'],
   prodError: true,
+  checkSlug: 'types',
 });
 
 // Throws ConfigError with location
 context.logger.configError({
   message: 'Invalid block type.',
   configKey: block['~k'],
+  checkSlug: 'types',
 });
 ```
 
 **Implementation** (in `createContext.js`):
 ```javascript
-logger.configWarning = ({ message, configKey, operatorLocation, prodError }) => {
-  const formatted = ConfigWarning.format({ message, configKey, operatorLocation, context, prodError });
+logger.configWarning = ({ message, configKey, operatorLocation, prodError, checkSlug }) => {
+  const formatted = ConfigWarning.format({
+    message, configKey, operatorLocation, context, prodError, checkSlug
+  });
   if (formatted) {
     logger.warn(formatted);
   }
 };
 
-logger.configError = ({ message, configKey, operatorLocation }) => {
-  throw new ConfigError({ message, configKey, operatorLocation, context });
+logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
+  const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
+  if (formatted) {
+    logger.error(formatted);
+  }
 };
 ```
 

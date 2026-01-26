@@ -1,5 +1,5 @@
 # Page template that uses _var to get a state reference from parent.
-# The parent's var has ~ignoreBuildCheck: true, which should suppress warnings.
+# The parent's var has ~ignoreBuildChecks: true, which should suppress warnings.
 id: templatePage
 type: Box
 requests:

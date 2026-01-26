@@ -57,6 +57,7 @@ class ConfigError extends Error {
     lineNumber,
     context,
     configDirectory,
+    checkSlug,
   }) {
     // Handle YAML parse errors - extract line number from error message
     let finalMessage = message;
@@ -76,6 +77,7 @@ class ConfigError extends Error {
       lineNumber: finalLineNumber,
       context,
       configDirectory,
+      checkSlug,
     });
 
     super(formattedMessage);

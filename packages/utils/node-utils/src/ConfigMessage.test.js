@@ -27,7 +27,7 @@ const mockContext = {
       key: 'root.pages[0].blocks[1]',
       '~r': 'ref1',
       '~l': 20,
-      '~ignoreBuildCheck': true,
+      '~ignoreBuildChecks': true,
     },
     keyWithoutRef: {
       key: 'root.pages[0].blocks[2]',
@@ -59,13 +59,13 @@ describe('ConfigMessage.shouldSuppress', () => {
     );
   });
 
-  test('returns false when ~ignoreBuildCheck is not set', () => {
+  test('returns false when ~ignoreBuildChecks is not set', () => {
     expect(ConfigMessage.shouldSuppress({ configKey: 'testKey', keyMap: mockContext.keyMap })).toBe(
       false
     );
   });
 
-  test('returns true when ~ignoreBuildCheck is true', () => {
+  test('returns true when ~ignoreBuildChecks is true', () => {
     expect(
       ConfigMessage.shouldSuppress({ configKey: 'suppressedKey', keyMap: mockContext.keyMap })
     ).toBe(true);

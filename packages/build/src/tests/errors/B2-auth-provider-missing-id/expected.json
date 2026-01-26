@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["should have required property \"id\""],
       "errorContains": [
-        "[Config Error] Auth provider should have required property \"id\".\n  lowdefy.yaml:14 at root.auth.providers[0:GoogleProvider]\n  {{fixturesDir}}/B2-auth-provider-missing-id/lowdefy.yaml:14"
+        "[Config Error] Auth provider should have required property \"id\".",
+        "lowdefy.yaml:14",
+        "{{fixturesDir}}/B2-auth-provider-missing-id/lowdefy.yaml:14"
       ]
     }
   ]
