@@ -15,6 +15,7 @@
 */
 
 import { createSessionCallback } from '@lowdefy/api';
+import { serializer } from '@lowdefy/helpers';
 
 import authJson from '../../../build/auth.json';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
@@ -37,8 +38,8 @@ async function getMockSession() {
     return undefined;
   }
 
-  // Remove build markers from mock user
-  mockUser = Object.fromEntries(Object.entries(mockUser).filter(([key]) => !key.startsWith('~')));
+  // Deserialize to restore arrays from ~arr markers and remove other build markers
+  mockUser = serializer.deserialize(mockUser);
 
   if (authJson.configured !== true) {
     throw new Error(
