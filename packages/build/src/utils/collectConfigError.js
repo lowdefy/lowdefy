@@ -37,11 +37,13 @@ function collectConfigError({ message, configKey, context }) {
     throw new Error(errorMessage);
   }
 
-  // Deduplicate by full formatted message (source:line + message)
-  if (context.seenMessages?.has(errorMessage)) {
+  // Deduplicate by source:line only (same file:line = same error)
+  const newlineIndex = errorMessage.indexOf('\n');
+  const sourceLine = newlineIndex > 0 ? errorMessage.slice(0, newlineIndex) : errorMessage;
+  if (context.seenSourceLines?.has(sourceLine)) {
     return;
   }
-  context.seenMessages?.add(errorMessage);
+  context.seenSourceLines?.add(sourceLine);
 
   // Collect error - logging happens at checkpoints in index.js
   context.errors.push(errorMessage);

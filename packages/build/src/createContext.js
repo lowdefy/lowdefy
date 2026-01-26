@@ -24,9 +24,19 @@ import createReadConfigFile from './utils/readConfigFile.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
+/**
+ * Extracts source:line from a formatted message for deduplication.
+ * Format: "source:line\n[Config Warning/Error] message"
+ * Returns the first line (source:line) as the dedup key.
+ */
+function getSourceLine(formatted) {
+  const newlineIndex = formatted.indexOf('\n');
+  return newlineIndex > 0 ? formatted.slice(0, newlineIndex) : formatted;
+}
+
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
-  // Track seen messages for deduplication (by source:line + message)
-  const seenMessages = new Set();
+  // Track seen source:line for deduplication (same file:line = same warning, even if different pages)
+  const seenSourceLines = new Set();
 
   // Create context object first (needed for logger methods)
   const context = {
@@ -39,7 +49,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
-    seenMessages, // For deduplication
+    seenSourceLines, // For deduplication by source:line
     stage,
     typeCounters: {
       actions: createCounter(),
@@ -75,11 +85,12 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         checkSlug,
       });
       if (formatted) {
-        // Deduplicate by full formatted message (source:line + message)
-        if (seenMessages.has(formatted)) {
+        // Deduplicate by source:line only (same file:line = same warning)
+        const sourceLine = getSourceLine(formatted);
+        if (seenSourceLines.has(sourceLine)) {
           return;
         }
-        seenMessages.add(formatted);
+        seenSourceLines.add(sourceLine);
         logger.warn(formatted);
       }
     } catch (err) {
@@ -87,8 +98,9 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       // This allows validation to continue and report all errors
       if (err instanceof ConfigError) {
         // Skip suppressed errors (empty message means ~ignoreBuildCheck: true)
-        if (!err.suppressed && !seenMessages.has(err.message)) {
-          seenMessages.add(err.message);
+        const sourceLine = getSourceLine(err.message);
+        if (!err.suppressed && !seenSourceLines.has(sourceLine)) {
+          seenSourceLines.add(sourceLine);
           context.errors.push(err.message);
         }
       } else {
@@ -99,11 +111,12 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
     const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
     if (formatted) {
-      // Deduplicate by full formatted message (source:line + message)
-      if (seenMessages.has(formatted)) {
+      // Deduplicate by source:line only (same file:line = same warning)
+      const sourceLine = getSourceLine(formatted);
+      if (seenSourceLines.has(sourceLine)) {
         return;
       }
-      seenMessages.add(formatted);
+      seenSourceLines.add(sourceLine);
       logger.error(formatted);
     }
   };
