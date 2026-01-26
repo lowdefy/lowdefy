@@ -18,6 +18,7 @@ import NextAuth from 'next-auth';
 
 import apiWrapper from '../../../lib/server/apiWrapper.js';
 import authJson from '../../../build/auth.json';
+import getMockSession from '../../../lib/server/auth/getMockSession.js';
 
 async function handler({ context, req, res }) {
   if (authJson.configured !== true) {
@@ -31,6 +32,16 @@ async function handler({ context, req, res }) {
   if (req.method === 'HEAD') {
     return res.status(200).end();
   }
+
+  // Return mock session for session requests (dev server only)
+  const nextauthPath = req.query.nextauth ?? [];
+  if (nextauthPath[0] === 'session') {
+    const mockSession = await getMockSession();
+    if (mockSession) {
+      return res.status(200).json(mockSession);
+    }
+  }
+
   return NextAuth(req, res, context.authOptions);
 }
 

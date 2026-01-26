@@ -464,6 +464,37 @@ const nextConfig = {
 | Plugin change | nextBuildWatcher | Next build | Hard restart |
 | package.json | nextBuildWatcher | Install + build | Hard restart |
 
+## Mock User for Testing
+
+The dev server supports mock users for testing, bypassing the login flow.
+
+### Configuration
+
+**Environment Variable (takes precedence):**
+```bash
+LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+**Config File:**
+```yaml
+auth:
+  dev:
+    mockUser:
+      sub: test-user
+      email: test@example.com
+```
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `lib/server/auth/getMockSession.js` | Core mock session logic |
+| `lib/server/auth/checkMockUserWarning.js` | Startup warning |
+| `lib/server/auth/getServerSession.js` | Server-side integration |
+| `pages/api/auth/[...nextauth].js` | Client-side integration |
+
+See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
+
 ## Environment Variables
 
 | Variable | Purpose |
@@ -472,3 +503,4 @@ const nextConfig = {
 | `LOWDEFY_DIRECTORY_CONFIG` | Config directory path |
 | `PORT` | Server port (default: 3000) |
 | `LOWDEFY_BUILD_REF_RESOLVER` | Custom ref resolver |
+| `LOWDEFY_DEV_USER` | Mock user JSON for testing |

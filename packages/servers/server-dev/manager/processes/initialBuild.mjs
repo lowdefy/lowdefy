@@ -19,6 +19,7 @@ function initialBuild(context) {
   return async () => {
     context.readDotEnv();
     await context.lowdefyBuild();
+    await context.checkMockUserWarning();
     await context.installPlugins();
     await context.nextBuild();
   };

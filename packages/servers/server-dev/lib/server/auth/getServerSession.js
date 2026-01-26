@@ -17,8 +17,15 @@
 import { getServerSession as getNextAuthServerSession } from 'next-auth/next';
 
 import authJson from '../../../build/auth.json';
+import getMockSession from './getMockSession.js';
 
-function getServerSession({ authOptions, req, res }) {
+async function getServerSession({ authOptions, req, res }) {
+  // Check for mock user first (dev server only)
+  const mockSession = await getMockSession();
+  if (mockSession) {
+    return mockSession;
+  }
+
   if (authJson.configured === true) {
     return getNextAuthServerSession(req, res, authOptions);
   }

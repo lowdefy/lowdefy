@@ -20,6 +20,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import createLogger from './utils/createLogger.mjs';
+import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
@@ -61,6 +62,7 @@ async function getContext() {
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+  context.checkMockUserWarning = checkMockUserWarning(context);
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
   context.lowdefyBuild = lowdefyBuild(context);
