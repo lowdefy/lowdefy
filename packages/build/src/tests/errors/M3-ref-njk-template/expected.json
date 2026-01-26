@@ -5,7 +5,7 @@
       "warnings": ["undefinedBlockId"],
       "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
-        "page-template.yaml.njk:11 at root.pages",
+        "page-template.yaml.njk:11",
         "{{fixturesDir}}/M3-ref-njk-template/page-template.yaml.njk:11"
       ]
     },
@@ -14,7 +14,7 @@
       "errors": ["undefinedBlockId"],
       "errorContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
-        "page-template.yaml.njk:11 at root.pages",
+        "page-template.yaml.njk:11",
         "{{fixturesDir}}/M3-ref-njk-template/page-template.yaml.njk:11"
       ],
       "expectThrow": true

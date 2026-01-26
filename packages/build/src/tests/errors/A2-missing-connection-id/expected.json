@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["should have required property \"id\""],
       "errorContains": [
-        "[Config Error] Connection should have required property \"id\".\n  lowdefy.yaml:13 at root.connections[0:AxiosHttp]\n  {{fixturesDir}}/A2-missing-connection-id/lowdefy.yaml:13"
+        "[Config Error] Connection should have required property \"id\".",
+        "lowdefy.yaml:13",
+        "{{fixturesDir}}/A2-missing-connection-id/lowdefy.yaml:13"
       ]
     }
   ]

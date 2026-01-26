@@ -1,0 +1,15 @@
+# S5: Migration Error for Old ~ignoreBuildCheck Property
+# =======================================================
+# Tests that using the old ~ignoreBuildCheck property throws a migration error.
+#
+# Expected: ConfigError explaining the rename to ~ignoreBuildChecks
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    ~ignoreBuildCheck: true
+    blocks:
+      - id: test
+        type: Paragraph

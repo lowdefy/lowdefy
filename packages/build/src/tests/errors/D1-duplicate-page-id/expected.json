@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["Duplicate pageId"],
       "errorContains": [
-        "[Config Error] Duplicate pageId \"home\".\n  lowdefy.yaml:15 at root.pages[1:home:Box]\n  {{fixturesDir}}/D1-duplicate-page-id/lowdefy.yaml:15"
+        "[Config Error] Duplicate pageId \"home\".",
+        "lowdefy.yaml:15",
+        "{{fixturesDir}}/D1-duplicate-page-id/lowdefy.yaml:15"
       ]
     }
   ]

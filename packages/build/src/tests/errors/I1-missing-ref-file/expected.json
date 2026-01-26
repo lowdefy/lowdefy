@@ -4,14 +4,18 @@
       "mode": "dev",
       "errors": ["Referenced file does not exist"],
       "errorContains": [
-        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\". Resolved to: {{fixturesDir}}/I1-missing-ref-file/nonexistent.yaml\n  lowdefy.yaml:15\n  {{fixturesDir}}/I1-missing-ref-file/lowdefy.yaml:15"
+        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\".",
+        "lowdefy.yaml:15",
+        "{{fixturesDir}}/I1-missing-ref-file/lowdefy.yaml:15"
       ]
     },
     {
       "mode": "prod",
       "errors": ["Referenced file does not exist"],
       "errorContains": [
-        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\". Resolved to: {{fixturesDir}}/I1-missing-ref-file/nonexistent.yaml\n  lowdefy.yaml:15\n  {{fixturesDir}}/I1-missing-ref-file/lowdefy.yaml:15"
+        "[Config Error] Referenced file does not exist: \"nonexistent.yaml\".",
+        "lowdefy.yaml:15",
+        "{{fixturesDir}}/I1-missing-ref-file/lowdefy.yaml:15"
       ],
       "expectThrow": true
     }

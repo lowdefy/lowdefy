@@ -4,14 +4,18 @@
       "mode": "dev",
       "warnings": ["nonExistentPage"],
       "warningContains": [
-        "[Config Warning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page.\n  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n  {{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23"
+        "[Config Warning] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page.",
+        "lowdefy.yaml:23",
+        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23"
       ]
     },
     {
       "mode": "prod",
       "errors": ["nonExistentPage"],
       "errorContains": [
-        "[Config Error] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page.\n  lowdefy.yaml:23 at root.pages[0:home:Box].blocks[0:invalidLink:Button].events.onClick[0:linkAction:Link]\n  {{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23"
+        "[Config Error] Page \"nonExistentPage\" not found. Link on page \"home\" references non-existent page.",
+        "lowdefy.yaml:23",
+        "{{fixturesDir}}/G1-invalid-page-link/lowdefy.yaml:23"
       ]
     }
   ]

@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["Duplicate actionId"],
       "errorContains": [
-        "[Config Error] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\".\n  lowdefy.yaml:26 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[1:linkAction:SetState]\n  {{fixturesDir}}/G2-duplicate-action-id/lowdefy.yaml:26"
+        "[Config Error] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\".",
+        "lowdefy.yaml:26",
+        "{{fixturesDir}}/G2-duplicate-action-id/lowdefy.yaml:26"
       ]
     }
   ]

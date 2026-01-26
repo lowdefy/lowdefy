@@ -1,0 +1,21 @@
+# S1: Suppress All Checks with ~ignoreBuildChecks: true
+# ======================================================
+# Tests that ~ignoreBuildChecks: true suppresses all build-time checks.
+#
+# The block has an undefined _state reference which would normally warn,
+# but ~ignoreBuildChecks: true is set on the block.
+#
+# Expected: NO warning should be shown.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: stateRef
+        type: Paragraph
+        ~ignoreBuildChecks: true
+        properties:
+          content:
+            _state: undefinedKey

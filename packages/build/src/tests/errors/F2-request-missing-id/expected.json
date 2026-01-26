@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["Request should have required property \"id\""],
       "errorContains": [
-        "[Config Error] Request should have required property \"id\".\n  lowdefy.yaml:22 at root.pages[0:home:Box].requests[0:testApi:AxiosHttp]\n  {{fixturesDir}}/F2-request-missing-id/lowdefy.yaml:22"
+        "[Config Error] Request should have required property \"id\".",
+        "lowdefy.yaml:22",
+        "{{fixturesDir}}/F2-request-missing-id/lowdefy.yaml:22"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 # H3: Operator Typo with ~ignoreBuildCheck
 # =========================================
-# Tests that operator typo warnings are suppressed with ~ignoreBuildCheck: true.
+# Tests that operator typo warnings are suppressed with ~ignoreBuildChecks: true.
 # The ~ignoreBuildCheck flag is on the same object as the operator.
 #
 # Expected: NO warning should be shown.
@@ -16,4 +16,4 @@ pages:
         properties:
           content:
             _staet: typoKey
-            ~ignoreBuildCheck: true
+            ~ignoreBuildChecks: true

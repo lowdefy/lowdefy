@@ -186,7 +186,7 @@ test('tryBuildStep ignores suppressed ConfigError', () => {
       suppressedKey: {
         '~r': 'ref1',
         '~l': 10,
-        '~ignoreBuildCheck': true,
+        '~ignoreBuildChecks': true,
       },
     },
     refMap: {

@@ -27,7 +27,7 @@ const mockContext = {
       key: 'root.pages[0].blocks[1]',
       '~r': 'ref1',
       '~l': 20,
-      '~ignoreBuildCheck': true,
+      '~ignoreBuildChecks': true,
     },
   },
   refMap: {
@@ -54,7 +54,7 @@ describe('ConfigError instance', () => {
     expect(error.suppressed).toBe(false);
   });
 
-  test('sets suppressed to true when ~ignoreBuildCheck is true', () => {
+  test('sets suppressed to true when ~ignoreBuildChecks is true', () => {
     const error = new ConfigError({
       message: 'This should be suppressed.',
       configKey: 'suppressedKey',

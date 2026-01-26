@@ -29,6 +29,7 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
         message: `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
         configKey: action['~k'],
         prodError: true,
+        checkSlug: 'link-refs',
       });
     }
   });

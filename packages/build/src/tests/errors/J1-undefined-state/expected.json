@@ -4,14 +4,18 @@
       "mode": "dev",
       "warnings": ["undefinedKey"],
       "warningContains": [
-        "[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page."
+        "[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page.",
+        "lowdefy.yaml:21",
+        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21"
       ]
     },
     {
       "mode": "prod",
       "errors": ["undefinedKey"],
       "errorContains": [
-        "[Config Error] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page."
+        "[Config Error] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page.",
+        "lowdefy.yaml:21",
+        "{{fixturesDir}}/J1-undefined-state/lowdefy.yaml:21"
       ],
       "expectThrow": true
     }

@@ -30,6 +30,7 @@ function validateRequestReferences({ requestActionRefs, requests, pageId, contex
         message: `Request "${requestId}" not defined on page "${pageId}".`,
         configKey: action['~k'],
         prodError: true,
+        checkSlug: 'request-refs',
       });
     }
   });
