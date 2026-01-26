@@ -5,9 +5,9 @@
       "description": "Multiple schema errors across pages should ALL be collected",
       "errorContains": [
         "[Config Error] Block should have required property \"id\"",
-        "root.pages[0:page1:Box].blocks[0:Paragraph]",
-        "root.pages[1:page2:Box].blocks[0:Paragraph]",
-        "root.pages[2:page3:Box].blocks[0:Paragraph]"
+        "lowdefy.yaml:17",
+        "lowdefy.yaml:25",
+        "lowdefy.yaml:33"
       ],
       "errorCount": 3,
       "expectThrow": true

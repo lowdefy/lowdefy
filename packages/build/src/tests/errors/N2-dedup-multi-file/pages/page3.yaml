@@ -1,0 +1,10 @@
+# Page 3 - references "uniqueKey" which is undefined
+# This tests that different error messages are shown separately
+id: page3
+type: Box
+blocks:
+  - id: display3
+    type: Paragraph
+    properties:
+      content:
+        _state: uniqueKey

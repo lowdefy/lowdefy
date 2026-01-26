@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Duplicate connectionId"],
+      "errors": [
+        "Duplicate connectionId"
+      ],
       "errorContains": [
         "[Config Error] Duplicate connectionId \"testApi\".",
-        "lowdefy.yaml:17",
-        "{{fixturesDir}}/A3-duplicate-connection-id/lowdefy.yaml:17"
+        "lowdefy.yaml:17"
       ]
     }
   ]

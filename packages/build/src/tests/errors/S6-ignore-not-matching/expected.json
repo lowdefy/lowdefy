@@ -2,20 +2,22 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["undefinedKey"],
+      "warnings": [
+        "undefinedKey"
+      ],
       "warningContains": [
         "[Config Warning] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page.",
-        "lowdefy.yaml:21",
-        "{{fixturesDir}}/S6-ignore-not-matching/lowdefy.yaml:21"
+        "lowdefy.yaml:21"
       ]
     },
     {
       "mode": "prod",
-      "errors": ["undefinedKey"],
+      "errors": [
+        "undefinedKey"
+      ],
       "errorContains": [
         "[Config Error] _state references \"undefinedKey\" on page \"home\", but no input block with id \"undefinedKey\" exists on this page.",
-        "lowdefy.yaml:21",
-        "{{fixturesDir}}/S6-ignore-not-matching/lowdefy.yaml:21"
+        "lowdefy.yaml:21"
       ],
       "expectThrow": true
     }

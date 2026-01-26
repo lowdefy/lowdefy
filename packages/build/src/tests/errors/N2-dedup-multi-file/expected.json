@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "description": "Same error from different files should NOT be deduplicated - each file:line is unique. Tests exact 2-line format.",
+      "warningCount": 3,
+      "exactWarnings": [
+        "pages/page1.yaml:8\n[Config Warning] _state references \"sharedKey\" on page \"page1\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState.",
+        "pages/page2.yaml:9\n[Config Warning] _state references \"sharedKey\" on page \"page2\", but no input block with id \"sharedKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState.",
+        "pages/page3.yaml:9\n[Config Warning] _state references \"uniqueKey\" on page \"page3\", but no input block with id \"uniqueKey\" exists on this page. State keys are created from input block ids. Check for typos, add an input block with this id, or initialize the state with SetState."
+      ]
+    }
+  ]
+}

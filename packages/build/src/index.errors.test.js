@@ -121,6 +121,22 @@ describe('Build Error Tests', () => {
           }
         }
 
+        // Check exact warning format (for testing 2-line format)
+        if (testCase.exactWarnings) {
+          for (const exactWarning of testCase.exactWarnings) {
+            const found = result.warnings.some((warn) => warn === exactWarning);
+            expect(found).toBe(true);
+          }
+        }
+
+        // Check exact error format (for testing 2-line format)
+        if (testCase.exactErrors) {
+          for (const exactError of testCase.exactErrors) {
+            const found = result.errors.some((err) => err === exactError);
+            expect(found).toBe(true);
+          }
+        }
+
         // Check that certain errors should NOT appear (for ~ignoreBuildCheck tests)
         if (testCase.noErrors) {
           for (const notExpected of testCase.noErrors) {

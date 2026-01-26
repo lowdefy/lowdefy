@@ -48,10 +48,9 @@ class ConfigMessage {
    * @param {string} params.configKey - Config key (~k) of the error location
    * @param {Object} params.keyMap - The keyMap from build context
    * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
-   * @param {boolean} [params.verbose] - Log suppressions when true
    * @returns {boolean} True if message should be suppressed
    */
-  static shouldSuppress({ configKey, keyMap, checkSlug, verbose }) {
+  static shouldSuppress({ configKey, keyMap, checkSlug }) {
     if (!configKey || !keyMap) return false;
 
     let currentKey = configKey;
@@ -65,18 +64,10 @@ class ConfigMessage {
       const ignoredChecks = entry['~ignoreBuildChecks'];
 
       if (ignoredChecks === true) {
-        if (verbose) {
-          // eslint-disable-next-line no-console
-          console.log(`[Debug] Suppressed all checks at ${currentKey} (inherited to ${configKey})`);
-        }
         return true;
       }
 
       if (Array.isArray(ignoredChecks) && checkSlug && ignoredChecks.includes(checkSlug)) {
-        if (verbose) {
-          // eslint-disable-next-line no-console
-          console.log(`[Debug] Suppressed ${checkSlug} at ${currentKey} (inherited to ${configKey})`);
-        }
         return true;
       }
 
@@ -153,8 +144,7 @@ class ConfigMessage {
     checkSlug,
   }) {
     // Check for ~ignoreBuildChecks suppression
-    const verbose = context?.logger?.level === 'debug';
-    if (ConfigMessage.shouldSuppress({ configKey, keyMap: context?.keyMap, checkSlug, verbose })) {
+    if (ConfigMessage.shouldSuppress({ configKey, keyMap: context?.keyMap, checkSlug })) {
       return '';
     }
 
@@ -189,9 +179,7 @@ class ConfigMessage {
       return `${prefix} ${message}`;
     }
 
-    const source = location.config ? `${location.source} at ${location.config}` : location.source;
-    const link = location.link || '';
-    return `${prefix} ${message}\n  ${source}\n  ${link}`;
+    return `${location.source}\n${prefix} ${message}`;
   }
 }
 

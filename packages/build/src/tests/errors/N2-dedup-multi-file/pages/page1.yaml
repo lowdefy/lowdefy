@@ -1,0 +1,9 @@
+# Page 1 - references "sharedKey" which is undefined
+id: page1
+type: Box
+blocks:
+  - id: display1
+    type: Paragraph
+    properties:
+      content:
+        _state: sharedKey

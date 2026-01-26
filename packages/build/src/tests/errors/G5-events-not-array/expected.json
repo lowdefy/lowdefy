@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["must be array"],
+      "errors": [
+        "must be array"
+      ],
       "errorContains": [
         "[Config Error] must be array",
-        "lowdefy.yaml:21",
-        "{{fixturesDir}}/G5-events-not-array/lowdefy.yaml:21"
+        "lowdefy.yaml:21"
       ]
     }
   ]

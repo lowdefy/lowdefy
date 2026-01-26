@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Block \"type\" should be a string"],
+      "errors": [
+        "Block \"type\" should be a string"
+      ],
       "errorContains": [
         "[Config Error] Block \"type\" should be a string.",
-        "lowdefy.yaml:17",
-        "{{fixturesDir}}/E5-block-type-not-string/lowdefy.yaml:17"
+        "lowdefy.yaml:17"
       ]
     }
   ]

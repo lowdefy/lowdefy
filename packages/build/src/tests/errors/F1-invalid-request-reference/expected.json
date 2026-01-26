@@ -2,21 +2,16 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["nonExistentRequest"],
-      "warningContains": [
-        "[Config Warning] Request \"nonExistentRequest\" not defined on page \"home\".",
-        "lowdefy.yaml:29",
-        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29"
+      "exactWarnings": [
+        "lowdefy.yaml:29\n[Config Warning] Request \"nonExistentRequest\" not defined on page \"home\"."
       ]
     },
     {
       "mode": "prod",
-      "errors": ["nonExistentRequest"],
-      "errorContains": [
-        "[Config Error] Request \"nonExistentRequest\" not defined on page \"home\".",
-        "lowdefy.yaml:29",
-        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29"
-      ]
+      "exactErrors": [
+        "lowdefy.yaml:29\n[Config Error] Request \"nonExistentRequest\" not defined on page \"home\"."
+      ],
+      "expectThrow": true
     }
   ]
 }

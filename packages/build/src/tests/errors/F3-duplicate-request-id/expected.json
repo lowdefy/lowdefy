@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Duplicate requestId"],
+      "errors": [
+        "Duplicate requestId"
+      ],
       "errorContains": [
         "[Config Error] Duplicate requestId \"myRequest\" on page \"home\".",
-        "lowdefy.yaml:27",
-        "{{fixturesDir}}/F3-duplicate-request-id/lowdefy.yaml:27"
+        "lowdefy.yaml:27"
       ]
     }
   ]

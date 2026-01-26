@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Action \"type\" should be a string"],
+      "errors": [
+        "Action \"type\" should be a string"
+      ],
       "errorContains": [
         "[Config Error] Action \"type\" should be a string.",
-        "lowdefy.yaml:24",
-        "{{fixturesDir}}/G4-action-type-not-string/lowdefy.yaml:24"
+        "lowdefy.yaml:24"
       ]
     }
   ]

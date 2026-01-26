@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["nonExistentConnection"],
+      "errors": [
+        "nonExistentConnection"
+      ],
       "errorContains": [
         "[Config Error] Request \"badConnectionRequest\" at page \"home\" references non-existent connection \"nonExistentConnection\".",
-        "lowdefy.yaml:17",
-        "{{fixturesDir}}/F6-nonexistent-connection/lowdefy.yaml:17"
+        "lowdefy.yaml:17"
       ]
     }
   ]

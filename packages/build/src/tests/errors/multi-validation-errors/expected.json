@@ -2,32 +2,34 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["anotherUndefined", "undefinedState", "undefinedPayload"],
+      "warnings": [
+        "anotherUndefined",
+        "undefinedState",
+        "undefinedPayload"
+      ],
       "warningContains": [
         "[Config Warning] _state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page.",
         "lowdefy.yaml:36",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:36",
         "[Config Warning] _state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page.",
         "lowdefy.yaml:25",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:25",
         "[Config Warning] _payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition.",
-        "lowdefy.yaml:30",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:30"
+        "lowdefy.yaml:30"
       ]
     },
     {
       "mode": "prod",
-      "errors": ["anotherUndefined", "undefinedState", "undefinedPayload"],
+      "errors": [
+        "anotherUndefined",
+        "undefinedState",
+        "undefinedPayload"
+      ],
       "errorContains": [
         "[Config Error] _state references \"anotherUndefined\" on page \"home\", but no input block with id \"anotherUndefined\" exists on this page.",
         "lowdefy.yaml:36",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:36",
         "[Config Error] _state references \"undefinedState\" on page \"home\", but no input block with id \"undefinedState\" exists on this page.",
         "lowdefy.yaml:25",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:25",
         "[Config Error] _payload references \"undefinedPayload\" in request \"testRequest\" on page \"home\", but no key \"undefinedPayload\" exists in the request payload definition.",
-        "lowdefy.yaml:30",
-        "{{fixturesDir}}/multi-validation-errors/lowdefy.yaml:30"
+        "lowdefy.yaml:30"
       ],
       "errorCount": 3,
       "expectThrow": true

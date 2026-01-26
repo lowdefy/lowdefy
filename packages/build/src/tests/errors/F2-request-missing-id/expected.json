@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Request should have required property \"id\""],
+      "errors": [
+        "Request should have required property \"id\""
+      ],
       "errorContains": [
         "[Config Error] Request should have required property \"id\".",
-        "lowdefy.yaml:22",
-        "{{fixturesDir}}/F2-request-missing-id/lowdefy.yaml:22"
+        "lowdefy.yaml:22"
       ]
     }
   ]

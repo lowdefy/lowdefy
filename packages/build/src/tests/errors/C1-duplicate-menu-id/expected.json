@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Duplicate menuId"],
+      "errors": [
+        "Duplicate menuId"
+      ],
       "errorContains": [
         "[Config Error] Duplicate menuId \"default\".",
-        "lowdefy.yaml:20",
-        "{{fixturesDir}}/C1-duplicate-menu-id/lowdefy.yaml:20"
+        "lowdefy.yaml:20"
       ]
     }
   ]

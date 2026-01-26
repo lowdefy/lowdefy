@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should be a string"],
+      "errors": [
+        "should be a string"
+      ],
       "errorContains": [
         "[Config Error] Block \"id\" should be a string.",
-        "lowdefy.yaml:16",
-        "{{fixturesDir}}/E4-block-id-not-string/lowdefy.yaml:16"
+        "lowdefy.yaml:16"
       ]
     }
   ]

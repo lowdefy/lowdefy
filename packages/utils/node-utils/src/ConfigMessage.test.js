@@ -81,10 +81,8 @@ describe('ConfigMessage.format', () => {
       context: mockContext,
     });
 
-    expect(result).toContain('[Test]');
-    expect(result).toContain('Test message.');
-    expect(result).toContain('pages/test.yaml:10');
-    expect(result).toContain('root.pages[0].blocks[0]');
+    // New 2-line format: source on line 1, prefix + message on line 2
+    expect(result).toBe('pages/test.yaml:10\n[Test] Test message.');
   });
 
   test('returns empty string when suppressed', () => {

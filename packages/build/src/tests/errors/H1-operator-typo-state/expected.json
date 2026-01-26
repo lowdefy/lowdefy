@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["_staet"],
+      "warnings": [
+        "_staet"
+      ],
       "warningContains": [
         "[Config Error] Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
-        "lowdefy.yaml:21",
-        "{{fixturesDir}}/H1-operator-typo-state/lowdefy.yaml:21"
+        "lowdefy.yaml:21"
       ]
     }
   ]

@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should have required property \"id\""],
+      "errors": [
+        "should have required property \"id\""
+      ],
       "errorContains": [
         "[Config Error] Auth provider should have required property \"id\".",
-        "lowdefy.yaml:14",
-        "{{fixturesDir}}/B2-auth-provider-missing-id/lowdefy.yaml:14"
+        "lowdefy.yaml:14"
       ]
     }
   ]

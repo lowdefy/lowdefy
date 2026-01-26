@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Block should have required property \"id\""],
+      "errors": [
+        "Block should have required property \"id\""
+      ],
       "errorContains": [
         "[Config Error] Block should have required property \"id\".",
-        "lowdefy.yaml:16",
-        "{{fixturesDir}}/E3-missing-block-id/lowdefy.yaml:16"
+        "lowdefy.yaml:16"
       ]
     }
   ]

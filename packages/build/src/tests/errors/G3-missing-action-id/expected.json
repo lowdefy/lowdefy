@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Action should have required property \"id\""],
+      "errors": [
+        "Action should have required property \"id\""
+      ],
       "errorContains": [
         "[Config Error] Action should have required property \"id\".",
-        "lowdefy.yaml:22",
-        "{{fixturesDir}}/G3-missing-action-id/lowdefy.yaml:22"
+        "lowdefy.yaml:22"
       ]
     }
   ]

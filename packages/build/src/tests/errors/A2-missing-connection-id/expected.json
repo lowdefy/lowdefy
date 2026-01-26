@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should have required property \"id\""],
+      "errors": [
+        "should have required property \"id\""
+      ],
       "errorContains": [
         "[Config Error] Connection should have required property \"id\".",
-        "lowdefy.yaml:13",
-        "{{fixturesDir}}/A2-missing-connection-id/lowdefy.yaml:13"
+        "lowdefy.yaml:13"
       ]
     }
   ]

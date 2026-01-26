@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should not include a period"],
+      "errors": [
+        "should not include a period"
+      ],
       "errorContains": [
         "[Config Error] Request id \"my.request\" at page \"home\" should not include a period (\".\").",
-        "lowdefy.yaml:23",
-        "{{fixturesDir}}/F4-request-id-with-period/lowdefy.yaml:23"
+        "lowdefy.yaml:23"
       ]
     }
   ]

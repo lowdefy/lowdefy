@@ -2,20 +2,22 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["nonExistentPage"],
+      "warnings": [
+        "nonExistentPage"
+      ],
       "warningContains": [
         "[Config Warning] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
-        "lowdefy.yaml:15",
-        "{{fixturesDir}}/C2-menu-missing-page/lowdefy.yaml:15"
+        "lowdefy.yaml:15"
       ]
     },
     {
       "mode": "prod",
-      "errors": ["nonExistentPage"],
+      "errors": [
+        "nonExistentPage"
+      ],
       "errorContains": [
         "[Config Error] Page \"nonExistentPage\" referenced in menu link \"badLink\" not found.",
-        "lowdefy.yaml:15",
-        "{{fixturesDir}}/C2-menu-missing-page/lowdefy.yaml:15"
+        "lowdefy.yaml:15"
       ]
     }
   ]

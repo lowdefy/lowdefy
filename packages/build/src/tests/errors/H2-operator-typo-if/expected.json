@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["_iff"],
+      "warnings": [
+        "_iff"
+      ],
       "warningContains": [
         "[Config Error] Operator type \"_iff\" was used but is not defined. Did you mean \"_if\"?",
-        "lowdefy.yaml:21",
-        "{{fixturesDir}}/H2-operator-typo-if/lowdefy.yaml:21"
+        "lowdefy.yaml:21"
       ]
     }
   ]

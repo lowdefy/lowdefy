@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["SetStat"],
+      "errors": [
+        "SetStat"
+      ],
       "errorContains": [
         "[Config Error] Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?",
-        "lowdefy.yaml:23",
-        "{{fixturesDir}}/E1-invalid-action-type/lowdefy.yaml:23"
+        "lowdefy.yaml:23"
       ]
     }
   ]

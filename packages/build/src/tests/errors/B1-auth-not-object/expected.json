@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should be an object"],
+      "errors": [
+        "should be an object"
+      ],
       "errorContains": [
         "[Config Error] App \"auth\" should be an object.",
-        "lowdefy.yaml:11",
-        "{{fixturesDir}}/B1-auth-not-object/lowdefy.yaml:11"
+        "lowdefy.yaml:11"
       ]
     }
   ]

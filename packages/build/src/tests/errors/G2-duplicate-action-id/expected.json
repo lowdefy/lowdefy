@@ -2,11 +2,12 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Duplicate actionId"],
+      "errors": [
+        "Duplicate actionId"
+      ],
       "errorContains": [
         "[Config Error] Duplicate actionId \"linkAction\" on event \"onClick\" on block \"button\" on page \"home\".",
-        "lowdefy.yaml:26",
-        "{{fixturesDir}}/G2-duplicate-action-id/lowdefy.yaml:26"
+        "lowdefy.yaml:26"
       ]
     }
   ]

@@ -25,6 +25,9 @@ import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultTypesMap from './defaultTypesMap.js';
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
+  // Track seen messages for deduplication (by source:line + message)
+  const seenMessages = new Set();
+
   // Create context object first (needed for logger methods)
   const context = {
     connectionIds: new Set(),
@@ -36,6 +39,7 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
+    seenMessages, // For deduplication
     stage,
     typeCounters: {
       actions: createCounter(),
@@ -71,6 +75,11 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         checkSlug,
       });
       if (formatted) {
+        // Deduplicate by full formatted message (source:line + message)
+        if (seenMessages.has(formatted)) {
+          return;
+        }
+        seenMessages.add(formatted);
         logger.warn(formatted);
       }
     } catch (err) {
@@ -78,7 +87,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       // This allows validation to continue and report all errors
       if (err instanceof ConfigError) {
         // Skip suppressed errors (empty message means ~ignoreBuildCheck: true)
-        if (!err.suppressed) {
+        if (!err.suppressed && !seenMessages.has(err.message)) {
+          seenMessages.add(err.message);
           context.errors.push(err.message);
         }
       } else {
@@ -89,6 +99,11 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
     const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
     if (formatted) {
+      // Deduplicate by full formatted message (source:line + message)
+      if (seenMessages.has(formatted)) {
+        return;
+      }
+      seenMessages.add(formatted);
       logger.error(formatted);
     }
   };

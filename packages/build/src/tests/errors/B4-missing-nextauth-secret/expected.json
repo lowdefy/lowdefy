@@ -2,12 +2,15 @@
   "tests": [
     {
       "mode": "prod",
-      "deleteEnv": ["NEXTAUTH_SECRET"],
-      "errors": ["NEXTAUTH_SECRET"],
+      "deleteEnv": [
+        "NEXTAUTH_SECRET"
+      ],
+      "errors": [
+        "NEXTAUTH_SECRET"
+      ],
       "errorContains": [
         "[Config Error] Auth providers are configured but NEXTAUTH_SECRET environment variable is not set.",
-        "lowdefy.yaml:13",
-        "{{fixturesDir}}/B4-missing-nextauth-secret/lowdefy.yaml:13"
+        "lowdefy.yaml:13"
       ]
     }
   ]
