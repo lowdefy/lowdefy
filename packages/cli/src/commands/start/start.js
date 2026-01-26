@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import checkPortAvailable from '../../utils/checkPortAvailable.js';
 import runStart from './runStart.js';
 // TODO: Handle "spawn yarn ENOENT" error if no built server exists.
 
 async function build({ context }) {
+  await checkPortAvailable({ port: context.options.port });
   context.sendTelemetry({ sendTypes: true });
   const serverProcess = runStart({ context, directory: context.directories.server });
   context.print.succeed('Started server.');

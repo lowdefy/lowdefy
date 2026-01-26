@@ -15,6 +15,7 @@
 */
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
+import checkPortAvailable from '../../utils/checkPortAvailable.js';
 import installServer from '../../utils/installServer.js';
 import resetServerPackageJson from '../../utils/resetServerPackageJson.js';
 import runDevServer from './runDevServer.js';
@@ -23,6 +24,7 @@ import getServer from '../../utils/getServer.js';
 async function dev({ context }) {
   const directory = context.directories.dev;
   context.print.info('Starting development server.');
+  await checkPortAvailable({ port: context.options.port });
   await getServer({ context, packageName: '@lowdefy/server-dev', directory });
   await resetServerPackageJson({ context, directory });
   await addCustomPluginsAsDeps({ context, directory });
