@@ -27,7 +27,9 @@ async function controlLog(context, routineContext, { control }) {
 
   if (!type.isString(logLevel)) {
     throw new Error(
-      `Invalid :log in endpoint "${endpointId}" - :level must be a string. Received ${JSON.stringify(logLevel)}.`
+      `Invalid :log in endpoint "${endpointId}" - :level must be a string. Received ${JSON.stringify(
+        logLevel
+      )}.`
     );
   }
   if (!logger[logLevel]) {

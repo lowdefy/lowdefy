@@ -41,7 +41,9 @@ async function controlParallelFor(context, routineContext, { control }) {
 
   if (!Array.isArray(array)) {
     throw new Error(
-      `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array. Received ${JSON.stringify(array)}.`
+      `Invalid :parallel_for in endpoint "${endpointId}" - :in must evaluate to an array. Received ${JSON.stringify(
+        array
+      )}.`
     );
   }
 

@@ -240,7 +240,12 @@ test('operator errors preserve existing configKey', () => {
     writable: true,
     configurable: true,
   });
-  const parser = new ServerParser({ operators: operatorsWithPreConfiguredError, payload, secrets, user });
+  const parser = new ServerParser({
+    operators: operatorsWithPreConfiguredError,
+    payload,
+    secrets,
+    user,
+  });
   const res = parser.parse({ args, input, location });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].configKey).toBe('existing-key'); // Should preserve existing key

@@ -44,15 +44,11 @@ test('_ne param 0 not eq 1', () => {
 });
 
 test('_ne params not an array', () => {
-  expect(() => ne({ params: '1, 0', location })).toThrow(
-    '_ne takes an array type as input.'
-  );
+  expect(() => ne({ params: '1, 0', location })).toThrow('_ne takes an array type as input.');
 });
 
 test('_ne params array with length 1', () => {
-  expect(() => ne({ params: [1], location })).toThrow(
-    '_ne takes an array of length 2 as input.'
-  );
+  expect(() => ne({ params: [1], location })).toThrow('_ne takes an array of length 2 as input.');
 });
 
 test('_ne params array with length 3', () => {

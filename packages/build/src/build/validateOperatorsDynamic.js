@@ -29,7 +29,9 @@ function validateOperatorsDynamic({ operators }) {
 
   if (missingDynamic.length > 0) {
     throw new Error(
-      `Operator validation failed: The following operators are missing the 'dynamic' property: ${missingDynamic.join(', ')}. ` +
+      `Operator validation failed: The following operators are missing the 'dynamic' property: ${missingDynamic.join(
+        ', '
+      )}. ` +
         `All operators must have a 'dynamic' boolean property (true for runtime-only, false for build-time safe).`
     );
   }

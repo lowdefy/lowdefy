@@ -1479,8 +1479,9 @@ test('_array called with no method or params', () => {
 });
 
 test('_array invalid method', () => {
-  expect(() => _array({ params: [['a']], methodName: 'X', location: 'location' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_array.X is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
-    );
+  expect(() =>
+    _array({ params: [['a']], methodName: 'X', location: 'location' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_array.X is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
+  );
 });

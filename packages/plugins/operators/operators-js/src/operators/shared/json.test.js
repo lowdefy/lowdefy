@@ -51,17 +51,15 @@ test('_json.parse undefined string', () => {
 });
 
 test('_json.parse object not allowed', () => {
-  expect(() => json({ params: { b: 'm' }, location: 'locationId', methodName: 'parse' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_json.parse accepts one of the following types: string."`
-    );
+  expect(() =>
+    json({ params: { b: 'm' }, location: 'locationId', methodName: 'parse' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_json.parse accepts one of the following types: string."`);
 });
 
 test('_json.parse date not supported', () => {
-  expect(() => json({ params: new Date(0), location: 'locationId', methodName: 'parse' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_json.parse accepts one of the following types: string."`
-    );
+  expect(() =>
+    json({ params: new Date(0), location: 'locationId', methodName: 'parse' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_json.parse accepts one of the following types: string."`);
 });
 
 test('_json.parse array', () => {

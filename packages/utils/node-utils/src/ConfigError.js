@@ -48,7 +48,17 @@ class ConfigError extends Error {
    * @param {Object} [params.context] - Build context with keyMap, refMap, directories
    * @param {string} [params.configDirectory] - Config directory (for raw mode without context)
    */
-  constructor({ message, error, configKey, operatorLocation, filePath, lineNumber, context, configDirectory, checkSlug }) {
+  constructor({
+    message,
+    error,
+    configKey,
+    operatorLocation,
+    filePath,
+    lineNumber,
+    context,
+    configDirectory,
+    checkSlug,
+  }) {
     // Handle YAML parse errors - extract line number from error message
     let finalMessage = message;
     let finalLineNumber = lineNumber;

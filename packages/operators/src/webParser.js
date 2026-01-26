@@ -83,7 +83,9 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${operatorLocation}.`;
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
+          [key]: params,
+        })} at ${operatorLocation}.`;
         const formattedError = new Error(formattedMessage);
         formattedError.stack = e.stack;
         formattedError.configKey = e.configKey; // Preserve original configKey if present

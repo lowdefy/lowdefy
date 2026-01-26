@@ -76,7 +76,9 @@ function enhanceErrorMessage(error) {
     return `Request timed out. The server took too long to respond. (${code}: ${message})`;
   }
   if (code === 'ECONNRESET' || message === 'socket hang up') {
-    return `Connection reset. The server closed the connection unexpectedly. (${code || 'socket hang up'}: ${message})`;
+    return `Connection reset. The server closed the connection unexpectedly. (${
+      code || 'socket hang up'
+    }: ${message})`;
   }
   if (code === 'EHOSTUNREACH' || code === 'ENETUNREACH') {
     return `Host unreachable. Check network connectivity. (${code}: ${message})`;

@@ -86,9 +86,7 @@ async function build(options) {
   if (context.errors.length > 0) {
     // Log all errors together before summary to ensure proper ordering
     context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
-    const error = new Error(
-      `Build failed with ${context.errors.length} error(s).`
-    );
+    const error = new Error(`Build failed with ${context.errors.length} error(s).`);
     error.isFormatted = true;
     error.hideStack = true;
     throw error;
@@ -115,9 +113,7 @@ async function build(options) {
   if (context.errors.length > 0) {
     // Log all errors together before summary to ensure proper ordering
     context.errors.forEach((errorMsg) => context.logger.error(errorMsg));
-    const error = new Error(
-      `Build failed with ${context.errors.length} error(s).`
-    );
+    const error = new Error(`Build failed with ${context.errors.length} error(s).`);
     // Mark this error as already formatted so stack trace isn't shown
     error.isFormatted = true;
     error.hideStack = true;

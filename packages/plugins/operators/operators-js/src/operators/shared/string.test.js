@@ -1322,8 +1322,9 @@ test('_string called with no method or params', () => {
 });
 
 test('_string invalid method', () => {
-  expect(() => string({ params: ['a'], methodName: 'X', location: 'location' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_string.X is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
-    );
+  expect(() =>
+    string({ params: ['a'], methodName: 'X', location: 'location' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_string.X is not supported, use one of the following: charAt, concat, endsWith, includes, indexOf, lastIndexOf, match, normalize, padEnd, padStart, repeat, replace, search, slice, split, startsWith, substring, toLowerCase, toUpperCase, trim, trimEnd, trimStart, length."`
+  );
 });

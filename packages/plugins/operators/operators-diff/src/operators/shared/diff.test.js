@@ -90,31 +90,35 @@ test('_diff.deep delete and add fields', () => {
 });
 
 test('_diff.deep number', () => {
-  expect(() => diff({ params: -1000, location, methodName: 'deep' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_diff.deep accepts one of the following types: object, array."`
-    );
+  expect(() =>
+    diff({ params: -1000, location, methodName: 'deep' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_diff.deep accepts one of the following types: object, array."`
+  );
 });
 
 test('_diff.deep null', () => {
-  expect(() => diff({ params: null, location, methodName: 'deep' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_diff.deep accepts one of the following types: object, array."`
-    );
+  expect(() =>
+    diff({ params: null, location, methodName: 'deep' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_diff.deep accepts one of the following types: object, array."`
+  );
 });
 
 test('_diff.deep invalid string', () => {
-  expect(() => diff({ params: 'abc', location, methodName: 'deep' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_diff.deep accepts one of the following types: object, array."`
-    );
+  expect(() =>
+    diff({ params: 'abc', location, methodName: 'deep' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_diff.deep accepts one of the following types: object, array."`
+  );
 });
 
 test('_diff.x not supported', () => {
-  expect(() => diff({ params: -1000, location, methodName: 'x' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_diff.x is not supported, use one of the following: deep."`
-    );
+  expect(() =>
+    diff({ params: -1000, location, methodName: 'x' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_diff.x is not supported, use one of the following: deep."`
+  );
 });
 
 test('_diff number', () => {

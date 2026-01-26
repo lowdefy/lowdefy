@@ -47,16 +47,7 @@ class BuildParser {
     return value;
   }
 
-  constructor({
-    env,
-    payload,
-    secrets,
-    user,
-    operators,
-    verbose,
-    dynamicIdentifiers,
-    typeNames,
-  }) {
+  constructor({ env, payload, secrets, user, operators, verbose, dynamicIdentifiers, typeNames }) {
     this.env = env;
     this.operators = operators;
     this.parse = this.parse.bind(this);
@@ -167,7 +158,9 @@ class BuildParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${operatorLocation}.`;
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
+          [key]: params,
+        })} at ${operatorLocation}.`;
         const formattedError = new Error(formattedMessage);
         formattedError.stack = e.stack;
         // Attach location info for error formatting

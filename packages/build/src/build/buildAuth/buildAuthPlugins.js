@@ -36,7 +36,9 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
       }
       if (!type.isString(plugin.type)) {
         throw new ConfigError({
-          message: `Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}". Received ${JSON.stringify(plugin.type)}.`,
+          message: `Auth ${typeClass} type is not a string at ${typeClass} "${
+            plugin.id
+          }". Received ${JSON.stringify(plugin.type)}.`,
           configKey,
           context,
         });
@@ -68,7 +70,9 @@ function buildAdapter({ components, context }) {
   }
   if (!type.isString(adapter.type)) {
     throw new ConfigError({
-      message: `Auth adapter type is not a string at adapter "${adapter.id}". Received ${JSON.stringify(adapter.type)}.`,
+      message: `Auth adapter type is not a string at adapter "${
+        adapter.id
+      }". Received ${JSON.stringify(adapter.type)}.`,
       configKey,
       context,
     });

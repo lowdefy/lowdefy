@@ -518,9 +518,7 @@ describe('type boundary reset', () => {
       type: 'Card',
       areas: {
         content: {
-          blocks: [
-            { type: 'Button', label: { _state: 'text' } },
-          ],
+          blocks: [{ type: 'Button', label: { _state: 'text' } }],
         },
       },
     };
@@ -606,9 +604,7 @@ describe('edge cases', () => {
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
     const input = {
-      items: [
-        { nested: [{ deep: { _state: 'value' } }] },
-      ],
+      items: [{ nested: [{ deep: { _state: 'value' } }] }],
     };
     const res = parser.parse({ input, location });
 
@@ -626,7 +622,7 @@ describe('edge cases', () => {
     const dynamicIdentifiers = new Set(['_state']);
 
     const parser = new BuildParser({ operators: ops, dynamicIdentifiers });
-    const input = { a: { '$state': 'value' } };
+    const input = { a: { $state: 'value' } };
     const res = parser.parse({ input, location, operatorPrefix: '$' });
 
     expect(_state).not.toHaveBeenCalled();

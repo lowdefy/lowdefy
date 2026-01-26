@@ -48,15 +48,11 @@ test('_lt param 0 greater than param 1', () => {
 });
 
 test('_lt params not an array', () => {
-  expect(() => lt({ params: '1, 0', location })).toThrow(
-    '_lt takes an array type as input.'
-  );
+  expect(() => lt({ params: '1, 0', location })).toThrow('_lt takes an array type as input.');
 });
 
 test('_lt params array with length 1', () => {
-  expect(() => lt({ params: [1], location })).toThrow(
-    '_lt takes an array of length 2 as input.'
-  );
+  expect(() => lt({ params: [1], location })).toThrow('_lt takes an array of length 2 as input.');
 });
 
 test('_lt params array with length 3', () => {

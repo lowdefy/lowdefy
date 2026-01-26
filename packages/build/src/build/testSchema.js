@@ -38,9 +38,7 @@ function testSchema({ components, context }) {
     // filter out errors at parent paths (prefer more specific errors)
     filteredErrors = filteredErrors.filter((error) => {
       const hasChildError = filteredErrors.some(
-        (other) =>
-          other !== error &&
-          other.instancePath.startsWith(error.instancePath + '/')
+        (other) => other !== error && other.instancePath.startsWith(error.instancePath + '/')
       );
       return !hasChildError;
     });

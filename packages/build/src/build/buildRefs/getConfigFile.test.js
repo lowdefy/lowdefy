@@ -45,18 +45,18 @@ test('getConfigFile returns file content when file exists', async () => {
 
 test('getConfigFile throws error when path is not a string', async () => {
   const refDef = { path: null, original: { path: null } };
-  await expect(
-    getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })
-  ).rejects.toThrow('Invalid _ref definition');
+  await expect(getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })).rejects.toThrow(
+    'Invalid _ref definition'
+  );
 });
 
 test('getConfigFile throws formatted error when file does not exist', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: 'missing.yaml', lineNumber: 10 };
 
-  await expect(
-    getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })
-  ).rejects.toThrow('[Config Error] Referenced file does not exist: "missing.yaml"');
+  await expect(getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })).rejects.toThrow(
+    '[Config Error] Referenced file does not exist: "missing.yaml"'
+  );
 });
 
 test('getConfigFile error includes line number when available', async () => {
@@ -72,9 +72,9 @@ test('getConfigFile error shows resolved absolute path', async () => {
   mockReadConfigFile.mockResolvedValue(null);
   const refDef = { path: 'missing.yaml' };
 
-  await expect(
-    getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })
-  ).rejects.toThrow('Resolved to: /test/config/missing.yaml');
+  await expect(getConfigFile({ context, refDef, referencedFrom: 'lowdefy.yaml' })).rejects.toThrow(
+    'Resolved to: /test/config/missing.yaml'
+  );
 });
 
 test('getConfigFile suggests correct path for ../ prefix', async () => {

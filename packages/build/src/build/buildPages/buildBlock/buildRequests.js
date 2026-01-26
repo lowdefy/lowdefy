@@ -29,7 +29,9 @@ function buildRequest(request, pageContext) {
   }
   if (!type.isString(request.id)) {
     throw new ConfigError({
-      message: `Request id is not a string at page "${pageId}". Received ${JSON.stringify(request.id)}.`,
+      message: `Request id is not a string at page "${pageId}". Received ${JSON.stringify(
+        request.id
+      )}.`,
       configKey,
       context,
     });
@@ -45,7 +47,9 @@ function buildRequest(request, pageContext) {
 
   if (!type.isString(request.type)) {
     throw new ConfigError({
-      message: `Request type is not a string at request "${request.id}" at page "${pageId}". Received ${JSON.stringify(request.type)}.`,
+      message: `Request type is not a string at request "${
+        request.id
+      }" at page "${pageId}". Received ${JSON.stringify(request.type)}.`,
       configKey,
       context,
     });
@@ -56,7 +60,11 @@ function buildRequest(request, pageContext) {
   if (!type.isNone(request.connectionId)) {
     if (!type.isString(request.connectionId)) {
       throw new ConfigError({
-        message: `Request "${request.id}" at page "${pageId}" connectionId is not a string. Received ${JSON.stringify(request.connectionId)}.`,
+        message: `Request "${
+          request.id
+        }" at page "${pageId}" connectionId is not a string. Received ${JSON.stringify(
+          request.connectionId
+        )}.`,
         configKey,
         context,
       });

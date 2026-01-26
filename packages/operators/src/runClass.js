@@ -40,7 +40,9 @@ const runClass = ({ location, meta, methodName, operator, params, functions, def
   // validate params type
   if (meta[methodName].validTypes && !meta[methodName].validTypes.includes(type.typeOf(params))) {
     throw new Error(
-      `${operator}.${methodName} accepts one of the following types: ${meta[methodName].validTypes.join(', ')}.`
+      `${operator}.${methodName} accepts one of the following types: ${meta[
+        methodName
+      ].validTypes.join(', ')}.`
     );
   }
 

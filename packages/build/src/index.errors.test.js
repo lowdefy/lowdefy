@@ -98,10 +98,7 @@ describe('Build Error Tests', () => {
         if (testCase.errorContains) {
           for (const expectedText of testCase.errorContains) {
             // Replace {{fixturesDir}} with actual path
-            const normalizedExpected = expectedText.replace(
-              /\{\{fixturesDir\}\}/g,
-              fixturesDir
-            );
+            const normalizedExpected = expectedText.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
             const found = result.errors.some((err) => err.includes(normalizedExpected));
             expect(found).toBe(true);
           }
@@ -118,10 +115,7 @@ describe('Build Error Tests', () => {
         // Check warning messages contain expected text
         if (testCase.warningContains) {
           for (const expectedText of testCase.warningContains) {
-            const normalizedExpected = expectedText.replace(
-              /\{\{fixturesDir\}\}/g,
-              fixturesDir
-            );
+            const normalizedExpected = expectedText.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
             const found = result.warnings.some((warn) => warn.includes(normalizedExpected));
             expect(found).toBe(true);
           }

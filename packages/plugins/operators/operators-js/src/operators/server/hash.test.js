@@ -25,45 +25,39 @@ test('_hash.md5 a string', () => {
 });
 
 test('_hash.md5 a number', () => {
-  expect(() => hash({ params: 10, location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: 10, location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.md5 a boolean', () => {
-  expect(() => hash({ params: true, location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: true, location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.md5 a object', () => {
-  expect(() => hash({ params: { a: 1 }, location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: { a: 1 }, location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.md5 a array', () => {
-  expect(() => hash({ params: ['a', 'b'], location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: ['a', 'b'], location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.md5 undefined', () => {
-  expect(() => hash({ location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.md5 null', () => {
-  expect(() => hash({ params: null, location: 'locationId', methodName: 'md5' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.md5 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: null, location: 'locationId', methodName: 'md5' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.md5 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 a string', () => {
@@ -73,45 +67,39 @@ test('_hash.sha1 a string', () => {
 });
 
 test('_hash.sha1 a number', () => {
-  expect(() => hash({ params: 10, location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: 10, location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 a boolean', () => {
-  expect(() => hash({ params: true, location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: true, location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 a object', () => {
-  expect(() => hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 a array', () => {
-  expect(() => hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 undefined', () => {
-  expect(() => hash({ location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha1 null', () => {
-  expect(() => hash({ params: null, location: 'locationId', methodName: 'sha1' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha1 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: null, location: 'locationId', methodName: 'sha1' })
+  ).toThrowErrorMatchingInlineSnapshot(`"_hash.sha1 accepts one of the following types: string."`);
 });
 
 test('_hash.sha256 a string', () => {
@@ -121,45 +109,51 @@ test('_hash.sha256 a string', () => {
 });
 
 test('_hash.sha256 a number', () => {
-  expect(() => hash({ params: 10, location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: 10, location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha256 a boolean', () => {
-  expect(() => hash({ params: true, location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: true, location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha256 a object', () => {
-  expect(() => hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha256 a array', () => {
-  expect(() => hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha256 undefined', () => {
-  expect(() => hash({ location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha256 null', () => {
-  expect(() => hash({ params: null, location: 'locationId', methodName: 'sha256' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha256 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: null, location: 'locationId', methodName: 'sha256' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha256 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 a string', () => {
@@ -169,45 +163,51 @@ test('_hash.sha512 a string', () => {
 });
 
 test('_hash.sha512 a number', () => {
-  expect(() => hash({ params: 10, location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: 10, location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 a boolean', () => {
-  expect(() => hash({ params: true, location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: true, location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 a object', () => {
-  expect(() => hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: { a: 1 }, location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 a array', () => {
-  expect(() => hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: ['a', 'b'], location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 undefined', () => {
-  expect(() => hash({ location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 test('_hash.sha512 null', () => {
-  expect(() => hash({ params: null, location: 'locationId', methodName: 'sha512' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_hash.sha512 accepts one of the following types: string."`
-    );
+  expect(() =>
+    hash({ params: null, location: 'locationId', methodName: 'sha512' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_hash.sha512 accepts one of the following types: string."`
+  );
 });
 
 // TODO: Remove ripemd160 support, Node.js no longer provides ripemd160

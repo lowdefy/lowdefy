@@ -19,13 +19,17 @@ import { type } from '@lowdefy/helpers';
 const runInstance = ({ location, meta, methodName, operator, params, instanceType }) => {
   if (!meta[methodName]) {
     throw new Error(
-      `${operator}.${methodName} is not supported, use one of the following: ${Object.keys(meta).join(', ')}.`
+      `${operator}.${methodName} is not supported, use one of the following: ${Object.keys(
+        meta
+      ).join(', ')}.`
     );
   }
   // validate params type
   if (meta[methodName].validTypes && !meta[methodName].validTypes.includes(type.typeOf(params))) {
     throw new Error(
-      `${operator}.${methodName} accepts one of the following types: ${meta[methodName].validTypes.join(', ')}.`
+      `${operator}.${methodName} accepts one of the following types: ${meta[
+        methodName
+      ].validTypes.join(', ')}.`
     );
   }
 

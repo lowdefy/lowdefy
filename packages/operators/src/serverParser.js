@@ -77,7 +77,9 @@ class ServerParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({ [key]: params })} at ${location}.`;
+        const formattedMessage = `Operator Error: ${e.message} Received: ${JSON.stringify({
+          [key]: params,
+        })} at ${location}.`;
         const formattedError = new Error(formattedMessage);
         formattedError.stack = e.stack;
         formattedError.configKey = e.configKey ?? configKey;

@@ -20,9 +20,7 @@ function getFromObject({ params, object, arrayIndices, operator, location }) {
   if (params === true) params = { all: true };
   if (type.isString(params) || type.isInt(params)) params = { key: params };
   if (!type.isObject(params)) {
-    throw new Error(
-      `${operator} params must be of type string, integer, boolean or object.`
-    );
+    throw new Error(`${operator} params must be of type string, integer, boolean or object.`);
   }
 
   if (params.key === null) return get(params, 'default', { default: null, copy: true });

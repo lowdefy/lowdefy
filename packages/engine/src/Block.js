@@ -19,10 +19,7 @@ import Events from './Events.js';
 import Areas from './Areas.js';
 
 class Block {
-  constructor(
-    { context, arrayIndices },
-    blockConfig
-  ) {
+  constructor({ context, arrayIndices }, blockConfig) {
     const {
       id,
       blockId,

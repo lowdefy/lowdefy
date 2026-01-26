@@ -94,14 +94,18 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         const invalid = checks.filter((slug) => !validSlugs.includes(slug));
         if (invalid.length > 0) {
           throw new ConfigError({
-            message: `Invalid check slug(s): "${invalid.join('", "')}". Valid slugs: ${validSlugs.join(', ')}`,
+            message: `Invalid check slug(s): "${invalid.join(
+              '", "'
+            )}". Valid slugs: ${validSlugs.join(', ')}`,
             configKey: keyMapId,
             context,
           });
         }
       } else if (checks !== true) {
         throw new ConfigError({
-          message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(checks)}`,
+          message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(
+            checks
+          )}`,
           configKey: keyMapId,
           context,
         });
@@ -139,7 +143,13 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
 
 function addKeys({ components, context }) {
   const keyMapId = makeId.next();
-  recAddKeys({ object: components, key: 'root', keyMap: context.keyMap, parentKeyMapId: keyMapId, context });
+  recAddKeys({
+    object: components,
+    key: 'root',
+    keyMap: context.keyMap,
+    parentKeyMapId: keyMapId,
+    context,
+  });
 }
 
 export default addKeys;

@@ -51,7 +51,5 @@ test('url_query calls getFromObject', async () => {
         params: 'params',
       })
     )
-  ).toThrowErrorMatchingInlineSnapshot(
-    `"Browser window.location not available for _url_query."`
-  );
+  ).toThrowErrorMatchingInlineSnapshot(`"Browser window.location not available for _url_query."`);
 });

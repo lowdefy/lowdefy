@@ -67,7 +67,9 @@ test('validateStateReferences warns for undefined top-level state key', () => {
   };
   validateStateReferences({ page, context });
   expect(mockLogWarn).toHaveBeenCalledTimes(1);
-  expect(mockLogWarn.mock.calls[0][0]).toContain('_state references "undefinedKey" on page "page_1"');
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    '_state references "undefinedKey" on page "page_1"'
+  );
   expect(mockLogWarn.mock.calls[0][0]).toContain('no input block with id "undefinedKey" exists');
 });
 
@@ -129,7 +131,9 @@ test('validateStateReferences handles object param format', () => {
   };
   validateStateReferences({ page, context });
   expect(mockLogWarn).toHaveBeenCalledTimes(1);
-  expect(mockLogWarn.mock.calls[0][0]).toContain('_state references "undefinedKey" on page "page_1"');
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    '_state references "undefinedKey" on page "page_1"'
+  );
 });
 
 test('validateStateReferences handles array index in path', () => {
@@ -215,7 +219,9 @@ test('validateStateReferences finds references in nested properties', () => {
   };
   validateStateReferences({ page, context });
   expect(mockLogWarn).toHaveBeenCalledTimes(1);
-  expect(mockLogWarn.mock.calls[0][0]).toContain('_state references "undefinedField" on page "page_1"');
+  expect(mockLogWarn.mock.calls[0][0]).toContain(
+    '_state references "undefinedField" on page "page_1"'
+  );
   expect(mockLogWarn.mock.calls[0][0]).toContain('Check for typos');
 });
 

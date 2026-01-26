@@ -27,7 +27,11 @@ function checkConnectionRead(
     );
     logger.debug(
       {
-        params: { connectionId: connectionConfig.connectionId, requestId: requestConfig.requestId, configKey },
+        params: {
+          connectionId: connectionConfig.connectionId,
+          requestId: requestConfig.requestId,
+          configKey,
+        },
         err,
       },
       err.message
