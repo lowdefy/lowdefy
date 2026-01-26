@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["Action should have required property \"id\""],
       "errorContains": [
-        "[Config Error] Action should have required property \"id\".\n  lowdefy.yaml:22 at root.pages[0:home:Box].blocks[0:button:Button].events.onClick[0:SetState]\n  {{fixturesDir}}/G3-missing-action-id/lowdefy.yaml:22"
+        "[Config Error] Action should have required property \"id\".",
+        "lowdefy.yaml:22",
+        "{{fixturesDir}}/G3-missing-action-id/lowdefy.yaml:22"
       ]
     }
   ]

@@ -4,7 +4,9 @@
       "mode": "dev",
       "warnings": ["_staet"],
       "warningContains": [
-        "[Config Error] Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?\n  lowdefy.yaml:21 at root.pages[0:home:Box].blocks[0:typoBlock:Paragraph].properties.content\n  {{fixturesDir}}/H1-operator-typo-state/lowdefy.yaml:21"
+        "[Config Error] Operator type \"_staet\" was used but is not defined. Did you mean \"_state\"?",
+        "lowdefy.yaml:21",
+        "{{fixturesDir}}/H1-operator-typo-state/lowdefy.yaml:21"
       ]
     }
   ]

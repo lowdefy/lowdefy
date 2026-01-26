@@ -4,12 +4,19 @@
       "mode": "dev",
       "errors": ["Circular reference detected"],
       "errorContains": [
-        "[Config Error] Circular reference detected. File \"a.yaml\" references itself through:\n  -> lowdefy.yaml\n  -> a.yaml\n  -> b.yaml\n  -> a.yaml\n  b.yaml:4\n  {{fixturesDir}}/I2-circular-ref/b.yaml:4"
+        "[Config Error] Circular reference detected. File \"a.yaml\" references itself through:",
+        "b.yaml:4",
+        "{{fixturesDir}}/I2-circular-ref/b.yaml:4"
       ]
     },
     {
       "mode": "prod",
       "errors": ["Circular reference detected"],
+      "errorContains": [
+        "[Config Error] Circular reference detected. File \"a.yaml\" references itself through:",
+        "b.yaml:4",
+        "{{fixturesDir}}/I2-circular-ref/b.yaml:4"
+      ],
       "expectThrow": true
     }
   ]

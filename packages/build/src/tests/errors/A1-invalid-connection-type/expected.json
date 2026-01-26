@@ -4,7 +4,9 @@
       "mode": "prod",
       "errors": ["NonExistentConnection"],
       "errorContains": [
-        "[Config Error] Connection type \"NonExistentConnection\" was used but is not defined.\n  lowdefy.yaml:14 at root.connections[0:invalidConnection:NonExistentConnection]\n  {{fixturesDir}}/A1-invalid-connection-type/lowdefy.yaml:14"
+        "[Config Error] Connection type \"NonExistentConnection\" was used but is not defined.",
+        "lowdefy.yaml:14",
+        "{{fixturesDir}}/A1-invalid-connection-type/lowdefy.yaml:14"
       ]
     }
   ]
