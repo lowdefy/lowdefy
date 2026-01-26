@@ -44,7 +44,9 @@ const mockContext = {
 
 describe('ConfigMessage.shouldSuppress', () => {
   test('returns false when configKey is not in keyMap', () => {
-    expect(ConfigMessage.shouldSuppress({ configKey: 'nonexistent', keyMap: mockContext.keyMap })).toBe(false);
+    expect(
+      ConfigMessage.shouldSuppress({ configKey: 'nonexistent', keyMap: mockContext.keyMap })
+    ).toBe(false);
   });
 
   test('returns false when keyMap is undefined', () => {
@@ -52,15 +54,21 @@ describe('ConfigMessage.shouldSuppress', () => {
   });
 
   test('returns false when configKey is undefined', () => {
-    expect(ConfigMessage.shouldSuppress({ configKey: undefined, keyMap: mockContext.keyMap })).toBe(false);
+    expect(ConfigMessage.shouldSuppress({ configKey: undefined, keyMap: mockContext.keyMap })).toBe(
+      false
+    );
   });
 
   test('returns false when ~ignoreBuildCheck is not set', () => {
-    expect(ConfigMessage.shouldSuppress({ configKey: 'testKey', keyMap: mockContext.keyMap })).toBe(false);
+    expect(ConfigMessage.shouldSuppress({ configKey: 'testKey', keyMap: mockContext.keyMap })).toBe(
+      false
+    );
   });
 
   test('returns true when ~ignoreBuildCheck is true', () => {
-    expect(ConfigMessage.shouldSuppress({ configKey: 'suppressedKey', keyMap: mockContext.keyMap })).toBe(true);
+    expect(
+      ConfigMessage.shouldSuppress({ configKey: 'suppressedKey', keyMap: mockContext.keyMap })
+    ).toBe(true);
   });
 });
 

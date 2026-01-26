@@ -39,7 +39,9 @@ async function controlFor(context, routineContext, { control }) {
 
   if (!Array.isArray(array)) {
     throw new Error(
-      `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array. Received ${JSON.stringify(array)}.`
+      `Invalid :for in endpoint "${endpointId}" - :in must evaluate to an array. Received ${JSON.stringify(
+        array
+      )}.`
     );
   }
 

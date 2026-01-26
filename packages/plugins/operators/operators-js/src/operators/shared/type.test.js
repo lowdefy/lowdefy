@@ -59,9 +59,7 @@ test('_type with null key', () => {
   expect(_type({ params: { type: 'boolean', key: null }, location, state })).toEqual(false);
 });
 test('_type null', () => {
-  expect(() => _type({ params: null, location })).toThrow(
-    '_type.type must be a string.'
-  );
+  expect(() => _type({ params: null, location })).toThrow('_type.type must be a string.');
 });
 test('_type with non-string on', () => {
   expect(_type({ params: { type: 'number', on: 5 }, location })).toEqual(true);

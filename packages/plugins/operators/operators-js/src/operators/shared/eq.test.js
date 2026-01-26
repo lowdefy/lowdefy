@@ -31,18 +31,10 @@ test('_eq true', () => {
   expect(eq({ params: [false, false], location })).toEqual(true);
 });
 test('_eq errors', () => {
-  expect(() => eq({ params: 'hello', location })).toThrow(
-    '_eq takes an array type as input.'
-  );
-  expect(() => eq({ params: null, location })).toThrow(
-    '_eq takes an array type as input.'
-  );
-  expect(() => eq({ params: true, location })).toThrow(
-    '_eq takes an array type as input.'
-  );
-  expect(() => eq({ params: false, location })).toThrow(
-    '_eq takes an array type as input.'
-  );
+  expect(() => eq({ params: 'hello', location })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: null, location })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: true, location })).toThrow('_eq takes an array type as input.');
+  expect(() => eq({ params: false, location })).toThrow('_eq takes an array type as input.');
   expect(() => eq({ params: [1, 2, 3], location })).toThrow(
     '_eq takes an array of length 2 as input.'
   );

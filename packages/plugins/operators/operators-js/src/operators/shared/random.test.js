@@ -63,9 +63,7 @@ test('_random integer with min and max', () => {
 test('_random integer with min greater than max', () => {
   expect(() =>
     random({ params: { type: 'integer', max: 500, min: 550 }, location: 'locationId' })
-  ).toThrow(
-    '_random.min must be less than _random.max.'
-  );
+  ).toThrow('_random.min must be less than _random.max.');
 });
 
 test('_random integer with max not a number', () => {
@@ -101,9 +99,7 @@ test('_random float with min and max', () => {
 test('_random float with min greater than max', () => {
   expect(() =>
     random({ params: { type: 'float', max: 500, min: 550 }, location: 'locationId' })
-  ).toThrow(
-    '_random.min must be less than _random.max.'
-  );
+  ).toThrow('_random.min must be less than _random.max.');
 });
 
 test('_random float with max not a number', () => {

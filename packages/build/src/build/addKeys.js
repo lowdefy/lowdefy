@@ -67,7 +67,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId }) {
     };
     if (object['~r'] !== undefined) entry['~r'] = object['~r'];
     if (object['~l'] !== undefined) entry['~l'] = object['~l'];
-    if (object['~ignoreBuildCheck'] !== undefined) entry['~ignoreBuildCheck'] = object['~ignoreBuildCheck'];
+    if (object['~ignoreBuildCheck'] !== undefined)
+      entry['~ignoreBuildCheck'] = object['~ignoreBuildCheck'];
     keyMap[keyMapId] = entry;
     Object.defineProperty(object, '~k', {
       value: keyMapId,

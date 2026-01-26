@@ -87,7 +87,7 @@ test('for loop with object array', async () => {
 test('for loop evaluates :in with operators', async () => {
   const routine = {
     ':for': 'num',
-    ':in': { '_array.map': [[1, 2], { '_function': { __args: 0 } }] },
+    ':in': { '_array.map': [[1, 2], { _function: { __args: 0 } }] },
     ':do': {
       id: 'request:test_endpoint:test_request',
       type: 'TestRequest',

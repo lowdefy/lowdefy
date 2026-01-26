@@ -379,15 +379,17 @@ test('_object called with no method or params', () => {
 });
 
 test('_object invalid method', () => {
-  expect(() => object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
-    );
+  expect(() =>
+    object({ params: [{ a: 1 }], methodName: 'X', location: 'locationId' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_object.X is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+  );
 });
 
 test('_object invalid method args', () => {
-  expect(() => object({ params: 'X', methodName: 'flat', location: 'locationId' }))
-    .toThrowErrorMatchingInlineSnapshot(
-      `"_object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
-    );
+  expect(() =>
+    object({ params: 'X', methodName: 'flat', location: 'locationId' })
+  ).toThrowErrorMatchingInlineSnapshot(
+    `"_object.flat is not supported, use one of the following: assign, defineProperty, entries, fromEntries, keys, values."`
+  );
 });

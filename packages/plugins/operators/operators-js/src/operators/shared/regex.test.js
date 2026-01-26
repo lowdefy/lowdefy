@@ -65,14 +65,10 @@ test('_regex with null key', () => {
       location,
       state: { string: 'Some String' },
     })
-  ).toThrow(
-    '_regex.key must be a string.'
-  );
+  ).toThrow('_regex.key must be a string.');
 });
 test('_regex null', () => {
-  expect(() => _regex({ params: null, location })).toThrow(
-    '_regex.pattern must be a string.'
-  );
+  expect(() => _regex({ params: null, location })).toThrow('_regex.pattern must be a string.');
 });
 test('_regex with non-string on', () => {
   expect(() => _regex({ params: { pattern: '^a$', on: 5 }, location })).toThrow(

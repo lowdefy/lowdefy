@@ -224,9 +224,7 @@ describe('ConfigError.log', () => {
     expect(console.error).toHaveBeenCalledWith(
       expect.stringContaining('[Config Error] Test error')
     );
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining('pages/home.yaml:10')
-    );
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('pages/home.yaml:10'));
   });
 
   test('logs without location on resolution failure', async () => {

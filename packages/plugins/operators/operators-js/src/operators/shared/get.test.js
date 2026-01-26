@@ -83,9 +83,7 @@ test('_get throws if params is not a object', async () => {
     location: 'location',
     params: 'params',
   };
-  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(
-    `"_get takes an object as params."`
-  );
+  expect(() => get(input)).toThrowErrorMatchingInlineSnapshot(`"_get takes an object as params."`);
 });
 
 test('_get throws if from is not a object, array or null', async () => {
