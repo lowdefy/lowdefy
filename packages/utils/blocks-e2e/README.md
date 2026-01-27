@@ -1,6 +1,6 @@
-# End-to-End Tests for blocks-basic
+# Lowdefy Blocks E2E Tests
 
-This directory contains Playwright e2e tests for the `@lowdefy/blocks-basic` package. Tests run against a real Lowdefy dev server, validating blocks in their production environment.
+End-to-end tests for all Lowdefy block packages using Playwright. Tests run against a real Lowdefy dev server, validating blocks in their production environment.
 
 ## Setup
 
@@ -11,13 +11,13 @@ This directory contains Playwright e2e tests for the `@lowdefy/blocks-basic` pac
 
 2. Install Playwright browsers (first time only):
    ```bash
-   cd packages/plugins/blocks/blocks-basic
+   cd packages/utils/blocks-e2e
    pnpm exec playwright install chromium
    ```
 
 ## Running Tests
 
-From the `packages/plugins/blocks/blocks-basic` directory:
+From the `packages/utils/blocks-e2e` directory:
 
 ```bash
 # Run all e2e tests (headless)
@@ -26,8 +26,11 @@ pnpm e2e
 # Run with Playwright UI for debugging
 pnpm e2e:ui
 
+# Run tests for a specific block package
+pnpm e2e tests/blocks-basic/
+
 # Run specific test file
-pnpm e2e box.spec.ts
+pnpm e2e tests/blocks-basic/box.spec.ts
 
 # Run in headed mode (see the browser)
 pnpm e2e --headed
@@ -36,54 +39,63 @@ pnpm e2e --headed
 ## Folder Structure
 
 ```
-e2e/
-├── README.md                 # This file
-├── playwright.config.ts      # Playwright configuration
-├── app/                      # Lowdefy test application
-│   ├── lowdefy.yaml          # App entry point
-│   ├── box.yaml              # Test page for Box block
-│   └── [block].yaml          # Add more pages for other blocks
-├── box.spec.ts               # Tests for Box block
-└── [block].spec.ts           # Add more spec files for other blocks
+blocks-e2e/
+├── README.md
+├── package.json
+├── playwright.config.ts
+├── app/                          # Lowdefy test application
+│   ├── lowdefy.yaml              # App entry point (references all pages)
+│   ├── blocks-basic/             # Pages for blocks-basic
+│   │   ├── box.yaml
+│   │   ├── span.yaml
+│   │   └── ...
+│   ├── blocks-antd/              # Pages for blocks-antd
+│   │   ├── button.yaml
+│   │   └── ...
+│   └── [package]/                # Add folders for other block packages
+└── tests/                        # Test specs
+    ├── blocks-basic/
+    │   ├── box.spec.ts
+    │   └── ...
+    ├── blocks-antd/
+    │   └── ...
+    └── [package]/
 ```
 
 ## How It Works
 
-1. **Playwright starts the dev server** via the `webServer` config in `playwright.config.ts`
-2. **The dev server** runs a minimal Lowdefy app from `e2e/app/`
-3. **Each test page** (e.g., `box.yaml`) renders blocks with various configurations
+1. **Playwright starts the dev server** via the `webServer` config
+2. **The dev server** runs a Lowdefy app from `app/` that loads all block packages
+3. **Each test page** (e.g., `app/blocks-basic/box.yaml`) renders blocks with various configurations
 4. **Playwright tests** navigate to pages and assert block behavior
 
-The dev server is reused between test runs during development (`reuseExistingServer: true`), making subsequent runs fast (~2s). In CI, a fresh server starts for each run.
+The dev server is reused between test runs during development (`reuseExistingServer: true`), making subsequent runs fast. In CI, a fresh server starts for each run.
 
-## Adding Tests for a New Block
+## Adding Tests for a Block Package
 
-### 1. Create a test page
+### 1. Create a folder for the package
 
-Add `e2e/app/[block].yaml` with test configurations:
+```bash
+mkdir -p app/blocks-foo tests/blocks-foo
+```
+
+### 2. Create test pages
+
+Add `app/blocks-foo/myblock.yaml`:
 
 ```yaml
-# e2e/app/span.yaml
-id: span
+id: myblock
 type: Box
 blocks:
   # Test 1: Basic rendering
-  - id: span_basic
-    type: Span
+  - id: myblock_basic
+    type: MyBlock
     properties:
       content: Hello World
 
-  # Test 2: With styling
-  - id: span_styled
-    type: Span
-    properties:
-      content: Styled text
-      style:
-        color: red
-
-  # Test 3: With events (use SetState to verify)
-  - id: span_clickable
-    type: Span
+  # Test 2: With events (use SetState to verify)
+  - id: myblock_clickable
+    type: MyBlock
     properties:
       content:
         _if:
@@ -101,45 +113,39 @@ blocks:
             clicked: true
 ```
 
-### 2. Reference the page in lowdefy.yaml
+### 3. Reference pages in lowdefy.yaml
 
 ```yaml
-# e2e/app/lowdefy.yaml
-lowdefy: local
-name: blocks-basic e2e tests
-
+# app/lowdefy.yaml
 pages:
-  - _ref: box.yaml
-  - _ref: span.yaml    # Add new page
+  # blocks-basic
+  - _ref: blocks-basic/box.yaml
+  # blocks-foo (add new pages)
+  - _ref: blocks-foo/myblock.yaml
 ```
 
-### 3. Create the spec file
+### 4. Create the spec file
 
-Add `e2e/[block].spec.ts`:
+Add `tests/blocks-foo/myblock.spec.ts`:
 
 ```typescript
 import { test, expect } from '@playwright/test';
 
-test.describe('Span Block', () => {
+test.describe('MyBlock', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/span');
+    await page.goto('/myblock');
   });
 
   test('renders with content', async ({ page }) => {
-    const span = page.getByTestId('span_basic');
-    await expect(span).toHaveText('Hello World');
-  });
-
-  test('applies style properties', async ({ page }) => {
-    const span = page.getByTestId('span_styled');
-    await expect(span).toHaveCSS('color', 'rgb(255, 0, 0)');
+    const block = page.getByTestId('myblock_basic');
+    await expect(block).toHaveText('Hello World');
   });
 
   test('onClick updates state', async ({ page }) => {
-    const span = page.getByTestId('span_clickable');
-    await expect(span).toHaveText('Click me');
-    await span.click();
-    await expect(span).toHaveText('Clicked!');
+    const block = page.getByTestId('myblock_clickable');
+    await expect(block).toHaveText('Click me');
+    await block.click();
+    await expect(block).toHaveText('Clicked!');
   });
 });
 ```
@@ -244,7 +250,7 @@ pnpm exec playwright show-report
 ### Debug a specific test
 
 ```bash
-pnpm e2e --debug box.spec.ts
+pnpm e2e --debug tests/blocks-basic/box.spec.ts
 ```
 
 ### Keep browser open on failure

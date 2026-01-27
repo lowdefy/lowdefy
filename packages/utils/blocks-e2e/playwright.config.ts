@@ -20,13 +20,13 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Resolve paths relative to this config file
 const e2eDir = path.dirname(fileURLToPath(import.meta.url));
-const packagesDir = path.resolve(e2eDir, '../../../../');
+const packagesDir = path.resolve(e2eDir, '../../');
 const cliPath = path.join(packagesDir, 'cli/dist/index.js');
 const appDir = path.join(e2eDir, 'app');
 const serverDevDir = path.join(packagesDir, 'servers/server-dev');
 
 export default defineConfig({
-  testDir: '.',
+  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

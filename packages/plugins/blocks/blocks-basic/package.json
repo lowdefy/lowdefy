@@ -44,9 +44,7 @@
     "clean": "rm -rf dist",
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "e2e": "playwright test --config e2e/playwright.config.ts",
-    "e2e:ui": "playwright test --config e2e/playwright.config.ts --ui"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "@lowdefy/block-utils": "4.5.2",
@@ -57,7 +55,6 @@
   },
   "devDependencies": {
     "@emotion/jest": "11.10.5",
-    "@playwright/test": "1.50.1",
     "@lowdefy/block-dev": "4.5.2",
     "@lowdefy/jest-yaml-transform": "4.5.2",
     "@swc/cli": "0.1.63",
