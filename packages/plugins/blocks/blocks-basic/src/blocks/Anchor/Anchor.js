@@ -24,6 +24,7 @@ const AnchorBlock = ({ blockId, events, components: { Icon, Link }, methods, pro
   return (
     <Link
       id={blockId}
+      data-testid={blockId}
       className={methods.makeCssClass([
         properties.style,
         disabled && { color: '#BEBEBE', cursor: 'not-allowed' },

@@ -15,10 +15,7 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { navigateToTestPage } from '@lowdefy/block-dev-e2e';
-
-// Icon uses internal Icon component which sets id but not data-testid
-const getIcon = (page, id) => page.locator(`#${id}`);
+import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 test.describe('Icon Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -26,17 +23,17 @@ test.describe('Icon Block', () => {
   });
 
   test('renders default icon', async ({ page }) => {
-    const icon = getIcon(page, 'icon_default');
+    const icon = getBlock(page, 'icon_default');
     await expect(icon).toBeVisible();
   });
 
   test('renders custom icon by name', async ({ page }) => {
-    const icon = getIcon(page, 'icon_custom');
+    const icon = getBlock(page, 'icon_custom');
     await expect(icon).toBeVisible();
   });
 
   test('onClick event fires', async ({ page }) => {
-    const icon = getIcon(page, 'icon_clickable');
+    const icon = getBlock(page, 'icon_clickable');
     await icon.click();
     await expect(icon).toBeVisible();
   });
