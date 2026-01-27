@@ -16,4 +16,10 @@ lowdefy: local
 name: blocks-basic E2E Tests
 
 pages:
+  - _ref: ../../src/blocks/Anchor/tests/Anchor.e2e.yaml
   - _ref: ../../src/blocks/Box/tests/Box.e2e.yaml
+  - _ref: ../../src/blocks/DangerousHtml/tests/DangerousHtml.e2e.yaml
+  - _ref: ../../src/blocks/Html/tests/Html.e2e.yaml
+  - _ref: ../../src/blocks/Icon/tests/Icon.e2e.yaml
+  - _ref: ../../src/blocks/Img/tests/Img.e2e.yaml
+  - _ref: ../../src/blocks/Span/tests/Span.e2e.yaml

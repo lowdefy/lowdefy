@@ -1,0 +1,29 @@
+id: icon
+type: Box
+
+blocks:
+  - id: icon_default
+    type: Icon
+
+  - id: icon_custom
+    type: Icon
+    properties:
+      name: AiOutlineHome
+
+  - id: icon_clickable
+    type: Icon
+    properties:
+      name:
+        _if:
+          test:
+            _eq:
+              - _state: icon_clicked
+              - true
+          then: AiOutlineCheck
+          else: AiOutlineClose
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            icon_clicked: true

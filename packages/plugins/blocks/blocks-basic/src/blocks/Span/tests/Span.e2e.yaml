@@ -1,0 +1,45 @@
+id: span
+type: Box
+
+blocks:
+  - id: span_basic
+    type: Span
+
+  - id: span_content
+    type: Span
+    properties:
+      content: Hello from Span
+
+  - id: span_styled
+    type: Span
+    properties:
+      content: Styled Span
+      style:
+        color: rgb(255, 0, 0)
+        fontWeight: bold
+
+  - id: span_with_children
+    type: Span
+    blocks:
+      - id: child_span
+        type: Span
+        properties:
+          content: Child content
+
+  - id: span_clickable
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: span_clicked
+              - true
+          then: Clicked!
+          else: Click me
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            span_clicked: true

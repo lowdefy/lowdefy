@@ -1,0 +1,47 @@
+id: img
+type: Box
+
+blocks:
+  - id: img_basic
+    type: Img
+    properties:
+      src: https://via.placeholder.com/100
+
+  - id: img_sized
+    type: Img
+    properties:
+      src: https://via.placeholder.com/200
+      width: 150
+      height: 100
+
+  - id: img_alt
+    type: Img
+    properties:
+      src: https://via.placeholder.com/100
+      alt: Test image description
+
+  - id: img_lazy
+    type: Img
+    properties:
+      src: https://via.placeholder.com/100
+      loading: lazy
+
+  - id: img_clickable
+    type: Img
+    properties:
+      src: https://via.placeholder.com/100
+      style:
+        border:
+          _if:
+            test:
+              _eq:
+                - _state: img_clicked
+                - true
+            then: 2px solid green
+            else: 2px solid red
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            img_clicked: true

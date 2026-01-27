@@ -1,0 +1,19 @@
+id: dangeroushtml
+type: Box
+
+blocks:
+  - id: dangeroushtml_basic
+    type: DangerousHtml
+    properties:
+      html: <p>Basic dangerous HTML content</p>
+
+  - id: dangeroushtml_iframe
+    type: DangerousHtml
+    properties:
+      html: <iframe src="about:blank" title="Test iframe"></iframe>
+      DOMPurifyOptions:
+        ADD_TAGS:
+          - iframe
+        ADD_ATTR:
+          - src
+          - title

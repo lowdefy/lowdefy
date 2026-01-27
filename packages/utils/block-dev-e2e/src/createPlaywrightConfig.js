@@ -35,7 +35,7 @@ function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
     workers: process.env.CI ? 1 : undefined,
-    reporter: 'html',
+    reporter: 'list',
     outputDir: path.join(e2eDir, 'test-results'),
     use: {
       baseURL: `http://localhost:${port}`,

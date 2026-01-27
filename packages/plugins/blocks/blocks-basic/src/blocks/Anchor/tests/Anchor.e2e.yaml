@@ -1,0 +1,51 @@
+id: anchor
+type: Box
+
+blocks:
+  - id: anchor_basic
+    type: Anchor
+    properties:
+      title: Basic Anchor
+
+  - id: anchor_with_icon
+    type: Anchor
+    properties:
+      title: With Icon
+      icon: AiOutlineLink
+
+  - id: anchor_disabled
+    type: Anchor
+    properties:
+      title: Disabled Anchor
+      disabled: true
+
+  - id: anchor_href
+    type: Anchor
+    properties:
+      title: External Link
+      href: https://lowdefy.com
+
+  - id: anchor_newtab
+    type: Anchor
+    properties:
+      title: New Tab Link
+      href: https://lowdefy.com
+      newTab: true
+
+  - id: anchor_clickable
+    type: Anchor
+    properties:
+      title:
+        _if:
+          test:
+            _eq:
+              - _state: anchor_clicked
+              - true
+          then: Clicked!
+          else: Click me
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            anchor_clicked: true
