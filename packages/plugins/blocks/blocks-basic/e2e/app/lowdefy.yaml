@@ -13,8 +13,7 @@
 # limitations under the License.
 
 lowdefy: local
-name: Lowdefy Blocks E2E Tests
+name: blocks-basic E2E Tests
 
 pages:
-  # blocks-basic
-  - _ref: blocks-basic/box.yaml
+  - _ref: ../../src/blocks/Box/Box.e2e.yaml
