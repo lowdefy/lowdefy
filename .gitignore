@@ -4,6 +4,8 @@
 **/node_modules/*
 **/.lowdefy/*
 **/.next/*
+**/playwright-report/*
+**/test-results/*
 **/.env
 
 .turbo
