@@ -16,4 +16,4 @@ lowdefy: local
 name: blocks-basic E2E Tests
 
 pages:
-  - _ref: ../../src/blocks/Box/Box.e2e.yaml
+  - _ref: ../../src/blocks/Box/tests/Box.e2e.yaml

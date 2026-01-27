@@ -17,7 +17,7 @@
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
-function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/*.e2e.spec.js' }) {
+function createPlaywrightConfig({ packageDir, port = 3001, testMatch = '**/tests/*.e2e.spec.js' }) {
   const e2eDir = path.join(packageDir, 'e2e');
   const appDir = path.join(e2eDir, 'app');
   const srcDir = path.join(packageDir, 'src');

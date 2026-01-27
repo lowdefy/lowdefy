@@ -43,12 +43,12 @@ lowdefy: local
 name: my-blocks E2E Tests
 
 pages:
-  - _ref: ../../src/blocks/MyBlock/MyBlock.e2e.yaml
+  - _ref: ../../src/blocks/MyBlock/tests/MyBlock.e2e.yaml
 ```
 
 ### 3. Add test fixtures
 
-Create `src/blocks/MyBlock/MyBlock.e2e.yaml` (co-located with block source):
+Create `src/blocks/MyBlock/tests/MyBlock.e2e.yaml`:
 
 ```yaml
 id: myblock
@@ -63,7 +63,7 @@ blocks:
 
 ### 4. Add e2e tests
 
-Create `src/blocks/MyBlock/MyBlock.e2e.spec.js` (co-located with block source):
+Create `src/blocks/MyBlock/tests/MyBlock.e2e.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -100,7 +100,7 @@ Creates a Playwright config for a block package.
 
 - `packageDir` - Absolute path to the block package root
 - `port` - Dev server port (default: 3001)
-- `testMatch` - Glob pattern for test files (default: `**/*.e2e.spec.js`)
+- `testMatch` - Glob pattern for test files (default: `**/tests/*.e2e.spec.js`)
 
 ### getBlock(page, blockId)
 
