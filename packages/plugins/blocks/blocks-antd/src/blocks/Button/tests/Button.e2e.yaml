@@ -1,0 +1,97 @@
+id: button
+type: Box
+
+blocks:
+  - id: button_basic
+    type: Button
+    properties:
+      title: Basic Button
+
+  - id: button_primary
+    type: Button
+    properties:
+      title: Primary
+      type: primary
+
+  - id: button_default
+    type: Button
+    properties:
+      title: Default
+      type: default
+
+  - id: button_dashed
+    type: Button
+    properties:
+      title: Dashed
+      type: dashed
+
+  - id: button_link
+    type: Button
+    properties:
+      title: Link
+      type: link
+
+  - id: button_disabled
+    type: Button
+    properties:
+      title: Disabled
+      disabled: true
+
+  - id: button_small
+    type: Button
+    properties:
+      title: Small
+      size: small
+
+  - id: button_large
+    type: Button
+    properties:
+      title: Large
+      size: large
+
+  - id: button_danger
+    type: Button
+    properties:
+      title: Danger
+      danger: true
+
+  - id: button_block
+    type: Button
+    properties:
+      title: Block Button
+      block: true
+
+  - id: button_with_icon
+    type: Button
+    properties:
+      title: With Icon
+      icon: AiOutlineSave
+
+  - id: button_clickable
+    type: Button
+    properties:
+      title:
+        _if:
+          test:
+            _eq:
+              - _state: button_clicked
+              - true
+          then: Clicked!
+          else: Click me
+    events:
+      onClick:
+        - id: set_clicked
+          type: SetState
+          params:
+            button_clicked: true
+
+  - id: button_loading
+    type: Button
+    properties:
+      title: Loading Button
+    events:
+      onClick:
+        - id: slow_action
+          type: SetState
+          params:
+            loading_done: true

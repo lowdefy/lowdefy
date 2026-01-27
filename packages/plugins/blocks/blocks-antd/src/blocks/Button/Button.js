@@ -59,6 +59,7 @@ const ButtonBlock = ({
       danger={properties.danger}
       href={properties.href}
       id={blockId}
+      data-testid={blockId}
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
