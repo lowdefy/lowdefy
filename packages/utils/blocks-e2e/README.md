@@ -2,6 +2,15 @@
 
 End-to-end tests for all Lowdefy block packages using Playwright. Tests run against a real Lowdefy dev server, validating blocks in their production environment.
 
+## Why `packages/utils/`?
+
+This package lives in `packages/utils/` rather than alongside the block packages because:
+
+1. **Cross-package testing** - Tests blocks from multiple packages (`blocks-basic`, `blocks-antd`, etc.) with a single Lowdefy app and dev server
+2. **Not publishable** - This is internal test tooling, not a package published to npm
+3. **Shared infrastructure** - Follows the pattern of other internal utilities like `@lowdefy/block-dev` and `@lowdefy/jest-yaml-transform`
+4. **Single CI job** - One centralized location means one test run in CI, not one per block package
+
 ## Setup
 
 1. Ensure the monorepo is built:
