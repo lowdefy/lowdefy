@@ -5,6 +5,7 @@ End-to-end tests for all Lowdefy block packages using Playwright. Tests run agai
 ## Setup
 
 1. Ensure the monorepo is built:
+
    ```bash
    pnpm build:turbo
    ```
@@ -165,8 +166,8 @@ const box = page.getByTestId('box_basic');
 Empty blocks may have zero dimensions. Use `toBeAttached()` for empty containers:
 
 ```typescript
-await expect(emptyBox).toBeAttached();      // Element exists in DOM
-await expect(boxWithContent).toBeVisible();  // Element is visible
+await expect(emptyBox).toBeAttached(); // Element exists in DOM
+await expect(boxWithContent).toBeVisible(); // Element is visible
 ```
 
 ### Testing styles
@@ -243,6 +244,7 @@ projects: [
 ### View test report
 
 After running tests:
+
 ```bash
 pnpm exec playwright show-report
 ```
@@ -259,10 +261,157 @@ pnpm e2e --debug tests/blocks-basic/box.spec.ts
 pnpm e2e --headed --timeout=0
 ```
 
-## CI Considerations
+## CI / GitHub Actions
 
-In CI (`process.env.CI` is set):
+### Playwright Config Behavior
+
+When `process.env.CI` is set, the config automatically adjusts:
+
 - `reuseExistingServer: false` - always starts fresh server
 - `retries: 2` - retries failed tests
 - `workers: 1` - sequential execution for stability
 - `forbidOnly: true` - fails if `.only` is left in tests
+
+### Prerequisites
+
+Before running e2e tests in CI:
+
+1. **Build the monorepo** - CLI and server-dev must be built:
+
+   ```bash
+   pnpm build:turbo
+   ```
+
+2. **Install Playwright browsers** - Chromium binaries are required:
+   ```bash
+   pnpm exec playwright install chromium --with-deps
+   ```
+   The `--with-deps` flag installs system dependencies (needed on Linux).
+
+### Example GitHub Actions Workflow
+
+```yaml
+# .github/workflows/e2e.yml
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm build:turbo
+
+      - name: Install Playwright browsers
+        run: |
+          cd packages/utils/blocks-e2e
+          pnpm exec playwright install chromium --with-deps
+
+      - name: Run e2e tests
+        run: |
+          cd packages/utils/blocks-e2e
+          pnpm e2e
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: packages/utils/blocks-e2e/playwright-report/
+          retention-days: 7
+```
+
+### Performance Considerations
+
+| Step             | Duration | Notes                                |
+| ---------------- | -------- | ------------------------------------ |
+| Install browsers | ~1-2 min | Can be cached (see below)            |
+| Build monorepo   | ~2-5 min | Required for CLI/server-dev          |
+| Server startup   | ~30-60s  | First request triggers Next.js build |
+| Tests            | ~10-30s  | Depends on test count                |
+
+### Caching Playwright Browsers
+
+To speed up CI runs, cache the Playwright browser binaries:
+
+```yaml
+- name: Cache Playwright browsers
+  uses: actions/cache@v4
+  id: playwright-cache
+  with:
+    path: ~/.cache/ms-playwright
+    key: playwright-${{ runner.os }}-${{ hashFiles('packages/utils/blocks-e2e/package.json') }}
+
+- name: Install Playwright browsers
+  if: steps.playwright-cache.outputs.cache-hit != 'true'
+  run: |
+    cd packages/utils/blocks-e2e
+    pnpm exec playwright install chromium --with-deps
+```
+
+### Alternative: Playwright Docker Image
+
+For faster, more consistent CI runs, use the official Playwright Docker image:
+
+```yaml
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.50.1-jammy
+
+    steps:
+      # ... checkout, setup, build steps ...
+
+      - name: Run e2e tests
+        run: |
+          cd packages/utils/blocks-e2e
+          pnpm e2e
+        env:
+          HOME: /root # Required for Playwright in Docker
+```
+
+### Troubleshooting CI Failures
+
+**Server startup timeout:**
+
+- Increase `timeout` in `playwright.config.ts` webServer config
+- Check if build step completed successfully
+- CI machines may be slower than local
+
+**Browser crashes:**
+
+- Ensure `--with-deps` was used when installing browsers
+- Try the Docker image approach for consistent environment
+
+**Flaky tests:**
+
+- The config already has `retries: 2` in CI
+- Consider increasing if tests are timing-dependent
+- Use `await expect().toBeVisible()` with proper timeouts
+
+**Port conflicts:**
+
+- Tests use port 3001 by default
+- Change in `playwright.config.ts` if needed
