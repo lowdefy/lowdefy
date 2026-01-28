@@ -95,4 +95,55 @@ test.describe('Button Block', () => {
     // Verify button is still functional after click
     await expect(button).toBeVisible();
   });
+
+  test('renders ghost button with transparent background', async ({ page }) => {
+    const button = getBlock(page, 'button_ghost');
+    await expect(button).toHaveClass(/ant-btn-background-ghost/);
+  });
+
+  test('renders circle shape button', async ({ page }) => {
+    const button = getBlock(page, 'button_shape_circle');
+    await expect(button).toHaveClass(/ant-btn-circle/);
+  });
+
+  test('renders round shape button', async ({ page }) => {
+    const button = getBlock(page, 'button_shape_round');
+    await expect(button).toHaveClass(/ant-btn-round/);
+  });
+
+  test('renders text type button', async ({ page }) => {
+    const button = getBlock(page, 'button_text');
+    await expect(button).toHaveClass(/ant-btn-text/);
+  });
+
+  test('renders button with href attribute', async ({ page }) => {
+    const button = getBlock(page, 'button_href');
+    await expect(button).toHaveAttribute('href', 'https://lowdefy.com');
+  });
+
+  test('renders button with hidden title (icon only)', async ({ page }) => {
+    const button = getBlock(page, 'button_hide_title');
+    await expect(button).toBeVisible();
+    // Should have icon-only class
+    await expect(button).toHaveClass(/ant-btn-icon-only/);
+    // Should have icon
+    const svg = button.locator('svg');
+    await expect(svg).toBeAttached();
+  });
+
+  test('renders button with custom color', async ({ page }) => {
+    const button = getBlock(page, 'button_color');
+    await expect(button).toBeVisible();
+    // Check that the custom background color is applied
+    await expect(button).toHaveCSS('background-color', 'rgb(82, 196, 26)');
+  });
+
+  test('shows loading spinner during onClick action', async ({ page }) => {
+    const button = getBlock(page, 'button_loading_spinner');
+    await expect(button).toBeVisible();
+    // Click and immediately check for loading state
+    await button.click();
+    // The button should show loading spinner (ant-btn-loading class)
+    await expect(button).toHaveClass(/ant-btn-loading/);
+  });
 });

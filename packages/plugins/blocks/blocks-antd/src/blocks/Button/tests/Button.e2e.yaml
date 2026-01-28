@@ -95,3 +95,58 @@ blocks:
           type: SetState
           params:
             loading_done: true
+
+  - id: button_ghost
+    type: Button
+    properties:
+      title: Ghost
+      ghost: true
+
+  - id: button_shape_circle
+    type: Button
+    properties:
+      icon: AiOutlinePlus
+      shape: circle
+      hideTitle: true
+
+  - id: button_shape_round
+    type: Button
+    properties:
+      title: Round
+      shape: round
+
+  - id: button_text
+    type: Button
+    properties:
+      title: Text Button
+      type: text
+
+  - id: button_href
+    type: Button
+    properties:
+      title: Link with href
+      type: link
+      href: https://lowdefy.com
+
+  - id: button_hide_title
+    type: Button
+    properties:
+      icon: AiOutlineSearch
+      hideTitle: true
+
+  - id: button_color
+    type: Button
+    properties:
+      title: Custom Color
+      color: '#52c41a'
+
+  - id: button_loading_spinner
+    type: Button
+    properties:
+      title: Click for Loading
+    events:
+      onClick:
+        - id: wait_action
+          type: Wait
+          params:
+            ms: 2000
