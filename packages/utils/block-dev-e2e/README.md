@@ -74,7 +74,7 @@ test.describe('MyBlock', () => {
     await navigateToTestPage(page, 'myblock');
   });
 
-  test('renders with data-testid', async ({ page }) => {
+  test('renders block', async ({ page }) => {
     const block = getBlock(page, 'myblock_basic');
     await expect(block).toBeAttached();
   });
@@ -104,7 +104,7 @@ Creates a Playwright config for a block package.
 
 ### getBlock(page, blockId)
 
-Returns a Playwright locator for a block by its `data-testid`.
+Returns a Playwright locator for a block by its `id` attribute.
 
 ```javascript
 const box = getBlock(page, 'box_basic');
