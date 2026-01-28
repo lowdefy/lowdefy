@@ -52,7 +52,12 @@ function validatePayloadReferences({ page, context }) {
         `Payload keys are defined in the request's "payload" property. ` +
         `Check for typos or add the key to the payload definition.`;
 
-      context.logger.configWarning({ message, configKey, prodError: true, checkSlug: 'payload-refs' });
+      context.logger.configWarning({
+        message,
+        configKey,
+        prodError: true,
+        checkSlug: 'payload-refs',
+      });
     });
   });
 }

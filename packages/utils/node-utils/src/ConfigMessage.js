@@ -30,8 +30,8 @@ export const VALID_CHECK_SLUGS = {
   'link-refs': 'Invalid Link action page reference warnings',
   'request-refs': 'Invalid Request action reference warnings',
   'connection-refs': 'Nonexistent connection ID references',
-  'types': 'All type validation (blocks, operators, actions, requests, connections)',
-  'schema': 'JSON schema validation errors',
+  types: 'All type validation (blocks, operators, actions, requests, connections)',
+  schema: 'JSON schema validation errors',
 };
 
 /**

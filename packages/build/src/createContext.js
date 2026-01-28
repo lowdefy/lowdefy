@@ -109,7 +109,13 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
     }
   };
   logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
-    const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
+    const formatted = ConfigError.format({
+      message,
+      configKey,
+      operatorLocation,
+      context,
+      checkSlug,
+    });
     if (formatted) {
       // Deduplicate by source:line only (same file:line = same warning)
       const sourceLine = getSourceLine(formatted);
