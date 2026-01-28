@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import getUserJavascriptFunction from './getUserJavascriptFunction.js';
 
 async function runRefResolver({ context, refDef, referencedFrom }) {

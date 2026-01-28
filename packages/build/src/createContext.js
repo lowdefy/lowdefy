@@ -17,7 +17,7 @@
 */
 
 import { mergeObjects } from '@lowdefy/helpers';
-import { ConfigError, ConfigWarning } from '@lowdefy/node-utils';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 
 import createCounter from './utils/createCounter.js';
 import createReadConfigFile from './utils/readConfigFile.js';
@@ -32,6 +32,21 @@ import defaultTypesMap from './defaultTypesMap.js';
 function getSourceLine(formatted) {
   const newlineIndex = formatted.indexOf('\n');
   return newlineIndex > 0 ? formatted.slice(0, newlineIndex) : formatted;
+}
+
+/**
+ * Splits a formatted message into source line and message parts.
+ * Returns { source, message } or { message } if no source line.
+ */
+function splitMessage(formatted) {
+  const newlineIndex = formatted.indexOf('\n');
+  if (newlineIndex > 0) {
+    return {
+      source: formatted.slice(0, newlineIndex),
+      message: formatted.slice(newlineIndex + 1),
+    };
+  }
+  return { message: formatted };
 }
 
 function createContext({ customTypesMap, directories, logger, refResolver, stage = 'prod' }) {
@@ -64,8 +79,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       requests: createCounter(),
       controls: createCounter(),
       operators: {
-        client: createCounter(),
-        server: createCounter(),
+        client: createCounter('client'),
+        server: createCounter('server'),
       },
     },
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
@@ -75,8 +90,8 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
   // Add config-aware methods to logger (don't spread - pino uses Symbol-keyed internals)
   logger.configWarning = ({ message, configKey, operatorLocation, prodError, checkSlug }) => {
     try {
-      // ConfigWarning.format throws ConfigError in prod mode when prodError is true
-      const formatted = ConfigWarning.format({
+      // ConfigWarning constructor throws ConfigError in prod mode when prodError is true
+      const warning = new ConfigWarning({
         message,
         configKey,
         operatorLocation,
@@ -84,22 +99,35 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
         prodError,
         checkSlug,
       });
-      if (formatted) {
-        // Deduplicate by source:line only (same file:line = same warning)
-        const sourceLine = getSourceLine(formatted);
-        if (seenSourceLines.has(sourceLine)) {
-          return;
-        }
-        seenSourceLines.add(sourceLine);
-        logger.warn(formatted);
+
+      // Skip suppressed warnings (from ~ignoreBuildChecks)
+      if (warning.suppressed || !warning.message) {
+        return;
       }
+
+      // Deduplicate by source:line only (same file:line = same warning)
+      const sourceLine = getSourceLine(warning.message);
+      if (seenSourceLines.has(sourceLine)) {
+        return;
+      }
+      seenSourceLines.add(sourceLine);
+
+      // Log source line then warning message
+      const parts = splitMessage(warning.message);
+      if (parts.source) {
+        logger.info(parts.source);
+      }
+      logger.warn(parts.message);
     } catch (err) {
       // ConfigError thrown in prod mode - collect instead of throwing
       // This allows validation to continue and report all errors
       if (err instanceof ConfigError) {
         // Skip suppressed errors (empty message means ~ignoreBuildCheck: true)
+        if (err.suppressed || !err.message) {
+          return;
+        }
         const sourceLine = getSourceLine(err.message);
-        if (!err.suppressed && !seenSourceLines.has(sourceLine)) {
+        if (!seenSourceLines.has(sourceLine)) {
           seenSourceLines.add(sourceLine);
           context.errors.push(err.message);
         }
@@ -108,17 +136,28 @@ function createContext({ customTypesMap, directories, logger, refResolver, stage
       }
     }
   };
+
   logger.configError = ({ message, configKey, operatorLocation, checkSlug }) => {
-    const formatted = ConfigError.format({ message, configKey, operatorLocation, context, checkSlug });
-    if (formatted) {
-      // Deduplicate by source:line only (same file:line = same warning)
-      const sourceLine = getSourceLine(formatted);
-      if (seenSourceLines.has(sourceLine)) {
-        return;
-      }
-      seenSourceLines.add(sourceLine);
-      logger.error(formatted);
+    const error = new ConfigError({ message, configKey, operatorLocation, context, checkSlug });
+
+    // Skip suppressed errors (from ~ignoreBuildChecks)
+    if (error.suppressed || !error.message) {
+      return;
     }
+
+    // Deduplicate by source:line only (same file:line = same error)
+    const sourceLine = getSourceLine(error.message);
+    if (seenSourceLines.has(sourceLine)) {
+      return;
+    }
+    seenSourceLines.add(sourceLine);
+
+    // Log source line then error message
+    const parts = splitMessage(error.message);
+    if (parts.source) {
+      logger.info(parts.source);
+    }
+    logger.error(parts.message);
   };
   context.logger = logger;
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function authorizeRequest({ authorize, logger }, { requestConfig }) {
   if (!authorize(requestConfig)) {
@@ -24,7 +24,9 @@ function authorizeRequest({ authorize, logger }, { requestConfig }) {
       auth_config: requestConfig.auth,
     });
     // Throw does not exist error to avoid leaking information that request exists to unauthorized users
-    throw new ConfigurationError(`Request "${requestConfig.requestId}" does not exist.`);
+    throw new ConfigError({
+      message: `Request "${requestConfig.requestId}" does not exist.`,
+    });
   }
   logger.debug({
     event: 'debug_request_authorize',

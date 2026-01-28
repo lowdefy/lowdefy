@@ -18,7 +18,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { validate } from '@lowdefy/ajv';
-import { ConfigError } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 import lowdefySchema from '../../lowdefySchema.js';
 import validateMutualExclusivity from './validateMutualExclusivity.js';
 

@@ -15,35 +15,19 @@
 */
 
 import { nunjucksFunction } from '@lowdefy/nunjucks';
-import { resolveConfigLocation } from '@lowdefy/node-utils';
+import { ConfigError } from '@lowdefy/errors/build';
 
 function createCheckDuplicateId({ message, context }) {
   const template = nunjucksFunction(message);
   const ids = new Set();
   function checkDuplicateId({ id, blockId, configKey, eventId, menuId, pageId }) {
     if (ids.has(id.toLowerCase())) {
-      let errorMessage = template({ id, blockId, eventId, menuId, pageId });
-
-      if (configKey && context) {
-        const location = resolveConfigLocation({
-          configKey,
-          keyMap: context.keyMap,
-          refMap: context.refMap,
-          configDirectory: context.directories.config,
-        });
-
-        if (location) {
-          const source = location.source ? `${location.source} at ${location.config}` : '';
-          const link = location.link || '';
-          errorMessage = `[Config Error] ${errorMessage}\n  ${source}\n  ${link}`;
-        } else {
-          errorMessage = `[Config Error] ${errorMessage}`;
-        }
-      } else {
-        errorMessage = `[Config Error] ${errorMessage}`;
-      }
-
-      throw new Error(errorMessage);
+      const errorMessage = template({ id, blockId, eventId, menuId, pageId });
+      throw new ConfigError({
+        message: errorMessage,
+        configKey,
+        context,
+      });
     }
     ids.add(id.toLowerCase());
   }

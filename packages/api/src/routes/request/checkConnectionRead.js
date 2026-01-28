@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function checkConnectionRead(
   { logger },
@@ -21,10 +21,10 @@ function checkConnectionRead(
 ) {
   if (requestResolver.meta.checkRead && connectionProperties.read === false) {
     const configKey = requestConfig['~k'];
-    const err = new ConfigurationError(
-      `Connection "${connectionConfig.connectionId}" does not allow reads.`,
-      { configKey }
-    );
+    const err = new ConfigError({
+      message: `Connection "${connectionConfig.connectionId}" does not allow reads.`,
+      configKey,
+    });
     logger.debug(
       {
         params: {

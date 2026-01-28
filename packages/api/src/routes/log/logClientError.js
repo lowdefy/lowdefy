@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/node-utils';
+import { resolveConfigLocation } from '@lowdefy/errors/build';
 
 async function logClientError(
   context,

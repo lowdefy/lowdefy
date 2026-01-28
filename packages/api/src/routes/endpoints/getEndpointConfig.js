@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 async function getEndpointConfig({ logger, readConfigFile }, { endpointId }) {
   const endpoint = await readConfigFile(`api/${endpointId}.json`);
   if (!endpoint) {
-    const err = new ConfigurationError(`API Endpoint "${endpointId}" does not exist.`);
+    const err = new ConfigError({ message: `API Endpoint "${endpointId}" does not exist.` });
     logger.debug({ params: { endpointId }, err }, err.message);
     throw err;
   }

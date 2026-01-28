@@ -16,7 +16,7 @@
 
 import createAuthorize from './createAuthorize.js';
 
-import { ServerError } from './errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 test('authorize public object', () => {
   const auth = { public: true };
@@ -59,10 +59,36 @@ test('authorize role protected object', () => {
   expect(authorize({ auth })).toBe(true);
 });
 
-test('invalid auth config', () => {
+test('throws ConfigError with helpful message when auth.public is undefined', () => {
   const authorize = createAuthorize({});
-  expect(() => authorize({ auth: { other: 'value' } })).toThrow(ServerError);
-  expect(() => authorize({ auth: {} })).toThrow(ServerError);
-  expect(() => authorize({})).toThrow();
-  expect(() => authorize()).toThrow();
+  expect(() => authorize({ auth: { other: 'value' } })).toThrow(
+    'auth.public must be true or false. Received undefined.'
+  );
+  expect(() => authorize({ auth: {} })).toThrow(
+    'auth.public must be true or false. Received undefined.'
+  );
+});
+
+test('throws ConfigError with helpful message when auth.public is wrong type', () => {
+  const authorize = createAuthorize({});
+  expect(() => authorize({ auth: { public: 'yes' } })).toThrow(
+    'auth.public must be true or false. Received "yes".'
+  );
+  expect(() => authorize({ auth: { public: 1 } })).toThrow(
+    'auth.public must be true or false. Received 1.'
+  );
+  expect(() => authorize({ auth: { public: null } })).toThrow(
+    'auth.public must be true or false. Received null.'
+  );
+});
+
+test('throws ConfigError with configKey for location tracing', () => {
+  const authorize = createAuthorize({});
+  try {
+    authorize({ auth: {}, '~k': 'pages[0:home].auth' });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.configKey).toBe('pages[0:home].auth');
+    expect(e.message).toContain('auth.public must be true or false. Received undefined.');
+  }
 });

@@ -125,12 +125,32 @@ function createRunBuild(build, fixturesDir) {
     const configDir = path.join(fixturesDir, fixtureDir);
     const errors = [];
     const warnings = [];
+    let pendingLogLine = null; // Captures log line to combine with next warn/error
 
     const logger = {
       info: jest.fn(),
-      log: jest.fn(),
-      warn: jest.fn((msg) => warnings.push(msg)),
-      error: jest.fn((msg) => errors.push(msg)),
+      log: jest.fn((msg) => {
+        // Capture log line to combine with next warn/error (for split source:line + message format)
+        pendingLogLine = msg;
+      }),
+      warn: jest.fn((msg) => {
+        // Combine with pending log line if present
+        if (pendingLogLine) {
+          warnings.push(`${pendingLogLine}\n${msg}`);
+          pendingLogLine = null;
+        } else {
+          warnings.push(msg);
+        }
+      }),
+      error: jest.fn((msg) => {
+        // Combine with pending log line if present
+        if (pendingLogLine) {
+          errors.push(`${pendingLogLine}\n${msg}`);
+          pendingLogLine = null;
+        } else {
+          errors.push(msg);
+        }
+      }),
       succeed: jest.fn(),
     };
 

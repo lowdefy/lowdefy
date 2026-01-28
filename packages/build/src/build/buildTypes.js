@@ -16,10 +16,9 @@
 
 import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
-import { ConfigMessage } from '@lowdefy/node-utils';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors/build';
 
 import findSimilarString from '../utils/findSimilarString.js';
-import formatBuildError from './formatBuildError.js';
 
 function buildTypeClass(
   context,
@@ -29,26 +28,34 @@ function buildTypeClass(
   const definedTypes = Object.keys(definitions);
   Object.keys(counts).forEach((typeName) => {
     if (!definitions[typeName]) {
-      // Check if this type usage has ~ignoreBuildChecks flag
       const configKey = counter.getLocation(typeName);
-      if (ConfigMessage.shouldSuppress({ configKey, keyMap: context.keyMap, checkSlug: 'types' })) {
-        return; // Skip warning/error for this type
-      }
 
       let message = `${typeClass} type "${typeName}" was used but is not defined.`;
       const suggestion = findSimilarString({ input: typeName, candidates: definedTypes });
       if (suggestion) {
         message += ` Did you mean "${suggestion}"?`;
       }
-      const formattedError = formatBuildError({ context, counter, typeName, message });
       if (warnIfMissing) {
         if (typeName === '_id') {
           return;
         }
-        context.logger.warn(formattedError);
+        const warning = new ConfigWarning({
+          message,
+          configKey,
+          context,
+          checkSlug: 'types',
+        });
+        if (!warning.suppressed) {
+          context.logger.warn(warning.message);
+        }
         return;
       }
-      throw new Error(formattedError);
+      throw new ConfigError({
+        message,
+        configKey,
+        context,
+        checkSlug: 'types',
+      });
     }
     store[typeName] = {
       originalTypeName: definitions[typeName].originalTypeName,

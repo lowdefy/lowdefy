@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigurationError } from '../../context/errors.js';
+import { ConfigError } from '@lowdefy/errors/server';
 
 function checkConnectionWrite(
   { logger },
@@ -21,10 +21,10 @@ function checkConnectionWrite(
 ) {
   if (requestResolver.meta.checkWrite && connectionProperties.write !== true) {
     const configKey = requestConfig['~k'];
-    const err = new ConfigurationError(
-      `Connection "${connectionConfig.connectionId}" does not allow writes.`,
-      { configKey }
-    );
+    const err = new ConfigError({
+      message: `Connection "${connectionConfig.connectionId}" does not allow writes.`,
+      configKey,
+    });
     logger.debug(
       {
         params: {

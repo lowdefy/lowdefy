@@ -404,7 +404,7 @@ await error.log(lowdefy);
 
 // Or resolve separately
 await error.resolve(lowdefy);
-console.error(error.format());
+console.error(error.message); // Message already formatted with location
 ```
 
 ### Constructor
@@ -433,28 +433,19 @@ new ConfigError({ message, configKey })
 
 #### `resolve(lowdefy, options)`
 
-Asynchronously resolves the error location from the server via `/api/client-error`.
+Asynchronously resolves the error location from the server via `/api/client-error`. Updates `this.message` with the resolved location.
 
 ```javascript
 await error.resolve(lowdefy, { timeout: 1000 });
+console.error(error.message);
+// "pages/home.yaml:10
+// [Config Error] Invalid config"
 ```
 
 - **Non-blocking**: Uses 1-second timeout by default
 - **Graceful degradation**: If server unreachable, `resolved` is set to `true` but location fields remain `null`
 - **Returns**: `this` for chaining
-
-#### `format()`
-
-Returns formatted error message for console output.
-
-```javascript
-error.format();
-// Without location: "[Config Error] Invalid config"
-// With location:
-// "[Config Error] Invalid config
-//   pages/home.yaml:10 at root.pages[0].blocks[0]
-//   vscode://file/app/pages/home.yaml?line=10"
-```
+- **Message format**: `message` property is automatically updated with location prefix
 
 #### `log(lowdefy, options)`
 
@@ -464,7 +455,7 @@ Resolves location and logs to console in one call.
 await error.log(lowdefy);
 // Equivalent to:
 // await error.resolve(lowdefy);
-// console.error(error.format());
+// console.error(error.message);
 ```
 
 #### `static from({ error, configKey })`

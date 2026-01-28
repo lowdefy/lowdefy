@@ -108,6 +108,10 @@ describe('Build Error Tests', () => {
         if (testCase.warnings) {
           for (const warningSubstring of testCase.warnings) {
             const count = countOccurrences(result.warnings, warningSubstring);
+            if (count === 0) {
+              console.log('DEBUG: Expected warning:', warningSubstring);
+              console.log('DEBUG: Actual warnings:', result.warnings);
+            }
             expect(count).toBe(1);
           }
         }
