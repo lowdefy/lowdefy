@@ -21,18 +21,14 @@ const getFromObject = ({ arrayIndices, location, method, object, params }) => {
   if (type.isString(params) || type.isInt(params)) params = { key: params };
   if (!type.isObject(params)) {
     throw new Error(
-      `Method Error: ${method} params must be of type string, integer, boolean or object. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
+      `Method Error: ${method} params must be of type string, integer, boolean or object at ${location}.`
     );
   }
   if (params.key === null) return get(params, 'default', { default: null, copy: true });
   if (params.all === true) return serializer.copy(object);
   if (!type.isString(params.key) && !type.isInt(params.key)) {
     throw new Error(
-      `Method Error: ${method} params.key must be of type string or integer. Received: ${JSON.stringify(
-        params
-      )} at ${location}.`
+      `Method Error: ${method} params.key must be of type string or integer at ${location}.`
     );
   }
   return get(object, applyArrayIndices(arrayIndices, params.key), {

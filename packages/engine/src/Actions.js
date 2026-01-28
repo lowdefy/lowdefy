@@ -228,6 +228,7 @@ class Actions {
               error: err,
               pluginType: 'action',
               pluginName: action.type,
+              received: parsedAction.params,
               location: block.blockId,
               configKey: action['~k'],
             });

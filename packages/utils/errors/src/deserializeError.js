@@ -15,11 +15,13 @@
 */
 
 import ConfigError from './ConfigError.js';
+import LowdefyError from './LowdefyError.js';
 import PluginError from './PluginError.js';
 import ServiceError from './ServiceError.js';
 
 const errorTypes = {
   ConfigError,
+  LowdefyError,
   PluginError,
   ServiceError,
 };

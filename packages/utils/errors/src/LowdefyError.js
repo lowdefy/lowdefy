@@ -46,15 +46,28 @@ class LowdefyError extends Error {
   }
 
   /**
-   * Creates a LowdefyError from an existing error.
-   * Preserves the original stack trace.
-   * @param {Error} error - The original error
+   * Serializes the error for transport (e.g., client to server).
+   * @returns {Object} Serialized error data with type marker
+   */
+  serialize() {
+    return {
+      '~err': 'LowdefyError',
+      message: this.message,
+      stack: this.stack,
+    };
+  }
+
+  /**
+   * Deserializes error data back into a LowdefyError.
+   * @param {Object} data - Serialized error data
    * @returns {LowdefyError}
    */
-  static from(error) {
-    const lowdefyError = new LowdefyError(error.message, { cause: error });
-    lowdefyError.stack = error.stack;
-    return lowdefyError;
+  static deserialize(data) {
+    const error = new LowdefyError(data.message);
+    if (data.stack) {
+      error.stack = data.stack;
+    }
+    return error;
   }
 }
 

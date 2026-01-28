@@ -61,25 +61,34 @@ test('authorize role protected object', () => {
 
 test('throws ConfigError with helpful message when auth.public is undefined', () => {
   const authorize = createAuthorize({});
+  // Message doesn't include Received - that's formatted by logger
   expect(() => authorize({ auth: { other: 'value' } })).toThrow(
-    'auth.public must be true or false. Received undefined.'
+    'auth.public must be true or false.'
   );
-  expect(() => authorize({ auth: {} })).toThrow(
-    'auth.public must be true or false. Received undefined.'
-  );
+  expect(() => authorize({ auth: {} })).toThrow('auth.public must be true or false.');
 });
 
-test('throws ConfigError with helpful message when auth.public is wrong type', () => {
+test('throws ConfigError with received value when auth.public is wrong type', () => {
   const authorize = createAuthorize({});
-  expect(() => authorize({ auth: { public: 'yes' } })).toThrow(
-    'auth.public must be true or false. Received "yes".'
-  );
-  expect(() => authorize({ auth: { public: 1 } })).toThrow(
-    'auth.public must be true or false. Received 1.'
-  );
-  expect(() => authorize({ auth: { public: null } })).toThrow(
-    'auth.public must be true or false. Received null.'
-  );
+  try {
+    authorize({ auth: { public: 'yes' } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.message).toBe('auth.public must be true or false.');
+    expect(e.received).toBe('yes');
+  }
+  try {
+    authorize({ auth: { public: 1 } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.received).toBe(1);
+  }
+  try {
+    authorize({ auth: { public: null } });
+  } catch (e) {
+    expect(e).toBeInstanceOf(ConfigError);
+    expect(e.received).toBe(null);
+  }
 });
 
 test('throws ConfigError with configKey for location tracing', () => {
@@ -89,6 +98,7 @@ test('throws ConfigError with configKey for location tracing', () => {
   } catch (e) {
     expect(e).toBeInstanceOf(ConfigError);
     expect(e.configKey).toBe('pages[0:home].auth');
-    expect(e.message).toContain('auth.public must be true or false. Received undefined.');
+    expect(e.message).toBe('auth.public must be true or false.');
+    expect(e.received).toBeUndefined();
   }
 });

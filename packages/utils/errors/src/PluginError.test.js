@@ -36,17 +36,18 @@ test('PluginError stores plugin metadata', () => {
   expect(error.pluginName).toBe('_if');
 });
 
-test('PluginError includes received value in message', () => {
+test('PluginError stores received value for logger formatting', () => {
   const original = new Error('Invalid params');
   const error = new PluginError({
     error: original,
     received: { test: true },
   });
-  expect(error.message).toBe('Invalid params Received: {"test":true}');
+  // Message does NOT include received - logger formats it
+  expect(error.message).toBe('Invalid params');
   expect(error.received).toEqual({ test: true });
 });
 
-test('PluginError handles unserializable received value', () => {
+test('PluginError stores unserializable received value', () => {
   const circular = {};
   circular.self = circular;
 
@@ -55,7 +56,9 @@ test('PluginError handles unserializable received value', () => {
     error: original,
     received: circular,
   });
-  expect(error.message).toBe('Invalid params Received: [unserializable]');
+  // Message does NOT include received - logger handles formatting
+  expect(error.message).toBe('Invalid params');
+  expect(error.received).toBe(circular);
 });
 
 test('PluginError includes location in message', () => {
@@ -78,7 +81,8 @@ test('PluginError with all fields', () => {
     location: 'blocks.0.visible',
     configKey: 'key123',
   });
-  expect(error.message).toBe('_if requires boolean test Received: "string" at blocks.0.visible.');
+  // Message includes location but NOT received - logger formats received
+  expect(error.message).toBe('_if requires boolean test at blocks.0.visible.');
   expect(error.pluginType).toBe('operator');
   expect(error.pluginName).toBe('_if');
   expect(error.received).toBe('string');
@@ -117,4 +121,76 @@ test('PluginError preserves original stack trace', () => {
   const pluginError = new PluginError({ error: original, pluginType: 'block' });
 
   expect(pluginError.stack).toBe(original.stack);
+});
+
+test('PluginError serialize includes stack trace', () => {
+  const original = new Error('Test error');
+  const error = new PluginError({
+    error: original,
+    pluginType: 'operator',
+    pluginName: '_if',
+    configKey: 'key123',
+  });
+  const serialized = error.serialize();
+
+  expect(serialized['~err']).toBe('PluginError');
+  expect(serialized.message).toBe('Test error');
+  expect(serialized.pluginType).toBe('operator');
+  expect(serialized.pluginName).toBe('_if');
+  expect(serialized.configKey).toBe('key123');
+  expect(serialized.stack).toBe(original.stack);
+  expect(serialized.stack).toContain('PluginError.test.js');
+});
+
+test('PluginError deserialize restores error with stack trace', () => {
+  const original = new Error('Original error');
+  const pluginError = new PluginError({
+    error: original,
+    pluginType: 'action',
+    pluginName: 'SetState',
+    location: 'events.onClick',
+    configKey: 'key456',
+  });
+  const serialized = pluginError.serialize();
+  const restored = PluginError.deserialize(serialized);
+
+  expect(restored.name).toBe('PluginError');
+  expect(restored.message).toBe(pluginError.message);
+  expect(restored.pluginType).toBe('action');
+  expect(restored.pluginName).toBe('SetState');
+  expect(restored.location).toBe('events.onClick');
+  expect(restored.configKey).toBe('key456');
+  expect(restored.stack).toBe(original.stack);
+  expect(restored.stack).toContain('PluginError.test.js');
+});
+
+test('PluginError serialize/deserialize roundtrip preserves stack', () => {
+  const original = new Error('Roundtrip test');
+  const pluginError = new PluginError({
+    error: original,
+    pluginType: 'request',
+    pluginName: 'MongoDBFind',
+  });
+  const json = JSON.stringify(pluginError.serialize());
+  const parsed = JSON.parse(json);
+  const restored = PluginError.deserialize(parsed);
+
+  expect(restored.message).toBe(pluginError.message);
+  expect(restored.stack).toBe(original.stack);
+});
+
+test('PluginError deserialize handles missing stack', () => {
+  const data = {
+    '~err': 'PluginError',
+    message: 'No stack error',
+    pluginType: 'block',
+    pluginName: 'Button',
+  };
+  const error = PluginError.deserialize(data);
+
+  expect(error.name).toBe('PluginError');
+  expect(error.message).toBe('No stack error');
+  expect(error.pluginType).toBe('block');
+  // Will have its own stack from construction
+  expect(error.stack).toContain('Error');
 });

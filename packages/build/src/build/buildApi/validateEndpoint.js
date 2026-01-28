@@ -1,32 +1,62 @@
-import { type } from '@lowdefy/helpers';
+/*
+  Copyright 2020-2024 Lowdefy, Inc
 
-function validateEndpoint({ endpoint, index, checkDuplicateEndpointId }) {
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
+
+function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, context }) {
+  const configKey = endpoint['~k'];
   if (type.isUndefined(endpoint.id)) {
-    throw new Error(`Endpoint id missing at endpoint ${index}.`);
+    throw new ConfigError({
+      message: `Endpoint id missing at endpoint ${index}.`,
+      configKey,
+      context,
+    });
   }
   if (!type.isString(endpoint.id)) {
-    throw new Error(
-      `Endpoint id is not a string at endpoint ${index}. Received ${JSON.stringify(endpoint.id)}.`
-    );
+    throw new ConfigError({
+      message: `Endpoint id is not a string at endpoint ${index}.`,
+      received: endpoint.id,
+      configKey,
+      context,
+    });
   }
   if (endpoint.id.includes('.')) {
-    throw new Error(
-      `Endpoint id "${endpoint.id}" at endpoint "${endpoint.id}" should not include a period (".").`
-    );
+    throw new ConfigError({
+      message: `Endpoint id "${endpoint.id}" should not include a period (".").`,
+      configKey,
+      context,
+    });
   }
   if (type.isUndefined(endpoint.type)) {
-    throw new Error(
-      `Endpoint type is not defined at "${endpoint.id}" on endpoint "${endpoint.id}".`
-    );
+    throw new ConfigError({
+      message: `Endpoint type is not defined at "${endpoint.id}".`,
+      configKey,
+      context,
+    });
   }
   if (!type.isString(endpoint.type)) {
-    throw new Error(
-      `Endpoint type is not a string at "${endpoint.id}" on endpoint "${
-        endpoint.id
-      }". Received ${JSON.stringify(endpoint.type)}.`
-    );
+    throw new ConfigError({
+      message: `Endpoint type is not a string at "${endpoint.id}".`,
+      received: endpoint.type,
+      configKey,
+      context,
+    });
   }
-  checkDuplicateEndpointId({ id: endpoint.id });
+  checkDuplicateEndpointId({ id: endpoint.id, configKey });
 }
 
 export default validateEndpoint;

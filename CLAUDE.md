@@ -203,12 +203,12 @@ export default MongoDBFindOne;
 
 Located in `operators/shared/` (everywhere), `operators/client/`, `operators/server/`, or `operators/build/`.
 
-Operators throw simple error messages. The parsers (WebParser, ServerParser, BuildParser) add the received value and location:
+Operators throw simple error messages. The parsers (WebParser, ServerParser, BuildParser) catch errors and wrap them with `received` value and location:
 
 ```javascript
 function _myOperator({ params }) {
   if (typeof params !== 'object') {
-    // Simple error - parsers will format with received value and location
+    // Simple error - parser adds params as received value and location
     throw new Error('_myOperator requires an object.');
   }
   return result;
@@ -218,11 +218,31 @@ export default _myOperator;
 
 ### Actions
 
+Actions throw simple errors. The engine's action interface layer (Actions.js) catches and wraps them in `PluginError` with the `received` value:
+
 ```javascript
-function SetState({ methods: { setState }, params }) {
+function MyAction({ methods: { setState }, params }) {
+  if (!params.value) {
+    // Simple error - interface layer adds params as received value
+    throw new Error('MyAction requires "value" property.');
+  }
   setState(params);
 }
-export default SetState;
+export default MyAction;
+```
+
+### Connections/Requests
+
+Connections throw simple errors. The request interface layer catches and wraps them in `PluginError`:
+
+```javascript
+async function MongoDBFindOne({ request, connection }) {
+  if (!request.collection) {
+    // Simple error - interface layer adds request as received value
+    throw new Error('MongoDBFindOne requires "collection" property.');
+  }
+  // ... execute query
+}
 ```
 
 ## Error Handling

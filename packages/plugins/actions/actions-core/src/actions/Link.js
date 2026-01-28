@@ -20,8 +20,8 @@ function Link({ methods: { link }, params }) {
   const linkParams = type.isString(params) ? { pageId: params } : params;
   try {
     link(linkParams);
-  } catch (error) {
-    throw new Error(`Invalid Link, check action params. Received "${JSON.stringify(params)}".`);
+  } catch (e) {
+    throw new Error('Invalid Link, check action params.');
   }
 }
 

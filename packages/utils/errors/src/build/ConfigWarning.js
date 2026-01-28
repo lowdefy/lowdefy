@@ -46,6 +46,7 @@ class ConfigWarning {
    * @param {string} [params.configDirectory] - Config directory (for raw mode without context)
    * @param {string} [params.checkSlug] - The specific check being performed (e.g., 'state-refs')
    * @param {boolean} [params.prodError] - If true, throw ConfigError in prod mode
+   * @param {*} [params.received] - The value that caused the warning (for logger to format)
    * @throws {ConfigError} When prodError is true and context.stage is 'prod'
    */
   constructor({
@@ -58,15 +59,17 @@ class ConfigWarning {
     configDirectory,
     checkSlug,
     prodError,
+    received,
   }) {
     // In prod mode with prodError flag, throw ConfigError instead
     if (prodError && context?.stage === 'prod') {
-      throw new ConfigError({ message, configKey, operatorLocation, context, checkSlug });
+      throw new ConfigError({ message, configKey, operatorLocation, context, checkSlug, received });
     }
 
     // Store all properties for the logger
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
+    this.received = received;
 
     // Check for ~ignoreBuildChecks suppression
     this.suppressed = ConfigMessage.shouldSuppress({

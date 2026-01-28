@@ -78,9 +78,10 @@ test('log level is not a string', async () => {
   const { res, context } = await runTest({ routine });
 
   expect(res.status).toEqual('error');
-  expect(res.error).toEqual(
-    new Error('Invalid :log in endpoint "endpointId" - :level must be a string. Received true.')
-  );
+  // PluginError stores received separately - message doesn't include "Received true."
+  expect(res.error.name).toBe('PluginError');
+  expect(res.error.message).toBe('Invalid :log in endpoint "endpointId" - :level must be a string.');
+  expect(res.error.received).toBe(true);
   expect(context.logger.debug.mock.calls).toEqual([[{ event: 'debug_control_log' }]]);
 });
 

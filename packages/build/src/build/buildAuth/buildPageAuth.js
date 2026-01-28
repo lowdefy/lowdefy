@@ -17,10 +17,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/build';
 import getPageRoles from './getPageRoles.js';
 import getProtectedPages from './getProtectedPages.js';
 
-function buildPageAuth({ components }) {
+function buildPageAuth({ components, context }) {
   const protectedPages = getProtectedPages({ components });
   const pageRoles = getPageRoles({ components });
   let configPublicPages = [];
@@ -31,11 +32,12 @@ function buildPageAuth({ components }) {
   (components.pages || []).forEach((page) => {
     if (pageRoles[page.id]) {
       if (configPublicPages.includes(page.id)) {
-        throw new Error(
-          `Page "${page.id}" is both protected by roles ${JSON.stringify(
-            pageRoles[page.id]
-          )} and public.`
-        );
+        throw new ConfigError({
+          message: `Page "${page.id}" is both protected by roles and public.`,
+          received: pageRoles[page.id],
+          configKey: page['~k'],
+          context,
+        });
       }
       page.auth = {
         public: false,

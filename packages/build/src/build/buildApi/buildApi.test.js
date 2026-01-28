@@ -44,7 +44,7 @@ test('api is not an array', () => {
   const components = {
     api: 'api',
   };
-  expect(() => buildApi({ components, context })).toThrow('Api is not an array. Received "api".');
+  expect(() => buildApi({ components, context })).toThrow('Api is not an array.');
 });
 
 test('api endpoint does not have an id', () => {

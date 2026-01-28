@@ -85,9 +85,7 @@ function refReviver(key, value) {
         return copyVarValue(defaultValue, null);
       }
       throw new Error(
-        `"_var" operator takes a string or object with "key" field as arguments. Received "${JSON.stringify(
-          value
-        )}"`
+        '_var operator takes a string or object with "key" field as arguments.'
       );
     }
   }

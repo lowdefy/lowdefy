@@ -36,11 +36,7 @@ async function Redis({ request, connection }) {
   }
 
   if (!type.isArray(parameters)) {
-    throw new Error(
-      `Invalid parameters, command "${command}" parameters should be an array, received ${JSON.stringify(
-        parameters
-      )}.`
-    );
+    throw new Error(`Invalid parameters, command "${command}" parameters should be an array.`);
   }
 
   const upperCaseModifiers = Object.entries(modifiers).reduce((acc, [key, value]) => {

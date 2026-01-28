@@ -77,12 +77,12 @@ class ServerParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `${e.message} Received: ${JSON.stringify({
-          [key]: params,
-        })} at ${location}.`;
-        const formattedError = new Error(formattedMessage);
+        const message = e.message || `Operator ${op} threw an error`;
+        const formattedError = new Error(message);
         formattedError.stack = e.stack;
         formattedError.configKey = e.configKey ?? configKey;
+        formattedError.received = { [key]: params };
+        formattedError.operatorLocation = location;
         errors.push(formattedError);
         if (this.verbose) {
           console.error(formattedError);

@@ -18,11 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 function DisplayMessage({ methods: { displayMessage }, params }) {
   if (!type.isObject(params)) {
-    throw new Error(
-      `Invalid DisplayMessage, check action params. Params must be an object, received "${JSON.stringify(
-        params
-      )}".`
-    );
+    throw new Error('Invalid DisplayMessage, check action params. Params must be an object.');
   }
   displayMessage(params);
 }

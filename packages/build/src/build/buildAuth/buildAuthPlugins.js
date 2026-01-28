@@ -33,7 +33,8 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
         collectExceptions(
           context,
           new ConfigError({
-            message: `Auth ${typeClass} id is not a string. Received ${JSON.stringify(plugin.id)}.`,
+            message: `Auth ${typeClass} id is not a string.`,
+            received: plugin.id,
             configKey,
             context,
           })
@@ -44,9 +45,8 @@ function buildAuthPlugin({ counter, pluginConfig, typeClass, context }) {
         collectExceptions(
           context,
           new ConfigError({
-            message: `Auth ${typeClass} type is not a string at ${typeClass} "${
-              plugin.id
-            }". Received ${JSON.stringify(plugin.type)}.`,
+            message: `Auth ${typeClass} type is not a string at ${typeClass} "${plugin.id}".`,
+            received: plugin.type,
             configKey,
             context,
           })
@@ -75,7 +75,8 @@ function buildAdapter({ components, context }) {
     collectExceptions(
       context,
       new ConfigError({
-        message: `Auth adapter id is not a string. Received ${JSON.stringify(adapter.id)}.`,
+        message: `Auth adapter id is not a string.`,
+        received: adapter.id,
         configKey,
         context,
       })
@@ -86,9 +87,8 @@ function buildAdapter({ components, context }) {
     collectExceptions(
       context,
       new ConfigError({
-        message: `Auth adapter type is not a string at adapter "${
-          adapter.id
-        }". Received ${JSON.stringify(adapter.type)}.`,
+        message: `Auth adapter type is not a string at adapter "${adapter.id}".`,
+        received: adapter.type,
         configKey,
         context,
       })

@@ -52,12 +52,18 @@ class ConfigError extends Error {
     const configKey = isString ? null : (messageOrParams.configKey ?? error?.configKey);
     const location = isString ? null : messageOrParams.location;
     const checkSlug = isString ? undefined : messageOrParams.checkSlug;
+    const received = isString ? undefined : messageOrParams.received;
+    const operatorLocation = isString ? null : messageOrParams.operatorLocation;
 
     // Message without prefix - logger uses error.name for display
     super(message);
     this.name = 'ConfigError';
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
+
+    // For logger formatting
+    this.received = received;
+    this.operatorLocation = operatorLocation;
 
     // Location info (can be set via constructor or subclass)
     this.source = location?.source ?? null;

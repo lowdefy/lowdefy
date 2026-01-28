@@ -38,7 +38,8 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     collectExceptions(
       context,
       new ConfigError({
-        message: `Page id is not a string at page ${index}. Received ${JSON.stringify(page.id)}.`,
+        message: `Page id is not a string at page ${index}.`,
+        received: page.id,
         configKey,
         context,
       })

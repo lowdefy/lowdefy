@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors/client';
+import { ConfigError, PluginError } from '@lowdefy/errors/client';
 import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
@@ -84,12 +84,22 @@ class WebParser {
         });
         return res;
       } catch (e) {
-        const formattedMessage = `${e.message} Received: ${JSON.stringify({
-          [key]: params,
-        })} at ${operatorLocation}.`;
+        // ConfigError from plugin - add configKey and re-throw structure
+        if (e instanceof ConfigError) {
+          if (!e.configKey) {
+            e.configKey = configKey;
+          }
+          errors.push(e);
+          return null;
+        }
+        // Plain error from plugin - wrap in PluginError
         errors.push(
-          new ConfigError({
-            message: formattedMessage,
+          new PluginError({
+            error: e,
+            pluginType: 'operator',
+            pluginName: op,
+            received: { [key]: params },
+            location: operatorLocation,
             configKey: e.configKey ?? configKey,
           })
         );

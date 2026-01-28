@@ -21,7 +21,8 @@ async function writeRequestsOnPage({ page, context }) {
 
   if (!type.isArray(requests)) {
     throw new ConfigError({
-      message: `Page requests must be an array. Received ${JSON.stringify(requests)}.`,
+      message: `Page requests must be an array.`,
+      received: requests,
       configKey: page['~k'],
       context,
     });

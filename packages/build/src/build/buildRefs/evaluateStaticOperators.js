@@ -46,6 +46,7 @@ function evaluateStaticOperators({ context, input, refDef }) {
     errors.forEach((error) => {
       context.logger.warn({
         message: error.message,
+        received: error.received,
         operatorLocation: error.operatorLocation,
       });
     });

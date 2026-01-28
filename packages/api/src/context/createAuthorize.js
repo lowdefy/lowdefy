@@ -32,7 +32,8 @@ function createAuthorize({ session }) {
       return authenticated;
     }
     throw new ConfigError({
-      message: `auth.public must be true or false. Received ${JSON.stringify(auth.public)}.`,
+      message: 'auth.public must be true or false.',
+      received: auth.public,
       configKey: config['~k'],
     });
   }

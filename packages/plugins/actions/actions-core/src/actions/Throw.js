@@ -28,14 +28,10 @@ class ThrowActionError extends Error {
 
 function Throw({ methods: { getBlockId, getPageId }, params }) {
   if (!type.isObject(params)) {
-    throw new Error(
-      `Throw action params should be an object. Received "${JSON.stringify(params)}".`
-    );
+    throw new Error('Throw action params should be an object.');
   }
   if (!type.isNone(params.throw) && !type.isBoolean(params.throw)) {
-    throw new Error(
-      `Throw action "throw" param should be an boolean. Received "${JSON.stringify(params.throw)}".`
-    );
+    throw new Error('Throw action "throw" param should be a boolean.');
   }
   if (params.throw === true) {
     throw new ThrowActionError(params.message, {

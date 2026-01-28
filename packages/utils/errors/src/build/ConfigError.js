@@ -53,6 +53,7 @@ class ConfigError extends BaseConfigError {
    * @param {Object} [params.context] - Build context with keyMap, refMap, directories
    * @param {string} [params.configDirectory] - Config directory (for raw mode without context)
    * @param {string} [params.checkSlug] - The specific check being performed
+   * @param {*} [params.received] - The value that caused the error (for logger to format)
    */
   constructor({
     message,
@@ -64,6 +65,7 @@ class ConfigError extends BaseConfigError {
     context,
     configDirectory,
     checkSlug,
+    received,
   }) {
     // Handle YAML parse errors - extract line number from error message
     let finalMessage = message;
@@ -82,6 +84,7 @@ class ConfigError extends BaseConfigError {
     this.configKey = configKey ?? null;
     this.checkSlug = checkSlug;
     this.operatorLocation = operatorLocation;
+    this.received = received;
 
     // Check for ~ignoreBuildChecks suppression
     this.suppressed = ConfigMessage.shouldSuppress({

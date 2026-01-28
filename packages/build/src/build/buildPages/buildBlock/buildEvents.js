@@ -41,9 +41,8 @@ function checkAction(
   }
   if (!type.isString(action.id)) {
     throw new ConfigError({
-      message: `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
-        action.id
-      )}.`,
+      message: `Action id is not a string on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      received: action.id,
       configKey,
       context,
     });
@@ -57,11 +56,8 @@ function checkAction(
   });
   if (!type.isString(action.type)) {
     throw new ConfigError({
-      message: `Action type is not a string on action "${
-        action.id
-      }" on event "${eventId}" on block "${blockId}" on page "${pageId}". Received ${JSON.stringify(
-        action.type
-      )}.`,
+      message: `Action type is not a string on action "${action.id}" on event "${eventId}" on block "${blockId}" on page "${pageId}".`,
+      received: action.type,
       configKey,
       context,
     });
@@ -110,9 +106,8 @@ function buildEvents(block, pageContext) {
         (type.isObject(block.events[key]) && type.isNone(block.events[key].try))
       ) {
         throw new ConfigError({
-          message: `Actions must be an array at "${block.blockId}" in event "${key}" on page "${
-            pageContext.pageId
-          }". Received ${JSON.stringify(block.events[key]?.try)}`,
+          message: `Actions must be an array at "${block.blockId}" in event "${key}" on page "${pageContext.pageId}".`,
+          received: block.events[key]?.try,
           configKey: eventConfigKey,
           context,
         });
@@ -125,11 +120,8 @@ function buildEvents(block, pageContext) {
       }
       if (!type.isArray(block.events[key].try)) {
         throw new ConfigError({
-          message: `Try actions must be an array at "${
-            block.blockId
-          }" in event "${key}.try" on page "${pageContext.pageId}". Received ${JSON.stringify(
-            block.events[key].try
-          )}`,
+          message: `Try actions must be an array at "${block.blockId}" in event "${key}.try" on page "${pageContext.pageId}".`,
+          received: block.events[key].try,
           configKey: eventConfigKey,
           context,
         });
@@ -139,11 +131,8 @@ function buildEvents(block, pageContext) {
       }
       if (!type.isArray(block.events[key].catch)) {
         throw new ConfigError({
-          message: `Catch actions must be an array at "${
-            block.blockId
-          }" in event "${key}.catch" on page "${pageContext.pageId}". Received ${JSON.stringify(
-            block.events[key].catch
-          )}`,
+          message: `Catch actions must be an array at "${block.blockId}" in event "${key}.catch" on page "${pageContext.pageId}".`,
+          received: block.events[key].catch,
           configKey: eventConfigKey,
           context,
         });

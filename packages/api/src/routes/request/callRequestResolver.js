@@ -65,6 +65,7 @@ async function callRequestResolver(
       error,
       pluginType: 'request',
       pluginName: requestConfig.type,
+      received: requestProperties,
       location: `${requestConfig.connectionId}/${requestConfig.requestId}`,
       configKey: requestConfig['~k'],
     });

@@ -22,9 +22,7 @@ function createGetUrlQuery({ arrayIndices, blockId, context }) {
     const { window } = context._internal.lowdefy._internal.globals;
     if (!window?.location) {
       throw new Error(
-        `Browser window.location not available for getUrlQuery. Received: ${JSON.stringify(
-          params
-        )} on blockId: ${blockId}.`
+        `Browser window.location not available for getUrlQuery on blockId: ${blockId}.`
       );
     }
     return getFromObject({

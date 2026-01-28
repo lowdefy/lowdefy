@@ -48,7 +48,7 @@ async function logClientError(context, data) {
     }
   }
 
-  // Log error - logger handles formatting based on error.name and error.source
+  // Log error - logger handles formatting
   logger.error(error);
 
   return {

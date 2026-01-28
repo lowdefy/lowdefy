@@ -21,7 +21,11 @@ import buildEndpoint from './buildEndpoint.js';
 
 function buildApi({ components, context }) {
   if (components.api && !type.isArray(components.api)) {
-    throw new Error(`Api is not an array. Received ${JSON.stringify(components.api)}.`);
+    throw new ConfigError({
+      message: 'Api is not an array.',
+      received: components.api,
+      context,
+    });
   }
   const api = type.isArray(components.api) ? components.api : [];
   const checkDuplicateEndpointId = createCheckDuplicateId({

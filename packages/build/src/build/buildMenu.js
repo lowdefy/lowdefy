@@ -117,7 +117,8 @@ function buildMenu({ components, context }) {
       collectExceptions(
         context,
         new ConfigError({
-          message: `Menu id is not a string. Received ${JSON.stringify(menu.id)}.`,
+          message: `Menu id is not a string.`,
+          received: menu.id,
           configKey,
           context,
         })

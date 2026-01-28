@@ -21,7 +21,8 @@ import { ConfigError } from '@lowdefy/errors/build';
 async function getConfigFile({ context, refDef, referencedFrom }) {
   if (!type.isString(refDef.path)) {
     throw new ConfigError({
-      message: `Invalid _ref definition: ${JSON.stringify({ _ref: refDef.original })}`,
+      message: 'Invalid _ref definition.',
+      received: { _ref: refDef.original },
       filePath: referencedFrom,
       lineNumber: refDef.lineNumber,
       configDirectory: context.directories.config,

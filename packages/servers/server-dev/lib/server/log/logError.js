@@ -37,13 +37,8 @@ async function logError({ context, error }) {
       error.config = location.config;
     }
 
-    // Log source first (if resolved), then error with name prefix
-    if (error.source) {
-      context.logger.info(error.source);
-    }
-    const errorName = error?.name || 'Error';
-    const errorMessage = error?.message || 'Unknown error';
-    context.logger.error(`[${errorName}] ${errorMessage}`);
+    // Log error - logger handles source, name prefix, and received formatting
+    context.logger.error(error);
 
     // Capture error to Sentry (no-op if Sentry not configured)
     captureSentryError({

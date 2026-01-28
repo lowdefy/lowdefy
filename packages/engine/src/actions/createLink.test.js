@@ -27,11 +27,9 @@ const lowdefy = {
         const linkParams = type.isString(params) ? { pageId: params } : params;
         try {
           link(linkParams);
-        } catch (error) {
-          console.log(error);
-          throw new Error(
-            `Invalid Link, check action params. Received "${JSON.stringify(params)}".`
-          );
+        } catch (e) {
+          console.log(e);
+          throw new Error('Invalid Link, check action params.');
         }
       },
     },

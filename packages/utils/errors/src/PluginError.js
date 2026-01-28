@@ -49,18 +49,11 @@ class PluginError extends Error {
    * @param {string} [params.location] - Where in the config the error occurred
    * @param {string} [params.configKey] - Config key (~k) for location resolution
    */
-  constructor({ error, pluginType, pluginName, received, location, configKey }) {
-    const message = error.message;
-
-    // Format the message with context (no prefix - logger uses error.name for display)
-    let formattedMessage = message;
-    if (received !== undefined) {
-      try {
-        formattedMessage += ` Received: ${JSON.stringify(received)}`;
-      } catch {
-        formattedMessage += ` Received: [unserializable]`;
-      }
-    }
+  constructor({ error, message, pluginType, pluginName, received, location, configKey }) {
+    // Store raw message - logger formats received value
+    // Accept either error object or direct message string
+    const rawMessage = message ?? error?.message;
+    let formattedMessage = rawMessage;
     if (location) {
       formattedMessage += ` at ${location}.`;
     }
@@ -69,16 +62,17 @@ class PluginError extends Error {
     this.name = 'PluginError';
     this.pluginType = pluginType;
     this.pluginName = pluginName;
+    this.rawMessage = rawMessage; // Original message without location
     this.received = received;
     this.location = location;
-    this.configKey = error.configKey ?? configKey ?? null;
+    this.configKey = error?.configKey ?? configKey ?? null;
 
     // Location info (set by server-side resolution)
     this.source = null;
     this.config = null;
     this.link = null;
 
-    if (error.stack) {
+    if (error?.stack) {
       this.stack = error.stack;
     }
   }
@@ -95,22 +89,30 @@ class PluginError extends Error {
       pluginName: this.pluginName,
       location: this.location,
       configKey: this.configKey,
+      stack: this.stack,
     };
   }
 
   /**
    * Deserializes error data back into a PluginError.
+   * Note: message already contains location/received, so we don't pass them
+   * to avoid double-formatting.
    * @param {Object} data - Serialized error data
    * @returns {PluginError}
    */
   static deserialize(data) {
-    return new PluginError({
+    const error = new PluginError({
       error: new Error(data.message),
       pluginType: data.pluginType,
       pluginName: data.pluginName,
-      location: data.location,
       configKey: data.configKey,
     });
+    // Set location separately to preserve it without re-formatting message
+    error.location = data.location;
+    if (data.stack) {
+      error.stack = data.stack;
+    }
+    return error;
   }
 }
 

@@ -373,8 +373,7 @@ test('action error in error messages from same action id', async () => {
   expect(displayMessage.mock.calls).toEqual([
     [
       {
-        content:
-          'Result one: one response - Result two: PluginError: [Plugin Error] Test error at blockId.',
+        content: 'Result one: one response - Result two: PluginError: Test error at blockId.',
         duration: 6,
         status: 'error',
       },
@@ -425,14 +424,14 @@ test('action error in error parser', async () => {
   });
   expect(res.responses.two.error).toBeInstanceOf(PluginError);
   expect(res.responses.two.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
-  expect(res.responses.two.error.message).toBe(
-    '[Plugin Error] _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"PluginError"}]} at blockId.'
-  );
+  // Message includes location but not [Plugin Error] prefix or Received - logger formats those
+  expect(res.responses.two.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
+  // Received value contains the _divide operator with params - second param is the error from nested parsing
+  expect(res.responses.two.error.received._divide[0]).toBe(3);
+  expect(res.responses.two.error.received._divide[1].name).toBe('PluginError');
   expect(res.error.error).toBeInstanceOf(PluginError);
   expect(res.error.error.rawMessage).toBe('_divide takes an array of 2 numbers.');
-  expect(res.error.error.message).toBe(
-    '[Plugin Error] _divide takes an array of 2 numbers. Received: {"_divide":[3,{"name":"PluginError"}]} at blockId.'
-  );
+  expect(res.error.error.message).toBe('_divide takes an array of 2 numbers. at blockId.');
 });
 
 test('error with messages undefined', async () => {
@@ -710,9 +709,11 @@ test('Parser error in action', async () => {
   expect(res.error.error.rawMessage).toBe(
     '_state params must be of type string, integer, boolean or object.'
   );
+  // Message includes location but not [Plugin Error] prefix or Received - logger formats those
   expect(res.error.error.message).toBe(
-    '[Plugin Error] _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+    '_state params must be of type string, integer, boolean or object. at blockId.'
   );
+  expect(res.error.error.received).toEqual({ _state: [] });
 
   // Check responses structure
   expect(res.responses.test.action).toEqual({
@@ -726,8 +727,9 @@ test('Parser error in action', async () => {
     '_state params must be of type string, integer, boolean or object.'
   );
   expect(res.responses.test.error.message).toBe(
-    '[Plugin Error] _state params must be of type string, integer, boolean or object. Received: {"_state":[]} at blockId.'
+    '_state params must be of type string, integer, boolean or object. at blockId.'
   );
+  expect(res.responses.test.error.received).toEqual({ _state: [] });
 });
 
 test('Display default loading and success messages when value == true ', async () => {

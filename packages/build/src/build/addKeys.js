@@ -112,9 +112,8 @@ function recAddKeys({ object, key, keyMap, parentKeyMapId, context }) {
         collectExceptions(
           context,
           new ConfigError({
-            message: `~ignoreBuildChecks must be true or an array of check slugs. Received: ${JSON.stringify(
-              checks
-            )}`,
+            message: `~ignoreBuildChecks must be true or an array of check slugs.`,
+            received: checks,
             configKey: keyMapId,
             context,
           })
