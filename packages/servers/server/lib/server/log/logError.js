@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/node-utils';
+import {
+  ConfigError,
+  LowdefyError,
+  PluginError,
+  ServiceError,
+} from '@lowdefy/errors/server';
+import { resolveConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
 
@@ -39,21 +45,63 @@ async function resolveErrorConfigLocation(context, error) {
   }
 }
 
+function getErrorType(error) {
+  if (error instanceof ServiceError || error?.isServiceError === true) {
+    return 'Service Error';
+  }
+  if (error instanceof PluginError) {
+    return 'Plugin Error';
+  }
+  if (error instanceof ConfigError) {
+    return 'Config Error';
+  }
+  if (error instanceof LowdefyError) {
+    return 'Lowdefy Error';
+  }
+  // Check legacy flags
+  if (error?.isServiceError === true) {
+    return 'Service Error';
+  }
+  return 'Error';
+}
+
+function getEventType(error) {
+  if (error instanceof ServiceError || error?.isServiceError === true) {
+    return 'service_error';
+  }
+  if (error instanceof PluginError) {
+    return 'plugin_error';
+  }
+  if (error instanceof ConfigError) {
+    return 'config_error';
+  }
+  if (error instanceof LowdefyError) {
+    return 'lowdefy_error';
+  }
+  return 'error';
+}
+
 async function logError({ context, error }) {
   try {
     const { headers = {}, user = {} } = context;
     const message = error?.message || 'Unknown error';
-    const isServiceError = error?.isServiceError === true;
+    const errorType = getErrorType(error);
+    const eventType = getEventType(error);
+    const isServiceError = error instanceof ServiceError || error?.isServiceError === true;
+    const isLowdefyError = error instanceof LowdefyError;
 
-    // For service errors, don't resolve config location (not a config issue)
-    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
+    // For service errors and internal lowdefy errors, don't resolve config location
+    const location =
+      isServiceError || isLowdefyError ? null : await resolveErrorConfigLocation(context, error);
 
     // Human-readable console output (single log entry)
-    const errorType = isServiceError ? 'Service Error' : 'Config Error';
     const source = location?.source ? `${location.source} at ${location.config}` : '';
     const link = location?.link || '';
 
-    if (isServiceError || !location) {
+    if (isLowdefyError) {
+      // LowdefyError - show with stack trace
+      console.error(LowdefyError.format(error));
+    } else if (isServiceError || !location) {
       console.error(`[${errorType}] ${message}`);
     } else {
       console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
@@ -63,7 +111,7 @@ async function logError({ context, error }) {
     context.logger.error(
       {
         // Core error schema (consistent with client)
-        event: isServiceError ? 'service_error' : 'config_error',
+        event: eventType,
         errorName: error?.name || 'Error',
         errorMessage: message,
         isServiceError,

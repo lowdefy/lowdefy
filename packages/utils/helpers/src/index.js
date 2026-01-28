@@ -16,7 +16,6 @@
 
 import applyArrayIndices from './applyArrayIndices.js';
 import cachedPromises from './cachedPromises.js';
-import ConfigError from './ConfigError.js';
 import get from './get.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
@@ -33,7 +32,6 @@ import wait from './wait.js';
 export {
   applyArrayIndices,
   cachedPromises,
-  ConfigError,
   get,
   LRUCache,
   mergeObjects,

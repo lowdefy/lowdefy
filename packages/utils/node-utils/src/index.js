@@ -15,29 +15,20 @@
 */
 
 import cleanDirectory from './cleanDirectory.js';
-import ConfigError from './ConfigError.js';
-import ConfigMessage, { VALID_CHECK_SLUGS } from './ConfigMessage.js';
-import ConfigWarning from './ConfigWarning.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
-import resolveConfigLocation from './resolveConfigLocation.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 
 export {
   cleanDirectory,
-  ConfigError,
-  ConfigMessage,
-  ConfigWarning,
   copyFileOrDirectory,
   getFileExtension,
   getFileSubExtension,
   getSecretsFromEnv,
-  resolveConfigLocation,
   spawnProcess,
   readFile,
-  VALID_CHECK_SLUGS,
   writeFile,
 };

@@ -99,8 +99,9 @@ test('_request true gives null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toEqual(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_request accepts a string value.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _request accepts a string value. Received: {"_request":true} at locationId.'
+    '[Plugin Error] _request accepts a string value. Received: {"_request":true} at locationId.'
   );
 });
 
@@ -126,8 +127,9 @@ test('_request null', () => {
   const res = parser.parse({ input, location: 'locationId', arrayIndices });
   expect(res.output).toBe(null);
   expect(res.errors.length).toBe(1);
+  expect(res.errors[0].rawMessage).toBe('_request accepts a string value.');
   expect(res.errors[0].message).toBe(
-    'Operator Error: _request accepts a string value. Received: {"_request":null} at locationId.'
+    '[Plugin Error] _request accepts a string value. Received: {"_request":null} at locationId.'
   );
 });
 
