@@ -22,7 +22,7 @@ test.describe('Span Block', () => {
     await navigateToTestPage(page, 'span');
   });
 
-  test('renders basic Span with data-testid', async ({ page }) => {
+  test('renders basic Span', async ({ page }) => {
     const span = getBlock(page, 'span_basic');
     await expect(span).toBeAttached();
   });

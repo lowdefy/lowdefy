@@ -22,7 +22,7 @@ test.describe('Box Block', () => {
     await navigateToTestPage(page, 'box');
   });
 
-  test('renders basic Box with data-testid', async ({ page }) => {
+  test('renders basic Box', async ({ page }) => {
     const box = getBlock(page, 'box_basic');
     await expect(box).toBeAttached();
   });

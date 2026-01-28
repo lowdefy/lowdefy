@@ -54,7 +54,6 @@ const createIcon = (Icons) => {
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
     const iconProps = {
       id: blockId,
-      'data-testid': blockId,
       className: classNames({
         [makeCssClass([{ cursor: (onClick || events.onClick) && 'pointer' }, propertiesObj.style])]:
           true,

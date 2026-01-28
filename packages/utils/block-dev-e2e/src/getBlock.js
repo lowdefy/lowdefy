@@ -15,7 +15,7 @@
 */
 
 function getBlock(page, blockId) {
-  return page.getByTestId(blockId);
+  return page.locator(`[id="${blockId}"]`);
 }
 
 export default getBlock;
