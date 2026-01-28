@@ -1,0 +1,195 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: titleinput
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        titleinput_with_value: Editable Title
+        titleinput_editable: Click to Edit
+        titleinput_onchange: Change me
+        titleinput_level2: Level 2 Title
+        titleinput_level3: Level 3 Title
+        titleinput_level4: Level 4 Title
+        titleinput_copyable: Copy this text
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: titleinput_basic
+    type: TitleInput
+
+  - id: titleinput_with_value
+    type: TitleInput
+
+  # ============================================
+  # PROPERTY TESTS - LEVELS
+  # ============================================
+
+  - id: titleinput_level2
+    type: TitleInput
+    properties:
+      level: 2
+
+  - id: titleinput_level3
+    type: TitleInput
+    properties:
+      level: 3
+
+  - id: titleinput_level4
+    type: TitleInput
+    properties:
+      level: 4
+
+  # ============================================
+  # PROPERTY TESTS - STYLES
+  # ============================================
+
+  - id: titleinput_code
+    type: TitleInput
+    properties:
+      code: true
+
+  - id: titleinput_italic
+    type: TitleInput
+    properties:
+      italic: true
+
+  - id: titleinput_underline
+    type: TitleInput
+    properties:
+      underline: true
+
+  - id: titleinput_delete
+    type: TitleInput
+    properties:
+      delete: true
+
+  - id: titleinput_mark
+    type: TitleInput
+    properties:
+      mark: true
+
+  - id: titleinput_disabled
+    type: TitleInput
+    properties:
+      disabled: true
+
+  # ============================================
+  # PROPERTY TESTS - TYPES
+  # ============================================
+
+  - id: titleinput_secondary
+    type: TitleInput
+    properties:
+      type: secondary
+
+  - id: titleinput_warning
+    type: TitleInput
+    properties:
+      type: warning
+
+  - id: titleinput_danger
+    type: TitleInput
+    properties:
+      type: danger
+
+  - id: titleinput_success
+    type: TitleInput
+    properties:
+      type: success
+
+  # ============================================
+  # COPYABLE TEST
+  # ============================================
+
+  - id: titleinput_copyable
+    type: TitleInput
+    properties:
+      copyable: true
+
+  # ============================================
+  # EDITABLE TEST
+  # ============================================
+
+  - id: titleinput_editable
+    type: TitleInput
+    properties:
+      editable: true
+
+  - id: titleinput_not_editable
+    type: TitleInput
+    properties:
+      editable: false
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: titleinput_onchange
+    type: TitleInput
+    properties:
+      editable: true
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            titleinput_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: titleinput_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: titleinput_onchange_value
+          else: ''
+
+  - id: titleinput_oncopy
+    type: TitleInput
+    properties:
+      copyable:
+        text: Copy this text
+    events:
+      onCopy:
+        - id: set_oncopy
+          type: SetState
+          params:
+            titleinput_oncopy_fired: true
+
+  - id: oncopy_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: titleinput_oncopy_fired
+              - true
+          then: Copy fired
+          else: ''

@@ -18,3 +18,10 @@ name: blocks-antd E2E Tests
 pages:
   - _ref: ../../src/blocks/Button/tests/Button.e2e.yaml
   - _ref: ../../src/blocks/Selector/tests/Selector.e2e.yaml
+  # Step 1.1: Text Input Blocks
+  - _ref: ../../src/blocks/TextInput/tests/TextInput.e2e.yaml
+  - _ref: ../../src/blocks/PasswordInput/tests/PasswordInput.e2e.yaml
+  - _ref: ../../src/blocks/TextArea/tests/TextArea.e2e.yaml
+  - _ref: ../../src/blocks/NumberInput/tests/NumberInput.e2e.yaml
+  - _ref: ../../src/blocks/TitleInput/tests/TitleInput.e2e.yaml
+  - _ref: ../../src/blocks/ParagraphInput/tests/ParagraphInput.e2e.yaml

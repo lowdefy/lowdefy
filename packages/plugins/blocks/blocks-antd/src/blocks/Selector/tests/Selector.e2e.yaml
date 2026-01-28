@@ -13,9 +13,7 @@
 # limitations under the License.
 
 id: selector
-type: PageSiderMenu
-properties:
-  title: Selector Tests
+type: Box
 
 events:
   onInit:

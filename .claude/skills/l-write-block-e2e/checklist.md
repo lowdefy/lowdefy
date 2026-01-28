@@ -4,7 +4,7 @@ Use this checklist when writing e2e tests for a Lowdefy block.
 
 ## Pre-Flight Checks
 
-- [ ] Block has `data-testid={blockId}` on root element
+- [ ] Block has `id={blockId}` on root element (or `id={\`${blockId}_input\`}` for input blocks)
 - [ ] Package has e2e infrastructure (playwright.config.js, e2e/app/lowdefy.yaml)
 - [ ] Package has @lowdefy/block-dev-e2e as devDependency
 
@@ -26,7 +26,7 @@ Review `schema.json` and ensure tests for:
 
 ### Rendering Tests
 - [ ] Basic render with minimal props
-- [ ] Block has correct data-testid
+- [ ] Block is visible and has correct id
 - [ ] Text content displays correctly
 
 ### Property Tests
@@ -66,6 +66,14 @@ Test descriptions:
 - "applies {property} styling"
 - "{event} event fires and updates state"
 
+## Selector Best Practices
+
+- [ ] Use role-based selectors for buttons: `block.getByRole('button', { name: 'Copy' })`
+- [ ] Use `.first()` when Ant Design has nested button elements: `block.getByRole('button', { name: 'Edit' }).first()`
+- [ ] Use ID selectors for inputs: `#${blockId}_input`
+- [ ] Use class selectors only for style assertions or when no better option exists
+- [ ] Avoid fragile selectors like `div:nth-child(2)` or long CSS chains
+
 ## Common Assertions
 
 ```javascript
@@ -78,7 +86,7 @@ await expect(block).toHaveText('exact text');
 await expect(block).toContainText('partial');
 await expect(block).toHaveText(''); // empty
 
-// Classes (use regex for partial match)
+// Classes (use regex for partial match - OK for style assertions)
 await expect(block).toHaveClass(/ant-btn-primary/);
 
 // Attributes
@@ -88,7 +96,11 @@ await expect(block).toBeDisabled();
 // CSS
 await expect(block).toHaveCSS('background-color', 'rgb(82, 196, 26)');
 
-// Child elements
+// Child elements - prefer role-based when possible
+const copyBtn = block.getByRole('button', { name: 'Copy' });
+await expect(copyBtn).toBeVisible();
+
+// Fallback to locator for elements without accessible names
 const svg = block.locator('svg');
 await expect(svg).toBeAttached();
 ```

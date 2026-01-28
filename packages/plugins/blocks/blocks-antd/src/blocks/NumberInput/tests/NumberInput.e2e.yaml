@@ -1,0 +1,228 @@
+# Copyright 2020-2024 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: numberinput
+type: Box
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        numberinput_with_value: 42
+        numberinput_controls: 10
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: numberinput_basic
+    type: NumberInput
+    properties:
+      title: Basic Number Input
+
+  - id: numberinput_with_value
+    type: NumberInput
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: numberinput_placeholder
+    type: NumberInput
+    properties:
+      title: Placeholder Test
+      placeholder: Enter a number
+
+  - id: numberinput_disabled
+    type: NumberInput
+    properties:
+      title: Disabled Input
+      disabled: true
+
+  - id: numberinput_small
+    type: NumberInput
+    properties:
+      title: Small Input
+      size: small
+
+  - id: numberinput_large
+    type: NumberInput
+    properties:
+      title: Large Input
+      size: large
+
+  - id: numberinput_borderless
+    type: NumberInput
+    properties:
+      title: Borderless Input
+      bordered: false
+
+  - id: numberinput_no_controls
+    type: NumberInput
+    properties:
+      title: No Controls
+      controls: false
+
+  - id: numberinput_controls
+    type: NumberInput
+    properties:
+      title: With Controls
+      controls: true
+
+  - id: numberinput_minmax
+    type: NumberInput
+    properties:
+      title: Min/Max
+      min: 0
+      max: 100
+
+  - id: numberinput_step
+    type: NumberInput
+    properties:
+      title: Step 5
+      step: 5
+
+  - id: numberinput_precision
+    type: NumberInput
+    properties:
+      title: Precision 2
+      precision: 2
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  - id: numberinput_onchange
+    type: NumberInput
+    properties:
+      title: OnChange Test
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            numberinput_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: numberinput_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: numberinput_onchange_value
+          else: ''
+
+  - id: numberinput_onblur
+    type: NumberInput
+    properties:
+      title: OnBlur Test
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            numberinput_onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: numberinput_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  - id: numberinput_onfocus
+    type: NumberInput
+    properties:
+      title: OnFocus Test
+    events:
+      onFocus:
+        - id: set_onfocus
+          type: SetState
+          params:
+            numberinput_onfocus_fired: true
+
+  - id: onfocus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: numberinput_onfocus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: numberinput_onpressenter
+    type: NumberInput
+    properties:
+      title: OnPressEnter Test
+    events:
+      onPressEnter:
+        - id: set_onpressenter
+          type: SetState
+          params:
+            numberinput_onpressenter_fired: true
+
+  - id: onpressenter_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: numberinput_onpressenter_fired
+              - true
+          then: Enter pressed
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: numberinput_typing
+    type: NumberInput
+    properties:
+      title: Typing Test
+
+  - id: typing_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: numberinput_typing
+              - null
+          then:
+            _string.concat:
+              - 'Typed: '
+              - _state: numberinput_typing
+          else: ''

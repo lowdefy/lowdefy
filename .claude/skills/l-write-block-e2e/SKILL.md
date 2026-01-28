@@ -13,7 +13,7 @@ Generate comprehensive end-to-end tests for Lowdefy block components using Playw
 ```
 /l-write-block-e2e blocks-antd Button
 /l-write-block-e2e blocks-basic Span
-/l-write-block-e2e blocks-antd Modal
+/l-write-block-e2e blocks-antd TextInput
 ```
 
 ## Prerequisites
@@ -25,7 +25,7 @@ Before generating tests, ensure the block package has e2e infrastructure:
 3. **package.json** - Has `e2e` and `e2e:ui` scripts
 4. **@lowdefy/block-dev-e2e** - Dev dependency installed
 
-If missing, set up the infrastructure first (see Setup section below).
+If missing, set up the infrastructure first (see Package Setup section).
 
 ## Instructions
 
@@ -34,80 +34,148 @@ If missing, set up the infrastructure first (see Setup section below).
 Read these files to understand the block:
 
 1. **Block component** (`src/blocks/{BlockName}/{BlockName}.js`)
-   - What props does it accept?
-   - Verify it has `id={blockId}` (all blocks should have this)
+   - Check ID pattern: `id={blockId}` (display) vs `id={\`${blockId}_input\`}` (input)
+   - Does it use Label wrapper? (input blocks do)
    - What events does it support?
-   - What child components does it use?
 
 2. **Schema** (`src/blocks/{BlockName}/schema.json`)
    - All available properties with types and defaults
    - All available events
 
-3. **Examples** (`src/blocks/{BlockName}/examples.yaml`) - if exists
-   - Common usage patterns
+### Step 2: Identify Block Type
 
-### Step 2: Create Test Fixtures
+**Display Blocks** (Button, Title, Alert, Badge, etc.):
+- Have `id={blockId}` on main element
+- Use `getBlock(page, blockId)` directly
 
-Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml` with test scenarios:
+**Input Blocks with Label** (TextInput, Selector, NumberInput, etc.):
+- Wrapped in Label component which has `id={blockId}`
+- Actual input has `id={\`${blockId}_input\`}`
+- Need helper: `const getInput = (page, blockId) => page.locator(\`#${blockId}_input\`);`
+
+**Select/Dropdown Blocks** (Selector, MultipleSelector, etc.):
+- Use Ant Design Select internally
+- The `.ant-select` wrapper is created by Ant Design (we can't add test IDs to it)
+- Need helper: `const getSelector = (page, blockId) => page.locator(\`.ant-select:has(#${blockId}_input)\`);`
+- Options have IDs: `${blockId}_0`, `${blockId}_1`, etc.
+
+### Step 3: Create Test Fixtures
+
+Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml`:
 
 ```yaml
+# Copyright 2020-2024 Lowdefy, Inc
+# ... license header ...
+
 id: blockname  # Page ID - lowercase, used in URL
 type: Box
-
-blocks:
-  # Basic rendering test
-  - id: blockname_basic
-    type: BlockName
-    properties:
-      title: Basic Title
-
-  # Test each property from schema.json
-  - id: blockname_property1
-    type: BlockName
-    properties:
-      property1: value1
-
-  # Test events with state updates for verification
-  - id: blockname_clickable
-    type: BlockName
-    properties:
-      title:
-        _if:
-          test:
-            _eq:
-              - _state: was_clicked
-              - true
-          then: Clicked!
-          else: Click me
-    events:
-      onClick:
-        - id: set_clicked
-          type: SetState
-          params:
-            was_clicked: true
-```
-
-**Block ID Naming Convention:**
-- `{blockname}_basic` - Basic rendering
-- `{blockname}_{property}` - Property-specific tests
-- `{blockname}_{event}` - Event tests
-- Use lowercase, underscores
-
-**Setting Initial Values:**
-Use `onInit` event with `SetState` to set initial values for input blocks:
-```yaml
-id: selector
-type: PageSiderMenu
 
 events:
   onInit:
     - id: set_defaults
       type: SetState
       params:
-        selector_with_value: Option 2
+        blockname_with_value: Initial Value
+        blockname_clearable: Clear me
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: blockname_basic
+    type: BlockName
+    properties:
+      title: Basic Title
+
+  - id: blockname_with_value
+    type: BlockName
+    properties:
+      title: With Value
+
+  # ============================================
+  # PROPERTY TESTS
+  # ============================================
+
+  - id: blockname_disabled
+    type: BlockName
+    properties:
+      disabled: true
+
+  - id: blockname_small
+    type: BlockName
+    properties:
+      size: small
+
+  # ============================================
+  # EVENT TESTS
+  # ============================================
+
+  # For value-based events (onChange with value)
+  - id: blockname_onchange
+    type: BlockName
+    events:
+      onChange:
+        - id: set_onchange
+          type: SetState
+          params:
+            blockname_onchange_value:
+              _event: value
+
+  - id: onchange_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: blockname_onchange_value
+              - null
+          then:
+            _string.concat:
+              - 'Value: '
+              - _state: blockname_onchange_value
+          else: ''
+
+  # For boolean events (onBlur, onFocus, etc.)
+  - id: blockname_onblur
+    type: BlockName
+    events:
+      onBlur:
+        - id: set_onblur
+          type: SetState
+          params:
+            blockname_onblur_fired: true
+
+  - id: onblur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: blockname_onblur_fired
+              - true
+          then: Blur fired
+          else: ''
+
+  # ============================================
+  # INTERACTION TESTS
+  # ============================================
+
+  - id: blockname_clearable
+    type: BlockName
+    properties:
+      allowClear: true
 ```
 
-### Step 3: Create Test Spec
+**Block ID Naming Convention:**
+- `{blockname}_basic` - Basic rendering
+- `{blockname}_{property}` - Property-specific (e.g., `textinput_disabled`)
+- `{blockname}_on{event}` - Event tests (e.g., `textinput_onblur`)
+- Use lowercase, underscores
+
+### Step 4: Create Test Spec
 
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 
@@ -122,21 +190,87 @@ Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
+// For input blocks with Label wrapper:
+const getInput = (page, blockId) => page.locator(`#${blockId}_input`);
+
+// For Selector-type blocks (class selector needed - Ant Design controls the wrapper):
+// const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+// const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
+
 test.describe('BlockName Block', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'blockname');  // matches yaml id
   });
 
-  test('renders basic block', async ({ page }) => {
+  // ============================================
+  // BASIC RENDERING TESTS
+  // ============================================
+
+  test('renders with label', async ({ page }) => {
     const block = getBlock(page, 'blockname_basic');
     await expect(block).toBeVisible();
+    const label = block.locator('label');
+    await expect(label).toContainText('Basic Title');
   });
 
-  // Add tests for each property and event...
+  test('renders with initial value', async ({ page }) => {
+    const input = getInput(page, 'blockname_with_value');
+    await expect(input).toHaveValue('Initial Value');
+  });
+
+  // ============================================
+  // PROPERTY TESTS
+  // ============================================
+
+  test('renders disabled state', async ({ page }) => {
+    const input = getInput(page, 'blockname_disabled');
+    await expect(input).toBeDisabled();
+  });
+
+  test('renders small size', async ({ page }) => {
+    const input = getInput(page, 'blockname_small');
+    await expect(input).toHaveClass(/ant-input-sm/);
+  });
+
+  // ============================================
+  // EVENT TESTS
+  // ============================================
+
+  test('onChange event fires when value changes', async ({ page }) => {
+    const input = getInput(page, 'blockname_onchange');
+    await input.fill('New Value');
+
+    const display = getBlock(page, 'onchange_display');
+    await expect(display).toHaveText('Value: New Value');
+  });
+
+  test('onBlur event fires when input loses focus', async ({ page }) => {
+    const input = getInput(page, 'blockname_onblur');
+    await input.focus();
+    await input.blur();
+
+    const display = getBlock(page, 'onblur_display');
+    await expect(display).toHaveText('Blur fired');
+  });
+
+  // ============================================
+  // INTERACTION TESTS
+  // ============================================
+
+  test('can clear value with clear button', async ({ page }) => {
+    const block = getBlock(page, 'blockname_clearable');
+    const input = getInput(page, 'blockname_clearable');
+
+    await expect(input).toHaveValue('Clear me');
+    await block.hover();
+    const clearBtn = block.locator('.ant-input-clear-icon');
+    await clearBtn.click();
+    await expect(input).toHaveValue('');
+  });
 });
 ```
 
-### Step 4: Add Page Reference
+### Step 5: Add Page Reference
 
 Add the test page to `e2e/app/lowdefy.yaml`:
 
@@ -145,7 +279,7 @@ pages:
   - _ref: ../../src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml
 ```
 
-### Step 5: Run and Validate
+### Step 6: Run and Validate
 
 ```bash
 pnpm e2e  # Run all tests
@@ -154,97 +288,194 @@ pnpm e2e -- --grep "BlockName"  # Run specific block tests
 
 Fix any failures before committing.
 
-## Test Categories
+## Selector Strategy
 
-### 1. Rendering Tests
-Test that block renders correctly with different property combinations:
-- Basic rendering with minimal props
-- Each property from schema.json
-- Combined properties
+### Selector Priority (Most to Least Preferred)
 
-### 2. Event Tests
-Test that events fire correctly:
-- onClick, onChange, onBlur, etc.
-- Use state updates to verify events fired
-- Test loading states during async events
+| Priority | Selector Type | When to Use | Example |
+|----------|---------------|-------------|---------|
+| 1 | ID `#id` | Always preferred when available | `#textinput_basic_input` |
+| 2 | Role-based | For buttons, inputs with accessible names | `getByRole('button', { name: 'Copy' })` |
+| 3 | ID attribute | For blockId on wrapper | `getBlock()` uses `[id="..."]` |
+| 4 | Class + ID | When targeting Ant Design internals | `.ant-select:has(#id)` |
+| 5 | Class only | **Last resort** - for style assertions | `.ant-input-sm` |
 
-### 3. Attribute Tests
-Test HTML attributes are set correctly:
-- `disabled` attribute
-- `href` attribute
-- Custom classes via CSS assertions
+### Role-Based Selectors (Preferred for Ant Design Buttons)
 
-### 4. Style/Class Tests
-Test CSS classes for visual variants:
-- Ant Design classes: `/ant-btn-primary/`, `/ant-btn-lg/`
-- Custom style application
-
-## Assertion Patterns
-
-### Use `getBlock` for Element Selection
-
-`getBlock(page, blockId)` uses `[id="blockId"]` selector - all Lowdefy blocks have `id={blockId}`.
+Use Playwright's role-based selectors for Ant Design action buttons:
 
 ```javascript
-const block = getBlock(page, 'block_id');
-await expect(block).toBeVisible();
+// Copy button - single element, works directly
+const copyBtn = block.getByRole('button', { name: 'Copy' });
+
+// Edit button - Ant Design has nested elements, use .first()
+const editBtn = block.getByRole('button', { name: 'Edit' }).first();
 ```
 
-### Custom Selectors for Complex Components
+**Why role-based is better:**
+- Uses semantic meaning (what the button does) not implementation (class names)
+- Less fragile than class selectors like `.ant-typography-copy`
+- Ant Design won't change accessible names without it being a breaking change
 
-For components like Ant Design Select where the input is nested:
+### About Class Selectors
+
+We use `.ant-select:has(#${blockId}_input)` for Selector blocks because:
+- The `.ant-select` wrapper is created internally by Ant Design
+- We cannot add `data-testid` to it (we don't control that element)
+- We scope it with the ID we DO control to ensure uniqueness
+- This is standard practice for testing Ant Design components
+
+**When class selectors are still needed:**
+- Style assertions: `await expect(input).toHaveClass(/ant-input-sm/);`
+- Elements without accessible names (wrapper divs, icons)
+- The `.ant-typography-edit-content` wrapper for Typography edit mode
+
+## Ant Design Class Patterns
+
+### Size Classes
+| Component | Small | Large |
+|-----------|-------|-------|
+| Input/TextArea | `ant-input-sm` | `ant-input-lg` |
+| Button | `ant-btn-sm` | `ant-btn-lg` |
+| Select | `ant-select-sm` | `ant-select-lg` |
+| NumberInput wrapper | `ant-input-number-sm` | `ant-input-number-lg` |
+
+### Style Classes
+| Style | Class Pattern |
+|-------|---------------|
+| Borderless | `ant-input-borderless`, `ant-select-borderless` |
+| Disabled Select | `ant-select-disabled` |
+| Loading Button | `ant-btn-loading` |
+| Primary Button | `ant-btn-primary` |
+| Danger Button | `ant-btn-dangerous` |
+
+### Typography Classes
+| Type | Class |
+|------|-------|
+| Secondary | `ant-typography-secondary` |
+| Warning | `ant-typography-warning` |
+| Danger | `ant-typography-danger` |
+| Success | `ant-typography-success` |
+| Disabled | `ant-typography-disabled` |
+
+## Common Test Patterns
+
+### Testing Clear Button (requires hover)
 ```javascript
-// Selector: the ant-select wrapper contains the input with id
-const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+test('can clear value', async ({ page }) => {
+  const block = getBlock(page, 'blockname_clearable');
+  const input = getInput(page, 'blockname_clearable');
+
+  await expect(input).toHaveValue('Clear me');
+  await block.hover();
+  const clearBtn = block.locator('.ant-input-clear-icon');
+  await clearBtn.click();
+  await expect(input).toHaveValue('');
+});
 ```
 
-### Check CSS Classes (for variants)
+### Testing NumberInput Controls
 ```javascript
-await expect(block).toHaveClass(/ant-btn-primary/);
-await expect(block).toHaveClass(/ant-btn-loading/);
+test('can increment with controls', async ({ page }) => {
+  const block = getBlock(page, 'numberinput_controls');
+  const input = getInput(page, 'numberinput_controls');
+
+  await expect(input).toHaveValue('10');
+  await block.hover();
+  const upHandler = block.locator('.ant-input-number-handler-up');
+  await upHandler.click();
+  await expect(input).toHaveValue('11');
+});
 ```
 
-### Check Attributes
+### Testing Select Dropdown
 ```javascript
-await expect(block).toHaveAttribute('href', 'https://example.com');
-await expect(block).toBeDisabled();
+test('can select option', async ({ page }) => {
+  const selector = getSelector(page, 'selector_basic');
+  await selector.click();
+
+  const option = getOption(page, 'selector_basic', 1);
+  await option.click();
+
+  const selected = selector.locator('.ant-select-selection-item');
+  await expect(selected).toHaveText('Option 2');
+});
 ```
 
-### Check CSS Properties
+### Testing Password Visibility Toggle
 ```javascript
-await expect(block).toHaveCSS('background-color', 'rgb(82, 196, 26)');
-await expect(block).toHaveCSS('cursor', 'not-allowed');
+test('can toggle password visibility', async ({ page }) => {
+  const block = getBlock(page, 'passwordinput_visibility');
+  const input = getInput(page, 'passwordinput_visibility');
+
+  await expect(input).toHaveAttribute('type', 'password');
+  const toggle = block.locator('.ant-input-password-icon');
+  await toggle.click();
+  await expect(input).toHaveAttribute('type', 'text');
+});
 ```
 
-### Check Text Content
+## Known Patterns
+
+### Typography Editable (TitleInput, ParagraphInput)
+The editable typography components replace the element with an edit wrapper when clicking the edit button:
+
 ```javascript
-await expect(block).toHaveText('Expected Text');
-await expect(block).toContainText('Partial');
+test('can edit title and onChange fires', async ({ page }) => {
+  const block = getBlock(page, 'titleinput_onchange');
+
+  // Click the edit button - use role-based selector with .first()
+  // (Ant Design has nested button elements)
+  const editBtn = block.getByRole('button', { name: 'Edit' }).first();
+  await editBtn.click();
+
+  // After clicking, the element is replaced with an editable wrapper
+  // Use page.locator to find the textarea (not block.locator)
+  const textarea = page.locator('.ant-typography-edit-content textarea');
+  await expect(textarea).toBeVisible();
+  await textarea.fill('New Title Value');
+
+  // Press Enter to confirm
+  await textarea.press('Enter');
+
+  // Verify the onChange event fired
+  const display = getBlock(page, 'onchange_display');
+  await expect(display).toHaveText('Value: New Title Value');
+});
+
+test('onCopy event fires when copy button is clicked', async ({ page }) => {
+  const block = getBlock(page, 'titleinput_oncopy');
+
+  // Copy button - role-based selector works directly (single element)
+  const copyBtn = block.getByRole('button', { name: 'Copy' });
+  await copyBtn.click();
+
+  const display = getBlock(page, 'oncopy_display');
+  await expect(display).toHaveText('Copy fired');
+});
 ```
 
-### Check Child Elements
-```javascript
-const svg = block.locator('svg');
-await expect(svg).toBeAttached();
-```
+**Key insights:**
+- When Typography enters edit mode, the heading/paragraph is replaced with a `div.ant-typography-edit-content` containing a textarea
+- Use `page.locator('.ant-typography-edit-content textarea')` instead of `block.locator('textarea')`
+- For `onCopy` to fire, `copyable` must be an object (e.g., `copyable: { text: 'Copy text' }`), not just `true`
 
-### Test Event State Changes
+### TextArea maxLength
+TextArea enforces maxLength at component level, not via HTML attribute. Test by filling more characters and checking result:
 ```javascript
-await expect(block).toHaveText('Click me');
-await block.click();
-await expect(block).toHaveText('Clicked!');
+await textarea.fill('a'.repeat(150));
+const value = await textarea.inputValue();
+expect(value.length).toBeLessThanOrEqual(100);
 ```
 
 ## Package Setup (First-Time Only)
 
-If the package doesn't have e2e infrastructure:
-
-### 1. Create playwright.config.js
+### 1. Create e2e/playwright.config.js
 
 ```javascript
 /*
   Copyright 2020-2024 Lowdefy, Inc
-  ...license header...
+  ... license header ...
 */
 
 import path from 'path';
@@ -255,7 +486,7 @@ const packageDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 export default createPlaywrightConfig({
   packageDir,
-  port: 3002,  // Use unique port per package (3001=blocks-basic, 3002=blocks-antd, etc.)
+  port: 3002,  // See port assignments below
 });
 ```
 
@@ -263,7 +494,7 @@ export default createPlaywrightConfig({
 
 ```yaml
 # Copyright 2020-2024 Lowdefy, Inc
-# ...license header...
+# ... license header ...
 
 lowdefy: local
 name: {package-name} E2E Tests
@@ -274,7 +505,6 @@ pages:
 
 ### 3. Update package.json
 
-Add dev dependencies:
 ```json
 "devDependencies": {
   "@lowdefy/block-dev-e2e": "4.5.2",
@@ -282,7 +512,6 @@ Add dev dependencies:
 }
 ```
 
-Add scripts:
 ```json
 "scripts": {
   "e2e": "playwright test --config e2e/playwright.config.js",
@@ -290,18 +519,12 @@ Add scripts:
 }
 ```
 
-### 4. Install Dependencies
-
-```bash
-pnpm install
-```
-
 ## Shared Utilities
 
 The `@lowdefy/block-dev-e2e` package provides:
 
 - `createPlaywrightConfig({ packageDir, port })` - Creates Playwright config
-- `getBlock(page, blockId)` - Gets element by `[id="blockId"]` selector (blocks have `id={blockId}`)
+- `getBlock(page, blockId)` - Gets element by `[id="blockId"]` selector
 - `navigateToTestPage(page, pageId)` - Navigates to test page
 
 ## Port Assignments
