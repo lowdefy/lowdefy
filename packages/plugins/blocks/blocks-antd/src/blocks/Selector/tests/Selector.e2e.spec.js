@@ -18,8 +18,10 @@ import { test, expect } from '@playwright/test';
 import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
 
 // Helper to get the selector wrapper (the ant-select container)
-// The data-testid is on the hidden input, but we need the visible .ant-select wrapper
 const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
+
+// Helper to get an option by index (options have id={blockId}_{index})
+const getOption = (page, blockId, index) => page.locator(`#${blockId}_${index}`);
 
 test.describe('Selector Block', () => {
   test.beforeEach(async ({ page }) => {
@@ -94,29 +96,29 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_basic');
     await selector.click();
 
-    // Check options are visible
-    const options = page.locator('.ant-select-item-option');
-    await expect(options).toHaveCount(3);
-    await expect(options.nth(0)).toHaveText('Option 1');
-    await expect(options.nth(1)).toHaveText('Option 2');
-    await expect(options.nth(2)).toHaveText('Option 3');
+    // Check options are visible using their ids
+    await expect(getOption(page, 'selector_basic', 0)).toHaveText('Option 1');
+    await expect(getOption(page, 'selector_basic', 1)).toHaveText('Option 2');
+    await expect(getOption(page, 'selector_basic', 2)).toHaveText('Option 3');
   });
 
   test('renders object options with labels', async ({ page }) => {
     const selector = getSelector(page, 'selector_object_options');
     await selector.click();
 
-    const options = page.locator('.ant-select-item-option');
-    await expect(options.nth(0)).toHaveText('First Option');
-    await expect(options.nth(1)).toHaveText('Second Option');
-    await expect(options.nth(2)).toHaveText('Third Option');
+    await expect(getOption(page, 'selector_object_options', 0)).toHaveText('First Option');
+    await expect(getOption(page, 'selector_object_options', 1)).toHaveText('Second Option');
+    await expect(getOption(page, 'selector_object_options', 2)).toHaveText('Third Option');
   });
 
   test('renders disabled option correctly', async ({ page }) => {
     const selector = getSelector(page, 'selector_disabled_option');
     await selector.click();
 
-    const disabledOption = page.locator('.ant-select-item-option').filter({ hasText: 'Disabled Option' });
+    // Disabled option is at index 1
+    const disabledOption = getOption(page, 'selector_disabled_option', 1);
+    await expect(disabledOption).toHaveText('Disabled Option');
+    // Ant Design uses a class for disabled state
     await expect(disabledOption).toHaveClass(/ant-select-item-option-disabled/);
   });
 
@@ -136,8 +138,8 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_onchange');
     await selector.click();
 
-    const option = page.locator('.ant-select-item-option').filter({ hasText: 'Banana' });
-    await option.click();
+    // Banana is at index 1 (Apple=0, Banana=1, Cherry=2)
+    await getOption(page, 'selector_onchange', 1).click();
 
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Selected: Banana');
@@ -194,8 +196,8 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_basic');
     await selector.click();
 
-    const option = page.locator('.ant-select-item-option').filter({ hasText: 'Option 3' });
-    await option.click();
+    // Option 3 is at index 2
+    await getOption(page, 'selector_basic', 2).click();
 
     const selectedItem = selector.locator('.ant-select-selection-item');
     await expect(selectedItem).toHaveText('Option 3');
@@ -223,19 +225,19 @@ test.describe('Selector Block', () => {
     // Type to filter
     await page.keyboard.type('Bl');
 
-    // Only Blueberry should match
-    const options = page.locator('.ant-select-item-option:visible');
-    await expect(options).toHaveCount(1);
-    await expect(options.first()).toHaveText('Blueberry');
+    // Only Blueberry should be visible (index 3)
+    // Other options should be hidden
+    await expect(getOption(page, 'selector_searchable', 3)).toBeVisible();
+    await expect(getOption(page, 'selector_searchable', 3)).toHaveText('Blueberry');
+    await expect(getOption(page, 'selector_searchable', 0)).not.toBeVisible(); // Apple hidden
   });
 
   test('cannot select disabled option', async ({ page }) => {
     const selector = getSelector(page, 'selector_disabled_option');
     await selector.click();
 
-    // Try to click disabled option
-    const disabledOption = page.locator('.ant-select-item-option').filter({ hasText: 'Disabled Option' });
-    await disabledOption.click();
+    // Try to click disabled option (index 1)
+    await getOption(page, 'selector_disabled_option', 1).click();
 
     // Dropdown should still be open (option not selected)
     const dropdown = page.locator('.ant-select-dropdown');
