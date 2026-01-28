@@ -16,17 +16,20 @@
 
 import PluginError from './PluginError.js';
 
-test('PluginError creates error with message only', () => {
-  const error = new PluginError({ message: 'Test error message' });
+test('PluginError wraps error with formatted message', () => {
+  const original = new Error('Test error message');
+  const error = new PluginError({ error: original });
   expect(error.message).toBe('[Plugin Error] Test error message');
   expect(error.name).toBe('PluginError');
   expect(error.rawMessage).toBe('Test error message');
   expect(error.configKey).toBeNull();
+  expect(error.cause).toBe(original);
 });
 
 test('PluginError stores plugin metadata', () => {
+  const original = new Error('Invalid params');
   const error = new PluginError({
-    message: 'Invalid params',
+    error: original,
     pluginType: 'operator',
     pluginName: '_if',
   });
@@ -35,8 +38,9 @@ test('PluginError stores plugin metadata', () => {
 });
 
 test('PluginError includes received value in message', () => {
+  const original = new Error('Invalid params');
   const error = new PluginError({
-    message: 'Invalid params',
+    error: original,
     received: { test: true },
   });
   expect(error.message).toBe('[Plugin Error] Invalid params Received: {"test":true}');
@@ -47,16 +51,18 @@ test('PluginError handles unserializable received value', () => {
   const circular = {};
   circular.self = circular;
 
+  const original = new Error('Invalid params');
   const error = new PluginError({
-    message: 'Invalid params',
+    error: original,
     received: circular,
   });
   expect(error.message).toBe('[Plugin Error] Invalid params Received: [unserializable]');
 });
 
 test('PluginError includes location in message', () => {
+  const original = new Error('Invalid params');
   const error = new PluginError({
-    message: 'Invalid params',
+    error: original,
     location: 'blocks.0.properties.visible',
   });
   expect(error.message).toBe('[Plugin Error] Invalid params at blocks.0.properties.visible.');
@@ -64,8 +70,9 @@ test('PluginError includes location in message', () => {
 });
 
 test('PluginError with all fields', () => {
+  const original = new Error('_if requires boolean test');
   const error = new PluginError({
-    message: '_if requires boolean test',
+    error: original,
     pluginType: 'operator',
     pluginName: '_if',
     received: 'string',
@@ -83,50 +90,34 @@ test('PluginError with all fields', () => {
 });
 
 test('PluginError is an instance of Error', () => {
-  const error = new PluginError({ message: 'Test' });
+  const original = new Error('Test');
+  const error = new PluginError({ error: original });
   expect(error instanceof Error).toBe(true);
   expect(error instanceof PluginError).toBe(true);
 });
 
-test('PluginError.from creates error from existing error', () => {
-  const original = new Error('Original plugin error');
-  const pluginError = PluginError.from({
-    error: original,
-    pluginType: 'action',
-    pluginName: 'SetState',
-    location: 'events.onClick',
-  });
-
-  expect(pluginError.message).toBe('[Plugin Error] Original plugin error at events.onClick.');
-  expect(pluginError.pluginType).toBe('action');
-  expect(pluginError.pluginName).toBe('SetState');
-  expect(pluginError.cause).toBe(original);
-});
-
-test('PluginError.from preserves configKey from original error', () => {
+test('PluginError preserves configKey from original error', () => {
   const original = new Error('Error');
   original.configKey = 'original_key';
-  const pluginError = PluginError.from({ error: original, pluginType: 'operator' });
+  const pluginError = new PluginError({ error: original, pluginType: 'operator' });
 
   expect(pluginError.configKey).toBe('original_key');
 });
 
-test('PluginError.from with received value', () => {
-  const original = new Error('Invalid input');
-  const pluginError = PluginError.from({
+test('PluginError uses provided configKey when original has none', () => {
+  const original = new Error('Error');
+  const pluginError = new PluginError({
     error: original,
     pluginType: 'operator',
-    pluginName: '_get',
-    received: [1, 2, 3],
+    configKey: 'provided_key',
   });
 
-  expect(pluginError.message).toBe('[Plugin Error] Invalid input Received: [1,2,3]');
-  expect(pluginError.received).toEqual([1, 2, 3]);
+  expect(pluginError.configKey).toBe('provided_key');
 });
 
 test('PluginError preserves original stack trace', () => {
   const original = new Error('Original');
-  const pluginError = PluginError.from({ error: original, pluginType: 'block' });
+  const pluginError = new PluginError({ error: original, pluginType: 'block' });
 
   expect(pluginError.stack).toBe(original.stack);
 });

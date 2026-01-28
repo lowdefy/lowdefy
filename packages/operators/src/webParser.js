@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { applyArrayIndices, ConfigError, serializer, type } from '@lowdefy/helpers';
+import { ConfigError } from '@lowdefy/errors/client';
+import { applyArrayIndices, serializer, type } from '@lowdefy/helpers';
 
 class WebParser {
   constructor({ context, operators }) {

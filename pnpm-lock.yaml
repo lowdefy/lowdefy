@@ -1996,6 +1996,9 @@ importers:
       '@lowdefy/blocks-aggrid':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-aggrid
+      '@lowdefy/blocks-algolia':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-algolia
       '@lowdefy/blocks-antd':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-antd
@@ -2008,6 +2011,9 @@ importers:
       '@lowdefy/blocks-echarts':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-echarts
+      '@lowdefy/blocks-google-maps':
+        specifier: 4.5.2
+        version: link:../../plugins/blocks/blocks-google-maps
       '@lowdefy/blocks-loaders':
         specifier: 4.5.2
         version: link:../../plugins/blocks/blocks-loaders
@@ -2026,9 +2032,18 @@ importers:
       '@lowdefy/connection-axios-http':
         specifier: 4.5.2
         version: link:../../plugins/connections/connection-axios-http
+      '@lowdefy/connection-mongodb':
+        specifier: 4.5.2
+        version: link:../../plugins/connections/connection-mongodb
+      '@lowdefy/docs':
+        specifier: workspace:*
+        version: link:../../docs
       '@lowdefy/engine':
         specifier: 4.5.2
         version: link:../../engine
+      '@lowdefy/errors':
+        specifier: 4.5.2
+        version: link:../../utils/errors
       '@lowdefy/helpers':
         specifier: 4.5.2
         version: link:../../utils/helpers
@@ -2062,6 +2077,9 @@ importers:
       '@lowdefy/operators-yaml':
         specifier: 4.5.2
         version: link:../../plugins/operators/operators-yaml
+      '@lowdefy/plugin-aws':
+        specifier: 4.5.2
+        version: link:../../plugins/plugins/plugin-aws
       '@lowdefy/plugin-next-auth':
         specifier: 4.5.2
         version: link:../../plugins/plugins/plugin-next-auth

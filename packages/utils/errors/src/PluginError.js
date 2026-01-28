@@ -21,15 +21,13 @@
  * The plugin interface layer catches these and wraps them in PluginError
  * with additional context (received values, location, plugin type).
  *
- * The message is formatted in the constructor - no format() method needed.
- *
  * @example
  * // In operator parser (plugin interface layer):
  * try {
  *   return operator({ params });
  * } catch (error) {
  *   if (error instanceof ConfigError) throw error;
- *   throw PluginError.from({
+ *   throw new PluginError({
  *     error,
  *     pluginType: 'operator',
  *     pluginName: '_if',
@@ -44,15 +42,16 @@ class PluginError extends Error {
   /**
    * Creates a PluginError instance with formatted message.
    * @param {Object} params
-   * @param {string} params.message - The raw error message
+   * @param {Error} params.error - The original error thrown by the plugin
    * @param {string} [params.pluginType] - Type of plugin (operator, action, block, request, connection)
    * @param {string} [params.pluginName] - Name of the plugin (e.g., '_if', 'SetState')
    * @param {*} [params.received] - The input that caused the error
    * @param {string} [params.location] - Where in the config the error occurred
    * @param {string} [params.configKey] - Config key (~k) for location resolution
-   * @param {Error} [params.cause] - The original error
    */
-  constructor({ message, pluginType, pluginName, received, location, configKey, cause }) {
+  constructor({ error, pluginType, pluginName, received, location, configKey }) {
+    const message = error.message;
+
     // Format the message with context
     let formattedMessage = `[Plugin Error] ${message}`;
     if (received !== undefined) {
@@ -66,41 +65,18 @@ class PluginError extends Error {
       formattedMessage += ` at ${location}.`;
     }
 
-    super(formattedMessage, { cause });
+    super(formattedMessage, { cause: error });
     this.name = 'PluginError';
     this.rawMessage = message;
     this.pluginType = pluginType;
     this.pluginName = pluginName;
     this.received = received;
     this.location = location;
-    this.configKey = configKey ?? null;
+    this.configKey = error.configKey ?? configKey ?? null;
 
-    if (cause?.stack) {
-      this.stack = cause.stack;
+    if (error.stack) {
+      this.stack = error.stack;
     }
-  }
-
-  /**
-   * Creates a PluginError from an existing error.
-   * @param {Object} params
-   * @param {Error} params.error - The original error thrown by the plugin
-   * @param {string} params.pluginType - Type of plugin
-   * @param {string} [params.pluginName] - Name of the plugin
-   * @param {*} [params.received] - The input that caused the error
-   * @param {string} [params.location] - Where in the config the error occurred
-   * @param {string} [params.configKey] - Config key (~k) for location resolution
-   * @returns {PluginError}
-   */
-  static from({ error, pluginType, pluginName, received, location, configKey }) {
-    return new PluginError({
-      message: error.message,
-      pluginType,
-      pluginName,
-      received,
-      location,
-      configKey: error.configKey ?? configKey,
-      cause: error,
-    });
   }
 }
 

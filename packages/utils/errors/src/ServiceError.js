@@ -49,7 +49,7 @@ const SERVICE_ERROR_CODES = new Set([
  *   if (ServiceError.isServiceError(error)) {
  *     throw ServiceError.from(error, 'MongoDB');
  *   }
- *   throw PluginError.from({ error, ... });
+ *   throw new PluginError({ error, ... });
  * }
  * // error.message = "[Service Error] MongoDB: Connection refused. The service may be down..."
  */

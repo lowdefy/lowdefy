@@ -45,7 +45,7 @@ class ErrorBoundary extends Component {
     }
 
     // Wrap plain errors in PluginError with block context
-    const pluginError = PluginError.from({
+    const pluginError = new PluginError({
       error,
       pluginType: 'block',
       pluginName: blockId,

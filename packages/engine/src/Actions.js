@@ -224,7 +224,7 @@ class Actions {
       const error =
         err instanceof ConfigError || err instanceof PluginError
           ? err
-          : PluginError.from({
+          : new PluginError({
               error: err,
               pluginType: 'action',
               pluginName: action.type,

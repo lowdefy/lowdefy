@@ -118,7 +118,7 @@ test('try catch with unsuccessful try', async () => {
     [
       {
         err: new PluginError({
-          message: 'Try and fail',
+          error: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -240,7 +240,7 @@ test('try only, fail', async () => {
     [
       {
         err: new PluginError({
-          message: 'Try and fail',
+          error: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -379,7 +379,7 @@ test('try with finally, try fail', async () => {
     [
       {
         err: new PluginError({
-          message: 'Try and fail',
+          error: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -563,7 +563,7 @@ test('try catch finally, try fail', async () => {
     [
       {
         err: new PluginError({
-          message: 'Try and fail',
+          error: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -684,7 +684,7 @@ test('try catch finally, try and catch fail', async () => {
     [
       {
         err: new PluginError({
-          message: 'Try and fail',
+          error: new Error('Try and fail'),
           location: 'test/try_fail',
         }),
         params: {
@@ -716,7 +716,7 @@ test('try catch finally, try and catch fail', async () => {
     [
       {
         err: new PluginError({
-          message: 'Fallback thing fail',
+          error: new Error('Fallback thing fail'),
           location: 'test/catch_error',
         }),
         params: {

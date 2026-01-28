@@ -57,7 +57,7 @@ async function callRequestResolver(
     }
 
     // Wrap other errors in PluginError (request/connection logic error)
-    const pluginError = PluginError.from({
+    const pluginError = new PluginError({
       error,
       pluginType: 'request',
       pluginName: requestConfig.type,
