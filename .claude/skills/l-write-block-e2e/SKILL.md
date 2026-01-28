@@ -35,7 +35,7 @@ Read these files to understand the block:
 
 1. **Block component** (`src/blocks/{BlockName}/{BlockName}.js`)
    - What props does it accept?
-   - Does it have `data-testid={blockId}`? (CRITICAL for testing)
+   - Verify it has `id={blockId}` (all blocks should have this)
    - What events does it support?
    - What child components does it use?
 
@@ -46,23 +46,7 @@ Read these files to understand the block:
 3. **Examples** (`src/blocks/{BlockName}/examples.yaml`) - if exists
    - Common usage patterns
 
-### Step 2: Ensure data-testid Support
-
-**CRITICAL**: The block MUST have `data-testid={blockId}` for reliable test selection.
-
-Check the component renders with `data-testid`:
-```javascript
-// The block should have this attribute on its root element
-id={blockId}
-data-testid={blockId}
-```
-
-If `data-testid` is missing:
-1. Add it to the block component
-2. Rebuild the package: `pnpm build`
-3. Document the change in the commit
-
-### Step 3: Create Test Fixtures
+### Step 2: Create Test Fixtures
 
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml` with test scenarios:
 
@@ -109,7 +93,21 @@ blocks:
 - `{blockname}_{event}` - Event tests
 - Use lowercase, underscores
 
-### Step 4: Create Test Spec
+**Setting Initial Values:**
+Use `onInit` event with `SetState` to set initial values for input blocks:
+```yaml
+id: selector
+type: PageSiderMenu
+
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        selector_with_value: Option 2
+```
+
+### Step 3: Create Test Spec
 
 Create `src/blocks/{BlockName}/tests/{BlockName}.e2e.spec.js`:
 
@@ -129,7 +127,7 @@ test.describe('BlockName Block', () => {
     await navigateToTestPage(page, 'blockname');  // matches yaml id
   });
 
-  test('renders with data-testid', async ({ page }) => {
+  test('renders basic block', async ({ page }) => {
     const block = getBlock(page, 'blockname_basic');
     await expect(block).toBeVisible();
   });
@@ -138,7 +136,7 @@ test.describe('BlockName Block', () => {
 });
 ```
 
-### Step 5: Add Page Reference
+### Step 4: Add Page Reference
 
 Add the test page to `e2e/app/lowdefy.yaml`:
 
@@ -147,7 +145,7 @@ pages:
   - _ref: ../../src/blocks/{BlockName}/tests/{BlockName}.e2e.yaml
 ```
 
-### Step 6: Run and Validate
+### Step 5: Run and Validate
 
 ```bash
 pnpm e2e  # Run all tests
@@ -184,9 +182,20 @@ Test CSS classes for visual variants:
 ## Assertion Patterns
 
 ### Use `getBlock` for Element Selection
+
+`getBlock(page, blockId)` uses `[id="blockId"]` selector - all Lowdefy blocks have `id={blockId}`.
+
 ```javascript
 const block = getBlock(page, 'block_id');
 await expect(block).toBeVisible();
+```
+
+### Custom Selectors for Complex Components
+
+For components like Ant Design Select where the input is nested:
+```javascript
+// Selector: the ant-select wrapper contains the input with id
+const getSelector = (page, blockId) => page.locator(`.ant-select:has(#${blockId}_input)`);
 ```
 
 ### Check CSS Classes (for variants)
@@ -292,7 +301,7 @@ pnpm install
 The `@lowdefy/block-dev-e2e` package provides:
 
 - `createPlaywrightConfig({ packageDir, port })` - Creates Playwright config
-- `getBlock(page, blockId)` - Gets element by `data-testid`
+- `getBlock(page, blockId)` - Gets element by `[id="blockId"]` selector (blocks have `id={blockId}`)
 - `navigateToTestPage(page, pageId)` - Navigates to test page
 
 ## Port Assignments

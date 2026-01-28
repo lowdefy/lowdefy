@@ -53,7 +53,6 @@ const Selector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
-              data-testid={`${blockId}_input`}
               bordered={properties.bordered}
               className={methods.makeCssClass([{ width: '100%' }, properties.inputStyle])}
               mode="single"
