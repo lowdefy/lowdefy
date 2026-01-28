@@ -18,13 +18,13 @@ function createStdOutLineHandler({ context }) {
   const { logger } = context;
   function stdOutLineHandler(line) {
     try {
-      const { level, name, time, rid, ...msgObj } = JSON.parse(line);
-      if (level) {
-        const print = level === 30 ? 'log' : logger.levels.labels[level];
-        logger[logger.levels.labels[level]]({ print }, JSON.stringify(msgObj));
+      const { level, msg } = JSON.parse(line);
+      if (level && msg) {
+        const print = level === 30 ? 'info' : logger.levels.labels[level];
+        logger[logger.levels.labels[level]]({ print }, msg);
       }
     } catch (error) {
-      logger.info({ print: 'log' }, line);
+      logger.info({ print: 'info' }, line);
     }
   }
   return stdOutLineHandler;

@@ -37,7 +37,8 @@ class ConfigError extends BaseConfigError {
    * @returns {Promise<ConfigError>} Returns this for chaining
    */
   async resolve(lowdefy, { timeout = 1000 } = {}) {
-    if (this.resolved || !this.configKey || !lowdefy?.basePath) {
+    // basePath can be empty string "" which is valid (no custom base path)
+    if (this.resolved || lowdefy?.basePath === undefined) {
       this.resolved = true;
       return this;
     }
@@ -105,6 +106,8 @@ class ConfigError extends BaseConfigError {
       configKey: error.configKey ?? configKey,
       location,
     });
+    // Preserve original error's name and stack
+    configError.name = error.name;
     configError.stack = error.stack;
     return configError;
   }

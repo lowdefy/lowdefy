@@ -34,16 +34,11 @@ function createLogError(lowdefy) {
       return;
     }
 
-    // PluginError - log message (already formatted in constructor)
+    // PluginError - resolve location (if available) and log to server
     if (error instanceof PluginError) {
-      // If has configKey, resolve location and add source to message
-      if (error.configKey) {
-        const configError = ConfigError.from({ error, configKey: error.configKey });
-        await configError.resolve(lowdefy);
-        console.error(`${configError.source ? configError.source + '\n' : ''}${error.message}`);
-      } else {
-        console.error(error.message);
-      }
+      const configError = ConfigError.from({ error, configKey: error.configKey });
+      await configError.resolve(lowdefy);
+      console.error(`${configError.source ? configError.source + '\n' : ''}${error.message}`);
       return;
     }
 

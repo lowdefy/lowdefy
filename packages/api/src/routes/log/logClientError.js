@@ -63,18 +63,14 @@ async function logClientError(
     link,
   };
 
-  // Human-readable console output (single log entry)
-  const errorType = isServiceError ? 'Service Error' : 'Config Error';
-  const sourceInfo = source ? `${source} at ${config}` : '';
-
-  if (isServiceError) {
-    console.error(`[${errorType}] ${message}`);
-  } else {
-    console.error(`[${errorType}] ${message}\n  ${sourceInfo}\n  ${link || ''}`);
+  // Human-readable output: source (info/blue) then message (error/red)
+  if (source) {
+    logger.info(source);
   }
+  logger.error(message);
 
-  // Structured logging for log aggregation
-  logger.error(logData, message);
+  // Structured logging for log aggregation (debug level - won't display in dev)
+  logger.debug(logData);
 
   return {
     success: true,

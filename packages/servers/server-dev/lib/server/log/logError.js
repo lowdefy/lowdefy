@@ -14,30 +14,9 @@
   limitations under the License.
 */
 
-import { resolveConfigLocation } from '@lowdefy/errors/build';
+import { resolveErrorConfigLocation } from '@lowdefy/errors/build';
 
 import captureSentryError from '../sentry/captureSentryError.js';
-
-async function resolveErrorConfigLocation(context, error) {
-  if (!error.configKey) {
-    return null;
-  }
-  try {
-    const [keyMap, refMap] = await Promise.all([
-      context.readConfigFile('keyMap.json'),
-      context.readConfigFile('refMap.json'),
-    ]);
-    const location = resolveConfigLocation({
-      configKey: error.configKey,
-      keyMap,
-      refMap,
-      configDirectory: context.configDirectory,
-    });
-    return location || null;
-  } catch {
-    return null;
-  }
-}
 
 async function logError({ context, error }) {
   try {
@@ -45,34 +24,32 @@ async function logError({ context, error }) {
     const isServiceError = error?.isServiceError === true;
 
     // For service errors, don't resolve config location (not a config issue)
-    const location = isServiceError ? null : await resolveErrorConfigLocation(context, error);
+    const location = isServiceError
+      ? null
+      : await resolveErrorConfigLocation({
+          error,
+          readConfigFile: context.readConfigFile,
+          configDirectory: context.configDirectory,
+        });
 
-    // Human-readable console output (single log entry)
-    const errorType = isServiceError ? 'Service Error' : 'Config Error';
-    const source = location?.source ? `${location.source} at ${location.config}` : '';
-    const link = location?.link || '';
-
-    if (isServiceError || !location) {
-      console.error(`[${errorType}] ${message}`);
-    } else {
-      console.error(`[${errorType}] ${message}\n  ${source}\n  ${link}`);
+    // Human-readable output: source (info/blue) then message (error/red)
+    if (location) {
+      context.logger.info(location.source);
     }
+    context.logger.error(message);
 
-    // Structured logging
-    context.logger.error(
-      {
-        event: isServiceError ? 'service_error' : 'config_error',
-        errorName: error?.name || 'Error',
-        errorMessage: message,
-        isServiceError,
-        pageId: context.pageId || null,
-        timestamp: new Date().toISOString(),
-        source: location?.source || null,
-        config: location?.config || null,
-        link: location?.link || null,
-      },
-      message
-    );
+    // Structured logging for log aggregation (debug level - won't display in dev)
+    context.logger.debug({
+      event: isServiceError ? 'service_error' : 'config_error',
+      errorName: error?.name || 'Error',
+      errorMessage: message,
+      isServiceError,
+      pageId: context.pageId || null,
+      timestamp: new Date().toISOString(),
+      source: location?.source || null,
+      config: location?.config || null,
+      link: location?.link || null,
+    });
 
     // Capture error to Sentry (no-op if Sentry not configured)
     captureSentryError({
