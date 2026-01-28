@@ -1,0 +1,26 @@
+lowdefy: local
+name: lowdefy-app
+pages:
+  - id: testing
+    type: PageHeaderMenu
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content: Test Page
+      - id: filter.search
+        type: TextInput
+        properties:
+          title: Search
+      - id: filter.category
+        type: Selector
+        properties:
+          title: Category
+          options:
+            - label: Option 1
+              value: option_1
+      - id: results
+        type: Paragraph
+        properties:
+          content:
+            _state: filter

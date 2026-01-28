@@ -373,6 +373,31 @@ test('validateStateReferences handles SetState with array bracket notation', () 
   expect(mockLogWarn).not.toHaveBeenCalled();
 });
 
+test('validateStateReferences allows parent key when dot-notation child blockId exists', () => {
+  const context = testContext({ logger });
+  const page = {
+    pageId: 'page_1',
+    blockId: 'page_1',
+    areas: {
+      content: {
+        blocks: [
+          {
+            blockId: 'filter.search',
+            type: 'TextInput',
+          },
+        ],
+      },
+    },
+    properties: {
+      title: {
+        _state: 'filter',
+      },
+    },
+  };
+  validateStateReferences({ page, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
 test('validateStateReferences allows both input blocks and SetState keys', () => {
   const context = testContext({ logger });
   const page = {
