@@ -4,10 +4,9 @@ import { type } from '@lowdefy/helpers';
 
 const createLinkComponent = (lowdefy, Link) => {
   const { window } = lowdefy._internal.globals;
-  const backLink = ({ ariaLabel, children, className, id, 'data-testid': dataTestId, onClick = () => {}, rel }) => (
+  const backLink = ({ ariaLabel, children, className, id, onClick = () => {}, rel }) => (
     <a
       id={id}
-      data-testid={dataTestId ?? id}
       className={className}
       rel={rel}
       aria-label={ariaLabel ?? 'back'}
@@ -23,7 +22,6 @@ const createLinkComponent = (lowdefy, Link) => {
     ariaLabel,
     children,
     className,
-    'data-testid': dataTestId,
     href,
     id,
     onClick = () => {},
@@ -36,7 +34,6 @@ const createLinkComponent = (lowdefy, Link) => {
     return (
       <a
         id={id}
-        data-testid={dataTestId ?? id}
         aria-label={ariaLabel}
         className={className}
         href={href ?? `${url}${query ? `?${query}` : ''}`}
@@ -55,7 +52,6 @@ const createLinkComponent = (lowdefy, Link) => {
     ariaLabel,
     children,
     className,
-    'data-testid': dataTestId,
     id,
     newTab,
     onClick = () => {},
@@ -73,7 +69,6 @@ const createLinkComponent = (lowdefy, Link) => {
         // eslint-disable-next-line react/jsx-no-target-blank
         <a
           id={id}
-          data-testid={dataTestId ?? id}
           aria-label={ariaLabel}
           className={className}
           href={`${window.location.origin}${lowdefy.basePath}${pathname}${
@@ -97,7 +92,6 @@ const createLinkComponent = (lowdefy, Link) => {
         replace={replace}
         scroll={scroll}
         id={id}
-        data-testid={dataTestId ?? id}
         aria-label={ariaLabel}
         className={className}
         rel={rel}
@@ -110,8 +104,8 @@ const createLinkComponent = (lowdefy, Link) => {
       </Link>
     );
   };
-  const noLink = ({ className, children, 'data-testid': dataTestId, id, onClick = () => {} }) => (
-    <span id={id} data-testid={dataTestId ?? id} className={className} onClick={onClick}>
+  const noLink = ({ className, children, id, onClick = () => {} }) => (
+    <span id={id} className={className} onClick={onClick}>
       {type.isFunction(children) ? children(id) : children}
     </span>
   );
